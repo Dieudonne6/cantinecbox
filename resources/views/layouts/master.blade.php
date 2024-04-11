@@ -27,7 +27,7 @@
     <div class="container-fluid page-body-wrapper">
       @include('layouts.sidebar')
       <div class="main-panel">  
-        @yield('contenu')
+        @yield('content')
         @include('layouts.footer')
       </div>
     </div>
