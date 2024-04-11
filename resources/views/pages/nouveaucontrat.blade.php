@@ -52,7 +52,7 @@
 
         <div class="form-group">
             <p class="card-description">
-                Info de l'inscription
+                Info de l'inscriptions
               </p>
               <div class="form-group row">
                 <div class="col">
