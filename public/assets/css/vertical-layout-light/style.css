@@ -116,6 +116,13 @@
 /* === Import template variables === */
 /*-------------------------------------------------------------------*/
 /* === SCSS Compass Functions === */
+.count-indicator {
+  width: 100% !important;
+}
+.navbar .navbar-brand-wrapper .navbar-brand-inner-wrapper .navbar-brand {
+  color: #fff !important;
+  font-size: 2rem !important;
+}
 @-moz-keyframes flash {
   0% {
     opacity: 1;

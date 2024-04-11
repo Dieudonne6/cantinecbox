@@ -175,31 +175,31 @@
     </li>
     <li class="nav-item">
       <a class="nav-link" href="https://bootstrapdash.com/demo/polluxui-free/docs/documentation.html">
-        <i class="typcn typcn-mortar-board menu-icon"></i>
+        <i class="typcn typcn-document-text menu-icon"></i>
         <span class="menu-title">Nouveau</span>
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="../../index.html">
-        <i class="typcn typcn-device-desktop menu-icon"></i>
+        <i class="typcn typcn-mortar-board menu-icon"></i>
         <span class="menu-title">Suspendre</span>
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="../../index.html">
-        <i class="typcn typcn-device-desktop menu-icon"></i>
+        <i class="typcn typcn-mortar-board menu-icon"></i>
         <span class="menu-title">Paiement</span>
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="../../index.html">
-        <i class="typcn typcn-device-desktop menu-icon"></i>
+        <i class="typcn typcn-mortar-board menu-icon"></i>
         <span class="menu-title">Inscription mensuelle</span>
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="../../index.html">
-        <i class="typcn typcn-device-desktop menu-icon"></i>
+        <i class="typcn typcn-mortar-board menu-icon"></i>
         <span class="menu-title">Paramètre</span>
       </a>
     </li>
