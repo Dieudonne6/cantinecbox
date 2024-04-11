@@ -11,9 +11,9 @@ class PagesController extends Controller
     }
 
 
-    // public function nouveaucontrat(){
-    //     return view('pages.nouveaucontrat');
-    // }
+    public function nouveaucontrat(){
+        return view('pages.nouveaucontrat');
+    }
 
     public function classe(){
         return view('pages.classes');
