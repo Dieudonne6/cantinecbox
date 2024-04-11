@@ -17,3 +17,4 @@ use App\Http\Controllers\PagesController;
 
 
 Route::get('/inscription', [PagesController::class, 'inscription']);
+Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
