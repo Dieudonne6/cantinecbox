@@ -52,7 +52,7 @@
 
         <div class="form-group">
             <p class="card-description">
-                Info sur l'eleve
+                Info de l'inscription
               </p>
               <div class="form-group row">
                 <div class="col">

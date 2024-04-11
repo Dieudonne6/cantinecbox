@@ -174,7 +174,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="https://bootstrapdash.com/demo/polluxui-free/docs/documentation.html">
+      <a class="nav-link" href="{{url('/nouveaucontrat')}}">
         <i class="typcn typcn-document-text menu-icon"></i>
         <span class="menu-title">Nouveau</span>
       </a>
