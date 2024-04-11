@@ -9,4 +9,7 @@ class PagesController extends Controller
     public function inscription(){
         return view('pages.inscription');
     }
+    public function classe(){
+        return view('pages.classes');
+    }
 }
