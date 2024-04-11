@@ -168,7 +168,7 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
     <li class="nav-item">
-      <a class="nav-link" href="../../index.html">
+      <a class="nav-link" href="{{url('/')}}">
         <i class="typcn typcn-device-desktop menu-icon"></i>
         <span class="menu-title">Toutes les classes</span>
       </a>
@@ -192,7 +192,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="../../index.html">
+      <a class="nav-link" href="{{url('/inscription')}}">
         <i class="typcn typcn-mortar-board menu-icon"></i>
         <span class="menu-title">Inscription mensuelle</span>
       </a>
