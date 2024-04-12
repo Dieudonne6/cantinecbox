@@ -13,13 +13,12 @@ class PagesController extends Controller
     public function paiement(){
         return view('pages.paiement');
     } 
+
     public function nouveaucontrat(){
         return view('pages.nouveaucontrat');
     }
 
-    public function classe(){
-        return view('pages.classes');
-    }
+  
 
     public function connexiondonnées(){
         return view('pages.connexiondonnées');
@@ -28,4 +27,5 @@ class PagesController extends Controller
     public function frais(){
         return view('pages.frais');
     }
+
 }
