@@ -22,3 +22,5 @@ Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 
 Route::get('/', [PagesController::class, 'classe']);
 
+Route::get('/connexiondonnées', [PagesController::class, 'connexiondonnées']);
+
