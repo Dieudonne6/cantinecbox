@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
 
+use App\Http\Controllers\ClassesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,10 @@ use App\Http\Controllers\PagesController;
 Route::get('/inscription', [PagesController::class, 'inscription']);
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
+Route::get('/paiement', [PagesController::class, 'paiement']);
 
-Route::get('/', [PagesController::class, 'classe']);
+Route::get('/', [ClassesController::class, 'classe']);
+Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
+
+Route::get('/connexiondonnées', [PagesController::class, 'connexiondonnées']);
 
