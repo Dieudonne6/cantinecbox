@@ -22,7 +22,8 @@ class PagesController extends Controller
     }
 
 
-  
-
+    public function frais(){
+        return view('pages.frais');
+    }
   
 }
