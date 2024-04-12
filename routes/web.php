@@ -25,3 +25,4 @@ Route::get('/', [PagesController::class, 'classe']);
 
 Route::get('/connexiondonnées', [PagesController::class, 'connexiondonnées']);
 
+Route::get('/frais', [PagesController::class, 'frais']);

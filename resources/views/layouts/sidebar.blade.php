@@ -192,13 +192,13 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{{url('/inscription')}}">
+      <a class="nav-link" href="{{url('/connexiondonnées')}}">
         <i class="typcn typcn-mortar-board menu-icon"></i>
         <span class="menu-title">Inscription mensuelle</span>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="../../index.html">
+      <a class="nav-link" href="{{url('/connexiondonnées')}} ">
         <i class="typcn typcn-mortar-board menu-icon"></i>
         <span class="menu-title">Paramètre</span>
       </a>

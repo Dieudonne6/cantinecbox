@@ -10,12 +10,22 @@ class PagesController extends Controller
         return view('pages.inscription');
     }
 
-
+    public function paiement(){
+        return view('pages.paiement');
+    } 
     public function nouveaucontrat(){
         return view('pages.nouveaucontrat');
     }
 
     public function classe(){
         return view('pages.classes');
+    }
+
+    public function connexiondonnées(){
+        return view('pages.connexiondonnées');
+    }
+    
+    public function frais(){
+        return view('pages.frais');
     }
 }
