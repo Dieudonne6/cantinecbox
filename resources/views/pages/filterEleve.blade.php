@@ -5,11 +5,17 @@
     <div class="card-body">
       <h4 class="card-title">Toutes les classes</h4>
       <div class="form-group">
-        <select class="js-example-basic-single w-100">
+        <select class="js-example-basic-single w-100" onchange="window.location.href=this.value">
+          <option disabled selected value="">Toutes les classes</option>
           @foreach ($classe as $classes)
-            <option value="eleve/{{$classes->CODECLAS}}">{{$classes->CODECLAS}}</a></option>
+
+            {{-- <option value="eleve/{{$classes->CODECLAS}}">{{$classes->CODECLAS}}</a></option> --}}
+
+              <option value="{{$classes->CODECLAS}}">{{$classes->CODECLAS}}</option>
+
           @endforeach
-        </select>
+      </select>
+      
       </div>
       <div class="table-responsive">
         <table class="table table-striped">
