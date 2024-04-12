@@ -203,8 +203,7 @@
         <i class="typcn typcn-document-text menu-icon"></i>
         <span class="menu-title">Parametre</span>
         <i class="menu-arrow"></i>
-
-
+      </a>
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" href="#">Frais mensuel et <br>annee academique</a></li>
