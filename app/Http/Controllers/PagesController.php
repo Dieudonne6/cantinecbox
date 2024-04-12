@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Eleve;
+use App\Models\Moiscontrat;
+
 
 class PagesController extends Controller
 {
@@ -18,4 +21,6 @@ class PagesController extends Controller
     public function classe(){
         return view('pages.classes');
     }
+
+ 
 }

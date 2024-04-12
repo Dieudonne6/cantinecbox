@@ -198,16 +198,39 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="../../index.html">
-        <i class="typcn typcn-mortar-board menu-icon"></i>
-        <span class="menu-title">Paramètre</span>
+      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+        <i class="typcn typcn-document-text menu-icon"></i>
+        <span class="menu-title">Parametre</span>
+        <i class="menu-arrow"></i>
       </a>
+      <div class="collapse" id="ui-basic">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="#">Frais mensuel et <br>annee academique</a></li>
+          <li class="nav-item"> <a class="nav-link" href="#">conexion a la<br>base de donnee</a></li>
+        </ul>
+      </div>
     </li>
+
     <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+        <i class="typcn typcn-document-text menu-icon"></i>
+        <span class="menu-title">Etat</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-basic">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="#">Etat des paiements</a></li>
+          <li class="nav-item"> <a class="nav-link" href="#">Etat des droits<br>constates</a></li>
+          <li class="nav-item"> <a class="nav-link" href="#">lettre de relance</a></li>
+        </ul>
+      </div>
+    </li>
+
+    {{-- <li class="nav-item">
       <a class="nav-link" href="../../index.html">
         <i class="typcn typcn-device-desktop menu-icon"></i>
         <span class="menu-title">Etat</span>
       </a>
-    </li>
+    </li> --}}
   </ul>
 </nav>
