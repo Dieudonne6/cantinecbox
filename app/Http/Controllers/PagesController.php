@@ -17,4 +17,5 @@ class PagesController extends Controller
     public function paiement(){
         return view('pages.paiement');
     }
+  
 }

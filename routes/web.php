@@ -24,3 +24,6 @@ Route::get('/paiement', [PagesController::class, 'paiement']);
 
 Route::get('/', [ClassesController::class, 'classe']);
 Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
+
+Route::get('/connexiondonnées', [PagesController::class, 'connexiondonnées']);
+
