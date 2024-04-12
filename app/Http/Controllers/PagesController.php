@@ -18,8 +18,4 @@ class PagesController extends Controller
     public function classe(){
         return view('pages.classes');
     }
-    
-    public function connexiondonnées(){
-        return view('pages.connexiondonnées');
-    }
 }
