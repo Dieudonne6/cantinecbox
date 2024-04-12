@@ -5,9 +5,9 @@
     <div class="card-body">
       <h4 class="card-title">Toutes les classes</h4>
       <div class="form-group">
-        <select id="mySelect" class="js-example-basic-single w-100">
+        <select class="js-example-basic-single w-100">
           @foreach ($classe as $classes)
-            <option value="eleve/{{$classes->CODECLAS}}">{{$classes->CODECLAS}}</option>
+            <option value="{{$classes->CODECLAS}}"><a href="eleve/{{$classes->CODECLAS}}">{{$classes->CODECLAS}}</a></option>
           @endforeach
         </select>
       </div>
@@ -24,13 +24,13 @@
             </tr>
           </thead>
           <tbody>
-            @foreach ($eleve as $eleves)
+            @foreach ($filterEleves as $filterEleve)
               <tr>
                 <td>
-                  {{$eleves->CODECLAS}}
+                  {{$filterEleve->CODECLAS}}
                 </td>
                 <td>
-                  {{$eleves->NOM}} {{$eleves->PRENOM}}
+                  {{$filterEleve->NOM}} {{$filterEleve->PRENOM}}
                 </td>
               </tr>
             @endforeach
@@ -41,12 +41,3 @@
   </div>
 </div>
 @endsection
-<script>
-  $(document).ready(function() {
-    $('#mySelect').on('change', function() {
-      var url = $(this).val();
-      window.location.href = url;
-      console.log('lolo');
-    });
-  });
-  </script>

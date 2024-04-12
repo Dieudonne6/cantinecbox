@@ -47,8 +47,11 @@
   <!-- End plugin js for this page -->
   <!-- Custom js for this page-->
   <script src="{{asset('assets/js/file-upload.js')}}"></script>
+
   <script src="{{asset('assets/js/typeahead.js')}}"></script>
   <script src="{{asset('assets/js/select2.js')}}"></script>
+  <script src="{{asset('assets/js/jquery-3.2.1.min.js')}}"></script>
+
   <!-- End custom js for this page-->
 </body>
 
