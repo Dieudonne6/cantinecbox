@@ -7,7 +7,7 @@
       <div class="form-group">
         <select class="js-example-basic-single w-100">
           @foreach ($classe as $classes)
-            <option value="{{$classes->CODECLAS}}"><a href="eleve/{{$classes->CODECLAS}}">{{$classes->CODECLAS}}</a></option>
+            <option value="eleve/{{$classes->CODECLAS}}">{{$classes->CODECLAS}}</a></option>
           @endforeach
         </select>
       </div>
