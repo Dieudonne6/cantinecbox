@@ -13,13 +13,16 @@ class PagesController extends Controller
         return view('pages.inscription');
     }
 
+    public function paiement(){
+        return view('pages.paiement');
+    } 
+
     public function nouveaucontrat(){
         return view('pages.nouveaucontrat');
     }
 
-    public function paiement(){
-        return view('pages.paiement');
-    }
 
+  
 
+  
 }

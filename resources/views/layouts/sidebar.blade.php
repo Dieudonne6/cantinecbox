@@ -192,17 +192,19 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{{url('/inscription')}}">
+      <a class="nav-link" href="{{url('/connexiondonnées')}}">
         <i class="typcn typcn-mortar-board menu-icon"></i>
         <span class="menu-title">Inscription mensuelle</span>
       </a>
     </li>
     <li class="nav-item">
+
       <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
         <i class="typcn typcn-document-text menu-icon"></i>
         <span class="menu-title">Parametre</span>
         <i class="menu-arrow"></i>
-      </a>
+
+
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" href="#">Frais mensuel et <br>annee academique</a></li>
