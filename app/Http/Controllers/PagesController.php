@@ -18,4 +18,7 @@ class PagesController extends Controller
     public function classe(){
         return view('pages.classes');
     }
+    public function paiement(){
+        return view('pages.paiement');
+    }
 }
