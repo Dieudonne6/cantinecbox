@@ -19,4 +19,9 @@ class ClassesController extends Controller
         $filterEleves = Eleve::where('CODECLAS', $CODECLAS)->get();
         return view('pages.filterEleve')->with("filterEleve", $filterEleves)->with('classe', $classes);
     }
+
+
+ 
+
+
 }
