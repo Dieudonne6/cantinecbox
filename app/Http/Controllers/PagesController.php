@@ -25,5 +25,9 @@ class PagesController extends Controller
     public function frais(){
         return view('pages.frais');
     }
+
+    public function connexiondonnées(){
+        return view('pages.connexiondonnées');
+    }
   
 }
