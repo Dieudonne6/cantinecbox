@@ -20,7 +20,12 @@ class ClassesController extends Controller
         return view('pages.filterEleve')->with("filterEleve", $filterEleves)->with('classe', $classes);
     }
 
-
+    public function getElevesByClasse($CODECLAS) {
+        $elevess = Eleve::where('CODECLAS', $CODECLAS)->get();
+        
+        dd($elevess);// Récupérer les élèves de la classe sélectionnée en fonction de $codeClasse
+        return view('pages.partial')->with('elevess', $elevess);
+      }
  
 
 
