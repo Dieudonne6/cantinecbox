@@ -123,10 +123,13 @@
   color: #fff !important;
   font-size: 2rem !important;
 }
-.form-check .form-check-label {
+/* .form-check .form-check-label {
   min-height: 10px !important;
   font-size: 1rem !important;
   margin-bottom: .9rem !important;
+} */
+.modal .select2-container {
+  width: 100% !important;
 }
 @-moz-keyframes flash {
   0% {
