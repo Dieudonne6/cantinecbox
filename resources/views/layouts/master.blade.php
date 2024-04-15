@@ -52,6 +52,7 @@
   <script src="{{asset('assets/js/select2.js')}}"></script>
   <script src="{{asset('assets/js/jquery-3.2.1.min.js')}}"></script>
   
+  
 
   <!-- End custom js for this page-->
 
