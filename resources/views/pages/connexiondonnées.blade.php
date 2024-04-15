@@ -1,10 +1,11 @@
 @extends('layouts.master')
 @section('content')
 
-<div class="col-md-16 grid-margin stretch-card">
-  <div class="card">
+<div class="main-panel-16">        
+  <div class="content-wrapper">
+    <div class="row">
 
-<div class="col-md grid-margin stretch-card">
+<div class="col-md-6 grid-margin stretch-card">
   <div class="card">
     <div class="card-body">
       <h4 class="card-title" _msttexthash="323960" _msthash="106">Connexion Scodelux</h4>
@@ -81,9 +82,11 @@
     </div>
   </div>
 </div>
+
+    </div>
+  </div>
+</div>
 <button type="submit" class="btn btn-primary mr-2" _msttexthash="98280" _msthash="118">Enregistrer</button>
-</form>
-</div>
-</div>
+
 
 @endsection
