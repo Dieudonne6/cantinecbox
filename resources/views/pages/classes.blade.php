@@ -76,6 +76,16 @@
             <p class="card-description" style="color: black">
               Eleve
             </p>
+            <div class="form-group">
+              <label>Single select box using select 2</label>
+              <select class="js-example-basic-single w-100">
+                <option value="AL">Alabama</option>
+                <option value="WY">Wyoming</option>
+                <option value="AM">America</option>
+                <option value="CA">Canada</option>
+                <option value="RU">Russia</option>
+              </select>
+            </div>
             <div class="form-group w-100">
               <select class="js-example-basic-multiple w-100" multiple="multiple">
                 @foreach ($eleve as $eleves)
