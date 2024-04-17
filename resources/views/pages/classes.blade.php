@@ -79,16 +79,6 @@
               Eleve
             </p>
 
-            <div class="form-group">
-              <label>Single select box using select 2</label>
-              <select class="js-example-basic-single w-100">
-                <option value="AL">Alabama</option>
-                <option value="WY">Wyoming</option>
-                <option value="AM">America</option>
-                <option value="CA">Canada</option>
-                <option value="RU">Russia</option>
-              </select>
-            </div>
             <div class="form-group w-100">
               <select class="js-example-basic-multiple w-100" multiple="multiple">
                 @foreach ($eleve as $eleves)
@@ -108,12 +98,14 @@
                     <input class="typeahead w-100" type="date">
                   </div>
                 </div>
+
                 <div class="col">
                   <label>Montant</label>
                   <div id="bloodhound">
                     <input class="typeahead" type="text" placeholder="0">
                   </div>
                 </div>
+                
               </div>
             </div>
           </div>
