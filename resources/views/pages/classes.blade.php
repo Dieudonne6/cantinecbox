@@ -4,6 +4,7 @@
   <div class="card">
     <div class="card-body">
       <h4 class="card-title">Toutes les classes</h4>
+
       <div class="form-group row">
         <div class="col-3">
           <select class="js-example-basic-single w-100" onchange="window.location.href=this.value">
@@ -33,9 +34,10 @@
             Inscriptions mensuelles
           </button>
         </div>
+
       </div>
       <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table">
           <thead>
             <tr>
               <th>
@@ -46,18 +48,18 @@
               </th>
             </tr>
           </thead>
-          <tbody>
-            @foreach ($eleve as $eleves)
-              <tr>
-                <td>
-                  {{$eleves->CODECLAS}}
-                </td>
-                <td>
-                  {{$eleves->NOM}} {{$eleves->PRENOM}}
-                </td>
-              </tr>
+          <tbody id="eleve-details">
+            @foreach ($eleve as $index => $eleves)
+                <tr class="eleve" data-id="{{ $eleves->id }}" data-nom="{{ $eleves->NOM }}" data-prenom="{{ $eleves->PRENOM }}" data-codeclas="{{ $eleves->CODECLAS }}">
+                    <td>
+                        {{$eleves->CODECLAS}}
+                    </td>
+                    <td>
+                        {{$eleves->NOM}} {{$eleves->PRENOM}}
+                    </td>
+                </tr>
             @endforeach
-          </tbody>
+        </tbody>
         </table>
       </div>
     </div>
@@ -78,6 +80,16 @@
             </p>
 
             <div class="form-group">
+              <label>Single select box using select 2</label>
+              <select class="js-example-basic-single w-100">
+                <option value="AL">Alabama</option>
+                <option value="WY">Wyoming</option>
+                <option value="AM">America</option>
+                <option value="CA">Canada</option>
+                <option value="RU">Russia</option>
+              </select>
+            </div>
+            <div class="form-group w-100">
               <select class="js-example-basic-multiple w-100" multiple="multiple">
                 @foreach ($eleve as $eleves)
                   <option value="{{$eleves->NOM}} {{$eleves->PRENOM}}">{{$eleves->NOM}} {{$eleves->PRENOM}}</option>
@@ -287,3 +299,26 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 @endsection
+
+{{-- @push('scripts')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#select-classe').on('change', function() {
+      var classeCode = $(this).val();
+      if (classeCode) {
+        $.ajax({
+          url: '/eleve/'+classeCode,
+          type: 'GET',
+          success: function(data) {
+            $('#eleve-details').html(data);
+          }
+        });
+      } else {
+        $('#eleve-details').html('');
+      }
+      return false; // Empêcher la soumission du formulaire
+    });
+  });
+</script>
+@endpush --}}

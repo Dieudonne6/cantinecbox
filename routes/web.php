@@ -24,9 +24,14 @@ Route::get('/paiement', [PagesController::class, 'paiement']);
 
 Route::get('/', [ClassesController::class, 'classe']);
 Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
+// Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'getElevesByClasse']);
 
+// Route::get('/eleve/{CODECLAS}', 'EleveController@getElevesByClasse');
+Route::post('/traiter', [ClassesController::class, 'traiter']);
 
 
 Route::get('/connexiondonnées', [PagesController::class, 'connexiondonnées']);
 
 Route::get('/frais', [PagesController::class, 'frais']);
+Route::post('/nouveaufrais', [PagesController::class, 'fraisnouveau']);
+Route::post('/modifierfrais', [PagesController::class, 'modifierfrais']);
