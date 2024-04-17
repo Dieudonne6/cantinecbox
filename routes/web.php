@@ -23,10 +23,11 @@ Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
 
 Route::get('/', [ClassesController::class, 'classe']);
-// Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
-Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'getElevesByClasse']);
+Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
+// Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'getElevesByClasse']);
 
 // Route::get('/eleve/{CODECLAS}', 'EleveController@getElevesByClasse');
+Route::post('/traiter', [ClassesController::class, 'traiter']);
 
 
 Route::get('/connexiondonnées', [PagesController::class, 'connexiondonnées']);

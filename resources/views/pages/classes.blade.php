@@ -34,10 +34,10 @@
             Inscriptions mensuelles
           </button>
         </div>
-        
+
       </div>
       <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table">
           <thead>
             <tr>
               <th>
@@ -49,17 +49,17 @@
             </tr>
           </thead>
           <tbody id="eleve-details">
-            @foreach ($eleve as $eleves)
-              <tr>
-                <td>
-                  {{$eleves->CODECLAS}}
-                </td>
-                <td>
-                  {{$eleves->NOM}} {{$eleves->PRENOM}}
-                </td>
-              </tr>
+            @foreach ($eleve as $index => $eleves)
+                <tr class="eleve" data-id="{{ $eleves->id }}" data-nom="{{ $eleves->NOM }}" data-prenom="{{ $eleves->PRENOM }}" data-codeclas="{{ $eleves->CODECLAS }}">
+                    <td>
+                        {{$eleves->CODECLAS}}
+                    </td>
+                    <td>
+                        {{$eleves->NOM}} {{$eleves->PRENOM}}
+                    </td>
+                </tr>
             @endforeach
-          </tbody>
+        </tbody>
         </table>
       </div>
     </div>
@@ -299,7 +299,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 @endsection
 
-@push('scripts')
+{{-- @push('scripts')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
   $(document).ready(function() {
@@ -320,4 +320,4 @@
     });
   });
 </script>
-@endpush
+@endpush --}}
