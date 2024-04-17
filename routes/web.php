@@ -30,3 +30,5 @@ Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
 Route::get('/connexiondonnées', [PagesController::class, 'connexiondonnées']);
 
 Route::get('/frais', [PagesController::class, 'frais']);
+Route::post('/nouveaufrais', [PagesController::class, 'fraisnouveau']);
+Route::post('/modifierfrais', [PagesController::class, 'modifierfrais']);

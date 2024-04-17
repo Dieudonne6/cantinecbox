@@ -3,84 +3,137 @@
 
 <div class="main-panel-16">        
   <div class="content-wrapper">
-    <div class="row">
-
-<div class="col-md-6 grid-margin stretch-card">
-  <div class="card">
-    <div class="card-body">
-      <h4 class="card-title" _msttexthash="323960" _msthash="106">Année académique</h4>
-      <form class="forms-sample">
-      
-        <div class="form-group row">
-          <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="exampleInputUserannée" placeholder="2024" _mstplaceholder="117572" _msthash="115">
+    @if(Session::has('status'))
+      <div class="alert alert-succes">
+      {{ Session::get('status')}}
+      </div>
+    @endif
+    @if($param)
+      <form action="{{url('modifierfrais')}}" method="POST">
+        {{csrf_field()}}
+        <input type="hidden" value="{{$param->id_paramcontrat}}" name="id_paramcontrat">
+        <div class="row">
+          <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title" _msttexthash="323960" _msthash="106">Année académique </h4>
+                <div class="form-group row">
+                  <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
+                  <div class="col-sm-9">
+                    <input type="text" name="anneencours_paramcontrat" class="form-control" id="exampleInputUserannée"  value="{{$param->anneencours_paramcontrat}}" _mstplaceholder="117572" _msthash="115">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-      </form>
-    </div>
-  </div>
-</div>
-
-<div class="col-md-6 grid-margin stretch-card">
-  <div class="card">
-    <div class="card-body">
-      <h4 class="card-title" _msttexthash="323960" _msthash="106">Frais d'inscriptions</h4>
-      <form class="forms-sample">
-      
-        <div class="form-group row">
-          <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="exampleInputUserannée" placeholder="2024" _mstplaceholder="117572" _msthash="115">
+          <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title" _msttexthash="323960" _msthash="106">Frais d'inscriptions</h4>      
+                <div class="form-group row">
+                  <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
+                  <div class="col-sm-9">
+                    <input type="text" name="fraisinscription_paramcontrat" value="{{$param->fraisinscription_paramcontrat}}" class="form-control" id="exampleInputUserannée" placeholder="2024" _mstplaceholder="117572" _msthash="115">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-      </form>
-    </div>
-  </div>
-</div>
-
-<div class="col-md-6 grid-margin stretch-card">
-  <div class="card">
-    <div class="card-body">
-      <h4 class="card-title" _msttexthash="323960" _msthash="106">Frais mensuel Maternel</h4>
-      <form class="forms-sample">
-      
-        <div class="form-group row">
-          <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="exampleInputUserannée" placeholder="2024" _mstplaceholder="117572" _msthash="115">
+          <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title" _msttexthash="323960" _msthash="106">Frais mensuel Maternel</h4>      
+                <div class="form-group row">
+                  <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
+                  <div class="col-sm-9">
+                    <input type="text" name="fraisinscription2_paramcontrat" value="{{$param->fraisinscription2_paramcontrat}}"  class="form-control" id="exampleInputUserannée"  _mstplaceholder="117572" _msthash="115">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-
-      </form>
-    </div>
-  </div>
-</div>
-
-<div class="col-md-6 grid-margin stretch-card">
-  <div class="card">
-    <div class="card-body">
-      <h4 class="card-title" _msttexthash="323960" _msthash="106">Frais mensuel Primaire</h4>
-      <form class="forms-sample">
-      
-        <div class="form-group row">
-          <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
-          <div class="col-sm-9">
-            <input type="text" class="form-control " id="exampleInputUserannée" placeholder="2024" _mstplaceholder="117572" _msthash="115">
+          <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title" _msttexthash="323960" _msthash="106">Frais mensuel Primaire</h4>      
+                  <div class="form-group row">
+                    <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
+                    <div class="col-sm-9">
+                      <input type="text" name="coutmensuel_paramcontrat" class="form-control" value="{{$param->coutmensuel_paramcontrat}}"  id="exampleInputUserannée" _mstplaceholder="117572" _msthash="115">
+                    </div>
+                  </div>
+              </div>
+            </div>
           </div>
+          <button type="submit" class="btn btn-primary w-100" _msttexthash="98280" _msthash="118">Modifier</button>
         </div>
-
       </form>
-    </div>
-  </div>
-</div>
+    @else
+      <form action="{{url('nouveaufrais')}}" method="POST">
+        {{csrf_field()}}
+        <div class="row">
+          <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title" _msttexthash="323960" _msthash="106">Année académique</h4>
+                <div class="form-group row">
+                  <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
+                  <div class="col-sm-9">
+                    <input type="text" name="anneencours_paramcontrat" class="form-control" id="exampleInputUserannée" placeholder="2024" _mstplaceholder="117572" _msthash="115">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-    </div>
+          <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title" _msttexthash="323960" _msthash="106">Frais d'inscriptions</h4>      
+                <div class="form-group row">
+                  <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
+                  <div class="col-sm-9">
+                    <input type="text" name="fraisinscription_paramcontrat" class="form-control" id="exampleInputUserannée" placeholder="2024" _mstplaceholder="117572" _msthash="115">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title" _msttexthash="323960" _msthash="106">Frais mensuel Maternel</h4>      
+                <div class="form-group row">
+                  <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
+                  <div class="col-sm-9">
+                    <input type="text" name="fraisinscription2_paramcontrat" class="form-control" id="exampleInputUserannée" placeholder="2024" _mstplaceholder="117572" _msthash="115">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title" _msttexthash="323960" _msthash="106">Frais mensuel Primaire</h4>      
+                  <div class="form-group row">
+                    <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
+                    <div class="col-sm-9">
+                      <input type="text" name="coutmensuel_paramcontrat" class="form-control" id="exampleInputUserannée" placeholder="2024" _mstplaceholder="117572" _msthash="115">
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100" _msttexthash="98280" _msthash="118">Enregistrer</button>
+        </div>
+      </form>
+    @endif
   </div>
 </div>
-<button type="submit" class="btn btn-primary mr-2" _msttexthash="98280" _msthash="118">Enregistrer</button>
 
 
 @endsection
