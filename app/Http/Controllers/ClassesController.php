@@ -16,11 +16,13 @@ class ClassesController extends Controller
     public function filterEleve($CODECLAS){
 
         $eleves = Eleve::get();
+
+
         $classes = Classes::get();
         $filterEleves = Eleve::where('CODECLAS', $CODECLAS)->get();
         return view('pages.filterEleve')->with("filterEleve", $filterEleves)->with('classe', $classes)->with('eleve', $eleves);
     }
-
+   
 
     public function traiter(Request $request)
     {
