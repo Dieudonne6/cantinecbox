@@ -69,27 +69,27 @@
         $('.eleve').removeClass('selected');
         // Ajouter la classe 'selected' à la ligne d'élève cliquée
         $(this).addClass('selected');
-        
         // Récupérer les informations de l'élève sélectionné
         // var eleveId = $(this).data('id');
         var eleveNom = $(this).data('nom');
         var elevePrenom = $(this).data('prenom');
         var eleveCodeClas = $(this).data('codeclas');
-
         $.ajax({
             url: '/traiter',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': csrfToken
             },
-            data: {
-              eleveNom: eleveNom
-            },
+           
+            data: JSON.stringify({ eleveNom: eleveNom }), // Encapsuler les données dans un objet JSON
+    contentType: 'application/json',
             success: function(response) {
+              console.log('Réponse du serveur : ', response);
                 console.log('Les informations de l\'élève ont été envoyées avec succès.');
             },
             error: function(xhr, status, error) {
                 console.error('Une erreur s\'est produite lors de l\'envoi des informations de l\'élève : ' + error);
+                console.log(xhr);
             }
         });
         

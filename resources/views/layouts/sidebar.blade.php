@@ -173,30 +173,7 @@
         <span class="menu-title">Toutes les classes</span>
       </a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{{url('/nouveaucontrat')}}">
-        <i class="typcn typcn-document-text menu-icon"></i>
-        <span class="menu-title">Nouveau</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="../../index.html">
-        <i class="typcn typcn-mortar-board menu-icon"></i>
-        <span class="menu-title">Suspendre</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{{url('/paiement')}}">
-        <i class="typcn typcn-mortar-board menu-icon"></i>
-        <span class="menu-title">Paiement</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{{url('/inscription')}}">
-        <i class="typcn typcn-mortar-board menu-icon"></i>
-        <span class="menu-title">Inscription mensuelle</span>
-      </a>
-    </li>
+    
     <li class="nav-item">
 
       <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
