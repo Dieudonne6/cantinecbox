@@ -97,12 +97,14 @@
                     <input class="typeahead w-100" type="date">
                   </div>
                 </div>
+
                 <div class="col">
                   <label>Montant</label>
                   <div id="bloodhound">
                     <input class="typeahead" type="text" placeholder="0">
                   </div>
                 </div>
+                
               </div>
             </div>
           </div>
