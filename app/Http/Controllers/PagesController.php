@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Eleve;
 use App\Models\Moiscontrat;
 use App\Models\Paramcontrat;
+use App\Models\Contrat;
 
 class PagesController extends Controller
 {
