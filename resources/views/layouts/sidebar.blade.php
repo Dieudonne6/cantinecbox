@@ -165,49 +165,170 @@
     <!-- chat tab ends -->
   </div>
 </div>
+
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
+
     <li class="nav-item">
-      <a class="nav-link" href="{{url('/')}}">
+      <a class="nav-link" href="{{url('/dashbord')}}">
         <i class="typcn typcn-device-desktop menu-icon"></i>
-        <span class="menu-title">Toutes les classes</span>
+        <span class="menu-title">Tableau de bord</span>
       </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+        <i class="typcn typcn-document-text menu-icon"></i>
+        <span class="menu-title">Inscription</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-basic">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Dropdowns</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>
+        </ul>
+      </div>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
+        <i class="typcn typcn-film menu-icon"></i>
+        <span class="menu-title">Gestion des notes</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="form-elements">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Basic Elements</a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+        <i class="typcn typcn-chart-pie-outline menu-icon"></i>
+        <span class="menu-title">Examen Blanc</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="charts">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">ChartJs</a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
+        <i class="typcn typcn-th-small-outline menu-icon"></i>
+        <span class="menu-title">Ressource humaine</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="tables">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Basic table</a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
+        <i class="typcn typcn-compass menu-icon"></i>
+        <span class="menu-title">Comptabilité & Budget</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="icons">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Mdi icons</a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+        <i class="typcn typcn-user-add-outline menu-icon"></i>
+        <span class="menu-title">Ressource matérielles</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="auth">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
+        <i class="typcn typcn-globe-outline menu-icon"></i>
+        <span class="menu-title">Communication</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="error">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
+        <i class="typcn typcn-globe-outline menu-icon"></i>
+        <span class="menu-title">Administration</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="error">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
+        <i class="typcn typcn-globe-outline menu-icon"></i>
+        <span class="menu-title">Paramètre</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="error">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
+        </ul>
+      </div>
     </li>
     
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
         <i class="typcn typcn-document-text menu-icon"></i>
-        <span class="menu-title">Parametre</span>
+        <span class="menu-title">Cantine</span>
         <i class="menu-arrow"></i>
       </a>
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>annee academique</a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnées')}}">conexion a la<br>base de donnee</a></li>
+
+          <li class="nav-item"> <a class="nav-link" href="{{url('/')}}">Toutes les classes</a></li>
+
+          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Paramètre</a></li>
+          <div class="collapse" id="ui-basic">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>annee academique</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnées')}}">conexion a la<br>base de donnee</a></li>
+            </ul>
+          </div>
+
+          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Etat</a></li>
+          <div class="collapse" id="ui-basics">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="#">Etat des paiements</a></li>
+              <li class="nav-item"> <a class="nav-link" href="#">Etat des droits<br>constates</a></li>
+              <li class="nav-item"> <a class="nav-link" href="#">lettre de relance</a></li>
+            </ul>
+          </div>
         </ul>
       </div>
     </li>
 
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#ui-basics" aria-expanded="false" aria-controls="ui-basic">
-        <i class="typcn typcn-document-text menu-icon"></i>
-        <span class="menu-title">Etat</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="ui-basics">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="#">Etat des paiements</a></li>
-          <li class="nav-item"> <a class="nav-link" href="#">Etat des droits<br>constates</a></li>
-          <li class="nav-item"> <a class="nav-link" href="#">lettre de relance</a></li>
-        </ul>
-      </div>
-    </li>
-
-    {{-- <li class="nav-item">
-      <a class="nav-link" href="../../index.html">
-        <i class="typcn typcn-device-desktop menu-icon"></i>
-        <span class="menu-title">Etat</span>
-      </a>
-    </li> --}}
   </ul>
 </nav>

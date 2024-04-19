@@ -49,4 +49,8 @@ class PagesController extends Controller
 
     }
   
+    public function dashbord(){
+        return view('pages.dashbord');
+
+    }
 }
