@@ -179,7 +179,7 @@
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
         <i class="typcn typcn-document-text menu-icon"></i>
-        <span class="menu-title">Inscription</span>
+        <span class="menu-title">Inscriptions & disciplines</span>
         <i class="menu-arrow"></i>
       </a>
       <div class="collapse" id="ui-basic">
@@ -238,7 +238,25 @@
       </a>
       <div class="collapse" id="icons">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Mdi icons</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Paramètrage</a></li>
+          <div class="collapse" id="icons">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Table des chapitres</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Table des compres</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">table des banques</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Table des partenaitres</a></li>
+            </ul>
+          </div>
+          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Exécution</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Op. Bancaire</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Valider le brouillard</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Mise en place</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Décision nominatives</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Suivi des opérations par compte</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Editions</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Exporter</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Verouillage</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Cloture de mois</a></li>
         </ul>
       </div>
     </li>
@@ -251,8 +269,17 @@
       </a>
       <div class="collapse" id="auth">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Configuration des Matières </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Configuration des Denrées </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Entrée de stock </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Sortie de stock </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> PV de Réception </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Affectations </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Suivi </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Etat d'inventaire </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Editions </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Réservations Salles </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Occupation Salles </a></li>
         </ul>
       </div>
     </li>
@@ -265,8 +292,8 @@
       </a>
       <div class="collapse" id="error">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> Dialogue par SMS </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> WebScolaire </a></li>
         </ul>
       </div>
     </li>
@@ -279,8 +306,11 @@
       </a>
       <div class="collapse" id="error">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html">Profils des utilisateurs </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> Connexion... </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> Erreur Date </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> Gestion des clés </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> Bricoles</a></li>
         </ul>
       </div>
     </li>
@@ -293,8 +323,20 @@
       </a>
       <div class="collapse" id="error">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
+          <li class="nav-item"> <a class="nav-link" href="#"> Table des paramètres </a></li>
+          <li class="nav-item"> <a class="nav-link" href="#"> Modifier les bornes de l'exercice </a></li>
+          <li class="nav-item"> <a class="nav-link" href="#"> Op. Ouverture </a></li>
+          <div class="collapse" id="error">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="#"> Passer en classe supérieure </a></li>
+              <li class="nav-item"> <a class="nav-link" href="#"> Reinitialiser les classes </a></li>
+              <li class="nav-item"> <a class="nav-link" href="#"> Supprimer les sans classe </a></li>
+              <li class="nav-item"> <a class="nav-link" href="#"> Cloturer l'année </a></li>
+              <li class="nav-item"> <a class="nav-link" href="#"> Changement de trimestre </a></li>
+            </ul>
+          </div>
+          <li class="nav-item"> <a class="nav-link" href="#"> Configurer Imprimante </a></li>
+          <li class="nav-item"> <a class="nav-link" href="#"> Changement de trimestre </a></li>
         </ul>
       </div>
     </li>
