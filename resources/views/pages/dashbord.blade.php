@@ -68,13 +68,38 @@
           <div class="col-md-6 col-xl-4 grid-margin stretch-card">
             <div class="card">
               <div class="card-body border-bottom">
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
-                  <h6 class="mb-2 mb-md-0 text-uppercase font-weight-medium">Recouvrements</h6>
-                  <div class="dropdown">
-                    <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Rentabilité
+                <div class="dropdown d-flex justify-content-center align-items-center flex-wrap">
+                    <button class="btn btn-light dropdown-toggle" style="display: flex; justify-content: center; align-items: center; height:;"
+                     type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h6>Budgétaire</h6>
                     </button>
-                  </div>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4">
+                      <h6 class="dropdown-header">Settings</h6>
+                      <a class="dropdown-item" href="javascript:;">Action</a>
+                      <a class="dropdown-item" href="javascript:;">Another action</a>
+                      <a class="dropdown-item" href="javascript:;">Something else here</a>
+                      <a class="dropdown-item" href="javascript:;">Separated link</a>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-xl-4 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body border-bottom">
+                <div style="display: flex; justify-content: center; align-items: center; height:;">
+                    <button class="btn btn-light">Rentabilité</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-xl-4 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body border-bottom">
+                <div class="d-flex justify-content-between align-items-center flex-wrap"> 
+                  <a class="btn btn-light " data-toggle="button">Historique des suppressions et paiements</a>    
                 </div>
               </div>
             </div>
@@ -84,19 +109,7 @@
             <div class="card">
               <div class="card-body border-bottom">
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
-                  <h6 class="mb-2 mb-md-0 text-uppercase font-weight-medium">Recouvrements</h6>
-                  <div class="dropdown">
-                    <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Last 7 days
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4">
-                      <h6 class="dropdown-header">Settings</h6>
-                      <a class="dropdown-item" href="javascript:;">Action</a>
-                      <a class="dropdown-item" href="javascript:;">Another action</a>
-                      <a class="dropdown-item" href="javascript:;">Something else here</a>
-                      <a class="dropdown-item" href="javascript:;">Separated link</a>
-                    </div>
-                  </div>
+                    <a class="btn btn-light " data-toggle="button">Historique des modifications de paiements</a>
                 </div>
               </div>
             </div>
@@ -106,19 +119,7 @@
             <div class="card">
               <div class="card-body border-bottom">
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
-                  <h6 class="mb-2 mb-md-0 text-uppercase font-weight-medium">Recouvrements</h6>
-                  <div class="dropdown">
-                    <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Last 7 days
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4">
-                      <h6 class="dropdown-header">Settings</h6>
-                      <a class="dropdown-item" href="javascript:;">Action</a>
-                      <a class="dropdown-item" href="javascript:;">Another action</a>
-                      <a class="dropdown-item" href="javascript:;">Something else here</a>
-                      <a class="dropdown-item" href="javascript:;">Separated link</a>
-                    </div>
-                  </div>
+                  <a class="btn btn-light " data-toggle="button">Historique des suppressions d'élèves</a>
                 </div>
               </div>
             </div>
@@ -128,63 +129,7 @@
             <div class="card">
               <div class="card-body border-bottom">
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
-                  <h6 class="mb-2 mb-md-0 text-uppercase font-weight-medium">Recouvrements</h6>
-                  <div class="dropdown">
-                    <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Last 7 days
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4">
-                      <h6 class="dropdown-header">Settings</h6>
-                      <a class="dropdown-item" href="javascript:;">Action</a>
-                      <a class="dropdown-item" href="javascript:;">Another action</a>
-                      <a class="dropdown-item" href="javascript:;">Something else here</a>
-                      <a class="dropdown-item" href="javascript:;">Separated link</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-4 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body border-bottom">
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
-                  <h6 class="mb-2 mb-md-0 text-uppercase font-weight-medium">Recouvrements</h6>
-                  <div class="dropdown">
-                    <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Last 7 days
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4">
-                      <h6 class="dropdown-header">Settings</h6>
-                      <a class="dropdown-item" href="javascript:;">Action</a>
-                      <a class="dropdown-item" href="javascript:;">Another action</a>
-                      <a class="dropdown-item" href="javascript:;">Something else here</a>
-                      <a class="dropdown-item" href="javascript:;">Separated link</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-4 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body border-bottom">
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
-                  <h6 class="mb-2 mb-md-0 text-uppercase font-weight-medium">Recouvrements</h6>
-                  <div class="dropdown">
-                    <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Last 7 days
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4">
-                      <h6 class="dropdown-header">Settings</h6>
-                      <a class="dropdown-item" href="javascript:;">Action</a>
-                      <a class="dropdown-item" href="javascript:;">Another action</a>
-                      <a class="dropdown-item" href="javascript:;">Something else here</a>
-                      <a class="dropdown-item" href="javascript:;">Separated link</a>
-                    </div>
-                  </div>
+                    <a class="btn btn-light" data-toggle="button">Historique des modifications de profiles</a>
                 </div>
               </div>
             </div>

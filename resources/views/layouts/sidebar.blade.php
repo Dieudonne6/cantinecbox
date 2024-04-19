@@ -248,6 +248,12 @@
             </ul>
           </div>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Exécution</a></li>
+          <div class="collapse" id="icons">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Enregistrement des écritures</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">eregistrement linéaire</a></li>
+            </ul>
+          </div>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Op. Bancaire</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Valider le brouillard</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Mise en place</a></li>
