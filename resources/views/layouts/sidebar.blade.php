@@ -199,7 +199,68 @@
       </a>
       <div class="collapse" id="form-elements">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Basic Elements</a></li>
+          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Paramètres</a></li>
+          <div class="collapse" id="form-elements">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Répartition des classes par opérateur</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Table des matiètes</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Table des coefficients</a></li>
+            </ul>
+          </div>
+          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Manipulation des notes</a></li>
+          <div class="collapse" id="form-elements">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Saisir et mises à jour des notes</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Enrégistrer Résultats des examens</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Vérifier les notes</a></li>
+            </ul>
+          </div>
+
+          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Sécurité</a></li>
+          <div class="collapse" id="form-elements">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Vérouillage</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Dévérouillage</a></li>
+            </ul>
+          </div>
+
+          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Edition</a></li>
+          <div class="collapse" id="form-elements">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Tableau de notes</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Buletin de notes</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Attestations de mérite</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Editions</a></li>
+                <div class="collapse" id="form-elements">
+                  <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Fiches de notes vierge</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Relevés par matière</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Relevés par élèves</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Récapitulatif de notes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Tableau analytique par matière</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Résultats par promotion</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Liste des méritant</a></li>
+                  </ul>
+                </div>
+            </ul>
+          </div>
+
+          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Résultats</a></li>
+          <div class="collapse" id="form-elements">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Liste par ordre de mérite</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Tableau analytique</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Rapports annuels</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Livrets scolaire</a></li>
+            </ul>
+          </div>
+          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Extraction</a></li>
+          <div class="collapse" id="form-elements">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Exporter</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Importer</a></li>
+            </ul>
+          </div>
         </ul>
       </div>
     </li>
@@ -212,7 +273,15 @@
       </a>
       <div class="collapse" id="charts">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">ChartJs</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Confection des listes</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Anonymat</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Fiches de notes vierges</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Saisit des notes</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Calcul des moyennes</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Transfert des notes</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Tableau des notes</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Listes par ordre de mérite</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Relevés de notes</a></li>
         </ul>
       </div>
     </li>
@@ -225,7 +294,39 @@
       </a>
       <div class="collapse" id="tables">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Basic table</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Type agent</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Mise à jour du personnel</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Configurer</a></li>
+          <div class="collapse" id="tables">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Configuration des salles</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Config. quotas horaires</a></li>
+            </ul>
+          </div>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Emploi du temps automatique</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Saisir un emploi du temps</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Pointage des heures</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Pointage manuel</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Hors emploi du temps</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Heures sup.</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Rubriques salaire</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Créer Profils</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Taux horaires</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Avances sur salaires</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Buletins et états</a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Editions</a></li>
+          <div class="collapse" id="tables">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Liste des profs par matière</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Liste des profs par classes et par matière</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Liste des proffesseurs principaux</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Liste des nominative du personnel</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Etat d'effectif</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Volume horaire exécuté/prof</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Volume horaire exécuté par matière/classe</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Etat paiement IPTS & CNSS</a></li>
+            </ul>
+          </div>
         </ul>
       </div>
     </li>
@@ -251,7 +352,7 @@
           <div class="collapse" id="icons">
             <ul class="nav flex-column sub-menu">
               <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Enregistrement des écritures</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">eregistrement linéaire</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Enregistrement linéaire</a></li>
             </ul>
           </div>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Op. Bancaire</a></li>
@@ -260,8 +361,40 @@
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Décision nominatives</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Suivi des opérations par compte</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Editions</a></li>
+          <div class="collapse" id="icons">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Liste des comptes</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Liste des partenaires</a></li>
+
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Prévisions Budgétaires</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Edition Borderaux et relevés</a></li>
+
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Fiche de suivi des opérations par compte</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Fiche de suivi des comptes par mois</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Situation mensuelle des dépenses</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Suivi des comptes de recettes spécifiquues</a></li>
+
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Journaux</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Balances des comptes/Résultat</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Grand livre périodique des comptes</a></li>
+              
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Situation des finances de l'établissement</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Situation de la banque </a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Situation des finances mos par mois</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Situation des engagements</a></li>
+
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Compte rendu d'exécution du budget</a></li>
+              
+            </ul>
+          </div>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Exporter</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Verouillage</a></li>
+          <div class="collapse" id="icons">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Vérouillage</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Dévérouillage</a></li>
+            </ul>
+          </div>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Cloture de mois</a></li>
         </ul>
       </div>

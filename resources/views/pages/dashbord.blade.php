@@ -8,18 +8,16 @@
         <div class="col-xl-4 grid-margin stretch-card">
           <div class="card">
             <div class="card-body border-bottom">
-              <div class="d-flex justify-content-between align-items-center flex-wrap">
-                <h6 class="mb-2 mb-md-0 text-uppercase font-weight-medium">Effectifs</h6>
-                <div class="dropdown">
-                  <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Effectifs
-                  </button>
+              <div class="d-flex justify-content-center align-items-center flex-wrap">
+                <button class="btn btn-light dropdown-toggle" style="display: flex; justify-content: center; align-items: center; height:;"
+                    type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h6>Effectif</h6>
+                </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
                     <a class="dropdown-item" href="javascript:;">Evolution de l'éffectif sur 5 ans</a>
                     <a class="dropdown-item" href="javascript:;">Evolution de l'éffectif par promotion sur 5 ans</a>
                   </div>
                 </div>
-              </div>
             </div>    
           </div>
         </div>
@@ -27,19 +25,17 @@
         <div class="col-md-6 col-xl-4 grid-margin stretch-card">
           <div class="card">
             <div class="card-body border-bottom">
-              <div class="d-flex justify-content-between align-items-center flex-wrap">
-                <h6 class="mb-2 mb-md-0 text-uppercase font-weight-medium">Recouvrements</h6>
-                <div class="dropdown">
-                  <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Recouvrements
-                  </button>
+              <div class="d-flex justify-content-center align-items-center flex-wrap">
+                <button class="btn btn-light dropdown-toggle" style="display: flex; justify-content: center; align-items: center; height:;"
+                type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   <h6>Recouvrement</h6>
+               </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4">
                     <a class="dropdown-item" href="javascript:;">Tableau analytique des recouvrements mensuels</a>
                     <a class="dropdown-item" href="javascript:;">Comparaison taux de recouvrement</a>
                     <a class="dropdown-item" href="javascript:;">Comparaison chiffre d'affaire</a>
                   </div>
                 </div>
-              </div>
             </div>
           </div>
         </div>
@@ -47,11 +43,10 @@
         <div class="col-md-6 col-xl-4 grid-margin stretch-card">
             <div class="card">
               <div class="card-body border-bottom">
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
-                  <h6 class="mb-2 mb-md-0 text-uppercase font-weight-medium">Recouvrements</h6>
-                  <div class="dropdown">
-                    <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Académique
+                <div class="dropdown d-flex justify-content-center align-items-center flex-wrap">
+                    <button class="btn btn-light dropdown-toggle" style="display: flex; justify-content: center; align-items: center; height:;"
+                     type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h6>Académique</h6>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4">
                       <a class="dropdown-item" href="javascript:;">Taux de passage en classe supérieure</a>
@@ -59,7 +54,6 @@
                       <a class="dropdown-item" href="javascript:;">Taux d'exclusion</a>
                       <a class="dropdown-item" href="javascript:;">Evolution Taux de réussite par type d'examen</a>
                     </div>
-                  </div>
                 </div>
               </div>
             </div>
