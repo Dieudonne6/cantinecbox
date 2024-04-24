@@ -119,6 +119,12 @@
 .count-indicator {
   width: 100% !important;
 }
+.sidebar{
+  width: 300px !important;
+}
+.sidebar .navbar:not(.sub-menu){
+  margin-right: 0 !important;
+}
 .navbar .navbar-brand-wrapper .navbar-brand-inner-wrapper .navbar-brand {
   color: #fff !important;
   font-size: 2rem !important;
