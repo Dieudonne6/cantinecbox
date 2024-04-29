@@ -3,12 +3,18 @@
 
 <div class="main-panel-16">        
   <div class="content-wrapper">
-    <div class="row">
 
+    <div class="row">
 
 <div class="col-md grid-margin stretch-card">
   <div class="card">
     <div class="card-body">
+
+      @if(Session::has('status'))
+      <div class="alert alert-succes mb-4">
+      {{ Session::get('status')}}
+      </div>
+      @endif
       <h4 class="mb-5">Connexion à la base de donnée</h4>
       <form action="{{url('connexion')}}" method="POST">
         {{csrf_field()}}
