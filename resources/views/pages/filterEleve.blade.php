@@ -21,7 +21,7 @@
           Nouveau
         </button>
       </div>
-      <div class="col-2"> 
+      {{-- <div class="col-2"> 
         <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
           Suspendre
         </button>
@@ -30,7 +30,7 @@
         <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#examplePaiement">
           Paiement
         </button>
-      </div>
+      </div> --}}
       <div class="col-3">
         <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleInscrire">
           Inscriptions mensuelles
@@ -48,17 +48,32 @@
               <th>
                 Elève
               </th>
+              <th>
+                Action
+              </th>
             </tr>
           </thead>
           <tbody id="eleve-details">
-            @foreach ($filterEleve as $index => $filterEleve)
-                <tr class="eleve" data-id="{{ $filterEleve->id }}" data-nom="{{ $filterEleve->NOM }}" data-prenom="{{ $filterEleve->PRENOM }}" data-codeclas="{{ $filterEleve->CODECLAS }}">
+            @foreach ($filterEleve as $filterEleves)
+                <tr class="eleve" data-id="{{ $filterEleves->id }}" data-nom="{{ $filterEleves->NOM }}" data-prenom="{{ $filterEleves->PRENOM }}" data-codeclas="{{ $filterEleves->CODECLAS }}">
                     <td>
-                        {{$filterEleve->CODECLAS}}
+                        {{$filterEleves->CODECLAS}}
                     </td>
                     <td>
-                        {{$filterEleve->NOM}} {{$filterEleve->PRENOM}}
+                        {{$filterEleves->NOM}} {{$filterEleves->PRENOM}}
                     </td>
+                    <td>
+
+                      <a href='/paiementcontrat/{{$filterEleves->CODECLAS}}/{{$filterEleves->MATRICULE}}' class='btn btn-primary w-50'>Paiement</a>
+                      <a href='/admin/deletecashier/{{$filterEleves->MATRICULE}}' class='btn btn-danger w-50'>Suspendre</a>
+
+                      {{-- <button type="button" class="btn btn-primary w-50" data-bs-toggle="modal" data-bs-target="#examplePaiement">
+                        Paiement
+                      </button>
+                      <button type="button" class="btn btn-danger w-50" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Suspendre
+                      </button> --}}
+                  </td>
                 </tr>
             @endforeach
         </tbody>
@@ -66,7 +81,7 @@
       </div>
 
     </div>
-
+{{-- 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -126,8 +141,49 @@
             </div>
           </div>
         </div>
+      </div> --}}
+
+
+      {{-- @foreach ($cashiers as $cashier)
+          
+      <div class="modal fade" id="exampleModalUpdate{{$cashier->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edit Cashier Account</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="{{url('/admin/updatecashier')}}" method="POST">
+                @csrf
+                  <div class="form-group">
+                    <input type="hidden" name="id" value="{{$cashier->id}}">
+                    <input class="form-control w-75 mx-auto" type="email" name="email" required value="{{$cashier->email}}">
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control w-75 mx-auto" type="password" name="password" required value="{{$cashier->password}}" minlength="4">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" name="saveAccount" class="btn btn-primary">Update Account</button>
+                  </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="modal fade" id="examplePaiement" tabindex="-1" aria-labelledby="examplePaiementLabel" aria-hidden="true">
+    @endforeach --}}
+
+
+
+
+
+
+    @foreach ($filterEleve as  $filterEleves)
+
+      <div class="modal fade" id="examplePaiement{{$filterEleves->MATRICULE}}" tabindex="-1" aria-labelledby="examplePaiementLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -135,6 +191,8 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+              <form action="{{url('/paiementcontrat')}}" method="POST">
+                @csrf
                 <div class="col-md-12 mx-auto grid-margin stretch-card">
                   <div class="card">
                     <div class="card-body">
@@ -143,13 +201,14 @@
                         <div class="col">
                           <label>Date</label>
                           <div id="the-basics">
-                            <input class="typeahead" type="date" placeholder="States of USA">
+                            <input class="typeaheads" type="date" id="date" name="date" value="{{ date('Y-m-d') }}">
+
                           </div>
                         </div>
                         <div class="col">
                           <label>Montant Mensuel</label>
                           <div id="bloodhound">
-                            <input class="typeahead" type="text" placeholder="60090">
+                            <input class="typeaheads" type="text" placeholder="60090">
                           </div>
                         </div>
                       </div>
@@ -164,30 +223,7 @@
                         <div class="row">
                           <div class="col-md-6">
                             <div class="form-group">
-                              <div class="form-check">
-                                <label class="form-check-label">
-                                  <input type="checkbox" class="form-check-input">
-                                 Janvier
-                                </label>
-                              </div>
-                              <div class="form-check">
-                                <label class="form-check-label">
-                                  <input type="checkbox" class="form-check-input" checked>
-                                 Février
-                                </label>
-                              </div>
-                              <div class="form-check">
-                                <label class="form-check-label">
-                                  <input type="checkbox" class="form-check-input">
-                                 Mars
-                                </label>
-                              </div>
-                              <div class="form-check">
-                                <label class="form-check-label">
-                                  <input type="checkbox" class="form-check-input" checked>
-                                  Avril
-                                </label>
-                              </div>
+                         
                              
                            
                               <div class="form-check">
@@ -196,12 +232,7 @@
                                  Juillet
                                 </label>
                               </div>
-                              <div class="form-check">
-                                <label class="form-check-label">
-                                  <input type="checkbox" class="form-check-input">
-                                 Août
-                                </label>
-                              </div>
+ 
                             </div>
                           </div>
                         </div>
@@ -222,16 +253,27 @@
                     </div>
                   </div>
                 </div>
-              
-            </div>
+
+
+              </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-              <button type="button" class="btn btn-primary">Enregister</button>
+              <button type="submit" class="btn btn-primary">Enregister</button>
             </div>
+
+          </form>
+
           </div>
         </div>
       </div>
-      <div class="modal fade" id="exampleInscrire" tabindex="-1" aria-labelledby="exampleInscrireLabel" aria-hidden="true">
+
+      @endforeach
+
+
+
+
+
+      {{-- <div class="modal fade" id="exampleInscrire" tabindex="-1" aria-labelledby="exampleInscrireLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -297,6 +339,6 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> --}}
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 @endsection

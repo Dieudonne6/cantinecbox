@@ -23,16 +23,7 @@
             Nouveau
           </button>
         </div>
-        <div class="col-2"> 
-          <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Suspendre
-          </button>
-        </div>
-        <div class="col-2"> 
-          <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#examplePaiement">
-            Paiement
-          </button>
-        </div>
+
         <div class="col-3">
           <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleInscrire">
             Inscriptions mensuelles
@@ -50,6 +41,9 @@
               <th>
                 Elève
               </th>
+              <th>
+                Action
+              </th>
             </tr>
           </thead>
           <tbody id="eleve-details">
@@ -60,6 +54,10 @@
                     </td>
                     <td>
                         {{$eleves->NOM}} {{$eleves->PRENOM}}
+                    </td>
+                    <td>
+                      <a href='/paiementcontrat/{{$eleves->CODECLAS}}/{{$eleves->MATRICULE}}' class='btn btn-primary w-50'>Paiement</a>
+                      <a href='/admin/deletecashier/{{$eleves->MATRICULE}}' class='btn btn-danger w-50'>Suspendre</a>
                     </td>
                 </tr>
             @endforeach

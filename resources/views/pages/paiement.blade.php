@@ -15,13 +15,13 @@
               <div class="col">
                 <label>Date</label>
                 <div id="the-basics">
-                  <input class="typeahead" type="date" placeholder="States of USA">
+                  <input class="typeaheads" type="date" placeholder="States of USA">
                 </div>
               </div>
               <div class="col">
                 <label>Montant Mensuel</label>
                 <div id="bloodhound">
-                  <input class="typeahead" type="text" placeholder="60090">
+                  <input class="typeaheads" type="text" placeholder="60090">
                 </div>
               </div>
             </div>
