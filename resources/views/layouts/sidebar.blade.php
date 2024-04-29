@@ -183,11 +183,95 @@
         <i class="menu-arrow"></i>
       </a>
       <div class="collapse" id="ui-basic">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Dropdowns</a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>
-        </ul>
+         {{-- Acceuil --}}
+
+        <div class="dropdown">
+          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Acceuil </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton1" style="" _mstvisible="0" >
+            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Acceuil</a>
+            <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Photos</a>
+          </div>
+        </div>
+
+         {{-- Créations des classes --}}
+
+        <div class="dropdown">
+          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton2" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Créations des classes </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton2" style="" _mstvisible="0" >
+            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Types classes</a>
+            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Séries</a>
+            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Promotions</a>
+            <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Table des classes</a>
+            <a class="dropdown-item" href="#" _msttexthash="229879" _msthash="283" _mstvisible="1">Couper</a>
+          </div>
+        </div>
+  
+         {{-- Scolarité --}}
+        
+        <div class="dropdown">
+          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Scolarité </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="" _mstvisible="0" >
+            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Créer profils</a>
+            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Parametrage composantes</a>
+            <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Factures classes</a>
+            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Réductions collectives</a>
+            <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Paiement des <br> non inscrits</a>
+            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Duplicata</a>
+          </div>
+        </div>
+
+         {{-- Dicipline --}}
+
+        <div class="dropdown">
+          <button class="btn btn-light-lg" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Dicipline </button>
+        </div>
+        
+        {{-- Extraction de données --}}
+
+        <div class="dropdown">
+          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Extraction de données </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4" style="" _mstvisible="0" >
+            <a class="dropdown-item" href="#" _msttexthash="14" _msthash="14" _mstvisible="1">Transfert</a>
+            <a class="dropdown-item" href="#" _msttexthash="15" _msthash="15" _mstvisible="1">Exporter</a>
+            <a class="dropdown-item" href="#" _msttexthash="16" _msthash="16" _mstvisible="1">Importer</a>
+          </div>
+        </div>
+ 
+        {{-- Intégrité --}}
+
+        <div class="dropdown">
+          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton5" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Intégrité </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton5" style="" _mstvisible="0" >
+            <a class="dropdown-item" href="#" _msttexthash="18" _msthash="18" _mstvisible="1">Vérouillage</a>
+            <a class="dropdown-item" href="#" _msttexthash="19" _msthash="19" _mstvisible="1">Recalculer Effectifs</a>
+          </div>
+        </div>
+
+        {{-- Editions --}}
+
+        <div class="dropdown">
+          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Editions </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4" style="" _mstvisible="0" >
+            <a class="dropdown-item" href="#" _msttexthash="14" _msthash="14" _mstvisible="1">Liste par ordre <br> de mérite</a>
+            <a class="dropdown-item" href="#" _msttexthash="15" _msthash="15" _mstvisible="1">Tableau analytique</a>
+            <a class="dropdown-item" href="#" _msttexthash="16" _msthash="16" _mstvisible="1">Rapports annuels</a>
+            <a class="dropdown-item" href="#" _msttexthash="17" _msthash="17" _mstvisible="1">Livrets scolaire</a>
+          </div>
+        </div>
+ 
+        {{-- Archives --}}
+
+        <div class="dropdown">
+          <button class="btn btn-light-lg " type="button" id="dropdownMenuSizeButton5" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Archives </button>
+        </div>
       </div>
     </li>
     
@@ -496,11 +580,11 @@
       </div>
     </li>
  
-    {{-- Paramètre --}}
+    {{-- Paramètres --}}
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
         <i class="typcn typcn-globe-outline menu-icon"></i>
-        <span class="menu-title">Paramètre</span>
+        <span class="menu-title">Paramètres</span>
         <i class="menu-arrow"></i>
       </a>
       <div class="collapse" id="error">
@@ -524,6 +608,10 @@
 
           <li class="nav-item"> <a class="nav-link" href="#"> Configurer Imprimante </a></li>
           <li class="nav-item"> <a class="nav-link" href="#"> Changement de trimestre </a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnées')}}">Connexion à la<br>base de donnée </a></li>
+
+
         </ul>
       </div>
     </li>
@@ -538,16 +626,6 @@
         <ul class="nav flex-column sub-menu">
 
           <li class="nav-item"> <a class="nav-link" href="{{url('/')}}">Toutes les classes</a></li>
-          <div class="dropdown">
-            <li class="nav-item">
-             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
-             aria-haspopup="true" aria-expanded="false"> Paramètre </button>
-             <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton1" style="max-height: 200px ; overflow-y: auto;" >
-               <a class="dropdown-item"  href="{{url('/frais')}}">Frais mensuel et <br>année academique</a>
-               <a class="dropdown-item" href="{{url('/connexiondonnées')}}">Connexion à la<br>base de donnée</a>
-             </div>
-            </li>
-           </div>
 
         </ul>
       </div>

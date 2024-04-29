@@ -54,4 +54,34 @@ class PagesController extends Controller
         return view('pages.dashbord');
 
     }
+
+    public function statistique(){
+        return view('pages.tableaudebord.statistique');
+
+    }
+
+    public function recouvrementsM(){
+        return view('pages.tableaudebord.recouvrementsM');
+
+    }
+
+    public function hsuppression(){
+        return view('pages.tableaudebord.hsuppression');
+
+    }
+
+    public function changetrimestre(){
+        return view('pages.parametre.changetrimestre');
+
+    }
+
+    public function confimpression(){
+        return view('pages.parametre.confimpression');
+
+    }
+
+    public function Acceuil(){
+        return view('pages.inscriptions.Acceuil');
+
+    }
 }
