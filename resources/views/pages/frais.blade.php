@@ -9,8 +9,9 @@
       </div>
     @endif
     @if($param)
-      <form action="{{url('modifierfrais')}}" method="POST">
+      <form action="{{url('modifierfrais/'.$param->id_paramcontrat)}}" method="POST">
         {{csrf_field()}}
+        @method('PUT')
         <input type="hidden" value="{{$param->id_paramcontrat}}" name="id_paramcontrat">
         <div class="row">
           <div class="col-md-6 grid-margin stretch-card">

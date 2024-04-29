@@ -4,7 +4,11 @@
   <div class="card">
     <div class="card-body">
       <h4 class="card-title">Toutes les classes</h4>
-
+      @if(Session::has('status'))
+      <div class="alert alert-succes">
+      {{ Session::get('status')}}
+      </div>
+      @endif
       <div class="form-group row">
         <div class="col-3">
           <select class="js-example-basic-single w-100" onchange="window.location.href=this.value">
@@ -63,6 +67,7 @@
     </div>
   </div>
 </div>
+
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -70,21 +75,24 @@
         <h4 class="modal-title fs-3" id="exampleModalLabel">Nouveau contrat</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <form method="POST" action="{{url('creercontrat')}}">
+
       <div class="modal-body">
         <div class="card">
+            {{csrf_field()}}
           <div class="card-body">
             <p class="card-description" style="color: black">
-              Eleve
+              Eleve 
             </p>
+              <div class="form-group w-100">
+                @csrf
+                <select class="js-example-basic-multiple w-100" multiple="multiple" name="matricules[]">
+                  @foreach ($eleve as $eleves)
+                    <option value="{{$eleves->MATRICULE}}">{{$eleves->NOM}} {{$eleves->PRENOM}}</option>
+                  @endforeach
+                </select>
+              </div>
 
-            <div class="form-group w-100">
-              <select class="js-example-basic-multiple w-100" multiple="multiple">
-                @foreach ($eleve as $eleves)
-                  <option value="{{$eleves->NOM}} {{$eleves->PRENOM}}">{{$eleves->NOM}} {{$eleves->PRENOM}}</option>
-                @endforeach
-              </select>
-            </div>
-            
             <div class="form-group">
               <p class="card-description">
                 Info de l'inscriptions
@@ -93,17 +101,16 @@
                 <div class="col">
                   <label>Date</label>
                   <div id="the-basics">
-                    <input class="typeahead w-100" type="date">
+                    <input class="typeahead w-100" type="date"  name="date">
                   </div>
                 </div>
 
                 <div class="col">
                   <label>Montant</label>
                   <div id="bloodhound">
-                    <input class="typeahead" type="text" placeholder="0">
+                    <input class="typeahead" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_paramcontrat}}">
                   </div>
                 </div>
-                
               </div>
             </div>
           </div>
@@ -111,8 +118,9 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <button type="button" class="btn btn-primary">Enregister</button>
+        <button type="submit" class="btn btn-primary">Enregister</button>
       </div>
+    </form>
     </div>
   </div>
 </div>
