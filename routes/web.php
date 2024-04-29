@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
 
 use App\Http\Controllers\ClassesController;
+use App\Http\Controllers\ConnexionDBController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,17 +23,23 @@ Route::get('/inscription', [PagesController::class, 'inscription']);
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
 
-Route::get('/', [ClassesController::class, 'classe']);
+Route::get('/classes', [ClassesController::class, 'classe']);
+Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees']);
+Route::get('/', [PagesController::class, 'connexion']);
+
 Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
 // Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'getElevesByClasse']);
 
 // Route::get('/eleve/{CODECLAS}', 'EleveController@getElevesByClasse');
 Route::post('/traiter', [ClassesController::class, 'traiter']);
 
+Route::post('/creercontrat', [ClassesController::class, 'creercontrat']);
 
-Route::get('/connexiondonnées', [PagesController::class, 'connexiondonnées']);
 
 Route::get('/frais', [PagesController::class, 'frais']);
 Route::post('/nouveaufrais', [PagesController::class, 'fraisnouveau']);
-Route::post('/modifierfrais', [PagesController::class, 'modifierfrais']);
+Route::put('/modifierfrais/{id_paramcontrat}', [PagesController::class, 'modifierfrais']);
 Route::get('/dashbord', [PagesController::class, 'dashbord']);
+Route::post('/connexion', [ConnexionDBController::class, 'connexion']);
+Route::post('/connexions', [PagesController::class, 'connexions']);
+Route::post('/logins', [PagesController::class, 'logins']);

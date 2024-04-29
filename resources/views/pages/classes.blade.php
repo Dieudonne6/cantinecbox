@@ -88,8 +88,7 @@
             </p>
               <div class="form-group w-100">
                 @csrf
-                <select class="js-example-basic-multiple w-100" multiple="multiple" name="matricules">
-                  
+                <select class="js-example-basic-multiple w-100" multiple="multiple" name="matricules[]">
                   @foreach ($eleve as $eleves)
                     <option value="{{$eleves->MATRICULE}}">{{$eleves->NOM}} {{$eleves->PRENOM}}</option>
                   @endforeach
@@ -104,7 +103,7 @@
                 <div class="col">
                   <label>Date</label>
                   <div id="the-basics">
-                    <input class="typeahead w-100" type="date" name="date">
+                    <input class="typeahead w-100" type="date"  name="date">
                   </div>
                 </div>
 
