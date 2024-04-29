@@ -39,7 +39,7 @@
 
         {{--  --}}
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-8">
                 
               <div class="card">
                 <div class="table-responsive pt-1 xl-5">
@@ -218,57 +218,57 @@
                           </tr>
                           <tr>
                             <td>
-                <div class="form-check">
-                <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" value="">
-                <span class="form-check-sign">
-                <span class="check"></span>
-                </span>
-                </label>
-                </div>
-                </td>
-                <td _msttexthash="2824289" _msthash="127">Des vers de la grande littérature russe ? Ou des e-mails de mon patron ?</td>
-                <td class="td-actions text-right">
-                <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task">
-                <i class="material-icons" _msttexthash="91195" _msthash="128">éditer</i>
-                </button>
-                <button type="button" rel="tooltip" title="" class="btn btn-danger btn-link btn-sm" data-original-title="Remove">
-                <i class="material-icons" _msttexthash="79521" _msthash="129">fermer</i>
-                </button>
-                </td>
-                </tr>
-                <tr>
-                <td>
-                <div class="form-check">
-                <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" value="">
-                <span class="form-check-sign">
-                <span class="check"></span>
-                </span>
-                </label>
-                </div>
-                </td>
-                <td _msttexthash="24173136" _msthash="130">Inondations : Un an plus tard, évaluation de ce qui a été perdu et de ce qui a été trouvé lorsqu’une pluie dévastatrice a balayé la région métropolitaine de Détroit </td>
-                <td class="td-actions text-right">
-                <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task">
-                <i class="material-icons" _msttexthash="91195" _msthash="131">éditer</i>
-                </button>
-                <button type="button" rel="tooltip" title="" class="btn btn-danger btn-link btn-sm" data-original-title="Remove">
-                <i class="material-icons" _msttexthash="79521" _msthash="132">fermer</i>
-                </button>
-                </td>
-                </tr>
-                <tr>
-                <td>
-                <div class="form-check">
-                <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" value="" checked="">
-                <span class="form-check-sign">
-                <span class="check"></span>
-                </span>
-                </label>
-                </div>
-                </td>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" value="">
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                </label>
+                              </div>
+                            </td>
+                            <td _msttexthash="2824289" _msthash="127"> Ou des e-mails de mon patron ?</td>
+                              <td class="td-actions text-right">
+                              <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task">
+                                <i class="material-icons" _msttexthash="91195" _msthash="128">éditer</i>
+                              </button>
+                              <button type="button" rel="tooltip" title="" class="btn btn-danger btn-link btn-sm" data-original-title="Remove">
+                                <i class="material-icons" _msttexthash="79521" _msthash="129">fermer</i>
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" value="">
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                </label>
+                              </div>
+                            </td>
+                            <td _msttexthash="24173136" _msthash="130">Inondations : Un an plus tard, évaluation de ce qui a été perdu et de ce qui a été trouvé lorsqu’une pluie dévastatrice a balayé la région métropolitaine de Détroit </td>
+                              <td class="td-actions text-right">
+                              <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task">
+                                <i class="material-icons" _msttexthash="91195" _msthash="131">éditer</i>
+                              </button>
+                              <button type="button" rel="tooltip" title="" class="btn btn-danger btn-link btn-sm" data-original-title="Remove">
+                                <i class="material-icons" _msttexthash="79521" _msthash="132">fermer</i>
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                            <div class="form-check">
+                            <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" value="" checked="">
+                            <span class="form-check-sign">
+                            <span class="check"></span>
+                            </span>
+                            </label>
+                            </div>
+                            </td>
                 <td _msttexthash="3227575" _msthash="133">Créez 4 expériences utilisateur invisibles que vous ne connaissiez pas</td>
                 <td class="td-actions text-right">
                 <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task">
