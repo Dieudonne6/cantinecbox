@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Paramcontrat extends Model
+class Usercontrat extends Model
 {
     use HasFactory;
-    protected $table = 'paramcontrat';
-    protected $primaryKey = 'id_paramcontrat';
+    protected $table = 'usercontrat';
     public $timestamps = false;
 }

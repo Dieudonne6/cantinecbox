@@ -129,6 +129,9 @@
   color: #fff !important;
   font-size: 2rem !important;
 }
+.form-control {
+  color: #000 !important;
+}
 /* .form-check .form-check-label {
   min-height: 10px !important;
   font-size: 1rem !important;
