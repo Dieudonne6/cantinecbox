@@ -17,6 +17,7 @@ use App\Http\Controllers\ClassesController;
 */
 
 
+
 Route::get('/inscription', [PagesController::class, 'inscription']);
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
@@ -35,3 +36,12 @@ Route::get('/connexiondonnées', [PagesController::class, 'connexiondonnées']);
 Route::get('/frais', [PagesController::class, 'frais']);
 Route::post('/nouveaufrais', [PagesController::class, 'fraisnouveau']);
 Route::post('/modifierfrais', [PagesController::class, 'modifierfrais']);
+
+Route::get('/paiementcontrat/{CODECLAS}/{MATRICULE}', [ClassesController::class, 'paiementcontrat']);
+Route::post('/savepaiementcontrat', [ClassesController::class, 'savepaiementcontrat']);
+Route::get('/telechargerfacture', [ClassesController::class, 'telechargerfacture']);
+
+
+Route::get('/pdffacture',[ClassesController::class,'pdffacture'])->name('pdffacture');
+Route::get('/facturenormalise/{nomcompleteleve}',[ClassesController::class,'facturenormalise'])->name('pdffacture');
+Route::get('/create',[ClassesController::class,'create'])->name('qrcode.create');

@@ -10,6 +10,9 @@
   <!-- base:css -->
   <link rel="stylesheet" href="{{asset('assets/vendors/typicons/typicons.css')}}">
   <link rel="stylesheet" href="{{asset('assets/vendors/css/vendor.bundle.base.css')}}">
+
+  <script src="{{ asset('davidshimjs-qrcodejs-04f46c6/qrcode.js') }}"></script>
+
   <!-- endinject -->
   <!-- plugin css for this page -->
   <link rel="stylesheet" href="{{asset('assets/vendors/select2/select2.min.css')}}">
@@ -53,13 +56,13 @@
 
   <script src="{{asset('assets/js/typeahead.js')}}"></script>
   <script src="{{asset('assets/js/select2.js')}}"></script>
-  {{-- <script src="{{asset('assets/js/jquery-3.2.1.min.js')}}"></script> --}}
+  <script src="{{asset('assets/js/jquery-3.2.1.min.js')}}"></script>
   
   
 
   <!-- End custom js for this page-->
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
       $(document).ready(function() {
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -118,7 +121,9 @@
     .selected {
         background-color: #e3e6f4; /* Changez la couleur de fond selon vos préférences */
     }
-</style>
+</style> --}}
+
+
 </body>
 
 </html>

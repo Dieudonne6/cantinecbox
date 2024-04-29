@@ -10489,7 +10489,7 @@ pre code {
   border: 0;
 }
 
-.form-control, .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .typeahead,
+.form-control, .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .typeaheads,
 .tt-query,
 .tt-hint {
   display: block;
