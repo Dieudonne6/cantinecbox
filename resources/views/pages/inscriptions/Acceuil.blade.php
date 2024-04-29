@@ -39,7 +39,7 @@
 
         {{--  --}}
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-8">
                 
               <div class="card">
                 <div class="table-responsive pt-1 xl-5">
