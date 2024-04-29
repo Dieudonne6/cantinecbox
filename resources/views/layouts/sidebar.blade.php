@@ -609,7 +609,7 @@
           <li class="nav-item"> <a class="nav-link" href="#"> Configurer Imprimante </a></li>
           <li class="nav-item"> <a class="nav-link" href="#"> Changement de trimestre </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnées')}}">Connexion à la<br>base de donnée </a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnees')}}">Connexion à la<br>base de donnée </a></li>
 
 
         </ul>
@@ -625,7 +625,7 @@
       <div class="collapse" id="Cantine">
         <ul class="nav flex-column sub-menu">
 
-          <li class="nav-item"> <a class="nav-link" href="{{url('/')}}">Toutes les classes</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/classes')}}">Toutes les classes</a></li>
 
         </ul>
       </div>

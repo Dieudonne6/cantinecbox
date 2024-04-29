@@ -202,7 +202,6 @@
                           <label>Date</label>
                           <div id="the-basics">
                             <input class="typeaheads" type="date" id="date" name="date" value="{{ date('Y-m-d') }}">
-
                           </div>
                         </div>
                         <div class="col">
