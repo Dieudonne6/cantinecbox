@@ -8,18 +8,13 @@ use App\Models\Eleve;
 use App\Models\Classes;
 use App\Models\Contrat;
 use App\Models\Paramcontrat;
-
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
-use App\Models\Eleve;
-use App\Models\Contrat;
-use App\Models\Paramcontrat;
 use App\Models\Inscriptioncontrat;
 use App\Models\Paiementglobalcontrat;
 use App\Models\Paiementcontrat;
 use App\Models\Moiscontrat;
-use App\Models\Classes;
 use App\Models\Facturenormalise;
 use GuzzleHttp\Client;
 use Barryvdh\DomPDF\PDF;
@@ -42,10 +37,14 @@ use Endroid\QrCode\Writer\FileWriter;
 class ClassesController extends Controller
 {
     public function classe(Request $request){
-        $eleves = Eleve::get();
-        $classes = Classes::get();
-        $fraiscontrat = Paramcontrat::first(); 
-        return view('pages.classes')->with('eleve', $eleves)->with('classe', $classes)->with('fraiscontrats', $fraiscontrat);
+        if(Session::has('account')){
+
+            $eleves = Eleve::get();
+            $classes = Classes::get();
+            $fraiscontrat = Paramcontrat::first(); 
+            return view('pages.classes')->with('eleve', $eleves)->with('classe', $classes)->with('fraiscontrats', $fraiscontrat);
+        } 
+        return redirect('/');
     }
     
     public function filterEleve($CODECLAS){
@@ -584,7 +583,7 @@ class ClassesController extends Controller
         ]);        
     }
 
-}
+
 
 
 
@@ -768,4 +767,4 @@ class ClassesController extends Controller
    
 
 
-// }
+}

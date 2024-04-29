@@ -96,6 +96,7 @@ class PagesController extends Controller
         $account = Usercontrat::where("login_usercontrat",$request->login_usercontrat)->first();
         if($account){
             if($account->password_usercontrat == $request->password_usercontrat){
+                Session::put('account', $account);
                 return redirect("classes");
             } else{
                 return back()->with('status', 'Mot de passe ou email incorrecte');
