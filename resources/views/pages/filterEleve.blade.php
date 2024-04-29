@@ -31,11 +31,11 @@
           Paiement
         </button>
       </div> --}}
-      <div class="col-3">
+      {{-- <div class="col-3">
         <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleInscrire">
           Inscriptions mensuelles
         </button>
-      </div>
+      </div> --}}
 
       </div>
       <div class="table-responsive">
