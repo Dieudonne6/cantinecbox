@@ -21,21 +21,6 @@
           Nouveau
         </button>
       </div>
-      {{-- <div class="col-2"> 
-        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Suspendre
-        </button>
-      </div>
-      <div class="col-2"> 
-        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#examplePaiement">
-          Paiement
-        </button>
-      </div> --}}
-      {{-- <div class="col-3">
-        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleInscrire">
-          Inscriptions mensuelles
-        </button>
-      </div> --}}
 
       </div>
       <div class="table-responsive">
@@ -66,20 +51,12 @@
 
                       <a href='/paiementcontrat/{{$filterEleves->CODECLAS}}/{{$filterEleves->MATRICULE}}' class='btn btn-primary w-50'>Paiement</a>
                       <a href='/admin/deletecashier/{{$filterEleves->MATRICULE}}' class='btn btn-danger w-50'>Suspendre</a>
-
-                      {{-- <button type="button" class="btn btn-primary w-50" data-bs-toggle="modal" data-bs-target="#examplePaiement">
-                        Paiement
-                      </button>
-                      <button type="button" class="btn btn-danger w-50" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Suspendre
-                      </button> --}}
                   </td>
                 </tr>
             @endforeach
         </tbody>
         </table>
       </div>
-
     </div>
 {{-- 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
