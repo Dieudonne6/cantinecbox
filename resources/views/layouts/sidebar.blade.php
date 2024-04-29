@@ -198,70 +198,85 @@
         <i class="menu-arrow"></i>
       </a>
       <div class="collapse" id="form-elements">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Paramètres</a></li>
-          <div class="collapse" id="form-elements">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Répartition des classes par opérateur</a></li>
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Table des matiètes</a></li>
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Table des coefficients</a></li>
-            </ul>
-          </div>
-          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Manipulation des notes</a></li>
-          <div class="collapse" id="form-elements">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Saisir et mises à jour des notes</a></li>
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Enrégistrer Résultats des examens</a></li>
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Vérifier les notes</a></li>
-            </ul>
-          </div>
+        
+        {{-- Paramètres --}}
 
-          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Sécurité</a></li>
-          <div class="collapse" id="form-elements">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Vérouillage</a></li>
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Dévérouillage</a></li>
-            </ul>
+        <div class="dropdown">
+          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Paramètres </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton1" style="" _mstvisible="0" >
+            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Répartition des classes <br> par opérateur</a>
+            <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Table des matiètes</a>
+            <a class="dropdown-item" href="#" _msttexthash="229879" _msthash="283" _mstvisible="1">Table des coefficients</a>
           </div>
+        </div>
 
-          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Edition</a></li>
-          <div class="collapse" id="form-elements">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Tableau de notes</a></li>
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Buletin de notes</a></li>
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Attestations de mérite</a></li>
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Editions</a></li>
-                <div class="collapse" id="form-elements">
-                  <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Fiches de notes vierge</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Relevés par matière</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Relevés par élèves</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Récapitulatif de notes</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Tableau analytique par matière</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Résultats par promotion</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Liste des méritant</a></li>
-                  </ul>
-                </div>
-            </ul>
-          </div>
+         {{-- Manipulation des notes --}}
 
-          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Résultats</a></li>
-          <div class="collapse" id="form-elements">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Liste par ordre de mérite</a></li>
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Tableau analytique</a></li>
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Rapports annuels</a></li>
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Livrets scolaire</a></li>
-            </ul>
+        <div class="dropdown">
+          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton2" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Manipulation des notes </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton2" style="" _mstvisible="0" >
+            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Saisir et mises à jour <br> des notes</a>
+            <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Enrégistrer les résultats <br> des examens</a>
+            <a class="dropdown-item" href="#" _msttexthash="229879" _msthash="283" _mstvisible="1">Vérifier les notes</a>
           </div>
-          <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Extraction</a></li>
-          <div class="collapse" id="form-elements">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Exporter</a></li>
-              <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Importer</a></li>
-            </ul>
+        </div>
+  
+         {{-- Sécurité --}}
+        
+        <div class="dropdown">
+          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Sécurité </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="" _mstvisible="0" >
+            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Vérouillage</a>
+            <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Dévérouillage</a>
           </div>
-        </ul>
+        </div>
+
+         {{-- Edition --}}
+
+        <div class="dropdown">
+          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Edition </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4" style="" _mstvisible="0" >
+            <a class="dropdown-item" href="#" _msttexthash="04" _msthash="04" _mstvisible="1">Tableau de notes</a>
+            <a class="dropdown-item" href="#" _msttexthash="05" _msthash="05" _mstvisible="1">Buletin de notes</a>
+            <a class="dropdown-item" href="#" _msttexthash="06" _msthash="06" _mstvisible="1">Attestations de mérite</a>
+            <a class="dropdown-item" href="#" _msttexthash="07" _msthash="07" _mstvisible="1">Fiches de notes vierge</a>
+            <a class="dropdown-item" href="#" _msttexthash="08" _msthash="08" _mstvisible="1">Relevés par matière</a>
+            <a class="dropdown-item" href="#" _msttexthash="09" _msthash="09" _mstvisible="1">Relevés par élèves</a>
+            <a class="dropdown-item" href="#" _msttexthash="10" _msthash="10" _mstvisible="1">Récapitulatif de notes</a>
+            <a class="dropdown-item" href="#" _msttexthash="11" _msthash="11" _mstvisible="1">Tableau analytique <br> par matière</a>
+            <a class="dropdown-item" href="#" _msttexthash="12" _msthash="12" _mstvisible="1">Résultats par promotion</a>
+            <a class="dropdown-item" href="#" _msttexthash="13" _msthash="13" _mstvisible="1">Liste des méritant</a>
+          </div>
+        </div>
+        
+        {{-- Résultats --}}
+
+        <div class="dropdown">
+          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Résultats </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4" style="" _mstvisible="0" >
+            <a class="dropdown-item" href="#" _msttexthash="14" _msthash="14" _mstvisible="1">Liste par ordre <br> de mérite</a>
+            <a class="dropdown-item" href="#" _msttexthash="15" _msthash="15" _mstvisible="1">Tableau analytique</a>
+            <a class="dropdown-item" href="#" _msttexthash="16" _msthash="16" _mstvisible="1">Rapports annuels</a>
+            <a class="dropdown-item" href="#" _msttexthash="17" _msthash="17" _mstvisible="1">Livrets scolaire</a>
+          </div>
+        </div>
+ 
+        {{-- Extraction --}}
+
+        <div class="dropdown">
+          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton5" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Extraction </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton5" style="" _mstvisible="0" >
+            <a class="dropdown-item" href="#" _msttexthash="18" _msthash="18" _mstvisible="1">Exporter</a>
+            <a class="dropdown-item" href="#" _msttexthash="19" _msthash="19" _mstvisible="1">Importer</a>
+          </div>
+        </div>
+
       </div>
     </li>
 
@@ -296,13 +311,18 @@
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Type agent</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Mise à jour du personnel</a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Configurer</a></li>
-          <div class="collapse" id="tables">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Configuration des salles</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Config. quotas horaires</a></li>
-            </ul>
+
+          <div class="dropdown">
+            <li class="nav-item">
+            <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton6" data-toggle="dropdown" 
+            aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Configurer </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton6" style="" _mstvisible="0" >
+              <a class="dropdown-item" href="#" _msttexthash="20" _msthash="20" _mstvisible="1">Configuration des salles</a>
+              <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Config. quotas horaires</a>
+            </div>
+            </li>
           </div>
+          
           <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Emploi du temps automatique</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Saisir un emploi du temps</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Pointage des heures</a></li>
@@ -314,23 +334,29 @@
           <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Taux horaires</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Avances sur salaires</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Buletins et états</a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Editions</a></li>
-          <div class="collapse" id="tables">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Liste des profs par matière</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Liste des profs par classes et par matière</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Liste des proffesseurs principaux</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Liste des nominative du personnel</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Etat d'effectif</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Volume horaire exécuté/prof</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Volume horaire exécuté par matière/classe</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Etat paiement IPTS & CNSS</a></li>
-            </ul>
+
+          <div class="dropdown">
+            <li class="nav-item">
+            <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton7" data-toggle="dropdown" 
+            aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Editions </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton7" style="" _mstvisible="0" >
+              <a class="dropdown-item" href="#" _msttexthash="22" _msthash="22" _mstvisible="1">Liste des profs par matière</a>
+              <a class="dropdown-item" href="#" _msttexthash="23" _msthash="23" _mstvisible="1">Liste des profs par classes <br> et par matière</a>
+              <a class="dropdown-item" href="#" _msttexthash="24" _msthash="24" _mstvisible="1">Liste des proffesseurs <br> principaux</a>
+              <a class="dropdown-item" href="#" _msttexthash="25" _msthash="25" _mstvisible="1">Liste des nominative <br> du personnel</a>
+              <a class="dropdown-item" href="#" _msttexthash="26" _msthash="26" _mstvisible="1">Etat d'effectif</a>
+              <a class="dropdown-item" href="#" _msttexthash="27" _msthash="27" _mstvisible="1">Volume horaire exécuté/prof</a>
+              <a class="dropdown-item" href="#" _msttexthash="28" _msthash="28" _mstvisible="1">Volume horaire exécuté <br>  par matière/classe</a>
+              <a class="dropdown-item" href="#" _msttexthash="29" _msthash="29" _mstvisible="1">Etat paiement IPTS & CNSS</a>
+            </div>
+            </li>
           </div>
+        
         </ul>
       </div>
     </li>
 
+    {{-- Comptabilité & Budget --}}
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
         <i class="typcn typcn-compass menu-icon"></i>
@@ -339,67 +365,81 @@
       </a>
       <div class="collapse" id="icons">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Paramètrage</a></li>
-          <div class="collapse" id="icons">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Table des chapitres</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Table des compres</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">table des banques</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Table des partenaitres</a></li>
-            </ul>
+
+          <div class="dropdown">
+            <li class="nav-item">
+            <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton6" data-toggle="dropdown" 
+            aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Paramètrage </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton6" style="" _mstvisible="0" >
+              <a class="dropdown-item" href="#" _msttexthash="20" _msthash="20" _mstvisible="1">Table des chapitres</a>
+              <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Table des comptes</a>
+              <a class="dropdown-item" href="#" _msttexthash="20" _msthash="20" _mstvisible="1">Table des banques</a>
+              <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Table des partenaitres</a>
+            </div>
+            </li>
           </div>
-          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Exécution</a></li>
-          <div class="collapse" id="icons">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Enregistrement des écritures</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Enregistrement linéaire</a></li>
-            </ul>
+
+          <div class="dropdown-scroll">
+            <li class="nav-item">
+            <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton6" data-toggle="dropdown" 
+            aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Exécution </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton6" style="" _mstvisible="0" >
+              <a class="dropdown-item" href="#" _msttexthash="20" _msthash="20" _mstvisible="1">Enregistrement des écritures</a>
+              <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Enregistrement linéaire</a>
+            </div>
+            </li>
           </div>
+        
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Op. Bancaire</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Valider le brouillard</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Mise en place</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Décision nominatives</a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Suivi des opérations par compte</a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Editions</a></li>
-          <div class="collapse" id="icons">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Liste des comptes</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Liste des partenaires</a></li>
-
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Prévisions Budgétaires</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Edition Borderaux et relevés</a></li>
-
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Fiche de suivi des opérations par compte</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Fiche de suivi des comptes par mois</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Situation mensuelle des dépenses</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Suivi des comptes de recettes spécifiquues</a></li>
-
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Journaux</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Balances des comptes/Résultat</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Grand livre périodique des comptes</a></li>
-              
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Situation des finances de l'établissement</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Situation de la banque </a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Situation des finances mos par mois</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Situation des engagements</a></li>
-
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Compte rendu d'exécution du budget</a></li>
-              
-            </ul>
+          
+          <div class="dropdown">
+           <li class="nav-item">
+            <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton20" data-toggle="dropdown" 
+            aria-haspopup="true" aria-expanded="false" > Editions </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton20" style="max-height: 200px ; overflow-y: auto;" >
+              <a class="dropdown-item" href="#">Liste des comptes</a>
+              <a class="dropdown-item" href="#">Liste des partenaires</a>
+              <a class="dropdown-item" href="#">Prévisions Budgétaires</a>
+              <a class="dropdown-item" href="#">Edition Borderaux <br> et relevés</a>
+              <a class="dropdown-item" href="#">Fiche de suivi des <br> opérations par compte</a>
+              <a class="dropdown-item" href="#">Fiche de suivi des <br> comptes par mois</a>
+              <a class="dropdown-item" href="#">Situation mensuelle <br> des dépenses</a>
+              <a class="dropdown-item" href="#">Suivi des comptes de <br> recettes spécifiques</a>
+              <a class="dropdown-item" href="#">Journaux</a>
+              <a class="dropdown-item" href="#">Balances des <br> comptes/Résultats</a>
+              <a class="dropdown-item" href="#">Grand livre périodique <br> des comptes</a>
+              <a class="dropdown-item" href="#">Situation des finances <br> de l'établissement</a>
+              <a class="dropdown-item" href="#">Situation de la banque</a>
+              <a class="dropdown-item" href="#">Situation des finances <br> mois par mois</a>
+              <a class="dropdown-item" href="#">Situation des engagements</a>
+              <a class="dropdown-item" href="#">Compte rendu <br> d'exécution du budget</a>
+            </div>
+           </li>
           </div>
+          
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Exporter</a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Verouillage</a></li>
-          <div class="collapse" id="icons">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Vérouillage</a></li>
-              <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Dévérouillage</a></li>
-            </ul>
+
+          <div class="dropdown">
+            
+            <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton6" data-toggle="dropdown" 
+            aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Verouillage </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton6" style="" _mstvisible="0" >
+              <a class="dropdown-item" href="#" _msttexthash="20" _msthash="20" _mstvisible="1">Vérouillage</a>
+              <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Dévérouillage</a>
+            </div>
+            
           </div>
+
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Cloture de mois</a></li>
         </ul>
       </div>
     </li>
 
+    {{-- Ressource matérielles --}}
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
         <i class="typcn typcn-user-add-outline menu-icon"></i>
@@ -423,27 +463,29 @@
       </div>
     </li>
 
+    {{-- Communication --}}
     <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
+      <a class="nav-link" data-toggle="collapse" href="#Communication" aria-expanded="false" aria-controls="Communication">
         <i class="typcn typcn-globe-outline menu-icon"></i>
         <span class="menu-title">Communication</span>
         <i class="menu-arrow"></i>
       </a>
-      <div class="collapse" id="error">
+      <div class="collapse" id="Communication">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> Dialogue par SMS </a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> WebScolaire </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/Communication-404.html"> Dialogue par SMS </a></li>
+          <li class="nav-item"> <a class="nav-link" href="pages/samples/Communication-500.html"> WebScolaire </a></li>
         </ul>
       </div>
     </li>
 
+    {{-- Administration --}}
     <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
+      <a class="nav-link" data-toggle="collapse" href="#Administration" aria-expanded="false" aria-controls="Administration">
         <i class="typcn typcn-globe-outline menu-icon"></i>
         <span class="menu-title">Administration</span>
         <i class="menu-arrow"></i>
       </a>
-      <div class="collapse" id="error">
+      <div class="collapse" id="Administration">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html">Profils des utilisateurs </a></li>
           <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> Connexion... </a></li>
@@ -453,7 +495,8 @@
         </ul>
       </div>
     </li>
-
+ 
+    {{-- Paramètre --}}
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
         <i class="typcn typcn-globe-outline menu-icon"></i>
@@ -464,16 +507,21 @@
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" href="#"> Table des paramètres </a></li>
           <li class="nav-item"> <a class="nav-link" href="#"> Modifier les bornes de l'exercice </a></li>
-          <li class="nav-item"> <a class="nav-link" href="#"> Op. Ouverture </a></li>
-          <div class="collapse" id="error">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="#"> Passer en classe supérieure </a></li>
-              <li class="nav-item"> <a class="nav-link" href="#"> Reinitialiser les classes </a></li>
-              <li class="nav-item"> <a class="nav-link" href="#"> Supprimer les sans classe </a></li>
-              <li class="nav-item"> <a class="nav-link" href="#"> Cloturer l'année </a></li>
-              <li class="nav-item"> <a class="nav-link" href="#"> Changement de trimestre </a></li>
-            </ul>
+          
+          <div class="dropdown">
+           <li class="nav-item">
+            <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
+            aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Op. Ouverture </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton1" style="" _mstvisible="0" >
+              <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Passer en classe supérieure</a>
+              <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Reinitialiser les classes</a>
+              <a class="dropdown-item" href="#" _msttexthash="229879" _msthash="283" _mstvisible="1">Supprimer les sans classe</a>
+              <a class="dropdown-item" href="#" _msttexthash="26180" _msthash="284" _mstvisible="1">Cloturer l'année</a>
+              <a class="dropdown-item" href="#" _msttexthash="22987" _msthash="285" _mstvisible="1">Changement de trimestre</a>
+            </div>
+           </li>
           </div>
+
           <li class="nav-item"> <a class="nav-link" href="#"> Configurer Imprimante </a></li>
           <li class="nav-item"> <a class="nav-link" href="#"> Changement de trimestre </a></li>
         </ul>
@@ -481,32 +529,26 @@
     </li>
     
     <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+      <a class="nav-link" data-toggle="collapse" href="#Cantine" aria-expanded="false" aria-controls="Cantine">
         <i class="typcn typcn-document-text menu-icon"></i>
         <span class="menu-title">Cantine</span>
         <i class="menu-arrow"></i>
       </a>
-      <div class="collapse" id="ui-basic">
+      <div class="collapse" id="Cantine">
         <ul class="nav flex-column sub-menu">
 
           <li class="nav-item"> <a class="nav-link" href="{{url('/')}}">Toutes les classes</a></li>
+          <div class="dropdown">
+            <li class="nav-item">
+             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
+             aria-haspopup="true" aria-expanded="false"> Paramètre </button>
+             <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton1" style="max-height: 200px ; overflow-y: auto;" >
+               <a class="dropdown-item"  href="{{url('/frais')}}">Frais mensuel et <br>année academique</a>
+               <a class="dropdown-item" href="{{url('/connexiondonnées')}}">Connexion à la<br>base de donnée</a>
+             </div>
+            </li>
+           </div>
 
-          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Paramètre</a></li>
-          <div class="collapse" id="ui-basic">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>annee academique</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnées')}}">conexion a la<br>base de donnee</a></li>
-            </ul>
-          </div>
-
-          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Etat</a></li>
-          <div class="collapse" id="ui-basics">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="#">Etat des paiements</a></li>
-              <li class="nav-item"> <a class="nav-link" href="#">Etat des droits<br>constates</a></li>
-              <li class="nav-item"> <a class="nav-link" href="#">lettre de relance</a></li>
-            </ul>
-          </div>
         </ul>
       </div>
     </li>

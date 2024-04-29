@@ -82,8 +82,8 @@
           <div class="col-md-6 col-xl-4 grid-margin stretch-card">
             <div class="card">
               <div class="card-body border-bottom">
-                <div style="display: flex; justify-content: center; align-items: center; height:;">
-                    <button class="btn btn-light">Rentabilité</button>
+                <div class="d-flex justify-content-center align-items-center flex-wrap"> 
+                    <button class="btn btn-light"> <h6>Rentabilité</h6></button>
                 </div>
               </div>
             </div>
@@ -92,8 +92,8 @@
           <div class="col-md-6 col-xl-4 grid-margin stretch-card">
             <div class="card">
               <div class="card-body border-bottom">
-                <div class="d-flex justify-content-between align-items-center flex-wrap"> 
-                  <a class="btn btn-light " data-toggle="button">Historique des suppressions et paiements</a>    
+                <div class="d-flex justify-content-center align-items-center flex-wrap"> 
+                  <a class="btn btn-light " data-toggle="button"> <h6>Historique des suppressions et paiements</h6></a>    
                 </div>
               </div>
             </div>
@@ -102,8 +102,8 @@
           <div class="col-md-6 col-xl-4 grid-margin stretch-card">
             <div class="card">
               <div class="card-body border-bottom">
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
-                    <a class="btn btn-light " data-toggle="button">Historique des modifications de paiements</a>
+                <div class="d-flex justify-content-center align-items-center flex-wrap">
+                    <a class="btn btn-light " data-toggle="button"> <h6>Historique des modifications de paiements</h6></a>
                 </div>
               </div>
             </div>
@@ -112,8 +112,8 @@
           <div class="col-md-6 col-xl-4 grid-margin stretch-card">
             <div class="card">
               <div class="card-body border-bottom">
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
-                  <a class="btn btn-light " data-toggle="button">Historique des suppressions d'élèves</a>
+                <div class="d-flex justify-content-center align-items-center flex-wrap">
+                  <a class="btn btn-light " data-toggle="button"> <h6>Historique des suppressions d'élèves</h6></a>
                 </div>
               </div>
             </div>
@@ -122,8 +122,8 @@
           <div class="col-md-6 col-xl-4 grid-margin stretch-card">
             <div class="card">
               <div class="card-body border-bottom">
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
-                    <a class="btn btn-light" data-toggle="button">Historique des modifications de profiles</a>
+                <div class="d-flex justify-content-center align-items-center flex-wrap">
+                    <a class="btn btn-light" data-toggle="button"> <h6>Historique des modifications de profiles</h6></a>
                 </div>
               </div>
             </div>
