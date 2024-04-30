@@ -33,10 +33,11 @@ class ClassesController extends Controller
 {
     public function classe(Request $request){
         if(Session::has('account')){
-
             $eleves = Eleve::get();
             $classes = Classes::get();
             $fraiscontrat = Paramcontrat::first(); 
+            Session::put('eleves', $eleves);
+            Session::put('fraiscontrats', $fraiscontrat);
             return view('pages.classes')->with('eleve', $eleves)->with('classe', $classes)->with('fraiscontrats', $fraiscontrat);
         } 
         return redirect('/');
