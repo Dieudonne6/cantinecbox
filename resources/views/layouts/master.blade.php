@@ -60,6 +60,14 @@
   <script src="{{asset('assets/js/select2.js')}}"></script>
   <script src="{{asset('assets/js/jquery-3.2.1.min.js')}}"></script>
   
+  <script>
+    var statusAlert = document.getElementById('statusAlert');
+    if (statusAlert) {
+      setTimeout(function() {
+        statusAlert.style.display = 'none';
+      }, 3000); 
+    }
+</script>
 
   <!-- End custom js for this page-->
 

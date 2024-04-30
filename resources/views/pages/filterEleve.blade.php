@@ -6,7 +6,7 @@
     <div class="card-body">
       <h4 class="card-title">Toutes les classes</h4>
       @if(Session::has('status'))
-      <div class="alert alert-succes btn-primary">
+      <div id="statusAlert" class="alert alert-succes btn-primary">
       {{ Session::get('status')}}
       </div>
       @endif

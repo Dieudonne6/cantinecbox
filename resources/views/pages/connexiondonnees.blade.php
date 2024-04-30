@@ -11,7 +11,7 @@
     <div class="card-body">
 
       @if(Session::has('status'))
-      <div class="alert alert-succes btn-primary mb-4">
+      <div  id="statusAlert" class="alert alert-succes btn-primary mb-4">
       {{ Session::get('status')}}
       </div>
       @endif
