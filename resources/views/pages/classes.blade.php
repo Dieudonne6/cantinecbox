@@ -61,8 +61,15 @@
                         {{$eleves->NOM}} {{$eleves->PRENOM}}
                     </td>
                     <td>
-                      <a href='/paiementcontrat/{{$eleves->CODECLAS}}/{{$eleves->MATRICULE}}' class='btn btn-primary w-50'>Paiement</a>
-                      <a href='/admin/deletecashier/{{$eleves->MATRICULE}}' class='btn btn-danger w-50'>Suspendre</a>
+                      <a href='/paiementcontrat/{{$eleves->CODECLAS}}/{{$eleves->MATRICULE}}' class='btn btn-primary w-40'>Paiement</a>
+
+                      
+                      <form action="{{ url('supprimercontrat/'.$eleves->MATRICULE)}}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        {{-- <a href='/admin/deletecashier/{{$eleves->MATRICULE}}' class='btn btn-danger w-50'>Suspendre</a> --}}
+                        <input type="submit" class="btn btn-danger w-40" value="Suspendre" style="margin-left: 9.5rem; margin-top: -3.8rem">
+                    </form>  
                     </td>
                 </tr>
             @endforeach

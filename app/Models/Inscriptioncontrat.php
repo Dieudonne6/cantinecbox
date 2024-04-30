@@ -11,6 +11,9 @@ class Inscriptioncontrat extends Model
     protected $table = 'inscriptioncontrat';
     public $timestamps = false;
 
+    protected $primaryKey = 'id_inscription'; // Clé primaire de votre table
+
+
 
     protected $fillable = ['id_contrat', 'id_moiscontrat', 'anne_inscrption'];
 

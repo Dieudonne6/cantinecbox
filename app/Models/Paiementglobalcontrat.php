@@ -11,4 +11,7 @@ class Paiementglobalcontrat extends Model
     protected $table = 'paiementglobalcontrat';
     public $timestamps = false;
 
+    protected $primaryKey = 'id_paiementcontrat'; // Clé primaire de votre table
+
+
 }

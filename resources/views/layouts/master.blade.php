@@ -65,7 +65,7 @@
     if (statusAlert) {
       setTimeout(function() {
         statusAlert.style.display = 'none';
-      }, 3000); 
+      }, 15000); 
     }
 </script>
 

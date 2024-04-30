@@ -66,3 +66,4 @@ Route::get('/dashbord', [PagesController::class, 'dashbord']);
 Route::post('/connexion', [ConnexionDBController::class, 'connexion']);
 Route::post('/connexions', [PagesController::class, 'connexions']);
 Route::post('/logins', [PagesController::class, 'logins']);
+Route::delete('/supprimercontrat/{MATRICULE}', [ClassesController::class, 'supprimercontrat']);
