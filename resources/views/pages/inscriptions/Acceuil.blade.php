@@ -7,7 +7,7 @@
         {{--  --}}
         <div class="row">
           
-            <div class="col-12">
+            <div class="col-11">
               <div class="card mb-4">
                 <div class="card-body">
                   <div class="row gy-3">
@@ -156,253 +156,85 @@
 
             {{--  --}}
             <div class="col-md-3">
-              <div class="card">
-                <div class="card-header card-header-tabs card-header-primary">
-                  <div class="nav-tabs-navigation">
-                    <div class="nav-tabs-wrapper">
-                      <ul class="nav nav-tabs" data-tabs="tabs">
-                        <li class="nav-item">
-                          <a class="nav-link active show" href="#profile" data-toggle="tab">
-                            <i class="material-icons" _msttexthash="163033" _msthash="118">bug_report</i>
-                            <font _mstmutation="1" _msttexthash="114920" _msthash="119"> Insectes </font>
-                            <div class="ripple-container"></div>
-                            <div class="ripple-container"></div>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" href="#messages" data-toggle="tab">
-                            <i class="material-icons" _msttexthash="45383" _msthash="120">code</i>
-                            <font _mstmutation="1" _msttexthash="209911" _msthash="121"> Site internet </font>
-                            <div class="ripple-container"></div>
-                            <div class="ripple-container"></div>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" href="#settings" data-toggle="tab">
-                            <i class="material-icons" _msttexthash="61360" _msthash="122">nuage</i>
-                            <font _mstmutation="1" _msttexthash="98696" _msthash="123"> Serveur </font>
-                            <div class="ripple-container"></div>
-                            <div class="ripple-container"></div>
-                          </a>
-                        </li>
-                      </ul>
+                <div class="card">
+                  <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                      <h5 class="accordion-header">
+                        <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                          Accordion Item #1
+                        </button>
+                      </h5>
+                      <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h5 class="accordion-header">
+                        <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                          Accordion Item #2
+                        </button>
+                      </h5>
+                      <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h5 class="accordion-header">
+                        <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                          Accordion Item #3
+                        </button>
+                      </h5>
+                      <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h5 class="accordion-header">
+                      <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                        Accordion Item #4
+                      </button>
+                    </h5>
+                    <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h5 class="accordion-header">
+                      <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+                        Accordion Item #5
+                      </button>
+                    </h5>
+                    <div id="flush-collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h5 class="accordion-header">
+                      <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
+                        Accordion Item #6
+                      </button>
+                    </h5>
+                    <div id="flush-collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h5 class="accordion-header">
+                      <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
+                        Accordion Item #7
+                      </button>
+                    </h5>
+                    <div id="flush-collapseSeven" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
                     </div>
                   </div>
                 </div>
-
-                <div class="card-body">
-                  <div class="tab-content">
-                    <div class="tab-pane active show" id="profile">
-                      <table class="table">
-                        <tbody>
-                          <tr>
-                            <td>
-                              <div class="form-check">
-                                <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="" checked="">
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
-                              </div>
-                            </td>
-                            <td _msttexthash="3965325" _msthash="124">Signez un contrat »</td>
-                            <td class="td-actions text-right">
-                              <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task">
-                                <i class="material-icons" _msttexthash="91195" _msthash="125">éditer</i>
-                              </button>
-                              <button type="button" rel="tooltip" title="" class="btn btn-danger btn-link btn-sm" data-original-title="Remove">
-                                <i class="material-icons" _msttexthash="79521" _msthash="126">fermer</i>
-                              </button>
-                             </td>
-                          </tr>
-                          <tr>
-                            <td>
-                <div class="form-check">
-                <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" value="">
-                <span class="form-check-sign">
-                <span class="check"></span>
-                </span>
-                </label>
                 </div>
-                </td>
-                <td _msttexthash="2824289" _msthash="127">Des vers de la grande littérature russe ? Ou des e-mails de mon patron ?</td>
-                <td class="td-actions text-right">
-                <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task">
-                <i class="material-icons" _msttexthash="91195" _msthash="128">éditer</i>
-                </button>
-                <button type="button" rel="tooltip" title="" class="btn btn-danger btn-link btn-sm" data-original-title="Remove">
-                <i class="material-icons" _msttexthash="79521" _msthash="129">fermer</i>
-                </button>
-                </td>
-                </tr>
-                <tr>
-                <td>
-                <div class="form-check">
-                <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" value="">
-                <span class="form-check-sign">
-                <span class="check"></span>
-                </span>
-                </label>
-                </div>
-                </td>
-                <td _msttexthash="24173136" _msthash="130">Inondations : Un an plus tard, évaluation de ce qui a été perdu et de ce qui a été trouvé lorsqu’une pluie dévastatrice a balayé la région métropolitaine de Détroit </td>
-                <td class="td-actions text-right">
-                <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task">
-                <i class="material-icons" _msttexthash="91195" _msthash="131">éditer</i>
-                </button>
-                <button type="button" rel="tooltip" title="" class="btn btn-danger btn-link btn-sm" data-original-title="Remove">
-                <i class="material-icons" _msttexthash="79521" _msthash="132">fermer</i>
-                </button>
-                </td>
-                </tr>
-                <tr>
-                <td>
-                <div class="form-check">
-                <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" value="" checked="">
-                <span class="form-check-sign">
-                <span class="check"></span>
-                </span>
-                </label>
-                </div>
-                </td>
-                <td _msttexthash="3227575" _msthash="133">Créez 4 expériences utilisateur invisibles que vous ne connaissiez pas</td>
-                <td class="td-actions text-right">
-                <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task">
-                <i class="material-icons" _msttexthash="91195" _msthash="134">éditer</i>
-                </button>
-                <button type="button" rel="tooltip" title="" class="btn btn-danger btn-link btn-sm" data-original-title="Remove">
-                <i class="material-icons" _msttexthash="79521" _msthash="135">fermer</i>
-                </button>
-                </td>
-                </tr>
-                </tbody>
-                </table>
-                </div>
-                <div class="tab-pane" id="messages" _mstvisible="0">
-                <table class="table" _mstvisible="1">
-                <tbody _mstvisible="2">
-                <tr _mstvisible="3">
-                <td _mstvisible="4">
-                <div class="form-check" _mstvisible="5">
-                <label class="form-check-label" _mstvisible="6">
-                <input class="form-check-input" type="checkbox" value="" checked="" _mstvisible="7">
-                <span class="form-check-sign" _mstvisible="7">
-                <span class="check" _mstvisible="8"></span>
-                </span>
-                </label>
-                </div>
-                </td>
-                <td _msttexthash="24173136" _msthash="136" _mstvisible="4">Inondations : Un an plus tard, évaluation de ce qui a été perdu et de ce qui a été trouvé lorsqu’une pluie dévastatrice a balayé la région métropolitaine de Détroit </td>
-                <td class="td-actions text-right" _mstvisible="4">
-                <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task" _mstvisible="5">
-                <i class="material-icons" _msttexthash="91195" _msthash="137" _mstvisible="6">éditer</i>
-                </button>
-                <button type="button" rel="tooltip" title="" class="btn btn-danger btn-link btn-sm" data-original-title="Remove" _mstvisible="5" aria-describedby="tooltip557485">
-                <i class="material-icons" _msttexthash="79521" _msthash="138" _mstvisible="6">fermer</i>
-                </button>
-                </td>
-                </tr>
-                <tr _mstvisible="3">
-                <td _mstvisible="4">
-                <div class="form-check" _mstvisible="5">
-                <label class="form-check-label" _mstvisible="6">
-                <input class="form-check-input" type="checkbox" value="" _mstvisible="7">
-                <span class="form-check-sign" _mstvisible="7">
-                <span class="check" _mstvisible="8"></span>
-                </span>
-                </label>
-                </div>
-                </td>
-                <td _msttexthash="3965325" _msthash="139" _mstvisible="4">Signez un contrat pour « De quoi les organisateurs de conférences ont-ils peur ? »</td>
-                <td class="td-actions text-right" _mstvisible="4">
-                <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task" _mstvisible="5">
-                <i class="material-icons" _msttexthash="91195" _msthash="140" _mstvisible="6">éditer</i>
-                </button>
-                <button type="button" rel="tooltip" title="" class="btn btn-danger btn-link btn-sm" data-original-title="Remove" _mstvisible="5">
-                <i class="material-icons" _msttexthash="79521" _msthash="141" _mstvisible="6">fermer</i>
-                </button>
-                </td>
-                </tr>
-                </tbody>
-                </table>
-                </div>
-                <div class="tab-pane" id="settings" _mstvisible="0">
-                <table class="table" _mstvisible="1">
-                <tbody _mstvisible="2">
-                <tr _mstvisible="3">
-                <td _mstvisible="4">
-                <div class="form-check" _mstvisible="5">
-                <label class="form-check-label" _mstvisible="6">
-                <input class="form-check-input" type="checkbox" value="" _mstvisible="7">
-                <span class="form-check-sign" _mstvisible="7">
-                <span class="check" _mstvisible="8"></span>
-                </span>
-                </label>
-                </div>
-                </td>
-                <td _msttexthash="2824289" _msthash="142" _mstvisible="4">Des vers de la grande littérature russe ? Ou des e-mails de mon patron ?</td>
-                <td class="td-actions text-right" _mstvisible="4">
-                <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task" _mstvisible="5">
-                <i class="material-icons" _msttexthash="91195" _msthash="143" _mstvisible="6">éditer</i>
-                </button>
-                <button type="button" rel="tooltip" title="" class="btn btn-danger btn-link btn-sm" data-original-title="Remove" _mstvisible="5" aria-describedby="tooltip971624">
-                <i class="material-icons" _msttexthash="79521" _msthash="144" _mstvisible="6">fermer</i>
-                </button>
-                </td>
-                </tr>
-                <tr _mstvisible="3">
-                <td _mstvisible="4">
-                <div class="form-check" _mstvisible="5">
-                <label class="form-check-label" _mstvisible="6">
-                <input class="form-check-input" type="checkbox" value="" checked="" _mstvisible="7">
-                <span class="form-check-sign" _mstvisible="7">
-                <span class="check" _mstvisible="8"></span>
-                </span>
-                </label>
-                </div>
-                </td>
-                <td _msttexthash="24173136" _msthash="145" _mstvisible="4">Inondations : Un an plus tard, évaluation de ce qui a été perdu et de ce qui a été trouvé lorsqu’une pluie dévastatrice a balayé la région métropolitaine de Détroit </td>
-                <td class="td-actions text-right" _mstvisible="4">
-                <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task" _mstvisible="5">
-                <i class="material-icons" _msttexthash="91195" _msthash="146" _mstvisible="6">éditer</i>
-                </button>
-                <button type="button" rel="tooltip" title="" class="btn btn-danger btn-link btn-sm" data-original-title="Remove" _mstvisible="5">
-                <i class="material-icons" _msttexthash="79521" _msthash="147" _mstvisible="6">fermer</i>
-                </button>
-                </td>
-                </tr>
-                <tr _mstvisible="3">
-                <td _mstvisible="4">
-                <div class="form-check" _mstvisible="5">
-                <label class="form-check-label" _mstvisible="6">
-                <input class="form-check-input" type="checkbox" value="" checked="" _mstvisible="7">
-                <span class="form-check-sign" _mstvisible="7">
-                <span class="check" _mstvisible="8"></span>
-                </span>
-                </label>
-                </div>
-                </td>
-                <td _msttexthash="3965325" _msthash="148" _mstvisible="4">Signez un contrat pour « De quoi les organisateurs de conférences ont-ils peur ? »</td>
-                <td class="td-actions text-right" _mstvisible="4">
-                <button type="button" rel="tooltip" title="" class="btn btn-primary btn-link btn-sm" data-original-title="Edit Task" _mstvisible="5">
-                <i class="material-icons" _msttexthash="91195" _msthash="149" _mstvisible="6">éditer</i>
-                </button>
-                <button type="button" rel="tooltip" title="" class="btn btn-danger btn-link btn-sm" data-original-title="Remove" _mstvisible="5">
-                <i class="material-icons" _msttexthash="79521" _msthash="150" _mstvisible="6">fermer</i>
-                </button>
-                </td>
-                </tr>
-                </tbody>
-                </table>
-                </div>
-                </div>
-                </div>
-                </div>
-              </div>   
+                
+                  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+                  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+                </div>   
           </div>
 
       </div>

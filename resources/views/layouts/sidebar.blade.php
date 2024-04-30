@@ -189,7 +189,7 @@
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Acceuil </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton1" style="" _mstvisible="0" >
-            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Acceuil</a>
+            <a class="dropdown-item" href="{{url('/Acceuil')}}" _msttexthash="76466" _msthash="281" _mstvisible="1">Acceuil</a>
             <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Photos</a>
           </div>
         </div>
@@ -606,8 +606,8 @@
            </li>
           </div>
 
-          <li class="nav-item"> <a class="nav-link" href="#"> Configurer Imprimante </a></li>
-          <li class="nav-item"> <a class="nav-link" href="#"> Changement de trimestre </a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/confimpression')}}"> Configurer Imprimante </a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/changetrimestre')}}"> Changement de trimestre </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnees')}}">Connexion à la<br>base de donnée </a></li>
 

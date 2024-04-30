@@ -460,7 +460,7 @@ class ClassesController extends Controller
     
         // $commandeId =  \App\Models\Commandes::find(id);
         // $commande = \App\Models\Commandes::find($commandid);
-    
+        // dd($codemecef);
     
         $facturenormalise = new Facturenormalise();
             $facturenormalise->id = $reffacture;
