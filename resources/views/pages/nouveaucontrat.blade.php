@@ -50,15 +50,17 @@
           </div>
         </div>
 
-        <div class="form-group">
-            <p class="card-description">
+            <div class="form-group">
+              <p class="card-description">
                 Info de l'inscriptions
               </p>
               <div class="form-group row">
                 <div class="col">
                   <label>Date</label>
+                 
                   <div id="the-basics">
-                    <input class="typeahead" type="date" placeholder="States of USA">
+                    <input class="typeaheads" type="date" id="date" name="date"
+                        value="{{ date('Y-m-d') }}">
                   </div>
                 </div>
                 <div class="col">
@@ -68,7 +70,7 @@
                   </div>
                 </div>
               </div>
-        </div>
+            </div>
 
         <div class="form-group">
             <button type="submit" class="btn btn-primary mr-2">Enregister</button>

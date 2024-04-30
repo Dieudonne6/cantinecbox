@@ -4,7 +4,7 @@
 <div class="main-panel-16">        
   <div class="content-wrapper">
     @if(Session::has('status'))
-      <div class="alert alert-succes">
+      <div class="alert alert-succes btn-primary">
       {{ Session::get('status')}}
       </div>
     @endif

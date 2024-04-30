@@ -5,9 +5,9 @@
     <div class="card-body">
       <h4 class="card-title">Toutes les classes</h4>
       @if(Session::has('status'))
-      <div class="alert alert-succes">
-      {{ Session::get('status')}}
-      </div>
+        <div class="alert alert-succes btn-primary">
+          {{ Session::get('status')}}
+        </div>
       @endif
       <div class="form-group row">
         <div class="col-3">
@@ -18,9 +18,9 @@
             @endforeach
           </select>
         </div>
-        <div class="col-2">
+        <div class="col-3">
           <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Nouveau
+            Nouveau Contrat
           </button>
         </div>
 
@@ -82,7 +82,7 @@
             {{csrf_field()}}
           <div class="card-body">
             <p class="card-description" style="color: black">
-              Eleve 
+              Sélectionnez l'élève 
             </p>
               <div class="form-group w-100">
                 @csrf
@@ -94,21 +94,19 @@
               </div>
 
             <div class="form-group">
-              <p class="card-description">
-                Info de l'inscriptions
-              </p>
               <div class="form-group row">
                 <div class="col">
                   <label>Date</label>
                   <div id="the-basics">
-                    <input class="typeahead w-100" type="date"  name="date">
+                    <input class="typeaheads" type="date" id="date" name="date"
+                        value="{{ date('Y-m-d') }}">
                   </div>
                 </div>
 
                 <div class="col">
                   <label>Montant</label>
                   <div id="bloodhound">
-                    <input class="typeahead" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_paramcontrat}}">
+                    <input class="typeaheads" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_paramcontrat}}">
                   </div>
                 </div>
               </div>
@@ -140,7 +138,8 @@
                   <div class="col">
                     <label>Date</label>
                     <div id="the-basics">
-                      <input class="typeahead" type="date" placeholder="">
+                      <input class="typeaheads" type="date" id="date" name="date"
+                          value="{{ date('Y-m-d') }}">
                     </div>
                   </div>
                   <div class="col">

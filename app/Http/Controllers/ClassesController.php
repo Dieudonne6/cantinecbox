@@ -164,7 +164,6 @@ class ClassesController extends Controller
                     else {
                         $moisCorrespondants = Moiscontrat::pluck('nom_moiscontrat', 'id_moiscontrat')->toArray();
 
-                        echo("le contrat n'existe pas dans la table inscriptioncontrat");
                         return view('pages.paiementcontrat')->with('fraismensuelle', $fraismensuelle)->with('moisCorrespondants', $moisCorrespondants);
 
                     }
@@ -177,7 +176,8 @@ class ClassesController extends Controller
                 }
             } else {
                 // return view('pages.inscriptioncontrat');
-                echo("le contrat n'existe pas !!!!!!!!!");
+                return back()->with('status','Le contrat n\'existe pas.Veuillez créer un contrat!!!');
+
             }
 
 
