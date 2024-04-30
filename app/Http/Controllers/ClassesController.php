@@ -94,7 +94,7 @@ class ClassesController extends Controller
 
             if ($contrat){
 
-                echo("oui L'eleve existe dans la table contrat !!!!!!!!!! ");
+                // echo("oui L'eleve existe dans la table contrat !!!!!!!!!! ");
                 $idcontrateleve = $contrat->id_contrat;
                 Session::put('idcontratEleve', $idcontrateleve);
 
@@ -129,7 +129,7 @@ class ClassesController extends Controller
                     // dd($fraismensuelle);
 
                     if($inscriptioncontrats){
-                        echo("le contrat existe dans la table inscriptioncontrat");
+                        // echo("le contrat existe dans la table inscriptioncontrat");
                         // dd($inscriptioncontrat);
                         // dd($moiscontrat);
                         
@@ -139,7 +139,8 @@ class ClassesController extends Controller
                     else {
                         $moisCorrespondants = Moiscontrat::pluck('nom_moiscontrat', 'id_moiscontrat')->toArray();
 
-                        echo("le contrat n'existe pas dans la table inscriptioncontrat");
+                        // echo("le contrat n'existe pas dans la table inscriptioncontrat");
+                        
                         return view('pages.paiementcontrat')->with('fraismensuelle', $fraismensuelle)->with('moisCorrespondants', $moisCorrespondants);
 
                     }
@@ -154,7 +155,7 @@ class ClassesController extends Controller
                     // dd($fraismensuelle);
 
                     if($inscriptioncontrats){
-                        echo("le contrat existe dans la table inscriptioncontrat");
+                        // echo("le contrat existe dans la table inscriptioncontrat");
                         // dd($inscriptioncontrat);
                         // dd($moiscontrat);
                         
@@ -296,7 +297,7 @@ class ClassesController extends Controller
 
 
 
-        echo('paiement effectuer avec succes');
+        // echo('paiement effectuer avec succes');
 
 
 
@@ -380,7 +381,8 @@ class ClassesController extends Controller
     
     // Vérifiez les erreurs de cURL
     if (curl_errno($ch)) {
-        echo 'Erreur cURL : ' . curl_error($ch);
+        // echo 'Erreur cURL : ' . curl_error($ch);
+        return back()->with('erreur','Erreur curl , mauvaise connexion a l\'API');
     }
     
     // Fermez la session cURL
@@ -420,7 +422,9 @@ class ClassesController extends Controller
     
         // Vérifiez les erreurs de cURL pour la confirmation
         if (curl_errno($chConfirmation)) {
-            echo 'Erreur cURL pour la confirmation : ' . curl_error($chConfirmation);
+            // echo 'Erreur cURL pour la confirmation : ' . curl_error($chConfirmation);/
+            return back()->with('erreur','Erreur curl pour la confirmation');
+
         }
     
         // Fermez la session cURL pour la confirmation
@@ -438,7 +442,9 @@ class ClassesController extends Controller
     // Vérifiez si la conversion a réussi
     if ($decodedResponseConfirmation === null) {
         // La conversion a échoué
-        echo 'Erreur lors de la conversion JSON : ' . json_last_error_msg();
+        // echo 'Erreur lors de la conversion JSON : ' . json_last_error_msg();
+        return back()->with('erreur','Erreur lors de la convertion json');
+
     } else {
     
         // 'codemecef',
@@ -501,7 +507,9 @@ class ClassesController extends Controller
     }
     } else {
         // La réponse ne contient pas d'UID
-        echo 'Erreur : Aucun UID trouvé dans la réponse de l\'API.';
+        // echo 'Erreur : Aucun UID trouvé dans la réponse de l\'API.';
+        return back()->with('erreur','Aucun iud trouver dans la reponse de l\'API');
+
     }
     
         }

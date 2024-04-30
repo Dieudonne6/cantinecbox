@@ -9,6 +9,11 @@
           {{ Session::get('status')}}
         </div>
       @endif
+            @if(Session::has('erreur'))
+        <div class="alert alert-danger btn-primary">
+          {{ Session::get('erreur')}}
+        </div>
+      @endif
       <div class="form-group row">
         <div class="col-3">
           <select class="js-example-basic-single w-100" onchange="window.location.href=this.value">
