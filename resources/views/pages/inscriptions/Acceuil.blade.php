@@ -7,18 +7,17 @@
         {{--  --}}
         <div class="row">
           
-            <div class="col-11">
-              <div class="card mb-4">
+            <div class="col-12">
+              <div class="card mb-6">
                 <div class="card-body">
                   <div class="row gy-3">
                     <div class="demo-inline-spacing">
                         <button type="button" class="btn btn-primary p-2">Nouveau</button>
-                        <button type="button" class="btn btn-secondary p-2">Modifier</button>
-                        <button type="button" class="btn btn-success p-2">Supprimez</button>
+                        
                         <button type="button" class="btn btn-danger p-2">Paiement</button>
                         <button type="button" class="btn btn-warning p-2">MAJ Paie</button>
                         <button type="button" class="btn btn-info p-2">Echéan.</button>
-                        <button type="button" class="btn btn-dark p-2">Profil</button>
+                        
                         <button type="button" class="btn btn-light p-2" >Cursus</button>
                         <button type="button" class="btn btn-secondary p-2">Imprimer</button>
                         <button class="btn btn-danger p-2 btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="291"> Liste déroulante </button>
@@ -39,7 +38,7 @@
 
         {{--  --}}
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-9">
                 
               <div class="card">
                 <div class="table-responsive pt-1 xl-5">
@@ -66,12 +65,21 @@
                         <td class="checkboxes-select" rowspan="1" colspan="1" style="width: 18px;">
                             <input type="checkbox" class="form-check-input-center"></td>
                         <td _msttexthash="141805" _msthash="179">1,3 millier</td>
+                        <td _msttexthash="28028" _msthash="178">5235 $</td>
                         <td>
                           <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-success btn-sm btn-icon-text mr-3">
-                                <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Éditer </font>
+                            <button type="button" class="btn btn-secondary p-2 btn-sm btn-icon-text mr-3">
+                                <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Modifier </font>
                                 <i class="typcn typcn-edit btn-icon-append"></i>                          
                             </button>
+                            <button type="button" class="btn btn-success p-2 btn-sm btn-icon-suprim mr-3">
+                              <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Supprimer </font>
+                              <i class="typcn typcn-edit btn-icon-append"></i>                          
+                          </button>
+                          <button type="button" class="btn btn-dark p-2 btn-sm btn-icon-profil mr-3">
+                            <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Profil </font>
+                            <i class="typcn typcn-edit btn-icon-append"></i>                          
+                        </button>
                           </div>
                         </td>
                       </tr>
@@ -84,12 +92,21 @@
                         <td class="checkboxes-select" rowspan="1" colspan="1" style="width: 18px;">
                             <input type="checkbox" class="form-check-input-center"></td>
                         <td _msttexthash="120575" _msthash="188">5,4 milles</td>
+                        <td _msttexthash="28028" _msthash="178">5235 $</td>
                         <td>
                           <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-success btn-sm btn-icon-text mr-3">
-                                <font _mstmutation="1" _msttexthash="88283" _msthash="188"> Éditer </font>
+                            <button type="button" class="btn btn-secondary p-2 btn-sm btn-icon-text mr-3">
+                                <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Modifier </font>
                                 <i class="typcn typcn-edit btn-icon-append"></i>                          
                             </button>
+                            <button type="button" class="btn btn-success p-2 btn-sm btn-icon-suprim mr-3">
+                              <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Supprimer </font>
+                              <i class="typcn typcn-edit btn-icon-append"></i>                          
+                          </button>
+                          <button type="button" class="btn btn-dark p-2 btn-sm btn-icon-profil mr-3">
+                            <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Profil </font>
+                            <i class="typcn typcn-edit btn-icon-append"></i>                          
+                        </button>
                           </div>
                         </td>
                       </tr>
@@ -102,12 +119,21 @@
                         <td class="checkboxes-select" rowspan="1" colspan="1" style="width: 18px;">
                             <input type="checkbox" class="form-check-input-center"></td>
                         <td _msttexthash="119951" _msthash="196">2,1 milles</td>
+                        <td _msttexthash="28028" _msthash="178">5235 $</td>
                         <td>
                           <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-success btn-sm btn-icon-text mr-3">
-                                <font _mstmutation="1" _msttexthash="88283" _msthash="196"> Éditer </font>
+                            <button type="button" class="btn btn-secondary p-2 btn-sm btn-icon-text mr-3">
+                                <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Modifier </font>
                                 <i class="typcn typcn-edit btn-icon-append"></i>                          
                             </button>
+                            <button type="button" class="btn btn-success p-2 btn-sm btn-icon-suprim mr-3">
+                              <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Supprimer </font>
+                              <i class="typcn typcn-edit btn-icon-append"></i>                          
+                          </button>
+                          <button type="button" class="btn btn-dark p-2 btn-sm btn-icon-profil mr-3">
+                            <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Profil </font>
+                            <i class="typcn typcn-edit btn-icon-append"></i>                          
+                        </button>
                           </div>
                         </td>
                       </tr>
@@ -120,12 +146,21 @@
                         <td class="checkboxes-select" rowspan="1" colspan="1" style="width: 18px;">
                             <input type="checkbox" class="form-check-input-center"></td>
                         <td _msttexthash="120653" _msthash="204">2,7 milles</td>
+                        <td _msttexthash="28028" _msthash="178">5235 $</td>
                         <td>
                           <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-success btn-sm btn-icon-text mr-3">
-                                <font _mstmutation="1" _msttexthash="88283" _msthash="204"> Éditer </font>
+                            <button type="button" class="btn btn-secondary p-2 btn-sm btn-icon-text mr-3">
+                                <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Modifier </font>
                                 <i class="typcn typcn-edit btn-icon-append"></i>                          
                             </button>
+                            <button type="button" class="btn btn-success p-2 btn-sm btn-icon-suprim mr-3">
+                              <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Supprimer </font>
+                              <i class="typcn typcn-edit btn-icon-append"></i>                          
+                          </button>
+                          <button type="button" class="btn btn-dark p-2 btn-sm btn-icon-profil mr-3">
+                            <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Profil </font>
+                            <i class="typcn typcn-edit btn-icon-append"></i>                          
+                        </button>
                           </div>
                         </td>
                       </tr>
@@ -138,12 +173,21 @@
                         <td class="checkboxes-select" rowspan="1" colspan="1" style="width: 18px;">
                             <input type="checkbox" class="form-check-input-center"></td>
                         <td _msttexthash="141687" _msthash="212">1,2 millier</td>
+                        <td _msttexthash="28028" _msthash="178">5235 $</td>
                         <td>
                           <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-success btn-sm btn-icon-text mr-3">
-                                <font _mstmutation="1" _msttexthash="88283" _msthash="212"> Éditer </font>
+                            <button type="button" class="btn btn-secondary p-2 btn-sm btn-icon-text mr-3">
+                                <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Modifier </font>
                                 <i class="typcn typcn-edit btn-icon-append"></i>                          
                             </button>
+                            <button type="button" class="btn btn-success p-2 btn-sm btn-icon-suprim mr-3">
+                              <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Supprimer </font>
+                              <i class="typcn typcn-edit btn-icon-append"></i>                          
+                          </button>
+                          <button type="button" class="btn btn-dark p-2 btn-sm btn-icon-profil mr-3">
+                            <font _mstmutation="1" _msttexthash="88283" _msthash="180"> Profil </font>
+                            <i class="typcn typcn-edit btn-icon-append"></i>                          
+                        </button>
                           </div>
                         </td>
                       </tr>
@@ -188,47 +232,48 @@
                         <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
                       </div>
                     </div>
-                  </div>
-                  <div class="accordion-item">
-                    <h5 class="accordion-header">
-                      <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
-                        Accordion Item #4
-                      </button>
-                    </h5>
-                    <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                    <div class="accordion-item">
+                      <h5 class="accordion-header">
+                        <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                          Accordion Item #4
+                        </button>
+                      </h5>
+                      <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h5 class="accordion-header">
+                        <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+                          Accordion Item #5
+                        </button>
+                      </h5>
+                      <div id="flush-collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h5 class="accordion-header">
+                        <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
+                          Accordion Item #6
+                        </button>
+                      </h5>
+                      <div id="flush-collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h5 class="accordion-header">
+                        <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
+                          Accordion Item #7
+                        </button>
+                      </h5>
+                      <div id="flush-collapseSeven" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                      </div>
                     </div>
                   </div>
-                  <div class="accordion-item">
-                    <h5 class="accordion-header">
-                      <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
-                        Accordion Item #5
-                      </button>
-                    </h5>
-                    <div id="flush-collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
-                    </div>
-                  </div>
-                  <div class="accordion-item">
-                    <h5 class="accordion-header">
-                      <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
-                        Accordion Item #6
-                      </button>
-                    </h5>
-                    <div id="flush-collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
-                    </div>
-                  </div>
-                  <div class="accordion-item">
-                    <h5 class="accordion-header">
-                      <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
-                        Accordion Item #7
-                      </button>
-                    </h5>
-                    <div id="flush-collapseSeven" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
-                    </div>
-                  </div>
+                  
                 </div>
                 </div>
                 
