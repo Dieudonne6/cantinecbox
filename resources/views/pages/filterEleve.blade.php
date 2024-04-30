@@ -104,7 +104,7 @@
                     <div class="col">
                       <label>Montant</label>
                       @if(Session::has('fraiscontrats'))
-                      <?php $fraiscontrats = Session::get('fraiscontrats'); ?>
+                        <?php $fraiscontrats = Session::get('fraiscontrats'); ?>
 
                         <div id="bloodhound">
                           <input class="typeahead" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_paramcontrat}}">
