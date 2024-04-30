@@ -11,6 +11,7 @@ class Paiementcontrat extends Model
     protected $table = 'paiementcontrat';
     public $timestamps = false;
 
+    protected $primaryKey = 'id_paiementcontrat'; // Clé primaire de votre table
 
     protected $fillable = ['soldeavant_paiementcontrat', 'montant_paiementcontrat', 'soldeapres_paiementcontrat', 'id_contrat', 'date_paiementcontrat', 'mois_paiementcontrat', 'anne_paiementcontrat', 'reference_paiementcontrat', 'statut_paiementcontrat', 'id_paiementglobalcontrat'];
 

@@ -177,7 +177,7 @@ class ClassesController extends Controller
                 }
             } else {
                 // return view('pages.inscriptioncontrat');
-                return back()->with('status','Le contrat n\'existe pas.Veuillez créer un contrat!!!');
+                return back()->with('status','Le contrat n\'existe pas.Veuillez créer un contrat pour l\'eleve');
 
             }
 
@@ -423,7 +423,7 @@ class ClassesController extends Controller
         // Vérifiez les erreurs de cURL pour la confirmation
         if (curl_errno($chConfirmation)) {
             // echo 'Erreur cURL pour la confirmation : ' . curl_error($chConfirmation);/
-            return back()->with('erreur','Erreur curl pour la confirmation');
+            return redirect('classes')->with('erreur','Erreur curl pour la confirmation');
 
         }
     
@@ -775,6 +775,74 @@ class ClassesController extends Controller
                 }
                 
     
+                public function supprimercontrat($MATRICULE){
+
+    // $existingContrat = Contrat::where('eleve_contrat', $matricules)->exists();
+
+                    $contratss = Contrat::where('eleve_contrat', $MATRICULE)->first();
+                    if($contratss){
+
+                        $idcontrat = $contratss['id_contrat'];
+                        // dd($idcontrat);
+                        $contratss->delete();
+
+
+                        // suppression du contrat de la table paiementcontrat
+                        
+                        $paiementcontrat = Paiementcontrat::where('id_contrat', $idcontrat)->get();
+                        // dd($paiementcontrat);
+                        // Vérifier si des enregistrements existent
+                        if ($paiementcontrat->count() > 0) {
+                            // Parcourir chaque modèle et appeler delete() sur chaque modèle
+                            foreach ($paiementcontrat as $paiement) {
+                                $paiement->delete();
+                            }
+                        }else{
+
+                            return back()->with("status", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve");
+                        }
+
+
+                        // suppression du contrat de la table inscriptioncontrat
+
+                        $inscriptioncontratspe = Inscriptioncontrat::where('id_contrat', $idcontrat)->get();
+                        // dd($paiementcontrat);
+                        // Vérifier si des enregistrements existent
+                        if ($inscriptioncontratspe->count() > 0) {
+                            // Parcourir chaque modèle et appeler delete() sur chaque modèle
+                            foreach ($inscriptioncontratspe as $paiementinscri) {
+                                $paiementinscri->delete();
+                            }
+                        }else{
+
+                            return back()->with("status", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve");
+                        }
+
+
+                        // suppression du contrat de la table paiementglobalcontrat
+
+                        $paiementglobal = Paiementglobalcontrat::where('id_contrat', $idcontrat)->get();
+                        // dd($paiementcontrat);
+                        // Vérifier si des enregistrements existent
+                        if ($paiementglobal->count() > 0) {
+                            // Parcourir chaque modèle et appeler delete() sur chaque modèle
+                            foreach ($paiementglobal as $paiementglob) {
+                                $paiementglob->delete();
+                            }
+                        }else{
+
+                            return back()->with("status", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve");
+                        }
+
+                        // $paiementcontrat->delete();
+                        return back()->with("status", "Le contrat a ete supprimer avec succes");
+
+                    }else{
+                        return back()->with("status", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve");
+
+                    }
+                
+            }
                 
   
                 

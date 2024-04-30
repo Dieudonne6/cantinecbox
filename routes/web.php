@@ -69,3 +69,4 @@ Route::post('/connexions', [PagesController::class, 'connexions']);
 Route::post('/logins', [PagesController::class, 'logins']);
 
 Route::get('/inscription', [EleveController::class, 'inscription']);
+Route::delete('/supprimercontrat/{MATRICULE}', [ClassesController::class, 'supprimercontrat']);
