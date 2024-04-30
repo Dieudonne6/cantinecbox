@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class EleveController extends Controller
 {
     public function inscription(){
-        return view('pages.inscription');
+        return view('pages.inscriptions.inscrireeleve');
     }
 
 }
