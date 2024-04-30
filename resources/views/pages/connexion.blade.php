@@ -28,7 +28,7 @@
           <div class="col-lg-4 mx-auto">
             <div class="auth-form-light text-left py-5 px-4 px-sm-5">
               @if(Session::has('status'))
-              <div class="alert alert-succes btn-primary">
+              <div id="statusAlert" class="alert alert-succes btn-primary">
               {{ Session::get('status')}}
               </div>
             @endif
