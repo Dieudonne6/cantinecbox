@@ -5,6 +5,7 @@ use App\Http\Controllers\PagesController;
 
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ConnexionDBController;
+use App\Http\Controllers\EleveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,4 +67,6 @@ Route::get('/dashbord', [PagesController::class, 'dashbord']);
 Route::post('/connexion', [ConnexionDBController::class, 'connexion']);
 Route::post('/connexions', [PagesController::class, 'connexions']);
 Route::post('/logins', [PagesController::class, 'logins']);
+
+Route::get('/inscription', [EleveController::class, 'inscription']);
 Route::delete('/supprimercontrat/{MATRICULE}', [ClassesController::class, 'supprimercontrat']);
