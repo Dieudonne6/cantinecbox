@@ -68,6 +68,20 @@
       }, 15000); 
     }
 </script>
+<script>
+  $(document).ready(function() {
+    $('#selectClasses').change(function() {
+      var selectedValue = $(this).val();
+      if (selectedValue === 'Maternelle') {
+        $('#bloodhound input[type="text"][name="montant"][value="{{$fraiscontrats->fraisinscription_paramcontrat}}"]').addClass('d-none');
+        $('#bloodhound input[type="text"][name="montant"][value="{{$fraiscontrats->fraisinscription_mat}}"]').removeClass('d-none');
+      } else if (selectedValue === 'Primaire') {
+        $('#bloodhound input[type="text"][name="montant"][value="{{$fraiscontrats->fraisinscription_mat}}"]').addClass('d-none');
+        $('#bloodhound input[type="text"][name="montant"][value="{{$fraiscontrats->fraisinscription_paramcontrat}}"]').removeClass('d-none');
+      }
+    });
+  });
+</script>
 
   <!-- End custom js for this page-->
 

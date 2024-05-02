@@ -31,6 +31,7 @@ class PagesController extends Controller
         $param = new Paramcontrat();
         $param->anneencours_paramcontrat = $request->input('anneencours_paramcontrat');
         $param->fraisinscription_paramcontrat = $request->input('fraisinscription_paramcontrat');
+        $param->fraisinscription_mat = $request->input('fraisinscription_mat');
         $param->fraisinscription2_paramcontrat = $request->input('fraisinscription2_paramcontrat');
         $param->coutmensuel_paramcontrat = $request->input('coutmensuel_paramcontrat');
         $param->save();
@@ -43,6 +44,8 @@ class PagesController extends Controller
         $params = Paramcontrat::find($id_paramcontrat);
         $params->anneencours_paramcontrat = $request->input('anneencours_paramcontrat');
         $params->fraisinscription_paramcontrat = $request->input('fraisinscription_paramcontrat');
+        $params->fraisinscription_mat = $request->input('fraisinscription_mat');
+
         $params->fraisinscription2_paramcontrat = $request->input('fraisinscription2_paramcontrat');
         $params->coutmensuel_paramcontrat = $request->input('coutmensuel_paramcontrat');
         $params->update();
