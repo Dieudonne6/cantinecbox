@@ -630,6 +630,14 @@
         </ul>
       </div>
     </li>
-
   </ul>
+  
+    <div class="justify-content-center d-flex align-items-center">
+       
+          <div class="section">
+            <a href="{{url('/')}}" class="button btn-danger">Déconnexion</a>
+          </div>
+       
+    </div>
+
 </nav>
