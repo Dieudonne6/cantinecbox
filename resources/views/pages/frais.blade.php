@@ -14,13 +14,13 @@
         @method('PUT')
         <input type="hidden" value="{{$param->id_paramcontrat}}" name="id_paramcontrat">
         <div class="row">
-          <div class="col-md-6 grid-margin stretch-card">
+          <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
                 <h4 class="card-title" _msttexthash="323960" _msthash="106">Année académique </h4>
                 <div class="form-group row">
                   <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
-                  <div class="col-sm-9">
+                  <div class="col-sm-12">
                     <input type="text" name="anneencours_paramcontrat" class="form-control" id="exampleInputUserannée"  value="{{$param->anneencours_paramcontrat}}" _mstplaceholder="117572" _msthash="115">
                   </div>
                 </div>
@@ -31,7 +31,7 @@
           <div class="col-md-6 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <h4 class="card-title" _msttexthash="323960" _msthash="106">Frais d'inscriptions</h4>      
+                <h4 class="card-title" _msttexthash="323960" _msthash="106">Frais d'inscriptions Primaire</h4>      
                 <div class="form-group row">
                   <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
                   <div class="col-sm-9">
@@ -41,7 +41,19 @@
               </div>
             </div>
           </div>
-
+          <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title" _msttexthash="323960" _msthash="106">Frais d'inscriptions Maternel</h4>      
+                <div class="form-group row">
+                  <label for="exampleInputUsername" class="col-sm-3 col-form-label" _msttexthash="202930" _msthash="116"></label>
+                  <div class="col-sm-9">
+                    <input type="text" name="fraisinscription_mat" value="{{$param->fraisinscription_mat}}" class="form-control" id="exampleInputUserannée" placeholder="2024" _mstplaceholder="117572" _msthash="115">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="col-md-6 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
