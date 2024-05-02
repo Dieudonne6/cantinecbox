@@ -28,6 +28,12 @@
                                             <input class="typeaheads" id="fraismensuelle" name="montantcontrat" type="text" value="{{ $fraismensuelle }}" readonly>
                                         </div>
                                     </div>
+                                    <div class="col">
+                                        <label>Reduction</label>
+                                        <div id="bloodhound">
+                                            <input class="typeaheads" id="reduction" name="reduction" type="number" >
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -87,41 +93,41 @@
 @endsection
 
 <script>
-    // Attend que le document soit prêt
-    document.addEventListener("DOMContentLoaded", function() {
-        // Sélectionne tous les éléments avec la classe checkbox-mois
-        var checkboxes = document.querySelectorAll('.checkbox-mois');
-        var fraismensuelle = document.querySelector('#fraismensuelle');
-        var fraistotal = document.querySelector('#fraistotal');
+ // Attend que le document soit prêt
+document.addEventListener("DOMContentLoaded", function() {
+    // Sélectionne tous les éléments avec la classe checkbox-mois
+    var checkboxes = document.querySelectorAll('.checkbox-mois');
+    var fraismensuelle = document.querySelector('#fraismensuelle');
+    var fraistotal = document.querySelector('#fraistotal');
+    var reductionInput = document.getElementById('reduction');
 
-        // Accéder à la valeur de l'élément input
-        var valeurInput = fraismensuelle.value;
-
-        // console.log(valeurInput);
-        // Fonction pour mettre à jour le nombre de cases cochées
-        function updateCheckedCount() {
-            var checkedCheckboxes = document.querySelectorAll('.checkbox-mois:checked');
-            var numberOfCheckedCheckboxes = checkedCheckboxes.length;
-  
-            // Mettre à jour le contenu de l'élément HTML
-            // document.getElementById('checked-count').textContent = numberOfCheckedCheckboxes * valeurInput;
-            var jojoj = document.getElementById('checked-count');
-
-             jojoj.textContent = numberOfCheckedCheckboxes * valeurInput;
-             var montanttot = jojoj.textContent;
-
-            // Mettre à jour la valeur de l'input avec le montant total
-            fraistotal.value = montanttot;
-
-        }
-  
-        // Écoute les changements d'état des cases à cocher
-        checkboxes.forEach(function(checkbox) {
-            checkbox.addEventListener('change', function() {
-                // Met à jour le nombre de cases cochées
-                updateCheckedCount();
-            });
-        });
-
+    // Ajouter un écouteur d'événement sur l'input de réduction
+    reductionInput.addEventListener('input', function() {
+        // Récupérer la valeur saisie dans l'input de réduction
+        var valuereduction = reductionInput.value;
+        // Mettre à jour le montant total en soustrayant la réduction
+        updateCheckedCount(valuereduction);
     });
+
+    // Fonction pour mettre à jour le montant total en fonction du nombre de cases cochées et de la réduction
+    function updateCheckedCount(valuereduction) {
+        var checkedCheckboxes = document.querySelectorAll('.checkbox-mois:checked');
+        var numberOfCheckedCheckboxes = checkedCheckboxes.length;
+        var montantTotal = (numberOfCheckedCheckboxes * fraismensuelle.value) - valuereduction;
+        
+        // Mettre à jour le contenu de l'élément HTML affichant le montant total
+        fraistotal.value = montantTotal;
+    }
+
+    // Écoute les changements d'état des cases à cocher
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            // Met à jour le montant total
+            updateCheckedCount(reductionInput.value);
+        });
+    });
+
+    // Mettre à jour le montant total initial lors du chargement de la page
+    updateCheckedCount(reductionInput.value);
+});
   </script>
