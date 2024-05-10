@@ -92,10 +92,16 @@
         <div class="card">
             {{csrf_field()}}
           <div class="card-body">
-            <p class="card-description" style="color: black">
-              Sélectionnez l'élève 
-            </p>
+            <div class="form-group">
+              <label> Sélectionnez la section </label>
+              <select class="form-select form-control w-100" id="selectClasses" name="classes">
+                <option value="Maternelle">Maternelle</option>
+                <option value="Primaire">Primaire</option>
+              </select>
+            </div>
+           
               <div class="form-group w-100">
+                <label> Sélectionnez l'élève </label>
                 @csrf
                 <select class="js-example-basic-multiple w-100" multiple="multiple" name="matricules[]">
                   @foreach ($eleve as $eleves)
@@ -113,11 +119,11 @@
                         value="{{ date('Y-m-d') }}">
                   </div>
                 </div>
-
                 <div class="col">
                   <label>Montant</label>
                   <div id="bloodhound">
-                    <input class="typeaheads" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_paramcontrat}}">
+                    <input class="typeaheads mater" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_mat}}">
+                    <input class="typeaheads d-none prima" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_paramcontrat}}">
                   </div>
                 </div>
               </div>
@@ -307,6 +313,8 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 @endsection
+
+
 
 {{-- @push('scripts')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

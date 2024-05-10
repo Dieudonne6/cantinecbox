@@ -73,3 +73,5 @@ Route::get('/etatpaiement', [ClassesController::class, 'etatpaiement'])->name('e
 Route::post('/traitementetatpaiement', [ClassesController::class, 'traitementetatpaiement'])->name('traitementetatpaiement');
 Route::delete('/supprimercontrat/{MATRICULE}', [ClassesController::class, 'supprimercontrat']);
 Route::delete('/supprimerpaiement/{id_paiementcontrat}', [ClassesController::class, 'supprimerpaiement']);
+
+Route::get('/vitrine', [PagesController::class, 'vitrine']);

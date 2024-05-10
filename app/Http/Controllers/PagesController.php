@@ -31,17 +31,21 @@ class PagesController extends Controller
         $param = new Paramcontrat();
         $param->anneencours_paramcontrat = $request->input('anneencours_paramcontrat');
         $param->fraisinscription_paramcontrat = $request->input('fraisinscription_paramcontrat');
+        $param->fraisinscription_mat = $request->input('fraisinscription_mat');
         $param->fraisinscription2_paramcontrat = $request->input('fraisinscription2_paramcontrat');
         $param->coutmensuel_paramcontrat = $request->input('coutmensuel_paramcontrat');
         $param->save();
         return back()->with('status','Enregistrer avec succes');
     }
+    
     public function modifierfrais($id_paramcontrat, Request $request){
         // $test = $request->input('id_paramcontrat');
         // dd($test);
         $params = Paramcontrat::find($id_paramcontrat);
         $params->anneencours_paramcontrat = $request->input('anneencours_paramcontrat');
         $params->fraisinscription_paramcontrat = $request->input('fraisinscription_paramcontrat');
+        $params->fraisinscription_mat = $request->input('fraisinscription_mat');
+
         $params->fraisinscription2_paramcontrat = $request->input('fraisinscription2_paramcontrat');
         $params->coutmensuel_paramcontrat = $request->input('coutmensuel_paramcontrat');
         $params->update();
@@ -88,10 +92,12 @@ class PagesController extends Controller
         return view('pages.inscriptions.Acceuil');
 
     }
+
     public function connexion(){
         $login = Usercontrat::get();
         return view('pages.connexion', ['login' => $login]);
     }
+
     public function logins(Request $request){
         $account = Usercontrat::where("login_usercontrat",$request->login_usercontrat)->first();
         if($account){
@@ -106,6 +112,11 @@ class PagesController extends Controller
             return back()->with('status', 'Mot de passe ou email incorrecte');
 
         }
+
+    }
+
+    public function vitrine(){
+        return view('pages.vitrine');
 
     }
 

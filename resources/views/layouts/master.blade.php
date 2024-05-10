@@ -69,6 +69,20 @@
     }
 </script>
 
+<script>
+  $(document).ready(function() {
+    $('#selectClasses').change(function() {
+      var selectedValue = $(this).val();
+      if (selectedValue === 'Maternelle') {
+        $('.prima').addClass('d-none');
+        $('.mater').removeClass('d-none');
+      } else if (selectedValue === 'Primaire') {
+        $('.mater').addClass('d-none');
+        $('.prima').removeClass('d-none');
+      }
+    });
+  });
+</script>
   <!-- End custom js for this page-->
 
   {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

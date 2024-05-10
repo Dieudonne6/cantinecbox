@@ -38,7 +38,7 @@
 
         {{--  --}}
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-8">
                 
               <div class="card">
                 <div class="table-responsive pt-1 xl-5">
@@ -205,21 +205,65 @@
                     <div class="accordion-item">
                       <h5 class="accordion-header">
                         <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                          Accordion Item #1
+                          Informations généraless
                         </button>
                       </h5>
                       <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+                        <form class="accordion-body">
+                          
+                            <div class="mb-2">
+                              <input type="" class="form-control" id="date" placeholder="Date de Naissance">
+                            </div>
+                            <div class="mb-2">
+                              <input type="" class="form-control" id="lieu" placeholder="Lieu de Naissance">
+                            </div>
+                            <div class="mb-2">
+                              <label for="exampleDropdownFormDate" class="form-label p-2">Sexe</label>
+                              <select class="form-auto">
+                                <option _msttexthash="42861" _msthash="226">Masculin</option>
+                                <option _msttexthash="73437" _msthash="227">Féminin</option>
+                              </select>
+                            </div>
+                            <div class="mb-2">
+                              <label for="exampleDropdownFormPassword2" class="form-label">Types élèves</label>
+                              <select class="form-auto">
+                                <option _msttexthash="42861" _msthash="226">Ancien</option>
+                                <option _msttexthash="73437" _msthash="227">Nouveau</option>
+                              </select>
+                            </div>
+                            <div class="mb-2">
+                              <input type="" class="form-control" id="date" placeholder="Date d'inscription">
+                            </div>
+                            <div class="mb-2 p-2">
+                              <label for="exampleDropdownFormPassword2" class="form-label">Apte</label>
+                              <select class="form-auto">
+                                <option >Oui</option>
+                                <option >Non</option>
+                              </select>
+                            </div>
+                            <div class="mb-2">
+                              <div class="form-check mx-9">
+                                <input type="checkbox" class="form-check-input mx-9" id="dropdownCheck2">
+                                <label class="form-check-label" for="dropdownCheck2">
+                                  Statut Redoublant
+                                </label>
+                              </div>
+                            </div>
+                            
+                          </form>
+                        
                       </div>
                     </div>
                     <div class="accordion-item">
                       <h5 class="accordion-header">
                         <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                          Accordion Item #2
+                          Détail des notes
                         </button>
                       </h5>
                       <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
+                        <div class="accordion-body">
+                          
+                        </div>
                       </div>
                     </div>
                     <div class="accordion-item">
