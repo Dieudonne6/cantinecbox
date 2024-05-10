@@ -605,13 +605,11 @@
             </div>
            </li>
           </div>
-
           <li class="nav-item"> <a class="nav-link" href="{{url('/confimpression')}}"> Configurer Imprimante </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/changetrimestre')}}"> Changement de trimestre </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnees')}}">Connexion à la<br>base de donnée </a></li>
-
-
+          <li class="nav-item"> <a class="nav-link" href="{{url('/paramsfacture')}}">Paramètre Facture </a></li>
         </ul>
       </div>
     </li>
@@ -626,18 +624,31 @@
         <ul class="nav flex-column sub-menu">
 
           <li class="nav-item"> <a class="nav-link" href="{{url('/classes')}}">Toutes les classes</a></li>
-
+          <div class="dropdown">
+            <li class="nav-item">
+            <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton90" data-toggle="dropdown" 
+            aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Etats </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton90" style="" _mstvisible="0" >
+              <a class="dropdown-item" href="#" _msttexthash="20" _msthash="20" _mstvisible="1">Etat des paiements</a>
+              <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Etat des droits constatés</a>
+              <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Lettre de relance</a>
+            </div>
+            </li>
+          </div>
+          
         </ul>
       </div>
     </li>
+ 
   </ul>
   
-    <div class="justify-content-center d-flex align-items-center">
+  
+    {{-- <div class="justify-content-center d-flex align-items-center">
        
           <div class="section">
-            <a href="{{url('/')}}" class="button btn-danger">Déconnexion</a>
+            <a href="{{url('/')}}" class="button btn-primary">Déconnexion</a>
           </div>
        
-    </div>
+    </div> --}}
 
 </nav>

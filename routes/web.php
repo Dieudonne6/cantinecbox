@@ -6,6 +6,7 @@ use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ConnexionDBController;
 use App\Http\Controllers\EleveController;
+use App\Http\Controllers\EtatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,3 +73,8 @@ Route::get('/inscription', [EleveController::class, 'inscription']);
 Route::delete('/supprimercontrat/{MATRICULE}', [ClassesController::class, 'supprimercontrat']);
 
 Route::get('/vitrine', [PagesController::class, 'vitrine']);
+Route::get('/etatdroits', [EtatController::class, 'etatdroits']);
+Route::post('/filteretat', [EtatController::class, 'filteretat']);
+
+Route::get('/paramsfacture', [PagesController::class, 'paramsfacture']);
+Route::post('/paramsemecef', [PagesController::class, 'paramsemecef']);

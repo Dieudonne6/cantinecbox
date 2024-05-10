@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('content')
+{{-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> --}}
 
 <div class="col-lg-12 grid-margin stretch-card">
   <div class="card">
@@ -31,7 +32,7 @@
       </div>
 
       </div>
-      <div class="table-responsive">
+      <div class="table-responsive mb-4">
         <table class="table">
           <thead>
             <tr>
@@ -70,7 +71,10 @@
             @endforeach
         </tbody>
         </table>
+
       </div>
+      {{ $filterEleve->links('pagination.bootstrap-4-custom') }}
+
     </div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -217,6 +221,10 @@
       </div>
 
       @endforeach --}}
+<!-- Scripts -->
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> --}}
 
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 @endsection

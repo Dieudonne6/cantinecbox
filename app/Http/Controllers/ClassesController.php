@@ -33,10 +33,11 @@ class ClassesController extends Controller
 {
     public function classe(Request $request){
         if(Session::has('account')){
-            $eleves = Eleve::get();
+            $eleves = Eleve::paginate(6);
             $classes = Classes::get();
             $fraiscontrat = Paramcontrat::first(); 
             Session::put('eleves', $eleves);
+            Session::put('classes', $classes);
             Session::put('fraiscontrats', $fraiscontrat);
             return view('pages.classes')->with('eleve', $eleves)->with('classe', $classes)->with('fraiscontrats', $fraiscontrat);
         } 
@@ -46,7 +47,7 @@ class ClassesController extends Controller
     public function filterEleve($CODECLAS){
         $eleves = Eleve::get();
         $classes = Classes::get();
-        $filterEleves = Eleve::where('CODECLAS', $CODECLAS)->get();
+        $filterEleves = Eleve::where('CODECLAS', $CODECLAS)->paginate(6);
         Session::put('fill', $filterEleves);
         
         // dd($fill);

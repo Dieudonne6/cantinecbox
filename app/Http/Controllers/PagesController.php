@@ -8,6 +8,8 @@ use App\Models\Moiscontrat;
 use App\Models\Paramcontrat;
 use App\Models\Contrat;
 use App\Models\Usercontrat;
+use App\Models\Paramsfacture;
+
 use Illuminate\Support\Facades\Session;
 class PagesController extends Controller
 {
@@ -119,5 +121,17 @@ class PagesController extends Controller
         return view('pages.vitrine');
 
     }
-
+    public function paramsfacture(){
+        return view('pages.paramsfacture');
+    }
+   
+    public function paramsemecef(Request $request){
+        $emcef = new Paramsfacture();
+        $emcef->ifu = $request->input('ifu');
+        $emcef->token = $request->input('token');
+        $emcef->taxe = $request->input('taxe');
+        $emcef->type = $request->input('type');
+        $emcef->save();
+        return back()->with('status','Enregistrer avec succes');
+    }
 }

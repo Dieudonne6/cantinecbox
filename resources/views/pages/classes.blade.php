@@ -10,7 +10,7 @@
         </div>
       @endif
             @if(Session::has('erreur'))
-        <div class="alert alert-danger btn-primary">
+        <div id="statusAlert" class="alert alert-danger btn-primary">
           {{ Session::get('erreur')}}
         </div>
       @endif
@@ -36,7 +36,7 @@
         </div> --}}
 
       </div>
-      <div class="table-responsive">
+      <div class="table-responsive mb-4">
         <table class="table">
           <thead>
             <tr>
@@ -73,9 +73,12 @@
                     </td>
                 </tr>
             @endforeach
+
         </tbody>
         </table>
       </div>
+      {{ $eleve->links('pagination.bootstrap-4-custom') }}
+
     </div>
   </div>
 </div>
