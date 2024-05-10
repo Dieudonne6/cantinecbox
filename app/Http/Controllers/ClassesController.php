@@ -16,6 +16,7 @@ use App\Models\Paiementglobalcontrat;
 use App\Models\Paiementcontrat;
 use App\Models\Moiscontrat;
 use App\Models\Facturenormalise;
+use App\Models\Usercontrat;
 use GuzzleHttp\Client;
 use Barryvdh\DomPDF\PDF;
 use Endroid\QrCode\QrCode;
@@ -189,6 +190,7 @@ class ClassesController extends Controller
 
                 $idcontratEleve = Session::get('idcontratEleve');
                 $moisCoches = $request->input('moiscontrat');
+                $montantmoiscontrat = $request->input('montantcontrat');
                 $montanttotal = $request->input('montanttotal');
                 $datepaiementcontrat = $request->input('date');
                 $anneeActuelle = date('Y');
@@ -247,9 +249,9 @@ class ClassesController extends Controller
                 // ENREGISTREMENT DANS LA TABLE PAIEMENTGLOBALCONTRAT
                $paiementglobalcontrat =  new Paiementglobalcontrat();
                     
-               $paiementglobalcontrat->soldeavant_paiementcontrat = $soldeavant_paiementcontrat;
+               $paiementglobalcontrat->soldeavant_paiementcontrat = $montanttotal;
                $paiementglobalcontrat->montant_paiementcontrat = $montanttotal;
-               $paiementglobalcontrat->soldeapres_paiementcontrat = $soldeapres_paiementcontrat;
+               $paiementglobalcontrat->soldeapres_paiementcontrat = 0;
                $paiementglobalcontrat->id_contrat = $idcontratEleve;
                $paiementglobalcontrat->date_paiementcontrat = $datepaiementcontrat;
                //     $paiementglobalcontrat->id_usercontrat = null;
@@ -277,9 +279,9 @@ class ClassesController extends Controller
                 foreach ($moisCoches as $id_moiscontrat) {
                     Paiementcontrat::create([
                         // 'id_paiementcontrat ' => $valeurDynamiqueidpaiemnetcontrat, 
-                        'soldeavant_paiementcontrat' => $soldeavant_paiementcontrat,
-                        'montant_paiementcontrat' => $montanttotal,
-                        'soldeapres_paiementcontrat' => $soldeapres_paiementcontrat,
+                        'soldeavant_paiementcontrat' => $montantmoiscontrat,
+                        'montant_paiementcontrat' => $montantmoiscontrat,
+                        'soldeapres_paiementcontrat' => 0,
                         'id_contrat' => $idcontratEleve,
                         'date_paiementcontrat' => $datepaiementcontrat,
                         // 'id_usercontrat' => $anneeActuelle,
@@ -342,7 +344,7 @@ class ClassesController extends Controller
         
             
             $invoiceRequestDto = [
-                "ifu" => "0202380068074",
+                "ifu" => "0202380068074", // ici on doit rendre la valeur de l'ifu dynamique
                 "type" => "FV",
                 "items" => $invoiceItems,
                 "operator" => [
@@ -753,6 +755,8 @@ class ClassesController extends Controller
             $contra = new Contrat();
             $contra->eleve_contrat = $matricule;
             $contra->cout_contrat = $request->input('montant');
+            $contra->statut_contrat = 1;
+            // $contra->id_usercontrat = ; mettre l'id de l'utilisateur connecter
             $dateContrat = $request->input('date');
             if(empty($dateContrat)) {
                 $dateContrat = date('Y-m-d'); 
@@ -785,55 +789,56 @@ class ClassesController extends Controller
 
                         $idcontrat = $contratss['id_contrat'];
                         // dd($idcontrat);
-                        $contratss->delete();
+                        // passage du statut a 0
+                        $contratss->update(['statut_contrat' => 0]);
 
 
                         // suppression du contrat de la table paiementcontrat
                         
-                        $paiementcontrat = Paiementcontrat::where('id_contrat', $idcontrat)->get();
-                        // dd($paiementcontrat);
-                        // Vérifier si des enregistrements existent
-                        if ($paiementcontrat->count() > 0) {
-                            // Parcourir chaque modèle et appeler delete() sur chaque modèle
-                            foreach ($paiementcontrat as $paiement) {
-                                $paiement->delete();
-                            }
-                        }else{
+                        // $paiementcontrat = Paiementcontrat::where('id_contrat', $idcontrat)->get();
+                        // // dd($paiementcontrat);
+                        // // Vérifier si des enregistrements existent
+                        // if ($paiementcontrat->count() > 0) {
+                        //     // Parcourir chaque modèle et appeler delete() sur chaque modèle
+                        //     foreach ($paiementcontrat as $paiement) {
+                        //         $paiement->update(['statut_paiementcontrat' => 0]);
+                        //     }
+                        // }else{
 
-                            return back()->with("status", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve");
-                        }
+                        //     return back()->with("status", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve");
+                        // }
 
 
                         // suppression du contrat de la table inscriptioncontrat
 
-                        $inscriptioncontratspe = Inscriptioncontrat::where('id_contrat', $idcontrat)->get();
-                        // dd($paiementcontrat);
-                        // Vérifier si des enregistrements existent
-                        if ($inscriptioncontratspe->count() > 0) {
-                            // Parcourir chaque modèle et appeler delete() sur chaque modèle
-                            foreach ($inscriptioncontratspe as $paiementinscri) {
-                                $paiementinscri->delete();
-                            }
-                        }else{
+                        // $inscriptioncontratspe = Inscriptioncontrat::where('id_contrat', $idcontrat)->get();
+                        // // dd($paiementcontrat);
+                        // // Vérifier si des enregistrements existent
+                        // if ($inscriptioncontratspe->count() > 0) {
+                        //     // Parcourir chaque modèle et appeler delete() sur chaque modèle
+                        //     foreach ($inscriptioncontratspe as $paiementinscri) {
+                        //         $paiementinscri->delete();
+                        //     }
+                        // }else{
 
-                            return back()->with("status", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve");
-                        }
+                        //     return back()->with("status", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve");
+                        // }
 
 
                         // suppression du contrat de la table paiementglobalcontrat
 
-                        $paiementglobal = Paiementglobalcontrat::where('id_contrat', $idcontrat)->get();
-                        // dd($paiementcontrat);
-                        // Vérifier si des enregistrements existent
-                        if ($paiementglobal->count() > 0) {
-                            // Parcourir chaque modèle et appeler delete() sur chaque modèle
-                            foreach ($paiementglobal as $paiementglob) {
-                                $paiementglob->delete();
-                            }
-                        }else{
+                        // $paiementglobal = Paiementglobalcontrat::where('id_contrat', $idcontrat)->get();
+                        // // dd($paiementcontrat);
+                        // // Vérifier si des enregistrements existent
+                        // if ($paiementglobal->count() > 0) {
+                        //     // Parcourir chaque modèle et appeler delete() sur chaque modèle
+                        //     foreach ($paiementglobal as $paiementglob) {
+                        //         $paiementglob->update(['statut_paiementcontrat' => 0]);
+                        //     }
+                        // }else{
 
-                            return back()->with("status", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve");
-                        }
+                        //     return back()->with("status", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve");
+                        // }
 
                         // $paiementcontrat->delete();
                         return back()->with("status", "Le contrat a ete supprimer avec succes");
@@ -845,7 +850,171 @@ class ClassesController extends Controller
                 
             }
                 
-  
+
+
+     
+            public function etatpaiement(){
+                return view ('pages.etatpaiement');
+            }
+
+            public function traitementetatpaiement(Request $request){
+
+                // $debut = $request->input('debut');
+                // $fin = $request->input('fin');
+
+                // // dd($debut);
+
+                // $resultats = Paiementglobalcontrat::whereBetween('date_paiementcontrat', [$debut, $fin])->get();
+                // $resultatsIndividuels = collect([]);
+
+                // // Itérez sur chaque résultat et stockez-le dans la collection
+                // foreach ($resultats as $resultat) {
+                //     $resultatsIndividuels->push($resultat);
+                // }
+                // // dd($resultatsIndividuels);
+
+                // // Vérifiez si la collection est vide
+                // if ($resultatsIndividuels->isEmpty()) {
+                //     // Aucun résultat trouvé
+                //     return view('pages.etatpaiement1')->with('status', 'Aucun paiement trouvé pour les dates spécifiées.');
+                // } else {
+                //     // Afficher les résultats
+                //     return view('pages.etatpaiement1')->with('resultatsIndividuels', $resultatsIndividuels);
+                // }
+
+
+
+
+
+
+
+
+
+
+
+
+                $debut = $request->input('debut');
+                $fin = $request->input('fin');
+            
+                // Récupérer les paiements entre les dates spécifiées
+                $paiements = Paiementglobalcontrat::whereBetween('date_paiementcontrat', [$debut, $fin])->get();
+            
+                // Collection pour stocker les informations de paiement avec les noms d'élève
+                $paiementsAvecEleves = collect([]);
+            
+                // Itérer sur chaque paiement
+                foreach ($paiements as $paiement) {
+                    // Récupérer l'id_contrat de ce paiement
+                    $idContrat = $paiement->id_contrat;
+            
+                    // Récupérer le matricule de l'élève à partir de la table Contrat
+                    $contrat = Contrat::find($idContrat);
+                    if ($contrat) {
+                        $matriculeEleve = $contrat->eleve_contrat;
+                        $iduser = $contrat->id_usercontrat;
+
+                        $user = Usercontrat::where('id_usercontrat', $iduser)->first();
+            
+                        // Récupérer le nom de l'élève à partir de la table Eleve
+                        $eleve = Eleve::where('MATRICULE', $matriculeEleve)->first();
+                        if ($eleve) {
+                            // Ajouter les informations de paiement avec le nom de l'élève à la collection
+                            $paiementsAvecEleves->push([
+                                'id_contrat' => $idContrat,
+                                'nomcomplet_eleve' => $eleve->NOM .' '. $eleve->PRENOM,
+                                'classe_eleve' => $eleve->CODECLAS,
+                                'id_paiementcontrat' => $paiement->id_paiementcontrat,
+                                'date_paiement' => $paiement->date_paiementcontrat,
+                                'montant' => $paiement->montant_paiementcontrat,
+                                'mois' => $paiement->mois_paiementcontrat,
+                                'reference' => $paiement->reference_paiementcontrat,
+                                'user' => $user->login_usercontrat,
+                                // Ajoutez d'autres informations de paiement si nécessaire
+                            ]);
+                        }
+                    }
+                }
+            
+                // Vérifiez si des paiements ont été trouvés
+                Session::put('paiementsAvecEleves', $paiementsAvecEleves);
+                if ($paiementsAvecEleves->isEmpty()) {
+                    // Aucun paiement trouvé pour les dates spécifiées
+                    return view('pages.etatpaiement1')->with('status', 'Aucun paiement trouvé pour la periode spécifiées.')->with('paiementsAvecEleves', $paiementsAvecEleves);
+                } else {
+                    // Afficher les résultats avec les noms des élèves
+                    return view('pages.etatpaiement1')->with('paiementsAvecEleves', $paiementsAvecEleves);
+                }
+
+
+
+
+
+
+            }
+
+            public function supprimerpaiement($id_paiementcontrat){
+
+                $paiementsAvecEleves = Session::get('paiementsAvecEleves', collect()); // Déclaration avec une collection vide par défaut
+
+                // $paiementsAvecEleves = Session::get('paiementsAvecEleves');
+                                // suppression du contrat de la table paiementglobalcontrat
+
+                                $paiementglobal = Paiementglobalcontrat::where('id_paiementcontrat', $id_paiementcontrat)->get();
+                                // dd($paiementcontrat);
+                                // Vérifier si des enregistrements existent
+                                if ($paiementglobal->count() > 0) {
+                                    // Parcourir chaque modèle et appeler delete() sur chaque modèle
+                                    foreach ($paiementglobal as $paiementglob) {
+                                        $paiementglob->update(['statut_paiementcontrat' => 0]);
+                                    }
+                                    // return view('pages.etatpaiement1')->with("statuspaiement", "Le paiement a ete supprimer avec succes")->with('paiementsAvecEleves', $paiementsAvecEleves);
+
+
+                                    $paiementcontrat = Paiementcontrat::where('id_paiementglobalcontrat', $id_paiementcontrat)->get();
+                                    // dd($paiementsAvecEleves);
+                                    // Vérifier si des enregistrements existent
+                                    if ($paiementcontrat->count() > 0) {
+                                        // Parcourir chaque modèle et appeler delete() sur chaque modèle
+                                        foreach ($paiementcontrat as $paiement) {
+                                            $paiement->update(['statut_paiementcontrat' => 0]);
+                                        }
+                                        return view('pages.etatpaiement1')->with("statuspaiement", "Le paiement a ete supprimer avec succes")->with('paiementsAvecEleves', $paiementsAvecEleves);
+                                    }else{
+                    
+                                        return view('pages.etatpaiement1')->with("statuspaiement", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve")->with('paiementsAvecEleves', $paiementsAvecEleves);
+                                    }
+                    
+
+                                    
+                                }else{
+                
+                                    return view('pages.etatpaiement1')->with("statuspaiement", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve")->with('paiementsAvecEleves', $paiementsAvecEleves);
+                                }
+
+
+                // suppression du contrat de la table paiementcontrat
+                
+                // $paiementcontrat = Paiementcontrat::where('id_paiementglobalcontrat', $id_paiementcontrat)->get();
+                // // dd($paiementsAvecEleves);
+                // // Vérifier si des enregistrements existent
+                // if ($paiementcontrat->count() > 0) {
+                //     // Parcourir chaque modèle et appeler delete() sur chaque modèle
+                //     foreach ($paiementcontrat as $paiement) {
+                //         $paiement->update(['statut_paiementcontrat' => 0]);
+                //     }
+                //     return view('pages.etatpaiement1')->with("statuspaiement", "Le paiement a ete supprimer avec succes")->with('paiementsAvecEleves', $paiementsAvecEleves);
+                // }else{
+
+                //     return view('pages.etatpaiement1')->with("statuspaiement", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve")->with('paiementsAvecEleves', $paiementsAvecEleves);
+                // }
+
+
+
+
+
+                // $paiementcontrat->delete();
+    }
+
                 
                 // public function traiter(Request $request)
                 // {

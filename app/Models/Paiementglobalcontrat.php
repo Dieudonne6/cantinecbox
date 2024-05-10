@@ -14,4 +14,9 @@ class Paiementglobalcontrat extends Model
     protected $primaryKey = 'id_paiementcontrat'; // Clé primaire de votre table
 
 
+    protected $fillable = [
+        // Ajoutez statut_contrat à la liste des colonnes remplissables
+        'statut_paiementcontrat',
+    ];
+
 }

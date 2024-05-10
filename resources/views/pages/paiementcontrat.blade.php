@@ -25,15 +25,15 @@
                                     <div class="col">
                                         <label>Montant Mensuel</label>
                                         <div id="bloodhound">
-                                            <input class="typeaheads" id="fraismensuelle" name="montantcontrat" type="text" value="{{ $fraismensuelle }}" readonly>
+                                            <input class="typeaheads" id="fraismensuelle" name="montantcontrat" type="text" value="{{ $fraismensuelle }}" >
                                         </div>
                                     </div>
-                                    <div class="col">
+                                    {{-- <div class="col">
                                         <label>Reduction</label>
                                         <div id="bloodhound">
                                             <input class="typeaheads" id="reduction" name="reduction" type="number" >
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>
@@ -93,7 +93,48 @@
 @endsection
 
 <script>
- // Attend que le document soit prêt
+// Attend que le document soit prêt
+document.addEventListener("DOMContentLoaded", function() {
+    // Sélectionne tous les éléments avec la classe checkbox-mois
+    var checkboxes = document.querySelectorAll('.checkbox-mois');
+    var fraismensuelle = document.querySelector('#fraismensuelle');
+    var fraistotal = document.querySelector('#fraistotal');
+
+    // Fonction pour mettre à jour le montant total en fonction du nombre de cases cochées et du frais mensuel
+    function updateTotalAmount() {
+        var valeurInput = fraismensuelle.value;
+        var checkedCheckboxes = document.querySelectorAll('.checkbox-mois:checked');
+        var numberOfCheckedCheckboxes = checkedCheckboxes.length;
+        var montantTotal = numberOfCheckedCheckboxes * valeurInput;
+        fraistotal.value = montantTotal;
+    }
+
+    // Écoute les changements de valeur de l'élément fraismensuelle
+    fraismensuelle.addEventListener('input', function() {
+        // Met à jour le montant total lorsque la valeur du frais mensuel change
+        updateTotalAmount();
+    });
+
+    // Écoute les changements d'état des cases à cocher
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            // Met à jour le montant total lorsque le nombre de cases cochées change
+            updateTotalAmount();
+        });
+    });
+
+    // Met à jour le montant total initial
+    updateTotalAmount();
+});
+  </script>
+
+
+
+
+
+{{-- 
+    
+     // Attend que le document soit prêt
 document.addEventListener("DOMContentLoaded", function() {
     // Sélectionne tous les éléments avec la classe checkbox-mois
     var checkboxes = document.querySelectorAll('.checkbox-mois');
@@ -130,4 +171,4 @@ document.addEventListener("DOMContentLoaded", function() {
     // Mettre à jour le montant total initial lors du chargement de la page
     updateCheckedCount(reductionInput.value);
 });
-  </script>
+    --}}

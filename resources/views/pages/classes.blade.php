@@ -41,7 +41,7 @@
           <thead>
             <tr>
               <th>
-                Classes
+                Date
               </th>
               <th>
                 Elève

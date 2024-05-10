@@ -70,7 +70,10 @@ Route::post('/connexions', [PagesController::class, 'connexions']);
 Route::post('/logins', [PagesController::class, 'logins']);
 
 Route::get('/inscription', [EleveController::class, 'inscription']);
+Route::get('/etatpaiement', [ClassesController::class, 'etatpaiement'])->name('etatpaiement');
+Route::post('/traitementetatpaiement', [ClassesController::class, 'traitementetatpaiement'])->name('traitementetatpaiement');
 Route::delete('/supprimercontrat/{MATRICULE}', [ClassesController::class, 'supprimercontrat']);
+Route::delete('/supprimerpaiement/{id_paiementcontrat}', [ClassesController::class, 'supprimerpaiement']);
 
 Route::get('/vitrine', [PagesController::class, 'vitrine']);
 Route::get('/etatdroits', [EtatController::class, 'etatdroits']);

@@ -21,4 +21,17 @@ class Contrat extends Model
     public function paiements() {
         return $this->hasMany(Paiementcontrat::class, 'id_contrat', 'id_contrat');
     }
+
+    protected $fillable = [
+        'id_contrat',
+        'cout_contrat',
+        'eleve_contrat',
+        'id_usercontrat',
+        'datecreation_contrat',
+        'dateversion_contrat',
+        'mois_contrat',
+        'cout_contrat',
+        // Ajoutez statut_contrat à la liste des colonnes remplissables
+        'statut_contrat',
+    ];
 }
