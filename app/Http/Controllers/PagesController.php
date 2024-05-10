@@ -102,9 +102,12 @@ class PagesController extends Controller
 
     public function logins(Request $request){
         $account = Usercontrat::where("login_usercontrat",$request->login_usercontrat)->first();
+
         if($account){
             if($account->password_usercontrat == $request->password_usercontrat){
                 Session::put('account', $account);
+                $id_usercontrat = $account->id_usercontrat;
+                Session::put('id_usercontrat', $id_usercontrat);
                 return redirect("classes");
             } else{
                 return back()->with('status', 'Mot de passe ou email incorrecte');

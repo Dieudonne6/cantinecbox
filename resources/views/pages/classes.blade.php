@@ -61,9 +61,7 @@
                         {{$eleves->NOM}} {{$eleves->PRENOM}}
                     </td>
                     <td>
-                      <a href='/paiementcontrat/{{$eleves->CODECLAS}}/{{$eleves->MATRICULE}}' class='btn btn-primary w-40'>Paiement</a>
-
-                      
+                      <a href='/paiementcontrat/{{$eleves->CODECLAS}}/{{$eleves->MATRICULE}}' class='btn btn-primary w-40'>Paiement</a>                      
                       <form action="{{ url('supprimercontrat/'.$eleves->MATRICULE)}}" method="post">
                         @csrf
                         @method('DELETE')
@@ -94,6 +92,10 @@
       <div class="modal-body">
         <div class="card">
             {{csrf_field()}}
+            @if(Session::has('id_usercontrat'))
+              <?php $id_usercontrat = Session::get('id_usercontrat'); ?>
+              <input type="hidden" value="{{$id_usercontrat}}" name="id_usercontrat">
+            @endif
           <div class="card-body">
             <div class="form-group">
               <label> Sélectionnez la section </label>
@@ -107,7 +109,7 @@
                 <label> Sélectionnez l'élève </label>
                 @csrf
                 <select class="js-example-basic-multiple w-100" multiple="multiple" name="matricules[]">
-                  @foreach ($eleve as $eleves)
+                  @foreach ($elev as $eleves)
                     <option value="{{$eleves->MATRICULE}}">{{$eleves->NOM}} {{$eleves->PRENOM}}</option>
                   @endforeach
                 </select>

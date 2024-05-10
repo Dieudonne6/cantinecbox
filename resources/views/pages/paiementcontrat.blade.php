@@ -7,7 +7,12 @@
 
                 <form action="{{url('/savepaiementcontrat')}}" method="POST">
                     @csrf
+                    @if(Session::has('id_usercontrat'))
+                        <?php $id_usercontrat = Session::get('id_usercontrat'); ?>
+                        <input type="hidden" value="{{$id_usercontrat}}" name="id_usercontrat">
+                    @endif
                     <div class="col-md-8 mx-auto grid-margin stretch-card">
+
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Infos paiement</h4>

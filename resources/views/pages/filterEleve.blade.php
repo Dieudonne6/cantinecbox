@@ -88,19 +88,30 @@
           <div class="modal-body">
             <div class="card">
                 {{csrf_field()}}
+                @if(Session::has('id_usercontrat'))
+                  <?php $id_usercontrat = Session::get('id_usercontrat'); ?>
+                  <input type="hidden" value="{{$id_usercontrat}}" name="id_usercontrat">
+                @endif
+
               <div class="card-body">
+                <div class="form-group">
+                  <label> Sélectionnez la section </label>
+                  <select class="form-select form-control w-100" id="selectClasses" name="classes">
+                    <option value="Maternelle">Maternelle</option>
+                    <option value="Primaire">Primaire</option>
+                  </select>
+                </div>
+                
                 <p class="card-description" style="color: black">
                   Sélectionnez l'élève 
                 </p>
                   <div class="form-group w-100">
                     @csrf
                     <select class="js-example-basic-multiple w-100" multiple="multiple" name="matricules[]">
-                      @if(Session::has('eleves'))
-                      <?php $eleve = Session::get('eleves'); ?>
-                        @foreach ($eleve as $eleves)
-                          <option value="{{$eleves->MATRICULE}}">{{$eleves->NOM}} {{$eleves->PRENOM}}</option>
-                        @endforeach
-                      @endif
+                      
+                      @foreach ($eleve as $eleves)
+                        <option value="{{$eleves->MATRICULE}}">{{$eleves->NOM}} {{$eleves->PRENOM}}</option>
+                      @endforeach
                     </select>
                   </div>
     
@@ -116,13 +127,10 @@
     
                     <div class="col">
                       <label>Montant</label>
-                      @if(Session::has('fraiscontrats'))
-                        <?php $fraiscontrats = Session::get('fraiscontrats'); ?>
-
-                        <div id="bloodhound">
-                          <input class="typeaheads" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_paramcontrat}}">
-                        </div>
-                      @endif
+                      <div id="bloodhound">
+                        <input class="typeaheads mater" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_mat}}">
+                        <input class="typeaheads d-none prima" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_paramcontrat}}">
+                      </div>
                     </div>
                   </div>
                 </div>

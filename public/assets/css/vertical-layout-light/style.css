@@ -116,6 +116,11 @@
 /* === Import template variables === */
 /*-------------------------------------------------------------------*/
 /* === SCSS Compass Functions === */
+
+.dropup-center.dropup .dropdown-menu.show {
+  display: block !important;
+  opacity: 1 !important;
+}
 .count-indicator {
   width: 100% !important;
 }

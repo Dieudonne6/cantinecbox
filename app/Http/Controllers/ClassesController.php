@@ -35,12 +35,13 @@ class ClassesController extends Controller
     public function classe(Request $request){
         if(Session::has('account')){
             $eleves = Eleve::paginate(6);
+            $elev = Eleve::get();
             $classes = Classes::get();
             $fraiscontrat = Paramcontrat::first(); 
             Session::put('eleves', $eleves);
             Session::put('classes', $classes);
             Session::put('fraiscontrats', $fraiscontrat);
-            return view('pages.classes')->with('eleve', $eleves)->with('classe', $classes)->with('fraiscontrats', $fraiscontrat);
+            return view('pages.classes')->with('eleve', $eleves)->with('classe', $classes)->with('fraiscontrats', $fraiscontrat)->with('elev', $elev);
         } 
         return redirect('/');
     }
@@ -48,11 +49,13 @@ class ClassesController extends Controller
     public function filterEleve($CODECLAS){
         $eleves = Eleve::get();
         $classes = Classes::get();
+        $fraiscontrat = Paramcontrat::first(); 
         $filterEleves = Eleve::where('CODECLAS', $CODECLAS)->paginate(6);
+        Session::put('fraiscontrats', $fraiscontrat);
         Session::put('fill', $filterEleves);
         
         // dd($fill);
-        return view('pages.filterEleve')->with("filterEleve", $filterEleves)->with('classe', $classes)->with('eleve', $eleves);
+        return view('pages.filterEleve')->with("filterEleve", $filterEleves)->with('classe', $classes)->with('eleve', $eleves)->with('fraiscontrats', $fraiscontrat);
     }
     
     
@@ -193,6 +196,8 @@ class ClassesController extends Controller
                 $montantmoiscontrat = $request->input('montantcontrat');
                 $montanttotal = $request->input('montanttotal');
                 $datepaiementcontrat = $request->input('date');
+                $id_usercontrat = $request->input('id_usercontrat');
+
                 $anneeActuelle = date('Y');
 
                 // generer une valeur aleatoire comprise entre 10000000 et 99999999 et verifier si elle existe deja dans la table.
@@ -253,6 +258,7 @@ class ClassesController extends Controller
                $paiementglobalcontrat->montant_paiementcontrat = $montanttotal;
                $paiementglobalcontrat->soldeapres_paiementcontrat = 0;
                $paiementglobalcontrat->id_contrat = $idcontratEleve;
+               $paiementglobalcontrat->id_usercontrat = $id_usercontrat;
                $paiementglobalcontrat->date_paiementcontrat = $datepaiementcontrat;
                //     $paiementglobalcontrat->id_usercontrat = null;
                $paiementglobalcontrat->anne_paiementcontrat = $anneeActuelle;
@@ -284,7 +290,7 @@ class ClassesController extends Controller
                         'soldeapres_paiementcontrat' => 0,
                         'id_contrat' => $idcontratEleve,
                         'date_paiementcontrat' => $datepaiementcontrat,
-                        // 'id_usercontrat' => $anneeActuelle,
+                        'id_usercontrat' => $id_usercontrat,
                         'mois_paiementcontrat' => $id_moiscontrat,
                         'anne_paiementcontrat' => $anneeActuelle,
                         'reference_paiementcontrat' => $valeurDynamiqueNumerique,
@@ -755,6 +761,8 @@ class ClassesController extends Controller
             $contra = new Contrat();
             $contra->eleve_contrat = $matricule;
             $contra->cout_contrat = $request->input('montant');
+            $contra->id_usercontrat = $request->input('id_usercontrat');
+
             $contra->statut_contrat = 1;
             // $contra->id_usercontrat = ; mettre l'id de l'utilisateur connecter
             $dateContrat = $request->input('date');
