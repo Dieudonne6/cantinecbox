@@ -623,7 +623,6 @@
       <div class="collapse" id="Cantine">
         <ul class="nav flex-column sub-menu">
 
-          <li class="nav-item"> <a class="nav-link" href="{{url('/classes')}}">Toutes les classes</a></li>
           <div class="dropdown">
             <li class="nav-item">
             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton90" data-toggle="dropdown" 
@@ -635,7 +634,18 @@
             </div>
             </li>
           </div>
-          
+          <li class="nav-item"> <a class="nav-link" href="{{url('/classes')}}">Toutes les classes</a></li>
+
+          {{-- <div class="dropup-center dropup">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Centered dropup
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Action two</a></li>
+              <li><a class="dropdown-item" href="#">Action three</a></li>
+            </ul>
+          </div> --}}
         </ul>
       </div>
     </li>
