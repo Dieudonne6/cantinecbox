@@ -74,10 +74,12 @@ Route::get('/etatpaiement', [ClassesController::class, 'etatpaiement'])->name('e
 Route::post('/traitementetatpaiement', [ClassesController::class, 'traitementetatpaiement'])->name('traitementetatpaiement');
 Route::delete('/supprimercontrat/{MATRICULE}', [ClassesController::class, 'supprimercontrat']);
 Route::delete('/supprimerpaiement/{id_paiementcontrat}', [ClassesController::class, 'supprimerpaiement']);
+Route::get('/etatpaiement1', [ClassesController::class, 'etatpaiement1']);
 
 Route::get('/vitrine', [PagesController::class, 'vitrine']);
 Route::get('/etatdroits', [EtatController::class, 'etatdroits']);
 Route::post('/filteretat', [EtatController::class, 'filteretat']);
+Route::get('/impressionetatdroitconstate', [EtatController::class, 'impressionetatdroitconstate'])->name('impressionetatdroitconstate');
 
 Route::get('/paramsfacture', [PagesController::class, 'paramsfacture']);
 Route::post('/paramsemecef', [PagesController::class, 'paramsemecef']);

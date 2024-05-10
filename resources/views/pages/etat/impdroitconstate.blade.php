@@ -1,14 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  {{-- <title>@yield('title')</title> --}}
+  <!-- base:css -->
+  <link rel="stylesheet" href="{{asset('assets/vendors/typicons/typicons.css')}}">
+  <link rel="stylesheet" href="{{asset('assets/vendors/css/vendor.bundle.base.css')}}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <script src="{{ asset('davidshimjs-qrcodejs-04f46c6/qrcode.js') }}"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <link rel="stylesheet" href="{{asset('assets/vendors/select2/select2.min.css')}}">
+  <link rel="stylesheet" href="{{asset('assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css')}}">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="{{asset('assets/css/vertical-layout-light/style.css')}}">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="{{asset('assets/images/favicon.png')}}" />
+
+
+  
+</head>
 <?php use Carbon\Carbon; ?>
-
-@extends('layouts.master')
-@section('content')
-<body>
-
+<style>
+    @media print {
+        body {
+            overflow: visible !important;
+        }
+    }
+</style>
+{{-- @extends('layouts.master')
+@section('content') --}}
+<body onload="window.print();">
 <div class="col-lg-12 grid-margin stretch-card">
   <div class="card">
     <div class="card-body">
       <h4 class="card-title">Etats des droits constatés</h4>
-      <form action="{{url('/filteretat')}}" method="POST">
+      {{-- <form action="{{url('/filteretat')}}" method="POST">
         {{csrf_field()}}
       <div class="form-group row">
         <div class="col-lg-3">
@@ -35,18 +70,15 @@
         </div>
     
         <div class="col-lg-2 offset-2">
-          {{-- <a class="telecharger btn btn-success" href="{{ url('/facturenormalise/' . $nomcompleteleve) }}" target="_blank">Imprimer</a> --}}
-{{-- 
+          <a class="telecharger btn btn-success" href="{{ url('/facturenormalise/' . $nomcompleteleve) }}" target="_blank">Imprimer</a>
+
           <a type="button" class="btn btn-primary"  href="{{ url('/impressionetatdroitconstate/') }}" target="_blank">
             Imprimer
-          </a> --}}
-          <button onclick="imprimerPage()">Imprimer</button>
+          </a>
         </div>
       </div>
-    </form>
-    
-    <div class="table-responsive pt-3 contenu">
-        <div id="contenu">
+    </form> --}}
+      <div class="table-responsive pt-3">
         <table class="table table-bordered">
           <thead>
             <tr>
@@ -139,20 +171,6 @@
         </table>
       </div>
     </div>
-    </div>
   </div>
 </div>
-</body>
-@endsection
-
-<script>
-  function imprimerPage() {
-      var page = window.open();
-      page.document.write('<html><head><title>Imprimer</title>');
-      page.document.write('</head><body>');
-      page.document.write(document.getElementById('contenu').innerHTML);
-      page.document.write('</body></html>');
-      page.document.close();
-      page.print();
-  }
-</script>
+{{-- @endsection --}}

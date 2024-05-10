@@ -854,6 +854,8 @@ class ClassesController extends Controller
 
      
             public function etatpaiement(){
+                // $paiementsAvecEleves = Session::get('paiementsAvecEleves', collect()); // Déclaration avec une collection vide par défaut
+
                 return view ('pages.etatpaiement');
             }
 
@@ -897,7 +899,7 @@ class ClassesController extends Controller
                 $fin = $request->input('fin');
             
                 // Récupérer les paiements entre les dates spécifiées
-                $paiements = Paiementglobalcontrat::whereBetween('date_paiementcontrat', [$debut, $fin])->get();
+                $paiements = Paiementglobalcontrat::whereBetween('date_paiementcontrat', [$debut, $fin])->where('statut_paiementcontrat', '=', 1)->get();
             
                 // Collection pour stocker les informations de paiement avec les noms d'élève
                 $paiementsAvecEleves = collect([]);
@@ -939,7 +941,7 @@ class ClassesController extends Controller
                 Session::put('paiementsAvecEleves', $paiementsAvecEleves);
                 if ($paiementsAvecEleves->isEmpty()) {
                     // Aucun paiement trouvé pour les dates spécifiées
-                    return view('pages.etatpaiement1')->with('status', 'Aucun paiement trouvé pour la periode spécifiées.')->with('paiementsAvecEleves', $paiementsAvecEleves);
+                    return redirect('etatpaiement')->with('status', 'Aucun paiement trouvé pour la periode spécifiées.')->with('paiementsAvecEleves', $paiementsAvecEleves);
                 } else {
                     // Afficher les résultats avec les noms des élèves
                     return view('pages.etatpaiement1')->with('paiementsAvecEleves', $paiementsAvecEleves);
@@ -951,7 +953,12 @@ class ClassesController extends Controller
 
 
             }
-
+            public function etatpaiement1 (){
+                $paiementsAvecEleves = Session::get('paiementsAvecEleves', collect()); // Déclaration avec une collection vide par défaut
+                // dd($paiementsAvecEleves);
+        
+                return view('pages.etatpaiement1')->with('paiementsAvecEleves', $paiementsAvecEleves);
+            }
             public function supprimerpaiement($id_paiementcontrat){
 
                 $paiementsAvecEleves = Session::get('paiementsAvecEleves', collect()); // Déclaration avec une collection vide par défaut
@@ -978,17 +985,19 @@ class ClassesController extends Controller
                                         foreach ($paiementcontrat as $paiement) {
                                             $paiement->update(['statut_paiementcontrat' => 0]);
                                         }
-                                        return view('pages.etatpaiement1')->with("statuspaiement", "Le paiement a ete supprimer avec succes")->with('paiementsAvecEleves', $paiementsAvecEleves);
+                                        $message = "Le paiement a été supprimé avec succès.";
+                                        return redirect('etatpaiement1')->with("statuspaiement", $message);                                    
+                                    
                                     }else{
-                    
-                                        return view('pages.etatpaiement1')->with("statuspaiement", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve")->with('paiementsAvecEleves', $paiementsAvecEleves);
+                                        return redirect('etatpaiement1')->with("statuspaiement", "Pas de paiement pour cet eleve,  veuillez dabord effectue un paiement");
+
                                     }
                     
 
                                     
                                 }else{
                 
-                                    return view('pages.etatpaiement1')->with("statuspaiement", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve")->with('paiementsAvecEleves', $paiementsAvecEleves);
+                                    return redirect('etatpaiement1')->with("statuspaiement", "Pas de paiement pour cet eleve,  veuillez dabord effectue un paiement");
                                 }
 
 
@@ -1015,6 +1024,8 @@ class ClassesController extends Controller
                 // $paiementcontrat->delete();
     }
 
+
+ 
                 
                 // public function traiter(Request $request)
                 // {

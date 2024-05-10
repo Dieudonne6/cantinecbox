@@ -4,43 +4,49 @@
 
         <form action="{{ url('/traitementetatpaiement') }}" method="POST">
             @csrf
-        <div class="form-group row">
-                    <div class="col">
-                        <label for="debut">Du</label>
-                        <input name="debut" id="debut" type="date" class="typeaheads">
-                    </div>
-                    <div class="col">
-                        <label for="fin">Au</label>
-                        <input name="fin" id="fin" type="date" class="typeaheads">
-                    </div>
+            <div class="form-group row">
+                <div class="col">
+                    <label for="debut">Du</label>
+                    <input name="debut" id="debut" type="date" class="typeaheads">
+                </div>
+                <div class="col">
+                    <label for="fin">Au</label>
+                    <input name="fin" id="fin" type="date" class="typeaheads">
+                </div>
 
-                    <div class="col">
-                        <!-- Bouton de soumission de formulaire -->
-                        <label for="debut" style="visibility: hidden">supprimer paiememtn</label>
-                        <button type="submit" class="btn btn-primary w-100">Rechercher</button>
-                    </div>
-                    {{-- <div class="col">
+                <div class="col">
+                    <!-- Bouton de soumission de formulaire -->
+                    <label for="debut" style="visibility: hidden">supprimer paiememtn</label>
+                    <button type="submit" class="btn btn-primary w-100">Rechercher</button>
+                </div>
+                {{-- <div class="col">
                         <label for="debut" style="visibility: hidden">supprimer paiememtn</label>
                         <button type="button" class="btn btn-danger w-200" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             Supp paiement
                         </button>
                     </div> --}}
-                    <div class="col">
-                        <label for="debut" style="visibility: hidden">Du</label>
-                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Imprimer Etat
-                        </button>
-                    </div>
-                    <div class="col">
-                        <label for="debut" style="visibility: hidden">Du</label>
-                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Imprimer fiche
-                        </button>
+                <div class="col">
+                    <label for="debut" style="visibility: hidden">Du</label>
+                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
+                        Imprimer Etat
+                    </button>
+                </div>
+                <div class="col">
+                    <label for="debut" style="visibility: hidden">Du</label>
+                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
+                        Imprimer fiche
+                    </button>
+                </div>
             </div>
-        </div>
-    </form>
-        
+        </form>
 
+        @if (Session::has('status'))
+            <div id="statusAlert" class="alert alert-succes btn-primary">
+                <p>{{ Session::get('status') }}</p>
+            </div>
+        @endif
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -68,12 +74,12 @@
                             Caissier
                         </th>
                         <th>
-                            Action a effectuee          
+                            Action a effectuee
                         </th>
 
                     </tr>
                 </thead>
-                <tbody >
+                <tbody>
                     {{-- @foreach ($resultatsIndividuels as $resultatsIndividuel)
                     <tr>
 

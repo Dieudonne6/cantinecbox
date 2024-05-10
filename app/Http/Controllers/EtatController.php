@@ -52,10 +52,25 @@ class EtatController extends Controller
                 }
             }]);
         }])->get();
+       Session::put('eleves', $eleves);
+       Session::put('moisContrat', $moisContrat);
+       Session::put('anne', $anne);
+       Session::put('class', $class);
         
         // Passer les données à la vue
         return view('pages.etat.filteretat')->with('eleves', $eleves)->with('moisContrat', $moisContrat)->with('anne', $anne)->with('class', $class);
     }
     
-    
+
+    public function impressionetatdroitconstate() {
+       $eleves = Session::get('eleves');
+       $moisContrat = Session::get('moisContrat');
+       $anne = Session::get('anne');
+       $class = Session::get('class');
+
+       return view('pages.etat.impdroitconstate')->with('eleves', $eleves)->with('moisContrat', $moisContrat)->with('anne', $anne)->with('class', $class);
+
+    }
+
+
 }
