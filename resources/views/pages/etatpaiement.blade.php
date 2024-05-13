@@ -32,13 +32,13 @@
                         Imprimer Etat
                     </button>
                 </div>
-                <div class="col">
+                {{-- <div class="col">
                     <label for="debut" style="visibility: hidden">Du</label>
                     <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
                         data-bs-target="#exampleModal">
                         Imprimer fiche
                     </button>
-                </div>
+                </div> --}}
             </div>
         </form>
 

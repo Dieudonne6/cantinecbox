@@ -21,6 +21,8 @@ use GuzzleHttp\Client;
 use Barryvdh\DomPDF\PDF;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use DateTime;
+
 // use Endroid\QrCode\Response\QrCodeResponse;
 // use Endroid\QrCode\Writer\PngWriter;
 // use Endroid\QrCode\Encoding\Encoding;
@@ -869,39 +871,6 @@ class ClassesController extends Controller
 
             public function traitementetatpaiement(Request $request){
 
-                // $debut = $request->input('debut');
-                // $fin = $request->input('fin');
-
-                // // dd($debut);
-
-                // $resultats = Paiementglobalcontrat::whereBetween('date_paiementcontrat', [$debut, $fin])->get();
-                // $resultatsIndividuels = collect([]);
-
-                // // Itérez sur chaque résultat et stockez-le dans la collection
-                // foreach ($resultats as $resultat) {
-                //     $resultatsIndividuels->push($resultat);
-                // }
-                // // dd($resultatsIndividuels);
-
-                // // Vérifiez si la collection est vide
-                // if ($resultatsIndividuels->isEmpty()) {
-                //     // Aucun résultat trouvé
-                //     return view('pages.etatpaiement1')->with('status', 'Aucun paiement trouvé pour les dates spécifiées.');
-                // } else {
-                //     // Afficher les résultats
-                //     return view('pages.etatpaiement1')->with('resultatsIndividuels', $resultatsIndividuels);
-                // }
-
-
-
-
-
-
-
-
-
-
-
 
                 $debut = $request->input('debut');
                 $fin = $request->input('fin');
@@ -945,27 +914,40 @@ class ClassesController extends Controller
                     }
                 }
             
+
+                // Convertir la date en objet DateTime
+                $dateObjdebut = DateTime::createFromFormat('Y-m-d', $debut);
+                $dateObjfin = DateTime::createFromFormat('Y-m-d', $fin);
+
+                // Formatter la date selon le format JJ/MM/AAAA
+                $dateFormateedebut = $dateObjdebut->format('d/m/Y');
+                $dateFormateefin = $dateObjfin->format('d/m/Y');
+
                 // Vérifiez si des paiements ont été trouvés
                 Session::put('paiementsAvecEleves', $paiementsAvecEleves);
+                Session::put('dateFormateedebut', $dateFormateedebut);
+                Session::put('dateFormateefin', $dateFormateefin);
+
                 if ($paiementsAvecEleves->isEmpty()) {
                     // Aucun paiement trouvé pour les dates spécifiées
                     return redirect('etatpaiement')->with('status', 'Aucun paiement trouvé pour la periode spécifiées.')->with('paiementsAvecEleves', $paiementsAvecEleves);
                 } else {
                     // Afficher les résultats avec les noms des élèves
-                    return view('pages.etatpaiement1')->with('paiementsAvecEleves', $paiementsAvecEleves);
+                    return view('pages.etatpaiement1')->with('paiementsAvecEleves', $paiementsAvecEleves)->with('dateFormateedebut', $dateFormateedebut)->with('dateFormateefin', $dateFormateefin);
                 }
 
 
-
-
-
-
             }
+
+
+
             public function etatpaiement1 (){
                 $paiementsAvecEleves = Session::get('paiementsAvecEleves', collect()); // Déclaration avec une collection vide par défaut
-                // dd($paiementsAvecEleves);
+                $dateFormateedebut = Session::get('dateFormateedebut'); 
+                $dateFormateefin = Session::get('dateFormateefin'); 
+                dd($debut);
         
-                return view('pages.etatpaiement1')->with('paiementsAvecEleves', $paiementsAvecEleves);
+                return view('pages.etatpaiement1')->with('paiementsAvecEleves', $paiementsAvecEleves)->with('dateFormateedebut', $dateFormateedebut)->with('dateFormateefin', $dateFormateefin);
             }
             public function supprimerpaiement($id_paiementcontrat){
 
