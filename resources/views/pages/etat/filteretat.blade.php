@@ -2,6 +2,22 @@
 
 @extends('layouts.master')
 @section('content')
+
+{{-- <style>
+  @media print {
+    body * {
+        visibility: hidden;
+    }
+    #contenu, #contenu * {
+        visibility: visible;
+    }
+    #contenu {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
+</style> --}}
 <body>
 
 <div class="col-lg-12 grid-margin stretch-card">
@@ -40,13 +56,17 @@
           <a type="button" class="btn btn-primary"  href="{{ url('/impressionetatdroitconstate/') }}" target="_blank">
             Imprimer
           </a> --}}
-          <button onclick="imprimerPage()">Imprimer</button>
+          <button onclick="imprimerPage()" class="btn btn-primary" >Imprimer</button>
         </div>
       </div>
     </form>
     
     <div class="table-responsive pt-3 contenu">
         <div id="contenu">
+          <div>
+            <h4 class="card-title" style="text-align: center; font-weight:bold;">Etats des droits constatés ANNEE-ACADEMIQUE: {{ $annee }} - {{ $anneesuivant }} | CLASSE: {{ $classe }}</h4>
+          </div><br>
+
         <table class="table table-bordered">
           <thead>
             <tr>
@@ -114,19 +134,6 @@
                   
                 </td>
                 
-                {{-- <td>
-                  @foreach ($eleve->contrats as $contrat)
-                  @foreach ($contrat->paiements as $paiement)
-                  @if ($paiement->mois_paiementcontrat == $mois->id_moiscontrat)
-                  {{ \Carbon\Carbon::parse($paiement->date_paiementcontrat)->format('d/m/Y') }}</br></br>
-                  {{ $paiement->montant_paiementcontrat }}
-                  @php
-                  $totalMois[$mois->id_moiscontrat] += $paiement->montant_paiementcontrat;
-                  @endphp
-                  @endif
-                  @endforeach
-                  @endforeach
-                </td> --}}
                 @endif
                 @endforeach
                 <td>
@@ -149,10 +156,12 @@
   function imprimerPage() {
       var page = window.open();
       page.document.write('<html><head><title>Imprimer</title>');
+      page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
       page.document.write('</head><body>');
       page.document.write(document.getElementById('contenu').innerHTML);
       page.document.write('</body></html>');
       page.document.close();
       page.print();
   }
+  
 </script>

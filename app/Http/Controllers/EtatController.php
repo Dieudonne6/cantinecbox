@@ -57,20 +57,15 @@ class EtatController extends Controller
        Session::put('anne', $anne);
        Session::put('class', $class);
         
+
+        // Ajouter 1 à l'année
+        $anneesuivant = $annee + 1;
         // Passer les données à la vue
-        return view('pages.etat.filteretat')->with('eleves', $eleves)->with('moisContrat', $moisContrat)->with('anne', $anne)->with('class', $class);
+        return view('pages.etat.filteretat')->with('eleves', $eleves)->with('moisContrat', $moisContrat)->with('anne', $anne)->with('class', $class)->with('annee', $annee)->with('classe', $classe)->with('anneesuivant', $anneesuivant);
     }
     
 
-    public function impressionetatdroitconstate() {
-       $eleves = Session::get('eleves');
-       $moisContrat = Session::get('moisContrat');
-       $anne = Session::get('anne');
-       $class = Session::get('class');
 
-       return view('pages.etat.impdroitconstate')->with('eleves', $eleves)->with('moisContrat', $moisContrat)->with('anne', $anne)->with('class', $class);
-
-    }
 
 
 }

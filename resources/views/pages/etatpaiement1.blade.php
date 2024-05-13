@@ -1,5 +1,14 @@
 @extends('layouts.master')
 @section('content')
+<style>
+    /* Masquer la colonne lors de l'impression */
+    @media print {
+        .hide-on-print {
+            /* display: none !important; */
+            visibility: hidden !important; 
+        }
+    }
+</style>
     <div class="container">
 
         <form action="{{ url('/traitementetatpaiement') }}" method="POST">
@@ -27,8 +36,7 @@
                     </div> --}}
                 <div class="col">
                     <label for="debut" style="visibility: hidden">Du</label>
-                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
-                        data-bs-target="#exampleModal">
+                    <button onclick="imprimerPage()" type="button" class="btn btn-primary w-100">
                         Imprimer Etat
                     </button>
                 </div>
@@ -66,6 +74,12 @@
         <p>lolllllllllllllllllllllll</p>
     </div>
     @endif --}}
+
+    <div id="contenu">
+
+    <div>
+        <h5 class="card-title" style="text-align: center;">Liste des paiements de la periode du {{$dateFormateedebut}} au {{$dateFormateefin}} </h5>
+    </div><br>
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -92,7 +106,7 @@
                         <th>
                             Caissier
                         </th>
-                        <th>
+                        <th class="hide-on-print">
                             Action a effectuee
                         </th>
 
@@ -130,7 +144,7 @@
                                 {{ $resultatsIndividuel['user'] }}
                             </td>
 
-                            <td>
+                            <td class="hide-on-print">
                                 <div class="d-flex justify-content-between">
                                     <button type="button" class="btn btn-primary w-50 me-1" data-bs-toggle="modal"
                                         data-bs-target="#exampleModal">
@@ -150,10 +164,27 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
 
         {{-- @endif --}}
     </div>
 @endsection
+
+<script>
+    function imprimerPage() {
+        var page = window.open();
+        page.document.write('<html><head><title>Imprimer</title>');
+        page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
+        page.document.write('<style>@media print { .hide-on-print { visibility: hidden; } }</style>');
+        page.document.write('</head><body>');
+        page.document.write(document.getElementById('contenu').innerHTML);
+        page.document.write('</body></html>');
+        page.document.close();
+        page.print();
+    }
+    
+  </script>
 
 <!-- Assurez-vous d'inclure jQuery avant d'utiliser les méthodes AJAX -->
 
