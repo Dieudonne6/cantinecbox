@@ -67,7 +67,7 @@
             <h4 class="card-title" style="text-align: center; font-weight:bold;">Etats des droits constatés ANNEE-ACADEMIQUE: {{ $annee }} - {{ $anneesuivant }} | CLASSE: {{ $classe }}</h4>
           </div><br>
 
-        <table class="table table-bordered">
+        <table id="myTable" class="table table-bordered">
           <thead>
             <tr>
               <th>

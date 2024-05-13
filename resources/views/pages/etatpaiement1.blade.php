@@ -81,7 +81,7 @@
         <h5 class="card-title" style="text-align: center;">Liste des paiements de la periode du {{$dateFormateedebut}} au {{$dateFormateefin}} </h5>
     </div><br>
         <div class="table-responsive">
-            <table class="table">
+            <table id="myTable" class="table">
                 <thead>
                     <tr>
 
