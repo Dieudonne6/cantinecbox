@@ -636,16 +636,7 @@
           </div>
           <li class="nav-item"> <a class="nav-link" href="{{url('/classes')}}">Toutes les classes</a></li>
 
-          {{-- <div class="dropup-center dropup">
-            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Centered dropup
-            </button>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Action two</a></li>
-              <li><a class="dropdown-item" href="#">Action three</a></li>
-            </ul>
-          </div> --}}
+         
         </ul>
       </div>
     </li>
@@ -653,12 +644,5 @@
   </ul>
   
   
-    {{-- <div class="justify-content-center d-flex align-items-center">
-       
-          <div class="section">
-            <a href="{{url('/')}}" class="button btn-primary">Déconnexion</a>
-          </div>
-       
-    </div> --}}
 
 </nav>
