@@ -146,10 +146,9 @@
 
                             <td class="hide-on-print">
                                 <div class="d-flex justify-content-between">
-                                    <button type="button" class="btn btn-primary w-50 me-1" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal">
+                                    <a type="button" style="height: 45px" class="btn btn-primary w-50 me-1" href="{{ url('imprimerfiche/' . $resultatsIndividuel['id_paiementcontrat']) }}">
                                         Imprimer fiche
-                                    </button>
+                                    </a>
                                     <form
                                         action="{{ url('supprimerpaiement/' . $resultatsIndividuel['id_paiementcontrat']) }}"
                                         method="post">
@@ -174,7 +173,7 @@
 <script>
     function imprimerPage() {
         var page = window.open();
-        page.document.write('<html><head><title>Imprimer</title>');
+        page.document.write('<html><head><title>Paiement_{{$dateFormateedebut}}--{{$dateFormateefin}}</title>');
         page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
         page.document.write('<style>@media print { .hide-on-print { visibility: hidden; } }</style>');
         page.document.write('</head><body>');

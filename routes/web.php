@@ -82,3 +82,4 @@ Route::post('/filteretat', [EtatController::class, 'filteretat']);
 
 Route::get('/paramsfacture', [PagesController::class, 'paramsfacture']);
 Route::post('/paramsemecef', [PagesController::class, 'paramsemecef']);
+Route::get('/imprimerfiche/{id_paiementcontrat}', [ClassesController::class, 'imprimerfiche']);
