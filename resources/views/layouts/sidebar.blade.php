@@ -581,38 +581,7 @@
     </li> --}}
  
     {{-- Paramètres --}}
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
-        <i class="typcn typcn-globe-outline menu-icon"></i>
-        <span class="menu-title">Paramètres</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="error">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="#"> Table des paramètres </a></li>
-          <li class="nav-item"> <a class="nav-link" href="#"> Modifier les bornes de l'exercice </a></li>
-          
-          <div class="dropdown">
-           <li class="nav-item">
-            <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
-            aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Op. Ouverture </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton1" style="" _mstvisible="0" >
-              <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Passer en classe supérieure</a>
-              <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Reinitialiser les classes</a>
-              <a class="dropdown-item" href="#" _msttexthash="229879" _msthash="283" _mstvisible="1">Supprimer les sans classe</a>
-              <a class="dropdown-item" href="#" _msttexthash="26180" _msthash="284" _mstvisible="1">Cloturer l'année</a>
-              <a class="dropdown-item" href="#" _msttexthash="22987" _msthash="285" _mstvisible="1">Changement de trimestre</a>
-            </div>
-           </li>
-          </div>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/confimpression')}}"> Configurer Imprimante </a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/changetrimestre')}}"> Changement de trimestre </a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnees')}}">Connexion à la<br>base de donnée </a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/paramsfacture')}}">Paramètre Facture </a></li>
-        </ul>
-      </div>
-    </li> 
+   
   
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#Cantine" aria-expanded="false" aria-controls="Cantine">
@@ -650,7 +619,38 @@
         </ul>
       </div>
     </li>
- 
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
+        <i class="typcn typcn-globe-outline menu-icon"></i>
+        <span class="menu-title">Paramètres</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="error">
+        <ul class="nav flex-column sub-menu">
+          {{-- <li class="nav-item"> <a class="nav-link" href="#"> Table des paramètres </a></li>
+          <li class="nav-item"> <a class="nav-link" href="#"> Modifier les bornes de l'exercice </a></li>
+           --}}
+          {{-- <div class="dropdown">
+           <li class="nav-item">
+            <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
+            aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Op. Ouverture </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton1" style="" _mstvisible="0" >
+              <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Passer en classe supérieure</a>
+              <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Reinitialiser les classes</a>
+              <a class="dropdown-item" href="#" _msttexthash="229879" _msthash="283" _mstvisible="1">Supprimer les sans classe</a>
+              <a class="dropdown-item" href="#" _msttexthash="26180" _msthash="284" _mstvisible="1">Cloturer l'année</a>
+              <a class="dropdown-item" href="#" _msttexthash="22987" _msthash="285" _mstvisible="1">Changement de trimestre</a>
+            </div>
+           </li>
+          </div> --}}
+          {{-- <li class="nav-item"> <a class="nav-link" href="{{url('/confimpression')}}"> Configurer Imprimante </a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/changetrimestre')}}"> Changement de trimestre </a></li> --}}
+          <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnees')}}">Connexion à la<br>base de donnée </a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/paramsfacture')}}">Paramètre Facture </a></li>
+        </ul>
+      </div>
+    </li> 
   </ul>
   
   
