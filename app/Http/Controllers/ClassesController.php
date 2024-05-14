@@ -36,8 +36,9 @@ class ClassesController extends Controller
 {
     public function classe(Request $request){
         if(Session::has('account')){
-            $eleves = Eleve::paginate(6);
             $elev = Eleve::get();
+            $eleves = Eleve::orderBy('NOM', 'asc')->get();
+
             $classes = Classes::get();
             $fraiscontrat = Paramcontrat::first(); 
             Session::put('eleves', $eleves);
@@ -49,10 +50,12 @@ class ClassesController extends Controller
     }
     
     public function filterEleve($CODECLAS){
-        $eleves = Eleve::get();
+        $eleves = Eleve::orderBy('NOM', 'asc')->get();
         $classes = Classes::get();
         $fraiscontrat = Paramcontrat::first(); 
-        $filterEleves = Eleve::where('CODECLAS', $CODECLAS)->paginate(6);
+        $filterEleves = Eleve::where('CODECLAS', $CODECLAS)
+        ->orderBy('NOM', 'asc')
+        ->get();
         Session::put('fraiscontrats', $fraiscontrat);
         Session::put('fill', $filterEleves);
         

@@ -33,7 +33,7 @@
 
       </div>
       <div class="table-responsive mb-4">
-        <table class="table">
+        <table id="myTable" class="table">
           <thead>
             <tr>
               <th>
@@ -73,8 +73,6 @@
         </table>
 
       </div>
-      {{ $filterEleve->links('pagination.bootstrap-4-custom') }}
-
     </div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -234,5 +232,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> --}}
 
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 @endsection

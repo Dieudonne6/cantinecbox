@@ -37,15 +37,15 @@
 
       </div>
       <div class="table-responsive mb-4">
-        <table class="table">
+        <table id="myTable">
           <thead>
             <tr>
               <th>
                 Date
               </th>
-              <th>
-                Elève
-              </th>
+             
+              <th>Elève </th>
+
               <th>
                 Action
               </th>
@@ -75,8 +75,6 @@
         </tbody>
         </table>
       </div>
-      {{ $eleve->links('pagination.bootstrap-4-custom') }}
-
     </div>
   </div>
 </div>
@@ -288,8 +286,6 @@
                         Avril
                       </label>
                     </div>
-                   
-                 
                     <div class="form-check">
                       <label class="form-check-label">
                         <input type="checkbox" class="form-check-input">
@@ -316,30 +312,9 @@
     </div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> --}}
 @endsection
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+{{-- <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script> --}}
 
 
-
-{{-- @push('scripts')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-  $(document).ready(function() {
-    $('#select-classe').on('change', function() {
-      var classeCode = $(this).val();
-      if (classeCode) {
-        $.ajax({
-          url: '/eleve/'+classeCode,
-          type: 'GET',
-          success: function(data) {
-            $('#eleve-details').html(data);
-          }
-        });
-      } else {
-        $('#eleve-details').html('');
-      }
-      return false; // Empêcher la soumission du formulaire
-    });
-  });
-</script>
-@endpush --}}

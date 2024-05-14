@@ -14,7 +14,7 @@
 
   <script src="{{ asset('davidshimjs-qrcodejs-04f46c6/qrcode.js') }}"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
   <!-- endinject -->
   <!-- plugin css for this page -->
   <link rel="stylesheet" href="{{asset('assets/vendors/select2/select2.min.css')}}">
@@ -60,7 +60,9 @@
   <script src="{{asset('assets/js/typeahead.js')}}"></script>
   <script src="{{asset('assets/js/select2.js')}}"></script>
   <script src="{{asset('assets/js/jquery-3.2.1.min.js')}}"></script>
-  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
   <script>
     var statusAlert = document.getElementById('statusAlert');
     if (statusAlert) {
@@ -85,7 +87,36 @@
   });
 </script>
 
+<script>
 
+  $(document).ready(function(){
+    $('#myTable').DataTable({
+        "language": {
+            "sProcessing":     "Traitement en cours...",
+            "sSearch":         "Rechercher&nbsp;:",
+            "sLengthMenu":     "Afficher _MENU_ éléments",
+            "sInfo":           "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+            "sInfoEmpty":      "Affichage de 0 à 0 sur 0 entrées",
+            "sInfoFiltered":   "(filtré à partir de _MAX_ entrées au total)",
+            "sInfoPostFix":    "",
+            "sLoadingRecords": "Chargement en cours...",
+            "sZeroRecords":    "Aucun résultat trouvé",
+            "sEmptyTable":     "Aucune donnée disponible dans le tableau",
+            "oPaginate": {
+                // "sFirst":      "Premier",
+                "sPrevious":   "Précédent",
+                "sNext":       "Suivant"
+                // "sLast":       "Dernier"
+            },
+            "oAria": {
+                "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
+                "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+            }
+        }
+    });
+});
+
+  </script>
   <!-- End custom js for this page-->
 
   {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
