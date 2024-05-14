@@ -948,7 +948,7 @@ class ClassesController extends Controller
                 $paiementsAvecEleves = Session::get('paiementsAvecEleves', collect()); // Déclaration avec une collection vide par défaut
                 $dateFormateedebut = Session::get('dateFormateedebut'); 
                 $dateFormateefin = Session::get('dateFormateefin'); 
-                dd($debut);
+                // dd($debut);
         
                 return view('pages.etatpaiement1')->with('paiementsAvecEleves', $paiementsAvecEleves)->with('dateFormateedebut', $dateFormateedebut)->with('dateFormateefin', $dateFormateefin);
             }
@@ -993,28 +993,37 @@ class ClassesController extends Controller
                                     return redirect('etatpaiement1')->with("statuspaiement", "Pas de paiement pour cet eleve,  veuillez dabord effectue un paiement");
                                 }
 
-
-                // suppression du contrat de la table paiementcontrat
-                
-                // $paiementcontrat = Paiementcontrat::where('id_paiementglobalcontrat', $id_paiementcontrat)->get();
-                // // dd($paiementsAvecEleves);
-                // // Vérifier si des enregistrements existent
-                // if ($paiementcontrat->count() > 0) {
-                //     // Parcourir chaque modèle et appeler delete() sur chaque modèle
-                //     foreach ($paiementcontrat as $paiement) {
-                //         $paiement->update(['statut_paiementcontrat' => 0]);
-                //     }
-                //     return view('pages.etatpaiement1')->with("statuspaiement", "Le paiement a ete supprimer avec succes")->with('paiementsAvecEleves', $paiementsAvecEleves);
-                // }else{
-
-                //     return view('pages.etatpaiement1')->with("statuspaiement", "Le contrat n'existe pas,  veuiller d'abord le creer pour l'eleve")->with('paiementsAvecEleves', $paiementsAvecEleves);
-                // }
+    }
 
 
+    public function imprimerfiche($idpaiementcontrat){
 
+        // dd($idpaiementcontrat);
+        $lignepaiement = Paiementglobalcontrat::where('id_paiementcontrat', $idpaiementcontrat)->first();
+        // dd($lignepaiement);
 
+        $solde = $lignepaiement->montant_paiementcontrat;
+        $id_contrat = $lignepaiement->id_contrat;
+        $date_paiementcontrat = $lignepaiement->date_paiementcontrat;
+        $anne_paiementcontrat = $lignepaiement->anne_paiementcontrat;
+        $mois = $lignepaiement->mois_paiementcontrat;
 
-                // $paiementcontrat->delete();
+        // recuperation des information de l'eleve
+
+        $infocontrat = Contrat::where('id_contrat', $id_contrat)->first();
+        $id_eleve = $infocontrat->eleve_contrat;
+
+        $infoeleves = Eleve::where('MATRICULE', $id_eleve)->first();
+        $nomcompeleve = $infoeleves->NOM .' '. $infoeleves->PRENOM;
+        $classeeleve = $infoeleves->CODECLAS;
+        // dd($classeeleve);
+
+        return view('pages.etat.imprimerfiche')
+        ->with('solde', $solde)
+        ->with('date_paiementcontrat', $date_paiementcontrat)
+        ->with('mois', $mois)
+        ->with('nomcompeleve', $nomcompeleve)
+        ->with('classeeleve', $classeeleve);
     }
 
 

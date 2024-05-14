@@ -155,7 +155,7 @@
 <script>
   function imprimerPage() {
       var page = window.open();
-      page.document.write('<html><head><title>Imprimer</title>');
+      page.document.write('<html><head><title>Etatdroitconstate{{ $annee }}-{{ $anneesuivant }}--{{ $classe }}</title>');
       page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
       page.document.write('</head><body>');
       page.document.write(document.getElementById('contenu').innerHTML);
