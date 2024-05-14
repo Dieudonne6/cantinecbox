@@ -172,12 +172,20 @@
 
 <script>
     function imprimerPage() {
+        // Supprimer l'ID myTable avant l'impression
+        // document.getElementById('myTable').removeAttribute('id');
         var page = window.open();
         page.document.write('<html><head><title>Paiement_{{$dateFormateedebut}}--{{$dateFormateefin}}</title>');
         page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
         page.document.write('<style>@media print { .hide-on-print { visibility: hidden; } }</style>');
         page.document.write('</head><body>');
         page.document.write(document.getElementById('contenu').innerHTML);
+        // var contenu = document.getElementById('contenu').innerHTML;
+        // var table = document.getElementById('myTable').innerHTML;
+        // table = table.replace('id="myTable"', '');
+        // console.log(table);
+        // page.document.write(contenu);
+
         page.document.write('</body></html>');
         page.document.close();
         page.print();
