@@ -7,6 +7,7 @@
             /* display: none !important; */
             visibility: hidden !important; 
         }
+    
     }
 </style>
     <div class="container">
@@ -146,9 +147,10 @@
 
                             <td class="hide-on-print">
                                 <div class="d-flex justify-content-between">
-                                    <a type="button" style="height: 45px" class="btn btn-primary w-50 me-1" href="{{ url('imprimerfiche/' . $resultatsIndividuel['id_paiementcontrat']) }}">
+                                    <button type="button" class="btn btn-primary w-50 me-1" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal">
                                         Imprimer fiche
-                                    </a>
+                                    </button>
                                     <form
                                         action="{{ url('supprimerpaiement/' . $resultatsIndividuel['id_paiementcontrat']) }}"
                                         method="post">
@@ -171,13 +173,20 @@
 @endsection
 
 <script>
+    
     function imprimerPage() {
+        var table = document.getElementById('myTable');
+        table.classList.remove('DataTable');
         var page = window.open();
-        page.document.write('<html><head><title>Paiement_{{$dateFormateedebut}}--{{$dateFormateefin}}</title>');
+        page.document.write('<html><head><title>Imprimer</title>');
+        page.document.write('<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />');
+
         page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
-        page.document.write('<style>@media print { .hide-on-print { visibility: hidden; } }</style>');
+        page.document.write('<style>@media print { .hide-on-print { visibility: hidden !important; } }</style>');
+
         page.document.write('</head><body>');
-            page.document.write(document.querySelector('.dt-layout-table').innerHTML);
+            page.document.write(document.getElementById('contenu').innerHTML);
+
         page.document.write('</body></html>');
         page.document.close();
         page.print();
