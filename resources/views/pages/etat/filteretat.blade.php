@@ -158,7 +158,7 @@
       page.document.write('<html><head><title>Etatdroitconstate{{ $annee }}-{{ $anneesuivant }}--{{ $classe }}</title>');
       page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
       page.document.write('</head><body>');
-      page.document.write(document.getElementById('contenu').innerHTML);
+        page.document.write(document.querySelector('.dt-layout-table').innerHTML);
       page.document.write('</body></html>');
       page.document.close();
       page.print();
