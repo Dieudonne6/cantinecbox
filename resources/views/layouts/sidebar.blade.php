@@ -169,21 +169,21 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
 
-    <li class="nav-item">
+    {{-- <li class="nav-item">
       <a class="nav-link" href="{{url('/dashbord')}}">
         <i class="typcn typcn-device-desktop menu-icon"></i>
         <span class="menu-title">Tableau de bord</span>
       </a>
-    </li>
+    </li> --}}
 
-    <li class="nav-item">
+    {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
         <i class="typcn typcn-document-text menu-icon"></i>
         <span class="menu-title">Inscriptions & disciplines</span>
         <i class="menu-arrow"></i>
       </a>
       <div class="collapse" id="ui-basic">
-         {{-- Acceuil --}}
+         {{-- Acceuil 
 
         <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
@@ -196,7 +196,7 @@
 
          {{-- Créations des classes --}}
 
-        <div class="dropdown">
+        {{-- <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton2" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Créations des classes </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton2" style="" _mstvisible="0" >
@@ -206,11 +206,11 @@
             <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Table des classes</a>
             <a class="dropdown-item" href="#" _msttexthash="229879" _msthash="283" _mstvisible="1">Couper</a>
           </div>
-        </div>
+        </div> --}}
   
          {{-- Scolarité --}}
         
-        <div class="dropdown">
+        {{-- <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Scolarité </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="" _mstvisible="0" >
@@ -221,18 +221,18 @@
             <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Paiement des <br> non inscrits</a>
             <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Duplicata</a>
           </div>
-        </div>
+        </div> --}}
 
          {{-- Dicipline --}}
-
+{{-- 
         <div class="dropdown">
           <button class="btn btn-light-lg" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Dicipline </button>
         </div>
-        
+         --}}
         {{-- Extraction de données --}}
 
-        <div class="dropdown">
+        {{-- <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Extraction de données </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4" style="" _mstvisible="0" >
@@ -240,10 +240,10 @@
             <a class="dropdown-item" href="#" _msttexthash="15" _msthash="15" _mstvisible="1">Exporter</a>
             <a class="dropdown-item" href="#" _msttexthash="16" _msthash="16" _mstvisible="1">Importer</a>
           </div>
-        </div>
+        </div> --}}
  
         {{-- Intégrité --}}
-
+{{-- 
         <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton5" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Intégrité </button>
@@ -251,10 +251,10 @@
             <a class="dropdown-item" href="#" _msttexthash="18" _msthash="18" _mstvisible="1">Vérouillage</a>
             <a class="dropdown-item" href="#" _msttexthash="19" _msthash="19" _mstvisible="1">Recalculer Effectifs</a>
           </div>
-        </div>
+        </div> --}}
 
         {{-- Editions --}}
-
+{{-- 
         <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Editions </button>
@@ -264,18 +264,18 @@
             <a class="dropdown-item" href="#" _msttexthash="16" _msthash="16" _mstvisible="1">Rapports annuels</a>
             <a class="dropdown-item" href="#" _msttexthash="17" _msthash="17" _mstvisible="1">Livrets scolaire</a>
           </div>
-        </div>
+        </div> --}}
  
-        {{-- Archives --}}
+        {{-- Archives 
 
         <div class="dropdown">
           <button class="btn btn-light-lg " type="button" id="dropdownMenuSizeButton5" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Archives </button>
         </div>
       </div>
-    </li>
+    </li> --}}
     
-    <li class="nav-item">
+    {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
         <i class="typcn typcn-film menu-icon"></i>
         <span class="menu-title">Gestion des notes</span>
@@ -283,7 +283,7 @@
       </a>
       <div class="collapse" id="form-elements">
         
-        {{-- Paramètres --}}
+        {{-- Paramètres 
 
         <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
@@ -297,7 +297,7 @@
 
          {{-- Manipulation des notes --}}
 
-        <div class="dropdown">
+        {{-- <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton2" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Manipulation des notes </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton2" style="" _mstvisible="0" >
@@ -305,10 +305,10 @@
             <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Enrégistrer les résultats <br> des examens</a>
             <a class="dropdown-item" href="#" _msttexthash="229879" _msthash="283" _mstvisible="1">Vérifier les notes</a>
           </div>
-        </div>
+        </div> --}}
   
          {{-- Sécurité --}}
-        
+{{--         
         <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Sécurité </button>
@@ -316,10 +316,10 @@
             <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Vérouillage</a>
             <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Dévérouillage</a>
           </div>
-        </div>
+        </div> --}}
 
          {{-- Edition --}}
-
+{{-- 
         <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Edition </button>
@@ -336,10 +336,10 @@
             <a class="dropdown-item" href="#" _msttexthash="13" _msthash="13" _mstvisible="1">Liste des méritant</a>
           </div>
         </div>
-        
+         --}}
         {{-- Résultats --}}
 
-        <div class="dropdown">
+        {{-- <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Résultats </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4" style="" _mstvisible="0" >
@@ -348,10 +348,10 @@
             <a class="dropdown-item" href="#" _msttexthash="16" _msthash="16" _mstvisible="1">Rapports annuels</a>
             <a class="dropdown-item" href="#" _msttexthash="17" _msthash="17" _mstvisible="1">Livrets scolaire</a>
           </div>
-        </div>
+        </div> --}}
  
         {{-- Extraction --}}
-
+{{-- 
         <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton5" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Extraction </button>
@@ -359,12 +359,12 @@
             <a class="dropdown-item" href="#" _msttexthash="18" _msthash="18" _mstvisible="1">Exporter</a>
             <a class="dropdown-item" href="#" _msttexthash="19" _msthash="19" _mstvisible="1">Importer</a>
           </div>
-        </div>
+        </div> 
 
       </div>
-    </li>
+    </li> --}}
 
-    <li class="nav-item">
+    {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
         <i class="typcn typcn-chart-pie-outline menu-icon"></i>
         <span class="menu-title">Examen Blanc</span>
@@ -438,10 +438,10 @@
         
         </ul>
       </div>
-    </li>
+    </li> --}}
 
     {{-- Comptabilité & Budget --}}
-    <li class="nav-item">
+    {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
         <i class="typcn typcn-compass menu-icon"></i>
         <span class="menu-title">Comptabilité & Budget</span>
@@ -521,10 +521,10 @@
           <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Cloture de mois</a></li>
         </ul>
       </div>
-    </li>
+    </li> --}}
 
     {{-- Ressource matérielles --}}
-    <li class="nav-item">
+    {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
         <i class="typcn typcn-user-add-outline menu-icon"></i>
         <span class="menu-title">Ressource matérielles</span>
@@ -545,10 +545,10 @@
           <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Occupation Salles </a></li>
         </ul>
       </div>
-    </li>
+    </li> --}}
 
     {{-- Communication --}}
-    <li class="nav-item">
+    {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#Communication" aria-expanded="false" aria-controls="Communication">
         <i class="typcn typcn-globe-outline menu-icon"></i>
         <span class="menu-title">Communication</span>
@@ -560,10 +560,10 @@
           <li class="nav-item"> <a class="nav-link" href="pages/samples/Communication-500.html"> WebScolaire </a></li>
         </ul>
       </div>
-    </li>
+    </li> --}}
 
     {{-- Administration --}}
-    <li class="nav-item">
+    {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#Administration" aria-expanded="false" aria-controls="Administration">
         <i class="typcn typcn-globe-outline menu-icon"></i>
         <span class="menu-title">Administration</span>
@@ -578,7 +578,7 @@
           <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> Bricoles</a></li>
         </ul>
       </div>
-    </li>
+    </li> --}}
  
     {{-- Paramètres --}}
     <li class="nav-item">
@@ -612,8 +612,8 @@
           <li class="nav-item"> <a class="nav-link" href="{{url('/paramsfacture')}}">Paramètre Facture </a></li>
         </ul>
       </div>
-    </li>
-    
+    </li> 
+  
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#Cantine" aria-expanded="false" aria-controls="Cantine">
         <i class="typcn typcn-document-text menu-icon"></i>
@@ -622,8 +622,21 @@
       </a>
       <div class="collapse" id="Cantine">
         <ul class="nav flex-column sub-menu">
-
-          <div class="dropdown">
+          <li class="nav-item menu-item-has-children">
+            <a href="" class="nav-link">Etats</a>
+            <ul class="sub-menus">
+              <li>
+                <a href="{{url('/etatpaiement')}}">Etat des paiements</a>
+              </li>
+              <li>
+                <a href="{{url('/etatdroits')}}">Etat des droits constatés</a>
+              </li>
+              <li>
+                <a href="#">Lettre de relance</a>
+              </li>
+            </ul>
+          </li>
+          {{-- <div class="dropdown">
             <li class="nav-item">
             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton90" data-toggle="dropdown" 
             aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Etats </button>
@@ -631,12 +644,9 @@
               <a class="dropdown-item" href="#" _msttexthash="20" _msthash="20" _mstvisible="1">Etat des paiements</a>
               <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Etat des droits constatés</a>
               <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Lettre de relance</a>
-            </div>
-            </li>
-          </div>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/classes')}}">Toutes les classes</a></li>
-
+            </div> --}}
          
+          <li class="nav-item"> <a class="nav-link" href="{{url('/classes')}}">Toutes les classes</a></li>
         </ul>
       </div>
     </li>
