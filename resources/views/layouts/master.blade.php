@@ -137,9 +137,9 @@ display: block;
 </script>
 
 <script>
-
-  $(document).ready(function(){
+$(document).ready(function(){
     $('#myTable').DataTable({
+        "paging": false, // Désactiver la pagination
         "language": {
             "sProcessing":     "Traitement en cours...",
             "sSearch":         "Rechercher&nbsp;:",
@@ -152,10 +152,8 @@ display: block;
             "sZeroRecords":    "Aucun résultat trouvé",
             "sEmptyTable":     "Aucune donnée disponible dans le tableau",
             "oPaginate": {
-                // "sFirst":      "Premier",
                 "sPrevious":   "Précédent",
                 "sNext":       "Suivant"
-                // "sLast":       "Dernier"
             },
             "oAria": {
                 "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
@@ -164,6 +162,8 @@ display: block;
         }
     });
 });
+
+
 
   </script>
   <!-- End custom js for this page-->
