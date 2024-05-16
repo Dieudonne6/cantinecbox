@@ -601,7 +601,7 @@
                 <a href="{{url('/etatdroits')}}">Etat des droits constatés</a>
               </li>
               <li>
-                <a href="#">Lettre de relance</a>
+                <a href="{{url('/lettrederelance')}}">Lettre de relance</a>
               </li>
             </ul>
           </li>
