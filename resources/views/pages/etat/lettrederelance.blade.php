@@ -3,8 +3,11 @@
 <div class="col-lg-12 grid-margin stretch-card">
   <div class="card">
     <div class="card-body">
-      <h4 class="card-title">Lettre de relance</h4>
-      
+      <div class="d-flex justify-content-between">
+        <h4 class="card-title">Lettre de relance</h4>
+        <button class="btn btn-primary">Imprimer la relance</button>
+      </div>
+
       <div class="table-responsive pt-3">
         <table class="table table-bordered">
           <thead>
