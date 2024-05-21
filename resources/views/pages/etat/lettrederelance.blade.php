@@ -5,9 +5,31 @@
     <div class="card-body">
       <div class="d-flex justify-content-between">
         <h4 class="card-title">Lettre de relance</h4>
-        <button class="btn btn-primary">Imprimer la relance</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Imprimer la relance        
+        </button>
       </div>
-
+      
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <form action="{{url('/relance')}}" method="POST">
+          {{csrf_field()}}
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Date Buttoir</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <input type="date" class="form-control"> 
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn btn-primary">Imprimer</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
       <div class="table-responsive pt-3">
         <table class="table table-bordered">
           <thead>

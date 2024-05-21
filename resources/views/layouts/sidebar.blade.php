@@ -1,4 +1,4 @@
-<div class="theme-setting-wrapper">
+{{-- <div class="theme-setting-wrapper">
   <div id="settings-trigger"><i class="typcn typcn-cog-outline"></i></div>
   <div id="theme-settings" class="settings-panel">
     <i class="settings-close typcn typcn-times"></i>
@@ -15,8 +15,8 @@
       <div class="tiles default"></div>
     </div>
   </div>
-</div>
-<div id="right-sidebar" class="settings-panel">
+</div> --}}
+{{-- <div id="right-sidebar" class="settings-panel">
   <i class="settings-close typcn typcn-times"></i>
   <ul class="nav nav-tabs" id="setting-panel" role="tablist">
     <li class="nav-item">
@@ -162,9 +162,8 @@
         </li>
       </ul>
     </div>
-    <!-- chat tab ends -->
   </div>
-</div>
+</div> --}}
 
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">

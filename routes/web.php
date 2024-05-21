@@ -80,6 +80,7 @@ Route::get('/etatpaiement1', [ClassesController::class, 'etatpaiement1']);
 Route::get('/vitrine', [PagesController::class, 'vitrine']);
 Route::get('/etatdroits', [EtatController::class, 'etatdroits']);
 Route::post('/filteretat', [EtatController::class, 'filteretat']);
+Route::post('/relance', [EtatController::class, 'relance']);
 
 Route::get('/paramsfacture', [PagesController::class, 'paramsfacture']);
 Route::post('/paramsemecef', [PagesController::class, 'paramsemecef']);
