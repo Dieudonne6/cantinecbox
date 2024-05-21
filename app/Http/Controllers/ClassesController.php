@@ -17,6 +17,8 @@ use App\Models\Paiementcontrat;
 use App\Models\Moiscontrat;
 use App\Models\Facturenormalise;
 use App\Models\Usercontrat;
+use App\Models\Paramsfacture;
+use App\Models\Params2;
 use GuzzleHttp\Client;
 use Barryvdh\DomPDF\PDF;
 use Endroid\QrCode\QrCode;
@@ -114,7 +116,7 @@ class ClassesController extends Controller
                 // dd($inscriptioncontrats);
                 // $allmoiscontrat = Moiscontrat::get();
                 // $allmoiscontrat = Moiscontrat::get()->toArray();
-                $allmoiscontrat = Moiscontrat::pluck('nom_moiscontrat', 'id_moiscontrat')->toArray();
+                $allmoiscontrat = Moiscontrat::pluck('nom_moiscontrat', 'id_moiscontrat')->take(12)->toArray();
                 // dd($allmoiscontrat);
 
                 $difference = array_diff(array_keys($allmoiscontrat), $inscriptioncontrats);
@@ -321,8 +323,19 @@ class ClassesController extends Controller
     $nomeleve = Eleve::where('MATRICULE', $matriculeeleve)->value('NOM');
     $prenomeleve = Eleve::where('MATRICULE', $matriculeeleve)->value('PRENOM');
     $classeeleve = Eleve::where('MATRICULE', $matriculeeleve)->value('CODECLAS');
-
     $nomcompleteleve = $nomeleve .' '. $prenomeleve;
+
+    $parametrefacture = Paramsfacture::first();
+    $ifuentreprise = $parametrefacture->ifu;
+    $tokenentreprise = $parametrefacture->token;
+    $taxe = $parametrefacture->taxe;
+    $type = $parametrefacture->type;
+
+    $parametreetab = Params2::first();
+    $nometab = $parametreetab->NOMETAB;
+    $villeetab = $parametreetab->VILLE;
+
+    
 
 
     // dd($classeeleve);
@@ -348,18 +361,19 @@ class ClassesController extends Controller
                     'name' => 'contrat de cantine',
                     'price' => intval($infocontrateleve->montant_paiementcontrat), // Convertir le prix en entier
                     'quantity' => 1,
-                    'taxGroup' => 'B', // La taxe reste la même, adaptez si nécessaire
+                    'taxGroup' => $taxe, // La taxe reste la même, adaptez si nécessaire
             ]
                 ];
         
         
             
             $invoiceRequestDto = [
-                "ifu" => "0202380068074", // ici on doit rendre la valeur de l'ifu dynamique
-                "type" => "FV",
+                "ifu" => $ifuentreprise, // ici on doit rendre la valeur de l'ifu dynamique
+                "type" => $type,
                 "items" => $invoiceItems,
                 "operator" => [
-                    "name" => "Test"
+                    // "name" => $nomecole
+                    "name" => "test"
                 ]
             ];
     
@@ -375,7 +389,8 @@ class ClassesController extends Controller
             $apiUrl = 'https://developper.impots.bj/sygmef-emcf/api/invoice';
     
             // Définissez le jeton d'authentification
-            $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjAyMDIzODAwNjgwNzR8VFMwMTAwNzgyMiIsInJvbGUiOiJUYXhwYXllciIsIm5iZiI6MTcxMzk2NDA3MSwiZXhwIjoxNzQ1NDQ5MjAwLCJpYXQiOjE3MTM5NjQwNzEsImlzcyI6ImltcG90cy5iaiIsImF1ZCI6ImltcG90cy5iaiJ9.CuR4P9gaXP1T-I5vWuR0i_iXlRHSZhyu8Hry73GO5o8';
+            // $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjAyMDIzODAwNjgwNzR8VFMwMTAwNzgyMiIsInJvbGUiOiJUYXhwYXllciIsIm5iZiI6MTcxMzk2NDA3MSwiZXhwIjoxNzQ1NDQ5MjAwLCJpYXQiOjE3MTM5NjQwNzEsImlzcyI6ImltcG90cy5iaiIsImF1ZCI6ImltcG90cy5iaiJ9.CuR4P9gaXP1T-I5vWuR0i_iXlRHSZhyu8Hry73GO5o8';
+            $token = $tokenentreprise;
     
             // Effectuez la requête POST à l'API
             // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -410,7 +425,7 @@ class ClassesController extends Controller
     if (isset($decodedResponse['uid'])) {
         // L'UID de la demande
         $uid = $decodedResponse['uid'];
-        $taxb = 0.18;
+        // $taxb = 0.18;
     
         // Affichez l'UID
         // echo "L'UID de la demande est : $uid";
@@ -448,6 +463,7 @@ class ClassesController extends Controller
     $decodedResponseConfirmation = json_decode($responseConfirmation, true);
     
     $facturedetaille = json_decode($jsonData, true);
+    // dd($facturedetaille);
     
     $reffacture = uniqid('f_');
     // dd($decodedResponseConfirmation);
@@ -502,6 +518,10 @@ class ClassesController extends Controller
         Session::put('nomcompleteleve', $nomcompleteleve);
         Session::put('toutmoiscontrat', $toutmoiscontrat);
         Session::put('qrCodeString', $qrCodeString);
+        Session::put('nometab', $nometab);
+        Session::put('villeetab', $villeetab);
+
+
     
     
         return view('pages.pdffacture', [
@@ -512,6 +532,8 @@ class ClassesController extends Controller
             'nomcompleteleve' => $nomcompleteleve,
             'toutmoiscontrat' => $toutmoiscontrat,
             'qrCodeString' => $qrCodeString,
+            'nometab' => $nometab,
+            'villeetab' => $villeetab,
             // 'qrCodeImage' => $qrCodeImage,
     
                  ]);
@@ -585,6 +607,8 @@ class ClassesController extends Controller
         $nomcompleteleve = Session::get('nomcompleteleve');
         $toutmoiscontrat = Session::get('toutmoiscontrat');
         $qrCodeString = Session::get('qrCodeString');
+        $villeetab = Session::get('villeetab');
+        $nometab = Session::get('nometab');
         return view('pages.facturenormalise',  [
             'factureconfirm' => $decodedResponseConfirmation,
             'facturedetaille' => $facturedetaille, 
@@ -593,6 +617,8 @@ class ClassesController extends Controller
             'nomcompleteleve' => $nomcompleteleve,
             'toutmoiscontrat' => $toutmoiscontrat,
             'qrCodeString' => $qrCodeString,
+            'nometab' => $nometab,
+            'villeetab' => $villeetab,
         ]);        
     }
 
