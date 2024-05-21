@@ -71,9 +71,9 @@ class EtatController extends Controller
         })->get();
         return view('pages.etat.lettrederelance')->with('relance', $relance);           
     }
-    public function relance(){
-     
-        return view('pages.etat.relance')->with('relance', $relance);           
+    public function relance(Request $request){
+        $relan = $request->daterelance;
+        return view('pages.etat.relance')->with('relan', $relan);           
     }
 
 }

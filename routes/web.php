@@ -85,3 +85,5 @@ Route::post('/relance', [EtatController::class, 'relance']);
 Route::get('/paramsfacture', [PagesController::class, 'paramsfacture']);
 Route::post('/paramsemecef', [PagesController::class, 'paramsemecef']);
 Route::get('/imprimerfiche/{id_paiementcontrat}', [ClassesController::class, 'imprimerfiche']);
+Route::get('/inscriptions', [PagesController::class, 'inscriptions']);
+Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
