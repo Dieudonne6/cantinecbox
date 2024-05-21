@@ -254,15 +254,29 @@
                         @endphp
 
                         @foreach ($facturedetaille['items'] as $item)
-                            @php
-                                // Calculer le montant TTC pour chaque article
-                                $tva = $item['price'] * 0.18;
+                                @php
+                                // Définition du taux de TVA initial
+                                $tauxTVA = 0;
+                            
+                                // Vérification de la valeur de taxGroup
+                                if ($item['taxGroup'] == 'B') {
+                                    // Si taxGroup est 'B', appliquer le taux de TVA 18%
+                                    $tauxTVA = 0.18;
+                                } elseif ($item['taxGroup'] == 'A') {
+                                    // Si taxGroup est 'A', appliquer le taux de TVA 1%
+                                    $tauxTVA = 0.01;
+                                }
+                            
+                                // Calcul du montant de TVA
+                                $tva = $item['price'] * $tauxTVA;
+                            
+                                // Calcul du montant TTC pour chaque article en ajoutant la TVA
                                 $totalTTCItem = $item['price'] + $tva;
-
-                                // Ajouter le montant TTC de l'article au total TTC
-$totalTTC += $totalTTCItem;
-
-// Ajouter le montant HT de l'article au total HT
+                            
+                                // Ajout du montant TTC de l'article au total TTC
+                                $totalTTC += $totalTTCItem;
+                            
+                                // Ajout du montant HT de l'article au total HT
                                 $totalHT += $item['price'];
                             @endphp
                             <tr>
@@ -297,7 +311,6 @@ $totalTTC += $totalTTCItem;
                             <th scope="col">Groupe tax</th>
                             <th scope="col">Montant total HT</th>
                             <th scope="col">Net a Payer</th>
-
                         </tr>
                     </thead>
                     <tbody>
@@ -344,15 +357,15 @@ $totalTTC += $totalTTCItem;
 
             <div class="bas">
                 <div class="logo1">
-                    <p>Complexe scolaire: <strong>Le petit poucet </strong> </p>
+                    <p><strong>{{ $nometab }}</strong> </p>
                     {{-- <img src="" alt=""> --}}
                 </div>
 
                 <div class="info1">
-                    <p>Fait a cotonou le , <strong>{{ $factureconfirm['dateTime'] }} </strong></p>
+                    <p>Fait a {{$villeetab}} le , <strong>{{ $factureconfirm['dateTime'] }} </strong></p>
                     {{-- <p>Reference 909090909090   </p> --}}
                 </div>
-                <p class="textremerciement"><i>Merci d'avoir choisi le complexe scolaire "le petit poucet". </i> </p>
+                <p class="textremerciement"><i>Merci d'avoir choisi le {{ $nometab }} </i> </p>
 
             </div>
         </div>

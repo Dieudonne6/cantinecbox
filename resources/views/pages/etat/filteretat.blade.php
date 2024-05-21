@@ -3,6 +3,7 @@
 @extends('layouts.master')
 @section('content')
 
+
 <body>
   
   <div class="col-lg-12 grid-margin stretch-card">
@@ -132,7 +133,7 @@
     </div>
   </body>
   @endsection
-  
+
   <script>
     
     function imprimerPage() {
@@ -140,7 +141,8 @@
       table.classList.remove('dataTable');
       
       var page = window.open();
-        page.document.write('<html><head><title>Imprimer</title>');
+        page.document.write('<html><head><title>EDC_annee_{{ $annee }}_{{ $anneesuivant }}_classe_{{ $classe }}</title>');
+        // page.document.write('<html><head><title>Imprimer</title>');
         // page.document.write('<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />');
         page.document.write('<style>@media print { .dt-end { display: none !important; } }</style>');
        

@@ -179,7 +179,7 @@
       table.classList.remove('dataTable');
       
       var page = window.open();
-      page.document.write('<html><head><title>Imprimer</title>');
+      page.document.write('<html><head><title>Paiement_du_{{$dateFormateedebut}}_au_{{$dateFormateefin}}</title>');
         page.document.write('<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />');
         page.document.write('<style>@media print { .dt-end { display: none !important; } }</style>');
        
@@ -194,6 +194,7 @@
           page.document.close();
           page.print();
         }
+
         
     
   </script>
