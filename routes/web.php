@@ -38,6 +38,7 @@ Route::post('/traiter', [ClassesController::class, 'traiter']);
 
 Route::post('/creercontrat', [ClassesController::class, 'creercontrat']);
 
+Route::get('/lettrederelance', [EtatController::class, 'lettrederelance']);
 
 Route::get('/frais', [PagesController::class, 'frais']);
 Route::post('/nouveaufrais', [PagesController::class, 'fraisnouveau']);

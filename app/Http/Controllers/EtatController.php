@@ -64,8 +64,12 @@ class EtatController extends Controller
         return view('pages.etat.filteretat')->with('eleves', $eleves)->with('moisContrat', $moisContrat)->with('anne', $anne)->with('class', $class)->with('annee', $annee)->with('classe', $classe)->with('anneesuivant', $anneesuivant);
     }
     
-
-
-
+    public function lettrederelance(){
+        
+        $relance = Eleve::whereHas('contrats', function($query) {
+            $query->where('statut_contrat', 1);
+        })->get();
+        return view('pages.etat.lettrederelance')->with('relance', $relance);           
+    }
 
 }

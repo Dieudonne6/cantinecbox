@@ -26,6 +26,11 @@
   <link rel="shortcut icon" href="{{asset('assets/images/favicon.png')}}" />
 
   <style>
+   .tables th:nth-child(n+1), .tables td:nth-child(n+1) {
+      /* width: 80px;
+      max-width: 80px; */
+      overflow: hidden;
+    }
     .menu-item-has-children:hover::after {
 transform: translateY(-3.5rem) rotate(-90deg);
 }

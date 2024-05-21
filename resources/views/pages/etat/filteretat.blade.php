@@ -48,7 +48,7 @@
           </form>
           
           
-          <div id="contenu">
+          <div id="contenu" class="tables">
             <div>
               <h4 class="card-title" style="text-align: center; font-weight:bold;">Etats des droits constatés ANNEE-ACADEMIQUE: {{ $annee }} - {{ $anneesuivant }} | CLASSE: {{ $classe }}</h4>
             </div><br>
@@ -142,19 +142,20 @@
       
       var page = window.open();
         page.document.write('<html><head><title>EDC_annee_{{ $annee }}_{{ $anneesuivant }}_classe_{{ $classe }}</title>');
+        // page.document.write('<html><head><title>Imprimer</title>');
         // page.document.write('<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />');
         page.document.write('<style>@media print { .dt-end { display: none !important; } }</style>');
        
         page.document.write('<style>@media print { .dt-start { display: none !important; } }</style>');
 
-        page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
-       
+        // page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
+        page.document.write('<style>@media print { th { display: table-cell !important; } }</style>');
+        page.document.write('<style>@media print { th:nth-child(n+1), td:nth-child(n+1) {width: 20px; max-width: 20px; overflow: hidden; font-size: 0.8rem;} }</style>');
+
         page.document.write('</head><body>');
         page.document.write(document.getElementById('contenu').innerHTML);
-          
         page.document.write('</body></html>');
         page.document.close();
         page.print();
-        }
-        
-      </script>
+    }
+    </script>
