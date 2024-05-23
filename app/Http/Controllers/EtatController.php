@@ -11,6 +11,11 @@ use Carbon\Carbon;
 use App\Models\Eleve;
 use App\Models\Contrat;
 use App\Models\Classes;
+<<<<<<< HEAD
+=======
+use App\Models\Paiementglobalcontrat;
+use Barryvdh\DomPDF\Facade as PDF;
+>>>>>>> 909165c89107ee2f9d97335019f0ab107997c168
 
 use App\Models\Moiscontrat;
 use Illuminate\Support\Facades\DB;
@@ -79,73 +84,92 @@ class EtatController extends Controller
    
 
 
-    public function relance(Request $request)
-    {
-        //lolo
-        // Date sélectionnée par l'utilisateur
-        $selectedDate = Carbon::createFromFormat('Y-m-d', $request->input('daterelance'));
+  
+public function relance(Request $request)
+{
+    //lolo
+    // Date sélectionnée par l'utilisateur
+    $selectedDate = Carbon::createFromFormat('Y-m-d', $request->input('daterelance'));
+
+    // Liste des mois en français dans l'ordre scolaire (septembre à août)
+    $months = ["Septembre", "Octobre", "Novembre", "Decembre", "Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout"];
     
-        // Liste des mois en français dans l'ordre scolaire (septembre à août)
-        $months = ["Septembre", "Octobre", "Novembre", "Decembre", "Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout"];
-        
-        // Convertir la date sélectionnée en mois et année
-        $selectedMonthName = $selectedDate->format('F'); // Mois en anglais
-        $selectedYear = $selectedDate->format('Y');
+    // Convertir la date sélectionnée en mois et année
+    $selectedMonthName = $selectedDate->format('F'); // Mois en anglais
+    $selectedYear = $selectedDate->format('Y');
+
+    // Mapper les mois anglais aux mois français pour correspondre avec notre tableau
+    $monthsMap = [
+        'January' => 'Janvier', 'February' => 'Fevrier', 'March' => 'Mars', 
+        'April' => 'Avril', 'May' => 'Mai', 'June' => 'Juin', 
+        'July' => 'Juillet', 'August' => 'Aout', 'September' => 'Septembre', 
+        'October' => 'Octobre', 'November' => 'Novembre', 'December' => 'Decembre'
+    ];
     
-        // Mapper les mois anglais aux mois français pour correspondre avec notre tableau
-        $monthsMap = [
-            'January' => 'Janvier', 'February' => 'Fevrier', 'March' => 'Mars', 
-            'April' => 'Avril', 'May' => 'Mai', 'June' => 'Juin', 
-            'July' => 'Juillet', 'August' => 'Aout', 'September' => 'Septembre', 
-            'October' => 'Octobre', 'November' => 'Novembre', 'December' => 'Decembre'
-        ];
-        
-        $selectedMonth = $monthsMap[$selectedMonthName];
-    
-        // Trouver l'index du mois sélectionné dans le tableau des mois scolaires
-        $selectedMonthIndex = array_search($selectedMonth, $months);
-    
-        // Trouver les mois précédant le mois sélectionné dans l'année scolaire
-        $previousMonths = array_slice($months, 0, $selectedMonthIndex);
-        // Récupérer tous les paiements
-        $paiements = Paiementglobalcontrat::all();
-    
-        // Grouper les mois payés par id_contrat
-        $contratPayments = [];
-    
-        foreach ($paiements as $paiement) {
-            $id_contrat = $paiement->id_contrat;
-            $paidMonths = explode(',', $paiement->mois_paiementcontrat);
-    
-            if (!isset($contratPayments[$id_contrat])) {
-                $contratPayments[$id_contrat] = [];
-            }
-    
-            $contratPayments[$id_contrat] = array_merge($contratPayments[$id_contrat], $paidMonths);
+    $selectedMonth = $monthsMap[$selectedMonthName];
+
+    // Trouver l'index du mois sélectionné dans le tableau des mois scolaires
+    $selectedMonthIndex = array_search($selectedMonth, $months);
+
+    // Trouver les mois précédant le mois sélectionné dans l'année scolaire
+    $previousMonths = array_slice($months, 0, $selectedMonthIndex + 1);
+    // Récupérer tous les paiements
+    $paiements = Paiementglobalcontrat::all();
+
+    // Grouper les mois payés par id_contrat
+    $contratPayments = [];
+
+    foreach ($paiements as $paiement) {
+        $id_contrat = $paiement->id_contrat;
+        $paidMonths = preg_split('/[\s,]+/', $paiement->mois_paiementcontrat);
+
+        if (!isset($contratPayments[$id_contrat])) {
+            $contratPayments[$id_contrat] = [];
         }
-    
-        // Initialiser un tableau pour stocker les id_contrat non payés
-        $unpaidContrats = [];
-    
-        // Parcourir les paiements regroupés pour vérifier les mois impayés
-        foreach ($contratPayments as $id_contrat => $paidMonths) {
-            $paidMonths = array_map('trim', $paidMonths); // Supprimer les espaces éventuels
-            $paidMonths = array_unique($paidMonths); // Supprimer les doublons
-    // dd($paidMonths);
-            // Vérifier si tous les mois précédents sont payés
-            foreach ($previousMonths as $month) {
-                if (!in_array($month, $paidMonths)) {
-                    // Ajouter l'id_contrat au tableau des impayés s'il manque un mois
-                    $unpaidContrats[] = $id_contrat;
-                    // dd($unpaidContrats);
-                    break; // Pas besoin de vérifier les autres mois pour ce contrat
-                }
-            }
-        }
-        // Retourner les résultats dans une vue
-        return view('pages.etat.relance')->with('unpaidContrats', array_unique($unpaidContrats));
+
+        $contratPayments[$id_contrat] = array_merge($contratPayments[$id_contrat], $paidMonths);
     }
 
+    // Initialiser un tableau pour stocker les id_contrat non payés
+    $unpaidContrats = [];
+
+    // Parcourir les paiements regroupés pour vérifier les mois impayés
+    foreach ($contratPayments as $id_contrat => $paidMonths) {
+        $paidMonths = array_map('trim', $paidMonths); // Supprimer les espaces éventuels
+        $paidMonths = array_unique($paidMonths); // Supprimer les doublons
+        $unpaidMonths = [];
+        foreach ($previousMonths as $month) {
+            if (!in_array($month, $paidMonths)) {
+                $unpaidMonths[] = $month;
+            }
+        }
+
+        if (!empty($unpaidMonths)) {
+            $unpaidContrats[$id_contrat] = $unpaidMonths;
+        }
+    }
+    $unpaidEleves = DB::table('contrat')
+    ->whereIn('id_contrat', array_keys($unpaidContrats))
+    ->pluck('eleve_contrat', 'id_contrat');
+
+    $matricules = DB::table('eleve')
+    ->whereIn('MATRICULE', $unpaidEleves->values())
+    ->pluck('NOM', 'MATRICULE');
+    $results = [];
+
+    foreach ($unpaidEleves as $id_contrat => $id_eleve) {
+        $results[] = [
+            'MATRICULE' => $matricules[$id_eleve],
+            'mois_impayes' => $unpaidContrats[$id_contrat]
+        ];
+    }
+    
+
+    return view('pages.etat.relance')->with('results', $results);// Retourner les résultats dans une vue
+// return view('pages.etat.relance')->with('results', $results);
+}
+
+    
 
 
 
@@ -265,5 +289,6 @@ $contratsImpayes = Paiementglobalcontrat::whereNotIn('id_contrat', $paiementsEff
     }
 
 
+   
 
 }
