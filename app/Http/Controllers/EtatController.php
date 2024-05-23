@@ -10,6 +10,7 @@ use App\Models\Eleve;
 use App\Models\Contrat;
 use App\Models\Classes;
 use App\Models\Paiementglobalcontrat;
+use Barryvdh\DomPDF\Facade as PDF;
 
 use App\Models\Moiscontrat;
 use Carbon\Carbon;
@@ -157,8 +158,10 @@ public function relance(Request $request)
             'mois_impayes' => $unpaidContrats[$id_contrat]
         ];
     }
-// Retourner les résultats dans une vue
-return view('pages.etat.relance')->with('results', $results);
+    
+
+    return view('pages.etat.relance')->with('results', $results);// Retourner les résultats dans une vue
+// return view('pages.etat.relance')->with('results', $results);
 }
 
 }

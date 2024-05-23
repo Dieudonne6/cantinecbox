@@ -1,26 +1,42 @@
 @extends('layouts.master')
 @section('content')
-<ul class="contenu">
-  <ul>
-    @foreach ($results as $result)
-        <li>
-            Matricule: {{ $result['MATRICULE'] }} <br>
-            Mois impayés: {{ implode(', ', $result['mois_impayes']) }}
-        </li>
-    @endforeach
-</ul>
-</ul>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Résultats de la Relance</title>
+    <style>
+        .page {
+            page-break-after: always;
+        }
+        .header, .content {
+            text-align: center;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    @if (count($results) > 0)
+        @foreach ($results as $result)
+            <div class="page">
+                <div class="header">
+                    <h2>Élève Matricule: {{ $result['MATRICULE'] }}</h2>
+                </div>
+                <div class="content">
+                    <p>Mois impayés: {{ implode(', ', $result['mois_impayes']) }}</p>
+                </div>
+            </div>
+        @endforeach
+    @else
+        <p>Aucun élève avec des contrats impayés pour les mois précédents la date sélectionnée.</p>
+    @endif
+
+    <script>
+        window.onload = function() {
+            window.print();
+        };
+    </script>
+</body>
+</html>
+
 @endsection
 
-<script>
-      var page = window.open();
-      page.document.write('<html><head><title>momom</title>');
-      page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
-      page.document.write('</head><body>');
-          page.document.write(document.querySelector('.contenu').innerHTML);
-          
-      page.document.write('</body></html>');
-      page.document.close();
-      page.print();
-  
-</script>
