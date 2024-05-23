@@ -1,9 +1,14 @@
 @extends('layouts.master')
 @section('content')
 <ul class="contenu">
-  @foreach ($unpaidContrats as $id_contrat)
-      <li>Contrat ID: {{ $id_contrat }}</li>
-  @endforeach
+  <ul>
+    @foreach ($results as $result)
+        <li>
+            Matricule: {{ $result['MATRICULE'] }} <br>
+            Mois impayés: {{ implode(', ', $result['mois_impayes']) }}
+        </li>
+    @endforeach
+</ul>
 </ul>
 @endsection
 

@@ -106,8 +106,7 @@ public function relance(Request $request)
     $selectedMonthIndex = array_search($selectedMonth, $months);
 
     // Trouver les mois précédant le mois sélectionné dans l'année scolaire
-    $previousMonths = array_slice($months, 0, $selectedMonthIndex);
-
+    $previousMonths = array_slice($months, 0, $selectedMonthIndex + 1);
     // Récupérer tous les paiements
     $paiements = Paiementglobalcontrat::all();
 
@@ -116,7 +115,7 @@ public function relance(Request $request)
 
     foreach ($paiements as $paiement) {
         $id_contrat = $paiement->id_contrat;
-        $paidMonths = explode(',', $paiement->mois_paiementcontrat);
+        $paidMonths = preg_split('/[\s,]+/', $paiement->mois_paiementcontrat);
 
         if (!isset($contratPayments[$id_contrat])) {
             $contratPayments[$id_contrat] = [];
@@ -132,19 +131,34 @@ public function relance(Request $request)
     foreach ($contratPayments as $id_contrat => $paidMonths) {
         $paidMonths = array_map('trim', $paidMonths); // Supprimer les espaces éventuels
         $paidMonths = array_unique($paidMonths); // Supprimer les doublons
-
-        // Vérifier si tous les mois précédents sont payés
+        $unpaidMonths = [];
         foreach ($previousMonths as $month) {
             if (!in_array($month, $paidMonths)) {
-                // Ajouter l'id_contrat au tableau des impayés s'il manque un mois
-                $unpaidContrats[] = $id_contrat;
-                // dd($unpaidContrats);
-                break; // Pas besoin de vérifier les autres mois pour ce contrat
+                $unpaidMonths[] = $month;
             }
         }
+
+        if (!empty($unpaidMonths)) {
+            $unpaidContrats[$id_contrat] = $unpaidMonths;
+        }
     }
-    // Retourner les résultats dans une vue
-    return view('pages.etat.relance')->with('unpaidContrats', array_unique($unpaidContrats));
+    $unpaidEleves = DB::table('contrat')
+    ->whereIn('id_contrat', array_keys($unpaidContrats))
+    ->pluck('eleve_contrat', 'id_contrat');
+
+    $matricules = DB::table('eleve')
+    ->whereIn('MATRICULE', $unpaidEleves->values())
+    ->pluck('NOM', 'MATRICULE');
+    $results = [];
+
+    foreach ($unpaidEleves as $id_contrat => $id_eleve) {
+        $results[] = [
+            'MATRICULE' => $matricules[$id_eleve],
+            'mois_impayes' => $unpaidContrats[$id_contrat]
+        ];
+    }
+// Retourner les résultats dans une vue
+return view('pages.etat.relance')->with('results', $results);
 }
 
 }
