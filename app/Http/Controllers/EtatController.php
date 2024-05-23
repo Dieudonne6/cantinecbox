@@ -83,6 +83,7 @@ class EtatController extends Controller
 
 public function relance(Request $request)
 {
+    //lolo
     // Date sélectionnée par l'utilisateur
     $selectedDate = Carbon::createFromFormat('Y-m-d', $request->input('daterelance'));
 
