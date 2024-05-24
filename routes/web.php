@@ -51,7 +51,7 @@ Route::get('/telechargerfacture', [ClassesController::class, 'telechargerfacture
 
 
 Route::get('/pdffacture',[ClassesController::class,'pdffacture'])->name('pdffacture');
-Route::get('/facturenormalise/{nomcompleteleve}',[ClassesController::class,'facturenormalise'])->name('pdffacture');
+Route::get('/facturenormalise/{nomcompleteleve}',[ClassesController::class,'facturenormalise'])->name('pdffactures');
 Route::get('/create',[ClassesController::class,'create'])->name('qrcode.create');
 
 Route::post('/modifierfrais', [PagesController::class, 'modifierfrais']);
