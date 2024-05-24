@@ -11,11 +11,7 @@ use Carbon\Carbon;
 use App\Models\Eleve;
 use App\Models\Contrat;
 use App\Models\Classes;
-<<<<<<< HEAD
-=======
-use App\Models\Paiementglobalcontrat;
 use Barryvdh\DomPDF\Facade as PDF;
->>>>>>> 909165c89107ee2f9d97335019f0ab107997c168
 
 use App\Models\Moiscontrat;
 use Illuminate\Support\Facades\DB;
@@ -167,6 +163,8 @@ public function relance(Request $request)
 
     return view('pages.etat.relance')->with('results', $results);// Retourner les résultats dans une vue
 // return view('pages.etat.relance')->with('results', $results);
+
+
 }
 
     
@@ -282,8 +280,8 @@ public function relance(Request $request)
 
 // Récupérez les contrats impayés pour ces mois
 $contratsImpayes = Paiementglobalcontrat::whereNotIn('id_contrat', $paiementsEffectues)
-    // ->whereNotIn('mois_paiementcontrat', $moisPrecedents)
-    ->pluck('id_contrat');
+    ->whereNotIn('mois_paiementcontrat', $moisPrecedents)
+    ->pluck('mois_paiementcontrat');
 
             dd ($contratsImpayes);
     }

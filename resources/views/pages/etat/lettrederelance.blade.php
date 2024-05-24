@@ -9,12 +9,12 @@
                         Imprimer la relance
                     </button>
                 </div>
-
+{{-- 
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
-                    <form action="{{ url('/essairelance') }}" method="POST">
-                        {{-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <form action="{{url('/relance')}}" method="POST"> --}}
+                    <form action="{{ url('/essairelance') }}" method="POST"> --}}
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <form action="{{url('/relance')}}" method="POST">
                         {{ csrf_field() }}
                         <div class="modal-dialog">
                             <div class="modal-content">
