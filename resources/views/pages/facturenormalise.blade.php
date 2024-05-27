@@ -29,7 +29,8 @@
     }
 
     .logoimg {
-        width: 50%
+        width: 50%;
+        margin-top: -1.1rem;
     }
 
     .info {
@@ -84,7 +85,7 @@
 
 
     .client {
-        margin-top: -8rem;
+        margin-top: -8.4rem;
         margin-left: 28rem;
         border: 1px solid black;
         width: 14rem;

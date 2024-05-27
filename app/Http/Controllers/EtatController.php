@@ -85,7 +85,13 @@ public function relance(Request $request)
 {
     //lolo
     // Date sélectionnée par l'utilisateur
-    $selectedDate = Carbon::createFromFormat('Y-m-d', $request->input('daterelance'));
+    $dateselectionne = $request->input('daterelance');
+
+    $date = Carbon::parse($dateselectionne);
+    $dateFormatee = $date->format('d/m/Y');
+
+    $selectedDate = Carbon::createFromFormat('Y-m-d', $dateselectionne);
+    // dd($dateselectionne);
 
     // Liste des mois en français dans l'ordre scolaire (septembre à août)
     $months = ["Septembre", "Octobre", "Novembre", "Decembre", "Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout"];
@@ -148,18 +154,28 @@ public function relance(Request $request)
     ->whereIn('id_contrat', array_keys($unpaidContrats))
     ->pluck('eleve_contrat', 'id_contrat');
 
-    $matricules = DB::table('eleve')
+    $elevematricule = DB::table('eleve')
     ->whereIn('MATRICULE', $unpaidEleves->values())
-    ->pluck('NOM', 'MATRICULE');
+    ->select('MATRICULE', 'NOM', 'PRENOM', 'CODECLAS')
+    ->get();
+
+    
+    $matricules = $elevematricule->mapWithKeys(function ($elevematricule) {
+        return [$elevematricule->MATRICULE => ['nom_complet' => $elevematricule->NOM . ' ' . $elevematricule->PRENOM, 'classe' => $elevematricule->CODECLAS]];
+    });
+
     $results = [];
 
     foreach ($unpaidEleves as $id_contrat => $id_eleve) {
         $results[] = [
-            'MATRICULE' => $matricules[$id_eleve],
-            'mois_impayes' => $unpaidContrats[$id_contrat]
+            'nometclasse' => $matricules[$id_eleve],
+            'mois_impayes' => $unpaidContrats[$id_contrat],
+            'datebuttoire' => $dateFormatee
         ];
     }
     
+    // dd($results);
+
 
     return view('pages.etat.relance')->with('results', $results);// Retourner les résultats dans une vue
 // return view('pages.etat.relance')->with('results', $results);

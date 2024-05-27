@@ -402,7 +402,7 @@ class ClassesController extends Controller
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . $token
             ));
-            curl_setopt($ch, CURLOPT_CAINFO, 'D:/certificationCA/cacert.pem');
+            curl_setopt($ch, CURLOPT_CAINFO, storage_path('certificates/cacert.pem'));
     
             // Exécutez la requête cURL et récupérez la réponse
     $response = curl_exec($ch);

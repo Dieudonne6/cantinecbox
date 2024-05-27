@@ -190,7 +190,7 @@
     </style>
 
     <body>
-        {{-- <a class="telecharger btn btn-success" href="{{ route('merci') }}">Telecharger</a> --}}
+        <a class="telecharger btn btn-success" href="{{ url('/facturenormalise/' . $nomcompleteleve) }}" target="_blank">Imprimer</a>
         <div class="invoice">
             <div class="entete">
                 <div class="logo">
@@ -374,7 +374,6 @@
         </div>
 
         {{-- <a class="telecharger btn btn-success" href="{{ url('telechargerfacture') }}">Imprimer</a> --}}
-        <a class="telecharger btn btn-success" href="{{ url('/facturenormalise/' . $nomcompleteleve) }}" target="_blank">Imprimer</a>
         {{-- <button onclick="window.print()">Imprimer</button> --}}
         {{-- <button onclick="printContent()">Imprimer</button> --}}
 
