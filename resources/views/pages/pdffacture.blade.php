@@ -22,7 +22,7 @@
         }
 
         .logo {
-            margin-left: 20px;
+            margin-left: 22px;
             margin-top: 20px;
             width: 30%;
             height: 30%;
