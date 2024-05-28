@@ -8,6 +8,9 @@ use App\Models\Moiscontrat;
 use App\Models\Paramcontrat;
 use App\Models\Contrat;
 use App\Models\Usercontrat;
+use App\Models\Paramsfacture;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 class PagesController extends Controller
 {
@@ -94,15 +97,19 @@ class PagesController extends Controller
     }
 
     public function connexion(){
-        $login = Usercontrat::get();
+        $login = User::get();
         return view('pages.connexion', ['login' => $login]);
     }
 
     public function logins(Request $request){
-        $account = Usercontrat::where("login_usercontrat",$request->login_usercontrat)->first();
+        $account = User::where("login",$request->login_usercontrat)->first();
+
         if($account){
-            if($account->password_usercontrat == $request->password_usercontrat){
+                if (Hash::check($request->password_usercontrat, $account->motdepasse)) {
+
                 Session::put('account', $account);
+                $id_usercontrat = $account->id;
+                Session::put('id', $id_usercontrat);
                 return redirect("classes");
             } else{
                 return back()->with('status', 'Mot de passe ou email incorrecte');
@@ -119,16 +126,42 @@ class PagesController extends Controller
         return view('pages.vitrine');
 
     }
+    public function paramsfacture(){
+        return view('pages.paramsfacture');
+    }
+   
+    public function paramsemecef(Request $request){
+        $emcef = new Paramsfacture();
+        $emcef->ifu = $request->input('ifu');
+        $emcef->token = $request->input('token');
+        $emcef->taxe = $request->input('taxe');
+        $emcef->type = $request->input('type');
+        $emcef->save();
+        return back()->with('status','Enregistrer avec succes');
+    }
+    public function inscriptions(){
+        return view('pages.etat.inscriptions');
+    }
+    public function enregistreruser(Request $request){
+        $login = new User();
+        $password_crypte = Hash::make($request->password);
+        $login->login = $request->input('login');
+        $login->nomuser = $request->input('nom');
+        $login->prenomuser = $request->input('prenom');
+        $login->motdepasse = $password_crypte;
+        $login->nomgroupe = '';
+        $login->administrateur = 1;
+        $login->user_actif = 1;
+        // $login->motdepasse ='';
+        // $login->motdepasse ='';
 
-    public function modifparam(){
-        return view('pages.parametre.modifparam');
+        
+        // $login->motdepasse ='';
+
+        $login->save();
+        return back()->with('status','Enregistrer avec succes');
+
+
 
     }
-
-    public function relance(){
-    
-        return view('pages.Etats.relance');
-
-    }
-
 }

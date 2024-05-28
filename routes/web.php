@@ -6,6 +6,7 @@ use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ConnexionDBController;
 use App\Http\Controllers\EleveController;
+use App\Http\Controllers\EtatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,8 @@ Route::post('/traiter', [ClassesController::class, 'traiter']);
 
 Route::post('/creercontrat', [ClassesController::class, 'creercontrat']);
 
+Route::get('/lettrederelance', [EtatController::class, 'lettrederelance']);
+Route::post('/essairelance', [EtatController::class, 'essairelance']);
 
 Route::get('/frais', [PagesController::class, 'frais']);
 Route::post('/nouveaufrais', [PagesController::class, 'fraisnouveau']);
@@ -48,7 +51,7 @@ Route::get('/telechargerfacture', [ClassesController::class, 'telechargerfacture
 
 
 Route::get('/pdffacture',[ClassesController::class,'pdffacture'])->name('pdffacture');
-Route::get('/facturenormalise/{nomcompleteleve}',[ClassesController::class,'facturenormalise'])->name('pdffacture');
+Route::get('/facturenormalise/{nomcompleteleve}',[ClassesController::class,'facturenormalise'])->name('pdffactures');
 Route::get('/create',[ClassesController::class,'create'])->name('qrcode.create');
 
 Route::post('/modifierfrais', [PagesController::class, 'modifierfrais']);
@@ -69,9 +72,14 @@ Route::post('/connexions', [PagesController::class, 'connexions']);
 Route::post('/logins', [PagesController::class, 'logins']);
 
 Route::get('/inscription', [EleveController::class, 'inscription']);
+Route::get('/etatpaiement', [ClassesController::class, 'etatpaiement'])->name('etatpaiement');
+Route::post('/traitementetatpaiement', [ClassesController::class, 'traitementetatpaiement'])->name('traitementetatpaiement');
 Route::delete('/supprimercontrat/{MATRICULE}', [ClassesController::class, 'supprimercontrat']);
+Route::delete('/supprimerpaiement/{id_paiementcontrat}', [ClassesController::class, 'supprimerpaiement']);
+Route::get('/etatpaiement1', [ClassesController::class, 'etatpaiement1']);
 
 Route::get('/vitrine', [PagesController::class, 'vitrine']);
+<<<<<<< HEAD
 
 Route::get('/modifparam', [PagesController::class, 'modifparam']);
 
@@ -81,3 +89,14 @@ Route::get('http://localhost:38917/info');
 
 
 // $apiUrl = 'http://localhost:38917/info'
+=======
+Route::get('/etatdroits', [EtatController::class, 'etatdroits']);
+Route::post('/filteretat', [EtatController::class, 'filteretat']);
+Route::post('/relance', [EtatController::class, 'relance']);
+
+Route::get('/paramsfacture', [PagesController::class, 'paramsfacture']);
+Route::post('/paramsemecef', [PagesController::class, 'paramsemecef']);
+Route::get('/imprimerfiche/{id_paiementcontrat}', [ClassesController::class, 'imprimerfiche']);
+Route::get('/inscriptions', [PagesController::class, 'inscriptions']);
+Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
+>>>>>>> 111e19fff1907e77c835374c364e6d247aa491f1

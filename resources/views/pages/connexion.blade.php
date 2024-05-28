@@ -39,7 +39,7 @@
                   <select class="form-select form-control form-control-lg" name="login_usercontrat" aria-label="Default select example">
                     <option selected>Selectionnez un utilisateur </option>
                     @foreach ($login as $logins)
-                    <option value="{{$logins->login_usercontrat}}">{{$logins->login_usercontrat}}</option>
+                    <option value="{{$logins->login}}">{{$logins->login}}</option>
                     @endforeach
                   </select>
                 </div>

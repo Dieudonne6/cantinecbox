@@ -10,7 +10,7 @@
         </div>
       @endif
             @if(Session::has('erreur'))
-        <div class="alert alert-danger btn-primary">
+        <div id="statusAlert" class="alert alert-danger btn-primary">
           {{ Session::get('erreur')}}
         </div>
       @endif
@@ -36,16 +36,16 @@
         </div> --}}
 
       </div>
-      <div class="table-responsive">
-        <table class="table">
+      <div class="table-responsive mb-4">
+        <table id="myTable">
           <thead>
             <tr>
               <th>
-                Classes
+                Classe
               </th>
-              <th>
-                Elève
-              </th>
+             
+              <th>Elève </th>
+
               <th>
                 Action
               </th>
@@ -61,9 +61,7 @@
                         {{$eleves->NOM}} {{$eleves->PRENOM}}
                     </td>
                     <td>
-                      <a href='/paiementcontrat/{{$eleves->CODECLAS}}/{{$eleves->MATRICULE}}' class='btn btn-primary w-40'>Paiement</a>
-
-                      
+                      <a href='/paiementcontrat/{{$eleves->CODECLAS}}/{{$eleves->MATRICULE}}' class='btn btn-primary w-40'>Paiement</a>                      
                       <form action="{{ url('supprimercontrat/'.$eleves->MATRICULE)}}" method="post">
                         @csrf
                         @method('DELETE')
@@ -73,6 +71,7 @@
                     </td>
                 </tr>
             @endforeach
+
         </tbody>
         </table>
       </div>
@@ -91,6 +90,10 @@
       <div class="modal-body">
         <div class="card">
             {{csrf_field()}}
+            @if(Session::has('id_usercontrat'))
+              <?php $id_usercontrat = Session::get('id_usercontrat'); ?>
+              <input type="hidden" value="{{$id_usercontrat}}" name="id_usercontrat">
+            @endif
           <div class="card-body">
             <div class="form-group">
               <label> Sélectionnez la section </label>
@@ -104,7 +107,7 @@
                 <label> Sélectionnez l'élève </label>
                 @csrf
                 <select class="js-example-basic-multiple w-100" multiple="multiple" name="matricules[]">
-                  @foreach ($eleve as $eleves)
+                  @foreach ($elev as $eleves)
                     <option value="{{$eleves->MATRICULE}}">{{$eleves->NOM}} {{$eleves->PRENOM}}</option>
                   @endforeach
                 </select>
@@ -283,8 +286,6 @@
                         Avril
                       </label>
                     </div>
-                   
-                 
                     <div class="form-check">
                       <label class="form-check-label">
                         <input type="checkbox" class="form-check-input">
@@ -311,30 +312,9 @@
     </div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> --}}
 @endsection
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+{{-- <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script> --}}
 
 
-
-{{-- @push('scripts')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-  $(document).ready(function() {
-    $('#select-classe').on('change', function() {
-      var classeCode = $(this).val();
-      if (classeCode) {
-        $.ajax({
-          url: '/eleve/'+classeCode,
-          type: 'GET',
-          success: function(data) {
-            $('#eleve-details').html(data);
-          }
-        });
-      } else {
-        $('#eleve-details').html('');
-      }
-      return false; // Empêcher la soumission du formulaire
-    });
-  });
-</script>
-@endpush --}}

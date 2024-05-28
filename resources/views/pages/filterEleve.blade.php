@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('content')
+{{-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> --}}
 
 <div class="col-lg-12 grid-margin stretch-card">
   <div class="card">
@@ -31,8 +32,8 @@
       </div>
 
       </div>
-      <div class="table-responsive">
-        <table class="table">
+      <div class="table-responsive mb-4">
+        <table id="myTable" class="table">
           <thead>
             <tr>
               <th>
@@ -70,6 +71,7 @@
             @endforeach
         </tbody>
         </table>
+
       </div>
     </div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -84,19 +86,30 @@
           <div class="modal-body">
             <div class="card">
                 {{csrf_field()}}
+                @if(Session::has('id_usercontrat'))
+                  <?php $id_usercontrat = Session::get('id_usercontrat'); ?>
+                  <input type="hidden" value="{{$id_usercontrat}}" name="id_usercontrat">
+                @endif
+
               <div class="card-body">
+                <div class="form-group">
+                  <label> Sélectionnez la section </label>
+                  <select class="form-select form-control w-100" id="selectClasses" name="classes">
+                    <option value="Maternelle">Maternelle</option>
+                    <option value="Primaire">Primaire</option>
+                  </select>
+                </div>
+                
                 <p class="card-description" style="color: black">
                   Sélectionnez l'élève 
                 </p>
                   <div class="form-group w-100">
                     @csrf
                     <select class="js-example-basic-multiple w-100" multiple="multiple" name="matricules[]">
-                      @if(Session::has('eleves'))
-                      <?php $eleve = Session::get('eleves'); ?>
-                        @foreach ($eleve as $eleves)
-                          <option value="{{$eleves->MATRICULE}}">{{$eleves->NOM}} {{$eleves->PRENOM}}</option>
-                        @endforeach
-                      @endif
+                      
+                      @foreach ($eleve as $eleves)
+                        <option value="{{$eleves->MATRICULE}}">{{$eleves->NOM}} {{$eleves->PRENOM}}</option>
+                      @endforeach
                     </select>
                   </div>
     
@@ -112,13 +125,10 @@
     
                     <div class="col">
                       <label>Montant</label>
-                      @if(Session::has('fraiscontrats'))
-                        <?php $fraiscontrats = Session::get('fraiscontrats'); ?>
-
-                        <div id="bloodhound">
-                          <input class="typeaheads" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_paramcontrat}}">
-                        </div>
-                      @endif
+                      <div id="bloodhound">
+                        <input class="typeaheads mater" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_mat}}">
+                        <input class="typeaheads d-none prima" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_paramcontrat}}">
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -217,6 +227,9 @@
       </div>
 
       @endforeach --}}
+<!-- Scripts -->
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> --}}
 
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 @endsection

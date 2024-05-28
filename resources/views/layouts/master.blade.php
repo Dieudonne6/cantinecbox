@@ -13,7 +13,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
   <script src="{{ asset('davidshimjs-qrcodejs-04f46c6/qrcode.js') }}"></script>
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
   <!-- endinject -->
   <!-- plugin css for this page -->
   <link rel="stylesheet" href="{{asset('assets/vendors/select2/select2.min.css')}}">
@@ -24,7 +25,61 @@
   <!-- endinject -->
   <link rel="shortcut icon" href="{{asset('assets/images/favicon.png')}}" />
 
-
+  <style>
+   .tables th:nth-child(n+1), .tables td:nth-child(n+1) {
+      /* width: 80px;
+      max-width: 80px; */
+      overflow: hidden;
+    }
+    .menu-item-has-children:hover::after {
+transform: translateY(-3.5rem) rotate(-90deg);
+}
+.menu-item-has-children {
+position: relative;
+padding: 0;
+}
+.menu-item-has-children::after{
+content: "";
+position: absolute;
+left: 4rem;
+top: 50%;
+width: 14px;
+height: 9px;
+transform: translateY(-50%) rotate(90deg);
+background-size: 0.8rem;
+background-image: url(assets/images/arrow-left-bold.png);
+background-position: center;
+background-repeat: no-repeat;
+transition: transform 0.6s;
+}
+.sub-menus {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  display: none;
+  position: static;
+  width: 12.5rem;
+  background-color: #fff;
+  padding: 0.8rem;
+  margin: 0;
+  z-index: 1;
+  box-shadow: 0px 1px 15px 1px rgba(230, 234, 236, 0.35);
+  border: 1px solid #f3f3f3;
+}
+.sub-menus li a {
+  color: #000 !important;
+}
+.sub-menus li a:hover {
+  text-decoration: none;
+}
+.sub-menus li {
+  list-style: none;
+  margin-bottom: 0.4rem;
+}
+.menu-item-has-children:hover .sub-menus{
+display: block;
+}
+  </style>
   
 </head>
 
@@ -59,7 +114,9 @@
   <script src="{{asset('assets/js/typeahead.js')}}"></script>
   <script src="{{asset('assets/js/select2.js')}}"></script>
   <script src="{{asset('assets/js/jquery-3.2.1.min.js')}}"></script>
-  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
   <script>
     var statusAlert = document.getElementById('statusAlert');
     if (statusAlert) {
@@ -83,6 +140,37 @@
     });
   });
 </script>
+
+<script>
+$(document).ready(function(){
+    $('#myTable').DataTable({
+        "paging": false, // Désactiver la pagination
+        "language": {
+            "sProcessing":     "Traitement en cours...",
+            "sSearch":         "Rechercher&nbsp;:",
+            "sLengthMenu":     "Afficher _MENU_ éléments",
+            "sInfo":           "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+            "sInfoEmpty":      "Affichage de 0 à 0 sur 0 entrées",
+            "sInfoFiltered":   "(filtré à partir de _MAX_ entrées au total)",
+            "sInfoPostFix":    "",
+            "sLoadingRecords": "Chargement en cours...",
+            "sZeroRecords":    "Aucun résultat trouvé",
+            "sEmptyTable":     "Aucune donnée disponible dans le tableau",
+            "oPaginate": {
+                "sPrevious":   "Précédent",
+                "sNext":       "Suivant"
+            },
+            "oAria": {
+                "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
+                "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+            }
+        }
+    });
+});
+
+
+
+  </script>
   <!-- End custom js for this page-->
 
   {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -147,7 +235,7 @@
 </style> --}}
 
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
  
 
 </body>

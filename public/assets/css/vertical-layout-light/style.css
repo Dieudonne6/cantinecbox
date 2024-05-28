@@ -116,6 +116,11 @@
 /* === Import template variables === */
 /*-------------------------------------------------------------------*/
 /* === SCSS Compass Functions === */
+
+.dropup-center.dropup .dropdown-menu.show {
+  display: block !important;
+  opacity: 1 !important;
+}
 .count-indicator {
   width: 100% !important;
 }
@@ -131,6 +136,9 @@
 }
 .form-control {
   color: #000 !important;
+}
+.table th, .table td {
+  padding: 0.2rem 0.9375rem !important;
 }
 /* .form-check .form-check-label {
   min-height: 10px !important;
