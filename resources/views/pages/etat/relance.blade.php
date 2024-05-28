@@ -19,7 +19,8 @@
         @foreach ($results as $result)
             <div class="page">
                 <div class="header">
-                    <h2>Élève Matricule: {{ $result['MATRICULE'] }}</h2>
+                    <h2>Élève Matricule:{{ $result['details']->NOM }} {{ $result['details']->PRENOM }}</h2>
+                    <p>classe : {{ $result['details']->CODECLAS}}</p>
                 </div>
                 <div class="content">
                     <p>Mois impayés: {{ implode(', ', $result['mois_impayes']) }}</p>
@@ -29,7 +30,9 @@
     @else
         <p>Aucun élève avec des contrats impayés pour les mois précédents la date sélectionnée.</p>
     @endif
-
+    @foreach ($paramse as $params)
+        <p> {{ $params['details']->CODECLAS}}</p>
+    @endforeach
     <script>
         window.onload = function() {
             window.print();

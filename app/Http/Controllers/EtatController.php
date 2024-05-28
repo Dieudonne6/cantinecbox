@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Session;
 
 use App\Models\Eleve;
 use App\Models\Contrat;
+use App\Models\Params2;
+
 use App\Models\Classes;
 use App\Models\Paiementglobalcontrat;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -147,20 +149,23 @@ public function relance(Request $request)
     ->whereIn('id_contrat', array_keys($unpaidContrats))
     ->pluck('eleve_contrat', 'id_contrat');
 
-    $matricules = DB::table('eleve')
+
+    $eleveDetails = DB::table('eleve')
     ->whereIn('MATRICULE', $unpaidEleves->values())
-    ->pluck('NOM', 'MATRICULE');
+    ->get()
+    ->keyBy('MATRICULE');
     $results = [];
 
     foreach ($unpaidEleves as $id_contrat => $id_eleve) {
-        $results[] = [
-            'MATRICULE' => $matricules[$id_eleve],
+        $results[] = [ 
+            'details' => $eleveDetails[$id_eleve],
             'mois_impayes' => $unpaidContrats[$id_contrat]
         ];
     }
-    
+    $paramse = Params2::all();
 
-    return view('pages.etat.relance')->with('results', $results);// Retourner les résultats dans une vue
+    return view('pages.etat.relance')->with('results', $results)->with('paramse', $paramse);
+    // Retourner les résultats dans une vue
 // return view('pages.etat.relance')->with('results', $results);
 }
 
