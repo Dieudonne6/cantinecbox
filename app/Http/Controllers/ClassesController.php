@@ -199,7 +199,7 @@ class ClassesController extends Controller
 
     
         
-
+public function savepaiementcontrat(Request $request) {
 
                 $idcontratEleve = Session::get('idcontratEleve');
                 $moisCoches = $request->input('moiscontrat');
