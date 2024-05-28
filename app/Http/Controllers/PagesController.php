@@ -153,7 +153,7 @@ class PagesController extends Controller
                 Session::put('account', $account);
                 $id_usercontrat = $account->id_usercontrat;
                 Session::put('id_usercontrat', $id_usercontrat);
-                return redirect("classes");
+                return redirect("vitrine");
             } else{
                 return back()->with('status', 'Mot de passe ou email incorrecte');
 
