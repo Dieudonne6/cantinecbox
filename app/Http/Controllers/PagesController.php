@@ -155,9 +155,13 @@ class PagesController extends Controller
         // $login->motdepasse ='';
         // $login->motdepasse ='';
 
+        
         // $login->motdepasse ='';
 
         $login->save();
         return back()->with('status','Enregistrer avec succes');
+
+
+
     }
 }

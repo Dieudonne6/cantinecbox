@@ -24,13 +24,14 @@
 
     .logo{
         margin-left: 20px;
-        margin-top: 20px;
+        margin-top: -3rem;
         width: 30%;
         height: 30%;
     }
 
     .logoimg{
-        width: 50%
+        width: 50%;
+        margin-top: -4rem;
     }
 
     .info{
@@ -85,7 +86,7 @@
     
     
     .client{
-        margin-top: -7rem;
+        margin-top: -2rem;
         margin-left: 25rem;
         border: 1px solid black;
         width: 11rem;
@@ -202,7 +203,7 @@
         <div class="titre">
 
         <div class="entreprise">
-            <p><i class="title">Ecole</i></p>
+            <p><i class="title">Ecoleyyyyyyyyyyyyy</i></p>
             <p>IFU:<strong>0202380068074</strong></p>
             <p>Ecole:<strong> complexe scolaire "le petit poucet" </strong></p>
         </div>

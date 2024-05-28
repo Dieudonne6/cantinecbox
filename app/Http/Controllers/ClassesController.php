@@ -196,7 +196,10 @@ class ClassesController extends Controller
 
 }
 
-    public function savepaiementcontrat (Request $request) {
+
+    
+        
+public function savepaiementcontrat(Request $request) {
 
                 $idcontratEleve = Session::get('idcontratEleve');
                 $moisCoches = $request->input('moiscontrat');
@@ -332,8 +335,8 @@ class ClassesController extends Controller
     $type = $parametrefacture->type;
 
     $parametreetab = Params2::first();
-    $nometab = $parametreetab->NOMETAB;
-    $villeetab = $parametreetab->VILLE;
+    // $nometab = $parametreetab->NOMETAB;
+    // $villeetab = $parametreetab->VILLE;
 
     
 
@@ -389,8 +392,8 @@ class ClassesController extends Controller
             $apiUrl = 'https://developper.impots.bj/sygmef-emcf/api/invoice';
     
             // Définissez le jeton d'authentification
-            // $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjAyMDIzODAwNjgwNzR8VFMwMTAwNzgyMiIsInJvbGUiOiJUYXhwYXllciIsIm5iZiI6MTcxMzk2NDA3MSwiZXhwIjoxNzQ1NDQ5MjAwLCJpYXQiOjE3MTM5NjQwNzEsImlzcyI6ImltcG90cy5iaiIsImF1ZCI6ImltcG90cy5iaiJ9.CuR4P9gaXP1T-I5vWuR0i_iXlRHSZhyu8Hry73GO5o8';
-            $token = $tokenentreprise;
+            $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjAyMDIzODAwNjgwNzR8VFMwMTAwNzgyMiIsInJvbGUiOiJUYXhwYXllciIsIm5iZiI6MTcxMzk2NDA3MSwiZXhwIjoxNzQ1NDQ5MjAwLCJpYXQiOjE3MTM5NjQwNzEsImlzcyI6ImltcG90cy5iaiIsImF1ZCI6ImltcG90cy5iaiJ9.CuR4P9gaXP1T-I5vWuR0i_iXlRHSZhyu8Hry73GO5o8';
+            // $token = $tokenentreprise;
     
             // Effectuez la requête POST à l'API
             // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -402,7 +405,7 @@ class ClassesController extends Controller
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . $token
             ));
-            curl_setopt($ch, CURLOPT_CAINFO, 'D:/certificationCA/cacert.pem');
+            curl_setopt($ch, CURLOPT_CAINFO, storage_path('certificates/cacert.pem'));
     
             // Exécutez la requête cURL et récupérez la réponse
     $response = curl_exec($ch);
@@ -518,8 +521,8 @@ class ClassesController extends Controller
         Session::put('nomcompleteleve', $nomcompleteleve);
         Session::put('toutmoiscontrat', $toutmoiscontrat);
         Session::put('qrCodeString', $qrCodeString);
-        Session::put('nometab', $nometab);
-        Session::put('villeetab', $villeetab);
+        // Session::put('nometab', $nometab);
+        // Session::put('villeetab', $villeetab);
 
 
     
@@ -532,8 +535,8 @@ class ClassesController extends Controller
             'nomcompleteleve' => $nomcompleteleve,
             'toutmoiscontrat' => $toutmoiscontrat,
             'qrCodeString' => $qrCodeString,
-            'nometab' => $nometab,
-            'villeetab' => $villeetab,
+            // 'nometab' => $nometab,
+            // 'villeetab' => $villeetab,
             // 'qrCodeImage' => $qrCodeImage,
     
                  ]);
@@ -607,8 +610,8 @@ class ClassesController extends Controller
         $nomcompleteleve = Session::get('nomcompleteleve');
         $toutmoiscontrat = Session::get('toutmoiscontrat');
         $qrCodeString = Session::get('qrCodeString');
-        $villeetab = Session::get('villeetab');
-        $nometab = Session::get('nometab');
+        // $villeetab = Session::get('villeetab');
+        // $nometab = Session::get('nometab');
         return view('pages.facturenormalise',  [
             'factureconfirm' => $decodedResponseConfirmation,
             'facturedetaille' => $facturedetaille, 
@@ -617,8 +620,8 @@ class ClassesController extends Controller
             'nomcompleteleve' => $nomcompleteleve,
             'toutmoiscontrat' => $toutmoiscontrat,
             'qrCodeString' => $qrCodeString,
-            'nometab' => $nometab,
-            'villeetab' => $villeetab,
+            // 'nometab' => $nometab,
+            // 'villeetab' => $villeetab,
         ]);        
     }
 

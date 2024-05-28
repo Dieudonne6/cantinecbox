@@ -22,7 +22,7 @@
         }
 
         .logo {
-            margin-left: 20px;
+            margin-left: 22px;
             margin-top: 20px;
             width: 30%;
             height: 30%;
@@ -190,7 +190,7 @@
     </style>
 
     <body>
-        {{-- <a class="telecharger btn btn-success" href="{{ route('merci') }}">Telecharger</a> --}}
+        <a class="telecharger btn btn-success" href="{{ url('/facturenormalise/' . $nomcompleteleve) }}" target="_blank">Imprimer</a>
         <div class="invoice">
             <div class="entete">
                 <div class="logo">
@@ -357,21 +357,23 @@
 
             <div class="bas">
                 <div class="logo1">
-                    <p><strong>{{ $nometab }}</strong> </p>
+                    <p><strong>complexe scolaire petiti poucet</strong> </p>
+                    {{-- <p><strong>{{ $nometab }}</strong> </p> --}}
                     {{-- <img src="" alt=""> --}}
                 </div>
 
                 <div class="info1">
-                    <p>Fait a {{$villeetab}} le , <strong>{{ $factureconfirm['dateTime'] }} </strong></p>
+                    <p>Fait a cotonou le , <strong>{{ $factureconfirm['dateTime'] }} </strong></p>
+                    {{-- <p>Fait a {{$villeetab}} le , <strong>{{ $factureconfirm['dateTime'] }} </strong></p> --}}
                     {{-- <p>Reference 909090909090   </p> --}}
                 </div>
-                <p class="textremerciement"><i>Merci d'avoir choisi le {{ $nometab }} </i> </p>
+                <p class="textremerciement"><i>Merci d'avoir choisi le complexe scolaire petit poucet </i> </p>
+                {{-- <p class="textremerciement"><i>Merci d'avoir choisi le {{ $nometab }} </i> </p> --}}
 
             </div>
         </div>
 
         {{-- <a class="telecharger btn btn-success" href="{{ url('telechargerfacture') }}">Imprimer</a> --}}
-        <a class="telecharger btn btn-success" href="{{ url('/facturenormalise/' . $nomcompleteleve) }}" target="_blank">Imprimer</a>
         {{-- <button onclick="window.print()">Imprimer</button> --}}
         {{-- <button onclick="printContent()">Imprimer</button> --}}
 

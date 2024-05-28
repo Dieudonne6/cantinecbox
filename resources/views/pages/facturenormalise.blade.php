@@ -29,7 +29,8 @@
     }
 
     .logoimg {
-        width: 50%
+        width: 50%;
+        margin-top: -1.1rem;
     }
 
     .info {
@@ -84,7 +85,7 @@
 
 
     .client {
-        margin-top: -8rem;
+        margin-top: -8.4rem;
         margin-left: 28rem;
         border: 1px solid black;
         width: 14rem;
@@ -362,15 +363,18 @@
 
         <div class="bas">
             <div class="logo1">
-                <p><strong> {{ $nometab }} </strong> </p>
+                <p><strong> complexe scolaire petit poucet </strong> </p>
+                {{-- <p><strong> {{ $nometab }} </strong> </p> --}}
                 {{-- <img src="" alt=""> --}}
             </div>
 
             <div class="info1">
-                <p>Fait a {{ $villeetab }} le , <strong>{{ $factureconfirm['dateTime'] }} </strong></p>
+                <p>Fait a cotonou le , <strong>{{ $factureconfirm['dateTime'] }} </strong></p>
+                {{-- <p>Fait a {{ $villeetab }} le , <strong>{{ $factureconfirm['dateTime'] }} </strong></p> --}}
                 {{-- <p>Reference 909090909090   </p> --}}
             </div>
-            <p class="textremerciement"><i>Merci d'avoir choisi le {{ $nometab }}. </i> </p>
+            <p class="textremerciement"><i>Merci d'avoir choisi le complexe scolaire petiti poucet. </i> </p>
+            {{-- <p class="textremerciement"><i>Merci d'avoir choisi le {{ $nometab }}. </i> </p> --}}
 
         </div>
     </div>
