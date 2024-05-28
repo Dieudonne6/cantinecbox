@@ -72,3 +72,12 @@ Route::get('/inscription', [EleveController::class, 'inscription']);
 Route::delete('/supprimercontrat/{MATRICULE}', [ClassesController::class, 'supprimercontrat']);
 
 Route::get('/vitrine', [PagesController::class, 'vitrine']);
+
+Route::get('/modifparam', [PagesController::class, 'modifparam']);
+
+Route::get('/relance', [PagesController::class, 'relance']);
+
+Route::get('http://localhost:38917/info');
+
+
+// $apiUrl = 'http://localhost:38917/info'

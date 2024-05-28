@@ -120,4 +120,15 @@ class PagesController extends Controller
 
     }
 
+    public function modifparam(){
+        return view('pages.parametre.modifparam');
+
+    }
+
+    public function relance(){
+    
+        return view('pages.Etats.relance');
+
+    }
+
 }
