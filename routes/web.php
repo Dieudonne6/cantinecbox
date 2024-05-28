@@ -79,7 +79,6 @@ Route::delete('/supprimerpaiement/{id_paiementcontrat}', [ClassesController::cla
 Route::get('/etatpaiement1', [ClassesController::class, 'etatpaiement1']);
 
 Route::get('/vitrine', [PagesController::class, 'vitrine']);
-<<<<<<< HEAD
 
 Route::get('/modifparam', [PagesController::class, 'modifparam']);
 
@@ -89,7 +88,6 @@ Route::get('http://localhost:38917/info');
 
 
 // $apiUrl = 'http://localhost:38917/info'
-=======
 Route::get('/etatdroits', [EtatController::class, 'etatdroits']);
 Route::post('/filteretat', [EtatController::class, 'filteretat']);
 Route::post('/relance', [EtatController::class, 'relance']);
@@ -99,4 +97,3 @@ Route::post('/paramsemecef', [PagesController::class, 'paramsemecef']);
 Route::get('/imprimerfiche/{id_paiementcontrat}', [ClassesController::class, 'imprimerfiche']);
 Route::get('/inscriptions', [PagesController::class, 'inscriptions']);
 Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
->>>>>>> 111e19fff1907e77c835374c364e6d247aa491f1
