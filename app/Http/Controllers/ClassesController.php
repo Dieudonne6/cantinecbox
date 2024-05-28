@@ -783,15 +783,14 @@ public function savepaiementcontrat(Request $request) {
     //     return back()->with('status','Contrat enregistré avec succès');
     // }
     public function creercontrat(Request $request){
-        $matricules = $request->input('matricules');
-        foreach($matricules as $matricule) {
-            $existingContrat = Contrat::where('eleve_contrat', $matricule)->exists();
-            if($existingContrat) {
-                return back()->with('status', 'Un contrat existe déjà pour l\'un des élèves sélectionnés.');
-            }
-        }
+        $matricule = $request->input('matricules');
+        // foreach($matricules as $matricule) {
+        //     $existingContrat = Contrat::where('eleve_contrat', $matricule)->exists();
+        //     if($existingContrat) {
+        //         return back()->with('status', 'Un contrat existe déjà pour l\'un des élèves sélectionnés.');
+        //     }
+        // }
         
-        foreach($matricules as $matricule) {
             $contra = new Contrat();
             $contra->eleve_contrat = $matricule;
             $contra->cout_contrat = $request->input('montant');
@@ -805,7 +804,7 @@ public function savepaiementcontrat(Request $request) {
             }
             $contra->datecreation_contrat = $dateContrat;
             $contra->save();
-        }
+        
         
         return back()->with('status','Contrats enregistrés avec succès');
     }

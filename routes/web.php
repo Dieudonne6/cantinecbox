@@ -21,7 +21,9 @@ use App\Http\Controllers\EtatController;
 
 
 
-Route::get('/inscription', [PagesController::class, 'inscription']);
+Route::get('/inscriptioncantine', [PagesController::class, 'inscriptioncantine']);
+Route::get('/get-eleves/{codeClass}', [PagesController::class, 'getEleves']);
+Route::get('/get-montant/{codeClass}', [PagesController::class, 'getMontant']);
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
