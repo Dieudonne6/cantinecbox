@@ -249,12 +249,16 @@ $(document).ready(function(){
                 url: '/get-eleves/' + codeClass,
                 type: 'GET',
                 success: function(data) {
-                    $('#eleveSelect').empty();
+                  $('#eleveSelect').empty();
+                  if (data.length > 0) {
                     $('#eleveSelect').append('<option value="">Sélectionner un élève</option>');
                     $.each(data, function(index, eleve) {
-                        $('#eleveSelect').append('<option value="' + eleve.NOM + '">' + eleve.NOM + '</option>');
+                        $('#eleveSelect').append('<option value="' + eleve.MATRICULE + '">' + eleve.NOM + ' ' + eleve.PRENOM + '</option>');
                     });
-                    $('#eleveSelect').select2();
+                  } else {
+                      $('#eleveSelect').append('<option value="">Aucun élève disponible</option>');
+                  }
+                $('#eleveSelect').select2();
 
                 }
             });

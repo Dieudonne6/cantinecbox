@@ -838,26 +838,54 @@ public function savepaiementcontrat(Request $request) {
     
     //     return back()->with('status','Contrat enregistré avec succès');
     // }
-    public function creercontrat(Request $request){
-        $matricule = $request->input('matricules');
-        $eleve = Eleve::where('CODECLAS', $matricule)->first();
-        $eleveId = $eleve->MATRICULE;
-            $contra = new Contrat();
-            $contra->eleve_contrat = $eleveId;
-            $contra->cout_contrat = $request->input('montant');
-            $contra->id_usercontrat = $request->input('id_usercontrat');
+    public function creercontrat(Request $request)
+    {
+        // Récupérer les informations de la requête
+        $eleveId = $request->input('matricules');
+        $montant = $request->input('montant');
+        $idUserContrat = $request->input('id_usercontrat');
+        $dateContrat = $request->input('date');
 
-            $contra->statut_contrat = 1;
-            // $contra->id_usercontrat = ; mettre l'id de l'utilisateur connecter
-            $dateContrat = $request->input('date');
-            if(empty($dateContrat)) {
-                $dateContrat = date('Y-m-d'); 
+        // Si la date n'est pas spécifiée, utiliser la date du jour
+        if (empty($dateContrat)) {
+            $dateContrat = date('Y-m-d');
+        }
+
+        // Trouver l'élève en fonction de la classe (CODECLAS)
+        // $eleve = Eleve::where('CODECLAS', $codeClass)->first();
+
+        if ($eleveId) {
+            // $eleveId = $eleve->MATRICULE;
+
+            // Chercher un contrat existant pour cet élève avec statut_contrat = 0
+            $contratExistant = Contrat::where('eleve_contrat', $eleveId)
+                                       ->where('statut_contrat', 0)
+                                       ->first();
+
+            if ($contratExistant) {
+                // Mettre à jour le contrat existant
+                $contratExistant->cout_contrat = $montant;
+                $contratExistant->id_usercontrat = $idUserContrat;
+                $contratExistant->statut_contrat = 1;
+                $contratExistant->datecreation_contrat = $dateContrat;
+                $contratExistant->save();
+
+                return back()->with('status', 'Contrat mis à jour avec succès');
+            } else {
+                // Créer un nouveau contrat
+                $nouveauContrat = new Contrat();
+                $nouveauContrat->eleve_contrat = $eleveId;
+                $nouveauContrat->cout_contrat = $montant;
+                $nouveauContrat->id_usercontrat = $idUserContrat;
+                $nouveauContrat->statut_contrat = 1;
+                $nouveauContrat->datecreation_contrat = $dateContrat;
+                $nouveauContrat->save();
+
+                return back()->with('status', 'Contrat créé avec succès');
             }
-            $contra->datecreation_contrat = $dateContrat;
-            $contra->save();
-        
-        
-        return back()->with('status','Contrats enregistrés avec succès');
+        } else {
+            return back()->with('error', 'Élève non trouvé');
+        }
     }
     
    

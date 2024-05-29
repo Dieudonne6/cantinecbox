@@ -25,7 +25,7 @@
               @endif
               <div class="form-group w-100 mb-6">
                 @csrf
-                <select class="js-example-basic-multiple w-100" id="classSelect" name="matricules">
+                <select class="js-example-basic-multiple w-100" id="classSelect">
                   <option value="">Sélectionner la classe</option>
                   @foreach ($class as $eleves)
                   <option value="{{$eleves->CODECLAS}}">{{$eleves->CODECLAS}}</option>
@@ -33,7 +33,7 @@
                 </select>
               </div>
               <div class="form-group w-100">
-                <select id="eleveSelect" class="js-example-basic-multiple w-100">
+                <select id="eleveSelect" class="js-example-basic-multiple w-100" name="matricules">
                   <option value="">Sélectionner un élève</option>
                 </select>
               </div>

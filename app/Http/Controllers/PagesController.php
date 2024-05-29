@@ -42,10 +42,20 @@ class PagesController extends Controller
     public function getEleves($codeClass)
     {
         $eleves = Eleve::where('CODECLAS', $codeClass)
-        ->whereHas('contrats', function($query) {
-            $query->where('statut_contrat', 0);
+        ->leftJoin('contrat', 'eleve.MATRICULE', '=', 'contrat.eleve_contrat')
+        ->where(function ($query) {
+            $query->whereNull('contrat.eleve_contrat') // Élèves sans contrat
+                  ->orWhere('contrat.statut_contrat', 0); // Élèves avec contrat ayant statut 0
         })
+        ->select('eleve.*')
+        ->distinct()   // Assurez-vous de sélectionner uniquement les colonnes de la table eleves
         ->get();
+
+        // $eleves = Eleve::where('CODECLAS', $codeClass)
+        // ->whereHas('contrats', function($query) {
+        //     $query->where('statut_contrat', 0);
+        // })
+        // ->get();
        return response()->json($eleves);
     }
     public function getMontant($codeClass)
