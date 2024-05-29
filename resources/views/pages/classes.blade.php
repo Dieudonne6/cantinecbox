@@ -79,69 +79,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title fs-3" id="exampleModalLabel">Nouveau contrat</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form method="POST" action="{{url('creercontrat')}}">
-      <div class="modal-body">
-        <div class="card">
-            {{csrf_field()}}
-            @if(Session::has('id_usercontrat'))
-              <?php $id_usercontrat = Session::get('id_usercontrat'); ?>
-              <input type="hidden" value="{{$id_usercontrat}}" name="id_usercontrat">
-            @endif
-          <div class="card-body">
-            <div class="form-group">
-              <label> Sélectionnez la section </label>
-              <select class="form-select form-control w-100" id="selectClasses" name="classes">
-                <option value="Maternelle">Maternelle</option>
-                <option value="Primaire">Primaire</option>
-              </select>
-            </div>
-           
-              <div class="form-group w-100">
-                <label> Sélectionnez l'élève </label>
-                @csrf
-                <select class="js-example-basic-multiple w-100" multiple="multiple" name="matricules[]">
-                  @foreach ($elev as $eleves)
-                    <option value="{{$eleves->MATRICULE}}">{{$eleves->NOM}} {{$eleves->PRENOM}}</option>
-                  @endforeach
-                </select>
-              </div>
 
-            <div class="form-group">
-              <div class="form-group row">
-                <div class="col">
-                  <label>Date</label>
-                  <div id="the-basics">
-                    <input class="typeaheads" type="date" id="date" name="date"
-                        value="{{ date('Y-m-d') }}">
-                  </div>
-                </div>
-                <div class="col">
-                  <label>Montant</label>
-                  <div id="bloodhound">
-                    <input class="typeaheads mater" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_mat}}">
-                    <input class="typeaheads d-none prima" type="text" readonly name="montant" value="{{$fraiscontrats->fraisinscription_paramcontrat}}">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <button type="submit" class="btn btn-primary">Enregister</button>
-      </div>
-    </form>
-    </div>
-  </div>
-</div>
 <div class="modal fade" id="examplePaiement" tabindex="-1" aria-labelledby="examplePaiementLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

@@ -4,47 +4,42 @@
   <div class="main-panel-10">
     <div class="content-wrapper">
         
-        {{--  --}}
-        <div class="row">
-          
-            <div class="col-12">
-              <div class="card mb-6">
-                <div class="card-body">
-                  <div class="row gy-3">
-                    <div class="demo-inline-spacing">
-                        <button type="button" class="btn btn-primary p-2">Nouveau</button>
-                        
-                        <button type="button" class="btn btn-danger p-2">Paiement</button>
-                        <button type="button" class="btn btn-warning p-2">MAJ Paie</button>
-                        <button type="button" class="btn btn-info p-2">Echéan.</button>
-                        
-                        <button type="button" class="btn btn-light p-2" >Cursus</button>
-                        <button type="button" class="btn btn-secondary p-2">Imprimer</button>
-                        <button class="btn btn-danger p-2 btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="291"> Liste déroulante </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="" _mstvisible="0">
-                              <h6 class="dropdown-header">Commandes</h6>
-                              <a class="dropdown-item" href="#">Action</a>
-                              <a class="dropdown-item" href="#">Une autre action</a>
-                              <a class="dropdown-item" href="#">Autre chose ici</a>
-                            </div>
-                          
-                    </div>
-                  </div>
+      {{--  --}}
+      <div class="row">          
+        <div class="col-12">
+          <div class="card mb-6">
+            <div class="card-body">
+              <div class="row gy-3">
+                <div class="demo-inline-spacing">
+                  <button type="button" class="btn btn-primary p-2">Nouveau</button>
+                  <button type="button" class="btn btn-danger p-2">Paiement</button>
+                  <button type="button" class="btn btn-warning p-2">MAJ Paie</button>
+                  <button type="button" class="btn btn-info p-2">Echéan.</button>
+                  <button type="button" class="btn btn-light p-2" >Cursus</button>
+                  <button type="button" class="btn btn-secondary p-2">Imprimer</button>
+                  <button class="btn btn-danger p-2 btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="291"> Liste déroulante </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="" _mstvisible="0">
+                    <h6 class="dropdown-header">Commandes</h6>
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Une autre action</a>
+                    <a class="dropdown-item" href="#">Autre chose ici</a>
+                  </div>      
                 </div>
               </div>
             </div>
-        
-        </div>
+          </div>
+        </div>       
+      </div>
 
-        {{--  --}}
-        <div class="row">
-            <div class="col-md-8">
+      {{--  --}}
+      <div class="row">
+        <div class="col-md-8">
                 
-              <div class="card">
-                <div class="table-responsive pt-1 xl-5">
-                  <table class="table table-striped project-orders-table">
-                    <thead>
-                      <tr>
+          <div class="card">
+            <div class="table-responsive" style="height: 300px; overflow: auto;">
+              <table class="table table-bordered table-striped" style="min-width: 800px;">
+                <thead>
+                  <tr>
                         <th class="ml-5" _msttexthash="13715" _msthash="167">Matricule</th>
                         <th _msttexthash="185380" _msthash="168">Nom</th>
                         <th _msttexthash="76570" _msthash="169">Prénoms</th>
@@ -53,9 +48,9 @@
                         <th _msttexthash="74568" _msthash="172">Red.</th>
                         <th _msttexthash="155961" _msthash="173">Date nai</th>
                         <th _msttexthash="95901" _msthash="01">Lieunais</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+                  </tr>
+                </thead>
+                <tbody>
                       <tr>
                         <td _msttexthash="15990" _msthash="174">#D1</td>
                         <td _msttexthash="702468" _msthash="175">Consectetur adipisicing elit </td>
@@ -191,24 +186,52 @@
                           </div>
                         </td>
                       </tr>
-                    </tbody>
-                  </table>
+                </tbody>
+              </table>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="container mt-2">
+                  <form>
+                    <div class="mb-3">
+                      <input type="text" class="form-control" id="lastName" placeholder="Entrez le nom">
+                    </div>
+                  </form>
                 </div>
               </div>
-
+              <div class="col-md-5">
+                <div class="container mt-2">
+                  <form>
+                    <div class="mb-3">
+                      <input type="text" class="form-control" id="firstName" placeholder="Entrez le prénom">
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="container mt-2">
+                  <form>
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                  </form>
+                </div>
+              </div>
             </div>
+            
+          </div>
 
-            {{--  --}}
-            <div class="col-md-3">
-                <div class="card">
-                  <div class="accordion accordion-flush" id="accordionFlushExample">
-                    <div class="accordion-item">
-                      <h5 class="accordion-header">
+        </div>
+
+        {{--  --}}
+        <div class="col-md-3">
+          <div class="card">
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+              <div class="accordion-item">
+                <h5 class="accordion-header">
                         <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
                           Informations généraless
                         </button>
-                      </h5>
-                      <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                </h5>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                         <form class="accordion-body">
                           
                             <div class="mb-2">
@@ -242,92 +265,413 @@
                               </select>
                             </div>
                             <div class="mb-2">
-                              <div class="form-check mx-9">
+                              <div class="form-check-center mx-9">
                                 <input type="checkbox" class="form-check-input mx-9" id="dropdownCheck2">
                                 <label class="form-check-label" for="dropdownCheck2">
                                   Statut Redoublant
                                 </label>
                               </div>
-                            </div>
-                            
-                          </form>
-                        
-                      </div>
-                    </div>
-                    <div class="accordion-item">
+                            </div>                           
+                          </form>                        
+                </div>
+              </div>
+
+              <div class="accordion-item">
                       <h5 class="accordion-header">
                         <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
                           Détail des notes
                         </button>
                       </h5>
                       <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">
-                          
-                        </div>
+                        <form class="accordion-body">
+                          <div class="table-responsive" style="height: 100px; overflow: auto;">
+                            <table class="table table-bordered table-striped" style="min-width: 800px;">
+                              <thead>
+                                <tr>
+                                  <th scope="col">Matière</th>
+                                  <th scope="col">Mi</th>
+                                  <th scope="col">Dev1</th>
+                                  <th scope="col">Dev2</th>
+                                  <th scope="col">Dev3</th>
+                                  <th scope="col">Test</th>
+                                  <th scope="col">Ms</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>1</td>
+                                  <td>Mark</td>
+                                  <td>Otto</td>
+                                  <td>@mdo</td>
+                                  <td>Jacob</td>
+                                  <td>Thornton</td>
+                                  <td>@fat</td>
+                                </tr>
+                                <tr>
+                                  <td>2</td>
+                                  <td>Jacob</td>
+                                  <td>Thornton</td>
+                                  <td>@fat</td>
+                                  <td>Mark</td>
+                                  <td>Otto</td>
+                                  <td>@mdo</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                           
+                          <div class="row">
+                            <div class="mb-2">
+                              <label for="exampleDropdownForm">Moy.1</label>
+                              <input type="" class="form-control" id="moy1" >
+                            </div>
+                            <div class="mb-2">
+                              <label for="exampleDropdownForm">Moy.2</label>
+                              <input type="" class="form-control" id="moy2">
+                            </div>
+                            <div class="mb-2">
+                              <label for="exampleDropdownForm">Moy.3</label>
+                              <input type="" class="form-control" id="moy3">
+                            </div>
+                          </div>
+
+                        </form>
                       </div>
-                    </div>
-                    <div class="accordion-item">
+              </div>
+              <div class="accordion-item">
                       <h5 class="accordion-header">
                         <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                          Accordion Item #3
+                          Détails des paiements
                         </button>
                       </h5>
                       <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                        <div class="accordion-body">  
+                          <div class="form-check-center mx-9">
+                              <input type="checkbox" class="form-check-input mx-9" id="dropdownCheck2">
+                              <label class="form-check-label" for="dropdownCheck2">
+                                Détail des composantes
+                              </label>
+                          </div> 
+
+                          <div class="table-responsive mt-2" style="height: 100px; overflow: auto;">
+                              <table class="table table-bordered " style="min-width: 10px;">
+                                <thead>
+                                  <tr>
+                                    <th>n°Recu</th>
+                                    <th>Date</th>
+                                    <th>Montant</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>130</td>
+                                    <td>05/06/2024</td>
+                                    <td>190 000</td>
+                                  </tr>
+                                  <tr>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td> 
+                                  </tr>
+                                </tbody>
+                              </table>
+                          </div>
+
+                          <div class="input-group p-2">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Somme</span>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Montant (au dollar près)" _mstaria-label="669448" _msthash="174">
+                          </div>
+
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Reste à payer</span>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Montant (au dollar près)" _mstaria-label="669448" _msthash="174">
+                          </div>
+
+                          <button type="button" class="btn btn-outline-danger btn-icon-text p-2">
+                            <i class="typcn typcn-upload btn-icon-prepend"></i><font> Imprimer récapitulatif des paiements </font>
+                          </button>
+                          
+                          <div class="card-body">
+                            <h4 class="card-title" _msttexthash="323960" _msthash="106">Réduction Montants dus</h4>
+                            <h8><form class="forms-sample">
+                              <div class="form-group row">
+                                <label for="exampleInputUsername2" class="col-sm-6 p-2 col-form-label">Scolarité</label>
+                                <div class="col-sm-6">
+                                  <input type="num" class="form-control" id="exampleInputUsername2" >
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="exampleInputEmail2" class="col-sm-6 col-form-label">Arrièré</label>
+                                <div class="col-sm-6">
+                                  <input type="num" class="form-control" id="exampleInputEmail2" >
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="exampleInputMobile" class="col-sm-6 col-form-label">Frais 1</label>
+                                <div class="col-sm-6">
+                                  <input type="num" class="form-control" id="exampleInputMobile">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="exampleInputPassword2" class="col-sm-6 col-form-label">Frais 2</label>
+                                <div class="col-sm-6">
+                                  <input type="num" class="form-control" id="exampleInputPassword2">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="exampleInputConfirmPassword2" class="col-sm-6 col-form-label">Frais 3</label>
+                                <div class="col-sm-6">
+                                  <input type="num" class="form-control" id="exampleInputConfirmPassword2">
+                                </div>
+                              </div>
+                            </form></h8>
+                          </div>
+
+                        </div>
                       </div>
-                    </div>
-                    <div class="accordion-item">
+              </div>
+              <div class="accordion-item">
                       <h5 class="accordion-header">
                         <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
-                          Accordion Item #4
+                          Informations financières
                         </button>
                       </h5>
                       <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                        <div class="accordion-body">
+                          <table class="table table-responsive text-center p-2">
+                            <thead>
+                              <tr>
+                                <th scope="col">Scolarités perçus <br> le 23/05/24</th>
+                                <th scope="col">0</th>
+                              </tr>
+                              <tr>
+                                <th scope="col">Arrièrés perçus <br> le 23/05/24</th>
+                                <th scope="col">0</th>
+                              </tr>
+                              <tr>
+                                <th scope="col">Total</th>
+                                <th scope="col">0</th>
+                              </tr>
+                              <tr>
+                                <th scope="col">Total recettes <br> à ce jour</th>
+                                <th scope="col">57 575 500</th>
+                              </tr>
+                              <tr>
+                                <th scope="col">Versé à la banque</th>
+                                <th scope="col">0</th>
+                              </tr>
+                              <tr>
+                                <th scope="col">Recettes attendues <br> ce jour</th>
+                                <th scope="col">0</th>
+                              </tr>
+                              <tr>
+                                <th scope="col">Recettes attendues <br> cette semaine</th>
+                                <th scope="col">0</th>
+                              </tr>
+                              <tr>
+                                <th scope="col">Recettes attendues <br> ce mois</th>
+                                <th scope="col">0</th>
+                              </tr>
+                            </thead>
+                           
+                          </table>
+                        </div>
                       </div>
-                    </div>
-                    <div class="accordion-item">
+              </div>
+              <div class="accordion-item">
                       <h5 class="accordion-header">
                         <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
-                          Accordion Item #5
+                          Emploi du temps
                         </button>
                       </h5>
                       <div id="flush-collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                        <div class="accordion-body">
+                          <table class="table table-responsive">
+                            <thead>
+                              <tr>
+                                <th scope="col">First</th>
+                                <th scope="col">Last</th>
+                                <th scope="col">Handle</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                              </tr>
+                              <tr>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                              </tr>
+                              <tr>
+                                <td>Larry</td>
+                                <td>the Bird</td>
+                                <td>@twitter</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
-                    </div>
-                    <div class="accordion-item">
+              </div>
+              <div class="accordion-item">
                       <h5 class="accordion-header">
                         <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
-                          Accordion Item #6
+                          Position Enseignants
                         </button>
                       </h5>
                       <div id="flush-collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                        <div class="accordion-body">
+                          <table class="table table-responsive">
+                            <thead>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First</th>
+                                <th scope="col">Last</th>
+                                <th scope="col">Handle</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                              </tr>
+                              <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                              </tr>
+                              <tr>
+                                <th scope="row">3</th>
+                                <td>Larry</td>
+                                <td>the Bird</td>
+                                <td>@twitter</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
-                    </div>
-                    <div class="accordion-item">
+              </div>
+              <div class="accordion-item">
                       <h5 class="accordion-header">
                         <button class="btn btn-light accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
-                          Accordion Item #7
+                          Filtrages
                         </button>
                       </h5>
                       <div id="flush-collapseSeven" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                </div>
-                </div>
-                
-                  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-                  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-                </div>   
-          </div>
+                        <div class="accordion-body">
 
-      </div>
+                              <div class="container">
+                                  <form>
+                                      <div class="form-row">
+                                          <div class="form-group col-md-6">
+                                              <label for="nom">Nom</label>
+                                              <input type="text" class="form-control" id="nom" placeholder="Nom de l'élève">
+                                          </div>
+                                          <div class="form-group col-md-6">
+                                              <label for="classe">Classe</label>
+                                              <select id="classe" class="form-control">
+                                                  <option selected>Choisir...</option>
+                                                  <option>Classe 1</option>
+                                                  <option>Classe 2</option>
+                                                  <option>Classe 3</option>
+                                                  <!-- Ajoutez d'autres classes selon vos besoins -->
+                                              </select>
+                                          </div>
+                                      </div>
+                                      <div class="form-row">
+                                          <div class="form-group col-md-4">
+                                              <label for="sexe">Sexe</label>
+                                              <select id="sexe" class="form-control">
+                                                  <option selected>Choisir...</option>
+                                                  <option>Masculin</option>
+                                                  <option>Féminin</option>
+                                                  <option>Autre</option>
+                                              </select>
+                                          </div>
+                                          <div class="form-group col-md-4">
+                                              <label for="serie">Série</label>
+                                              <select id="serie" class="form-control">
+                                                  <option selected>Choisir...</option>
+                                                  <option>Série A</option>
+                                                  <option>Série B</option>
+                                                  <option>Série C</option>
+                                                  <!-- Ajoutez d'autres séries selon vos besoins -->
+                                              </select>
+                                          </div>
+                                          <div class="form-group col-md-4">
+                                              <label for="statut">Statut</label>
+                                              <select id="statut" class="form-control">
+                                                  <option selected>Choisir...</option>
+                                                  <option>Inscrit</option>
+                                                  <option>Non inscrit</option>
+                                                  <option>En attente</option>
+                                                  <!-- Ajoutez d'autres statuts selon vos besoins -->
+                                              </select>
+                                          </div>
+                                      </div>
+                                      <div class="form-row">
+                                          <div class="form-group col-md-4">
+                                              <label for="categorie">Catégorie</label>
+                                              <select id="categorie" class="form-control">
+                                                  <option selected>Choisir...</option>
+                                                  <option>Catégorie 1</option>
+                                                  <option>Catégorie 2</option>
+                                                  <option>Catégorie 3</option>
+                                                  <!-- Ajoutez d'autres catégories selon vos besoins -->
+                                              </select>
+                                          </div>
+                                          <div class="form-group col-md-4">
+                                              <label for="nationalite">Nationalité</label>
+                                              <select id="nationalite" class="form-control">
+                                                  <option selected>Choisir...</option>
+                                                  <option>Française</option>
+                                                  <option>Américaine</option>
+                                                  <option>Canadienne</option>
+                                                  <option>Autre</option>
+                                                  <!-- Ajoutez d'autres nationalités selon vos besoins -->
+                                              </select>
+                                          </div>
+                                          <div class="form-group col-md-4">
+                                              <label for="matieres">Matières</label>
+                                              <select id="matieres" class="form-control">
+                                                  <option>Mathématiques</option>
+                                                  <option>Sciences</option>
+                                                  <option>Histoire</option>
+                                                  <option>Géographie</option>
+                                                  <option>Français</option>
+                                                  <option>Anglais</option>
+                                                  <!-- Ajoutez d'autres matières selon vos besoins -->
+                                              </select>
+                                          </div>
+                                      </div>
+                                      <button type="submit" class="btn btn-primary">Filtrer</button>
+                                  </form>
+                              </div>
+                                               
+                                                  
+                        </div>
+                      </div>
+              </div>
+            </div>                  
+          </div>
+        </div>                
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+      </div>  
+      
+      {{--  --}}
+      
 
     </div>
+  </div>
 
 @endsection

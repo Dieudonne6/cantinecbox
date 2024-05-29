@@ -21,7 +21,9 @@ use App\Http\Controllers\EtatController;
 
 
 
-Route::get('/inscription', [PagesController::class, 'inscription']);
+Route::get('/inscriptioncantine', [PagesController::class, 'inscriptioncantine']);
+Route::get('/get-eleves/{codeClass}', [PagesController::class, 'getEleves']);
+Route::get('/get-montant/{codeClass}', [PagesController::class, 'getMontant']);
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
@@ -79,6 +81,15 @@ Route::delete('/supprimerpaiement/{id_paiementcontrat}', [ClassesController::cla
 Route::get('/etatpaiement1', [ClassesController::class, 'etatpaiement1']);
 
 Route::get('/vitrine', [PagesController::class, 'vitrine']);
+
+Route::get('/modifparam', [PagesController::class, 'modifparam']);
+
+Route::get('/relance', [PagesController::class, 'relance']);
+
+Route::get('http://localhost:38917/info');
+
+
+// $apiUrl = 'http://localhost:38917/info'
 Route::get('/etatdroits', [EtatController::class, 'etatdroits']);
 Route::post('/filteretat', [EtatController::class, 'filteretat']);
 Route::post('/relance', [EtatController::class, 'relance']);

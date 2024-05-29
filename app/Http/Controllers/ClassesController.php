@@ -229,7 +229,10 @@ class ClassesController extends Controller
 
 }
 
-    public function savepaiementcontrat (Request $request) {
+
+    
+        
+public function savepaiementcontrat(Request $request) {
 
                 $idcontratEleve = Session::get('idcontratEleve');
                 $moisCoches = $request->input('moiscontrat');
@@ -836,15 +839,14 @@ class ClassesController extends Controller
     //     return back()->with('status','Contrat enregistré avec succès');
     // }
     public function creercontrat(Request $request){
-        $matricules = $request->input('matricules');
-        foreach($matricules as $matricule) {
-            $existingContrat = Contrat::where('eleve_contrat', $matricule)->exists();
-            if($existingContrat) {
-                return back()->with('status', 'Un contrat existe déjà pour l\'un des élèves sélectionnés.');
-            }
-        }
+        $matricule = $request->input('matricules');
+        // foreach($matricules as $matricule) {
+        //     $existingContrat = Contrat::where('eleve_contrat', $matricule)->exists();
+        //     if($existingContrat) {
+        //         return back()->with('status', 'Un contrat existe déjà pour l\'un des élèves sélectionnés.');
+        //     }
+        // }
         
-        foreach($matricules as $matricule) {
             $contra = new Contrat();
             $contra->eleve_contrat = $matricule;
             $contra->cout_contrat = $request->input('montant');
@@ -858,7 +860,7 @@ class ClassesController extends Controller
             }
             $contra->datecreation_contrat = $dateContrat;
             $contra->save();
-        }
+        
         
         return back()->with('status','Contrats enregistrés avec succès');
     }
