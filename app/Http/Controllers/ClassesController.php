@@ -784,15 +784,10 @@ public function savepaiementcontrat(Request $request) {
     // }
     public function creercontrat(Request $request){
         $matricule = $request->input('matricules');
-        // foreach($matricules as $matricule) {
-        //     $existingContrat = Contrat::where('eleve_contrat', $matricule)->exists();
-        //     if($existingContrat) {
-        //         return back()->with('status', 'Un contrat existe déjà pour l\'un des élèves sélectionnés.');
-        //     }
-        // }
-        
+        $eleve = Eleve::where('CODECLAS', $matricule)->first();
+        $eleveId = $eleve->MATRICULE;
             $contra = new Contrat();
-            $contra->eleve_contrat = $matricule;
+            $contra->eleve_contrat = $eleveId;
             $contra->cout_contrat = $request->input('montant');
             $contra->id_usercontrat = $request->input('id_usercontrat');
 
