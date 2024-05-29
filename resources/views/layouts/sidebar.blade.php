@@ -416,6 +416,8 @@
       </a>
       <div class="collapse" id="Cantine">
         <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="{{url('/inscriptioncantine')}}">Inscription</a></li>
+
           <li class="nav-item menu-item-has-children">
             <a href="" class="nav-link">Etats</a>
             <ul class="sub-menus">
@@ -439,8 +441,8 @@
               <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Etat des droits constatés</a>
               <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Lettre de relance</a>
             </div> --}}
-         
           <li class="nav-item"> <a class="nav-link" href="{{url('/classes')}}">Toutes les classes</a></li>
+
         </ul>
       </div>
     </li>

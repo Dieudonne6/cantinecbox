@@ -4,8 +4,15 @@
   <div class="content-wrapper">
     
     <div class="row">
-      
       <div class="col-md-8 mx-auto grid-margin stretch-card">
+        @if (Session::has('status'))
+          <div class="alert alert-success">
+              {{ Session::get('status') }}
+          </div>
+      @endif
+      </div>
+      <div class="col-md-8 mx-auto grid-margin stretch-card">
+        
         <div class="card">
           <div class="card-body">
             

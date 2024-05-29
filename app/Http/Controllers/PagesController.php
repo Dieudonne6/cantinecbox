@@ -43,7 +43,7 @@ class PagesController extends Controller
     {
         $eleves = Eleve::where('CODECLAS', $codeClass)
         ->whereHas('contrats', function($query) {
-            $query->where('statut_contrat', 1);
+            $query->where('statut_contrat', 0);
         })
         ->get();
        return response()->json($eleves);
