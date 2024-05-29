@@ -454,10 +454,10 @@
       </a>
       <div class="collapse" id="error">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="{{url('/modifparam')}}"> Table des paramètres </a></li>
-          <li class="nav-item"> <a class="nav-link" href="#"> Modifier les bornes de l'exercice </a></li>
+          {{-- <li class="nav-item"> <a class="nav-link" href="{{url('/modifparam')}}"> Table des paramètres </a></li>
+          <li class="nav-item"> <a class="nav-link" href="#"> Modifier les bornes de l'exercice </a></li> --}}
 
-           <li class="nav-item">
+           {{-- <li class="nav-item">
             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
             aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Op. Ouverture </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton1" style="" _mstvisible="0" >
@@ -467,10 +467,10 @@
               <a class="dropdown-item" href="#" _msttexthash="26180" _msthash="284" _mstvisible="1">Cloturer l'année</a>
               <a class="dropdown-item" href="#" _msttexthash="22987" _msthash="285" _mstvisible="1">Changement de trimestre</a>
             </div>
-           </li>
-
+           </li> --}}
+{{-- 
           <li class="nav-item"> <a class="nav-link" href="{{url('/confimpression')}}"> Configurer Imprimante </a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/changetrimestre')}}"> Changement de trimestre </a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/changetrimestre')}}"> Changement de trimestre </a></li> --}}
           <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnees')}}">Connexion à la<br>base de donnée </a></li>
 
@@ -478,7 +478,7 @@
       </div>
     </li>
 
-    <li class="nav-item">
+    {{-- <li class="nav-item">
       <a class="nav-link collapsed" data-toggle="collapse" href="#Etat" aria-expanded="false" aria-controls="Etat">
         <i class="typcn typcn-compass menu-icon"></i>
         <span class="menu-title">Etat</span>
@@ -491,7 +491,7 @@
           <li class="nav-item"> <a class="nav-link" href="{{url('/relance')}}">Lettre de relance</a></li>
         </ul>
       </div>
-    </li>
+    </li> --}}
 {{-- 
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#cantine" aria-expanded="false" aria-controls="cantine">
