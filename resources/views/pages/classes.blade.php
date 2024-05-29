@@ -16,7 +16,7 @@
       @endif
       <div class="form-group row">
         <div class="col-3">
-          <select class="js-example-basic-single w-100" onchange="window.location.href=this.value">
+          <select class="js-example-basic-single w-100 " onchange="window.location.href=this.value">
             <option value="">Sélectionnez une classe</option>
             @foreach ($classe as $classes)
               <option value="eleve/{{$classes->CODECLAS}}">{{$classes->CODECLAS}}</option>
@@ -37,7 +37,7 @@
 
       </div>
       <div class="table-responsive mb-4">
-        <table id="myTable">
+        <table id="myTable" class="table">
           <thead>
             <tr>
               <th>

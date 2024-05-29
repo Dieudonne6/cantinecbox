@@ -17,7 +17,7 @@
 
        <div class="collapse" id="ui-basic">
          {{-- Acceuil --}}
-
+{{-- 
         <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Acceuil </button>
@@ -25,7 +25,7 @@
             <a class="dropdown-item text-center" href="{{url('/Acceuil')}}" _msttexthash="76466" _msthash="281" _mstvisible="1">Acceuil</a>
             <a class="dropdown-item text-center" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Photos</a>
           </div>
-        </div>
+        </div> --}}
          {{-- Créations des classes --}}
 
         {{-- <div class="dropdown">
@@ -490,7 +490,7 @@
         </ul>
       </div>
     </li>
-
+{{-- 
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#cantine" aria-expanded="false" aria-controls="cantine">
         <i class="typcn typcn-device-desktop menu-icon"></i>
@@ -502,7 +502,7 @@
           <li class="nav-item"> <a class="nav-link" href="{{url('/classes')}}"> Toutes les classes </a></li>          
         </ul>
       </div>
-    </li>
+    </li> --}}
   </ul>
   
   <div class="justify-content-center d-flex align-items-center">    

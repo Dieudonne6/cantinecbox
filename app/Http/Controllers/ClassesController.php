@@ -39,7 +39,16 @@ class ClassesController extends Controller
     public function classe(Request $request){
         if(Session::has('account')){
             $elev = Eleve::get();
-            $eleves = Eleve::orderBy('NOM', 'asc')->get();
+
+        // Récupérer les matricules des élèves dont le statut de contrat est égal à 1
+        $contratValideMatricules = Contrat::where('statut_contrat', 1)->pluck('eleve_contrat');
+
+        // Récupérer les noms et prénoms des élèves correspondants
+        $eleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+            ->select('MATRICULE', 'NOM', 'PRENOM', 'CODECLAS')
+            ->orderBy('NOM', 'asc')
+            ->get();
+            // dd($eleves);
 
             $classes = Classes::get();
             $fraiscontrat = Paramcontrat::first(); 
@@ -55,9 +64,20 @@ class ClassesController extends Controller
         $eleves = Eleve::orderBy('NOM', 'asc')->get();
         $classes = Classes::get();
         $fraiscontrat = Paramcontrat::first(); 
-        $filterEleves = Eleve::where('CODECLAS', $CODECLAS)
-        ->orderBy('NOM', 'asc')
-        ->get();
+
+        // Récupérer les matricules des élèves dont le statut de contrat est égal à 1
+        $contratValideMatricules = Contrat::where('statut_contrat', 1)->pluck('eleve_contrat');
+
+        // Récupérer les noms et prénoms des élèves correspondants
+        $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+            ->where('CODECLAS', $CODECLAS)
+            ->select('MATRICULE', 'NOM', 'PRENOM', 'CODECLAS')
+            ->orderBy('NOM', 'asc')
+            ->get();
+
+        // $filterEleves = Eleve::where('CODECLAS', $CODECLAS)
+        // ->orderBy('NOM', 'asc')
+        // ->get();
         Session::put('fraiscontrats', $fraiscontrat);
         Session::put('fill', $filterEleves);
         
@@ -566,7 +586,7 @@ public function savepaiementcontrat(Request $request) {
             $facturenormalise->id_paiementglobalcontrat = $idPaiementContrat;
             $facturenormalise->classe = $classeeleve;
             $facturenormalise->nom = $nomcompleteleve;
-            $facturenormalise->montant_total = $infocontrateleve->montant_paiementcontrat;
+            $facturenormalise->montant_total = $montanttotal;
         
         $facturenormalise->save();
     
