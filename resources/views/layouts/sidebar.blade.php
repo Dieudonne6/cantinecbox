@@ -473,6 +473,8 @@
           <li class="nav-item"> <a class="nav-link" href="{{url('/changetrimestre')}}"> Changement de trimestre </a></li> --}}
           <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnees')}}">Connexion à la<br>base de donnée </a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/paramsfacture')}}">Paramètre Facture</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/inscriptions')}}">Enregistrement utilisateurs </a></li>
 
         </ul>
       </div>
