@@ -1,16 +1,19 @@
 @extends('layouts.master')
 @section('content')
 
+  <style>
+  .btn.btn-outline-dark.btn-icon-text:hover {
+      background-color: #844fc1; /* Change the background color to violet */
+      border-color: violet; /* Change the border color to violet */
+      color: white; /* Change the text color to white */
+  }
+  </style>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 <div class="main-panel-10">
-  <style>
-    .btn.btn-outline-dark.btn-icon-text:hover {
-        background-color: #844fc1; /* Change the background color to violet */
-        border-color: violet; /* Change the border color to violet */
-        color: white; /* Change the text color to white */
-    }
-  </style>
+  
   
   <div class="container">
 
@@ -58,7 +61,6 @@
 
     <div class="col-12">
       <div class="row">
-
         <div class="col-md-4">
           <div class="card flex-fill">
             <div class="card-header">
@@ -83,14 +85,7 @@
             <div class="card-body">
               <div id="chart1"></div>
             </div>
-          </div>
-          <!-- Inclure jQuery, Popper.js, et Bootstrap JS -->
-          <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-          <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-          <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-          <!-- Inclure ApexCharts JS -->
-          <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-  
+          </div>          
           <!-- Script JavaScript pour configurer et afficher le graphique -->
           <script>
             document.addEventListener("DOMContentLoaded", function(event) {
@@ -154,7 +149,7 @@
         <div class="col-md-8  stretch-card">
           <div class="row">
             <div class="col-md-8">
-              <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+              
               <div class="col-md-12 stretch-card">
                   <div class="card">
                     <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
@@ -218,11 +213,6 @@
                     Modifications de paiements
                   </font></span>
                 </button>
-                {{-- <button class="btn btn-outline-dark btn-icon-text">
-                  <i class="typcn typcn-vendor-apple btn-icon-prepend"></i>
-                  <span class="d-inline-block text-left">
-                    <small class="font-weight-light d-block" _msttexthash="663078" _msthash="191"></small><font _mstmutation="1" _msttexthash="2223429" _msthash="192"> Budgétaire </font></span>
-                </button> --}}
               </div>
               <div class="template-demo mt-2">              
                 <button class="btn btn-outline-dark btn-icon-text">
@@ -236,15 +226,7 @@
                     <small class="font-weight-light d-block" _msttexthash="283049" _msthash="193">Historique des </small><font _mstmutation="1" _msttexthash="152841" _msthash="194">
                     Modifications de profiles
                   </font></span>
-                </button>
-                {{-- <button class="btn btn-outline-dark btn-icon-text">
-                  <i class="typcn typcn-vendor-android btn-icon-prepend"></i>
-                  <span class="d-inline-block text-left">
-                    <small class="font-weight-light d-block" _msttexthash="283049" _msthash="193"></small><font _mstmutation="1" _msttexthash="152841" _msthash="194">
-                    Rentabilité
-                  </font></span>
-                </button> --}}
-                
+                </button> 
               </div>
             </div>
           </div> 
@@ -263,11 +245,8 @@
         <div class="col-12">
           <div class="row">
 
-            <div class="col-6">
+            <div class="col-6"> 
               
-              
-                  
-                  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
                   {{-- <div class="container">
                       <!-- Autres sections de ta page -->
               
@@ -333,17 +312,9 @@
                   </div> --}}
                   
                   <div class="container">
-
                     <div class="card">
                        
-                     
-                          <!-- Inclure Bootstrap CSS -->
-                          <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-                          <!-- Inclure Chart.js -->
-                          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                      
-                      
-                                      <div class="card-body border-bottom">
+                      <div class="card-body border-bottom">
                                           <div class="d-flex justify-content-between align-items-center flex-wrap">
                                               <h6 class="mb-2 mb-md-0 text-uppercase font-weight-medium">Budgétaire</h6>
                                               <div class="dropdown">
@@ -358,8 +329,8 @@
                                                   </div>
                                               </div>
                                           </div>
-                                      </div>
-                                      <div class="card-body">
+                      </div>
+                      <div class="card-body">
                                           <canvas id="sales-chart-c" class="mt-2"></canvas>
                                           <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3 mt-4">
                                               <div class="d-flex flex-column justify-content-center align-items-center">
@@ -403,12 +374,6 @@
                                           </div>
                               
                       </div>
-                      
-                      <!-- Inclure jQuery et Bootstrap JS -->
-                      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-                      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-                      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-                      
                       <!-- Script pour initialiser le graphique -->
                       <script>
                           var ctx = document.getElementById('sales-chart-c').getContext('2d');
@@ -434,13 +399,10 @@
                               }
                           });
                       </script>
-                      
-                      
-                   
+
                     </div>
                   </div>
-                  
-              
+
             </div>
 
             <div class="col-6">
@@ -451,16 +413,15 @@
                               <div class="page-title">Évolution des Effectifs</div>
                           </div>
                           <div class="col text-right">
-                              <button class="btn btn-light" type="button" data-toggle="dropdown" aria-haspopup="true"
-                                  aria-expanded="false">
-                                  <i class="fas fa-ellipsis-h"></i>
+                              <button class="btn btn-light" type="button" data-toggle="dropdown" aria-haspopup="true"aria-expanded="false">
+                                <i class="fas fa-ellipsis-h"></i>
                               </button>
                               <div class="dropdown-menu dropdown-menu-right">
-                                  <a class="dropdown-item" href="#">Action</a>
-                                  <div class="dropdown-divider"></div>
-                                  <a class="dropdown-item" href="#">Another action</a>
-                                  <div class="dropdown-divider"></div>
-                                  <a class="dropdown-item" href="#">Something else here</a>
+                                <a class="dropdown-item" href="#">Action</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a>
                               </div>
                           </div>
                       </div>
@@ -469,13 +430,6 @@
                       <div id="chart2"></div>
                   </div>
               </div>
-              <!-- Inclure jQuery, Popper.js, et Bootstrap JS -->
-              <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-              <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-              <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-              <!-- Inclure ApexCharts JS -->
-                <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-          
               <!-- Script JavaScript pour configurer et afficher le graphique -->
               <script>
                   document.addEventListener("DOMContentLoaded", function (event) {
@@ -539,21 +493,6 @@
         </div>
       </div>
 
-
- 
- 
-  
-  
-  
- 
-  
-
-   
-
-   
-
   </div>
-
-
 
 @endsection
