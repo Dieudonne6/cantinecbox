@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-<nav class="sidebar sidebar-start" id="sidebar" data-darkreader-mode="dynamic" >
-=======
 {{-- <div class="theme-setting-wrapper">
   <div id="settings-trigger"><i class="typcn typcn-cog-outline"></i></div>
   <div id="theme-settings" class="settings-panel">
@@ -168,8 +165,7 @@
   </div>
 </div> --}}
 
-<nav class="sidebar sidebar-offcanvas" id="sidebar">
->>>>>>> 111e19fff1907e77c835374c364e6d247aa491f1
+<nav class="sidebar sidebar-offcanvas " id="sidebar">
   <ul class="nav">
 
     {{-- <li class="nav-item">
@@ -185,14 +181,8 @@
         <span class="menu-title">Inscriptions & disciplines</span>
         <i class="menu-arrow"></i>
       </a>
-<<<<<<< HEAD
-
-       <div class="collapse" id="ui-basic">
-         {{-- Acceuil --}}
-=======
       <div class="collapse" id="ui-basic">
          {{-- Acceuil 
->>>>>>> 111e19fff1907e77c835374c364e6d247aa491f1
 
         <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
@@ -214,12 +204,8 @@
             <a class="dropdown-item text-center" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Table des classes</a>
             <a class="dropdown-item text-center" href="#" _msttexthash="229879" _msthash="283" _mstvisible="1">Couper</a>
           </div>
-<<<<<<< HEAD
-        </div>
-=======
         </div> --}}
   
->>>>>>> 111e19fff1907e77c835374c364e6d247aa491f1
          {{-- Scolarité --}}
         
         {{-- <div class="dropdown">
@@ -233,23 +219,15 @@
             <a class="dropdown-item text-center" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Paiement des non inscrits</a>
             <a class="dropdown-item text-center" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Duplicata</a>
           </div>
-<<<<<<< HEAD
-        </div>
-=======
         </div> --}}
 
->>>>>>> 111e19fff1907e77c835374c364e6d247aa491f1
          {{-- Dicipline --}}
 {{-- 
         <div class="dropdown">
           <button class="btn btn-light-lg" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Dicipline </button>
-<<<<<<< HEAD
-        </div>        
-=======
         </div>
          --}}
->>>>>>> 111e19fff1907e77c835374c364e6d247aa491f1
         {{-- Extraction de données --}}
 
         {{-- <div class="dropdown">
@@ -594,13 +572,8 @@
           <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> Bricoles</a></li>
         </ul>
       </div>
-<<<<<<< HEAD
-    </li>
-
-=======
     </li> --}}
  
->>>>>>> 111e19fff1907e77c835374c364e6d247aa491f1
     {{-- Paramètres --}}
    
   
@@ -612,6 +585,7 @@
       </a>
       <div class="collapse" id="Cantine">
         <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="{{url('/classes')}}">Toutes les classes</a></li>
           <li class="nav-item menu-item-has-children">
             <a href="" class="nav-link">Etats</a>
             <ul class="sub-menus">
@@ -636,7 +610,6 @@
               <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Lettre de relance</a>
             </div> --}}
          
-          <li class="nav-item"> <a class="nav-link" href="{{url('/classes')}}">Toutes les classes</a></li>
         </ul>
       </div>
     </li>
@@ -648,16 +621,10 @@
       </a>
       <div class="collapse" id="error">
         <ul class="nav flex-column sub-menu">
-<<<<<<< HEAD
-          <li class="nav-item"> <a class="nav-link" href="{{url('/modifparam')}}"> Table des paramètres </a></li>
-          <li class="nav-item"> <a class="nav-link" href="#"> Modifier les bornes de l'exercice </a></li>
-
-=======
           {{-- <li class="nav-item"> <a class="nav-link" href="#"> Table des paramètres </a></li>
           <li class="nav-item"> <a class="nav-link" href="#"> Modifier les bornes de l'exercice </a></li>
            --}}
           {{-- <div class="dropdown">
->>>>>>> 111e19fff1907e77c835374c364e6d247aa491f1
            <li class="nav-item">
             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
             aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Op. Ouverture </button>
@@ -669,59 +636,13 @@
               <a class="dropdown-item" href="#" _msttexthash="22987" _msthash="285" _mstvisible="1">Changement de trimestre</a>
             </div>
            </li>
-<<<<<<< HEAD
-
-          <li class="nav-item"> <a class="nav-link" href="{{url('/confimpression')}}"> Configurer Imprimante </a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/changetrimestre')}}"> Changement de trimestre </a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnees')}}">Connexion à la<br>base de donnée </a></li>
-
-        </ul>
-      </div>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-toggle="collapse" href="#Etat" aria-expanded="false" aria-controls="Etat">
-        <i class="typcn typcn-compass menu-icon"></i>
-        <span class="menu-title">Etat</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="Etat" style="">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Etats Paiement</a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Droit constatés</a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/relance')}}">Lettre de relance</a></li>
-        </ul>
-      </div>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#cantine" aria-expanded="false" aria-controls="cantine">
-        <i class="typcn typcn-device-desktop menu-icon"></i>
-        <span class="menu-title">Cantine</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="cantine">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="{{url('/classes')}}"> Toutes les classes </a></li>          
-        </ul>
-      </div>
-    </li>
-  </ul>
-  
-  <div class="justify-content-center d-flex align-items-center">    
-    <div class="section">
-      <a href="{{url('/')}}" class="btn btn-primary mr-2">Déconnexion</a>
-    </div>  
-  </div>
-=======
           </div> --}}
           {{-- <li class="nav-item"> <a class="nav-link" href="{{url('/confimpression')}}"> Configurer Imprimante </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/changetrimestre')}}"> Changement de trimestre </a></li> --}}
           <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnees')}}">Connexion à la<br>base de donnée </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/paramsfacture')}}">Paramètre Facture </a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/inscriptions')}}">Enregistrement utilisateur</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/inscriptions')}}">Enregistrement <br> utilisateur</a></li>
 
         </ul>
       </div>
@@ -729,6 +650,5 @@
   </ul>
   
   
->>>>>>> 111e19fff1907e77c835374c364e6d247aa491f1
 
 </nav>
