@@ -16,18 +16,18 @@
       @endif
       <div class="form-group row">
         <div class="col-3">
-          <select class="js-example-basic-single w-100 " onchange="window.location.href=this.value">
+          <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
             <option value="">Sélectionnez une classe</option>
             @foreach ($classe as $classes)
               <option value="eleve/{{$classes->CODECLAS}}">{{$classes->CODECLAS}}</option>
             @endforeach
           </select>
         </div>
-        <div class="col-3">
+        {{-- <div class="col-3">
           <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Nouveau Contrat
           </button>
-        </div>
+        </div> --}}
 
         {{-- <div class="col-3">
           <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleInscrire">

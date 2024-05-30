@@ -50,7 +50,12 @@ class ClassesController extends Controller
             ->get();
             // dd($eleves);
 
-            $classes = Classes::get();
+            // Les noms des classes à exclure
+            $classesAExclure = ['NON', 'DELETE'];
+
+            // Récupérer toutes les classes sauf celles à exclure
+            $classes = Classes::whereNotIn('CODECLAS', $classesAExclure)->get();
+            // $classes = Classes::get();
             $fraiscontrat = Paramcontrat::first(); 
             Session::put('eleves', $eleves);
             Session::put('classes', $classes);
@@ -62,7 +67,12 @@ class ClassesController extends Controller
     
     public function filterEleve($CODECLAS){
         $eleves = Eleve::orderBy('NOM', 'asc')->get();
-        $classes = Classes::get();
+        // Les noms des classes à exclure
+        $classesAExclure = ['NON', 'DELETE'];
+
+        // Récupérer toutes les classes sauf celles à exclure
+        $classes = Classes::whereNotIn('CODECLAS', $classesAExclure)->get();
+        // $classes = Classes::get();
         $fraiscontrat = Paramcontrat::first(); 
 
         // Récupérer les matricules des élèves dont le statut de contrat est égal à 1
@@ -447,7 +457,7 @@ public function savepaiementcontrat(Request $request) {
             'Authorization: Bearer ' . $token,
             'Content-Length: 0'
         ]);
-        curl_setopt($chConfirmation, CURLOPT_CAINFO, 'D:/certificationCA/cacert.pem');
+        curl_setopt($chConfirmation, CURLOPT_CAINFO, storage_path('certificates/cacert.pem'));
     
         // Exécutez la requête cURL pour la confirmation
         $responseConfirmation = curl_exec($chConfirmation);
