@@ -10,6 +10,8 @@ use Carbon\Carbon;
 
 use App\Models\Eleve;
 use App\Models\Contrat;
+use App\Models\Params2;
+
 use App\Models\Classes;
 use Barryvdh\DomPDF\Facade as PDF;
 
@@ -176,8 +178,9 @@ public function relance(Request $request)
     
     // dd($results);
 
+    $paramse = Params2::all();
 
-    return view('pages.etat.relance')->with('results', $results);// Retourner les résultats dans une vue
+    return view('pages.etat.relance')->with('results', $results)->with('paramse', $paramse);
 // return view('pages.etat.relance')->with('results', $results);
 
 

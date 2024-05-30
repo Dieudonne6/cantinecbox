@@ -39,7 +39,16 @@ class ClassesController extends Controller
     public function classe(Request $request){
         if(Session::has('account')){
             $elev = Eleve::get();
-            $eleves = Eleve::orderBy('NOM', 'asc')->get();
+
+        // Récupérer les matricules des élèves dont le statut de contrat est égal à 1
+        $contratValideMatricules = Contrat::where('statut_contrat', 1)->pluck('eleve_contrat');
+
+        // Récupérer les noms et prénoms des élèves correspondants
+        $eleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+            ->select('MATRICULE', 'NOM', 'PRENOM', 'CODECLAS')
+            ->orderBy('NOM', 'asc')
+            ->get();
+            // dd($eleves);
 
             $classes = Classes::get();
             $fraiscontrat = Paramcontrat::first(); 
@@ -55,9 +64,20 @@ class ClassesController extends Controller
         $eleves = Eleve::orderBy('NOM', 'asc')->get();
         $classes = Classes::get();
         $fraiscontrat = Paramcontrat::first(); 
-        $filterEleves = Eleve::where('CODECLAS', $CODECLAS)
-        ->orderBy('NOM', 'asc')
-        ->get();
+
+        // Récupérer les matricules des élèves dont le statut de contrat est égal à 1
+        $contratValideMatricules = Contrat::where('statut_contrat', 1)->pluck('eleve_contrat');
+
+        // Récupérer les noms et prénoms des élèves correspondants
+        $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+            ->where('CODECLAS', $CODECLAS)
+            ->select('MATRICULE', 'NOM', 'PRENOM', 'CODECLAS')
+            ->orderBy('NOM', 'asc')
+            ->get();
+
+        // $filterEleves = Eleve::where('CODECLAS', $CODECLAS)
+        // ->orderBy('NOM', 'asc')
+        // ->get();
         Session::put('fraiscontrats', $fraiscontrat);
         Session::put('fill', $filterEleves);
         
@@ -112,23 +132,56 @@ class ClassesController extends Controller
 
 
                 // $inscriptioncontrats = Inscriptioncontrat::where('id_contrat', $idcontrateleve)->get(['id_moiscontrat']);
-                $inscriptioncontrats = Inscriptioncontrat::where('id_contrat', $idcontrateleve)->pluck('id_moiscontrat')->toArray();
-                // dd($inscriptioncontrats);
-                // $allmoiscontrat = Moiscontrat::get();
-                // $allmoiscontrat = Moiscontrat::get()->toArray();
-                $allmoiscontrat = Moiscontrat::pluck('nom_moiscontrat', 'id_moiscontrat')->take(12)->toArray();
-                // dd($allmoiscontrat);
+                // $inscriptioncontrats = Inscriptioncontrat::where('id_contrat', $idcontrateleve)->pluck('id_moiscontrat')->toArray();
+                // $allmoiscontrat = Moiscontrat::pluck('nom_moiscontrat', 'id_moiscontrat')->take(12)->toArray();
+                // // dd($allmoiscontrat);
 
-                $difference = array_diff(array_keys($allmoiscontrat), $inscriptioncontrats);
+                // $difference = array_diff(array_keys($allmoiscontrat), $inscriptioncontrats);
 
-                // dd($difference);
+                // // dd($difference);
+                // $moisCorrespondants = [];
+                // foreach ($difference as $id_moiscontrat) {
+                //     if (array_key_exists($id_moiscontrat, $allmoiscontrat)) {
+                //         $moisCorrespondants[$id_moiscontrat] = $allmoiscontrat[$id_moiscontrat];
+                //     }
+                // }
+                
+
+
+
+
+                // Récupérer les mois d'inscription du contrat de l'élève
+                $inscriptioncontrats = Inscriptioncontrat::where('id_contrat', $idcontrateleve)
+                    ->pluck('id_moiscontrat')
+                    ->toArray();
+
+                // Récupérer tous les mois disponibles et les limiter aux 12 premiers mois
+                $allmoiscontrat = Moiscontrat::take(12)
+                    ->pluck('nom_moiscontrat', 'id_moiscontrat')
+                    ->toArray();
+
+                // Définir l'ordre des mois de septembre à août
+                $order = [
+                    'Septembre', 'Octobre', 'Novembre', 'Decembre',
+                    'Janvier', 'Fevrier', 'Mars', 'Avril',
+                    'Mai', 'Juin'
+                ];
+
+                // Filtrer les mois qui ne sont pas dans les contrats d'inscription
+                $moisNonPayes = array_diff_key($allmoiscontrat, array_flip($inscriptioncontrats));
+
+                // Réorganiser les mois selon l'ordre défini
                 $moisCorrespondants = [];
-                foreach ($difference as $id_moiscontrat) {
-                    if (array_key_exists($id_moiscontrat, $allmoiscontrat)) {
-                        $moisCorrespondants[$id_moiscontrat] = $allmoiscontrat[$id_moiscontrat];
+                foreach ($order as $mois) {
+                    foreach ($moisNonPayes as $id => $nom) {
+                        if ($nom === $mois) {
+                            $moisCorrespondants[$id] = $nom;
+                            break;
+                        }
                     }
                 }
 
+                // dd($moisCorrespondants);
 
 
 
@@ -149,7 +202,7 @@ class ClassesController extends Controller
 
                     }
                     else {
-                        $moisCorrespondants = Moiscontrat::pluck('nom_moiscontrat', 'id_moiscontrat')->toArray();
+                        // $moisCorrespondants = Moiscontrat::pluck('nom_moiscontrat', 'id_moiscontrat')->toArray();
 
                         // echo("le contrat n'existe pas dans la table inscriptioncontrat");
                         
@@ -175,7 +228,7 @@ class ClassesController extends Controller
 
                     }
                     else {
-                        $moisCorrespondants = Moiscontrat::pluck('nom_moiscontrat', 'id_moiscontrat')->toArray();
+                        // $moisCorrespondants = Moiscontrat::pluck('nom_moiscontrat', 'id_moiscontrat')->toArray();
 
                         return view('pages.paiementcontrat')->with('fraismensuelle', $fraismensuelle)->with('moisCorrespondants', $moisCorrespondants);
 
@@ -208,6 +261,7 @@ public function savepaiementcontrat(Request $request) {
                 $datepaiementcontrat = $request->input('date');
                 $id_usercontrat = $request->input('id_usercontrat');
 
+                // dd($id_usercontrat);
                 $anneeActuelle = date('Y');
 
                 // generer une valeur aleatoire comprise entre 10000000 et 99999999 et verifier si elle existe deja dans la table.
@@ -220,15 +274,6 @@ public function savepaiementcontrat(Request $request) {
                 } while (DB::table('paiementglobalcontrat')->where('reference_paiementcontrat', $valeurDynamiqueNumerique)->exists());
                 
 
-                // ENREGISTREMENT DANS LA TABLE INSCRIPTIONCONTRAT
-                // Parcourir les mois cochés et insérer chaque id de mois dans la table Inscriptioncontrat
-                foreach ($moisCoches as $id_moiscontrat) {
-                    Inscriptioncontrat::create([
-                        'id_contrat' => $idcontratEleve, 
-                        'id_moiscontrat' => $id_moiscontrat,
-                        'anne_inscrption' => $anneeActuelle
-                    ]);
-                }
 
                 // recuperer les nom des mois cochee
 
@@ -261,58 +306,9 @@ public function savepaiementcontrat(Request $request) {
                 // dd($soldeapres_paiementcontrat);
 
 
-                // ENREGISTREMENT DANS LA TABLE PAIEMENTGLOBALCONTRAT
-               $paiementglobalcontrat =  new Paiementglobalcontrat();
-                    
-               $paiementglobalcontrat->soldeavant_paiementcontrat = $montanttotal;
-               $paiementglobalcontrat->montant_paiementcontrat = $montanttotal;
-               $paiementglobalcontrat->soldeapres_paiementcontrat = 0;
-               $paiementglobalcontrat->id_contrat = $idcontratEleve;
-               $paiementglobalcontrat->id_usercontrat = $id_usercontrat;
-               $paiementglobalcontrat->date_paiementcontrat = $datepaiementcontrat;
-               //     $paiementglobalcontrat->id_usercontrat = null;
-               $paiementglobalcontrat->anne_paiementcontrat = $anneeActuelle;
-               $paiementglobalcontrat->reference_paiementcontrat = $valeurDynamiqueNumerique;
-               $paiementglobalcontrat->statut_paiementcontrat = 1;
-               //     $paiementglobalcontrat->datesuppr_paiementcontrat = null;
-               //    $paiementglobalcontrat->idsuppr_usercontrat = null;
-               //    $paiementglobalcontrat->motifsuppr_paiementcontrat = null;
-               $paiementglobalcontrat->mois_paiementcontrat = $moisConcatenes;
-
-               $paiementglobalcontrat->save();
-
-                // Récupérer l'id_paiementcontrat de la table paiementglobalcontrat qui correspond a l'id du contrat
-                $idPaiementContrat = Paiementglobalcontrat::where('id_contrat', $idcontratEleve)
-                ->orderBy('id_paiementcontrat', 'desc')
-                ->value('id_paiementcontrat');
-                // dd($idPaiementContrat);                
-
-                // ENREGISTREMENT DANS LA TABLE PAIEMENTCONTRAT
-
-                // dd($soldeavant_paiementcontrat);
-
-                // Parcourir les mois cochés et insérer chaque id de mois dans la table Inscriptioncontrat
-                foreach ($moisCoches as $id_moiscontrat) {
-                    Paiementcontrat::create([
-                        // 'id_paiementcontrat ' => $valeurDynamiqueidpaiemnetcontrat, 
-                        'soldeavant_paiementcontrat' => $montantmoiscontrat,
-                        'montant_paiementcontrat' => $montantmoiscontrat,
-                        'soldeapres_paiementcontrat' => 0,
-                        'id_contrat' => $idcontratEleve,
-                        'date_paiementcontrat' => $datepaiementcontrat,
-                        'id_usercontrat' => $id_usercontrat,
-                        'mois_paiementcontrat' => $id_moiscontrat,
-                        'anne_paiementcontrat' => $anneeActuelle,
-                        'reference_paiementcontrat' => $valeurDynamiqueNumerique,
-                        'statut_paiementcontrat' => 1,
-                        // 'datesuppr_paiementcontrat' => $anneeActuelle,
-                        // 'idsuppr_usercontrat' => $anneeActuelle,
-                        // 'motifsuppr_paiementcontrat' => $anneeActuelle,
-                        'id_paiementglobalcontrat' => $idPaiementContrat,
-                    ]);
-                }
 
 
+                
 
 
 
@@ -346,9 +342,12 @@ public function savepaiementcontrat(Request $request) {
     $infocontrateleve = Paiementglobalcontrat::where('id_contrat', $idcontratEleve)
     ->orderBy('id_paiementcontrat', 'desc')->first();
 
-    $toutmoiscontrat = $infocontrateleve->mois_paiementcontrat;
+    // $toutmoiscontrat = $infocontrateleve->mois_paiementcontrat;
+    $moisavecvirg = implode(',', $nomsMoisCoches);
+    $toutmoiscontrat = $moisavecvirg;
 
-    // dd($infocontrateleve);
+
+    // dd($toutmoiscontrat);
 
 
     $invoiceItems = 
@@ -362,7 +361,8 @@ public function savepaiementcontrat(Request $request) {
                     // 'taxGroup' => 'B', // La taxe reste la même, adaptez si nécessaire
 
                     'name' => 'contrat de cantine',
-                    'price' => intval($infocontrateleve->montant_paiementcontrat), // Convertir le prix en entier
+                    // 'price' => intval($infocontrateleve->montant_paiementcontrat),
+                    'price' => intval($montanttotal), 
                     'quantity' => 1,
                     'taxGroup' => $taxe, // La taxe reste la même, adaptez si nécessaire
             ]
@@ -468,7 +468,7 @@ public function savepaiementcontrat(Request $request) {
     $facturedetaille = json_decode($jsonData, true);
     // dd($facturedetaille);
     
-    $reffacture = uniqid('f_');
+    // $reffacture = uniqid('f_');
     // dd($decodedResponseConfirmation);
     // dd($facturedetaille);
     
@@ -489,12 +489,88 @@ public function savepaiementcontrat(Request $request) {
     
         $codemecef = $decodedResponseConfirmation['codeMECeFDGI'];
 
+        $counters = $decodedResponseConfirmation['counters'];
+
+        $nim = $decodedResponseConfirmation['nim'];
+
         // dd($decodedResponseConfirmation);
 
         // Générer le code QR
         $qrCodeString = $decodedResponseConfirmation['qrCode'];
 
+        $reffacture = $nim.'_'.$counters;
 
+
+
+
+
+                // Effectuer lrs enregistrement dans les tables inscriptioncontrat, paiementglobalcontrat et paiementcontrat ici pour etre sur que c'est apres que tout soit bien passe que les enregistrement dans ces tables sont effectue
+        
+                // ENREGISTREMENT DANS LA TABLE INSCRIPTIONCONTRAT
+                // Parcourir les mois cochés et insérer chaque id de mois dans la table Inscriptioncontrat
+                foreach ($moisCoches as $id_moiscontrat) {
+                    Inscriptioncontrat::create([
+                        'id_contrat' => $idcontratEleve, 
+                        'id_moiscontrat' => $id_moiscontrat,
+                        'anne_inscrption' => $anneeActuelle
+                    ]);
+                }
+
+
+
+
+                // ENREGISTREMENT DANS LA TABLE PAIEMENTGLOBALCONTRAT
+               $paiementglobalcontrat =  new Paiementglobalcontrat();
+                    
+               $paiementglobalcontrat->soldeavant_paiementcontrat = $montanttotal;
+               $paiementglobalcontrat->montant_paiementcontrat = $montanttotal;
+               $paiementglobalcontrat->soldeapres_paiementcontrat = 0;
+               $paiementglobalcontrat->id_contrat = $idcontratEleve;
+               $paiementglobalcontrat->id_usercontrat = $id_usercontrat;
+               $paiementglobalcontrat->date_paiementcontrat = $datepaiementcontrat;
+               //     $paiementglobalcontrat->id_usercontrat = null;
+               $paiementglobalcontrat->anne_paiementcontrat = $anneeActuelle;
+               $paiementglobalcontrat->reference_paiementcontrat = $valeurDynamiqueNumerique;
+               $paiementglobalcontrat->statut_paiementcontrat = 1;
+               //     $paiementglobalcontrat->datesuppr_paiementcontrat = null;
+               //    $paiementglobalcontrat->idsuppr_usercontrat = null;
+               //    $paiementglobalcontrat->motifsuppr_paiementcontrat = null;
+               $paiementglobalcontrat->mois_paiementcontrat = $moisConcatenes;
+
+               $paiementglobalcontrat->save();
+
+
+
+               // Récupérer l'id_paiementcontrat de la table paiementglobalcontrat qui correspond a l'id du contrat
+                $idPaiementContrat = Paiementglobalcontrat::where('id_contrat', $idcontratEleve)
+                ->orderBy('id_paiementcontrat', 'desc')
+                ->value('id_paiementcontrat');
+                // dd($idPaiementContrat);                
+
+                // ENREGISTREMENT DANS LA TABLE PAIEMENTCONTRAT
+
+                // dd($soldeavant_paiementcontrat);
+
+                // Parcourir les mois cochés et insérer chaque id de mois dans la table Inscriptioncontrat
+                foreach ($moisCoches as $id_moiscontrat) {
+                    Paiementcontrat::create([
+                        // 'id_paiementcontrat ' => $valeurDynamiqueidpaiemnetcontrat, 
+                        'soldeavant_paiementcontrat' => $montantmoiscontrat,
+                        'montant_paiementcontrat' => $montantmoiscontrat,
+                        'soldeapres_paiementcontrat' => 0,
+                        'id_contrat' => $idcontratEleve,
+                        'date_paiementcontrat' => $datepaiementcontrat,
+                        'id_usercontrat' => $id_usercontrat,
+                        'mois_paiementcontrat' => $id_moiscontrat,
+                        'anne_paiementcontrat' => $anneeActuelle,
+                        'reference_paiementcontrat' => $valeurDynamiqueNumerique,
+                        'statut_paiementcontrat' => 1,
+                        // 'datesuppr_paiementcontrat' => $anneeActuelle,
+                        // 'idsuppr_usercontrat' => $anneeActuelle,
+                        // 'motifsuppr_paiementcontrat' => $anneeActuelle,
+                        'id_paiementglobalcontrat' => $idPaiementContrat,
+                    ]);
+                }
 
 
     
@@ -510,7 +586,7 @@ public function savepaiementcontrat(Request $request) {
             $facturenormalise->id_paiementglobalcontrat = $idPaiementContrat;
             $facturenormalise->classe = $classeeleve;
             $facturenormalise->nom = $nomcompleteleve;
-            $facturenormalise->montant_total = $infocontrateleve->montant_paiementcontrat;
+            $facturenormalise->montant_total = $montanttotal;
         
         $facturenormalise->save();
     
@@ -782,32 +858,54 @@ public function savepaiementcontrat(Request $request) {
     
     //     return back()->with('status','Contrat enregistré avec succès');
     // }
-    public function creercontrat(Request $request){
-        $matricules = $request->input('matricules');
-        foreach($matricules as $matricule) {
-            $existingContrat = Contrat::where('eleve_contrat', $matricule)->exists();
-            if($existingContrat) {
-                return back()->with('status', 'Un contrat existe déjà pour l\'un des élèves sélectionnés.');
-            }
-        }
-        
-        foreach($matricules as $matricule) {
-            $contra = new Contrat();
-            $contra->eleve_contrat = $matricule;
-            $contra->cout_contrat = $request->input('montant');
-            $contra->id_usercontrat = $request->input('id_usercontrat');
+    public function creercontrat(Request $request)
+    {
+        // Récupérer les informations de la requête
+        $eleveId = $request->input('matricules');
+        $montant = $request->input('montant');
+        $idUserContrat = $request->input('id_usercontrat');
+        $dateContrat = $request->input('date');
 
-            $contra->statut_contrat = 1;
-            // $contra->id_usercontrat = ; mettre l'id de l'utilisateur connecter
-            $dateContrat = $request->input('date');
-            if(empty($dateContrat)) {
-                $dateContrat = date('Y-m-d'); 
-            }
-            $contra->datecreation_contrat = $dateContrat;
-            $contra->save();
+        // Si la date n'est pas spécifiée, utiliser la date du jour
+        if (empty($dateContrat)) {
+            $dateContrat = date('Y-m-d');
         }
-        
-        return back()->with('status','Contrats enregistrés avec succès');
+
+        // Trouver l'élève en fonction de la classe (CODECLAS)
+        // $eleve = Eleve::where('CODECLAS', $codeClass)->first();
+
+        if ($eleveId) {
+            // $eleveId = $eleve->MATRICULE;
+
+            // Chercher un contrat existant pour cet élève avec statut_contrat = 0
+            $contratExistant = Contrat::where('eleve_contrat', $eleveId)
+                                       ->where('statut_contrat', 0)
+                                       ->first();
+
+            if ($contratExistant) {
+                // Mettre à jour le contrat existant
+                $contratExistant->cout_contrat = $montant;
+                $contratExistant->id_usercontrat = $idUserContrat;
+                $contratExistant->statut_contrat = 1;
+                $contratExistant->datecreation_contrat = $dateContrat;
+                $contratExistant->save();
+
+                return back()->with('status', 'Contrat mis à jour avec succès');
+            } else {
+                // Créer un nouveau contrat
+                $nouveauContrat = new Contrat();
+                $nouveauContrat->eleve_contrat = $eleveId;
+                $nouveauContrat->cout_contrat = $montant;
+                $nouveauContrat->id_usercontrat = $idUserContrat;
+                $nouveauContrat->statut_contrat = 1;
+                $nouveauContrat->datecreation_contrat = $dateContrat;
+                $nouveauContrat->save();
+
+                return back()->with('status', 'Contrat créé avec succès');
+            }
+        } else {
+            return back()->with('error', 'Élève non trouvé');
+        }
     }
     
    

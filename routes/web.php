@@ -21,7 +21,9 @@ use App\Http\Controllers\EtatController;
 
 
 
-Route::get('/inscription', [PagesController::class, 'inscription']);
+Route::get('/inscriptioncantine', [PagesController::class, 'inscriptioncantine']);
+Route::get('/get-eleves/{codeClass}', [PagesController::class, 'getEleves']);
+Route::get('/get-montant/{codeClass}', [PagesController::class, 'getMontant']);
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
@@ -87,7 +89,6 @@ Route::get('/relance', [PagesController::class, 'relance']);
 Route::get('http://localhost:38917/info');
 
 
-
 Route::get('/etatdroits', [EtatController::class, 'etatdroits']);
 Route::post('/filteretat', [EtatController::class, 'filteretat']);
 Route::post('/relance', [EtatController::class, 'relance']);
@@ -97,4 +98,3 @@ Route::post('/paramsemecef', [PagesController::class, 'paramsemecef']);
 Route::get('/imprimerfiche/{id_paiementcontrat}', [ClassesController::class, 'imprimerfiche']);
 Route::get('/inscriptions', [PagesController::class, 'inscriptions']);
 Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
-

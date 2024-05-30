@@ -7,17 +7,70 @@ use App\Models\Eleve;
 use App\Models\Moiscontrat;
 use App\Models\Paramcontrat;
 use App\Models\Contrat;
+use App\Models\Paiementcontrat;
+use App\Models\Paiementglobalcontrat;
 use App\Models\Usercontrat;
 use App\Models\Paramsfacture;
 use App\Models\User;
+use App\Models\Params2;
+use App\Models\Classes;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 class PagesController extends Controller
 {
-    public function inscription(){
-        return view('pages.inscription');
+ 
+    public function inscriptioncantine(){
+        // Liste des mots à exclure
+        $excludedWords = ["DELETE", 'NON'];
+    
+        // Construire la requête initiale
+        $query = Classes::query();
+    
+        // Ajouter des conditions pour exclure les mots
+        foreach ($excludedWords as $word) {
+            $query->where('CODECLAS', 'not like', '%' . $word . '%');
+        }
+    
+        // Récupérer les résultats
+        $class = $query->get();
+    
+        // Retourner la vue avec les résultats
+        return view('pages.inscriptioncantine')->with('class', $class);
     }
+    
+    public function getEleves($codeClass)
+    {
+        $eleves = Eleve::where('CODECLAS', $codeClass)
+        ->leftJoin('contrat', 'eleve.MATRICULE', '=', 'contrat.eleve_contrat')
+        ->where(function ($query) {
+            $query->whereNull('contrat.eleve_contrat') // Élèves sans contrat
+                  ->orWhere('contrat.statut_contrat', 0); // Élèves avec contrat ayant statut 0
+        })
+        ->select('eleve.*')
+        ->distinct()   // Assurez-vous de sélectionner uniquement les colonnes de la table eleves
+        ->get();
 
+        // $eleves = Eleve::where('CODECLAS', $codeClass)
+        // ->whereHas('contrats', function($query) {
+        //     $query->where('statut_contrat', 0);
+        // })
+        // ->get();
+       return response()->json($eleves);
+    }
+    public function getMontant($codeClass)
+    {
+        // Suppose that the params table has one row
+        $params = Paramcontrat::first();
+
+        if (($codeClass === "MAT1") || ($codeClass === "MAT2")  || ($codeClass === "MAT2II")  || ($codeClass === "MAT3")  || ($codeClass === "MAT3II")  || ($codeClass === "PREMATER")) {
+            $montant = $params->fraisinscription_mat;
+        } else {
+            $montant = $params->fraisinscription2_paramcontrat;
+        }
+
+        return response()->json(['montant' => $montant]);
+    }
     public function paiement(){
         return view('pages.paiement');
     } 
@@ -108,9 +161,9 @@ class PagesController extends Controller
                 if (Hash::check($request->password_usercontrat, $account->motdepasse)) {
 
                 Session::put('account', $account);
-                $id_usercontrat = $account->id;
-                Session::put('id', $id_usercontrat);
-                return redirect("classes");
+                $id_usercontrat = $account->id_usercontrat;
+                Session::put('id_usercontrat', $id_usercontrat);
+                return redirect("vitrine");
             } else{
                 return back()->with('status', 'Mot de passe ou email incorrecte');
 

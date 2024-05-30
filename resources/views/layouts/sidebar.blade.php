@@ -191,7 +191,7 @@
             <a class="dropdown-item text-center" href="{{url('/Acceuil')}}" _msttexthash="76466" _msthash="281" _mstvisible="1">Acceuil</a>
             <a class="dropdown-item text-center" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Photos</a>
           </div>
-        </div>
+        </div> --}}
          {{-- Créations des classes --}}
 
         {{-- <div class="dropdown">

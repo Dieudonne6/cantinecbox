@@ -105,6 +105,8 @@ display: block;
   <script src="{{asset('assets/js/todolist.js')}}"></script>
   <!-- endinject -->
   <!-- plugin js for this page -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <script src="{{asset('assets/vendors/typeahead.js/typeahead.bundle.min.js')}}"></script>
   <script src="{{asset('assets/vendors/select2/select2.min.js')}}"></script>
   <!-- End plugin js for this page -->
@@ -112,8 +114,7 @@ display: block;
   <script src="{{asset('assets/js/file-upload.js')}}"></script>
 
   <script src="{{asset('assets/js/typeahead.js')}}"></script>
-  <script src="{{asset('assets/js/select2.js')}}"></script>
-  <script src="{{asset('assets/js/jquery-3.2.1.min.js')}}"></script>
+  {{-- <script src="{{asset('assets/js/select2.js')}}"></script> --}}
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
@@ -237,7 +238,40 @@ $(document).ready(function(){
 
   {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
  
+  <script>
+    $(document).ready(function() {
+        // Initialiser Select2 sur le sélecteur de classes
+        $('.js-example-basic-multiple').select2();
 
+        $('#classSelect').on('change', function() {
+            var codeClass = $(this).val();
+            $.ajax({
+                url: '/get-eleves/' + codeClass,
+                type: 'GET',
+                success: function(data) {
+                  $('#eleveSelect').empty();
+                  if (data.length > 0) {
+                    $('#eleveSelect').append('<option value="">Sélectionner un élève</option>');
+                    $.each(data, function(index, eleve) {
+                        $('#eleveSelect').append('<option value="' + eleve.MATRICULE + '">' + eleve.NOM + ' ' + eleve.PRENOM + '</option>');
+                    });
+                  } else {
+                      $('#eleveSelect').append('<option value="">Aucun élève disponible</option>');
+                  }
+                $('#eleveSelect').select2();
+
+                }
+            });
+            $.ajax({
+                  url: '/get-montant/' + codeClass,
+                  type: 'GET',
+                  success: function(data) {
+                      $('#montant').val(data.montant);
+                  }
+                });
+        });
+    });
+</script>
 </body>
 
 </html>
