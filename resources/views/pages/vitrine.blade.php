@@ -4,6 +4,13 @@
 
 
 <div class="main-panel-10">
+  <style>
+    .btn.btn-outline-dark.btn-icon-text:hover {
+        background-color: #844fc1; /* Change the background color to violet */
+        border-color: violet; /* Change the border color to violet */
+        color: white; /* Change the text color to white */
+    }
+  </style>
   
   <div class="container">
 
@@ -52,7 +59,7 @@
     <div class="col-12">
       <div class="row">
 
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div class="card flex-fill">
             <div class="card-header">
               <div class="row align-items-center">
@@ -144,7 +151,7 @@
           </script>
         </div>
 
-        <div class="col-md-6  stretch-card">
+        <div class="col-md-8  stretch-card">
           <div class="row">
             <div class="col-md-8">
               <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -197,15 +204,15 @@
                 });
               </script> 
             </div>  
-            <div class="col-md-4">
+            <div class="card col-md-4">
               <div class="template-demo">
                 <button class="btn btn-outline-dark btn-icon-text">
-                  <i class="typcn typcn-vendor-apple btn-icon-prepend"></i>
+                  <i class="typcn typcn-trash btn-icon-prepend"></i>
                   <span class="d-inline-block text-center">
                     <small class="font-weight-light d-block" _msttexthash="663078" _msthash="191">Historique des </small><font _mstmutation="1" _msttexthash="2223429" _msthash="192"> Suppressions & Paiements </font></span>
                 </button>
                 <button class="btn btn-outline-dark btn-icon-text">
-                  <i class="typcn typcn-vendor-android btn-icon-prepend"></i>
+                  <i class="typcn typcn-edit btn-icon-prepend"></i>
                   <span class="d-inline-block text-center">
                     <small class="font-weight-light d-block" _msttexthash="283049" _msthash="193">Historique des </small><font _mstmutation="1" _msttexthash="152841" _msthash="194">
                     Modifications de paiements
@@ -217,14 +224,14 @@
                     <small class="font-weight-light d-block" _msttexthash="663078" _msthash="191"></small><font _mstmutation="1" _msttexthash="2223429" _msthash="192"> Budgétaire </font></span>
                 </button> --}}
               </div>
-              <div class="template-demo mt-2">
+              <div class="template-demo mt-2">              
                 <button class="btn btn-outline-dark btn-icon-text">
-                  <i class="typcn typcn-vendor-apple btn-icon-prepend"></i>
+                  <i class="typcn typcn-user-delete btn-icon-prepend"></i>
                   <span class="d-inline-block text-center">
                     <small class="font-weight-light d-block" _msttexthash="663078" _msthash="191">Historique des </small><font _mstmutation="1" _msttexthash="2223429" _msthash="192"> Suppressions d'élèves </font></span>
                 </button>
                 <button class="btn btn-outline-dark btn-icon-text">
-                  <i class="typcn typcn-vendor-android btn-icon-prepend"></i>
+                  <i class="typcn typcn-user btn-icon-prepend"></i>
                   <span class="d-inline-block text-center">
                     <small class="font-weight-light d-block" _msttexthash="283049" _msthash="193">Historique des </small><font _mstmutation="1" _msttexthash="152841" _msthash="194">
                     Modifications de profiles
