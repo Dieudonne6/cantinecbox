@@ -457,7 +457,7 @@ public function savepaiementcontrat(Request $request) {
             'Authorization: Bearer ' . $token,
             'Content-Length: 0'
         ]);
-        curl_setopt($chConfirmation, CURLOPT_CAINFO, 'D:/certificationCA/cacert.pem');
+        curl_setopt($chConfirmation, CURLOPT_CAINFO, storage_path('certificates/cacert.pem'));
     
         // Exécutez la requête cURL pour la confirmation
         $responseConfirmation = curl_exec($chConfirmation);
