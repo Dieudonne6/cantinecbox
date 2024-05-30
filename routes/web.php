@@ -89,7 +89,6 @@ Route::get('/relance', [PagesController::class, 'relance']);
 Route::get('http://localhost:38917/info');
 
 
-// $apiUrl = 'http://localhost:38917/info'
 Route::get('/etatdroits', [EtatController::class, 'etatdroits']);
 Route::post('/filteretat', [EtatController::class, 'filteretat']);
 Route::post('/relance', [EtatController::class, 'relance']);
