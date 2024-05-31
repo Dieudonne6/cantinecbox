@@ -631,7 +631,7 @@ public function savepaiementcontrat(Request $request) {
 
     
     
-        return view('pages.pdffacture', [
+        return view('pages.Etats.pdffacture', [
             'factureconfirm' => $decodedResponseConfirmation,
             'facturedetaille' => $facturedetaille,
             'reffacture' => $reffacture,
@@ -716,7 +716,7 @@ public function savepaiementcontrat(Request $request) {
         $qrCodeString = Session::get('qrCodeString');
         // $villeetab = Session::get('villeetab');
         // $nometab = Session::get('nometab');
-        return view('pages.facturenormalise',  [
+        return view('pages.Etats.facturenormalise',  [
             'factureconfirm' => $decodedResponseConfirmation,
             'facturedetaille' => $facturedetaille, 
             'reffacture' => $reffacture,
