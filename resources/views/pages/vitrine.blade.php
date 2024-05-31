@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('content')
 
-  <style>
+ <style>
   .btn.btn-outline-dark.btn-icon-text:hover {
       background-color: #844fc1; /* Change the background color to violet */
       border-color: violet; /* Change the border color to violet */
@@ -24,7 +24,7 @@
             <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
               <div>
                 <p class="mb-2 text-md-center text-lg-left" _msttexthash="348296" _msthash="161">Total des Elèves</p>
-                <h1 class="mb-0" _msttexthash="23400" _msthash="162">8742</h1>
+                <h1 class="mb-0" _msttexthash="23400" _msthash="162">8,742</h1>
               </div>
               <i class="typcn typcn-group icon-xl text-secondary"></i>
             </div>
@@ -50,7 +50,7 @@
             <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
               <div>
                 <p class="mb-2 text-md-center text-lg-left" _msttexthash="158522" _msthash="165">Contrats Inactifs</p>
-                <h1 class="mb-0" _msttexthash="28067" _msthash="166">7 243 $</h1>
+                <h1 class="mb-0" _msttexthash="28067" _msthash="166">7,243</h1>
               </div>
               <i class="typcn typcn-clipboard icon-xl text-secondary"></i>
             </div>
@@ -66,24 +66,25 @@
             <div class="card-header">
               <div class="row align-items-center">
                 <div class="col-auto">
-                  <div class="page-title">Performance Académique</div>
+                  <div class="page-title">Performance <br> Académique</div>
                 </div>
                 <div class="col text-right">
                   <button class="btn btn-light" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-ellipsis-h"></i>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Taux de redoublement</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Taux d'exclusion</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="#">Réussite par tyoes d'examen</a>
                   </div>
                 </div>
               </div>
             </div>
             <div class="card-body">
               <div id="chart1"></div>
+              Taux de passage 
             </div>
           </div>          
           <!-- Script JavaScript pour configurer et afficher le graphique -->
@@ -200,26 +201,25 @@
               </script> 
             </div>  
             <div class="card col-md-4">
-              <div class="template-demo">
+              <div class="template-demo mt-2">
                 <button class="btn btn-outline-dark btn-icon-text">
                   <i class="typcn typcn-trash btn-icon-prepend"></i>
                   <span class="d-inline-block text-center">
                     <small class="font-weight-light d-block" _msttexthash="663078" _msthash="191">Historique des </small><font _mstmutation="1" _msttexthash="2223429" _msthash="192"> Suppressions & Paiements </font></span>
-                </button>
-                <button class="btn btn-outline-dark btn-icon-text">
+                </button><br><br>
+                <button class="btn btn-outline-dark btn-icon-text ">
                   <i class="typcn typcn-edit btn-icon-prepend"></i>
                   <span class="d-inline-block text-center">
                     <small class="font-weight-light d-block" _msttexthash="283049" _msthash="193">Historique des </small><font _mstmutation="1" _msttexthash="152841" _msthash="194">
                     Modifications de paiements
                   </font></span>
-                </button>
-              </div>
-              <div class="template-demo mt-2">              
+                </button><br><br>
+                           
                 <button class="btn btn-outline-dark btn-icon-text">
                   <i class="typcn typcn-user-delete btn-icon-prepend"></i>
                   <span class="d-inline-block text-center">
                     <small class="font-weight-light d-block" _msttexthash="663078" _msthash="191">Historique des </small><font _mstmutation="1" _msttexthash="2223429" _msthash="192"> Suppressions d'élèves </font></span>
-                </button>
+                </button><br><br>
                 <button class="btn btn-outline-dark btn-icon-text">
                   <i class="typcn typcn-user btn-icon-prepend"></i>
                   <span class="d-inline-block text-center">
@@ -315,20 +315,18 @@
                     <div class="card">
                        
                       <div class="card-body border-bottom">
-                                          <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
                                               <h6 class="mb-2 mb-md-0 text-uppercase font-weight-medium">Budgétaire</h6>
                                               <div class="dropdown">
-                                                  <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 30 derniers jours </button>
-                                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
-                                                      <h6 class="dropdown-header">Settings</h6>
-                                                      <a class="dropdown-item" href="javascript:;">Action</a>
-                                                      <a class="dropdown-item" href="javascript:;">Another action</a>
-                                                      <a class="dropdown-item" href="javascript:;">Something else here</a>
-                                                      <div class="dropdown-divider"></div>
-                                                      <a class="dropdown-item" href="javascript:;">Separated link</a>
-                                                  </div>
+                                                <button class="btn btn-light" type="button" data-toggle="dropdown" aria-haspopup="true"aria-expanded="false">
+                                                  <i class="fas fa-ellipsis-h"></i>
+                                                </button>
+                                                  <div class="dropdown-menu dropdown-menu-right">
+                                                      <a class="dropdown-item" href="javascript:;">Evolution du Budget</a>
+                                                      <a class="dropdown-item" href="javascript:;">Evolution par rubrique</a>
+                                                   </div>
                                               </div>
-                                          </div>
+                        </div>
                       </div>
                       <div class="card-body">
                                           <canvas id="sales-chart-c" class="mt-2"></canvas>
@@ -358,20 +356,7 @@
                                                   </div>
                                               </div>
                                           </div>
-                                          <div class="d-flex justify-content-between align-items-center">
-                                              <div class="dropdown">
-                                                  <button class="btn bg-white p-0 pb-1 pt-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 7 derniers jours </button>
-                                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
-                                                      <h6 class="dropdown-header">Settings</h6>
-                                                      <a class="dropdown-item" href="javascript:;">Action</a>
-                                                      <a class="dropdown-item" href="javascript:;">Another action</a>
-                                                      <a class="dropdown-item" href="javascript:;">Something else here</a>
-                                                      <div class="dropdown-divider"></div>
-                                                      <a class="dropdown-item" href="javascript:;">Separated link</a>
-                                                  </div>
-                                              </div>
-                                              <p class="mb-0">aperçu</p>
-                                          </div>
+                                          
                               
                       </div>
                       <!-- Script pour initialiser le graphique -->
@@ -417,11 +402,9 @@
                                 <i class="fas fa-ellipsis-h"></i>
                               </button>
                               <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Sur 5 ans</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Something else here</a>
+                                <a class="dropdown-item" href="#">Par promotion sur 5 ans</a>
                               </div>
                           </div>
                       </div>
