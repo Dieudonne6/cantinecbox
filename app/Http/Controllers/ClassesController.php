@@ -629,7 +629,9 @@ public function savepaiementcontrat(Request $request) {
         // Session::put('villeetab', $villeetab);
 
 
-    
+        $paramse = Paramsfacture::first(); 
+
+    $logoUrl = $paramse ? $paramse->logo: null; 
     
         return view('pages.Etats.pdffacture', [
             'factureconfirm' => $decodedResponseConfirmation,
@@ -639,6 +641,7 @@ public function savepaiementcontrat(Request $request) {
             'nomcompleteleve' => $nomcompleteleve,
             'toutmoiscontrat' => $toutmoiscontrat,
             'qrCodeString' => $qrCodeString,
+            'logoUrl' => $logoUrl,
             // 'nometab' => $nometab,
             // 'villeetab' => $villeetab,
             // 'qrCodeImage' => $qrCodeImage,
@@ -695,6 +698,10 @@ public function savepaiementcontrat(Request $request) {
         $nomcompleteleve = Session::get('nomcompleteleve');
         $toutmoiscontrat = Session::get('toutmoiscontrat');
         $qrCodeString = Session::get('qrCodeString');
+
+        $paramse = Paramsfacture::first(); 
+
+        $logoUrl = $paramse ? $paramse->logo: null; 
         // $villeetab = Session::get('villeetab');
         // $nometab = Session::get('nometab');
         return view('pages.Etats.facturenormalise',  [
@@ -705,6 +712,8 @@ public function savepaiementcontrat(Request $request) {
             'nomcompleteleve' => $nomcompleteleve,
             'toutmoiscontrat' => $toutmoiscontrat,
             'qrCodeString' => $qrCodeString,
+            'logoUrl' => $logoUrl,
+
             // 'nometab' => $nometab,
             // 'villeetab' => $villeetab,
         ]);        

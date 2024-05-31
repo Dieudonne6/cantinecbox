@@ -23,18 +23,24 @@
 
         .logo {
             margin-left: 22px;
-            margin-top: 20px;
+            /* margin-top: 20px; */
             width: 30%;
             height: 30%;
         }
 
         .logoimg {
-            width: 50%
-        }
+        width: 35%;
+        margin-top: 5px;
+    }
+
+        /* .info {
+        margin-left: 26rem;
+        margin-top: -20rem;
+    } */
 
         .info {
-            margin-left: 25rem;
-            margin-top: -11rem;
+            margin-left: 22rem;
+            margin-top: -3rem;
         }
 
         .bas {
@@ -194,6 +200,12 @@
         <div class="invoice">
             <div class="entete">
                 <div class="logo">
+
+                    @if($logoUrl)
+                    <img src="{{ asset('storage/logo/' . $logoUrl) }}" alt="Logo" class="logoimg">
+                    @else
+                        <p>Aucun logo disponible.</p>
+                    @endif
                     {{-- <img src="{{ 'assets/images/glasmorphism.jpg' }}" alt="logo" class="logoimg"> --}}
                     {{-- <img src="" alt=""> --}}
                 </div>
