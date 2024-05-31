@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('content')
 
-  <style>
+ <style>
   .btn.btn-outline-dark.btn-icon-text:hover {
       background-color: #844fc1; /* Change the background color to violet */
       border-color: violet; /* Change the border color to violet */
@@ -24,7 +24,7 @@
             <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
               <div>
                 <p class="mb-2 text-md-center text-lg-left" _msttexthash="348296" _msthash="161">Total des Elèves</p>
-                <h1 class="mb-0" _msttexthash="23400" _msthash="162">8742</h1>
+                <h1 class="mb-0" _msttexthash="23400" _msthash="162">8,742</h1>
               </div>
               <i class="typcn typcn-group icon-xl text-secondary"></i>
             </div>
@@ -50,7 +50,7 @@
             <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
               <div>
                 <p class="mb-2 text-md-center text-lg-left" _msttexthash="158522" _msthash="165">Contrats Inactifs</p>
-                <h1 class="mb-0" _msttexthash="28067" _msthash="166">7 243 $</h1>
+                <h1 class="mb-0" _msttexthash="28067" _msthash="166">7,243</h1>
               </div>
               <i class="typcn typcn-clipboard icon-xl text-secondary"></i>
             </div>
@@ -66,26 +66,32 @@
             <div class="card-header">
               <div class="row align-items-center">
                 <div class="col-auto">
-                  <div class="page-title">Performance Académique</div>
+                  <div class="page-title">Performance <br> Académique</div>
                 </div>
                 <div class="col text-right">
                   <button class="btn btn-light" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-ellipsis-h"></i>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Taux de redoublement</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Taux d'exclusion</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="#">Réussite par types d'examen</a>
                   </div>
                 </div>
               </div>
             </div>
             <div class="card-body">
               <div id="chart1"></div>
+              {{-- <div class="performance-metrics">
+                <div>Taux de passage: <span id="pass-rate">85%</span></div>
+                <div>Taux de redoublement: <span id="repeat-rate">10%</span></div>
+                <div>Taux d'exclusion académique: <span id="exclusion-rate">5%</span></div>
+                <div>Taux de passage en classe supérieure: <span id="promotion-rate">90%</span></div>
+              </div> --}}
             </div>
-          </div>          
+          </div>
           <!-- Script JavaScript pour configurer et afficher le graphique -->
           <script>
             document.addEventListener("DOMContentLoaded", function(event) {
@@ -136,97 +142,126 @@
                   }
                 }
               };
-          
+        
               // Initialiser le graphique avec les options
               var chart = new ApexCharts(document.querySelector("#chart1"), options);
-          
+        
               // Afficher le graphique
               chart.render();
+        
+              // Exemple de données de taux
+              var passRate = 85;
+              var repeatRate = 10;
+              var exclusionRate = 5;
+              var promotionRate = 90; // Taux de passage en classe supérieure
+        
+              // Mettre à jour les taux affichés
+              document.getElementById('pass-rate').textContent = passRate + '%';
+              document.getElementById('repeat-rate').textContent = repeatRate + '%';
+              document.getElementById('exclusion-rate').textContent = exclusionRate + '%';
+              document.getElementById('promotion-rate').textContent = promotionRate + '%'; // Mise à jour du taux de passage en classe supérieure
             });
           </script>
         </div>
+        
+        
 
         <div class="col-md-8  stretch-card">
           <div class="row">
             <div class="col-md-8">
-              
               <div class="col-md-12 stretch-card">
                   <div class="card">
-                    <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                      <div class="d-flex justify-content-between align-items-start flex-wrap">
-                        <div>
-                          <p class="mb-3" _msttexthash="497549" _msthash="117">Statistique mensuelle</p>
-                          <h3 _msttexthash="31096" _msthash="118">67842</h3>
-                        </div>
-                        <div id="income-chart-legend" class="d-flex flex-wrap mt-1 mt-md-0">
-                            <div class="d-flex align-items-center mr-3">
-                                <div class="mr-2" style="width: 12px; border-radius: 50%; height: 12px; background-color: #a43cda "></div>
-                                <p class="mb-0" _msttexthash="2632526" _msthash="119">Nombres d'inscrits</p>
-                            </div>
-                        </div>
+                      <div class="card-body">
+                          <div class="chartjs-size-monitor">
+                              <div class="chartjs-size-monitor-expand">
+                                  <div class=""></div>
+                              </div>
+                              <div class="chartjs-size-monitor-shrink">
+                                  <div class=""></div>
+                              </div>
+                          </div>
+                          <div class="d-flex justify-content-between align-items-start flex-wrap">
+                              <div>
+                                  <p class="mb-3" _msttexthash="497549" _msthash="117">Recouvrement</p>
+                              </div>
+                              <div class="col text-right">
+                                  <button class="btn btn-light" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <i class="fas fa-ellipsis-h"></i>
+                                  </button>
+                                  <div class="dropdown-menu dropdown-menu-right">
+                                      <a class="dropdown-item" href="#">Recouvrement mensuels</a>
+                                      <div class="dropdown-divider"></div>
+                                      <a class="dropdown-item" href="#">Comparaison taux de recouvrement</a>
+                                      <div class="dropdown-divider"></div>
+                                      <a class="dropdown-item" href="#">Comparaison chiffre d'affaire</a>
+                                  </div>
+                              </div>
+                          </div>
+                          <canvas id="income-chart" width="456" height="228" style="display: block; width: 456px; height: 228px;" class="chartjs-render-monitor"></canvas>
                       </div>
-                      <canvas id="income-chart" width="456" height="228" style="display: block; width: 456px; height: 228px;" class="chartjs-render-monitor"></canvas>
-                    </div>
                   </div>
               </div>
               <script>
-                // Supposons que Chart.js soit déjà inclus dans le projet
-                var ctx = document.getElementById('income-chart').getContext('2d');
-                var incomeChart = new Chart(ctx, {
-                    type: 'pie', // ou 'bar', 'pie', etc.
-                    data: {
-                        labels: ['Septembre', 'Octobre', 'Novembre', 'Décembre', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin'], // Exemples de labels
-                        datasets: [
-                            {
-                                label: 'Elèves Inscrits',
-                                backgroundColor: '#a43cda',
-                                data: [12000, 15000, 18000, 20000, 22000, 24000, 24500, 12000, 15000, 18000] // Exemples de données
-                            },
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        legend: {
-                            display: true,
-                            position: 'top',
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-              </script> 
-            </div>  
+                  // Supposons que Chart.js soit déjà inclus dans le projet
+                  var ctx = document.getElementById('income-chart').getContext('2d');
+                  var incomeChart = new Chart(ctx, {
+                      type: 'pie', // ou 'bar', 'pie', etc.
+                      data: {
+                          labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'], // Labels des mois
+                          datasets: [
+                              {
+                                  label: 'Taux de recouvrement',
+                                  backgroundColor: '#a43cda',
+                                  borderColor: '#ffffff',
+                                  borderWidth: 2.5,
+                                  data: [85, 90, 75, 80, 95, 70, 65, 60, 78, 88, 92, 85] // Exemples de taux de recouvrement mensuels
+                              },
+                          ]
+                      },
+                      options: {
+                          responsive: true,
+                          legend: {
+                              display: true,
+                              position: 'top',
+                          },
+                          scales: {
+                              y: {
+                                  beginAtZero: true,
+                                  max: 100 // Taux de recouvrement en pourcentage
+                              }
+                          }
+                      }
+                  });
+              </script>
+          </div>
+          
             <div class="card col-md-4">
-              <div class="template-demo">
+              <div class="template-demo mt-2">
                 <button class="btn btn-outline-dark btn-icon-text">
                   <i class="typcn typcn-trash btn-icon-prepend"></i>
                   <span class="d-inline-block text-center">
                     <small class="font-weight-light d-block" _msttexthash="663078" _msthash="191">Historique des </small><font _mstmutation="1" _msttexthash="2223429" _msthash="192"> Suppressions & Paiements </font></span>
-                </button>
-                <button class="btn btn-outline-dark btn-icon-text">
+                </button><br><br>
+                <button class="btn btn-outline-dark btn-icon-text ">
                   <i class="typcn typcn-edit btn-icon-prepend"></i>
                   <span class="d-inline-block text-center">
                     <small class="font-weight-light d-block" _msttexthash="283049" _msthash="193">Historique des </small><font _mstmutation="1" _msttexthash="152841" _msthash="194">
                     Modifications de paiements
                   </font></span>
-                </button>
-              </div>
-              <div class="template-demo mt-2">              
+                </button><br><br>
+                           
                 <button class="btn btn-outline-dark btn-icon-text">
                   <i class="typcn typcn-user-delete btn-icon-prepend"></i>
                   <span class="d-inline-block text-center">
                     <small class="font-weight-light d-block" _msttexthash="663078" _msthash="191">Historique des </small><font _mstmutation="1" _msttexthash="2223429" _msthash="192"> Suppressions d'élèves </font></span>
-                </button>
+                </button><br><br>
                 <button class="btn btn-outline-dark btn-icon-text">
                   <i class="typcn typcn-user btn-icon-prepend"></i>
                   <span class="d-inline-block text-center">
                     <small class="font-weight-light d-block" _msttexthash="283049" _msthash="193">Historique des </small><font _mstmutation="1" _msttexthash="152841" _msthash="194">
                     Modifications de profiles
                   </font></span>
-                </button> 
+                </button><br><br> 
               </div>
             </div>
           </div> 
@@ -315,20 +350,18 @@
                     <div class="card">
                        
                       <div class="card-body border-bottom">
-                                          <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
                                               <h6 class="mb-2 mb-md-0 text-uppercase font-weight-medium">Budgétaire</h6>
                                               <div class="dropdown">
-                                                  <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 30 derniers jours </button>
-                                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
-                                                      <h6 class="dropdown-header">Settings</h6>
-                                                      <a class="dropdown-item" href="javascript:;">Action</a>
-                                                      <a class="dropdown-item" href="javascript:;">Another action</a>
-                                                      <a class="dropdown-item" href="javascript:;">Something else here</a>
-                                                      <div class="dropdown-divider"></div>
-                                                      <a class="dropdown-item" href="javascript:;">Separated link</a>
-                                                  </div>
+                                                <button class="btn btn-light" type="button" data-toggle="dropdown" aria-haspopup="true"aria-expanded="false">
+                                                  <i class="fas fa-ellipsis-h"></i>
+                                                </button>
+                                                  <div class="dropdown-menu dropdown-menu-right">
+                                                      <a class="dropdown-item" href="javascript:;">Evolution du Budget</a>
+                                                      <a class="dropdown-item" href="javascript:;">Evolution par rubrique</a>
+                                                   </div>
                                               </div>
-                                          </div>
+                        </div>
                       </div>
                       <div class="card-body">
                                           <canvas id="sales-chart-c" class="mt-2"></canvas>
@@ -358,20 +391,7 @@
                                                   </div>
                                               </div>
                                           </div>
-                                          <div class="d-flex justify-content-between align-items-center">
-                                              <div class="dropdown">
-                                                  <button class="btn bg-white p-0 pb-1 pt-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 7 derniers jours </button>
-                                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
-                                                      <h6 class="dropdown-header">Settings</h6>
-                                                      <a class="dropdown-item" href="javascript:;">Action</a>
-                                                      <a class="dropdown-item" href="javascript:;">Another action</a>
-                                                      <a class="dropdown-item" href="javascript:;">Something else here</a>
-                                                      <div class="dropdown-divider"></div>
-                                                      <a class="dropdown-item" href="javascript:;">Separated link</a>
-                                                  </div>
-                                              </div>
-                                              <p class="mb-0">aperçu</p>
-                                          </div>
+                                          
                               
                       </div>
                       <!-- Script pour initialiser le graphique -->
@@ -417,11 +437,9 @@
                                 <i class="fas fa-ellipsis-h"></i>
                               </button>
                               <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Sur 5 ans</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Something else here</a>
+                                <a class="dropdown-item" href="#">Par promotion sur 5 ans</a>
                               </div>
                           </div>
                       </div>

@@ -165,7 +165,7 @@
   </div>
 </div> --}}
 
-<nav class="sidebar sidebar-offcanvas " id="sidebar">
+<nav class="sidebar sidebar-offcanvas " id="sidebar" style="max-width: 240px">
   <ul class="nav">
 
     {{-- <li class="nav-item">
