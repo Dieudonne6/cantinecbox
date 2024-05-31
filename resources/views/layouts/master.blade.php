@@ -239,7 +239,26 @@ $(document).ready(function(){
 
 
   {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
- 
+  <script>
+  $(document).ready(function() {
+    function toggleDivs() {
+      if ($('#optionsRadios1').is(':checked')) {
+        $('#div1').removeClass('d-block').addClass('d-none');
+        $('#div2').removeClass('d-none').addClass('d-block');
+      } else if ($('#optionsRadios2').is(':checked')) {
+        $('#div1').removeClass('d-none').addClass('d-block');
+        $('#div2').removeClass('d-block').addClass('d-none');
+      }
+    }
+  
+    // Écoutez les changements sur les boutons radio
+    $('input[name="optionsRadios"]').change(toggleDivs);
+  
+    // Initialiser l'état des divs
+    toggleDivs();
+  });
+  </script>
+  
   <script>
     $(document).ready(function() {
         // Initialiser Select2 sur le sélecteur de classes
