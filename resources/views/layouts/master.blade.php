@@ -79,6 +79,8 @@ transition: transform 0.6s;
 .menu-item-has-children:hover .sub-menus{
 display: block;
 }
+
+
   </style>
   
 </head>
@@ -272,6 +274,7 @@ $(document).ready(function(){
         });
     });
 </script>
+
 </body>
 
 </html>

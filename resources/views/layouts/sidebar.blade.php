@@ -165,7 +165,7 @@
   </div>
 </div> --}}
 
-<nav class="sidebar sidebar-offcanvas " id="sidebar">
+<nav class="sidebar sidebar-offcanvas " id="sidebar" style="max-width: 240px">
   <ul class="nav">
 
     {{-- <li class="nav-item">
@@ -598,9 +598,9 @@
               <li>
                 <a href="{{url('/etatdroits')}}">Etat des droits constatés</a>
               </li>
-              <li>
+              {{-- <li>
                 <a href="{{url('/lettrederelance')}}">Lettre de relance</a>
-              </li>
+              </li> --}}
             </ul>
           </li>
           {{-- <div class="dropdown">
