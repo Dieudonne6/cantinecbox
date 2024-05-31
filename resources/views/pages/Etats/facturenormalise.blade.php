@@ -29,8 +29,8 @@
     }
 
     .logoimg {
-        width: 50%;
-        margin-top: -1.1rem;
+        width: 25%;
+        margin-top: -1rem;
     }
 
     .info {
@@ -196,7 +196,11 @@
     <div class="invoice">
         <div class="entete">
             <div class="logo">
-                <img src="{{ 'assets/images/glasmorphism.jpg' }}" alt="logo" class="logoimg">
+                @if($logoUrl)
+                <img src="{{ asset('storage/logo/' . $logoUrl) }}" alt="Logo" class="logoimg">
+                @else
+                    <p>Aucun logo disponible.</p>
+                @endif                
                 {{-- <img src="" alt=""> --}}
             </div>
 

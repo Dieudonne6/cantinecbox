@@ -360,39 +360,57 @@ public function savepaiementcontrat(Request $request) {
     // dd($toutmoiscontrat);
 
 
-    $invoiceItems = 
-         [
-            [
-                    // 'date' => $infocontrateleve->date_paiementcontrat,
-                    // 'montantpaiement' => intval($infocontrateleve->montant_paiementcontrat), // Convertir le prix en entier
-                    // 'mois' => $infocontrateleve->mois_paiementcontrat,
-                    // 'eleve' => $nomcompleteleve,
-                    // 'classe' => $classeeleve,
-                    // 'taxGroup' => 'B', // La taxe reste la même, adaptez si nécessaire
+    // $invoiceItems = 
+    //      [
+    //         [
+    //                 // 'date' => $infocontrateleve->date_paiementcontrat,
+    //                 // 'montantpaiement' => intval($infocontrateleve->montant_paiementcontrat), // Convertir le prix en entier
+    //                 // 'mois' => $infocontrateleve->mois_paiementcontrat,
+    //                 // 'eleve' => $nomcompleteleve,
+    //                 // 'classe' => $classeeleve,
+    //                 // 'taxGroup' => 'B', // La taxe reste la même, adaptez si nécessaire
 
-                    'name' => 'contrat de cantine',
-                    // 'price' => intval($infocontrateleve->montant_paiementcontrat),
-                    'price' => intval($montanttotal), 
-                    'quantity' => 1,
-                    'taxGroup' => $taxe, // La taxe reste la même, adaptez si nécessaire
-            ]
-                ];
+    //                 'name' => 'contrat de cantine',
+    //                 // 'price' => intval($infocontrateleve->montant_paiementcontrat),
+    //                 'price' => intval($montanttotal), 
+    //                 'quantity' => 1,
+    //                 'taxGroup' => $taxe, // La taxe reste la même, adaptez si nécessaire
+    //         ]
+    //             ];
         
         
             
-            $invoiceRequestDto = [
-                "ifu" => $ifuentreprise, // ici on doit rendre la valeur de l'ifu dynamique
-                "type" => $type,
-                "items" => $invoiceItems,
-                "operator" => [
-                    // "name" => $nomecole
-                    "name" => "test"
-                ]
-            ];
+    //         $invoiceRequestDto = [
+    //             "ifu" => $ifuentreprise, // ici on doit rendre la valeur de l'ifu dynamique
+    //             "type" => $type,
+    //             "items" => $invoiceItems,
+    //             "operator" => [
+    //                 // "name" => $nomecole
+    //                 "name" => "test"
+    //             ]
+    //         ];
     
-            // dd($invoiceRequestDto);
+    //         // dd($invoiceRequestDto);
     
-            $jsonData = json_encode($invoiceRequestDto, JSON_UNESCAPED_UNICODE);
+    //         $jsonData = json_encode($invoiceRequestDto, JSON_UNESCAPED_UNICODE);
+
+            // Préparez les données JSON pour l'API
+                $jsonData = json_encode([
+                    "ifu" => $ifuentreprise, // ici on doit rendre la valeur de l'ifu dynamique
+                                "type" => $type,
+                    "items" => [
+                        [
+                            'name' => 'contrat de cantine',
+                            // 'price' => intval($infocontrateleve->montant_paiementcontrat),
+                            'price' => intval($montanttotal), 
+                            'quantity' => 1,
+                            'taxGroup' => $taxe,
+                        ]
+                    ],
+                    "operator" => [
+                        "name" => "test"
+                    ]
+                ]);
             // $jsonDataliste = json_encode($jsonData, JSON_FORCE_OBJECT);
 
 
@@ -611,9 +629,11 @@ public function savepaiementcontrat(Request $request) {
         // Session::put('villeetab', $villeetab);
 
 
+        $paramse = Paramsfacture::first(); 
+
+    $logoUrl = $paramse ? $paramse->logo: null; 
     
-    
-        return view('pages.pdffacture', [
+        return view('pages.Etats.pdffacture', [
             'factureconfirm' => $decodedResponseConfirmation,
             'facturedetaille' => $facturedetaille,
             'reffacture' => $reffacture,
@@ -621,6 +641,7 @@ public function savepaiementcontrat(Request $request) {
             'nomcompleteleve' => $nomcompleteleve,
             'toutmoiscontrat' => $toutmoiscontrat,
             'qrCodeString' => $qrCodeString,
+            'logoUrl' => $logoUrl,
             // 'nometab' => $nometab,
             // 'villeetab' => $villeetab,
             // 'qrCodeImage' => $qrCodeImage,
@@ -642,26 +663,7 @@ public function savepaiementcontrat(Request $request) {
 
 
         
-        public function create()
-        {
-            $qrCodeString = Session::get('qrCodeString');
 
-      $qrCode = new QrCode($qrCodeString);
-      $qrCode->setSize(300);
-      $qrCode->setMargin(20); 
-      $qrCode->setEncoding('UTF-8');
-      $qrCode->setWriterByName('png');
-      $qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH());
-      $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
-      $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
-      $qrCode->setLogoSize(200, 200);
-      $qrCode->setValidateResult(false);  
-      $qrCode->setRoundBlockSize(true);
-      $qrCode->setWriterOptions(['exclude_xml_declaration' => true]);
-      header('Content-Type: '.$qrCode->getContentType());
-      $qrCode->writeFile('D:/PROJETS/CBOX/cantinecbox/public/qrcode');
-      return redirect()->route('pdffacture');
-        }
 
 
     public function telechargerfacture() {
@@ -696,9 +698,13 @@ public function savepaiementcontrat(Request $request) {
         $nomcompleteleve = Session::get('nomcompleteleve');
         $toutmoiscontrat = Session::get('toutmoiscontrat');
         $qrCodeString = Session::get('qrCodeString');
+
+        $paramse = Paramsfacture::first(); 
+
+        $logoUrl = $paramse ? $paramse->logo: null; 
         // $villeetab = Session::get('villeetab');
         // $nometab = Session::get('nometab');
-        return view('pages.facturenormalise',  [
+        return view('pages.Etats.facturenormalise',  [
             'factureconfirm' => $decodedResponseConfirmation,
             'facturedetaille' => $facturedetaille, 
             'reffacture' => $reffacture,
@@ -706,6 +712,8 @@ public function savepaiementcontrat(Request $request) {
             'nomcompleteleve' => $nomcompleteleve,
             'toutmoiscontrat' => $toutmoiscontrat,
             'qrCodeString' => $qrCodeString,
+            'logoUrl' => $logoUrl,
+
             // 'nometab' => $nometab,
             // 'villeetab' => $villeetab,
         ]);        
