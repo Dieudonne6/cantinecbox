@@ -608,6 +608,7 @@ public function savepaiementcontrat(Request $request) {
     
         $facturenormalise = new Facturenormalise();
             $facturenormalise->id = $reffacture;
+            $facturenormalise->reference = $reffacture;
             $facturenormalise->codemecef = $codemecef;
             $facturenormalise->MATRICULE = $matriculeeleve;
             $facturenormalise->idcontrat = $idcontratEleve;
