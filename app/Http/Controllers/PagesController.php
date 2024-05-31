@@ -14,7 +14,7 @@ use App\Models\Paramsfacture;
 use App\Models\User;
 use App\Models\Params2;
 use App\Models\Classes;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 class PagesController extends Controller
@@ -189,6 +189,18 @@ class PagesController extends Controller
         $emcef->token = $request->input('token');
         $emcef->taxe = $request->input('taxe');
         $emcef->type = $request->input('type');
+        $request->validate([
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+        $fileNameWhiteExt = $request->file('logo')->getClientOriginalName();
+        $fileName = pathinfo($fileNameWhiteExt, PATHINFO_FILENAME);
+        $ext = $request->file('logo')->getClientOriginalExtension();
+        $fileNameToStore = $fileName."_".time().".".$ext;
+
+
+        $path = $request->file('logo')->storeAs("public/logo", $fileNameToStore);
+        $emcef->logo = $fileNameToStore;
+
         $emcef->save();
         return back()->with('status','Enregistrer avec succes');
     }

@@ -81,7 +81,13 @@
                             <div class="relance">
                                 <div class="header">
                                     <div class="logo">
-                                        <img src="path/to/logo.png" alt="Logo" class="logo">
+                                        {{-- <img src="path/to/logo.png" alt="Logo" class="logo"> --}}
+                                   
+                                        @if($logoUrl)
+                                        <img src="{{ asset('storage/logo/' . $logoUrl) }}" alt="Logo" class="logo">
+                                        @else
+                                            <p>Aucun logo disponible.</p>
+                                        @endif
                                     </div>
                                     <div class="info">
                                         <p>Cotonou le {{ date('d/m/Y') }}</p><br>

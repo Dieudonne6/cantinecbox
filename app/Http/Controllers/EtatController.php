@@ -7,6 +7,7 @@ use App\Models\Paiementcontrat;
 use App\Models\Paiementglobalcontrat;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
+use App\Models\Paramsfacture;
 
 use App\Models\Eleve;
 use App\Models\Contrat;
@@ -178,9 +179,12 @@ public function relance(Request $request)
     
     // dd($results);
 
-    $paramse = Params2::all();
+    $paramse = Paramsfacture::first(); 
 
-    return view('pages.etat.relance')->with('results', $results)->with('paramse', $paramse);
+    $logoUrl = $paramse ? $paramse->logo: null; 
+    // return view('pages.etat.relance')->with('results', $results)->with('paramse', $paramse);
+    return view('pages.etat.relance', compact('results', 'logoUrl'));
+
 // return view('pages.etat.relance')->with('results', $results);
 
 

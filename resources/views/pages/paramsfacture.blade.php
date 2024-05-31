@@ -12,7 +12,7 @@
                 {{ Session::get('status')}}
               </div>
             @endif
-            <form action="{{url('paramsemecef')}}" method="POST">
+            <form action="{{url('paramsemecef')}}" method="POST"  enctype="multipart/form-data">
               {{csrf_field()}}
 
               <div class="form-group">
@@ -31,7 +31,10 @@
                 <label for="exampleInputUsername1">Type de facture</label>
                 <input type="text" class="form-control" name="type" id="exampleInputUsername1" placeholder="Type de facture">
               </div>
-              
+              <div class="form-group row">
+                <label for="exampleInputUsername1">LOGO</label>
+                <input type="file" class="form-control" name="logo" id="exampleInputUsername1" placeholder="Logo">
+              </div>
               <button type="submit" class="btn btn-primary mr-2">Envoyer</button>
               <button class="btn btn-light">Annuler</button>
             </form>

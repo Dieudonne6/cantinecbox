@@ -598,9 +598,9 @@
               <li>
                 <a href="{{url('/etatdroits')}}">Etat des droits constatés</a>
               </li>
-              <li>
+              {{-- <li>
                 <a href="{{url('/lettrederelance')}}">Lettre de relance</a>
-              </li>
+              </li> --}}
             </ul>
           </li>
           {{-- <div class="dropdown">
