@@ -360,39 +360,57 @@ public function savepaiementcontrat(Request $request) {
     // dd($toutmoiscontrat);
 
 
-    $invoiceItems = 
-         [
-            [
-                    // 'date' => $infocontrateleve->date_paiementcontrat,
-                    // 'montantpaiement' => intval($infocontrateleve->montant_paiementcontrat), // Convertir le prix en entier
-                    // 'mois' => $infocontrateleve->mois_paiementcontrat,
-                    // 'eleve' => $nomcompleteleve,
-                    // 'classe' => $classeeleve,
-                    // 'taxGroup' => 'B', // La taxe reste la même, adaptez si nécessaire
+    // $invoiceItems = 
+    //      [
+    //         [
+    //                 // 'date' => $infocontrateleve->date_paiementcontrat,
+    //                 // 'montantpaiement' => intval($infocontrateleve->montant_paiementcontrat), // Convertir le prix en entier
+    //                 // 'mois' => $infocontrateleve->mois_paiementcontrat,
+    //                 // 'eleve' => $nomcompleteleve,
+    //                 // 'classe' => $classeeleve,
+    //                 // 'taxGroup' => 'B', // La taxe reste la même, adaptez si nécessaire
 
-                    'name' => 'contrat de cantine',
-                    // 'price' => intval($infocontrateleve->montant_paiementcontrat),
-                    'price' => intval($montanttotal), 
-                    'quantity' => 1,
-                    'taxGroup' => $taxe, // La taxe reste la même, adaptez si nécessaire
-            ]
-                ];
+    //                 'name' => 'contrat de cantine',
+    //                 // 'price' => intval($infocontrateleve->montant_paiementcontrat),
+    //                 'price' => intval($montanttotal), 
+    //                 'quantity' => 1,
+    //                 'taxGroup' => $taxe, // La taxe reste la même, adaptez si nécessaire
+    //         ]
+    //             ];
         
         
             
-            $invoiceRequestDto = [
-                "ifu" => $ifuentreprise, // ici on doit rendre la valeur de l'ifu dynamique
-                "type" => $type,
-                "items" => $invoiceItems,
-                "operator" => [
-                    // "name" => $nomecole
-                    "name" => "test"
-                ]
-            ];
+    //         $invoiceRequestDto = [
+    //             "ifu" => $ifuentreprise, // ici on doit rendre la valeur de l'ifu dynamique
+    //             "type" => $type,
+    //             "items" => $invoiceItems,
+    //             "operator" => [
+    //                 // "name" => $nomecole
+    //                 "name" => "test"
+    //             ]
+    //         ];
     
-            // dd($invoiceRequestDto);
+    //         // dd($invoiceRequestDto);
     
-            $jsonData = json_encode($invoiceRequestDto, JSON_UNESCAPED_UNICODE);
+    //         $jsonData = json_encode($invoiceRequestDto, JSON_UNESCAPED_UNICODE);
+
+            // Préparez les données JSON pour l'API
+                $jsonData = json_encode([
+                    "ifu" => $ifuentreprise, // ici on doit rendre la valeur de l'ifu dynamique
+                                "type" => $type,
+                    "items" => [
+                        [
+                            'name' => 'contrat de cantine',
+                            // 'price' => intval($infocontrateleve->montant_paiementcontrat),
+                            'price' => intval($montanttotal), 
+                            'quantity' => 1,
+                            'taxGroup' => $taxe,
+                        ]
+                    ],
+                    "operator" => [
+                        "name" => "test"
+                    ]
+                ]);
             // $jsonDataliste = json_encode($jsonData, JSON_FORCE_OBJECT);
 
 
