@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('content')
 
-<div class="card">
+<div class="card ml-6">
     <div class="card-body">
 
         <nav>
@@ -11,9 +11,9 @@
               <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button>
             </div>
         </nav>
-        <div class="tab-content mx-10" id="nav-tabContent">
+        <div class="tab-content" id="nav-tabContent">
 
-            <div class="tab-pane fade show active" id="nav-cantine" role="tabpanel" aria-labelledby="nav-cantine-tab">...1
+            <div class="tab-pane fade show active" id="nav-cantine" role="tabpanel" aria-labelledby="nav-cantine-tab">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab1" role="tablist">
                       <button class="nav-link active" id="nav-identification-tab" data-bs-toggle="tab" data-bs-target="#nav-identification" type="button" role="tab" aria-controls="nav-identification" aria-selected="true">Identification</button>
@@ -23,7 +23,7 @@
                     </div>
                   </nav>
                   <div class="tab-content" id="nav-tabContent1">
-                    <div class="tab-pane fade show active" id="nav-identification" role="tabpanel" aria-labelledby="nav-identification-tab">...
+                    <div class="tab-pane fade show active" id="nav-identification" role="tabpanel" aria-labelledby="nav-identification-tab">
                         <div class="row">
                             <div class="col-md-10 mx-auto grid-margin stretch-card">
                               <div class="card">
@@ -64,7 +64,7 @@
                           </div>
                     </div>
 
-                    <div class="tab-pane fade" id="nav-frais&année" role="tabpanel" aria-labelledby="nav-frais&année-tab">...
+                    <div class="tab-pane fade" id="nav-frais&année" role="tabpanel" aria-labelledby="nav-frais&année-tab">
                         <div class="content-wrapper">
                             @if(Session::has('status'))
                               <div id="statusAlert" class="alert alert-succes btn-primary">
@@ -211,7 +211,7 @@
                           </div>
                     </div>
 
-                    <div class="tab-pane fade" id="nav-connexionBD" role="tabpanel" aria-labelledby="nav-connexionBD-tab">...
+                    <div class="tab-pane fade" id="nav-connexionBD" role="tabpanel" aria-labelledby="nav-connexionBD-tab">
                         <div class="col-md grid-margin stretch-card">
                             <div class="card">
                               <div class="card-body">  
@@ -257,7 +257,7 @@
                           </div>
                     </div>
 
-                    <div class="tab-pane fade" id="nav-facture" role="tabpanel" aria-labelledby="nav-facture-tab">...
+                    <div class="tab-pane fade" id="nav-facture" role="tabpanel" aria-labelledby="nav-facture-tab">
                         <div class="row">
                             <div class="col-md-6 mx-auto grid-margin stretch-card">
                               <div class="card">
