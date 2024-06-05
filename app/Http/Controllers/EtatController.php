@@ -8,6 +8,7 @@ use App\Models\Paiementglobalcontrat;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use App\Models\Paramsfacture;
+use App\Models\Paramcontrat;
 
 use App\Models\Eleve;
 use App\Models\Contrat;
@@ -86,7 +87,9 @@ class EtatController extends Controller
   
 public function relance(Request $request)
 {
-    //lolo
+
+    $databaseName = DB::connection()->getDatabaseName();
+
     // Date sélectionnée par l'utilisateur
     $dateselectionne = $request->input('daterelance');
 
@@ -168,24 +171,30 @@ public function relance(Request $request)
     });
 
     $results = [];
+    $params = Paramcontrat::first();
 
     foreach ($unpaidEleves as $id_contrat => $id_eleve) {
+
+        $codeClass = $matricules[$id_eleve];
+        if (($codeClass === "MAT1") || ($codeClass === "MAT2")  || ($codeClass === "MAT2II")  || ($codeClass === "MAT3")  || ($codeClass === "MAT3II")  || ($codeClass === "PREMATER")) {
+            $montant = $params->fraisinscription2_paramcontrat;
+        } else {
+            $montant = $params->coutmensuel_paramcontrat;
+        }
+        $total = $montant * count($unpaidContrats[$id_contrat]);
         $results[] = [
             'nometclasse' => $matricules[$id_eleve],
             'mois_impayes' => $unpaidContrats[$id_contrat],
-            'datebuttoire' => $dateFormatee
+            'datebuttoire' => $dateFormatee,
+            'total_du' => $total
         ];
     }
-    
-    // dd($results);
-
     $paramse = Paramsfacture::first(); 
 
     $logoUrl = $paramse ? $paramse->logo: null; 
     // return view('pages.etat.relance')->with('results', $results)->with('paramse', $paramse);
-    return view('pages.etat.relance', compact('results', 'logoUrl'));
+    return view('pages.etat.relance', compact('results', 'logoUrl', 'databaseName'));
 
-// return view('pages.etat.relance')->with('results', $results);
 
 
 }
