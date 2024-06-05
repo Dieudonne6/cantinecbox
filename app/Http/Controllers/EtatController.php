@@ -86,7 +86,9 @@ class EtatController extends Controller
   
 public function relance(Request $request)
 {
-    //lolo
+
+    $databaseName = DB::connection()->getDatabaseName();
+
     // Date sélectionnée par l'utilisateur
     $dateselectionne = $request->input('daterelance');
 
@@ -183,7 +185,7 @@ public function relance(Request $request)
 
     $logoUrl = $paramse ? $paramse->logo: null; 
     // return view('pages.etat.relance')->with('results', $results)->with('paramse', $paramse);
-    return view('pages.etat.relance', compact('results', 'logoUrl'));
+    return view('pages.etat.relance', compact('results', 'logoUrl', 'databaseName'));
 
 // return view('pages.etat.relance')->with('results', $results);
 

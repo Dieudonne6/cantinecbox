@@ -17,6 +17,7 @@ use App\Models\Paiementcontrat;
 use App\Models\Moiscontrat;
 use App\Models\Facturenormalise;
 use App\Models\Usercontrat;
+use App\Models\Users;
 use App\Models\Paramsfacture;
 use App\Models\Params2;
 use GuzzleHttp\Client;
@@ -24,6 +25,7 @@ use Barryvdh\DomPDF\PDF;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use DateTime;
+
 
 // use Endroid\QrCode\Response\QrCodeResponse;
 // use Endroid\QrCode\Writer\PngWriter;
@@ -1040,7 +1042,7 @@ public function savepaiementcontrat(Request $request) {
                         $matriculeEleve = $contrat->eleve_contrat;
                         $iduser = $contrat->id_usercontrat;
 
-                        $user = Usercontrat::where('id_usercontrat', $iduser)->first();
+                        $user = Users::where('id_usercontrat', $iduser)->first();
             
                         // Récupérer le nom de l'élève à partir de la table Eleve
                         $eleve = Eleve::where('MATRICULE', $matriculeEleve)->first();

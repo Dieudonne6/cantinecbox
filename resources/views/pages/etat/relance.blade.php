@@ -99,7 +99,7 @@
                                 <div class="content">
                                     <p>Chers parents,</p><br><br>
                                     <p>Sauf erreur ou omission de notre part, nous rappelons qu'au titre des frais de
-                                        cantine 2022-2023 de votre enfant, vous restez devoir dans nos livres, la somme de
+                                        cantine <strong> {{ $databaseName }} </strong> de votre enfant, vous restez devoir dans nos livres, la somme de
                                         pour le compte de <strong> {{ implode(', ', $result['mois_impayes']) }}</strong>.</p><br>
                                     <p>Vous êtes invités à régler ce solde au plus tard le <strong>{{ $result['datebuttoire'] }}</strong></p>
                                     <p>Vous remerciant par avance pour votre compréhension.</p>
