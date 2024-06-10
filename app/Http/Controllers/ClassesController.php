@@ -17,7 +17,7 @@ use App\Models\Paiementcontrat;
 use App\Models\Moiscontrat;
 use App\Models\Facturenormalise;
 use App\Models\Usercontrat;
-use App\Models\Users;
+use App\Models\User;
 use App\Models\Paramsfacture;
 use App\Models\Params2;
 use GuzzleHttp\Client;
@@ -1032,6 +1032,7 @@ public function savepaiementcontrat(Request $request) {
                 // Collection pour stocker les informations de paiement avec les noms d'élève
                 $paiementsAvecEleves = collect([]);
             
+                // dd($paiements);
                 // Itérer sur chaque paiement
                 foreach ($paiements as $paiement) {
                     // Récupérer l'id_contrat de ce paiement
@@ -1039,17 +1040,25 @@ public function savepaiementcontrat(Request $request) {
             
                     // Récupérer le matricule de l'élève à partir de la table Contrat
                     $contrat = Contrat::find($idContrat);
+
                     if ($contrat) {
                         $matriculeEleve = $contrat->eleve_contrat;
                         $iduser = $contrat->id_usercontrat;
 
-                        $user = Users::where('id_usercontrat', $iduser)->first();
-            
+
+                        
                         // Récupérer le nom de l'élève à partir de la table Eleve
                         $eleve = Eleve::where('MATRICULE', $matriculeEleve)->first();
+                        $users = User::where('id_usercontrat', '=', $iduser)->first();
+                        // dd($users);
+
                         if ($eleve) {
+
                             // Ajouter les informations de paiement avec le nom de l'élève à la collection
                             $paiementsAvecEleves->push([
+                                // dd($user->login),
+
+                                'user' => $users->login,
                                 'id_contrat' => $idContrat,
                                 'nomcomplet_eleve' => $eleve->NOM .' '. $eleve->PRENOM,
                                 'classe_eleve' => $eleve->CODECLAS,
@@ -1058,14 +1067,13 @@ public function savepaiementcontrat(Request $request) {
                                 'montant' => $paiement->montant_paiementcontrat,
                                 'mois' => $paiement->mois_paiementcontrat,
                                 'reference' => $paiement->reference_paiementcontrat,
-                                'user' => $user->login_usercontrat,
                                 // Ajoutez d'autres informations de paiement si nécessaire
                             ]);
                         }
                     }
                 }
             
-
+                // dd($paiementsAvecEleves);
                 // Convertir la date en objet DateTime
                 $dateObjdebut = DateTime::createFromFormat('Y-m-d', $debut);
                 $dateObjfin = DateTime::createFromFormat('Y-m-d', $fin);

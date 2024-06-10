@@ -176,7 +176,12 @@ class PagesController extends Controller
     }
 
     public function vitrine(){
-        return view('pages.vitrine');
+        $totaleleve = Eleve::count();
+        $totalcantineinscritactif = Contrat::where('statut_contrat', 1)->count();
+        $totalcantineinscritinactif = Contrat::where('statut_contrat', 0)->count();
+
+        // dd($totalcantineinscritactif);
+        return view('pages.vitrine')->with('totalcantineinscritactif', $totalcantineinscritactif)->with('totalcantineinscritinactif', $totalcantineinscritinactif)->with('totaleleve', $totaleleve);
 
     }
     public function paramsfacture(){
