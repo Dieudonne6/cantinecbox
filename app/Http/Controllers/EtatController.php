@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\DB;
 class EtatController extends Controller
 {
     public function etatdroits(){
-        $annees = Paiementcontrat::distinct()->pluck('anne_paiementcontrat'); 
+        $annees = Paramcontrat::distinct()->pluck('anneencours_paramcontrat'); 
         $classes = Classes::get();
         
         return view('pages.etat.etatdroits')->with('annee', $annees)->with('classe', $classes);
@@ -30,7 +30,7 @@ class EtatController extends Controller
     }
     
     public function filteretat(Request $request){
-        $anne = Paiementcontrat::distinct()->pluck('anne_paiementcontrat'); 
+        $anne = Paramcontrat::distinct()->pluck('anneencours_paramcontrat'); 
         $class = Classes::get();
         $query = Eleve::query();
         $annee = $request->annee;
@@ -65,8 +65,7 @@ class EtatController extends Controller
        Session::put('moisContrat', $moisContrat);
        Session::put('anne', $anne);
        Session::put('class', $class);
-        
-
+    //    dd($anne);
         // Ajouter 1 à l'année
         $anneesuivant = $annee + 1;
         // Passer les données à la vue
