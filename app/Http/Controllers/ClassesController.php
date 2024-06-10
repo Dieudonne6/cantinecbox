@@ -291,19 +291,20 @@ public function savepaiementcontrat(Request $request) {
 
                 // Array des noms des mois
                 $nomsMoisCoches = [];
+                if (is_array($moisCoches)) {
 
-                // Parcourir les ID des mois cochés et obtenir leur nom correspondant
-                foreach ($moisCoches as $id_moiscontrat) {
-                    // Ici, vous pouvez récupérer le nom du mois à partir de votre modèle Mois
-                    $mois = Moiscontrat::where('id_moiscontrat', $id_moiscontrat)->first();
-                    
-                    // Vérifiez si le mois existe
-                    if ($mois) {
-                        // Ajouter le nom du mois à l'array
-                        $nomsMoisCoches[] = $mois->nom_moiscontrat;
+                    // Parcourir les ID des mois cochés et obtenir leur nom correspondant
+                    foreach ($moisCoches as $id_moiscontrat) {
+                        // Ici, vous pouvez récupérer le nom du mois à partir de votre modèle Mois
+                        $mois = Moiscontrat::where('id_moiscontrat', $id_moiscontrat)->first();
+                        
+                        // Vérifiez si le mois existe
+                        if ($mois) {
+                            // Ajouter le nom du mois à l'array
+                            $nomsMoisCoches[] = $mois->nom_moiscontrat;
+                        }
                     }
                 }
-
                 // Convertir le tableau en une chaîne de caractères
                 $moisConcatenes = implode(',', $nomsMoisCoches);
                 // dd($moisConcatenes);
