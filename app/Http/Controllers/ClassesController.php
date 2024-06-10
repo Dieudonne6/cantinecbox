@@ -1045,6 +1045,9 @@ public function savepaiementcontrat(Request $request) {
                         $matriculeEleve = $contrat->eleve_contrat;
                         $iduser = $contrat->id_usercontrat;
 
+                        // dd($iduser);
+
+
 
                         
                         // Récupérer le nom de l'élève à partir de la table Eleve
@@ -1058,7 +1061,7 @@ public function savepaiementcontrat(Request $request) {
                             $paiementsAvecEleves->push([
                                 // dd($user->login),
 
-                                'user' => $users->login,
+                                // 'user' => $users->login,
                                 'id_contrat' => $idContrat,
                                 'nomcomplet_eleve' => $eleve->NOM .' '. $eleve->PRENOM,
                                 'classe_eleve' => $eleve->CODECLAS,
