@@ -231,7 +231,10 @@ class PagesController extends Controller
         $login->save();
         return back()->with('status','Enregistrer avec succes');
 
-
-
     }
+
+    public function parametre(){
+        $param = Paramcontrat::first();
+        return view('pages.parametre.parametre', ['param' => $param]);
+    } 
 }

@@ -14,7 +14,7 @@
           {{csrf_field()}}
           <div class="form-group row">
             <div class="col-lg-3">
-              <select class="js-example-basic-single w-100"  name="annee">
+              <select class="form-control w-100"  name="annee">
                 <option value="">Sélectionnez une année</option>
                 @foreach ($anne as $annees)
                 <option value="{{$annees}}">{{$annees}}</option>
@@ -22,7 +22,7 @@
               </select>
             </div>
             <div class="col-lg-3">
-              <select class="js-example-basic-single w-100"  name="classe">
+              <select class="form-control w-100"  name="classe">
                 <option value="">Sélectionnez une classe</option>
                 
                 @foreach ($class as $classes)

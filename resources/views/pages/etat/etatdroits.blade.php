@@ -6,17 +6,18 @@
       <h4 class="card-title">Etats des droits constatés</h4>
       <form action="{{url('/filteretat')}}" method="POST">
         {{csrf_field()}}
-      <div class="form-group row">
+        <div class="row">
           <div class="col-3">
-            <select class="js-example-basic-single w-100" name="annee">
+            <select class="form-control w-100" name="annee">
               <option value="">Sélectionnez une année</option>
               @foreach ($annee as $annees)
                 <option value="{{$annees}}">{{$annees}}</option>
               @endforeach
             </select>
           </div>
+          
           <div class="col-3">
-            <select class="js-example-basic-single w-100" name="classe">
+            <select class="form-control w-100" name="classe">
               <option value="">Sélectionnez une classe</option>
                 @foreach ($classe as $classes)
                   <option value="{{$classes->CODECLAS}}">{{$classes->CODECLAS}}</option>

@@ -617,6 +617,12 @@
       </div>
     </li>
     <li class="nav-item">
+      <a class="nav-link" href="{{url('/parametre')}}">
+        <i class="typcn typcn-globe-outline menu-icon"></i>
+        <span class="menu-title" _msttexthash="234962" _msthash="98">Paramètres</span>
+      </a>
+    </li>
+    {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
         <i class="typcn typcn-globe-outline menu-icon"></i>
         <span class="menu-title">Paramètres</span>
@@ -642,14 +648,14 @@
           </div> --}}
           {{-- <li class="nav-item"> <a class="nav-link" href="{{url('/confimpression')}}"> Configurer Imprimante </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/changetrimestre')}}"> Changement de trimestre </a></li> --}}
-          <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
+          {{-- <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnees')}}">Connexion à la<br>base de donnée </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/paramsfacture')}}">Paramètre Facture</a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/inscriptions')}}">Enregistrement utilisateurs </a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/inscriptions')}}">Enregistrement utilisateurs </a></li> 
 
         </ul>
       </div>
-    </li> 
+    </li>  --}}
   </ul>
   
   

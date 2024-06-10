@@ -233,7 +233,7 @@
                       }
                   });
               </script>
-          </div>
+            </div>
           
             <div class="card col-md-4">
               <div class="template-demo mt-2">
