@@ -24,7 +24,7 @@
             <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
               <div>
                 <p class="mb-2 text-md-center text-lg-left" _msttexthash="348296" _msthash="161">Total des Elèves</p>
-                <h1 class="mb-0" _msttexthash="23400" _msthash="162">8,742</h1>
+                <h1 class="mb-0" _msttexthash="23400" _msthash="162">{{$totaleleve}}</h1>
               </div>
               <i class="typcn typcn-group icon-xl text-secondary"></i>
             </div>
@@ -37,7 +37,7 @@
             <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
               <div>
                 <p class="mb-2 text-md-center text-lg-left" _msttexthash="175812" _msthash="163">Total d'inscriptions</p>
-                <h1 class="mb-0" _msttexthash="37804" _msthash="164">47,840</h1>
+                <h1 class="mb-0" _msttexthash="37804" _msthash="164">{{$totalcantineinscritactif}}</h1>
               </div>
               <i class="typcn typcn-user-add icon-xl text-secondary"></i>
             </div>
@@ -50,7 +50,7 @@
             <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
               <div>
                 <p class="mb-2 text-md-center text-lg-left" _msttexthash="158522" _msthash="165">Contrats Inactifs</p>
-                <h1 class="mb-0" _msttexthash="28067" _msthash="166">7,243</h1>
+                <h1 class="mb-0" _msttexthash="28067" _msthash="166">{{$totalcantineinscritinactif}}</h1>
               </div>
               <i class="typcn typcn-clipboard icon-xl text-secondary"></i>
             </div>
