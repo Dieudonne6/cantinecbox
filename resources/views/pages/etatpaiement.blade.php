@@ -70,9 +70,9 @@
                         <th>
                             Classe
                         </th>
-                        <th>
+                        {{-- <th>
                             Caissier
-                        </th>
+                        </th> --}}
                         <th>
                             Action a effectuee
                         </th>

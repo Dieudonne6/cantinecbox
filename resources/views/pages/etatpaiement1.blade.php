@@ -104,9 +104,9 @@
                         <th>
                             Classe
                         </th>
-                        <th>
+                        {{-- <th>
                             Caissier
-                        </th>
+                        </th> --}}
                         <th class="hide-on-print">
                             Action a effectuee
                         </th>
@@ -140,10 +140,10 @@
                             <td>
                                 {{ $resultatsIndividuel['classe_eleve'] }}
                             </td>
-
+{{-- 
                             <td>
                                 {{ $resultatsIndividuel['user'] }}
-                            </td>
+                            </td> --}}
 
                             <td class="hide-on-print">
                                 <div class="d-flex justify-content-between">
