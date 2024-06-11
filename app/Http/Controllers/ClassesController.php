@@ -882,6 +882,7 @@ public function savepaiementcontrat(Request $request) {
     public function creercontrat(Request $request)
     {
         // Récupérer les informations de la requête
+        $classes = $request->input('classes');
         $eleveId = $request->input('matricules');
         $montant = $request->input('montant');
         $idUserContrat = $request->input('id_usercontrat');
@@ -891,10 +892,13 @@ public function savepaiementcontrat(Request $request) {
         if (empty($dateContrat)) {
             $dateContrat = date('Y-m-d');
         }
-
         // Trouver l'élève en fonction de la classe (CODECLAS)
-        // $eleve = Eleve::where('CODECLAS', $codeClass)->first();
-
+         $elevy = Eleve::where('MATRICULE', $eleveId)->get();
+        
+         $nom = Eleve::where('MATRICULE', $eleveId)->value('NOM');
+         $prenom = Eleve::where('MATRICULE', $eleveId)->value('PRENOM');
+         $elevyo = $nom .' '. $prenom;
+         
         if ($eleveId) {
             // $eleveId = $eleve->MATRICULE;
 
@@ -910,8 +914,12 @@ public function savepaiementcontrat(Request $request) {
                 $contratExistant->statut_contrat = 1;
                 $contratExistant->datecreation_contrat = $dateContrat;
                 $contratExistant->save();
-
-                return back()->with('status', 'Contrat mis à jour avec succès');
+                return view('pages.Etats.pdfinscription')
+                ->with('amount', $montant)
+                ->with('classe', $classes )
+                ->with('dateContrat', $dateContrat)
+                ->with('elevyo', $elevyo);
+                // return back()->with('status', 'Contrat mis à jour avec succès');
             } else {
                 // Créer un nouveau contrat
                 $nouveauContrat = new Contrat();
@@ -921,8 +929,12 @@ public function savepaiementcontrat(Request $request) {
                 $nouveauContrat->statut_contrat = 1;
                 $nouveauContrat->datecreation_contrat = $dateContrat;
                 $nouveauContrat->save();
-
-                return back()->with('status', 'Contrat créé avec succès');
+                return view('pages.Etats.pdfinscription')
+                ->with('amount', $montant)
+                ->with('classe', $classes )
+                ->with('dateContrat', $dateContrat)
+                ->with('elevyo', $elevyo);
+                // return back()->with('status', 'Contrat créé avec succès');
             }
         } else {
             return back()->with('error', 'Élève non trouvé');
