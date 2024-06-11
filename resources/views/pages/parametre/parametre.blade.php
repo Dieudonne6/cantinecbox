@@ -58,7 +58,7 @@
                                     </div>
                                   
                                     <button type="submit" class="btn btn-primary mr-2">Envoyer</button>
-                                    <button class="btn btn-light">Annuler</button>
+                                    <input type="reset" class="btn btn-light" value="Annuler">
                                   </form>
                                 </div>
                               </div>
@@ -309,7 +309,7 @@
                                       <input type="file" class="form-control" name="logo" id="exampleInputUsername1" placeholder="Logo">
                                     </div>
                                     <button type="submit" class="btn btn-primary mr-2">Envoyer</button>
-                                    <button class="btn btn-light">Annuler</button>
+                                    <input type="reset" class="btn btn-light" value="Annuler">
                                   </form>
                                   <form class="forms-sample d-none" id="div2">
                                     <h4 class="card-title">Informations Mcef</h4>
@@ -318,7 +318,7 @@
                                       <input type="text" class="form-control" id="exampleInputUsername1" placeholder="IFU">
                                     </div>
                                     <button type="submit" class="btn btn-primary mr-2">Envoyer</button>
-                                    <button class="btn btn-light">Annuler</button>
+                                    <input type="reset" class="btn btn-light" value="Annuler">
                                   </form>
                                 </div>
                               </div>
