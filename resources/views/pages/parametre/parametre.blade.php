@@ -57,8 +57,8 @@
                                       <input type="password" class="form-control" name="password" id="exampleInputConfirmPassword1" placeholder="Mot de passe">
                                     </div>
                                   
-                                    <button type="submit" class="btn btn-primary mr-2">Envoyer</button>
-                                    <input type="reset" class="btn btn-light" value="Annuler">
+                                    <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
+                                    <button class="btn btn-light">Annuler</button>
                                   </form>
                                 </div>
                               </div>
@@ -317,8 +317,8 @@
                                       <label for="exampleInputUsername1">IFU</label>
                                       <input type="text" class="form-control" id="exampleInputUsername1" placeholder="IFU">
                                     </div>
-                                    <button type="submit" class="btn btn-primary mr-2">Envoyer</button>
-                                    <input type="reset" class="btn btn-light" value="Annuler">
+                                    <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
+                                    <button class="btn btn-light">Annuler</button>
                                   </form>
                                 </div>
                               </div>
