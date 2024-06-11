@@ -87,7 +87,7 @@
                     <div class="col-md-8 mx-auto grid-margin stretch-card mt-5">
 
                         <input type="submit" class="btn btn-primary mr-2" value="Enregistrer">
-                        <button class="btn btn-light">Annuler</button>
+                        <input type="reset" class="btn btn-light" value="Annuler">
                     </div>
                 </form>
             </div>
