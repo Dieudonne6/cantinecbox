@@ -57,7 +57,7 @@
                                       <input type="password" class="form-control" name="password" id="exampleInputConfirmPassword1" placeholder="Mot de passe">
                                     </div>
                                   
-                                    <button type="submit" class="btn btn-primary mr-2">Envoyer</button>
+                                    <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
                                     <button class="btn btn-light">Annuler</button>
                                   </form>
                                 </div>
@@ -308,7 +308,7 @@
                                       <label for="exampleInputUsername1">LOGO</label>
                                       <input type="file" class="form-control" name="logo" id="exampleInputUsername1" placeholder="Logo">
                                     </div>
-                                    <button type="submit" class="btn btn-primary mr-2">Envoyer</button>
+                                    <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
                                     <button class="btn btn-light">Annuler</button>
                                   </form>
                                   <form class="forms-sample d-none" id="div2">
@@ -317,7 +317,7 @@
                                       <label for="exampleInputUsername1">IFU</label>
                                       <input type="text" class="form-control" id="exampleInputUsername1" placeholder="IFU">
                                     </div>
-                                    <button type="submit" class="btn btn-primary mr-2">Envoyer</button>
+                                    <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
                                     <button class="btn btn-light">Annuler</button>
                                   </form>
                                 </div>

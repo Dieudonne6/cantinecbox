@@ -87,22 +87,22 @@
                     <tr>
 
                         <th>
-                            Date
-                        </th>
-                        <th>
-                            Reference
-                        </th>
-                        <th>
-                            Montant
-                        </th>
-                        <th>
-                            Mois paye(s)
+                            Classe
                         </th>
                         <th>
                             Eleve
                         </th>
                         <th>
-                            Classe
+                            Montant
+                        </th>
+                        <th>
+                            Mois payé(s)
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Reference
                         </th>
                         {{-- <th>
                             Caissier
@@ -118,11 +118,11 @@
                         <tr>
 
                             <td>
-                                {{ $resultatsIndividuel['date_paiement'] }}
+                                {{ $resultatsIndividuel['classe_eleve'] }}
                             </td>
 
                             <td>
-                                {{ $resultatsIndividuel['reference'] }}
+                                {{ $resultatsIndividuel['nomcomplet_eleve'] }}
                             </td>
 
                             <td>
@@ -134,11 +134,11 @@
                             </td>
 
                             <td>
-                                {{ $resultatsIndividuel['nomcomplet_eleve'] }}
+                                {{ $resultatsIndividuel['date_paiement'] }}
                             </td>
 
                             <td>
-                                {{ $resultatsIndividuel['classe_eleve'] }}
+                                {{ $resultatsIndividuel['reference'] }}
                             </td>
 
                             {{-- <td>

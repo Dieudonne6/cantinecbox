@@ -16,7 +16,7 @@
 
                 <div class="col">
                     <!-- Bouton de soumission de formulaire -->
-                    <label for="debut" style="visibility: hidden">supprimer paiememtn</label>
+                    <label for="debut" style="visibility: hidden">supprimer paiement</label>
                     <button type="submit" class="btn btn-primary w-100">Rechercher</button>
                 </div>
                 {{-- <div class="col">
@@ -51,25 +51,25 @@
             <table class="table">
                 <thead>
                     <tr>
-
+                        <th>
+                            Classe
+                        </th>
+                        <th>
+                            Eleve
+                        </th>
+                        <th>
+                            Montant
+                        </th>
+                        <th>
+                            Mois payé(s)
+                        </th>
                         <th>
                             Date
                         </th>
                         <th>
                             Reference
                         </th>
-                        <th>
-                            Montant
-                        </th>
-                        <th>
-                            Mois paye(s)
-                        </th>
-                        <th>
-                            Eleve
-                        </th>
-                        <th>
-                            Classe
-                        </th>
+                        
                         {{-- <th>
                             Caissier
                         </th> --}}
