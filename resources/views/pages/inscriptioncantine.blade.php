@@ -56,7 +56,7 @@
               </div>
               
               <div class="">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <input type="reset" class="btn btn-secondary" data-bs-dismiss="modal" value="Annuler">
                 <button type="submit" class="btn btn-primary">Enregister</button>
               </div>
             </form>

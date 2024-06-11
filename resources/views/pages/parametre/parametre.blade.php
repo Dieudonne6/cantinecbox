@@ -308,8 +308,8 @@
                                       <label for="exampleInputUsername1">LOGO</label>
                                       <input type="file" class="form-control" name="logo" id="exampleInputUsername1" placeholder="Logo">
                                     </div>
-                                    <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
-                                    <button class="btn btn-light">Annuler</button>
+                                    <button type="submit" class="btn btn-primary mr-2">Envoyer</button>
+                                    <input type="reset" class="btn btn-light" value="Annuler">
                                   </form>
                                   <form class="forms-sample d-none" id="div2">
                                     <h4 class="card-title">Informations Mcef</h4>
