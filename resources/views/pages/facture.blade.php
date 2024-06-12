@@ -304,7 +304,7 @@
         <table id="customers">
             <thead>
                 <tr>
-                    
+                    <th scope="col">Groupe tax</th>
                     <th scope="col">Montant total HT</th>
                     <th scope="col">Net a Payer</th>
 
@@ -313,7 +313,9 @@
             <tbody>
 
                 <tr>
-
+                    <td>
+                        B-TAX 
+                    </td>
 
                     <td>
                         {{ $totalHT }}
