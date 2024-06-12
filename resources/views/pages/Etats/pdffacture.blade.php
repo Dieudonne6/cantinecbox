@@ -178,7 +178,7 @@
             padding-top: 12px;
             padding-bottom: 12px;
             text-align: left;
-            background-color: #04AA6D;
+            background-color: #000000;
             color: white;
         }
 
@@ -250,7 +250,7 @@
                 <table id="customers">
                     <thead>
                         <tr>
-                            <th scope="col">Designation</th>
+                            <th scope="col">Designation (B)</th>
                             {{-- <th scope="col">Prix unitaire</th> --}}
                             {{-- <th scope="col">Quantite</th> --}}
                             <th scope="col">Montant HT</th>
@@ -320,7 +320,7 @@
                 <table id="customers">
                     <thead>
                         <tr>
-                            <th scope="col">Groupe tax</th>
+                            
                             <th scope="col">Montant total HT</th>
                             <th scope="col">Net a Payer</th>
                         </tr>
@@ -328,9 +328,7 @@
                     <tbody>
 
                         <tr>
-                            <td>
-                                B-TAX
-                            </td>
+                            
 
                             <td>
                                 {{ $totalHT }}
