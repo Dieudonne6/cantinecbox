@@ -79,6 +79,7 @@ Route::post('/traitementetatpaiement', [ClassesController::class, 'traitementeta
 Route::delete('/supprimercontrat/{MATRICULE}', [ClassesController::class, 'supprimercontrat']);
 Route::delete('/supprimerpaiement/{id_paiementcontrat}', [ClassesController::class, 'supprimerpaiement']);
 Route::get('/etatpaiement1', [ClassesController::class, 'etatpaiement1']);
+Route::get('/essaipdf', [ClassesController::class, 'essaipdf']);
 
 Route::get('/vitrine', [PagesController::class, 'vitrine']);
 
@@ -102,3 +103,5 @@ Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
 Route::get('/parametre', [PagesController::class, 'parametre']);
 
 Route::post('logout', [ConnexionDBController::class, 'logout'])->name('logout');
+
+Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);

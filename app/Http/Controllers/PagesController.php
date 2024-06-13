@@ -237,4 +237,8 @@ class PagesController extends Controller
         $param = Paramcontrat::first();
         return view('pages.parametre.parametre', ['param' => $param]);
     } 
+
+    public function duplicatafacture(){
+        return view('pages.duplicatafacture');
+    } 
 }
