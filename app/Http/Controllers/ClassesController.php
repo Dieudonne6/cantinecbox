@@ -8,9 +8,13 @@ use App\Models\Eleve;
 use App\Models\Classes;
 use App\Models\Contrat;
 use App\Models\Paramcontrat;
+use App\Models\Duplicatafacture;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\App;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Inscriptioncontrat;
 use App\Models\Paiementglobalcontrat;
 use App\Models\Paiementcontrat;
@@ -21,10 +25,11 @@ use App\Models\User;
 use App\Models\Paramsfacture;
 use App\Models\Params2;
 use GuzzleHttp\Client;
-use Barryvdh\DomPDF\PDF;
+// use Barryvdh\DomPDF\PDF;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use DateTime;
+
 
 
 // use Endroid\QrCode\Response\QrCodeResponse;
@@ -635,6 +640,12 @@ public function savepaiementcontrat(Request $request) {
         $paramse = Paramsfacture::first(); 
 
     $logoUrl = $paramse ? $paramse->logo: null; 
+
+
+
+
+    
+
     
         return view('pages.Etats.pdffacture', [
             'factureconfirm' => $decodedResponseConfirmation,
@@ -650,6 +661,8 @@ public function savepaiementcontrat(Request $request) {
             // 'qrCodeImage' => $qrCodeImage,
     
                  ]);
+
+                 
     
     
     
@@ -707,6 +720,47 @@ public function savepaiementcontrat(Request $request) {
         $logoUrl = $paramse ? $paramse->logo: null; 
         // $villeetab = Session::get('villeetab');
         // $nometab = Session::get('nometab');
+
+
+                    // // Générer le PDF
+
+                    $data = [
+                        'decodedResponseConfirmation' => $decodedResponseConfirmation,
+                        'facturedetaille' => $facturedetaille,
+                        'reffacture' => $reffacture,
+                        'classeeleve' => $classeeleve,
+                        'nomcompleteleve' => $nomcompleteleve,
+                        'toutmoiscontrat' => $toutmoiscontrat,
+                        'qrCodeString' => $qrCodeString,
+                        'logoUrl' => $logoUrl,
+                    ];
+
+                    // dd($qrCodeString);
+                
+                    // Spécifiez le nom du fichier avec un timestamp pour garantir l'unicité
+                    $fileName = $nomcompleteleve . time() . '.pdf';
+                
+                    // Spécifiez le chemin complet vers le sous-dossier pdfs dans public
+                    $filePath = public_path('pdfs/' . $fileName);
+                
+                    // Assurez-vous que le répertoire pdfs existe, sinon créez-le
+                    if (!file_exists(public_path('pdfs'))) {
+                        mkdir(public_path('pdfs'), 0755, true);
+                    }
+                
+                    // Générer et enregistrer le PDF dans le sous-dossier pdfs
+                    $pdf = PDF::loadView('pages.Etats.essaipdf', $data)->save($filePath);
+                
+                
+                       // Enregistrer le chemin du PDF dans la base de données
+                                    $duplicatafacture = new Duplicatafacture();
+                                    $duplicatafacture->url = $filePath;
+                                    $duplicatafacture->nomeleve = $nomcompleteleve;
+                                    $duplicatafacture->classe = $classeeleve;
+                                    $duplicatafacture->save();
+
+
+
         return view('pages.Etats.facturenormalise',  [
             'factureconfirm' => $decodedResponseConfirmation,
             'facturedetaille' => $facturedetaille, 
@@ -728,7 +782,49 @@ public function savepaiementcontrat(Request $request) {
 
 
 
+public function essaipdf() {
 
+    $decodedResponseConfirmation = Session::get('factureconfirm');
+    $facturedetaille = Session::get('facturedetaille');
+    $reffacture = Session::get('reffacture');
+    $classeeleve = Session::get('classeeleve');
+    $nomcompleteleve = Session::get('nomcompleteleve');
+    $toutmoiscontrat = Session::get('toutmoiscontrat');
+    $qrCodeString = Session::get('qrCodeString');
+
+    // $reffacturearray = $reffacture->toArray();
+
+    // dd($facturedetaille);
+    $paramse = Paramsfacture::first(); 
+
+    $logoUrl = $paramse ? $paramse->logo: null; 
+
+
+
+
+ 
+
+
+
+    // $pdf = Pdf::loadView('pages.Etats.essaipdf', compact('decodedResponseConfirmation', 'facturedetaille', 'reffacture', 'classeeleve', 'nomcompleteleve', 'toutmoiscontrat', 'qrCodeString', 'logoUrl'))->save(public_path('pdfs').time() . '.pdf');
+    // $pdf = Pdf::loadView('pages.Etats.pdffacture', [
+    //     'factureconfirm' => $decodedResponseConfirmation,
+    //     'facturedetaille' => $facturedetaille,
+    //     'reffacture' => $reffacture,
+    //     'classeeleve' => $classeeleve,
+    //     'nomcompleteleve' => $nomcompleteleve,
+    //     'toutmoiscontrat' => $toutmoiscontrat,
+    //     'qrCodeString' => $qrCodeString,
+    //     'logoUrl' => $logoUrl,
+        // 'nometab' => $nometab,
+        // 'villeetab' => $villeetab,
+        // 'qrCodeImage' => $qrCodeImage,
+
+            //  ]);
+
+    // $pdf = Pdf::loadView('pdf.invoice', $data);
+    // return $pdf->download(time() . '.pdf');
+}
 
 
 
