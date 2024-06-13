@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\File;
 class ConnexionDBController extends Controller
 {
@@ -23,5 +27,14 @@ class ConnexionDBController extends Controller
 
         File::put(base_path('.env'), $envContent);
             return back()->with('status','Enregistrer avec succes');
+    }
+
+    public function logout(Request $request)
+    {
+       
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }

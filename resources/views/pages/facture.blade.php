@@ -234,7 +234,7 @@
                 <table id="customers">
                     <thead>
                         <tr>
-                            <th scope="col">Designation</th>
+                            <th scope="col">Designation (B)</th>
                             {{-- <th scope="col">Prix unitaire</th> --}}
                             {{-- <th scope="col">Quantite</th> --}}
                             <th scope="col">Montant HT</th>
@@ -314,7 +314,7 @@
 
                 <tr>
                     <td>
-                       B-TAX
+                        B-TAX 
                     </td>
 
                     <td>

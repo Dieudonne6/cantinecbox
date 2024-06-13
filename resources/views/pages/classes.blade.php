@@ -62,10 +62,31 @@
                     </td>
                     <td>
                       <a href='/paiementcontrat/{{$eleves->CODECLAS}}/{{$eleves->MATRICULE}}' class='btn btn-primary w-40'>Paiement</a>
-                      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Suspendre
-                      </button>                      
-                     
+                      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Suspendre</button> 
+                      <!-- Modal -->
+                      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation de suppression</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              Êtes-vous sûr de vouloir supprimer ce contrat ?
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                              <form action="{{ url('supprimercontrat/'.$eleves->MATRICULE)}}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                {{-- <a href='/admin/deletecashier/{{$eleves->MATRICULE}}' class='btn btn-danger w-50'>Suspendre</a> --}}
+                                <input type="submit" class="btn btn-danger" value="Confirmer">
+                              </form>  
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
                     </td>
                 </tr>
             @endforeach
@@ -78,31 +99,6 @@
 </div>
 
 <!-- Button trigger modal -->
-
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation de suppression</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Êtes-vous sûr de vouloir supprimer ce contrat ?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <form action="{{ url('supprimercontrat/'.$eleves->MATRICULE)}}" method="post">
-          @csrf
-          @method('DELETE')
-          {{-- <a href='/admin/deletecashier/{{$eleves->MATRICULE}}' class='btn btn-danger w-50'>Suspendre</a> --}}
-          <input type="submit" class="btn btn-danger" value="Confirmer">
-        </form> 
-      </div>
-    </div>
-  </div>
-</div>
 
 <div class="modal fade" id="examplePaiement" tabindex="-1" aria-labelledby="examplePaiementLabel" aria-hidden="true">
   <div class="modal-dialog">

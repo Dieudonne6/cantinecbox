@@ -658,6 +658,14 @@
     </li>  --}}
   </ul>
   
-  
+  <div class="center-container" style=" display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <form id="logout-form" action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button type="submit" class="logout-button" 
+          style="background-color: #dc3434; color: white; border: none; padding: 5px 10px; font-size: 16px; cursor: pointer; border-radius: 12px;">
+          Déconnexion
+        </button>
+    </form>
+</div>
 
 </nav>
