@@ -1,7 +1,12 @@
 
 @extends('layouts.master')
 @section('content')
-
+<style>
+    .logoimg {
+        width: 35%;
+        margin-top: 20px;
+    }
+</style>
 <body>
     <button onclick="imprimerPage()" class="btn btn-primary" style="width: 10rem">Imprimer</button>
     <div class="container-fluid d-flex  align-items-center justify-content-center" >
@@ -9,11 +14,25 @@
 
         </div>
             <div class="col-6 contenu"  style="background-color:white;">
-                <h5 style="text-align: center; padding-top:20px;">
-                    COMPLEXE SCOLAIRE: ""
-                </h5>
+              <div class="d-flex justify-content-center mb-5">
+                <div>
+                  @if($logoUrl)
+                  <img src="{{ asset('storage/logo/' . $logoUrl) }}" alt="Logo" class="logoimg">
+                  @else
+                      <p>Aucun logo disponible.</p>
+                  @endif
+                </div>
+                <div style="width: 75%;">
+                  <h5 style="padding-top:20px;">
+                    COMPLEXE SCOLAIRE: 
+                  </h5> 
+                  <h5>"le petit poucet"</h5>
+                </div>
+              </div>
+
+               
                 <h5 style="text-align: center">
-                    Recu d'inscription
+                    Reçu d'inscription cantine
                 </h5><br>
 
                     <div class="row">

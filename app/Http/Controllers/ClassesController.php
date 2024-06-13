@@ -907,6 +907,9 @@ public function savepaiementcontrat(Request $request) {
                                        ->where('statut_contrat', 0)
                                        ->first();
 
+                                       $paramse = Paramsfacture::first(); 
+
+                                       $logoUrl = $paramse ? $paramse->logo: null; 
             if ($contratExistant) {
                 // Mettre à jour le contrat existant
                 $contratExistant->cout_contrat = $montant;
@@ -917,6 +920,7 @@ public function savepaiementcontrat(Request $request) {
                 return view('pages.Etats.pdfinscription')
                 ->with('amount', $montant)
                 ->with('classe', $classes )
+                ->with('logoUrl', $logoUrl )
                 ->with('dateContrat', $dateContrat)
                 ->with('elevyo', $elevyo);
                 // return back()->with('status', 'Contrat mis à jour avec succès');
@@ -932,6 +936,7 @@ public function savepaiementcontrat(Request $request) {
                 return view('pages.Etats.pdfinscription')
                 ->with('amount', $montant)
                 ->with('classe', $classes )
+                ->with('logoUrl', $logoUrl )
                 ->with('dateContrat', $dateContrat)
                 ->with('elevyo', $elevyo);
                 // return back()->with('status', 'Contrat créé avec succès');
