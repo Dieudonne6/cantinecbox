@@ -735,7 +735,8 @@ public function savepaiementcontrat(Request $request) {
                         'logoUrl' => $logoUrl,
                     ];
 
-                    // dd($qrCodeString);
+                    $datepaiement = $decodedResponseConfirmation['dateTime'];
+                    // dd($datepaiement);
                 
                     // Spécifiez le nom du fichier avec un timestamp pour garantir l'unicité
                     $fileName = $nomcompleteleve . time() . '.pdf';
@@ -757,6 +758,8 @@ public function savepaiementcontrat(Request $request) {
                                     $duplicatafacture->url = $filePath;
                                     $duplicatafacture->nomeleve = $nomcompleteleve;
                                     $duplicatafacture->classe = $classeeleve;
+                                    $duplicatafacture->reference = $reffacture;
+                                    $duplicatafacture->datepaiement = $datepaiement;
                                     $duplicatafacture->save();
 
 

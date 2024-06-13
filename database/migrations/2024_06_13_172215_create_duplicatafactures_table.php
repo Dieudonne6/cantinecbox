@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('duplicatafactures', function (Blueprint $table) {
             $table->id();
             $table->string('url');
+            $table->string('reference');
             $table->string('nomeleve');
             $table->string('classe');
+            $table->string('datepaiement');
             $table->timestamps();
         });
     }
