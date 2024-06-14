@@ -14,6 +14,7 @@ use App\Models\Paramsfacture;
 use App\Models\User;
 use App\Models\Params2;
 use App\Models\Classes;
+use App\Models\Duplicatafacture;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -239,6 +240,9 @@ class PagesController extends Controller
     } 
 
     public function duplicatafacture(){
-        return view('pages.duplicatafacture');
+
+        $duplicatafactures = Duplicatafacture::all();
+
+        return view('pages.duplicatafacture')->with('duplicatafactures', $duplicatafactures);
     } 
 }

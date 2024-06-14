@@ -34,17 +34,23 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>CM1</td>
-                                            <td>Parker</td>
-                                            <td>ST-0d001</td>
-                                            <td>20/1/2021</td>
-                                            <td>
-                                                <a href="edit-student.html" class="btn btn-primary btn-sm mb-1">
-                                                    <i class="far">Télécharger</i>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        @foreach ($duplicatafactures as $duplicatafacture)
+
+                                            <tr>
+                                                <td>{{ $duplicatafacture['classe'] }}</td>
+                                                <td>{{ $duplicatafacture['nomeleve'] }}</td>
+                                                <td>{{ $duplicatafacture['datepaiement'] }}</td>
+                                                <td>{{ $duplicatafacture['reference'] }}</td>
+                                                <td>
+                                                    {{-- {{ public_path('qrcodes/' . $fileNameqrcode) }} --}}
+                                                    <a href="{{ asset('pdfs/' .$duplicatafacture['url']) }}" class="btn btn-primary btn-sm mb-1">
+                                                        <i class="far">Télécharger</i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                       
+                                        @endforeach
+                               
                                         <!-- Repeat similar <tr> blocks for other students -->
                                     </tbody>
                                 </table>

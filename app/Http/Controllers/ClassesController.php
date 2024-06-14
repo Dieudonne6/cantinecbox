@@ -779,7 +779,7 @@ public function savepaiementcontrat(Request $request) {
                 
                        // Enregistrer le chemin du PDF dans la base de données
                                     $duplicatafacture = new Duplicatafacture();
-                                    $duplicatafacture->url = $filePaths;
+                                    $duplicatafacture->url = $fileName;
                                     $duplicatafacture->nomeleve = $nomcompleteleve;
                                     $duplicatafacture->classe = $classeeleve;
                                     $duplicatafacture->reference = $reffacture;
