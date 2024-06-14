@@ -12,10 +12,10 @@
                             <div class="page-title"><h4>Reçus de paiement</h4></div>
                         </div>
                         <div class="col-sm-6">
-                            <div class="dt-search mt-3 mx-6">
+                            {{-- <div class="dt-search mt-3 mx-6">
                                 <label for="dt-search-0">Rechercher&nbsp;:</label>
                                 <input type="search" class="dt-input" id="dt-search-0" placeholder="" aria-controls="myTable">
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="table-responsive">
-                                <table class="table custom-table">
+                                <table id="myTable" class="table custom-table">
                                     <thead>
                                         <tr>
                                             <th>Classe</th>
@@ -43,8 +43,8 @@
                                                 <td>{{ $duplicatafacture['reference'] }}</td>
                                                 <td>
                                                     {{-- {{ public_path('qrcodes/' . $fileNameqrcode) }} --}}
-                                                    <a href="{{ asset('pdfs/' .$duplicatafacture['url']) }}" class="btn btn-primary btn-sm mb-1">
-                                                        <i class="far">Télécharger</i>
+                                                    <a href="{{ asset('pdfs/' .$duplicatafacture['url']) }}" class="btn btn-primary btn-sm mb-1" target="_blank">
+                                                        <i class="far">Télécharger</i> 
                                                     </a>
                                                 </td>
                                             </tr>
