@@ -26,7 +26,7 @@ use App\Models\Paramsfacture;
 use App\Models\Params2;
 use GuzzleHttp\Client;
 // use Barryvdh\DomPDF\PDF;
-use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use DateTime;
 
@@ -625,8 +625,30 @@ public function savepaiementcontrat(Request $request) {
             $facturenormalise->montant_total = $montanttotal;
         
         $facturenormalise->save();
+
+
+
+        // gestion du code qr sous forme d'image
+
+        $fileNameqrcode = $nomcompleteleve . time() . '.png';
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->data($qrCodeString)
+            ->size(100)
+            // ->margin(10)
+            ->build();
+    
+        $filePath = public_path('qrcodes/' . $fileNameqrcode);
+    
+        // Assurez-vous que le répertoire qrcodes existe, sinon créez-le
+        if (!file_exists(public_path('qrcodes'))) {
+            mkdir(public_path('qrcodes'), 0755, true);
+        }
+    
+        $result->saveToFile($filePath);
     
         Session::put('factureconfirm', $decodedResponseConfirmation);
+        Session::put('fileNameqrcode', $fileNameqrcode);
         Session::put('facturedetaille', $facturedetaille);
         Session::put('reffacture', $reffacture);
         Session::put('classeeleve', $classeeleve);
@@ -643,12 +665,10 @@ public function savepaiementcontrat(Request $request) {
 
 
 
-
-    
-
     
         return view('pages.Etats.pdffacture', [
             'factureconfirm' => $decodedResponseConfirmation,
+            'fileNameqrcode' => $fileNameqrcode,
             'facturedetaille' => $facturedetaille,
             'reffacture' => $reffacture,
             'classeeleve' => $classeeleve,
@@ -690,11 +710,13 @@ public function savepaiementcontrat(Request $request) {
         $nomcompleteleve = Session::get('nomcompleteleve');
         $toutmoiscontrat = Session::get('toutmoiscontrat');
         $qrCodeString = Session::get('qrCodeString');
+        $fileNameqrcode = Session::get('fileNameqrcode');
         // $reffacture = Session::get('reffacture');
 
         $pdf = app('dompdf.wrapper');
         $pdf->loadView('pages.facture', [
                 'factureconfirm' => $decodedResponseConfirmation,
+                'fileNameqrcode' => $fileNameqrcode,
                 'facturedetaille' => $facturedetaille, 
                 'reffacture' => $reffacture,
                 'classeeleve' => $classeeleve,
@@ -714,6 +736,7 @@ public function savepaiementcontrat(Request $request) {
         $nomcompleteleve = Session::get('nomcompleteleve');
         $toutmoiscontrat = Session::get('toutmoiscontrat');
         $qrCodeString = Session::get('qrCodeString');
+        $fileNameqrcode = Session::get('fileNameqrcode');
 
         $paramse = Paramsfacture::first(); 
 
@@ -732,6 +755,7 @@ public function savepaiementcontrat(Request $request) {
                         'nomcompleteleve' => $nomcompleteleve,
                         'toutmoiscontrat' => $toutmoiscontrat,
                         'qrCodeString' => $qrCodeString,
+                        'fileNameqrcode' => $fileNameqrcode,
                         'logoUrl' => $logoUrl,
                     ];
 
@@ -742,7 +766,7 @@ public function savepaiementcontrat(Request $request) {
                     $fileName = $nomcompleteleve . time() . '.pdf';
                 
                     // Spécifiez le chemin complet vers le sous-dossier pdfs dans public
-                    $filePath = public_path('pdfs/' . $fileName);
+                    $filePaths = public_path('pdfs/' . $fileName);
                 
                     // Assurez-vous que le répertoire pdfs existe, sinon créez-le
                     if (!file_exists(public_path('pdfs'))) {
@@ -750,12 +774,12 @@ public function savepaiementcontrat(Request $request) {
                     }
                 
                     // Générer et enregistrer le PDF dans le sous-dossier pdfs
-                    $pdf = PDF::loadView('pages.Etats.essaipdf', $data)->save($filePath);
+                    $pdf = PDF::loadView('pages.Etats.essaipdf', $data)->save($filePaths);
                 
                 
                        // Enregistrer le chemin du PDF dans la base de données
                                     $duplicatafacture = new Duplicatafacture();
-                                    $duplicatafacture->url = $filePath;
+                                    $duplicatafacture->url = $filePaths;
                                     $duplicatafacture->nomeleve = $nomcompleteleve;
                                     $duplicatafacture->classe = $classeeleve;
                                     $duplicatafacture->reference = $reffacture;
@@ -763,7 +787,7 @@ public function savepaiementcontrat(Request $request) {
                                     $duplicatafacture->save();
 
 
-
+// dd($fileName);
         return view('pages.Etats.facturenormalise',  [
             'factureconfirm' => $decodedResponseConfirmation,
             'facturedetaille' => $facturedetaille, 
@@ -773,6 +797,7 @@ public function savepaiementcontrat(Request $request) {
             'toutmoiscontrat' => $toutmoiscontrat,
             'qrCodeString' => $qrCodeString,
             'logoUrl' => $logoUrl,
+            'fileNameqrcode' => $fileNameqrcode,
 
             // 'nometab' => $nometab,
             // 'villeetab' => $villeetab,
