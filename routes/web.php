@@ -102,6 +102,7 @@ Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
 
 Route::get('/parametre', [PagesController::class, 'parametre']);
 
-Route::post('logout', [ConnexionDBController::class, 'logout'])->name('logout');
+Route::post('logout', [PagesController::class, 'logout'])->name('logout');
 
 Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);
+
