@@ -1003,8 +1003,7 @@ public function essaipdf() {
     
     //     return back()->with('status','Contrat enregistré avec succès');
     // }
-    public function creercontrat(Request $request)
-    {
+    public function creercontrat(Request $request){
         // Récupérer les informations de la requête
         $classes = $request->input('classes');
         $eleveId = $request->input('matricules');
@@ -1076,15 +1075,14 @@ public function essaipdf() {
                 
        
                 
-                public function pdffacture()
-                {
+                public function pdffacture(){
                     return view('pages.pdffacture');
                 }
                 
     
                 public function supprimercontrat($MATRICULE){
 
-    // $existingContrat = Contrat::where('eleve_contrat', $matricules)->exists();
+                        // $existingContrat = Contrat::where('eleve_contrat', $matricules)->exists();
 
                     $contratss = Contrat::where('eleve_contrat', $MATRICULE)->first();
                     if($contratss){
@@ -1156,9 +1154,12 @@ public function essaipdf() {
 
      
             public function etatpaiement(){
+                if(Session::has('account')){
                 // $paiementsAvecEleves = Session::get('paiementsAvecEleves', collect()); // Déclaration avec une collection vide par défaut
 
                 return view ('pages.etatpaiement');
+                } 
+                return redirect('/');
             }
 
             public function traitementetatpaiement(Request $request){
@@ -1252,6 +1253,7 @@ public function essaipdf() {
         
                 return view('pages.etatpaiement1')->with('paiementsAvecEleves', $paiementsAvecEleves)->with('dateFormateedebut', $dateFormateedebut)->with('dateFormateefin', $dateFormateefin);
             }
+            
             public function supprimerpaiement($id_paiementcontrat){
 
                 $paiementsAvecEleves = Session::get('paiementsAvecEleves', collect()); // Déclaration avec une collection vide par défaut

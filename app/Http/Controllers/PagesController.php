@@ -18,10 +18,13 @@ use App\Models\Duplicatafacture;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
+
 class PagesController extends Controller
 {
  
     public function inscriptioncantine(){
+        if(Session::has('account')){
         // Liste des mots à exclure
         $excludedWords = ["DELETE", 'NON'];
     
@@ -38,6 +41,8 @@ class PagesController extends Controller
     
         // Retourner la vue avec les résultats
         return view('pages.inscriptioncantine')->with('class', $class);
+       } 
+       return redirect('/');
     }
     
     public function getEleves($codeClass)
@@ -175,15 +180,24 @@ class PagesController extends Controller
         }
 
     }
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
 
     public function vitrine(){
+        if(Session::has('account')){
         $totaleleve = Eleve::count();
         $totalcantineinscritactif = Contrat::where('statut_contrat', 1)->count();
         $totalcantineinscritinactif = Contrat::where('statut_contrat', 0)->count();
 
         // dd($totalcantineinscritactif);
         return view('pages.vitrine')->with('totalcantineinscritactif', $totalcantineinscritactif)->with('totalcantineinscritinactif', $totalcantineinscritinactif)->with('totaleleve', $totaleleve);
-
+        }return redirect('/');
     }
     public function paramsfacture(){
         return view('pages.paramsfacture');
@@ -235,14 +249,18 @@ class PagesController extends Controller
     }
 
     public function parametre(){
+        if(Session::has('account')){
         $param = Paramcontrat::first();
         return view('pages.parametre.parametre', ['param' => $param]);
+        }return redirect('/');
     } 
 
     public function duplicatafacture(){
-
+        if(Session::has('account')){
         $duplicatafactures = Duplicatafacture::all();
 
         return view('pages.duplicatafacture')->with('duplicatafactures', $duplicatafactures);
+        } 
+        return redirect('/');
     } 
 }
