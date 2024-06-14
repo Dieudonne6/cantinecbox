@@ -7,11 +7,11 @@
             <div class="form-group row">
                 <div class="col">
                     <label for="debut">Du</label>
-                    <input name="debut" id="debut" type="date" class="typeaheads">
+                    <input name="debut" id="debut" type="date" class="typeaheads" required>
                 </div>
                 <div class="col">
                     <label for="fin">Au</label>
-                    <input name="fin" id="fin" type="date" class="typeaheads">
+                    <input name="fin" id="fin" type="date" class="typeaheads" required>
                 </div>
 
                 <div class="col">
