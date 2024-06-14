@@ -310,7 +310,7 @@
 
         </div>
 
-        <div class="table2">
+        {{-- <div class="table2">
             <table id="customers">
                 <thead>
                     <tr>
@@ -340,7 +340,7 @@
                 </tbody>
             </table>
 
-        </div>
+        </div> --}}
         <p class="textmontant">Arretée, la presente facture a la somme de <span
                 class="prix">{{ $totalTTC }}</span> FCFA .</p>
 
