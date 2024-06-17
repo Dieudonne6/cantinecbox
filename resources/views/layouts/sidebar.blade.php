@@ -603,6 +603,8 @@
               </li> --}}
             </ul>
           </li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/duplicatafacture')}}">Duplicata facture</a></li>
+
           {{-- <div class="dropdown">
             <li class="nav-item">
             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton90" data-toggle="dropdown" 
@@ -666,6 +668,7 @@
           Déconnexion
         </button>
     </form>
+    
 </div>
 
 </nav>

@@ -22,11 +22,12 @@ use Illuminate\Support\Facades\DB;
 class EtatController extends Controller
 {
     public function etatdroits(){
+        if(Session::has('account')){
         $annees = Paramcontrat::distinct()->pluck('anneencours_paramcontrat'); 
         $classes = Classes::get();
         
         return view('pages.etat.etatdroits')->with('annee', $annees)->with('classe', $classes);
-        
+        }return redirect('/');
     }
     
     public function filteretat(Request $request){

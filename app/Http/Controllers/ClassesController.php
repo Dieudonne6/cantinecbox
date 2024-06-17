@@ -26,7 +26,7 @@ use App\Models\Paramsfacture;
 use App\Models\Params2;
 use GuzzleHttp\Client;
 // use Barryvdh\DomPDF\PDF;
-use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use DateTime;
 
@@ -625,8 +625,30 @@ public function savepaiementcontrat(Request $request) {
             $facturenormalise->montant_total = $montanttotal;
         
         $facturenormalise->save();
+
+
+
+        // gestion du code qr sous forme d'image
+
+        $fileNameqrcode = $nomcompleteleve . time() . '.png';
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->data($qrCodeString)
+            ->size(100)
+            // ->margin(10)
+            ->build();
+    
+        $filePath = public_path('qrcodes/' . $fileNameqrcode);
+    
+        // Assurez-vous que le répertoire qrcodes existe, sinon créez-le
+        if (!file_exists(public_path('qrcodes'))) {
+            mkdir(public_path('qrcodes'), 0755, true);
+        }
+    
+        $result->saveToFile($filePath);
     
         Session::put('factureconfirm', $decodedResponseConfirmation);
+        Session::put('fileNameqrcode', $fileNameqrcode);
         Session::put('facturedetaille', $facturedetaille);
         Session::put('reffacture', $reffacture);
         Session::put('classeeleve', $classeeleve);
@@ -643,12 +665,10 @@ public function savepaiementcontrat(Request $request) {
 
 
 
-
-    
-
     
         return view('pages.Etats.pdffacture', [
             'factureconfirm' => $decodedResponseConfirmation,
+            'fileNameqrcode' => $fileNameqrcode,
             'facturedetaille' => $facturedetaille,
             'reffacture' => $reffacture,
             'classeeleve' => $classeeleve,
@@ -690,11 +710,13 @@ public function savepaiementcontrat(Request $request) {
         $nomcompleteleve = Session::get('nomcompleteleve');
         $toutmoiscontrat = Session::get('toutmoiscontrat');
         $qrCodeString = Session::get('qrCodeString');
+        $fileNameqrcode = Session::get('fileNameqrcode');
         // $reffacture = Session::get('reffacture');
 
         $pdf = app('dompdf.wrapper');
         $pdf->loadView('pages.facture', [
                 'factureconfirm' => $decodedResponseConfirmation,
+                'fileNameqrcode' => $fileNameqrcode,
                 'facturedetaille' => $facturedetaille, 
                 'reffacture' => $reffacture,
                 'classeeleve' => $classeeleve,
@@ -714,6 +736,7 @@ public function savepaiementcontrat(Request $request) {
         $nomcompleteleve = Session::get('nomcompleteleve');
         $toutmoiscontrat = Session::get('toutmoiscontrat');
         $qrCodeString = Session::get('qrCodeString');
+        $fileNameqrcode = Session::get('fileNameqrcode');
 
         $paramse = Paramsfacture::first(); 
 
@@ -732,6 +755,7 @@ public function savepaiementcontrat(Request $request) {
                         'nomcompleteleve' => $nomcompleteleve,
                         'toutmoiscontrat' => $toutmoiscontrat,
                         'qrCodeString' => $qrCodeString,
+                        'fileNameqrcode' => $fileNameqrcode,
                         'logoUrl' => $logoUrl,
                     ];
 
@@ -742,7 +766,7 @@ public function savepaiementcontrat(Request $request) {
                     $fileName = $nomcompleteleve . time() . '.pdf';
                 
                     // Spécifiez le chemin complet vers le sous-dossier pdfs dans public
-                    $filePath = public_path('pdfs/' . $fileName);
+                    $filePaths = public_path('pdfs/' . $fileName);
                 
                     // Assurez-vous que le répertoire pdfs existe, sinon créez-le
                     if (!file_exists(public_path('pdfs'))) {
@@ -750,20 +774,20 @@ public function savepaiementcontrat(Request $request) {
                     }
                 
                     // Générer et enregistrer le PDF dans le sous-dossier pdfs
-                    $pdf = PDF::loadView('pages.Etats.essaipdf', $data)->save($filePath);
+                    $pdf = PDF::loadView('pages.Etats.essaipdf', $data)->save($filePaths);
                 
                 
                        // Enregistrer le chemin du PDF dans la base de données
                                     $duplicatafacture = new Duplicatafacture();
-                                    $duplicatafacture->url = $filePath;
+                                    $duplicatafacture->url = $fileName;
                                     $duplicatafacture->nomeleve = $nomcompleteleve;
                                     $duplicatafacture->classe = $classeeleve;
-                                    $duplicatafacture->reference = $reffacture;
+                                    $duplicatafacture->reference = 'Facture de paiement';
                                     $duplicatafacture->datepaiement = $datepaiement;
                                     $duplicatafacture->save();
 
 
-
+// dd($fileName);
         return view('pages.Etats.facturenormalise',  [
             'factureconfirm' => $decodedResponseConfirmation,
             'facturedetaille' => $facturedetaille, 
@@ -773,6 +797,7 @@ public function savepaiementcontrat(Request $request) {
             'toutmoiscontrat' => $toutmoiscontrat,
             'qrCodeString' => $qrCodeString,
             'logoUrl' => $logoUrl,
+            'fileNameqrcode' => $fileNameqrcode,
 
             // 'nometab' => $nometab,
             // 'villeetab' => $villeetab,
@@ -780,10 +805,69 @@ public function savepaiementcontrat(Request $request) {
     }
 
 
+    public function duplicatainscription() {
+        $amount = Session::get('amount');
+        $classe = Session::get('classe');
+        $logoUrl = Session::get('logoUrl');
+        $dateContrat = Session::get('dateContrat');
+        $elevyo = Session::get('elevyo');
+        $data = [
+            'amount' => $amount,
+            'classe' => $classe,
+            'logoUrl' => $logoUrl,
+            'dateContrat' => $dateContrat,
+            'elevyo' => $elevyo,
+        ];
+
+       
+    
+        // Spécifiez le nom du fichier avec un timestamp pour garantir l'unicité
+        $fileName = $elevyo . time() . '.pdf';
+    
+        // Spécifiez le chemin complet vers le sous-dossier pdfs dans public
+        $filePaths = public_path('pdfs/' . $fileName);
+    
+        // Assurez-vous que le répertoire pdfs existe, sinon créez-le
+        if (!file_exists(public_path('pdfs'))) {
+            mkdir(public_path('pdfs'), 0755, true);
+        }
+    
+        // Générer et enregistrer le PDF dans le sous-dossier pdfs
+        $pdf = PDF::loadView('pages.Etats.doubleinscriptionpdf', $data)->save($filePaths);
+    
+    
+           // Enregistrer le chemin du PDF dans la base de données
+                        $duplicatafacture = new Duplicatafacture();
+                        $duplicatafacture->url = $fileName;
+                        $duplicatafacture->nomeleve = $elevyo;
+                        $duplicatafacture->classe = $classe;
+                        $duplicatafacture->reference = 'Facture d\'inscription';
+
+                        $duplicatafacture->datepaiement = $dateContrat;
+                        $duplicatafacture->save();
+                        return view('pages.Etats.duplicatainscription', [
+                            'amount' => $amount,
+                            'classe' => $classe,
+                            'logoUrl' => $logoUrl,
+                            'dateContrat' => $dateContrat,
+                            'elevyo' => $elevyo,
+                
+                        ]);  
+        
+    }
 
 
+    public function doubleinscriptionpdf() {
 
-
+        $amount = Session::get('amount');
+        $classe = Session::get('classe');
+        $dateContrat = Session::get('dateContrat');
+        $elevyo = Session::get('elevyo');
+    
+        $paramse = Paramsfacture::first(); 
+    
+        $logoUrl = $paramse ? $paramse->logo: null; 
+    }
 
 public function essaipdf() {
 
@@ -795,38 +879,9 @@ public function essaipdf() {
     $toutmoiscontrat = Session::get('toutmoiscontrat');
     $qrCodeString = Session::get('qrCodeString');
 
-    // $reffacturearray = $reffacture->toArray();
-
-    // dd($facturedetaille);
     $paramse = Paramsfacture::first(); 
 
     $logoUrl = $paramse ? $paramse->logo: null; 
-
-
-
-
- 
-
-
-
-    // $pdf = Pdf::loadView('pages.Etats.essaipdf', compact('decodedResponseConfirmation', 'facturedetaille', 'reffacture', 'classeeleve', 'nomcompleteleve', 'toutmoiscontrat', 'qrCodeString', 'logoUrl'))->save(public_path('pdfs').time() . '.pdf');
-    // $pdf = Pdf::loadView('pages.Etats.pdffacture', [
-    //     'factureconfirm' => $decodedResponseConfirmation,
-    //     'facturedetaille' => $facturedetaille,
-    //     'reffacture' => $reffacture,
-    //     'classeeleve' => $classeeleve,
-    //     'nomcompleteleve' => $nomcompleteleve,
-    //     'toutmoiscontrat' => $toutmoiscontrat,
-    //     'qrCodeString' => $qrCodeString,
-    //     'logoUrl' => $logoUrl,
-        // 'nometab' => $nometab,
-        // 'villeetab' => $villeetab,
-        // 'qrCodeImage' => $qrCodeImage,
-
-            //  ]);
-
-    // $pdf = Pdf::loadView('pdf.invoice', $data);
-    // return $pdf->download(time() . '.pdf');
 }
 
 
@@ -978,8 +1033,7 @@ public function essaipdf() {
     
     //     return back()->with('status','Contrat enregistré avec succès');
     // }
-    public function creercontrat(Request $request)
-    {
+    public function creercontrat(Request $request){
         // Récupérer les informations de la requête
         $classes = $request->input('classes');
         $eleveId = $request->input('matricules');
@@ -1006,6 +1060,9 @@ public function essaipdf() {
                                        ->where('statut_contrat', 0)
                                        ->first();
 
+                                       $paramse = Paramsfacture::first(); 
+
+                                       $logoUrl = $paramse ? $paramse->logo: null; 
             if ($contratExistant) {
                 // Mettre à jour le contrat existant
                 $contratExistant->cout_contrat = $montant;
@@ -1013,11 +1070,19 @@ public function essaipdf() {
                 $contratExistant->statut_contrat = 1;
                 $contratExistant->datecreation_contrat = $dateContrat;
                 $contratExistant->save();
+                Session::put('amount', $montant);
+                Session::put('classe', $classes);
+                Session::put('logoUrl', $logoUrl);
+                Session::put('dateContrat', $dateContrat);
+                Session::put('elevyo', $elevyo);
+
                 return view('pages.Etats.pdfinscription')
                 ->with('amount', $montant)
                 ->with('classe', $classes )
+                ->with('logoUrl', $logoUrl )
                 ->with('dateContrat', $dateContrat)
                 ->with('elevyo', $elevyo);
+                
                 // return back()->with('status', 'Contrat mis à jour avec succès');
             } else {
                 // Créer un nouveau contrat
@@ -1028,9 +1093,15 @@ public function essaipdf() {
                 $nouveauContrat->statut_contrat = 1;
                 $nouveauContrat->datecreation_contrat = $dateContrat;
                 $nouveauContrat->save();
+                Session::put('amount', $montant);
+                Session::put('classe', $classes);
+                Session::put('logoUrl', $logoUrl);
+                Session::put('dateContrat', $dateContrat);
+                Session::put('elevyo', $elevyo);
                 return view('pages.Etats.pdfinscription')
                 ->with('amount', $montant)
                 ->with('classe', $classes )
+                ->with('logoUrl', $logoUrl )
                 ->with('dateContrat', $dateContrat)
                 ->with('elevyo', $elevyo);
                 // return back()->with('status', 'Contrat créé avec succès');
@@ -1046,15 +1117,14 @@ public function essaipdf() {
                 
        
                 
-                public function pdffacture()
-                {
+                public function pdffacture(){
                     return view('pages.pdffacture');
                 }
                 
     
                 public function supprimercontrat($MATRICULE){
 
-    // $existingContrat = Contrat::where('eleve_contrat', $matricules)->exists();
+                        // $existingContrat = Contrat::where('eleve_contrat', $matricules)->exists();
 
                     $contratss = Contrat::where('eleve_contrat', $MATRICULE)->first();
                     if($contratss){
@@ -1126,9 +1196,12 @@ public function essaipdf() {
 
      
             public function etatpaiement(){
+                if(Session::has('account')){
                 // $paiementsAvecEleves = Session::get('paiementsAvecEleves', collect()); // Déclaration avec une collection vide par défaut
 
                 return view ('pages.etatpaiement');
+                } 
+                return redirect('/');
             }
 
             public function traitementetatpaiement(Request $request){
@@ -1222,6 +1295,7 @@ public function essaipdf() {
         
                 return view('pages.etatpaiement1')->with('paiementsAvecEleves', $paiementsAvecEleves)->with('dateFormateedebut', $dateFormateedebut)->with('dateFormateefin', $dateFormateefin);
             }
+            
             public function supprimerpaiement($id_paiementcontrat){
 
                 $paiementsAvecEleves = Session::get('paiementsAvecEleves', collect()); // Déclaration avec une collection vide par défaut

@@ -351,6 +351,7 @@
             <div class="qcode">
                 <div id="qrcode">
 
+                    <img src="{{ asset('qrcodes/' . $fileNameqrcode) }}"   alt="">
 
 
                     {{-- <img src="{{ asset('qrcode/codeqr.png') }}" alt="Code QR" /> --}}
@@ -415,7 +416,7 @@
     {{-- 
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="{{asset('assets/css/bootstrap.min.js')}}"></script> --}}
-    <script>
+    {{-- <script>
         // Obtenez la chaîne du QR code depuis le serveur
         var qrCodeStrings = "{{ $qrCodeString }}";
 
@@ -425,4 +426,4 @@
             width: 100,
             height: 100
         });
-    </script>
+    </script> --}}
