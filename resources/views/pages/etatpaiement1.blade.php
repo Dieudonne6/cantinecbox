@@ -7,9 +7,26 @@
             /* display: none !important; */
             visibility: hidden !important; 
         }
-    
+    }
+    .cell-classe { background-color: #f8f9fa; }
+    .cell-eleve { background-color: #e9ecef; }
+    .cell-montant { background-color: #dee2e6; }
+    .cell-mois { background-color: #ced4da; }
+    .cell-date { background-color: #adb5bd; }
+    .cell-reference { background-color: #6c757d; }
+    .cell-action { background-color: #343a40; color: #fff; }
+
+    /* Couleur pour les lignes paires */
+    tbody tr:nth-child(even) {
+        background-color: #f1f3f5;
+    }
+
+    /* Couleur pour les lignes impaires */
+    tbody tr:nth-child(odd) {
+        background-color: #ffffff;
     }
 </style>
+
     <div class="container">
 
         <form action="{{ url('/traitementetatpaiement') }}" method="POST">
@@ -116,49 +133,39 @@
                 <tbody>
                     @foreach ($paiementsAvecEleves as $resultatsIndividuel)
                         <tr>
-
-                            <td>
+                            <td class="cell-classe">
                                 {{ $resultatsIndividuel['classe_eleve'] }}
                             </td>
-
-                            <td>
+                            <td class="cell-eleve">
                                 {{ $resultatsIndividuel['nomcomplet_eleve'] }}
                             </td>
-
-                            <td>
+                            <td class="cell-montant">
                                 {{ $resultatsIndividuel['montant'] }}
                             </td>
-
-                            <td style="width: 20px;">
+                            <td class="cell-mois">
                                 {{ $resultatsIndividuel['mois'] }}
                             </td>
-
-                            <td>
+                            <td class="cell-date">
                                 {{ $resultatsIndividuel['date_paiement'] }}
                             </td>
-
-                            <td>
+                            <td class="cell-reference">
                                 {{ $resultatsIndividuel['reference'] }}
                             </td>
-
-                            {{-- <td>
-                                {{ $resultatsIndividuel['user'] }}
-                            </td> --}}
-
-                            <td class="hide-on-print">
+                            <td class="cell-action hide-on-print">
                                 <div class="d-flex justify-content-between">
-                                  
-                                        <a type="button" style="height: 45px" class="btn btn-primary w-50 me-1" href="{{ url('imprimerfiche/' . $resultatsIndividuel['id_paiementcontrat']) }}">
+                                    <a type="button" style="height: 45px" class="btn btn-primary w-50 me-1"
+                                       href="{{ url('imprimerfiche/' . $resultatsIndividuel['id_paiementcontrat']) }}">
                                         Imprimer fiche
-                                        </a>
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                            Supprimer
-                                          </button> 
+                                    </a>
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        Supprimer
+                                    </button>
                                 </div>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
+                
             </table>
         </div>
     </div>
@@ -195,31 +202,39 @@
 @endsection
 
 <script>
-    
     function imprimerPage() {
-      var table = document.getElementById('myTable');
-      table.classList.remove('dataTable');
-      
-      var page = window.open();
-      page.document.write('<html><head><title>Paiement_du_{{$dateFormateedebut}}_au_{{$dateFormateefin}}</title>');
-        page.document.write('<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />');
-        page.document.write('<style>@media print { .dt-end { display: none !important; } }</style>');
-       
-        page.document.write('<style>@media print { .dt-start { display: none !important; } }</style>');
-
-        page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
-       
-        page.document.write('</head><body>');
-          page.document.write(document.getElementById('contenu').innerHTML);
-          
-          page.document.write('</body></html>');
-          page.document.close();
-          page.print();
-        }
-
-        
+        var table = document.getElementById('myTable');
+        table.classList.remove('dataTable');
     
-  </script>
+        // Masque les colonnes avec la classe hide-on-print
+        var columns = table.querySelectorAll('.hide-on-print');
+        columns.forEach(function(column) {
+            column.style.display = 'none';
+        });
+    
+        var page = window.open('', '_blank');
+        page.document.write('<html><head><title>Paiement du {{$dateFormateedebut}} au {{$dateFormateefin}}</title>');
+        page.document.write('<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />');
+        page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
+        page.document.write('<style>@media print { .dt-end { display: none !important; } }</style>');
+        page.document.write('<style>@media print { .dt-start { display: none !important; } }</style>');
+        page.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ddd; padding: 8px; } .cell-classe { background-color: #f8f9fa; } .cell-eleve { background-color: #e9ecef; } .cell-montant { background-color: #dee2e6; } .cell-mois { background-color: #ced4da; } .cell-date { background-color: #adb5bd; } .cell-reference { background-color: #6c757d; } .cell-action { background-color: #343a40; color: #fff; } tbody tr:nth-child(even) { background-color: #f1f3f5; } tbody tr:nth-child(odd) { background-color: #ffffff; } </style>');
+        page.document.write('</head><body>');
+        page.document.write('<div>' + document.getElementById('contenu').innerHTML + '</div>');
+        page.document.write('</body></html>');
+        page.document.close();
+        page.onload = function() {
+            page.print();
+            page.close();
+        };
+    
+        // Restaure les colonnes après l'impression
+        columns.forEach(function(column) {
+            column.style.display = '';
+        });
+    }
+    </script>
+    
 
 <!-- Assurez-vous d'inclure jQuery avant d'utiliser les méthodes AJAX -->
 
