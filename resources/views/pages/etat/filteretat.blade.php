@@ -140,7 +140,7 @@
       var table = document.getElementById('myTable');
       table.classList.remove('dataTable');
       
-      var page = window.open();
+      var page = window.open('', 'blank_');
         page.document.write('<html><head><title>EDC_annee_{{ $annee }}_{{ $anneesuivant }}_classe_{{ $classe }}</title>');
         // page.document.write('<html><head><title>Imprimer</title>');
         // page.document.write('<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />');
@@ -151,11 +151,21 @@
         // page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
         page.document.write('<style>@media print { th { display: table-cell !important; } }</style>');
         page.document.write('<style>@media print { th:nth-child(n+1), td:nth-child(n+1) {width: 20px; max-width: 20px; overflow: hidden; font-size: 0.8rem;} }</style>');
-
+        page.document.write('<style>@media print {');
+        page.document.write('table { width: 100%; border-collapse: collapse; }');
+        page.document.write('th, td { border-top: 1px solid black; border-bottom: 1px solid black; padding: 4px; font-size: 10px; }');
+        page.document.write('tr:nth-child(even) { background-color: #f2f2f2; }'); // Couleur de fond pour les lignes paires
+        page.document.write('tr:nth-child(odd) { background-color: #ffffff; }'); // Couleur de fond pour les lignes impaires
+        
+        page.document.write('thead { display: table-header-group; }');
+        page.document.write('tr, td { page-break-inside: avoid; }');
+        page.document.write('body { margin: 0; }');
+        page.document.write('</style>');
         page.document.write('</head><body>');
         page.document.write(document.getElementById('contenu').innerHTML);
         page.document.write('</body></html>');
         page.document.close();
         page.print();
+        page.close();
     }
     </script>
