@@ -6,16 +6,9 @@
         width: 35%;
         margin-top: 20px;
     }
-    .telecharger {
-            width: 8rem;
-            height: 2.4rem;
-            text-align: center;
-            margin-top: 20px;
-            margin-left: 10px;
-        }
 </style>
 <body>
-    <a class="telecharger btn btn-primary" href="{{ url('/duplicatainscription/' . $elevyo) }}" target="_blank">Imprimer</a>
+    {{-- <a class="telecharger btn btn-primary" href="{{ url('/duplicatainscription/' . $elevyo) }}" target="_blank">Imprimer</a> --}}
 
     <div class="container-fluid d-flex  align-items-center justify-content-center" >
         <div id="contenu">
@@ -24,11 +17,11 @@
             <div class="col-6 mx-auto contenu"  style="background-color:white;">
               <div class="d-flex justify-content-between mb-5">
                 <div>
-                  @if($logoUrl)
+                  {{-- @if($logoUrl)
                   <img src="{{ asset('storage/logo/' . $logoUrl) }}" alt="Logo" class="logoimg">
                   @else
                       <p>Aucun logo disponible.</p>
-                  @endif
+                  @endif --}}
                 </div>
                 <div>
                   <h5 style="padding-top:20px;">
@@ -102,19 +95,3 @@
 
 @endsection
 
-<script>
-    function imprimerPage() {
-        var page = window.open();
-        page.document.write('<html><head><title>fiche</title>');
-        page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
-        page.document.write('<style>@media print { .logoimg {width: 35%; margin-top: 20px; } }</style>');
-
-        page.document.write('</head><body>');
-            page.document.write(document.querySelector('.contenu').innerHTML);
-            
-        page.document.write('</body></html>');
-        page.document.close();
-        page.print();
-    }
-    
-  </script>

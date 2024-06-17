@@ -106,3 +106,4 @@ Route::post('logout', [PagesController::class, 'logout'])->name('logout');
 
 Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);
 
+Route::get('/duplicatainscription/{elevyo}',[ClassesController::class,'duplicatainscription']);

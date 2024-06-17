@@ -26,10 +26,11 @@
                                 <table id="myTable" class="table custom-table">
                                     <thead>
                                         <tr>
+                                            <th> Type de Facture</th>
                                             <th>Classe</th>
                                             <th>Eleve</th>
                                             <th>Date de paiement</th>
-                                            <th>Reference</th>
+                                            {{-- <th>Reference</th> --}}
                                             <th>Facture</th>
                                         </tr>
                                     </thead>
@@ -38,9 +39,10 @@
 
                                             <tr>
                                                 <td>{{ $duplicatafacture['classe'] }}</td>
+                                                <td>{{ $duplicatafacture['classe'] }}</td>
                                                 <td>{{ $duplicatafacture['nomeleve'] }}</td>
                                                 <td>{{ $duplicatafacture['datepaiement'] }}</td>
-                                                <td>{{ $duplicatafacture['reference'] }}</td>
+                                                {{-- <td>{{ $duplicatafacture['reference'] }}</td> --}}
                                                 <td>
                                                     {{-- {{ public_path('qrcodes/' . $fileNameqrcode) }} --}}
                                                     <a href="{{ asset('pdfs/' .$duplicatafacture['url']) }}" class="btn btn-primary btn-sm mb-1" target="_blank">

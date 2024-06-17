@@ -805,10 +805,67 @@ public function savepaiementcontrat(Request $request) {
     }
 
 
+    public function duplicatainscription() {
+        $amount = Session::get('amount');
+        $classe = Session::get('classe');
+        $logoUrl = Session::get('logoUrl');
+        $dateContrat = Session::get('dateContrat');
+        $elevyo = Session::get('elevyo');
+        $data = [
+            'amount' => $amount,
+            'classe' => $classe,
+            'logoUrl' => $logoUrl,
+            'dateContrat' => $dateContrat,
+            'elevyo' => $elevyo,
+        ];
+
+       
+    
+        // Spécifiez le nom du fichier avec un timestamp pour garantir l'unicité
+        $fileName = $elevyo . time() . '.pdf';
+    
+        // Spécifiez le chemin complet vers le sous-dossier pdfs dans public
+        $filePaths = public_path('duplipdfs/' . $fileName);
+    
+        // Assurez-vous que le répertoire pdfs existe, sinon créez-le
+        if (!file_exists(public_path('duplipdfs'))) {
+            mkdir(public_path('duplipdfs'), 0755, true);
+        }
+    
+        // Générer et enregistrer le PDF dans le sous-dossier pdfs
+        $pdf = PDF::loadView('pages.Etats.doubleinscriptionpdf', $data)->save($filePaths);
+    
+    
+           // Enregistrer le chemin du PDF dans la base de données
+                        $duplicatafacture = new Duplicatafacture();
+                        $duplicatafacture->url = $fileName;
+                        $duplicatafacture->nomeleve = $elevyo;
+                        $duplicatafacture->classe = $classe;
+                        $duplicatafacture->datepaiement = $dateContrat;
+                        $duplicatafacture->save();
+                        return view('pages.Etats.duplicatainscription',  [
+                            'amount' => $amount,
+                            'classe' => $classe,
+                            'logoUrl' => $logoUrl,
+                            'dateContrat' => $dateContrat,
+                            'elevyo' => $elevyo,
+                
+                        ]);  
+        
+    }
 
 
+    public function doubleinscriptionpdf() {
 
-
+        $amount = Session::get('amount');
+        $classe = Session::get('classe');
+        $dateContrat = Session::get('dateContrat');
+        $elevyo = Session::get('elevyo');
+    
+        $paramse = Paramsfacture::first(); 
+    
+        $logoUrl = $paramse ? $paramse->logo: null; 
+    }
 
 public function essaipdf() {
 
@@ -820,38 +877,9 @@ public function essaipdf() {
     $toutmoiscontrat = Session::get('toutmoiscontrat');
     $qrCodeString = Session::get('qrCodeString');
 
-    // $reffacturearray = $reffacture->toArray();
-
-    // dd($facturedetaille);
     $paramse = Paramsfacture::first(); 
 
     $logoUrl = $paramse ? $paramse->logo: null; 
-
-
-
-
- 
-
-
-
-    // $pdf = Pdf::loadView('pages.Etats.essaipdf', compact('decodedResponseConfirmation', 'facturedetaille', 'reffacture', 'classeeleve', 'nomcompleteleve', 'toutmoiscontrat', 'qrCodeString', 'logoUrl'))->save(public_path('pdfs').time() . '.pdf');
-    // $pdf = Pdf::loadView('pages.Etats.pdffacture', [
-    //     'factureconfirm' => $decodedResponseConfirmation,
-    //     'facturedetaille' => $facturedetaille,
-    //     'reffacture' => $reffacture,
-    //     'classeeleve' => $classeeleve,
-    //     'nomcompleteleve' => $nomcompleteleve,
-    //     'toutmoiscontrat' => $toutmoiscontrat,
-    //     'qrCodeString' => $qrCodeString,
-    //     'logoUrl' => $logoUrl,
-        // 'nometab' => $nometab,
-        // 'villeetab' => $villeetab,
-        // 'qrCodeImage' => $qrCodeImage,
-
-            //  ]);
-
-    // $pdf = Pdf::loadView('pdf.invoice', $data);
-    // return $pdf->download(time() . '.pdf');
 }
 
 
@@ -1040,12 +1068,19 @@ public function essaipdf() {
                 $contratExistant->statut_contrat = 1;
                 $contratExistant->datecreation_contrat = $dateContrat;
                 $contratExistant->save();
+                Session::put('amount', $montant);
+                Session::put('classe', $classes);
+                Session::put('logoUrl', $logoUrl);
+                Session::put('dateContrat', $dateContrat);
+                Session::put('elevyo', $elevyo);
+
                 return view('pages.Etats.pdfinscription')
                 ->with('amount', $montant)
                 ->with('classe', $classes )
                 ->with('logoUrl', $logoUrl )
                 ->with('dateContrat', $dateContrat)
                 ->with('elevyo', $elevyo);
+                
                 // return back()->with('status', 'Contrat mis à jour avec succès');
             } else {
                 // Créer un nouveau contrat
@@ -1056,6 +1091,11 @@ public function essaipdf() {
                 $nouveauContrat->statut_contrat = 1;
                 $nouveauContrat->datecreation_contrat = $dateContrat;
                 $nouveauContrat->save();
+                Session::put('amount', $montant);
+                Session::put('classe', $classes);
+                Session::put('logoUrl', $logoUrl);
+                Session::put('dateContrat', $dateContrat);
+                Session::put('elevyo', $elevyo);
                 return view('pages.Etats.pdfinscription')
                 ->with('amount', $montant)
                 ->with('classe', $classes )
