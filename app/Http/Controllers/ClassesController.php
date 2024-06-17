@@ -782,7 +782,7 @@ public function savepaiementcontrat(Request $request) {
                                     $duplicatafacture->url = $fileName;
                                     $duplicatafacture->nomeleve = $nomcompleteleve;
                                     $duplicatafacture->classe = $classeeleve;
-                                    $duplicatafacture->reference = $reffacture;
+                                    $duplicatafacture->reference = 'Facture de paiement';
                                     $duplicatafacture->datepaiement = $datepaiement;
                                     $duplicatafacture->save();
 
@@ -825,11 +825,11 @@ public function savepaiementcontrat(Request $request) {
         $fileName = $elevyo . time() . '.pdf';
     
         // Spécifiez le chemin complet vers le sous-dossier pdfs dans public
-        $filePaths = public_path('duplipdfs/' . $fileName);
+        $filePaths = public_path('pdfs/' . $fileName);
     
         // Assurez-vous que le répertoire pdfs existe, sinon créez-le
-        if (!file_exists(public_path('duplipdfs'))) {
-            mkdir(public_path('duplipdfs'), 0755, true);
+        if (!file_exists(public_path('pdfs'))) {
+            mkdir(public_path('pdfs'), 0755, true);
         }
     
         // Générer et enregistrer le PDF dans le sous-dossier pdfs
@@ -841,9 +841,11 @@ public function savepaiementcontrat(Request $request) {
                         $duplicatafacture->url = $fileName;
                         $duplicatafacture->nomeleve = $elevyo;
                         $duplicatafacture->classe = $classe;
+                        $duplicatafacture->reference = 'Facture d\'inscription';
+
                         $duplicatafacture->datepaiement = $dateContrat;
                         $duplicatafacture->save();
-                        return view('pages.Etats.duplicatainscription',  [
+                        return view('pages.Etats.duplicatainscription', [
                             'amount' => $amount,
                             'classe' => $classe,
                             'logoUrl' => $logoUrl,

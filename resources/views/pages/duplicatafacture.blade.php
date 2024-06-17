@@ -38,7 +38,7 @@
                                         @foreach ($duplicatafactures as $duplicatafacture)
 
                                             <tr>
-                                                <td>{{ $duplicatafacture['classe'] }}</td>
+                                                <td>{{ $duplicatafacture['reference'] }}</td>
                                                 <td>{{ $duplicatafacture['classe'] }}</td>
                                                 <td>{{ $duplicatafacture['nomeleve'] }}</td>
                                                 <td>{{ $duplicatafacture['datepaiement'] }}</td>
