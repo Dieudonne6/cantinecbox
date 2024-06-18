@@ -1,31 +1,27 @@
 @extends('layouts.master')
 @section('content')
 <style>
-    /* Masquer la colonne lors de l'impression */
-    @media print {
-        .hide-on-print {
-            /* display: none !important; */
-            visibility: hidden !important; 
+    /* Styles spécifiques pour l'impression sur papier A4 */
+    @media print and (size: A4) {
+        table {
+            font-size: 5pt; /* Ajuste la taille de la police pour A4 */
+        }
+        th, td {
+            padding: 3px; /* Ajuste le padding pour A4 */
         }
     }
-    .cell-classe { background-color: #f8f9fa; }
-    .cell-eleve { background-color: #e9ecef; }
-    .cell-montant { background-color: #dee2e6; }
-    .cell-mois { background-color: #ced4da; }
-    .cell-date { background-color: #adb5bd; }
-    .cell-reference { background-color: #6c757d; }
-    .cell-action { background-color: #343a40; color: #fff; }
 
-    /* Couleur pour les lignes paires */
-    tbody tr:nth-child(even) {
-        background-color: #f1f3f5;
-    }
-
-    /* Couleur pour les lignes impaires */
-    tbody tr:nth-child(odd) {
-        background-color: #ffffff;
+    /* Styles spécifiques pour l'impression sur papier A3 */
+    @media print and (size: A3) {
+        table {
+            font-size: 6pt; /* Ajuste la taille de la police pour A3 */
+        }
+        th, td {
+            padding: 4px; /* Ajuste le padding pour A3 */
+        }
     }
 </style>
+
 
     <div class="container">
 
@@ -99,7 +95,7 @@
         <h5 class="card-title" style="text-align: center;">Liste des paiements de la periode du {{$dateFormateedebut}} au {{$dateFormateefin}} </h5>
     </div><br>
         <div class="table-responsive">
-            <table id="myTable" class="table">
+            <table id="myTable" class="table table-striped">
                 <thead>
                     <tr>
 
@@ -133,22 +129,22 @@
                 <tbody>
                     @foreach ($paiementsAvecEleves as $resultatsIndividuel)
                         <tr>
-                            <td class="cell-classe">
+                            <td>
                                 {{ $resultatsIndividuel['classe_eleve'] }}
                             </td>
-                            <td class="cell-eleve">
+                            <td >
                                 {{ $resultatsIndividuel['nomcomplet_eleve'] }}
                             </td>
-                            <td class="cell-montant">
+                            <td>
                                 {{ $resultatsIndividuel['montant'] }}
                             </td>
-                            <td class="cell-mois">
+                            <td>
                                 {{ $resultatsIndividuel['mois'] }}
                             </td>
-                            <td class="cell-date">
+                            <td>
                                 {{ $resultatsIndividuel['date_paiement'] }}
                             </td>
-                            <td class="cell-reference">
+                            <td>
                                 {{ $resultatsIndividuel['reference'] }}
                             </td>
                             <td class="cell-action hide-on-print">
@@ -205,13 +201,13 @@
     function imprimerPage() {
         var table = document.getElementById('myTable');
         table.classList.remove('dataTable');
-    
+
         // Masque les colonnes avec la classe hide-on-print
         var columns = table.querySelectorAll('.hide-on-print');
         columns.forEach(function(column) {
             column.style.display = 'none';
         });
-    
+
         var page = window.open('', '_blank');
         page.document.write('<html><head><title>Paiement du {{$dateFormateedebut}} au {{$dateFormateefin}}</title>');
         page.document.write('<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />');
@@ -227,14 +223,14 @@
             page.print();
             page.close();
         };
-    
+
         // Restaure les colonnes après l'impression
         columns.forEach(function(column) {
             column.style.display = '';
         });
     }
-    </script>
-    
+</script>
+
 
 <!-- Assurez-vous d'inclure jQuery avant d'utiliser les méthodes AJAX -->
 
