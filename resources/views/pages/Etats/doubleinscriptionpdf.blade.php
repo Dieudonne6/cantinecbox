@@ -45,6 +45,7 @@
     }
   
     .info {
+        padding: 0.5rem;
         margin-left: 26rem;
         margin-top: -20rem;
     }
@@ -214,7 +215,7 @@
             </div>
   
             <div class="info">
-                <p>Facture d'inscription cantine </p>
+                <h4>Facture d'inscription cantine </h4>
             </div>
         </div>
   
