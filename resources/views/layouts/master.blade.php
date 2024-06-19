@@ -41,12 +41,12 @@ padding: 0;
 .menu-item-has-children::after{
 content: "";
 position: absolute;
-left: 4rem;
+right: 0;
 top: 50%;
-width: 14px;
+width: 10px;
 height: 9px;
 transform: translateY(-50%) rotate(90deg);
-background-size: 0.8rem;
+background-size: 0.6rem;
 background-image: url(assets/images/arrow-left-bold.png);
 background-position: center;
 background-repeat: no-repeat;
