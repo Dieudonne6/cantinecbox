@@ -154,7 +154,10 @@ class PagesController extends Controller
         return view('pages.inscriptions.Acceuil');
 
     }
+    public function profil(){
+        return view('pages.inscriptions.profil');
 
+    }
     public function connexion(){
         $login = User::get();
         return view('pages.connexion', ['login' => $login]);

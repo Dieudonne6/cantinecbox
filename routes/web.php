@@ -66,6 +66,7 @@ Route::get('/changetrimestre', [PagesController::class, 'changetrimestre']);
 Route::get('/confimpression', [PagesController::class, 'confimpression']);
 
 Route::get('/Acceuil', [PagesController::class, 'Acceuil']);
+Route::get('/profil', [PagesController::class, 'profil']);
 
 Route::put('/modifierfrais/{id_paramcontrat}', [PagesController::class, 'modifierfrais']);
 Route::get('/dashbord', [PagesController::class, 'dashbord']);
