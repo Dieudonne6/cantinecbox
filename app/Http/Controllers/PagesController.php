@@ -154,7 +154,10 @@ class PagesController extends Controller
         return view('pages.inscriptions.Acceuil');
 
     }
+    public function profil(){
+        return view('pages.inscriptions.profil');
 
+    }
     public function connexion(){
         $login = User::get();
         return view('pages.connexion', ['login' => $login]);
@@ -202,7 +205,9 @@ class PagesController extends Controller
     public function paramsfacture(){
         return view('pages.paramsfacture');
     }
-   
+    public function echeancier(){
+        return view('pages.inscriptions.echeancier');
+    }
     public function paramsemecef(Request $request){
         $emcef = new Paramsfacture();
         $emcef->ifu = $request->input('ifu');
