@@ -9,7 +9,7 @@
                     A simple suggestion engine
                   </p> --}}
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-6">
                             <h5 style="text-align: center; color: rgb(188, 64, 64)">Scolarite</h5>
                             <div class="table-responsive pt-3">
 
@@ -18,7 +18,7 @@
                                         <tr>
                                             <th>Date</th>
                                             <th>Montant</th>
-                                            <th>Total</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -26,12 +26,29 @@
                                         <tr>
                                             <td>21/23/2025</td>
                                             <td>150000</td>
-                                            <td rowspan="6">150000</td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-sm">Modifier</button>
+                                                <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
+                                            </td>
+                                            {{-- <td rowspan="6">150000</td> --}}
                                         </tr>
 
                                         <tr>
                                             <td>21/23/2025</td>
                                             <td>150000</td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-sm">Modifier</button>
+                                                <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th colspan="2">
+                                                Total
+                                            </th>
+                                            <th >
+                                                300000
+                                            </th>
                                         </tr>
 
 
@@ -39,18 +56,18 @@
                                 </table>
                             </div>
                             <br>
-                            <div style="text-align: center">
+                            {{-- <div style="text-align: center">
                                 <button type="button" class="btn btn-primary btn-sm">Ajou Scolarite</button>
                                 <button type="button" class="btn btn-danger btn-sm" >Sup Scolarite</button>
-                            </div>
+                            </div> --}}
 
                         </div>
 
 
                         {{-- deuxieme tableau --}}
 
-                        <div class="col-3">
-                            <h5 style="text-align: center; color: rgb(188, 64, 64)">Arriere</h5>
+                        <div class="col-6">
+                            <h5 style="text-align: center; color: rgb(188, 64, 64)">Arriéré</h5>
                             <div class="table-responsive pt-3">
 
                                 <table class="table table-bordered">
@@ -58,7 +75,7 @@
                                         <tr>
                                             <th>Date</th>
                                             <th>Montant</th>
-                                            <th>Total</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -66,12 +83,28 @@
                                         <tr>
                                             <td>21/23/2025</td>
                                             <td>150000</td>
-                                            <td rowspan="6">150000</td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-sm">Modifier</button>
+                                                <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
+                                            </td>
+                                            {{-- <td rowspan="6">150000</td> --}}
                                         </tr>
 
                                         <tr>
                                             <td>21/23/2025</td>
                                             <td>150000</td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-sm">Modifier</button>
+                                                <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">
+                                                Total
+                                            </th>
+                                            <th >
+                                                300000
+                                            </th>
                                         </tr>
 
 
@@ -79,69 +112,91 @@
                                 </table>
                             </div>
                             <br>
-                            <div style="text-align: center">
+                            {{-- <div style="text-align: center">
                                 <button type="button" class="btn btn-primary btn-sm">Ajou Arriere</button>
                                 <button type="button" class="btn btn-danger btn-sm" >Sup Arriere</button>
-                            </div>
+                            </div> --}}
                         </div>
+                    </div>
+                </div><br>
 
-                            {{-- troisieme tableau --}}
+                <div class="row">
+                             {{-- troisieme tableau --}}
 
-                                <div class="col-4">
+                             <div class="col-8">
 
-                                    <h5 style="text-align: center; color: rgb(188, 64, 64)">Recapitulatif par recu</h5>
-                                    <div class="table-responsive pt-3">
-        
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>no recu</th>
-                                                    <th>Date</th>
-                                                    <th>Montant</th>
-                                                    <th>Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+                                <h5 style="text-align: center; color: rgb(188, 64, 64)">Recapitulatif par reçu</h5>
+                                <div class="table-responsive pt-3">
+    
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>no recu</th>
+                                                <th>Date</th>
+                                                <th>Montant</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                                <tr>
-                                                    <td>004</td>
-                                                    <td>21/23/2025</td>
-                                                    <td>150000</td>
-                                                    <td rowspan="6">150000</td>
-                                                </tr>
+                                            <tr>
+                                                <td>004</td>
+                                                <td>21/23/2025</td>
+                                                <td>150000</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary btn-sm">Modifier</button>
+                                                    <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
+                                                </td>
+                                                {{-- <td rowspan="6">150000</td> --}}
+                                            </tr>
 
-                                                <tr>
-                                                    <td>005</td>
-                                                    <td>21/23/2025</td>
-                                                    <td>150000</td>
-                                                </tr>
+                                            <tr>
+                                                <td>005</td>
+                                                <td>21/23/2025</td>
+                                                <td>150000</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary btn-sm">Modifier</button>
+                                                <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="3">
+                                                    Total
+                                                </th>
+                                                <th >
+                                                    300000
+                                                </th>
+                                            </tr>
 
 
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <br>
-                                    <div style="text-align: center">
-                                        <button type="button" class="btn btn-primary btn-sm">Ajou Recap</button>
-                                        <button type="button" class="btn btn-danger btn-sm" >Sup Recap</button>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br>
+                                {{-- <div style="text-align: center">
+                                    <button type="button" class="btn btn-primary btn-sm">Ajou Recap</button>
+                                    <button type="button" class="btn btn-danger btn-sm" >Sup Recap</button>
+                                </div> --}}
+
+                            </div>
+
+                            {{-- derniere partie --}}
+
+                                <div class="col-3 mt-4 ml-4">
+
+                                    <div>
+                                        <button type="button" class="btn btn-inverse-secondary btn-fw btn-sm" style="margin-top: 10px">En attente / eleve</button>
+                                        <button type="button" class="btn btn-inverse-secondary btn-fw btn-sm" style="margin-top: 10px">En attente / eleve</button>
+                                        <button type="button" class="btn btn-inverse-secondary btn-fw btn-sm" style="margin-top: 10px">Recapitulatif paiement</button>
                                     </div>
 
                                 </div>
 
-                                {{-- derniere partie --}}
+                </div>
+                   
 
-                                    <div class="col-2 mt-4 ">
+                    </div><br><br>
 
-                                        <div>
-                                            <button type="button" class="btn btn-inverse-secondary btn-fw btn-sm" style="margin-top: 10px">En attente / eleve</button>
-                                            <button type="button" class="btn btn-inverse-secondary btn-fw btn-sm" style="margin-top: 10px">En attente / eleve</button>
-                                            <button type="button" class="btn btn-inverse-secondary btn-fw btn-sm" style="margin-top: 10px">Recapitulatif paiement</button>
-                                        </div>
-
-                                    </div>
-
-
-                        </div><br><br>
                                 {{-- 
                   <div class="row">
                     <div class="col-12">
