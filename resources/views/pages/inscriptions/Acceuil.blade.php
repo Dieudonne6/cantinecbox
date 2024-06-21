@@ -11,7 +11,8 @@
             <div class="card-body">
               <div class="row gy-3">
                 <div class="demo-inline-spacing">
-                  <button type="button" class="btn btn-primary p-2">Nouveau</button>
+                  {{-- <button type="button" class="btn btn-primary p-2">Nouveau</button> --}}
+                  <a href="{{url('/inscrireeleve')}}" class="btn btn-primary btn-sm mb-1"> Nouveau</a>
                   <button type="button" class="btn btn-danger p-2">Paiement</button>
                   <button type="button" class="btn btn-warning p-2">MAJ Paie</button>
                   <button type="button" class="btn btn-info p-2">Echéan.</button>

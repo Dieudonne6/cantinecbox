@@ -263,4 +263,8 @@ class PagesController extends Controller
         } 
         return redirect('/');
     } 
+
+    public function inscrireeleve(){
+        return view('pages.inscriptions.inscrireeleve');
+    } 
 }
