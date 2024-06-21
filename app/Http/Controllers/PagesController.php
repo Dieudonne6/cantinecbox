@@ -263,4 +263,22 @@ class PagesController extends Controller
         } 
         return redirect('/');
     } 
+
+    public function paiementeleve(){
+        if(Session::has('account')){
+        // $duplicatafactures = Duplicatafacture::all();
+
+        return view('pages.inscriptions.Paiement');
+        } 
+        return redirect('/');
+    } 
+
+    public function majpaiementeleve(){
+        if(Session::has('account')){
+        // $duplicatafactures = Duplicatafacture::all();
+
+        return view('pages.inscriptions.MajPaiement');
+        } 
+        return redirect('/');
+    } 
 }

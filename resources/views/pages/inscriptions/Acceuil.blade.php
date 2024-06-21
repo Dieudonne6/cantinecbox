@@ -1,6 +1,8 @@
 @extends('layouts.master')
 @section('content')
 
+
+
   <div class="main-panel-10">
     <div class="content-wrapper">
         
@@ -12,7 +14,7 @@
               <div class="row gy-3">
                 <div class="demo-inline-spacing">
                   <button type="button" class="btn btn-primary p-2">Nouveau</button>
-                  <button type="button" class="btn btn-danger p-2">Paiement</button>
+                  <button type="button" class="btn btn-danger p-2" data-toggle="modal" data-target="#formulaire">Paiement</button>
                   <button type="button" class="btn btn-warning p-2">MAJ Paie</button>
                   <button type="button" class="btn btn-info p-2">Echéan.</button>
                   <button type="button" class="btn btn-light p-2" >Cursus</button>
@@ -36,13 +38,13 @@
         <div class="col-md-8">
                 
           <div class="card">
-            <div class="table-responsive" style="height: 300px; overflow: auto;">
+            <div  style="overflow: auto;">
               <table class="table table-bordered table-striped" style="min-width: 800px;">
                 <thead>
                   <tr>
                         <th class="ml-5" _msttexthash="13715" _msthash="167">Matricule</th>
                         <th _msttexthash="185380" _msthash="168">Nom</th>
-                        <th _msttexthash="76570" _msthash="169">Prénoms</th>
+                        {{-- <th _msttexthash="76570" _msthash="169">Prénoms</th> --}}
                         <th _msttexthash="155961" _msthash="170">Classe</th>
                         <th _msttexthash="136253" _msthash="171">Sexe</th>
                         <th _msttexthash="74568" _msthash="172">Red.</th>
@@ -53,8 +55,8 @@
                 <tbody>
                       <tr>
                         <td _msttexthash="15990" _msthash="174">#D1</td>
-                        <td _msttexthash="702468" _msthash="175">Consectetur adipisicing elit </td>
-                        <td _msttexthash="255164" _msthash="176">Beulah Cummings</td>
+                        <td style="width: 15px" !important>Consectetur adipisicing elit </td>
+                        {{-- <td _msttexthash="255164" _msthash="176">Beulah Cummings</td> --}}
                         <td _msttexthash="117845" _msthash="177">03 janv. 2019</td>
                         <td _msttexthash="28028" _msthash="178">5235 $</td>
                         <td class="checkboxes-select" rowspan="1" colspan="1" style="width: 18px;">
@@ -78,7 +80,7 @@
                           </div>
                         </td>
                       </tr>
-                      <tr>
+                      {{-- <tr>
                         <td _msttexthash="16107" _msthash="182">#D2</td>
                         <td _msttexthash="1387555" _msthash="183">Corrélation silo des ressources</td>
                         <td _msttexthash="253994" _msthash="184">Mitchel Dunford</td>
@@ -185,7 +187,7 @@
                         </button>
                           </div>
                         </td>
-                      </tr>
+                      </tr> --}}
                 </tbody>
               </table>
             </div>
@@ -664,6 +666,10 @@
             </div>                  
           </div>
         </div>                
+
+
+
+
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
       </div>  
