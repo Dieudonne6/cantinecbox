@@ -102,6 +102,7 @@ Route::get('/inscriptions', [PagesController::class, 'inscriptions']);
 Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
 
 Route::get('/parametre', [PagesController::class, 'parametre']);
+Route::get('/echeancier', [PagesController::class, 'echeancier']);
 
 Route::post('logout', [PagesController::class, 'logout'])->name('logout');
 

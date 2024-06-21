@@ -26,63 +26,17 @@
   <link rel="shortcut icon" href="{{asset('assets/images/favicon.png')}}" />
 
   <style>
-   .tables th:nth-child(n+1), .tables td:nth-child(n+1) {
-      /* width: 80px;
-      max-width: 80px; */
-      overflow: hidden;
+    input::placeholder {
+      color: #000 !important;
     }
-    .menu-item-has-children:hover::after {
-transform: translateY(-3.5rem) rotate(-90deg);
-}
-.menu-item-has-children {
-position: relative;
-padding: 0;
-}
-.menu-item-has-children::after{
-content: "";
-position: absolute;
-right: 0;
-top: 50%;
-width: 10px;
-height: 9px;
-transform: translateY(-50%) rotate(90deg);
-background-size: 0.6rem;
-background-image: url(assets/images/arrow-left-bold.png);
-background-position: center;
-background-repeat: no-repeat;
-transition: transform 0.6s;
-}
-.sub-menus {
-  position: absolute;
-  left: 0;
-  top: 100%;
-  display: none;
-  position: static;
-  width: 12.5rem;
-  background-color: #fff;
-  padding: 0.8rem;
-  margin: 0;
-  z-index: 1;
-  box-shadow: 0px 1px 15px 1px rgba(230, 234, 236, 0.35);
-  border: 1px solid #f3f3f3;
-}
-.sub-menus li a {
-  color: #000 !important;
-}
-.sub-menus li a:hover {
-  text-decoration: none;
-}
-.sub-menus li {
-  list-style: none;
-  margin-bottom: 0.4rem;
-}
-.menu-item-has-children:hover .sub-menus{
-display: block;
-}
-
-
-  </style>
-  
+    .profile-content .form-group {
+       margin-bottom: 0 !important;
+    }
+    .profile-content input {
+       text-align: right;
+       padding: 0 0.3rem;
+    }
+</style>
 </head>
 
 
@@ -141,6 +95,19 @@ display: block;
         $('.prima').removeClass('d-none');
       }
     });
+    $('#calculs').on('click', function() {
+      $('#percentage').removeClass('d-none');
+      
+      $('#calcul-one').addClass('col-lg-8');
+      $('.calcul-modal').css({'width': '800px'});
+    });
+    $('#closecalculate').on('click', function() {
+      $('#percentage').addClass('d-none');
+      $('#calcul-one').removeClass('col-lg-8');
+      $('.calcul-modal').css({'width': '500px'});
+
+    });
+    
   });
 </script>
 

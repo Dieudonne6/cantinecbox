@@ -205,7 +205,9 @@ class PagesController extends Controller
     public function paramsfacture(){
         return view('pages.paramsfacture');
     }
-   
+    public function echeancier(){
+        return view('pages.inscriptions.echeancier');
+    }
     public function paramsemecef(Request $request){
         $emcef = new Paramsfacture();
         $emcef->ifu = $request->input('ifu');
