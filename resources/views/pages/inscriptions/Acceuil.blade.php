@@ -11,7 +11,7 @@
             <div class="card-body">
               <div class="row gy-3">
                 <div class="demo-inline-spacing">
-                  <button type="button" class="btn btn-primary">Nouveau</button>
+                  <a href={{ url('/inscrireeleve')}}  class="btn btn-primary">Nouveau</a>
                   <button type="button" class="btn btn-secondary">Imprimer</button>  
                   <style>
                     table {
