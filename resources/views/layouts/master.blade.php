@@ -26,6 +26,16 @@
   <link rel="shortcut icon" href="{{asset('assets/images/favicon.png')}}" />
 
   <style>
+    input::placeholder {
+      color: #000 !important;
+    }
+    .profile-content .form-group {
+       margin-bottom: 0 !important;
+    }
+    .profile-content input {
+       text-align: right;
+       padding: 0 0.3rem;
+    }
    .tables th:nth-child(n+1), .tables td:nth-child(n+1) {
       /* width: 80px;
       max-width: 80px; */
@@ -129,7 +139,7 @@ display: block;
     }
 </script>
 
-<script>
+{{-- <script>
   $(document).ready(function() {
     $('#selectClasses').change(function() {
       var selectedValue = $(this).val();
@@ -142,7 +152,7 @@ display: block;
       }
     });
   });
-</script>
+</script> --}}
 
 <script>
 $(document).ready(function(){
@@ -294,6 +304,33 @@ $(document).ready(function(){
     });
 </script>
 
+<script>
+  $(document).ready(function() {
+    $('#selectClasses').change(function() {
+      var selectedValue = $(this).val();
+      if (selectedValue === 'Maternelle') {
+        $('.prima').addClass('d-none');
+        $('.mater').removeClass('d-none');
+      } else if (selectedValue === 'Primaire') {
+        $('.mater').addClass('d-none');
+        $('.prima').removeClass('d-none');
+      }
+    });
+    $('#calculs').on('click', function() {
+      $('#percentage').removeClass('d-none');
+      
+      $('#calcul-one').addClass('col-lg-8');
+      $('.calcul-modal').css({'width': '800px'});
+    });
+    $('#closecalculate').on('click', function() {
+      $('#percentage').addClass('d-none');
+      $('#calcul-one').removeClass('col-lg-8');
+      $('.calcul-modal').css({'width': '500px'});
+
+    });
+    
+  });
+</script>
 </body>
 
 </html>

@@ -205,7 +205,9 @@ class PagesController extends Controller
     public function paramsfacture(){
         return view('pages.paramsfacture');
     }
-   
+    public function echeancier(){
+        return view('pages.inscriptions.echeancier');
+    }
     public function paramsemecef(Request $request){
         $emcef = new Paramsfacture();
         $emcef->ifu = $request->input('ifu');
@@ -265,5 +267,27 @@ class PagesController extends Controller
         return view('pages.duplicatafacture')->with('duplicatafactures', $duplicatafactures);
         } 
         return redirect('/');
+    } 
+
+    public function paiementeleve(){
+        if(Session::has('account')){
+        // $duplicatafactures = Duplicatafacture::all();
+
+        return view('pages.inscriptions.Paiement');
+        } 
+        return redirect('/');
+    } 
+
+    public function majpaiementeleve(){
+        if(Session::has('account')){
+        // $duplicatafactures = Duplicatafacture::all();
+
+        return view('pages.inscriptions.MajPaiement');
+        } 
+        return redirect('/');
+
+    }
+    public function inscrireeleve(){
+        return view('pages.inscriptions.inscrireeleve');
     } 
 }

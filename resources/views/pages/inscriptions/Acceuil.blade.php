@@ -1,6 +1,8 @@
 @extends('layouts.master')
 @section('content')
 
+
+
   <div class="main-panel-10">
     <div class="content-wrapper">
         
@@ -11,7 +13,8 @@
             <div class="card-body">
               <div class="row gy-3">
                 <div class="demo-inline-spacing">
-                  <button type="button" class="btn btn-primary">Nouveau</button>
+                  <a  class="btn btn-primary" href="{{url('/inscrireeleve')}}">Nouveau</a>
+                  {{-- <button type="button" class="btn btn-primary">Nouveau</button> --}}
                   <button type="button" class="btn btn-secondary">Imprimer</button>  
                   <style>
                     table {
@@ -100,8 +103,9 @@
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
                           <li><a class="dropdown-item" href="#">Supprimer</a></li>
                           <li><a class="dropdown-item" href="#">Modifier</a></li>
-                          <li><a class="dropdown-item" href="#">Paiement</a></li>
-                          <li><a class="dropdown-item" href="#">Profil</a></li>
+                          <li><a class="dropdown-item" href="{{url('/paiementeleve')}}">Paiement</a></li>
+                          <li><a class="dropdown-item" href="{{url('/majpaiementeleve')}}">Maj Paie</a></li>
+                          <li><a class="dropdown-item" href="{{url('/profil')}}">Profil</a></li>
                           <li><a class="dropdown-item" href="#">Echéance</a></li>
                           <li><a class="dropdown-item" href="#">Cursus</a></li>
                         </ul>
