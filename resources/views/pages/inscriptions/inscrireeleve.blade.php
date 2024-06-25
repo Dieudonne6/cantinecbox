@@ -54,7 +54,153 @@
                                         </div>
                                         <div class="col">
                                           <div class="div">
-                                              <button type="button" class="btn btn-primary">Données financières (Factures)</button>
+                                            <button type="button" class=" btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                              Données financières (Factures)
+                                            </button>
+                                            
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                              <div class="modal-dialog">
+                                                <div class="modal-content calcul-modal">
+                                                  <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Fiche de reduction</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                  </div>
+                                                  <div class="modal-body profile-content">
+                                                    <div class="row">
+                                                      <div class="" id="calcul-one">
+                                                        <form class="forms-sample">
+                                                          <div class="form-group row">
+                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Numero reduction</label>
+                                                            <div class="col-sm-4">
+                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0">
+                                                            </div>
+                                                          </div>
+                                                          <div class="form-group row">
+                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Libelle reduction</label>
+                                                            <div class="col-sm-4">
+                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="">
+                                                            </div>
+                                                          </div>
+                                                          <div class="form-group row">
+                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur scolarite</label>
+                                                            <div class="col-sm-4">
+                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00000000000">
+                                                            </div>
+                                                          </div>
+                                                          <div class="form-group row">
+                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur arriere</label>
+                                                            <div class="col-sm-4">
+                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                                                            </div>
+                                                          </div>
+                                                          <div class="form-group row">
+                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
+                                                            <div class="col-sm-4">
+                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                                                            </div>
+                                                          </div>
+                                                          <div class="form-group row">
+                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
+                                                            <div class="col-sm-4">
+                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                                                            </div>
+                                                          </div>
+                                                          <div class="form-group row">
+                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
+                                                            <div class="col-sm-4">
+                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                                                            </div>
+                                                          </div>
+                                                          <div class="form-group row">
+                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
+                                                            <div class="col-sm-4">
+                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                                                            </div>
+                                                          </div>
+                                                          <div class="form-group row">
+                                                            <label for="exampleInputUsername2" class="col-sm-12 col-form-label mb-0">Mode d'application de la reduction sur les echeancier</label>
+                                                            <div class="col-sm-12 mb-2">
+                                                              <select class="form-select">
+                                                                <option>Agir sur les dernier tranches</option>
+                                                                <option>Agir sur les dernier tranches</option>
+                                                              </select>
+                                                            </div>
+                                                          </div>
+                                                          <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
+                                                          <button class="btn btn-light">Fermer</button>
+                                                        </form>
+                                                      </div>
+                                                      <div class="col-lg-4 d-none" id="percentage">
+                                                        <h6>Calculateur de pourcentage de reduction</h6>
+                                                        <div class="row">
+                                                          <div class="col-lg-6">
+                                                            <p>Avant redcution</p>
+                                                            <div class="mb-2">
+                                                              <input type="text"  class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                              <input type="text"  class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                              <input type="text"  class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                              <input type="text"  class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                              <input type="text"  class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div>
+                                                              <input type="text"  class="form-control" placeholder="133000">
+                                                            </div>
+                                                          </div>
+                                                          <div class="col-lg-6">
+                                                            <p>Apres reduction</p>
+                                                            <div class="mb-2">
+                                                              <input type="text"  class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                              <input type="text"  class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                              <input type="text"  class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                              <input type="text"  class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                              <input type="text"  class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div>
+                                                              <input type="text"  class="form-control" placeholder="133000">
+                                                            </div>
+                                                          </div>
+                                                          <div class="my-4 col-lg-12">
+                                                            <button type="button" class="btn btn-secondary" id="closecalculate">Fermer le calculateur</button>
+                            
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" id="calculs">Afficher calculateur de pourcentage</button>
+                                                    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Aide</button>
+                            
+                                                      <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+                                                        <div class="offcanvas-header">
+                                                          <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Offcanvas with body scrolling</h5>
+                                                          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="offcanvas-body">
+                                                          <p>Try scrolling the rest of the page to see this option in action.</p>
+                                                        </div>
+                                                      </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
                                               <button type="button" class="btn btn-primary">Classe précédente</button>
                                           </div>
                                       </div>
@@ -77,15 +223,161 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group row">
-                                                <div class="col-sm-9">
+                                                <div class="col-sm-8">
                                                     <label>Matricule</label>
                                                     <input type="text" placeholder="Auto" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4" style="margin-top: 23px">
-                                            <div class="col">
-                                                <button type="button" class="btn btn-primary">Vérifier archives</button>
+                                        <div class="col-md-4" style="margin-top: 16px;">
+                                            <div class="col" style="margin-left: -119px">
+                                              <button type="button" class="mt-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                Vérifier archives
+                                              </button>
+                                              
+                                              <!-- Modal -->
+                                              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                  <div class="modal-content calcul-modal">
+                                                    <div class="modal-header">
+                                                      <h1 class="modal-title fs-5" id="exampleModalLabel">Fiche de reduction</h1>
+                                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body profile-content">
+                                                      <div class="row">
+                                                        <div class="" id="calcul-one">
+                                                          <form class="forms-sample">
+                                                            <div class="form-group row">
+                                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Numero reduction</label>
+                                                              <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0">
+                                                              </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Libelle reduction</label>
+                                                              <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="">
+                                                              </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur scolarite</label>
+                                                              <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00000000000">
+                                                              </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur arriere</label>
+                                                              <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                                                              </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
+                                                              <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                                                              </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
+                                                              <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                                                              </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
+                                                              <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                                                              </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
+                                                              <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                                                              </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                              <label for="exampleInputUsername2" class="col-sm-12 col-form-label mb-0">Mode d'application de la reduction sur les echeancier</label>
+                                                              <div class="col-sm-12 mb-2">
+                                                                <select class="form-select">
+                                                                  <option>Agir sur les dernier tranches</option>
+                                                                  <option>Agir sur les dernier tranches</option>
+                                                                </select>
+                                                              </div>
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
+                                                            <button class="btn btn-light">Fermer</button>
+                                                          </form>
+                                                        </div>
+                                                        <div class="col-lg-4 d-none" id="percentage">
+                                                          <h6>Calculateur de pourcentage de reduction</h6>
+                                                          <div class="row">
+                                                            <div class="col-lg-6">
+                                                              <p>Avant redcution</p>
+                                                              <div class="mb-2">
+                                                                <input type="text"  class="form-control" placeholder="133000">
+                                                              </div>
+                                                              <div class="mb-2">
+                                                                <input type="text"  class="form-control" placeholder="133000">
+                                                              </div>
+                                                              <div class="mb-2">
+                                                                <input type="text"  class="form-control" placeholder="133000">
+                                                              </div>
+                                                              <div class="mb-2">
+                                                                <input type="text"  class="form-control" placeholder="133000">
+                                                              </div>
+                                                              <div class="mb-2">
+                                                                <input type="text"  class="form-control" placeholder="133000">
+                                                              </div>
+                                                              <div>
+                                                                <input type="text"  class="form-control" placeholder="133000">
+                                                              </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                              <p>Apres reduction</p>
+                                                              <div class="mb-2">
+                                                                <input type="text"  class="form-control" placeholder="133000">
+                                                              </div>
+                                                              <div class="mb-2">
+                                                                <input type="text"  class="form-control" placeholder="133000">
+                                                              </div>
+                                                              <div class="mb-2">
+                                                                <input type="text"  class="form-control" placeholder="133000">
+                                                              </div>
+                                                              <div class="mb-2">
+                                                                <input type="text"  class="form-control" placeholder="133000">
+                                                              </div>
+                                                              <div class="mb-2">
+                                                                <input type="text"  class="form-control" placeholder="133000">
+                                                              </div>
+                                                              <div>
+                                                                <input type="text"  class="form-control" placeholder="133000">
+                                                              </div>
+                                                            </div>
+                                                            <div class="my-4 col-lg-12">
+                                                              <button type="button" class="btn btn-secondary" id="closecalculate">Fermer le calculateur</button>
+                              
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                      <button type="button" class="btn btn-secondary" id="calculs">Afficher calculateur de pourcentage</button>
+                                                      <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Aide</button>
+                              
+                                                        <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+                                                          <div class="offcanvas-header">
+                                                            <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Offcanvas with body scrolling</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                          </div>
+                                                          <div class="offcanvas-body">
+                                                            <p>Try scrolling the rest of the page to see this option in action.</p>
+                                                          </div>
+                                                        </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-2">
@@ -362,7 +654,7 @@
                                     <div class="form-group">
                                         <div class="form-group row">
                                             <div class="col">
-                                                <label>Nom</label>
+                                                <label><strong>Nom</strong></label> 
                                                 <div id="bloodhound">
                                                     <input class="form-control" type="text" name="nom_pere" id="nom_pere" value="">
                                                 </div>
