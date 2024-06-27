@@ -290,4 +290,12 @@ class PagesController extends Controller
     public function inscrireeleve(){
         return view('pages.inscriptions.inscrireeleve');
     } 
+
+    public function photos(){
+        return view('pages.inscriptions.photos');
+    } 
+
+    public function groupes(){
+        return view('pages.inscriptions.groupes');
+    } 
 }

@@ -183,8 +183,8 @@
       </a>
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">
-          {{-- Acceuil  --}}     
-          <li class="nav-item"> <a class="nav-link" href="{{url('/Acceuil')}}">Acceuil</a></li>
+          {{-- Acceuil  --}}   
+          <li class="nav-item"> <a class="nav-link" href="{{url('/Acceuil')}}">Accueil</a></li>
 
           {{-- Créations des classes --}}
           <li class="nav-item menu-item-has-children">
@@ -203,7 +203,7 @@
                 <a href="#">Table des classes</a>
               </li>
               <li>
-                <a href="#">Couper</a>
+                <a href="{{url('/groupes')}}">Grouper</a>
               </li>
             </ul>
           </li>
