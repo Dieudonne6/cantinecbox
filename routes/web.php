@@ -116,3 +116,5 @@ Route::get('/duplicatainscription/{elevyo}',[ClassesController::class,'duplicata
 Route::get('/majpaiementeleve', [PagesController::class, 'majpaiementeleve']);
 Route::get('/photos', [PagesController::class, 'photos']);
 Route::get('/groupes', [PagesController::class, 'groupes']);
+Route::get('/gestionarriere', [PagesController::class, 'gestionarriere']);
+Route::get('/exporter', [PagesController::class, 'exporter']);
