@@ -27,6 +27,7 @@ Route::get('/get-montant/{codeClass}', [PagesController::class, 'getMontant']);
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
+Route::get('/listedeseleves', [PagesController::class, 'listedeseleves']);
 
 Route::get('/classes', [ClassesController::class, 'classe']);
 Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees']);
@@ -67,7 +68,28 @@ Route::get('/confimpression', [PagesController::class, 'confimpression']);
 
 Route::get('/Acceuil', [PagesController::class, 'Acceuil']);
 Route::get('/inscrireeleve', [PagesController::class, 'inscrireeleve']);
+Route::get('/modifiereleve', [PagesController::class, 'modifiereleve']);
 Route::get('/profil', [PagesController::class, 'profil']);
+
+Route::get('/typesclasses', [PagesController::class, 'typesclasses']);
+
+Route::get('/series', [PagesController::class, 'series']);
+
+Route::get('/promotions', [PagesController::class, 'promotions']);
+
+Route::get('/creerprofil', [PagesController::class, 'creerprofil']);
+
+Route::get('/paramcomposantes', [PagesController::class, 'paramcomposantes']);
+
+Route::get('/duplicatarecu', [PagesController::class, 'duplicatarecu']);
+
+Route::get('/transfert', [PagesController::class, 'transfert']);
+
+Route::get('/importer', [PagesController::class, 'importer']);
+
+Route::get('/verrouillage', [PagesController::class, 'verrouillage']);
+
+Route::get('/recaculereffectifs', [PagesController::class, 'recaculereffectifs']);
 
 Route::put('/modifierfrais/{id_paramcontrat}', [PagesController::class, 'modifierfrais']);
 Route::get('/dashbord', [PagesController::class, 'dashbord']);

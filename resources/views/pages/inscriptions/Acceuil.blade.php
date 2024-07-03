@@ -102,7 +102,7 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
                           <li><a class="dropdown-item" href="#">Supprimer</a></li>
-                          <li><a class="dropdown-item" href="#">Modifier</a></li>
+                          <li><a class="dropdown-item" href="{{url('/modifiereleve')}}">Modifier</a></li>
                           <li><a class="dropdown-item" href="{{url('/paiementeleve')}}">Paiement</a></li>
                           <li><a class="dropdown-item" href="{{url('/majpaiementeleve')}}">Maj Paie</a></li>
                           <li><a class="dropdown-item" href="{{url('/profil')}}">Profil</a></li>
