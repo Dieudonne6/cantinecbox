@@ -84,6 +84,9 @@ class PagesController extends Controller
     public function nouveaucontrat(){
         return view('pages.nouveaucontrat');
     }
+    public function exporter(){
+        return view('pages.inscriptions.exporter');
+    }
     public function frais(){
         $param = Paramcontrat::first();
         return view('pages.frais', ['param' => $param]);
@@ -156,6 +159,10 @@ class PagesController extends Controller
     }
     public function profil(){
         return view('pages.inscriptions.profil');
+
+    }
+    public function gestionarriere(){
+        return view('pages.inscriptions.gestionarriere');
 
     }
     public function connexion(){
@@ -289,7 +296,39 @@ class PagesController extends Controller
     }
     public function inscrireeleve(){
         return view('pages.inscriptions.inscrireeleve');
+    } 
+
+    public function photos(){
+        return view('pages.inscriptions.photos');
+    } 
+
+    public function groupes(){
+        return view('pages.inscriptions.groupes');
+    } 
+
+    public function facturesclasses(){
+        return view('pages.inscriptions.facturesclasses');
     }
+    
+    public function reductioncollective(){
+        return view('pages.inscriptions.reductioncollective');
+    } 
+
+    public function discipline(){
+        return view('pages.inscriptions.discipline');
+    } 
+
+    public function archive(){
+        return view('pages.inscriptions.archive');
+    } 
+
+        public function editions(){
+        return view('pages.inscriptions.editions');
+    } 
+
+    public function eleveparclasse(){
+        return view('pages.inscriptions.eleveparclasse');
+    } 
 
     public function modifiereleve(){
         return view ('pages.inscriptions.modifiereleve');

@@ -135,3 +135,16 @@ Route::get('/paiementeleve', [PagesController::class, 'paiementeleve']);
 
 Route::get('/duplicatainscription/{elevyo}',[ClassesController::class,'duplicatainscription']);
 Route::get('/majpaiementeleve', [PagesController::class, 'majpaiementeleve']);
+Route::get('/photos', [PagesController::class, 'photos']);
+Route::get('/groupes', [PagesController::class, 'groupes']);
+
+Route::get('/facturesclasses', [PagesController::class, 'facturesclasses']);
+Route::get('/reductioncollective', [PagesController::class, 'reductioncollective']);
+Route::get('/discipline', [PagesController::class, 'discipline']);
+Route::get('/archive', [PagesController::class, 'archive']);
+Route::get('/editions', [PagesController::class, 'editions']);
+Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse']);
+
+Route::get('/gestionarriere', [PagesController::class, 'gestionarriere']);
+Route::get('/exporter', [PagesController::class, 'exporter']);
+
