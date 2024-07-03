@@ -38,7 +38,7 @@
 <div class="card">
     <div class="container">
         <button><a href="{{ url('/eleveparclasse') }}"><i class="fas fa-users"></i> Liste des élèves par classe</a></button>
-        <button><a href="{{ url('/listedeselèves') }}"><i class="fas fa-user-graduate"></i> Liste générale des élèves</a></button>
+        <button><a href="{{ url('/listedeseleves') }}"><i class="fas fa-user-graduate"></i> Liste générale des élèves</a></button>
         <button><a href="{{ url('/listeselective') }}"><i class="fas fa-user-check"></i> Liste sélective des élèves</a></button>
         <button><a href="{{ url('/registredeseleves') }}"><i class="fas fa-book"></i> Registre des élèves</a></button>
         <button><a href="{{ url('/listedesclasses') }}"><i class="fas fa-list"></i> Liste des classes</a></button>

@@ -27,6 +27,7 @@ Route::get('/get-montant/{codeClass}', [PagesController::class, 'getMontant']);
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
+Route::get('/listedeseleves', [PagesController::class, 'listedeseleves']);
 
 Route::get('/classes', [ClassesController::class, 'classe']);
 Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees']);
