@@ -191,19 +191,19 @@
             <a href="" class="nav-link">Créations des classes</a>
             <ul class="sub-menus">
               <li>
-                <a href="#">Types classes</a>
+                <a href="{{url('/typesclasses')}}">Types classes</a>
               </li>
               <li>
-                <a href="#">Séries</a>
+                <a href="{{url('/series')}}">Séries</a>
               </li>
               <li>
-                <a href="#">Promotions</a>
+                <a href="{{url('/promotions')}}">Promotions</a>
               </li>
               <li>
                 <a href="#">Table des classes</a>
               </li>
               <li>
-                <a href="#">Couper</a>
+                <a href="#">Grouper</a>
               </li>
             </ul>
           </li>
@@ -213,10 +213,10 @@
             <a href="" class="nav-link">Scolarité</a>
             <ul class="sub-menus">
               <li>
-                <a href="#">Créer profils</a>
+                <a href="{{url('/creerprofil')}}">Créer profils</a>
               </li>
               <li>
-                <a href="#">Parametrage composantes</a>
+                <a href="{{url('/paramcomposantes')}}">Parametrage composantes</a>
               </li>
               <li>
                 <a href="#">Factures classes</a>
@@ -228,7 +228,7 @@
                 <a href="#">Paiement des non inscrits</a>
               </li>
               <li>
-                <a href="#">Duplicata</a>
+                <a href="{{url('/duplicatarecu')}}"> Duplicata</a>
               </li>
             </ul>
           </li>
@@ -241,13 +241,13 @@
             <a href="" class="nav-link">Extraction de données</a>
             <ul class="sub-menus">
               <li>
-                <a href="#">Transfert</a>
+                <a href="{{url('/transfert')}}">Transfert</a>
               </li>
               <li>
                 <a href="#">Exporter</a>
               </li>
               <li>
-                <a href="#">Importer</a>
+                <a href="{{url('/importer')}}">Importer</a>
               </li>
             </ul>
           </li>
@@ -257,10 +257,10 @@
             <a href="" class="nav-link">Intégrité</a>
             <ul class="sub-menus">
               <li>
-                <a href="#">Vérouillage</a>
+                <a href="{{url('/verrouillage')}}">Verrouillage</a>
               </li>
               <li>
-                <a href="#">Recalculer Effectifs</a>
+                <a href="{{url('/recaculereffectifs')}}">Recalculer Effectifs</a>
               </li>
             </ul>
           </li>
