@@ -329,4 +329,8 @@ class PagesController extends Controller
     public function eleveparclasse(){
         return view('pages.inscriptions.eleveparclasse');
     } 
+
+    public function listeselective(){
+        return view('pages.inscriptions.listeselective');
+    } 
 }

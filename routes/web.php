@@ -126,4 +126,5 @@ Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse']);
 
 Route::get('/gestionarriere', [PagesController::class, 'gestionarriere']);
 Route::get('/exporter', [PagesController::class, 'exporter']);
+Route::get('/listeselective', [PagesController::class, 'listeselective']);
 
