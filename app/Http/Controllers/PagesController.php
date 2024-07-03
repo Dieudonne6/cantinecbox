@@ -84,6 +84,9 @@ class PagesController extends Controller
     public function nouveaucontrat(){
         return view('pages.nouveaucontrat');
     }
+    public function exporter(){
+        return view('pages.inscriptions.exporter');
+    }
     public function frais(){
         $param = Paramcontrat::first();
         return view('pages.frais', ['param' => $param]);
@@ -156,6 +159,10 @@ class PagesController extends Controller
     }
     public function profil(){
         return view('pages.inscriptions.profil');
+
+    }
+    public function gestionarriere(){
+        return view('pages.inscriptions.gestionarriere');
 
     }
     public function connexion(){
