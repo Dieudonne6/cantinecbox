@@ -298,4 +298,28 @@ class PagesController extends Controller
     public function groupes(){
         return view('pages.inscriptions.groupes');
     } 
+
+    public function facturesclasses(){
+        return view('pages.inscriptions.facturesclasses');
+    }
+    
+    public function reductioncollective(){
+        return view('pages.inscriptions.reductioncollective');
+    } 
+
+    public function discipline(){
+        return view('pages.inscriptions.discipline');
+    } 
+
+    public function archive(){
+        return view('pages.inscriptions.archive');
+    } 
+
+        public function editions(){
+        return view('pages.inscriptions.editions');
+    } 
+
+    public function eleveparclasse(){
+        return view('pages.inscriptions.eleveparclasse');
+    } 
 }

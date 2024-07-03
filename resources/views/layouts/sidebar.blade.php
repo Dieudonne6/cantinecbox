@@ -219,10 +219,10 @@
                 <a href="#">Parametrage composantes</a>
               </li>
               <li>
-                <a href="#">Factures classes</a>
+                <a href="{{url('/facturesclasses')}}">Factures classes</a>
               </li>
               <li>
-                <a href="#">Réductions collectives</a>
+                <a href="{{url('/reductioncollective')}}">Réductions collectives</a>
               </li>
               <li>
                 <a href="#">Paiement des non inscrits</a>
@@ -234,7 +234,7 @@
           </li>
 
           {{-- Dicipline --}}
-          <li class="nav-item"> <a class="nav-link" href="#">Dicipline</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/discipline')}}">Discipline</a></li>
           
           {{-- Extraction de données --}}
           <li class="nav-item menu-item-has-children">
@@ -266,26 +266,10 @@
           </li>
 
           {{-- Editions --}}
-          <li class="nav-item menu-item-has-children">
-            <a href="" class="nav-link">Editions</a>
-            <ul class="sub-menus">
-              <li>
-                <a href="#">Liste par ordre de mérite</a>
-              </li>
-              <li>
-                <a href="#">Tableau analytique</a>
-              </li>
-              <li>
-                <a href="#">Rapports annuels</a>
-              </li>
-              <li>
-                <a href="#">Livrets scolaire</a>
-              </li>
-            </ul>
-          </li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/editions')}}">Editions</a></li>
 
           {{-- Archives --}}
-          <li class="nav-item"> <a class="nav-link" href="#">Archives</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url('/archive')}}">Archives</a></li>
           {{-- <div class="dropdown">
             <li class="nav-item">
             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton90" data-toggle="dropdown" 
