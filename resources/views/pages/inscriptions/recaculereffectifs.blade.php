@@ -5,7 +5,7 @@
 
 <div class="container">
     <div class="form-group row">
-        <div class="col">
+        <div class="col" style="margin-top: 18px">
             <div class="">
                 <button type="submit" class="btn btn-primary">Recalculer effectifs</button>
             </div>
@@ -142,6 +142,7 @@
         </table>
     </div>
 </div>
+
 
 @endsection
 
