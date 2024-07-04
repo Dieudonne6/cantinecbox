@@ -166,127 +166,128 @@
 </div> --}}
 
 <nav class="sidebar sidebar-offcanvas " id="sidebar" style="max-width: 240px">
-  <ul class="nav">
+    <ul class="nav">
 
-    {{-- <li class="nav-item">
+        {{-- <li class="nav-item">
       <a class="nav-link" href="{{url('/dashbord')}}">
         <i class="typcn typcn-device-desktop menu-icon"></i>
         <span class="menu-title">Tableau de bord</span>
       </a>
     </li> --}}
 
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-        <i class="typcn typcn-document-text menu-icon"></i>
-        <span class="menu-title">Inscriptions<br>& disciplines</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="ui-basic">
-        <ul class="nav flex-column sub-menu">
-          {{-- Acceuil  --}}     
-          <li class="nav-item"> <a class="nav-link" href="{{url('/Acceuil')}}">Acceuil</a></li>
 
-          {{-- Créations des classes --}}
-          <li class="nav-item menu-item-has-children">
-            <a href="" class="nav-link">Créations des classes</a>
-            <ul class="sub-menus">
-              <li>
-                <a href="#">Types classes</a>
-              </li>
-              <li>
-                <a href="#">Séries</a>
-              </li>
-              <li>
-                <a href="#">Promotions</a>
-              </li>
-              <li>
-                <a href="#">Table des classes</a>
-              </li>
-              <li>
-                <a href="#">Couper</a>
-              </li>
-            </ul>
-          </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                <i class="typcn typcn-document-text menu-icon"></i>
+                <span class="menu-title">Inscriptions<br>& disciplines</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-basic">
+                <ul class="nav flex-column sub-menu">
+                    {{-- Acceuil  --}}
+                    <li class="nav-item"> <a class="nav-link" href="{{ url('/Acceuil') }}">Acceuil</a></li>
 
-          {{-- Scolarité --}}
-          <li class="nav-item menu-item-has-children">
-            <a href="" class="nav-link">Scolarité</a>
-            <ul class="sub-menus">
-              <li>
-                <a href="#">Créer profils</a>
-              </li>
-              <li>
-                <a href="#">Parametrage composantes</a>
-              </li>
-              <li>
-                <a href="#">Factures classes</a>
-              </li>
-              <li>
-                <a href="#">Réductions collectives</a>
-              </li>
-              <li>
-                <a href="#">Paiement des non inscrits</a>
-              </li>
-              <li>
-                <a href="#">Duplicata</a>
-              </li>
-            </ul>
-          </li>
+                    {{-- Créations des classes --}}
+                    <li class="nav-item menu-item-has-children">
+                        <a href="" class="nav-link">Créations des classes</a>
+                        <ul class="sub-menus">
+                            <li>
+                                <a href="#">Types classes</a>
+                            </li>
+                            <li>
+                                <a href="#">Séries</a>
+                            </li>
+                            <li>
+                                <a href="#">Promotions</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/tabledesclasses') }}">Table des classes</a>
+                            </li>
+                            <li>
+                                <a href="#">Couper</a>
+                            </li>
+                        </ul>
+                    </li>
 
-          {{-- Dicipline --}}
-          <li class="nav-item"> <a class="nav-link" href="#">Dicipline</a></li>
-          
-          {{-- Extraction de données --}}
-          <li class="nav-item menu-item-has-children">
-            <a href="" class="nav-link">Extraction de données</a>
-            <ul class="sub-menus">
-              <li>
-                <a href="#">Transfert</a>
-              </li>
-              <li>
-                <a href="#">Exporter</a>
-              </li>
-              <li>
-                <a href="#">Importer</a>
-              </li>
-            </ul>
-          </li>
-          
-          {{-- Intégrité --}}
-          <li class="nav-item menu-item-has-children">
-            <a href="" class="nav-link">Intégrité</a>
-            <ul class="sub-menus">
-              <li>
-                <a href="#">Vérouillage</a>
-              </li>
-              <li>
-                <a href="#">Recalculer Effectifs</a>
-              </li>
-            </ul>
-          </li>
+                    {{-- Scolarité --}}
+                    <li class="nav-item menu-item-has-children">
+                        <a href="" class="nav-link">Scolarité</a>
+                        <ul class="sub-menus">
+                            <li>
+                                <a href="#">Créer profils</a>
+                            </li>
+                            <li>
+                                <a href="#">Parametrage composantes</a>
+                            </li>
+                            <li>
+                                <a href="#">Factures classes</a>
+                            </li>
+                            <li>
+                                <a href="#">Réductions collectives</a>
+                            </li>
+                            <li>
+                                <a href="#">Paiement des non inscrits</a>
+                            </li>
+                            <li>
+                                <a href="#">Duplicata</a>
+                            </li>
+                        </ul>
+                    </li>
 
-          {{-- Editions --}}
-          <li class="nav-item menu-item-has-children">
-            <a href="" class="nav-link">Editions</a>
-            <ul class="sub-menus">
-              <li>
-                <a href="#">Liste par ordre de mérite</a>
-              </li>
-              <li>
-                <a href="#">Tableau analytique</a>
-              </li>
-              <li>
-                <a href="#">Rapports annuels</a>
-              </li>
-              <li>
-                <a href="#">Livrets scolaire</a>
-              </li>
-            </ul>
-          </li>
+                    {{-- Dicipline --}}
+                    <li class="nav-item"> <a class="nav-link" href="#">Dicipline</a></li>
 
-          {{-- Archives --}}
-          <li class="nav-item"> <a class="nav-link" href="#">Archives</a></li>
-          {{-- <div class="dropdown">
+                    {{-- Extraction de données --}}
+                    <li class="nav-item menu-item-has-children">
+                        <a href="" class="nav-link">Extraction de données</a>
+                        <ul class="sub-menus">
+                            <li>
+                                <a href="#">Transfert</a>
+                            </li>
+                            <li>
+                                <a href="#">Exporter</a>
+                            </li>
+                            <li>
+                                <a href="#">Importer</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    {{-- Intégrité --}}
+                    <li class="nav-item menu-item-has-children">
+                        <a href="" class="nav-link">Intégrité</a>
+                        <ul class="sub-menus">
+                            <li>
+                                <a href="#">Vérouillage</a>
+                            </li>
+                            <li>
+                                <a href="#">Recalculer Effectifs</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    {{-- Editions --}}
+                    <li class="nav-item menu-item-has-children">
+                        <a href="" class="nav-link">Editions</a>
+                        <ul class="sub-menus">
+                            <li>
+                                <a href="#">Liste par ordre de mérite</a>
+                            </li>
+                            <li>
+                                <a href="#">Tableau analytique</a>
+                            </li>
+                            <li>
+                                <a href="#">Rapports annuels</a>
+                            </li>
+                            <li>
+                                <a href="#">Livrets scolaire</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    {{-- Archives --}}
+                    <li class="nav-item"> <a class="nav-link" href="#">Archives</a></li>
+                    {{-- <div class="dropdown">
             <li class="nav-item">
             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton90" data-toggle="dropdown" 
             aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Etats </button>
@@ -295,12 +296,14 @@
               <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Etat des droits constatés</a>
               <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Lettre de relance</a>
             </div> --}}
-         
-        </ul>
-      </div>
-    </li>
-    
-    {{-- <li class="nav-item">
+
+                </ul>
+            </div>
+        </li>
+
+
+
+        {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
         <i class="typcn typcn-film menu-icon"></i>
         <span class="menu-title">Gestion des notes</span>
@@ -331,9 +334,9 @@
             <a class="dropdown-item" href="#" _msttexthash="229879" _msthash="283" _mstvisible="1">Vérifier les notes</a>
           </div>
         </div> --}}
-  
-         {{-- Sécurité --}}
-{{--         
+
+        {{-- Sécurité --}}
+        {{--         
         <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Sécurité </button>
@@ -343,8 +346,8 @@
           </div>
         </div> --}}
 
-         {{-- Edition --}}
-{{-- 
+        {{-- Edition --}}
+        {{-- 
         <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Edition </button>
@@ -374,9 +377,9 @@
             <a class="dropdown-item" href="#" _msttexthash="17" _msthash="17" _mstvisible="1">Livrets scolaire</a>
           </div>
         </div> --}}
- 
+
         {{-- Extraction --}}
-{{-- 
+        {{-- 
         <div class="dropdown">
           <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton5" data-toggle="dropdown" 
           aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Extraction </button>
@@ -389,7 +392,7 @@
       </div>
     </li> --}}
 
-    {{-- <li class="nav-item">
+        {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
         <i class="typcn typcn-chart-pie-outline menu-icon"></i>
         <span class="menu-title">Examen Blanc</span>
@@ -465,8 +468,8 @@
       </div>
     </li> --}}
 
-    {{-- Comptabilité & Budget --}}
-    {{-- <li class="nav-item">
+        {{-- Comptabilité & Budget --}}
+        {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
         <i class="typcn typcn-compass menu-icon"></i>
         <span class="menu-title">Comptabilité & Budget</span>
@@ -544,8 +547,8 @@
       </div>
     </li> --}}
 
-    {{-- Ressource matérielles --}}
-    {{-- <li class="nav-item">
+        {{-- Ressource matérielles --}}
+        {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
         <i class="typcn typcn-user-add-outline menu-icon"></i>
         <span class="menu-title">Ressource matérielles</span>
@@ -568,8 +571,8 @@
       </div>
     </li> --}}
 
-    {{-- Communication --}}
-    {{-- <li class="nav-item">
+        {{-- Communication --}}
+        {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#Communication" aria-expanded="false" aria-controls="Communication">
         <i class="typcn typcn-globe-outline menu-icon"></i>
         <span class="menu-title">Communication</span>
@@ -583,8 +586,8 @@
       </div>
     </li> --}}
 
-    {{-- Administration --}}
-    {{-- <li class="nav-item">
+        {{-- Administration --}}
+        {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#Administration" aria-expanded="false" aria-controls="Administration">
         <i class="typcn typcn-globe-outline menu-icon"></i>
         <span class="menu-title">Administration</span>
@@ -600,39 +603,41 @@
         </ul>
       </div>
     </li> --}}
- 
-    {{-- Paramètres --}}
-   
-  
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#Cantine" aria-expanded="false" aria-controls="Cantine">
-        <i class="typcn typcn-document-text menu-icon"></i>
-        <span class="menu-title">Cantine</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="Cantine">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="{{url('/inscriptioncantine')}}">Inscriptions</a></li>
 
-          <li class="nav-item"> <a class="nav-link" href="{{url('/classes')}}">Toutes les classes</a></li>
-          
-          <li class="nav-item menu-item-has-children">
-            <a href="" class="nav-link">Etats</a>
-            <ul class="sub-menus">
-              <li>
-                <a href="{{url('/etatpaiement')}}">Etat des paiements</a>
-              </li>
-              <li>
-                <a href="{{url('/etatdroits')}}">Etat des droits constatés</a>
-              </li>
-              {{-- <li>
+        {{-- Paramètres --}}
+
+
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#Cantine" aria-expanded="false" aria-controls="Cantine">
+                <i class="typcn typcn-document-text menu-icon"></i>
+                <span class="menu-title">Cantine</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="Cantine">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ url('/inscriptioncantine') }}">Inscriptions</a>
+                    </li>
+
+                    <li class="nav-item"> <a class="nav-link" href="{{ url('/classes') }}">Toutes les classes</a></li>
+
+                    <li class="nav-item menu-item-has-children">
+                        <a href="" class="nav-link">Etats</a>
+                        <ul class="sub-menus">
+                            <li>
+                                <a href="{{ url('/etatpaiement') }}">Etat des paiements</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/etatdroits') }}">Etat des droits constatés</a>
+                            </li>
+                            {{-- <li>
                 <a href="{{url('/lettrederelance')}}">Lettre de relance</a>
               </li> --}}
-            </ul>
-          </li>
-          <li class="nav-item"> <a class="nav-link" href="{{url('/duplicatafacture')}}">Duplicata facture</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ url('/duplicatafacture') }}">Duplicata
+                            facture</a></li>
 
-          {{-- <div class="dropdown">
+                    {{-- <div class="dropdown">
             <li class="nav-item">
             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton90" data-toggle="dropdown" 
             aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Etats </button>
@@ -641,17 +646,17 @@
               <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Etat des droits constatés</a>
               <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Lettre de relance</a>
             </div> --}}
-         
-        </ul>
-      </div>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{{url('/parametre')}}">
-        <i class="typcn typcn-globe-outline menu-icon"></i>
-        <span class="menu-title" _msttexthash="234962" _msthash="98">Paramètres</span>
-      </a>
-    </li>
-    {{-- <li class="nav-item">
+
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url('/parametre') }}">
+                <i class="typcn typcn-globe-outline menu-icon"></i>
+                <span class="menu-title" _msttexthash="234962" _msthash="98">Paramètres</span>
+            </a>
+        </li>
+        {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
         <i class="typcn typcn-globe-outline menu-icon"></i>
         <span class="menu-title">Paramètres</span>
@@ -662,7 +667,7 @@
           {{-- <li class="nav-item"> <a class="nav-link" href="#"> Table des paramètres </a></li>
           <li class="nav-item"> <a class="nav-link" href="#"> Modifier les bornes de l'exercice </a></li>
            --}}
-          {{-- <div class="dropdown">
+        {{-- <div class="dropdown">
            <li class="nav-item">
             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
             aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Op. Ouverture </button>
@@ -675,9 +680,9 @@
             </div>
            </li>
           </div> --}}
-          {{-- <li class="nav-item"> <a class="nav-link" href="{{url('/confimpression')}}"> Configurer Imprimante </a></li>
+        {{-- <li class="nav-item"> <a class="nav-link" href="{{url('/confimpression')}}"> Configurer Imprimante </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/changetrimestre')}}"> Changement de trimestre </a></li> --}}
-          {{-- <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
+        {{-- <li class="nav-item"> <a class="nav-link" href="{{url('/frais')}}">Frais mensuel et <br>année academique </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/connexiondonnees')}}">Connexion à la<br>base de donnée </a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/paramsfacture')}}">Paramètre Facture</a></li>
           <li class="nav-item"> <a class="nav-link" href="{{url('/inscriptions')}}">Enregistrement utilisateurs </a></li> 
@@ -685,17 +690,17 @@
         </ul>
       </div>
     </li>  --}}
-  </ul>
-  
-  <div class="center-container" style=" display: flex; justify-content: center; align-items: center; height: 100vh;">
-    <form id="logout-form" action="{{ route('logout') }}" method="POST">
-        @csrf
-        <button type="submit" class="logout-button" 
-          style="background-color: #dc3434; color: white; border: none; padding: 5px 10px; font-size: 16px; cursor: pointer; border-radius: 12px;">
-          Déconnexion
-        </button>
-    </form>
-    
-</div>
+    </ul>
+
+    <div class="center-container" style=" display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <form id="logout-form" action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="logout-button"
+                style="background-color: #dc3434; color: white; border: none; padding: 5px 10px; font-size: 16px; cursor: pointer; border-radius: 12px;">
+                Déconnexion
+            </button>
+        </form>
+
+    </div>
 
 </nav>

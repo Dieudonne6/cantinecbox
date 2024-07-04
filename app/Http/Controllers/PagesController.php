@@ -287,7 +287,52 @@ class PagesController extends Controller
         return redirect('/');
 
     }
+
+    public function tabledesclasses(){
+        if(Session::has('account')){
+        // $duplicatafactures = Duplicatafacture::all();
+
+        return view('pages.inscriptions.tabledesclasses');
+        } 
+        return redirect('/');
+
+    }
+
+    public function enrclasse(){
+        if(Session::has('account')){
+        // $duplicatafactures = Duplicatafacture::all();
+
+        return view('pages.inscriptions.enregistrementclasse');
+        } 
+        return redirect('/');
+
+    }
+
+    public function groupe(){
+        if(Session::has('account')){
+        // $duplicatafactures = Duplicatafacture::all();
+
+        return view('pages.inscriptions.groupe');
+        } 
+        return redirect('/');
+
+    }
+    
     public function inscrireeleve(){
         return view('pages.inscriptions.inscrireeleve');
-    } 
+        } 
+        
+        public function certificatsolarite(){
+            return view('pages.inscriptions.certificatsolarite');
+            } 
+
+                public function droitconstate(){
+                    if(Session::has('account')){
+                    // $duplicatafactures = Duplicatafacture::all();
+            
+                    return view('pages.inscriptions.droitconstate');
+                    } 
+                    return redirect('/');
+            
+                }
 }

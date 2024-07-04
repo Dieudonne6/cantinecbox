@@ -104,6 +104,11 @@ Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
 
 Route::get('/parametre', [PagesController::class, 'parametre']);
 Route::get('/echeancier', [PagesController::class, 'echeancier']);
+Route::get('/tabledesclasses', [PagesController::class, 'tabledesclasses']);
+Route::get('/enrclasse', [PagesController::class, 'enrclasse']);
+Route::get('/groupe', [PagesController::class, 'groupe']);
+Route::get('/certificat', [PagesController::class, 'certificatsolarite']);
+Route::get('/droitconstate', [PagesController::class, 'droitconstate']);
 
 Route::post('logout', [PagesController::class, 'logout'])->name('logout');
 

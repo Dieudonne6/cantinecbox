@@ -94,7 +94,6 @@
                       <div class="d-flex align-items-center">
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-info p-2 btn-sm btn-icon-text mr-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                          <font></font>
                           <i class="typcn typcn-eye btn-icon-append"></i>                          
                         </button>
                         <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -106,7 +105,7 @@
                           <li><a class="dropdown-item" href="{{url('/paiementeleve')}}">Paiement</a></li>
                           <li><a class="dropdown-item" href="{{url('/majpaiementeleve')}}">Maj Paie</a></li>
                           <li><a class="dropdown-item" href="{{url('/profil')}}">Profil</a></li>
-                          <li><a class="dropdown-item" href="#">Echéance</a></li>
+                          <li><a class="dropdown-item" href="{{ url('/echeancier')}}">Echéance</a></li>
                           <li><a class="dropdown-item" href="#">Cursus</a></li>
                         </ul>
                       </div>
