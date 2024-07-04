@@ -84,6 +84,13 @@ class PagesController extends Controller
     public function nouveaucontrat(){
         return view('pages.nouveaucontrat');
     }
+    public function exporter(){
+        return view('pages.inscriptions.exporter');
+    }
+    public function listedeseleves(){
+        return view('pages.inscriptions.listedeseleves');
+    }
+    
     public function frais(){
         $param = Paramcontrat::first();
         return view('pages.frais', ['param' => $param]);
@@ -154,8 +161,16 @@ class PagesController extends Controller
         return view('pages.inscriptions.Acceuil');
 
     }
+    public function listedesretardsdepaiement(){
+        return view('pages.inscriptions.listedesretardsdepaiement');
+
+    }
     public function profil(){
         return view('pages.inscriptions.profil');
+
+    }
+    public function gestionarriere(){
+        return view('pages.inscriptions.gestionarriere');
 
     }
     public function connexion(){
@@ -335,4 +350,85 @@ class PagesController extends Controller
                     return redirect('/');
             
                 }
+
+    public function photos(){
+        return view('pages.inscriptions.photos');
+    } 
+
+    public function groupes(){
+        return view('pages.inscriptions.groupes');
+    } 
+
+    public function facturesclasses(){
+        return view('pages.inscriptions.facturesclasses');
+    }
+    
+    public function reductioncollective(){
+        return view('pages.inscriptions.reductioncollective');
+    } 
+
+    public function discipline(){
+        return view('pages.inscriptions.discipline');
+    } 
+
+    public function archive(){
+        return view('pages.inscriptions.archive');
+    } 
+
+        public function editions(){
+        return view('pages.inscriptions.editions');
+    } 
+
+    public function eleveparclasse(){
+        return view('pages.inscriptions.eleveparclasse');
+    } 
+
+    public function listeselective(){
+        return view('pages.inscriptions.listeselective');
+    } 
+
+    public function modifiereleve(){
+        return view ('pages.inscriptions.modifiereleve');
+    }
+
+    public function typesclasses(){
+        return view ('pages.inscriptions.typesclasses');
+    }
+
+    public function series(){
+        return view ('pages.inscriptions.series');
+    }
+
+    public function promotions(){
+        return view ('pages.inscriptions.promotions');
+    }
+
+    public function creerprofil(){
+        return view ('pages.inscriptions.creerprofil');
+    }
+
+    public function paramcomposantes(){
+        return view ('pages.inscriptions.paramcomposantes');
+    }
+
+    public function duplicatarecu(){
+        return view ('pages.inscriptions.duplicatarecu');
+    }
+
+    public function transfert(){
+        return view ('pages.inscriptions.transfert');
+    }
+
+    public function importer(){
+        return view ('pages.inscriptions.importer');
+    }
+
+    public function verrouillage(){
+        return view ('pages.inscriptions.verrouillage');
+    }
+
+    public function recaculereffectifs(){
+        return view ('pages.inscriptions.recaculereffectifs');
+    }
+
 }

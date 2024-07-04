@@ -288,6 +288,102 @@
                     {{-- Archives --}}
                     <li class="nav-item"> <a class="nav-link" href="#">Archives</a></li>
                     {{-- <div class="dropdown">
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+        <i class="typcn typcn-document-text menu-icon"></i>
+        <span class="menu-title">Inscriptions<br>& disciplines</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-basic">
+        <ul class="nav flex-column sub-menu">
+          {{-- Acceuil  --}}   
+          <li class="nav-item"> <a class="nav-link" href="{{url('/Acceuil')}}">Accueil</a></li>
+
+          {{-- Créations des classes --}}
+          <li class="nav-item menu-item-has-children">
+            <a href="" class="nav-link">Créations des classes</a>
+            <ul class="sub-menus">
+              <li>
+                <a href="{{url('/typesclasses')}}">Types classes</a>
+              </li>
+              <li>
+                <a href="{{url('/series')}}">Séries</a>
+              </li>
+              <li>
+                <a href="{{url('/promotions')}}">Promotions</a>
+              </li>
+              <li>
+                <a href="#">Table des classes</a>
+              </li>
+              <li>
+                <a href="{{url('/groupes')}}">Grouper</a>
+              </li>
+            </ul>
+          </li>
+
+          {{-- Scolarité --}}
+          <li class="nav-item menu-item-has-children">
+            <a href="" class="nav-link">Scolarité</a>
+            <ul class="sub-menus">
+              <li>
+                <a href="{{url('/creerprofil')}}">Créer profils</a>
+              </li>
+              <li>
+                <a href="{{url('/paramcomposantes')}}">Parametrage composantes</a>
+              </li>
+              <li>
+                <a href="{{url('/facturesclasses')}}">Factures classes</a>
+              </li>
+              <li>
+                <a href="{{url('/reductioncollective')}}">Réductions collectives</a>
+              </li>
+              <li>
+                <a href="#">Paiement des non inscrits</a>
+              </li>
+              <li>
+                <a href="{{url('/duplicatarecu')}}"> Duplicata</a>
+              </li>
+            </ul>
+          </li>
+
+          {{-- Dicipline --}}
+          <li class="nav-item"> <a class="nav-link" href="{{url('/discipline')}}">Discipline</a></li>
+          
+          {{-- Extraction de données --}}
+          <li class="nav-item menu-item-has-children">
+            <a href="" class="nav-link">Extraction de données</a>
+            <ul class="sub-menus">
+              <li>
+                <a href="{{url('/transfert')}}">Transfert</a>
+              </li>
+              <li>
+                <a href="#">Exporter</a>
+              </li>
+              <li>
+                <a href="{{url('/importer')}}">Importer</a>
+              </li>
+            </ul>
+          </li>
+          
+          {{-- Intégrité --}}
+          <li class="nav-item menu-item-has-children">
+            <a href="" class="nav-link">Intégrité</a>
+            <ul class="sub-menus">
+              <li>
+                <a href="{{url('/verrouillage')}}">Verrouillage</a>
+              </li>
+              <li>
+                <a href="{{url('/recaculereffectifs')}}">Recalculer Effectifs</a>
+              </li>
+            </ul>
+          </li>
+
+          {{-- Editions --}}
+          <li class="nav-item"> <a class="nav-link" href="{{url('/editions')}}">Editions</a></li>
+
+          {{-- Archives --}}
+          <li class="nav-item"> <a class="nav-link" href="{{url('/archive')}}">Archives</a></li>
+          {{-- <div class="dropdown">
             <li class="nav-item">
             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton90" data-toggle="dropdown" 
             aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Etats </button>

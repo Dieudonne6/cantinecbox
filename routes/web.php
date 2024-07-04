@@ -27,6 +27,7 @@ Route::get('/get-montant/{codeClass}', [PagesController::class, 'getMontant']);
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
+Route::get('/listedeseleves', [PagesController::class, 'listedeseleves']);
 
 Route::get('/classes', [ClassesController::class, 'classe']);
 Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees']);
@@ -67,7 +68,28 @@ Route::get('/confimpression', [PagesController::class, 'confimpression']);
 
 Route::get('/Acceuil', [PagesController::class, 'Acceuil']);
 Route::get('/inscrireeleve', [PagesController::class, 'inscrireeleve']);
+Route::get('/modifiereleve', [PagesController::class, 'modifiereleve']);
 Route::get('/profil', [PagesController::class, 'profil']);
+
+Route::get('/typesclasses', [PagesController::class, 'typesclasses']);
+
+Route::get('/series', [PagesController::class, 'series']);
+
+Route::get('/promotions', [PagesController::class, 'promotions']);
+
+Route::get('/creerprofil', [PagesController::class, 'creerprofil']);
+
+Route::get('/paramcomposantes', [PagesController::class, 'paramcomposantes']);
+
+Route::get('/duplicatarecu', [PagesController::class, 'duplicatarecu']);
+
+Route::get('/transfert', [PagesController::class, 'transfert']);
+
+Route::get('/importer', [PagesController::class, 'importer']);
+
+Route::get('/verrouillage', [PagesController::class, 'verrouillage']);
+
+Route::get('/recaculereffectifs', [PagesController::class, 'recaculereffectifs']);
 
 Route::put('/modifierfrais/{id_paramcontrat}', [PagesController::class, 'modifierfrais']);
 Route::get('/dashbord', [PagesController::class, 'dashbord']);
@@ -101,6 +123,7 @@ Route::post('/paramsemecef', [PagesController::class, 'paramsemecef']);
 Route::get('/imprimerfiche/{id_paiementcontrat}', [ClassesController::class, 'imprimerfiche']);
 Route::get('/inscriptions', [PagesController::class, 'inscriptions']);
 Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
+Route::get('/listedesretardsdepaiement', [PagesController::class, 'listedesretardsdepaiement']);
 
 Route::get('/parametre', [PagesController::class, 'parametre']);
 Route::get('/echeancier', [PagesController::class, 'echeancier']);
@@ -119,3 +142,17 @@ Route::get('/paiementeleve', [PagesController::class, 'paiementeleve']);
 
 Route::get('/duplicatainscription/{elevyo}',[ClassesController::class,'duplicatainscription']);
 Route::get('/majpaiementeleve', [PagesController::class, 'majpaiementeleve']);
+Route::get('/photos', [PagesController::class, 'photos']);
+Route::get('/groupes', [PagesController::class, 'groupes']);
+
+Route::get('/facturesclasses', [PagesController::class, 'facturesclasses']);
+Route::get('/reductioncollective', [PagesController::class, 'reductioncollective']);
+Route::get('/discipline', [PagesController::class, 'discipline']);
+Route::get('/archive', [PagesController::class, 'archive']);
+Route::get('/editions', [PagesController::class, 'editions']);
+Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse']);
+
+Route::get('/gestionarriere', [PagesController::class, 'gestionarriere']);
+Route::get('/exporter', [PagesController::class, 'exporter']);
+Route::get('/listeselective', [PagesController::class, 'listeselective']);
+
