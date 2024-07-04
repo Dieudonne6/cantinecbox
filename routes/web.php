@@ -149,4 +149,6 @@ Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse']);
 Route::get('/gestionarriere', [PagesController::class, 'gestionarriere']);
 Route::get('/exporter', [PagesController::class, 'exporter']);
 Route::get('/listeselective', [PagesController::class, 'listeselective']);
+Route::get('/pointderecouvrement', [PagesController::class, 'pointderecouvrement']);
+Route::get('/etatdesrecouvrements', [PagesController::class, 'etatdesrecouvrements']);
 
