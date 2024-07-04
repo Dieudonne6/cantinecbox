@@ -382,4 +382,12 @@ class PagesController extends Controller
         return view ('pages.inscriptions.recaculereffectifs');
     }
 
+    public function pointderecouvrement(){
+        return view ('pages.inscriptions.pointderecouvrement');
+    }
+
+    public function etatdesrecouvrements(){
+        return view ('pages.inscriptions.etatdesrecouvrements');
+    }
+
 }
