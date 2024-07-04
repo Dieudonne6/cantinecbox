@@ -374,4 +374,16 @@ class PagesController extends Controller
         return view ('pages.inscriptions.recaculereffectifs');
     }
 
+    public function enquetesstatistiques(){
+        return view ('pages.inscriptions.enquetesstatistiques');
+    }
+
+    public function etatdelacaisse(){
+        return view ('pages.inscriptions.etatdelacaisse');
+    }
+
+    public function situationfinanciereglobale(){
+        return view ('pages.inscriptions.situationfinanciereglobale');
+    }
+
 }

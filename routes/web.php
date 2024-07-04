@@ -148,3 +148,6 @@ Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse']);
 Route::get('/gestionarriere', [PagesController::class, 'gestionarriere']);
 Route::get('/exporter', [PagesController::class, 'exporter']);
 
+Route::get('/enquetesstatistiques', [PagesController::class, 'enquetesstatistiques']);
+Route::get('/etatdelacaisse', [PagesController::class, 'etatdelacaisse']);
+Route::get('/situationfinanciereglobale',[PagesController::class, 'situationfinanciereglobale']);
