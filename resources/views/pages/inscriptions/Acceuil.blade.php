@@ -114,7 +114,7 @@
                           <li><a class="dropdown-item" href="{{url('/paiementeleve')}}">Paiement</a></li>
                           <li><a class="dropdown-item" href="{{url('/majpaiementeleve')}}">Maj Paie</a></li>
                           <li><a class="dropdown-item" href="{{url('/profil')}}">Profil</a></li>
-                          <li><a class="dropdown-item" href="#">Echéance</a></li>
+                          <li><a class="dropdown-item" href="{{ url('/echeancier')}}">Echéance</a></li>
                           <li><a class="dropdown-item" href="#">Cursus</a></li>
                         </ul>
                       </div>
