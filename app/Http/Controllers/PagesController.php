@@ -87,6 +87,10 @@ class PagesController extends Controller
     public function exporter(){
         return view('pages.inscriptions.exporter');
     }
+    public function listedeseleves(){
+        return view('pages.inscriptions.listedeseleves');
+    }
+    
     public function frais(){
         $param = Paramcontrat::first();
         return view('pages.frais', ['param' => $param]);
@@ -328,6 +332,10 @@ class PagesController extends Controller
 
     public function eleveparclasse(){
         return view('pages.inscriptions.eleveparclasse');
+    } 
+
+    public function listeselective(){
+        return view('pages.inscriptions.listeselective');
     } 
 
     public function modifiereleve(){

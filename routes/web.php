@@ -27,6 +27,7 @@ Route::get('/get-montant/{codeClass}', [PagesController::class, 'getMontant']);
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
+Route::get('/listedeseleves', [PagesController::class, 'listedeseleves']);
 
 Route::get('/classes', [ClassesController::class, 'classe']);
 Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees']);
@@ -147,6 +148,7 @@ Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse']);
 
 Route::get('/gestionarriere', [PagesController::class, 'gestionarriere']);
 Route::get('/exporter', [PagesController::class, 'exporter']);
+Route::get('/listeselective', [PagesController::class, 'listeselective']);
 
 Route::get('/enquetesstatistiques', [PagesController::class, 'enquetesstatistiques']);
 Route::get('/etatdelacaisse', [PagesController::class, 'etatdelacaisse']);

@@ -38,9 +38,11 @@
 <div class="card">
     <div class="container">
         <button><a href="{{ url('/eleveparclasse') }}"><i class="fas fa-users"></i> Liste des élèves par classe</a></button>
-        <button><a href="{{ url('/listedeselèves') }}"><i class="fas fa-user-graduate"></i> Liste générale des élèves</a></button>
+        <button><a href="{{ url('/listedeseleves') }}"><i class="fas fa-user-graduate"></i> Liste générale des élèves</a></button>
         <button><a href="{{ url('/listeselective') }}"><i class="fas fa-user-check"></i> Liste sélective des élèves</a></button>
-        <button><a href="{{ url('/registredeseleves') }}"><i class="fas fa-book"></i> Registre des élèves</a></button>
+        <button data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="fas fa-book"></i> Registre des élèves</button>
+       
+          
         <button><a href="{{ url('/listedesclasses') }}"><i class="fas fa-list"></i> Liste des classes</a></button>
         <button><a href="{{ url('/certificatsdescolarite') }}"><i class="fas fa-certificate"></i> Certificats de scolarité</a></button>
         <button><a href="{{ url('/attestationsdescolarite') }}"><i class="fas fa-file-alt"></i> Attestations de scolarité</a></button>
@@ -62,5 +64,37 @@
         <button><a href="{{ url('/etatdesarriérés') }}"><i class="fas fa-exclamation"></i> État général des arriérés</a></button>
     </div>
 </div>
+<!-- Button trigger modal -->
 
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Choix du type de registre</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-check">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="">
+                 Registre par fiche
+                </label>
+                <p>Le reigistre sait creer sur le nom</p>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option2" checked>
+                 Registre par tableau
+                </label>
+                <p>Le reigistre sait creer sur le matricule</p>
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-primary">Imprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
