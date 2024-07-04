@@ -161,6 +161,10 @@ class PagesController extends Controller
         return view('pages.inscriptions.Acceuil');
 
     }
+    public function listedesretardsdepaiement(){
+        return view('pages.inscriptions.listedesretardsdepaiement');
+
+    }
     public function profil(){
         return view('pages.inscriptions.profil');
 

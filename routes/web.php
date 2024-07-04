@@ -123,6 +123,7 @@ Route::post('/paramsemecef', [PagesController::class, 'paramsemecef']);
 Route::get('/imprimerfiche/{id_paiementcontrat}', [ClassesController::class, 'imprimerfiche']);
 Route::get('/inscriptions', [PagesController::class, 'inscriptions']);
 Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
+Route::get('/listedesretardsdepaiement', [PagesController::class, 'listedesretardsdepaiement']);
 
 Route::get('/parametre', [PagesController::class, 'parametre']);
 Route::get('/echeancier', [PagesController::class, 'echeancier']);
