@@ -7,58 +7,66 @@
     <div class="content-wrapper">
         
       {{--  --}}
-      <div class="row">          
+      <div class="row">
         <div class="col-12">
-          <div class="card mb-6">
-            <div class="card-body">
-              <div class="row gy-3">
-                <div class="demo-inline-spacing">
-                  <a  class="btn btn-primary" href="{{url('/inscrireeleve')}}">Nouveau</a>
-                  {{-- <button type="button" class="btn btn-primary">Nouveau</button> --}}
-                  <button type="button" class="btn btn-secondary">Imprimer</button>  
-                  <a  class="btn btn-primary typcn-camera btn-icon-append" href="{{url('/photos')}}">Photos</a>
-                  <style>
-                    table {
-                      float: right;
-                      width: 10%;
-                      border-collapse: collapse;
-                      margin: 5px auto;
-                    }
-                    th, td {
-                      border: 1px solid #ddd;
-                      padding: 4px;
-                      text-align: center;
-                    }
-                    th {
-                      background-color: #f2f2f2;
-                    }
-                    td.bouton {
-                      background-color: #ffcccb;
-                    }
-                  </style>
-                  <table>
-                    <tbody>
-                      <td class="bouton">Star</td>
-                      <td>10,942</td>
-                      
-                        
-                      <td class="bouton">Star</td>
-                      <td>10,942</td>
-                      </tr>
-                      <td class="bouton">Star</td>
-                      <td>10,942</td>
-                      
-                        
-                      <td class="bouton">Star</td>
-                      <td>10,942</td>
-                    </tbody>
-                  </table>
+            <div class="card mb-6">
+                <div class="card-body">
+                    <div class="row gy-3">
+                        <div class="demo-inline-spacing">
+                            <a class="btn btn-primary" href="{{url('/inscrireeleve')}}">
+                                <i class="typcn typcn-plus btn-icon-prepend"></i> Nouveau
+                            </a>
+                            <button type="button" class="btn btn-secondary">
+                                <i class="typcn typcn-printer btn-icon-prepend"></i> Imprimer
+                            </button>
+                            <a class="btn btn-primary" href="{{url('/photos')}}">
+                                <i class="typcn typcn-camera btn-icon-prepend"></i> Photos
+                            </a>
+                            <style>
+                                table {
+                                    float: right;
+                                    width: 10%;
+                                    border-collapse: collapse;
+                                    margin: 5px auto;
+                                }
+
+                                th,
+                                td {
+                                    border: 1px solid #ddd;
+                                    padding: 4px;
+                                    text-align: center;
+                                }
+
+                                th {
+                                    background-color: #f2f2f2;
+                                }
+
+                                td.bouton {
+                                    background-color: #ffcccb;
+                                }
+                            </style>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td class="bouton">Star</td>
+                                        <td>10,942</td>
+                                        <td class="bouton">Star</td>
+                                        <td>10,942</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bouton">Star</td>
+                                        <td>10,942</td>
+                                        <td class="bouton">Star</td>
+                                        <td>10,942</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>       
-      </div>
+        </div>
+    </div>
 
       {{--  --}}
       <div class="row">
@@ -106,7 +114,7 @@
                           <li><a class="dropdown-item" href="{{url('/paiementeleve')}}">Paiement</a></li>
                           <li><a class="dropdown-item" href="{{url('/majpaiementeleve')}}">Maj Paie</a></li>
                           <li><a class="dropdown-item" href="{{url('/profil')}}">Profil</a></li>
-                          <li><a class="dropdown-item" href="#">Echéance</a></li>
+                          <li><a class="dropdown-item" href="{{ url('/echeancier')}}">Echéance</a></li>
                           <li><a class="dropdown-item" href="#">Cursus</a></li>
                         </ul>
                       </div>
@@ -143,7 +151,7 @@
         <div class="tab-content" id="nav-tabContent">
           <!--  -->
           <div class="tab-pane fade show active" id="nav-Infor" role="tabpanel" aria-labelledby="nav-Infor-tab" tabindex="0">
-            <form class="accordion-body col-md-10 mx-auto" style="background-color: #f0eff3">  
+            <form class="accordion-body col-md-12 mx-auto" style="background-color: #f0eff3">  
               
                 <div class="form-group row mt-2">
                     <label for="dateN" class="col-sm-4 col-form-label">Date de Naissance</label>
@@ -268,26 +276,26 @@
           </div>        
           <!--  -->
           <div class="tab-pane fade" id="nav-Deta" role="tabpanel" aria-labelledby="nav-Deta-tab" tabindex="0">
-            <div class="accordion-body col-md-10 mx-auto bg-light-gray">
+            <div class="accordion-body col-md-12 mx-auto bg-light-gray">
               <div class="col">
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-center mb-3">
                   <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="checkDetails">
                     <label class="form-check-label" for="checkDetails">Détail des composantes</label>
                   </div>
                 </div>
                 
-                <div class="table-responsive" style="height: 100px; overflow: auto;">
-                  <table class="table table-dark">
-                    <thead style="position: sticky; top: 0; z-index: 1; background: #343a40;">
+                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                  <table class="table table-dark table-hover">
+                    <thead class="thead-dark">
                       <tr>
-                        <th>n°Recu</th>
-                        <th>Date</th>
-                        <th>Montant</th>
+                        <th scope="col">n°Reçu</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Montant</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="table-active">
+                      <tr>
                         <td>130</td>
                         <td>05/06/2024</td>
                         <td>190 000</td>
@@ -303,23 +311,22 @@
                         <td>190 000</td>
                       </tr>
                     </tbody>
-                    <tfoot style="position: sticky; bottom: 0; z-index: 1; background: #343a40; ">
+                    <tfoot class="tfoot-dark">
                       <tr>
                         <td colspan="2" class="table-active">Somme</td>
                         <td>190 000</td>
                       </tr>
+                      <tr>
+                        <td colspan="2" class="table-active">Reste à Payer</td>
+                        <td>1 900</td>
+                      </tr>
                     </tfoot>
                   </table>
                 </div>
-                <div class="form-group row mt-2 p-10" style="background-color: #5f42c7;">
-                  <label for="dateN" class="col-sm-6 col-form-label">Reste à Payer</label>
-                  <div class="col-sm-6">
-                      <input type="montant" class="form-control mt-2" id="montant" placeholder="fcfa" style="margin-left;">
-                  </div>
-                </div>
+                
               </div>
-
-              <div style="display: flex; justify-content: center; align-items: center; margin: auto;">
+            
+              <div class="d-flex justify-content-center align-items-center mt-3">
                 <a href="votre-lien-ici" style="text-decoration: none;">
                   <button type="button" class="btn btn-outline-danger btn-icon-text-center">
                     <i class="typcn typcn-upload btn-icon-prepend"></i>Imprimer récapitulatif des paiements
@@ -327,95 +334,84 @@
                 </a>
               </div>
               
-            
-              <div class="card-body">               
-                <form class="forms-sample">
-                  <h4 class="card-title text-center">Réduction Montants dus</h4>
-                  <div class="form-group row p-2">
-                    <label for="scolarite" class="col-sm-2 col-form-label">[ 3,3% ] Scolarité</label>
-                    <div class="col-sm-4 mt-2">
-                      <input type="number" class="form-control" id="scolarite">
-                    </div>
-                    <label for="arriere" class="col-sm-2 col-form-label">[ 0,0% ] Arrièré</label>
-                    <div class="col-sm-4 mt-2">
-                      <input type="number" class="form-control" id="arriere">
-                    </div>
-                  </div>
-
-                  <div class="form-group row p-2">
-                    <label for="frais1" class="col-sm-2 col-form-label">Frais 1</label>
-                    <div class="col-sm-4">
-                      <input type="number" class="form-control" id="frais1">
-                    </div>
-                    <label for="frais2" class="col-sm-2 col-form-label">Frais 2</label>
-                    <div class="col-sm-4">
-                      <input type="number" class="form-control" id="frais2">
-                    </div>
-                  </div>
-
-                  <div class="form-group row p-2">
-                    <label for="frais3" class="col-sm-2 col-form-label">Frais 3</label>
-                    <div class="col-sm-4">
-                      <input type="number" class="form-control" id="frais3">
-                    </div>
-                    <label for="frais4" class="col-sm-2 col-form-label">Frais 4</label>
-                    <div class="col-sm-4">
-                      <input type="number" class="form-control" id="frais4">
-                    </div>
-                  </div>
-                </form>
+              <div class="card-body">
+                <h4 class="card-title text-center">Réduction Montants dus</h4>
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <td>[ 3,3% ] Scolarité</td>
+                      <td><input type="number" class="form-control" id="scolarite"></td>
+                      <td>[ 0,0% ] Arriéré</td>
+                      <td><input type="number" class="form-control" id="arriere"></td>
+                    </tr>
+                    <tr>
+                      <td>Frais 1</td>
+                      <td><input type="number" class="form-control" id="frais1"></td>
+                      <td>Frais 2</td>
+                      <td><input type="number" class="form-control" id="frais2"></td>
+                    </tr>
+                    <tr>
+                      <td>Frais 3</td>
+                      <td><input type="number" class="form-control" id="frais3"></td>
+                      <td>Frais 4</td>
+                      <td><input type="number" class="form-control" id="frais4"></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-            
+              
             </div>
+            
             
             
           </div>
           <!--  -->
           <div class="tab-pane fade" id="nav-finan" role="tabpanel" aria-labelledby="nav-finan-tab" tabindex="0">
-            <div class="accordion-body col-md-10 mx-auto" style="background-color: #f0eff3"> 
-
-              <table class="table table-responsive table-striped table-hover mt-p-2">
-                <tbody class="table">
-                  <tr>
-                    <th scope="col" class="text-start">Scolarités perçus le 23/05/24</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Arrièrés perçus le 23/05/24</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Total</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Total recettes à ce jour</th>
-                    <td class="text-end">57 575 500</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Versé à la banque</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Recettes attendues ce jour</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Recettes attendues cette semaine</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Recettes attendues ce mois</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                </tbody>
-              </table>
-              
+            <div class="accordion-body col-md-12 mx-auto" style="background-color: #f0eff3;"> 
+              <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                  <tbody>
+                    <tr>
+                      <th scope="row" class="text-start">Scolarités perçus le 23/05/24</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Arrièrés perçus le 23/05/24</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Total</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Total recettes à ce jour</th>
+                      <td class="text-end">57 575 500</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Versé à la banque</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Recettes attendues ce jour</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Recettes attendues cette semaine</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Recettes attendues ce mois</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
+            
           </div>
           <!--  -->
           <div class="tab-pane fade" id="nav-Emploi" role="tabpanel" aria-labelledby="nav-Emploi-tab" tabindex="0">
-            <div class="accordion-body col-md-10 mx-auto" style="background-color: #f0eff3"> 
+            <div class="accordion-body col-md-12 mx-auto" style="background-color: #f0eff3"> 
               <div class="container">
                 <div class="row">
                   <div class="col-md-4">

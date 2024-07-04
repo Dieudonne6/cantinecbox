@@ -123,9 +123,15 @@ Route::post('/paramsemecef', [PagesController::class, 'paramsemecef']);
 Route::get('/imprimerfiche/{id_paiementcontrat}', [ClassesController::class, 'imprimerfiche']);
 Route::get('/inscriptions', [PagesController::class, 'inscriptions']);
 Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
+Route::get('/listedesretardsdepaiement', [PagesController::class, 'listedesretardsdepaiement']);
 
 Route::get('/parametre', [PagesController::class, 'parametre']);
 Route::get('/echeancier', [PagesController::class, 'echeancier']);
+Route::get('/tabledesclasses', [PagesController::class, 'tabledesclasses']);
+Route::get('/enrclasse', [PagesController::class, 'enrclasse']);
+Route::get('/groupe', [PagesController::class, 'groupe']);
+Route::get('/certificat', [PagesController::class, 'certificatsolarite']);
+Route::get('/droitconstate', [PagesController::class, 'droitconstate']);
 
 Route::post('logout', [PagesController::class, 'logout'])->name('logout');
 
@@ -149,6 +155,8 @@ Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse']);
 Route::get('/gestionarriere', [PagesController::class, 'gestionarriere']);
 Route::get('/exporter', [PagesController::class, 'exporter']);
 Route::get('/listeselective', [PagesController::class, 'listeselective']);
+Route::get('/pointderecouvrement', [PagesController::class, 'pointderecouvrement']);
+Route::get('/etatdesrecouvrements', [PagesController::class, 'etatdesrecouvrements']);
 
 Route::get('/enquetesstatistiques', [PagesController::class, 'enquetesstatistiques']);
 Route::get('/etatdelacaisse', [PagesController::class, 'etatdelacaisse']);
