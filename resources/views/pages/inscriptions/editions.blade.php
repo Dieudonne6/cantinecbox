@@ -54,7 +54,7 @@
         <button><a href="{{ url('/lettresderelance') }}"><i class="fas fa-envelope"></i> Lettres de relance</a></button>
         <button><a href="{{ url('/situationfinanciereglobale') }}"><i class="fas fa-balance-scale"></i> Situation financière globale</a></button>
         <button><a href="{{ url('/listedereductions') }}"><i class="fas fa-percentage"></i> Liste des réductions accordées</a></button>
-        <button><a href="{{ url('/listedeselèvesparprofil') }}"><i class="fas fa-id-card"></i> Liste des élèves par profil</a></button>
+        <button><a href="{{ url('/listedeselèvesparprofil') }}"><i class="fas fa-id-card"></i> Liste des élèves par profillee</a></button>
         <button><a href="{{ url('/listedeselèvesechéancierpersonnalisé') }}"><i class="fas fa-calendar-check"></i> Liste des élèves ayant un échéancier personnalisé</a></button>
         <button><a href="{{ url('/etatdesarriérésinscrits') }}"><i class="fas fa-exclamation-triangle"></i> État général des arriérés (élèves inscrits)</a></button>
         <button><a href="{{ url('/etatdesarriérésmoissoldés') }}"><i class="fas fa-minus-circle"></i> État général des arriérés moins ceux qui sont soldés</a></button>
