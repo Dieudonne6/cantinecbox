@@ -446,7 +446,10 @@ class PagesController extends Controller
     public function pointderecouvrement(){
         return view ('pages.inscriptions.pointderecouvrement');
     }
-
+    public function paiementdesnoninscrits(){
+        return view ('pages.inscriptions.paiementdesnoninscrits');
+    }
+    
     public function etatdesrecouvrements(){
         return view ('pages.inscriptions.etatdesrecouvrements');
     }

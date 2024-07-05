@@ -184,109 +184,7 @@
             </a>
             <div class="collapse" id="ui-basic">
                 <ul class="nav flex-column sub-menu">
-                    {{-- Acceuil  --}}
-                    <li class="nav-item"> <a class="nav-link" href="{{ url('/Acceuil') }}">Acceuil</a></li>
-
-                    {{-- Créations des classes --}}
-                    <li class="nav-item menu-item-has-children">
-                        <a href="" class="nav-link">Créations des classes</a>
-                        <ul class="sub-menus">
-                            <li>
-                                <a href="#">Types classes</a>
-                            </li>
-                            <li>
-                                <a href="#">Séries</a>
-                            </li>
-                            <li>
-                                <a href="#">Promotions</a>
-                            </li>
-                            <li>
-                                <a href="{{ url('/tabledesclasses') }}">Table des classes</a>
-                            </li>
-                            <li>
-                                <a href="#">Couper</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    {{-- Scolarité --}}
-                    <li class="nav-item menu-item-has-children">
-                        <a href="" class="nav-link">Scolarité</a>
-                        <ul class="sub-menus">
-                            <li>
-                                <a href="#">Créer profils</a>
-                            </li>
-                            <li>
-                                <a href="#">Parametrage composantes</a>
-                            </li>
-                            <li>
-                                <a href="#">Factures classes</a>
-                            </li>
-                            <li>
-                                <a href="#">Réductions collectives</a>
-                            </li>
-                            <li>
-                                <a href="#">Paiement des non inscrits</a>
-                            </li>
-                            <li>
-                                <a href="#">Duplicata</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    {{-- Dicipline --}}
-                    <li class="nav-item"> <a class="nav-link" href="#">Dicipline</a></li>
-
-                    {{-- Extraction de données --}}
-                    <li class="nav-item menu-item-has-children">
-                        <a href="" class="nav-link">Extraction de données</a>
-                        <ul class="sub-menus">
-                            <li>
-                                <a href="#">Transfert</a>
-                            </li>
-                            <li>
-                                <a href="#">Exporter</a>
-                            </li>
-                            <li>
-                                <a href="#">Importer</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    {{-- Intégrité --}}
-                    <li class="nav-item menu-item-has-children">
-                        <a href="" class="nav-link">Intégrité</a>
-                        <ul class="sub-menus">
-                            <li>
-                                <a href="#">Vérouillage</a>
-                            </li>
-                            <li>
-                                <a href="#">Recalculer Effectifs</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    {{-- Editions --}}
-                    <li class="nav-item menu-item-has-children">
-                        <a href="" class="nav-link">Editions</a>
-                        <ul class="sub-menus">
-                            <li>
-                                <a href="#">Liste par ordre de mérite</a>
-                            </li>
-                            <li>
-                                <a href="#">Tableau analytique</a>
-                            </li>
-                            <li>
-                                <a href="#">Rapports annuels</a>
-                            </li>
-                            <li>
-                                <a href="#">Livrets scolaire</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    {{-- Archives --}}
-                    <li class="nav-item"> <a class="nav-link" href="#">Archives</a></li>
+                
                     {{-- <div class="dropdown">
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
@@ -313,7 +211,7 @@
                 <a href="{{url('/promotions')}}">Promotions</a>
               </li>
               <li>
-                <a href="#">Table des classes</a>
+                <a href="{{url('/tabledesclasses')}}">Table des classes</a>
               </li>
               <li>
                 <a href="{{url('/groupes')}}">Grouper</a>
@@ -338,7 +236,7 @@
                 <a href="{{url('/reductioncollective')}}">Réductions collectives</a>
               </li>
               <li>
-                <a href="#">Paiement des non inscrits</a>
+                <a href="{{url('/paiementdesnoninscrits')}}">Paiement des non inscrits</a>
               </li>
               <li>
                 <a href="{{url('/duplicatarecu')}}"> Duplicata</a>
@@ -357,7 +255,7 @@
                 <a href="{{url('/transfert')}}">Transfert</a>
               </li>
               <li>
-                <a href="#">Exporter</a>
+                <a href="{{url('/exporter')}}">Exporter</a>
               </li>
               <li>
                 <a href="{{url('/importer')}}">Importer</a>
