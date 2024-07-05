@@ -40,7 +40,7 @@
         <button><a href="{{ url('/eleveparclasse') }}"><i class="fas fa-users"></i> Liste des élèves par classe</a></button>
         <button><a href="{{ url('/listedeseleves') }}"><i class="fas fa-user-graduate"></i> Liste générale des élèves</a></button>
         <button><a href="{{ url('/listeselective') }}"><i class="fas fa-user-check"></i> Liste sélective des élèves</a></button>
-        <button data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="fas fa-book"></i> Registre des élèvese</button>
+        <button data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="fas fa-book"></i> Registre des élèves</button>
        
           
         <button><a href="{{ url('/listedesclasses') }}"><i class="fas fa-list"></i> Liste des classes</a></button>
@@ -56,7 +56,8 @@
         <button><a href="{{ url('/lettresderelance') }}"><i class="fas fa-envelope"></i> Lettres de relance</a></button>
         <button><a href="{{ url('/situationfinanciereglobale') }}"><i class="fas fa-balance-scale"></i> Situation financière globale</a></button>
         <button><a href="{{ url('/listedereductions') }}"><i class="fas fa-percentage"></i> Liste des réductions accordées</a></button>
-        <button><a href="{{ url('/listedeselèvesparprofil') }}"><i class="fas fa-id-card"></i> Liste des élèves par profil</a></button>
+        <button type="button" id="" class="" data-bs-toggle="modal" data-bs-target="#exampleModal2"><i class="fas fa-id-card"></i>Liste des élèves par profil</button>
+
         <button><a href="{{ url('/listedeselèvesechéancierpersonnalisé') }}"><i class="fas fa-calendar-check"></i> Liste des élèves ayant un échéancier personnalisé</a></button>
         <button><a href="{{ url('/etatdesarriérésinscrits') }}"><i class="fas fa-exclamation-triangle"></i> État général des arriérés (élèves inscrits)</a></button>
         <button><a href="{{ url('/etatdesarriérésmoissoldés') }}"><i class="fas fa-minus-circle"></i> État général des arriérés moins ceux qui sont soldés</a></button>
@@ -92,6 +93,46 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-primary">Imprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Liste des élèves par profil</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-12 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col">
+                                        <label>Sélectionner un type de classe</label>
+                                        <select class="form-select">
+                                            <option>Tous les groupes</option>
+                                            <option>SYSTEME</option>
+                                            <option>Normal</option>
+                                            <option>Temporaire</option>
+                                            <option>Examen Blanc</option>
+                                            <option>Cours du soir</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
           <button type="button" class="btn btn-primary">Imprimer</button>
         </div>
       </div>
