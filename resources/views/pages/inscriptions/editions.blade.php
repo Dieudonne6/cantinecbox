@@ -4,7 +4,7 @@
 <style>
     .container {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 10px;
         width: 100%;
         max-width: 5000px;
@@ -12,9 +12,9 @@
     button {
         padding: 10px;
         font-size: 14px;
-        background-color: #7c83a8;
-        color: white;
-        border: none;
+        background-color: white;
+        color: black;
+        border: 1px solid black;
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s;
@@ -22,15 +22,17 @@
         align-items: center;
         justify-content: center;
         text-align: center;
+        width: 250px;
+        height: 70px;
     }
     button:hover {
-        background-color: #AC32E4E6;
+        background-color: #844fc1;
     }
     button i {
         margin-right: 8px;
     }
     a {
-        color: white;
+        color: black;
         text-decoration: none;
     }
 </style>
