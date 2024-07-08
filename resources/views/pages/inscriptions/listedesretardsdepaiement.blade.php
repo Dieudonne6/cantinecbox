@@ -87,7 +87,7 @@
       <a class="btn btn-primary mb-2" href="">Creer</a>
       <a class="btn btn-primary mb-2" href="">Decisions</a>
       <a class="btn btn-primary mb-2" href="">Imprimer</a>
-      <a class="btn btn-primary mb-2" href="">Arreter</a>
+      <a class="btn btn-danger mb-2" href="">Arreter</a>
       <a class="btn btn-primary mb-2" href="">Relance</a>
       <p>Date de relance</p>
       <input type="date" class="form-control"> 

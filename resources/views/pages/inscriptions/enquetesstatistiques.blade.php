@@ -5,7 +5,7 @@
 <div class="col-12 grid-margin">
     <div class="card">
         <div class="card-body">
-          <h4 class="card-title">statistiques</h4>
+          <h4 class="card-title">Statistiques</h4>
             <div class="row">
                 <div class="col-12">
                     <div class="form-group row">
@@ -22,7 +22,7 @@
                         <div class="col">
                           <label>Cliquer pour choisir</label>
                           <div class="dropdown">
-                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                               Imprimer
                             </a>
                           

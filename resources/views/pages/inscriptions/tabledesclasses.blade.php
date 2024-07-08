@@ -8,7 +8,7 @@
                     {{-- <div class="row"> --}}
                     <a type="button" class="btn btn-primary" href="{{url('/enrclasse')}}">Nouveau</a>
                     <a type="button" class="btn btn-primary" href="{{url('/groupe')}}">Groupe</a>
-                    <button type="button" class="btn btn-primary">Imprimer</button><br>
+                    <button type="button" class="btn btn-secondary">Imprimer</button><br>
 
                     {{-- </div> --}}
 
@@ -43,7 +43,7 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <!-- Button trigger modal -->
-                                            <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                               <i class="typcn typcn-th-list btn-icon-append"></i>  
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
@@ -68,7 +68,7 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <!-- Button trigger modal -->
-                                            <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                               <i class="typcn typcn-th-list btn-icon-append"></i>  
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
@@ -118,7 +118,7 @@
                     </div>
                     <div class="modal-footer">
                         {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button> --}}
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
                         <button type="button" class="btn btn-primary">Enregistrer</button>
                     </div>
                 </div>

@@ -38,10 +38,6 @@
             </style>
         <div class="card-body">
             <h4 class="card-title">Liste des groupes</h4>
-
-        
-        
-        
             <table id="classTable">
                 <thead>
                     <tr>
@@ -101,7 +97,7 @@
                             </select>
                         </div>
                         <div class="form-group w-50 mb-6">
-                            <button type="button" class="btn btn-success">Ajouter une classe</button>
+                            <button type="button" class="btn btn-primary">Ajouter une classe</button>
                         </div>
                     </div>
                     <table id="classTable">

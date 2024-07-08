@@ -24,6 +24,18 @@
                     </div>
                 </div>
 
+                <div class="row mt-3">
+                    <div class="col-4">
+                        <button class="btn btn-primary w-100" onclick="printWithPhoto()">Imprimer avec photo</button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-primary w-100" onclick="printWithoutPhoto()">Imprimer sans photo</button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-primary w-100" onclick="printMaquettesDroits()">Maquettes droits</button>
+                    </div>
+                </div>
+
                 <style>
                     body {
                         font-family: Arial, sans-serif;
@@ -132,18 +144,6 @@
                             <!-- Ajouter d'autres lignes ici -->
                         </tbody>
                     </table>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-4">
-                        <button class="btn btn-primary w-100" onclick="printWithPhoto()">Imprimer avec photo</button>
-                    </div>
-                    <div class="col-4">
-                        <button class="btn btn-secondary w-100" onclick="printWithoutPhoto()">Imprimer sans photo</button>
-                    </div>
-                    <div class="col-4">
-                        <button class="btn btn-success w-100" onclick="printMaquettesDroits()">Maquettes droits</button>
-                    </div>
                 </div>
             </div>
         </div>

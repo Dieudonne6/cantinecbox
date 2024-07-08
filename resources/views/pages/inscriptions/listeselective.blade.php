@@ -21,11 +21,10 @@
         </div>
         <div class="col-md-2">
             <form>
-                <label for="sexe">Sexe :</label>
-                <select id="sexe" name="sexe" class="form-control">
-                    <option value="masculin">Masculin</option>
-                    <option value="feminin">Féminin</option>
-                    <option value="tous">Tous</option>
+                <select id="sexe" name="sexe" class="form-control w-100">
+                    <option value="">Séléctionner le sexe</option>
+                    <option value="">Masculin</option>
+                    <option value="">Féminin</option>
                 </select>
             </form>
         </div>
@@ -50,7 +49,15 @@
             </div>
         </div>
     </div>
-
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <button class="btn btn-primary ">Créer liste</button>
+        </div>
+        <div class="col-md-6">
+            <button class="btn btn-primary">Imprimer liste</button>
+        </div>
+    </div>
+<br>
     <div class="container">
         <div class="table-responsive pt-3">
             <table class="table table-striped project-orders-table">
@@ -96,13 +103,6 @@
         </div>
     </div>
 
-    <div class="row mt-3">
-        <div class="col-md-6 text-center">
-            <button class="btn btn-primary ">Créer liste</button>
-        </div>
-        <div class="col-md-6">
-            <button class="btn btn-secondary">Imprimer liste</button>
-        </div>
-    </div>
+
 </div>
 @endsection

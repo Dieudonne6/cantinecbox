@@ -41,7 +41,7 @@
                                                 <td>2 000</td>
                                                 <td>0</td>
                                                 <td>
-                                                    <a href="#" class="btn btn-primary btn-sm mb-1">
+                                                    <a href="#" class="btn btn-secondary btn-sm mb-1">
                                                         <i class="far">Imprimer</i> 
                                                     </a>
                                                 </td>

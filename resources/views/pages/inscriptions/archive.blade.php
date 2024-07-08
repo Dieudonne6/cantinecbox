@@ -64,20 +64,10 @@
                         <td>01/01/2000</td>
                         <td>Paris</td>
                         <td>
-                            <button type="button" class="btn btn-info p-2 btn-sm btn-icon-text mr-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <button type="button" class="btn btn-primary p-2 btn-sm btn-icon-text mr-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 <i class="typcn typcn-eye btn-icon-append">Voir plus</i>
                             </button>
                         </td>
-                    </tr>
-                    <tr>
-                        <td>67890</td>
-                        <td>Smith</td>
-                        <td>Jane</td>
-                        <td>4ème</td>
-                        <td>Féminin</td>
-                        <td>15/05/1999</td>
-                        <td>Lyon</td>
-                        <td><button class="btn btn-primary btn-sm">Modifier</button></td>
                     </tr>
                     <!-- Ajouter d'autres lignes ici -->
                 </tbody>
