@@ -3,64 +3,8 @@
 
 <div class="main-panel-10">
     <div class="card">
- 
-    </div>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-            }
-            .table-container {
-                width: 100%;
-                overflow-x: auto;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                table-layout: fixed;
-            }
-            th, td {
-                padding: 8px 12px;
-                border: 1px solid #ddd;
-                text-align: left;
-            }
-            th {
-                background-color: #f4f4f4;
-                position: sticky;
-                top: 0;
-                z-index: 1;
-            }
-            @media (max-width: 600px) {
-                table, thead, tbody, th, td, tr {
-                    display: block;
-                }
-                th {
-                    top: auto;
-                    background-color: transparent;
-                }
-                tr {
-                    display: flex;
-                    flex-direction: column;
-                    margin-bottom: 16px;
-                }
-                td {
-                    text-align: right;
-                    position: relative;
-                    padding-left: 50%;
-                }
-                td::before {
-                    content: attr(data-label);
-                    position: absolute;
-                    left: 0;
-                    width: 50%;
-                    padding-left: 12px;
-                    font-weight: bold;
-                    text-align: left;
-                    background-color: #f4f4f4;
-                    border-right: 1px solid #ddd;
-                }
-            }
-        </style>
-    
+      <div class="card-body">
+        <h4 class="card-title">Mise à jour des classes</h4>
     <div class="table-container">
         <table id="myTable">
             <thead>
@@ -96,7 +40,8 @@
             </tbody>
         </table>
     </div>
-    
+  </div>
+  </div>
 </div>
 
 @endsection
@@ -375,3 +320,60 @@
       </div>
     </div>
   </div>
+
+  
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+    th, td {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    th {
+        background-color: #f4f4f4;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+    @media (max-width: 600px) {
+        table, thead, tbody, th, td, tr {
+            display: block;
+        }
+        th {
+            top: auto;
+            background-color: transparent;
+        }
+        tr {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 16px;
+        }
+        td {
+            text-align: right;
+            position: relative;
+            padding-left: 50%;
+        }
+        td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 0;
+            width: 50%;
+            padding-left: 12px;
+            font-weight: bold;
+            text-align: left;
+            background-color: #f4f4f4;
+            border-right: 1px solid #ddd;
+        }
+    }
+</style>

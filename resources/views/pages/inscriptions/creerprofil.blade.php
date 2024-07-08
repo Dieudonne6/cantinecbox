@@ -10,14 +10,8 @@
       <div class="row">          
         <div class="col-12">
           <div class="card mb-6">
-                            <div class="card-header">
-                    <div class="row align-items-center">
-                        <div class="col-sm-6">
-                            <div class="page-title"><h4>Table réduction</h4></div>
-                        </div>
-                    </div>
-                </div>
             <div class="card-body">
+              <h4 class="card-title">Table réduction</h4>
               <div class="row gy-3">
                 <div class="demo-inline-spacing">
                   {{-- <a  class="btn btn-primary" href=" {{url('/nouveautypesclasses')}}">Nouveau</a> --}}
