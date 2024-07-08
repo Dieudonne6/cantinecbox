@@ -124,7 +124,7 @@
                             {{-- <a  class="btn btn-primary p-2 btn-sm" href="{{url('/modifierpromotion')}}">Modif</a> --}}
                             <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal2">
-    Modif
+    Modifier
   </button>
   
   <!-- Modal -->
@@ -183,7 +183,7 @@
       </div>
     </div>
   </div>
-                            <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Suppr
+                            <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Supprimer
                               {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
                             </button>
                           </div>

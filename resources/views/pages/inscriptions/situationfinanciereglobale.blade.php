@@ -15,12 +15,12 @@
                 <div class="demo-inline-spacing">
 
                   <button type="button" class="btn btn-primary">Créer</button>
-                    <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Trier</button>
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Trier</button>
                     <ul class="dropdown-menu">
                       <li><a class="dropdown-item" href="#">Par nom</a></li>
                       <li><a class="dropdown-item" href="#">Par classe</a></li>
                     </ul>
-                  <button type="button" class="btn btn-secondary">Imprimer</button>    
+                  <button type="button" class="btn btn-primary">Imprimer</button>    
 
                 </div>
               </div>

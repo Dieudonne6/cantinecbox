@@ -11,6 +11,7 @@
         <div class="col-12">
             <div class="card mb-6">
                 <div class="card-body">
+                  <h4 class="card-title">Acceuil</h4>
                     <div class="row gy-3">
                         <div class="demo-inline-spacing">
                             <a class="btn btn-primary" href="{{url('/inscrireeleve')}}">

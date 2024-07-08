@@ -59,6 +59,9 @@
                     </div>
                 </div>
               </div>
+              <div class="text-center">
+                <button type="button" class="btn btn-primary">Imprimer</button>
+              </div>
         </div>
     </div>
 </div>
