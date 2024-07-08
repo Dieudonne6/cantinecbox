@@ -4,6 +4,7 @@
 <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     <div class="card col-md-10">
         <div class="card-body">
+            <h4 class="card-title">Editions</h4>
             <div class="form-group row">
                 <div class="col">
                     <label for="debut">Du</label>
