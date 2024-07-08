@@ -169,7 +169,7 @@
                             </div>
                             <div class="col">
                                 <label>Libellé</label>
-                                <select class="form-select">
+                                <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                     <option>AG │ ACTIVITES GENERALES</option>
                                     <option>MF │ MATERNELLE CAMP-GUEZO</option>
                                     <option>MM │ MATERNELLE CADJEHOUN</option>
@@ -189,7 +189,7 @@
                         </div>
                         <div class="col">
                             <label>Libellé</label>
-                            <select class="form-select">
+                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                 <option>AG │ ACTIVITES GENERALES</option>
                                 <option>MF │ MATERNELLE CAMP-GUEZO</option>
                                 <option>MM │ MATERNELLE CADJEHOUN</option>
@@ -209,7 +209,7 @@
                         </div>
                         <div class="col">
                             <label>Libellé</label>
-                            <select class="form-select">
+                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                 <option>AG │ ACTIVITES GENERALES</option>
                                 <option>MF │ MATERNELLE CAMP-GUEZO</option>
                                 <option>MM │ MATERNELLE CADJEHOUN</option>
@@ -229,7 +229,7 @@
                         </div>
                         <div class="col">
                             <label>Libellé</label>
-                            <select class="form-select">
+                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                 <option>AG │ ACTIVITES GENERALES</option>
                                 <option>MF │ MATERNELLE CAMP-GUEZO</option>
                                 <option>MM │ MATERNELLE CADJEHOUN</option>
@@ -249,7 +249,7 @@
                         </div>
                         <div class="col">
                             <label>Libellé</label>
-                            <select class="form-select">
+                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                 <option>AG │ ACTIVITES GENERALES</option>
                                 <option>MF │ MATERNELLE CAMP-GUEZO</option>
                                 <option>MM │ MATERNELLE CADJEHOUN</option>
@@ -269,7 +269,7 @@
                         </div>
                         <div class="col">
                             <label>Libellé</label>
-                            <select class="form-select">
+                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                 <option>AG │ ACTIVITES GENERALES</option>
                                 <option>MF │ MATERNELLE CAMP-GUEZO</option>
                                 <option>MM │ MATERNELLE CADJEHOUN</option>

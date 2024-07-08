@@ -12,14 +12,14 @@
                         <div class="form-group row">
                             <div class="col">
                                 <label>Sélectionner</label>
-                                    <select class="form-select">
+                                    <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                         <option>Verrouiller l'écriture comptable de l'élève sélectionné</option>
                                         <option>Verrouiller les écritures comptables de tous les élèves</option>
                                     </select>
                             </div>
                             <div class="col">
                                 <label>Seul le superviseur pourra déverouiller</label>
-                                    <select class="form-select">
+                                    <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                         <option>Oui</option>
                                         <option>Non</option>
                                     </select>
@@ -47,7 +47,7 @@
                         <div class="form-group row">      
                             <div class="col">
                                 <label>Bloquer également toute nouvelle saisie antérieures à cette date</label>
-                                    <select class="form-select">
+                                    <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                         <option>Oui</option>
                                         <option>Non</option>
                                     </select>

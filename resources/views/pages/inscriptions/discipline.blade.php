@@ -8,7 +8,7 @@
             <h4 class="card-title">Dicipline</h4>
             <div class="row mb-3">
                 <div class="col">
-                    <select class="form-select">
+                    <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                         <option selected>Fautes et sanctions</option>
                         <option value="1">One</option>
                         <option value="2">Two</option>
@@ -16,7 +16,7 @@
                     </select>
                 </div>
                 <div class="col">
-                    <select class="form-select">
+                    <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                         <option selected>Sélectionner un groupe</option>
                         <option value="1">One</option>
                         <option value="2">Two</option>
@@ -82,7 +82,7 @@
                             <div class="form-group row">
                                 <label for="trimestre" class="col-sm-4 col-form-label">Trimestre</label>
                                 <div class="col-sm-4">
-                                    <select class="form-control" id="trimestre">
+                                    <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="trimestre">
                                         <option>1er Trimestre</option>
                                         <option>2ème Trimestre</option>
                                         <option>3ème Trimestre</option>

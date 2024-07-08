@@ -11,7 +11,7 @@
                     <div class="form-group row">
                         <div class="col">
                             <label>Type</label>
-                            <select class="form-select">
+                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                 <option>Bordereaux des paiements</option>
                                 <option>Relevé mensuel des ordres de recettes</option>
                                 <option>Bordereau de caisse</option>
@@ -19,7 +19,7 @@
                         </div>
                         <div class="col">
                           <label>Chapitre</label>
-                          <select class="form-select">
+                          <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                               <option>ACTIVITE GENERALES</option>
                               <option>MATERNELLE CAMP-GUEZO</option>
                               <option>MATERNELLE CADJEHOUN</option>
@@ -45,7 +45,7 @@
                     <div class="form-group row">      
                         <div class="col">
                             <label>Périodicité</label>
-                            <select class="form-select">
+                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                 <option>Mensuel</option>
                                 <option>Annuel</option>
                             </select>

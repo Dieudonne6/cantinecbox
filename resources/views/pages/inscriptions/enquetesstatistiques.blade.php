@@ -11,7 +11,7 @@
                     <div class="form-group row">
                         <div class="col">
                             <label>Choisir type d'enseignement</label>
-                            <select class="form-select">
+                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                 <option>Enseignement Général</option>
                                 <option>Enseignement Technique</option>
                             </select>

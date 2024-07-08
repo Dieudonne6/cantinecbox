@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-2">
                 <label for="tableSelect">Sélectionnez un tableau :</label>
-                <select class="form-select" id="tableSelect">
+                <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="tableSelect">
                     <option value="table1">Effectif par classe</option>
                     <option value="table2">Effectif par promotion</option>
                     <option value="table3">Effectif par série</option>

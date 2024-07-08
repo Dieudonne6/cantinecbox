@@ -22,7 +22,7 @@
             <div class="form-group row mt-1">
                 <label for="groupe" class="col-sm-3 col-form-label">Choisir un groupe</label>
                 <div class="col-sm-3 mt-2">
-                    <select class="form-select" id="groupe">
+                    <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="groupe">
                         <option>Standard</option>
                         <option>Féminin</option>
                     </select>
@@ -30,7 +30,7 @@
 
                 <label for="typeclasse" class="col-sm-3 col-form-label">Types de classe</label>
                 <div class="col-sm-3 mt-2">
-                    <select class="form-select" id="typeclasse">
+                    <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="typeclasse">
                         <option>Normal</option>
                         <option>Nouveau</option>
                     </select>

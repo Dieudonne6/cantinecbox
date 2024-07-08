@@ -174,7 +174,7 @@
                 <div class="form-group row mt-1">
                     <label for="sexe" class="col-sm-2 col-form-label">Sexe</label>
                     <div class="col-sm-3">
-                        <select class="form-control" id="sexe">
+                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="sexe">
                             <option>Masculin</option>
                             <option>Féminin</option>
                         </select>
@@ -182,7 +182,7 @@
         
                     <label for="typeEleve" class="col-sm-3 col-form-label">Types élèves</label>
                     <div class="col-sm-3">
-                        <select class="form-control" id="typeEleve">
+                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="typeEleve">
                             <option>Ancien</option>
                             <option>Nouveau</option>
                         </select>
@@ -199,7 +199,7 @@
                 <div class="form-group row mt-1 align-items-center">
                     <label for="apte" class="col-sm-2 col-form-label">Apte</label>
                     <div class="col-sm-2">
-                        <select class="form-control" id="apte">
+                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="apte">
                             <option>Oui</option>
                             <option>Non</option>
                         </select>

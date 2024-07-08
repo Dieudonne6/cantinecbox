@@ -20,7 +20,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="classe">Classe</label>
-                                            <select class="form-select" id="classe">
+                                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="classe">
                                                 <option>CE1</option>
                                                 <option>Italy</option>
                                                 <option>Russia</option>
@@ -29,7 +29,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="classe-entree">Classe d'entrée collège</label>
-                                            <select class="form-select" id="classe-entree">
+                                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="classe-entree">
                                                 <option>CM2</option>
                                                 <option>Italy</option>
                                                 <option>Russia</option>
@@ -93,7 +93,7 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <label>Profil de réduction</label>
-                                        <select class="form-select">
+                                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                             <option>Plein Tarif</option>
                                             <option>Fils d'enseignant</option>
                                         </select>
@@ -133,7 +133,7 @@
                                         </div>
                                         <div class="col">
                                             <label>Département</label>
-                                            <select class="form-select">
+                                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                                 <option>Littoral</option>
                                                 <option>Italy</option>
                                                 <option>Russia</option>
@@ -146,21 +146,21 @@
                                     <div class="row">
                                         <div class="col">
                                             <label>Sexe</label>
-                                            <select class="form-select">
+                                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                                 <option>Masculin</option>
                                                 <option>Feminin</option>
                                             </select>
                                         </div>
                                         <div class="col">
                                             <label>Type d'élève</label>
-                                            <select class="form-select">
+                                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                                 <option>Nouveau</option>
                                                 <option>Ancien</option>
                                             </select>
                                         </div>
                                         <div class="col">
                                             <label>Aptitude Sport</label>
-                                            <select class="form-select">
+                                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                                 <option>Apte</option>
                                                 <option>Inapte</option>
                                             </select>
@@ -214,7 +214,7 @@
                                         <div class="row">
                                             <div class="col-sm-2">
                                                 <label>Contacts parents</label>
-                                                <select class="form-select">
+                                                <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                                     <option>+229</option>
                                                     <option>+229</option>
                                                 </select>
@@ -260,7 +260,7 @@
                                     </div>
                                     <div class="col">
                                         <label for="groupe_sanguin">Groupe sanguin</label>
-                                        <select class="form-select" id="groupe_sanguin" name="groupe_sanguin">
+                                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="groupe_sanguin" name="groupe_sanguin">
                                             <option>A+</option>
                                             <option>O+</option>
                                             <option>B+</option>
@@ -269,7 +269,7 @@
                                     </div>
                                     <div class="col">
                                         <label for="type_hemoglobine">Type d'hémoglobine</label>
-                                        <select class="form-select" id="type_hemoglobine" name="type_hemoglobine">
+                                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="type_hemoglobine" name="type_hemoglobine">
                                             <option>A</option>
                                             <option>O</option>
                                             <option>B</option>
@@ -529,7 +529,7 @@
                                                           <div class="form-group row">
                                                             <label for="exampleInputUsername2" class="col-sm-12">Profil de réduction</label>
                                                             <div class="col-sm-12 mb-2">
-                                                              <select class="form-select">
+                                                              <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                                                 <option>Fils d'enseignant</option>
                                                                 <option>Plein Tarfif</option>
                                                               </select>

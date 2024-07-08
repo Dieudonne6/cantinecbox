@@ -49,7 +49,7 @@
                                 <div class="form-group row">
                                     <div class="col">
                                         <label>Source</label>
-                                        <select class="form-select">
+                                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                             <option>CE1</option>
                                             <option>Italy</option>
                                             <option>Russia</option>
@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="col">
                                       <label>Destination</label>
-                                      <select class="form-select">
+                                      <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                           <option>CM2</option>
                                           <option>Italy</option>
                                           <option>Russia</option>

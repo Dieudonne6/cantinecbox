@@ -41,7 +41,7 @@
                     </div>
                     <div class="col-sm-4">
                         <label><strong>Préciser le Cycle</strong></label>
-                        <select class="form-select">
+                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                             <option>1er Cycle</option>
                             <option>2eme Cycle</option>
                             <option>3eme Cycle</option>
@@ -134,7 +134,7 @@
                     </div>
                     <div class="col-sm-4">
                         <label><strong>Préciser le Cycle</strong></label>
-                        <select class="form-select">
+                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                             <option>1er Cycle</option>
                             <option>2eme Cycle</option>
                             <option>3eme Cycle</option>
