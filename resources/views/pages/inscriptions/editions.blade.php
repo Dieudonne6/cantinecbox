@@ -9,7 +9,9 @@
         width: 100%;
         max-width: 5000px;
     }
-    button {
+
+    /* Styles spécifiques aux boutons à l'intérieur de .container */
+    .container button {
         padding: 10px;
         font-size: 14px;
         background-color: white;
@@ -25,31 +27,29 @@
         width: 250px;
         height: 70px;
     }
-    button:hover {
+
+    .container button:hover {
         background-color: #844fc1;
     }
-    button:hover a {
+
+    .container button:hover a {
         color: white; /* Changement de couleur du texte */
     }
-    button i {
+
+    .container button i {
         margin-right: 8px;
     }
-    a {
+
+    /* Styles spécifiques pour les boutons avec les classes registre-btn et profil-btn */
+    .container .registre-btn:hover,
+    .container .profil-btn:hover {
+        color: white;
+    }
+
+    /* Styles pour les liens à l'intérieur des boutons */
+    .container button a {
         color: black;
         text-decoration: none;
-    }
-
-    .modal-content button {
-        padding: 5px 10px; /* Ajuste le padding selon tes besoins */
-        font-size: 15px; /* Ajuste la taille de police selon tes besoins */
-        height: auto; /* Permet d'ajuster la hauteur selon le contenu */
-        width: auto; /* Permet d'ajuster la largeur selon le contenu */
-    }
-
-    /* Style pour les boutons spécifiques au survol */
-    .registre-btn:hover,
-    .profil-btn:hover {
-        color: white;
     }
 </style>
 
