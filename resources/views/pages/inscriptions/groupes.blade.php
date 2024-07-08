@@ -36,8 +36,11 @@
                     margin-left: auto;
                 }
             </style>
+        <div class="card-body">
+            <h4 class="card-title">Liste des groupes</h4>
+
         
-            <h3 style="text-align: center">Liste des Groupes</h3>
+        
         
             <table id="classTable">
                 <thead>
@@ -73,29 +76,7 @@
                 </tbody>
             </table>
         
-            <script>
-                function filterTable() {
-                    var input, filter, table, tr, td, i, j, txtValue;
-                    input = document.getElementById("searchInput");
-                    filter = input.value.toLowerCase();
-                    table = document.getElementById("classTable");
-                    tr = table.getElementsByTagName("tr");
-            
-                    for (i = 1; i < tr.length; i++) {
-                        tr[i].style.display = "none"; // Hide all rows initially
-                        td = tr[i].getElementsByTagName("td");
-                        for (j = 0; j < td.length; j++) {
-                            if (td[j]) {
-                                txtValue = td[j].textContent || td[j].innerText;
-                                if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                                    tr[i].style.display = ""; // Show the row if a match is found
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            </script>
+        </div>
         </div>
     </div>
 </div>
@@ -145,4 +126,27 @@
     </div>
 </div>
 
+<script>
+    function filterTable() {
+        var input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("classTable");
+        tr = table.getElementsByTagName("tr");
+
+        for (i = 1; i < tr.length; i++) {
+            tr[i].style.display = "none"; // Hide all rows initially
+            td = tr[i].getElementsByTagName("td");
+            for (j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = ""; // Show the row if a match is found
+                        break;
+                    }
+                }
+            }
+        }
+    }
+</script>
 @endsection

@@ -6,6 +6,7 @@
     <div class="col-12 grid-margin">
         <div class="card">
             <div class="card-body">
+                <h4 class="card-title">verrouillage de la scolarité</h4>
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group row">

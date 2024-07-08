@@ -7,14 +7,8 @@
       <div class="col-md-4">
         <div class="col-12 grid-margin">
           <div class="card">
-            <div class="card-header">
-              <div class="row align-items-center">
-                <div class="col-sm-6">
-                  <div class="page-title"><h4>Importation des données</h4></div>
-                </div>
-              </div>
-            </div>
             <div class="card-body">
+              <h4 class="card-title">Importation de données</h4>
               <div class="form-group">
                 <h6>Configuration du fichier Excel</h6>
                 <div class="form-check">

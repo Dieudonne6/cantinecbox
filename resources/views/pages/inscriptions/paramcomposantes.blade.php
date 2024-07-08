@@ -6,12 +6,7 @@
     <div class="content-wrapper">
         <div class="card">
             <div class="card-body">
-                <div class="row justify-content-center">
-                    <div class="col">
-                        <div class="card-title">
-                            <h4> Configurer les comptes</h4>
-                        </div>
-                    </div>
+                <h4 class="card-title"> Configurer les comptes</h4>
                     <div class="col">
                         <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Voir la liste des comptes</button>
@@ -291,7 +286,6 @@
                         <button type="button" class="btn btn-danger">Annuler</button>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
     </div>

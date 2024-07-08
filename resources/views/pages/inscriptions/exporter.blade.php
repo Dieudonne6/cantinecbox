@@ -2,8 +2,9 @@
 @section('content')
 <div class="container">
   <div class="row">
-    <h4>Transfert de données</h4>
     <div class="col-lg-10 card">
+      <div class="card-body">
+        <h4 class="card-title">Transfert de données</h4>
       <div class="row p-3">
         <div class="col-lg-3">
           <h6>Diriger vers</h6>
@@ -93,6 +94,7 @@
           </tbody>  
         </table>
       </div>
+    </div>
     </div>
     <div class="col-lg-2 card">
       <h5>Colonnes</h5>

@@ -2,38 +2,10 @@
 @section('content')
 
 <div class="container card mt-3">
+    <div class="card-body">
+        <h4 class="card-title">Réductions de groupe</h4>
     <div class="row">
         <div class="col-md-6">
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                }
-                .table-container {
-                    max-width: 100%;
-                    overflow-x: auto;
-                }
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                }
-                thead {
-                    position: sticky;
-                    top: 0;
-                    background-color: #f2f2f2;
-                }
-                th, td {
-                    padding: 10px;
-                    border: 1px solid #ddd;
-                    text-align: left;
-                }
-                th {
-                    background-color: #f2f2f2;
-                }
-                tr:hover {
-                    background-color: #f1f1f1;
-                }
-            </style>
-
             <div class="table-container mt-2">
                 <table>
                     <thead>
@@ -62,15 +34,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <script>
-                function toggleAll(source) {
-                    const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
-                    checkboxes.forEach(checkbox => {
-                        if (checkbox != source) checkbox.checked = source.checked;
-                    });
-                }
-            </script>
         </div>
 
         <div class="col-md-6">
@@ -105,5 +68,46 @@
         </div>
     </div>
 </div>
+</div>
 
 @endsection
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .table-container {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    thead {
+        position: sticky;
+        top: 0;
+        background-color: #f2f2f2;
+    }
+    th, td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+
+
+<script>
+    function toggleAll(source) {
+        const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            if (checkbox != source) checkbox.checked = source.checked;
+        });
+    }
+</script>

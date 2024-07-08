@@ -7,14 +7,8 @@
     <div class="row ">
         <div class="col">
             <div class="card">
-                <div class="card-header">
-                    <div class="row align-items-center">
-                        <div class="col-sm-6">
-                            <div class="page-title"><h4>Transfert</h4></div>
-                        </div>
-                    </div>
-                </div>
                 <div class="card-body">
+                    <h4 class="card-title">Transfert</h4>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="table-responsive">
