@@ -19,54 +19,59 @@
                             <button type="button" class="btn btn-secondary">
                                 <i class="typcn typcn-printer btn-icon-prepend"></i> Imprimer
                             </button>
-                            <a class="btn btn-primary" href="{{url('/photos')}}">
+                            {{-- <a class="btn btn-primary" href="{{url('/photos')}}">
                                 <i class="typcn typcn-camera btn-icon-prepend"></i> Photos
-                            </a>
+                            </a> --}}
                             <style>
-                                table {
-                                    float: right;
-                                    width: 10%;
-                                    border-collapse: collapse;
-                                    margin: 5px auto;
-                                }
-
-                                th,
-                                td {
-                                    border: 1px solid #ddd;
-                                    padding: 4px;
-                                    text-align: center;
-                                }
-
-                                th {
-                                    background-color: #f2f2f2;
-                                }
-
-                                td.bouton {
-                                    background-color: #ffcccb;
-                                }
-                            </style>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td class="bouton">Star</td>
-                                        <td>10,942</td>
-                                        <td class="bouton">Star</td>
-                                        <td>10,942</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="bouton">Star</td>
-                                        <td>10,942</td>
-                                        <td class="bouton">Star</td>
-                                        <td>10,942</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                              table {
+                                  float: right;
+                                  width: 60%; /* Augmentez la largeur pour accommoder plus de colonnes */
+                                  border-collapse: collapse;
+                                  margin: 5px auto;
+                              }
+                          
+                              th,
+                              td {
+                                  border: 1px solid #ddd;
+                                  padding: 4px;
+                                  text-align: center;
+                              }
+                          
+                              th {
+                                  background-color: #f2f2f2;
+                              }
+                          
+                              td.bouton {
+                                  background-color: #ffcccb;
+                              }
+                          </style>
+                          <table>
+                              <tbody>
+                                  <tr>
+                                      <td class="bouton">Eff.Total</td>
+                                      <td>942</td>
+                                      <td class="bouton">Filles</td>
+                                      <td>60</td>
+                                      <td class="bouton">Garçons</td>
+                                      <td>742</td>
+                                  </tr>
+                                  <tr>
+                                      <td class="bouton">Eff.Red</td>
+                                      <td>10</td>
+                                      <td class="bouton">Red.Filles</td>
+                                      <td>2</td>
+                                      <td class="bouton">Red.Garçons</td>
+                                      <td>0</td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                          
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+      </div>
 
       {{--  --}}
       <div class="row">
@@ -102,10 +107,10 @@
                     <td>
                       <div class="d-flex align-items-center">
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-info p-2 btn-sm btn-icon-text mr-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <button type="button" class="btn btn-primary p-2 btn-sm btn-icon-text mr-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
                           <i class="typcn typcn-eye btn-icon-append"></i>                          
                         </button>
-                        <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           <i class="typcn typcn-th-list btn-icon-append"></i>  
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
@@ -130,7 +135,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" style=" max-width: 600px">
+  <div class="modal-dialog modal-lg" style=" max-width: 1100px">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -151,19 +156,17 @@
         <div class="tab-content" id="nav-tabContent">
           <!--  -->
           <div class="tab-pane fade show active" id="nav-Infor" role="tabpanel" aria-labelledby="nav-Infor-tab" tabindex="0">
-            <form class="accordion-body col-md-12 mx-auto" style="background-color: #f0eff3">  
+            <form class="accordion-body col-md-12 mx-auto">  
               
                 <div class="form-group row mt-2">
-                    <label for="dateN" class="col-sm-4 col-form-label">Date de Naissance</label>
-                    <div class="col-sm-5">
+                    <label for="dateN" class="col-sm-2 col-form-label">Date de Naissance</label>
+                    <div class="col-sm-4">
                         <input type="date" class="form-control mt-2" id="dateN" placeholder="jj/mm/dd">
                     </div>
-                </div>
-                
-                <div class="form-group row mt-1">
-                    <label for="lieu" class="col-sm-4 col-form-label">Lieu</label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" id="lieu" placeholder="Lieu">
+
+                    <label for="lieu" class="col-sm-1 col-form-label">Lieu</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control mt-2" id="lieu" placeholder="Lieu">
                     </div>
                 </div>
         
@@ -214,7 +217,7 @@
           </div>       
           <!--  -->
           <div class="tab-pane fade" id="nav-Detail" role="tabpanel" aria-labelledby="nav-Detail-tab" tabindex="0">
-            <form class="accordion-body col-md-12 mx-auto" style="background-color: #f0eff3;">
+            <form class="accordion-body col-md-12 mx-auto">
                 <div class="table-responsive mt-2">
                   <table class="table table-bordered table-striped">
                         <thead>
@@ -278,15 +281,20 @@
           <div class="tab-pane fade" id="nav-Deta" role="tabpanel" aria-labelledby="nav-Deta-tab" tabindex="0">
             <div class="accordion-body col-md-12 mx-auto bg-light-gray">
               <div class="col">
-                <div class="d-flex justify-content-center mb-3">
+                <div class="d-flex justify-content-between align-items-center mt-2">
                   <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="checkDetails">
                     <label class="form-check-label" for="checkDetails">Détail des composantes</label>
                   </div>
+                  <a href="votre-lien-ici" style="text-decoration: none;">
+                    <button type="button" class="btn btn-primary btn-icon-text-center p-2">
+                      <i class="typcn typcn-upload btn-icon-prepend"></i>Imprimer récapitulatif des paiements
+                    </button>
+                  </a>
                 </div>
-                
+                               
                 <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                  <table class="table table-dark table-hover">
+                  <table class="table table-hover">
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">n°Reçu</th>
@@ -325,19 +333,11 @@
                 </div>
                 
               </div>
-            
-              <div class="d-flex justify-content-center align-items-center mt-3">
-                <a href="votre-lien-ici" style="text-decoration: none;">
-                  <button type="button" class="btn btn-outline-danger btn-icon-text-center">
-                    <i class="typcn typcn-upload btn-icon-prepend"></i>Imprimer récapitulatif des paiements
-                  </button>
-                </a>
-              </div>
               
               <div class="card-body">
-                <h4 class="card-title text-center">Réduction Montants dus</h4>
+                <h6 class="card-title text-center">Réduction Montants dus</h6>
                 <table class="table">
-                  <tbody>
+                  <tbody style=" width: 50%;">
                     <tr>
                       <td>[ 3,3% ] Scolarité</td>
                       <td><input type="number" class="form-control" id="scolarite"></td>
@@ -367,8 +367,8 @@
           </div>
           <!--  -->
           <div class="tab-pane fade" id="nav-finan" role="tabpanel" aria-labelledby="nav-finan-tab" tabindex="0">
-            <div class="accordion-body col-md-12 mx-auto" style="background-color: #f0eff3;"> 
-              <div class="table-responsive">
+            <div class="accordion-body col-md-12 mx-auto"> 
+              <div class="table-responsive mt-2">
                 <table class="table table-striped table-hover">
                   <tbody>
                     <tr>
@@ -411,11 +411,11 @@
           </div>
           <!--  -->
           <div class="tab-pane fade" id="nav-Emploi" role="tabpanel" aria-labelledby="nav-Emploi-tab" tabindex="0">
-            <div class="accordion-body col-md-12 mx-auto" style="background-color: #f0eff3"> 
+            <div class="accordion-body col-md-12 mx-auto"> 
               <div class="container">
                 <div class="row">
                   <div class="col-md-4">
-                    <table class="table table-striped">
+                    <table class="table table-striped mt-2">
                       <thead>
                         <tr>
                           <th scope="col">Colonne 1</th>

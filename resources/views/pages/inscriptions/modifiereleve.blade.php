@@ -64,9 +64,14 @@
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                                 Données financières (Factures)
                                             </button>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="btn-group">
                                             <button type="button" class="btn btn-secondary">Classe précédente</button>
                                         </div>
                                     </div>
+
                                 </div>
                                 <hr>
                                 <h4 class="card-title mt-3">Informations personnelles</h4>
@@ -236,42 +241,41 @@
                     </div>
                 </div>
                 
-                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
-                      
-                      <div class="card">
+                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+                    <div class="card">
                         <div class="card-body">
                             <div class="form-group">
                                 <div class="form-group row">
                                     <div class="col">
-                                        <label>Maladies chroniques et allergies connues</label>
+                                        <label for="maladies_chroniques">Maladies chroniques et allergies connues</label>
                                         <div id="bloodhound">
-                                            <input class="form-control" type="text" name="nom" id="nom" value="">
+                                            <input class="form-control" type="text" name="maladies_chroniques" id="maladies_chroniques" value="">
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <label>Interdit alimentaires</label>
+                                        <label for="interdit_alimentaires">Interdit alimentaires</label>
                                         <div id="bloodhound">
-                                            <input class="form-control" type="text" name="prenom" id="prenom" value="">
+                                            <input class="form-control" type="text" name="interdit_alimentaires" id="interdit_alimentaires" value="">
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <label>Groupe sanguin</label>
-                                        <select class="form-select">
-                                          <option>A+</option>
-                                          <option>O+</option>
-                                          <option>B+</option>
-                                          <option>B-</option>
-                                      </select>
+                                        <label for="groupe_sanguin">Groupe sanguin</label>
+                                        <select class="form-select" id="groupe_sanguin" name="groupe_sanguin">
+                                            <option>A+</option>
+                                            <option>O+</option>
+                                            <option>B+</option>
+                                            <option>B-</option>
+                                        </select>
                                     </div>
                                     <div class="col">
-                                      <label>Type d'hémoglobine</label>
-                                      <select class="form-select">
-                                        <option>A</option>
-                                        <option>O</option>
-                                        <option>B</option>
-                                        <option>B</option>
-                                    </select>
-                                  </div>
+                                        <label for="type_hemoglobine">Type d'hémoglobine</label>
+                                        <select class="form-select" id="type_hemoglobine" name="type_hemoglobine">
+                                            <option>A</option>
+                                            <option>O</option>
+                                            <option>B</option>
+                                            <option>AB</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <hr>
@@ -279,51 +283,51 @@
                             <div class="form-group">
                                 <div class="form-group row">
                                     <div class="col">
-                                        <label>Nom</label>
+                                        <label for="nom_mere">Nom</label>
                                         <div id="bloodhound">
-                                          <input class="form-control" type="text" name="nom" id="nom" value="">
-                                      </div>
-                                    </div>
-                                    <div class="col">
-                                        <label>Prénom</label>
-                                        <div id="bloodhound">
-                                            <input class="form-control" type="text" name="nom" id="nom" value="">
+                                            <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
                                         </div>
                                     </div>
                                     <div class="col">
-                                      <label>Numéro de téléphone</label>
-                                      <div id="bloodhound">
-                                        <input class="form-control" type="text" name="numero_de_telephone" id="numero_de_telephone" value="">
+                                        <label for="prenom_mere">Prénom</label>
+                                        <div id="bloodhound">
+                                            <input class="form-control" type="text" name="prenom_mere" id="prenom_mere" value="">
+                                        </div>
                                     </div>
-                                  </div>
+                                    <div class="col">
+                                        <label for="telephone_mere">Numéro de téléphone</label>
+                                        <div id="bloodhound">
+                                            <input class="form-control" type="text" name="telephone_mere" id="telephone_mere" value="">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="form-group row">
                                     <div class="col">
-                                        <label>Adresse e-mail</label>
+                                        <label for="email_mere">Adresse e-mail</label>
                                         <div id="bloodhound">
-                                          <input class="form-control" type="text" name="numero_de_telephone" id="numero_de_telephone" value="">
-                                      </div>
+                                            <input class="form-control" type="text" name="email_mere" id="email_mere" value="">
+                                        </div>
                                     </div>
                                     <div class="col">
-                                        <label>Profession</label>
+                                        <label for="profession_mere">Profession</label>
                                         <div id="bloodhound">
-                                          <input class="form-control" type="text" name="adresse_email" id="adresse_email" value="">
-                                      </div>
+                                            <input class="form-control" type="text" name="profession_mere" id="profession_mere" value="">
+                                        </div>
                                     </div>
                                     <div class="col">
-                                        <label>Adresse employeur</label>
+                                        <label for="adresse_employeur_mere">Adresse employeur</label>
                                         <div id="bloodhound">
-                                          <input class="form-control" type="text" name="adresse_email" id="adresse_email" value="">
-                                      </div>
+                                            <input class="form-control" type="text" name="adresse_employeur_mere" id="adresse_employeur_mere" value="">
+                                        </div>
                                     </div>
                                     <div class="col">
-                                      <label>Adresse personnelle</label>
-                                      <div id="bloodhound">
-                                          <input class="form-control" type="textarea" name="adresse_personnelle" id="adresse_personnelle" value="">
-                                      </div>
-                                  </div>
+                                        <label for="adresse_personnelle_mere">Adresse personnelle</label>
+                                        <div id="bloodhound">
+                                            <input class="form-control" type="textarea" name="adresse_personnelle_mere" id="adresse_personnelle_mere" value="">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -333,54 +337,53 @@
                                     <div class="form-group">
                                         <div class="form-group row">
                                             <div class="col">
-                                                <label><strong>Nom</strong></label> 
+                                                <label for="nom_pere">Nom</label>
                                                 <div id="bloodhound">
                                                     <input class="form-control" type="text" name="nom_pere" id="nom_pere" value="">
                                                 </div>
                                             </div>
                                             <div class="col">
-                                                <label>Prénom</label>
+                                                <label for="prenom_pere">Prénom</label>
                                                 <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
+                                                    <input class="form-control" type="text" name="prenom_pere" id="prenom_pere" value="">
                                                 </div>
                                             </div>
                                             <div class="col">
-                                              <label>Numéro de téléphone</label>
-                                              <div id="bloodhound">
-                                                  <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
-                                              </div>
-                                          </div>
+                                                <label for="telephone_pere">Numéro de téléphone</label>
+                                                <div id="bloodhound">
+                                                    <input class="form-control" type="text" name="telephone_pere" id="telephone_pere" value="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="form-group row">
-                                          <div class="col">
-                                            <label>Adresse e-mail</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="numero_de_telephone" id="numero_de_telephone" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                            <label>Profession</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="adresse_email" id="adresse_email" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                            <label>Adresse employeur</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="adresse_email" id="adresse_email" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                          <label>Adresse personnelle</label>
-                                          <div id="bloodhound">
-                                              <input class="form-control" type="textarea" name="adresse_personnelle" id="adresse_personnelle" value="">
-                                          </div>
-                                      </div>
+                                            <div class="col">
+                                                <label for="email_pere">Adresse e-mail</label>
+                                                <div id="bloodhound">
+                                                    <input class="form-control" type="text" name="email_pere" id="email_pere" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <label for="profession_pere">Profession</label>
+                                                <div id="bloodhound">
+                                                    <input class="form-control" type="text" name="profession_pere" id="profession_pere" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <label for="adresse_employeur_pere">Adresse employeur</label>
+                                                <div id="bloodhound">
+                                                    <input class="form-control" type="text" name="adresse_employeur_pere" id="adresse_employeur_pere" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <label for="adresse_personnelle_pere">Adresse personnelle</label>
+                                                <div id="bloodhound">
+                                                    <input class="form-control" type="textarea" name="adresse_personnelle_pere" id="adresse_personnelle_pere" value="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    
                                 </div>
                                 <hr>
                                 <h4 class="card-title" style="margin-top: 15px">Tuteur</h4>
@@ -388,51 +391,51 @@
                                     <div class="form-group">
                                         <div class="form-group row">
                                             <div class="col">
-                                                <label>Nom</label>
+                                                <label for="nom_tuteur">Nom</label>
                                                 <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nom_pere" id="nom_pere" value="">
+                                                    <input class="form-control" type="text" name="nom_tuteur" id="nom_tuteur" value="">
                                                 </div>
                                             </div>
                                             <div class="col">
-                                                <label>Prénom</label>
+                                                <label for="prenom_tuteur">Prénom</label>
                                                 <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
+                                                    <input class="form-control" type="text" name="prenom_tuteur" id="prenom_tuteur" value="">
                                                 </div>
                                             </div>
                                             <div class="col">
-                                              <label>Numéro de téléphone</label>
-                                              <div id="bloodhound">
-                                                  <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
-                                              </div>
-                                          </div>
+                                                <label for="telephone_tuteur">Numéro de téléphone</label>
+                                                <div id="bloodhound">
+                                                    <input class="form-control" type="text" name="telephone_tuteur" id="telephone_tuteur" value="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="form-group row">
-                                          <div class="col">
-                                            <label>Adresse e-mail</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="numero_de_telephone" id="numero_de_telephone" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                            <label>Profession</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="adresse_email" id="adresse_email" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                            <label>Adresse employeur</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="adresse_email" id="adresse_email" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                          <label>Adresse personnelle</label>
-                                          <div id="bloodhound">
-                                              <input class="form-control" type="textarea" name="adresse_personnelle" id="adresse_personnelle" value="">
-                                          </div>
-                                      </div>
+                                            <div class="col">
+                                                <label for="email_tuteur">Adresse e-mail</label>
+                                                <div id="bloodhound">
+                                                    <input class="form-control" type="text" name="email_tuteur" id="email_tuteur" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <label for="profession_tuteur">Profession</label>
+                                                <div id="bloodhound">
+                                                    <input class="form-control" type="text" name="profession_tuteur" id="profession_tuteur" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <label for="adresse_employeur_tuteur">Adresse employeur</label>
+                                                <div id="bloodhound">
+                                                    <input class="form-control" type="text" name="adresse_employeur_tuteur" id="adresse_employeur_tuteur" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <label for="adresse_personnelle_tuteur">Adresse personnelle</label>
+                                                <div id="bloodhound">
+                                                    <input class="form-control" type="textarea" name="adresse_personnelle_tuteur" id="adresse_personnelle_tuteur" value="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -442,69 +445,67 @@
                                     <div class="form-group">
                                         <div class="form-group row">
                                             <div class="col">
-                                                <label>Nom</label>
+                                                <label for="nom_urgence">Nom</label>
                                                 <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nom_pere" id="nom_pere" value="">
+                                                    <input class="form-control" type="text" name="nom_urgence" id="nom_urgence" value="">
                                                 </div>
                                             </div>
                                             <div class="col">
-                                                <label>Prénom</label>
+                                                <label for="prenom_urgence">Prénom</label>
                                                 <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
+                                                    <input class="form-control" type="text" name="prenom_urgence" id="prenom_urgence" value="">
                                                 </div>
                                             </div>
                                             <div class="col">
-                                              <label>Numéro de téléphone</label>
-                                              <div id="bloodhound">
-                                                  <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
-                                              </div>
-                                          </div>
+                                                <label for="telephone_urgence">Numéro de téléphone</label>
+                                                <div id="bloodhound">
+                                                    <input class="form-control" type="text" name="telephone_urgence" id="telephone_urgence" value="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="form-group row">
-                                          <div class="col">
-                                            <label>Adresse e-mail</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="numero_de_telephone" id="numero_de_telephone" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                          <label>Adresse personnelle</label>
-                                          <div id="bloodhound">
-                                              <input class="form-control" type="textarea" name="adresse_personnelle" id="adresse_personnelle" value="">
-                                          </div>
-                                      </div>
+                                            <div class="col">
+                                                <label for="email_urgence">Adresse e-mail</label>
+                                                <div id="bloodhound">
+                                                    <input class="form-control" type="text" name="email_urgence" id="email_urgence" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <label for="adresse_personnelle_urgence">Adresse personnelle</label>
+                                                <div id="bloodhound">
+                                                    <input class="form-control" type="textarea" name="adresse_personnelle_urgence" id="adresse_personnelle_urgence" value="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                      <div class="form-check">
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                                         <label class="form-check-label" for="flexCheckDefault">
-                                          Autorisation d'utiliser les vidéos à des fins publicitaires</label>
-                                        </div>
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                                          <label class="form-check-label" for="flexCheckChecked">
-                                            Autorisation d'utiliser les images à des fins publicitaires</label>
-                                          </div>
-                                      </div>
-                                    
-
-
-
-                                    <div class="form-group">
-                                        <div class="text-center">
-                                            <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                            <button type="button" class="btn btn-danger">Annuler</button>
-                                        </div>
+                                            Autorisation d'utiliser les vidéos à des fins publicitaires
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                                        <label class="form-check-label" for="flexCheckChecked">
+                                            Autorisation d'utiliser les images à des fins publicitaires
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                        <button type="button" class="btn btn-danger">Annuler</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                      </div>
-
                     </div>
+                </div>
+                
                     {{-- <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">...</div>
                     <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">...</div> --}}
                 </div>

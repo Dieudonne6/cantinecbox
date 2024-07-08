@@ -6,6 +6,7 @@
     <div class="col-lg-10 mx-auto">
       <div class="card">
         <div class="card-body">
+          <h4 class="card-title">Changement de profil</h4>
           <form class="accordion-body">
             <div class="row"> 
               <div class="col-lg-4">
