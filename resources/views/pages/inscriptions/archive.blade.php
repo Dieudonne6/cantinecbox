@@ -36,6 +36,7 @@
 <div class="card row">
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card-body">
+            <h4 class="card-title">Archives</h4>
             <div class="chartjs-size-monitor">
                 <div class="chartjs-size-monitor-expand"><div class=""></div></div>
                 <div class="chartjs-size-monitor-shrink"><div class=""></div></div>

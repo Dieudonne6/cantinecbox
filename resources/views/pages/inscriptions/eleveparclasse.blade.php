@@ -5,6 +5,7 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
+                <h4 class="card-title">Liste des élèves par classe</h4>
                 <div class="row mb-3">
                     <div class="col-3">
                         <select class="form-control w-100" name="classe">

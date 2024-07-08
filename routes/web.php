@@ -163,3 +163,4 @@ Route::get('/etatdesrecouvrements', [PagesController::class, 'etatdesrecouvremen
 Route::get('/enquetesstatistiques', [PagesController::class, 'enquetesstatistiques']);
 Route::get('/etatdelacaisse', [PagesController::class, 'etatdelacaisse']);
 Route::get('/situationfinanciereglobale',[PagesController::class, 'situationfinanciereglobale']);
+Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite']);
