@@ -10,66 +10,95 @@
       <div class="row">
         <div class="col-12">
             <div class="card mb-6">
-                <div class="card-body">
-                  <h4 class="card-title">Acceuil</h4>
-                    <div class="row gy-3">
-                        <div class="demo-inline-spacing">
-                            <a class="btn btn-primary" href="{{url('/inscrireeleve')}}">
-                                <i class="typcn typcn-plus btn-icon-prepend"></i> Nouveau
-                            </a>
-                            <button type="button" class="btn btn-secondary">
-                                <i class="typcn typcn-printer btn-icon-prepend"></i> Imprimer
-                            </button>
-                            {{-- <a class="btn btn-primary" href="{{url('/photos')}}">
-                                <i class="typcn typcn-camera btn-icon-prepend"></i> Photos
-                            </a> --}}
-                            <style>
-                              table {
-                                  float: right;
-                                  width: 60%; /* Augmentez la largeur pour accommoder plus de colonnes */
-                                  border-collapse: collapse;
-                                  margin: 5px auto;
-                              }
-                          
-                              th,
-                              td {
-                                  border: 1px solid #ddd;
-                                  padding: 4px;
-                                  text-align: center;
-                              }
-                          
-                              th {
-                                  background-color: #f2f2f2;
-                              }
-                          
-                              td.bouton {
-                                  background-color: #ffcccb;
-                              }
-                          </style>
-                          <table>
-                              <tbody>
-                                  <tr>
-                                      <td class="bouton">Eff.Total</td>
-                                      <td>942</td>
-                                      <td class="bouton">Filles</td>
-                                      <td>60</td>
-                                      <td class="bouton">Garçons</td>
-                                      <td>742</td>
-                                  </tr>
-                                  <tr>
-                                      <td class="bouton">Eff.Red</td>
-                                      <td>10</td>
-                                      <td class="bouton">Red.Filles</td>
-                                      <td>2</td>
-                                      <td class="bouton">Red.Garçons</td>
-                                      <td>0</td>
-                                  </tr>
-                              </tbody>
-                          </table>
-                          
-                        </div>
+              <div class="card-body">
+                <h4 class="card-title">Accueil</h4>
+                <div class="row gy-4">
+                  <div class="demo-inline-spacing d-flex justify-content-between align-items-start">
+                    <div>
+                      <a class="btn btn-primary" href="{{url('/inscrireeleve')}}">
+                        <i class="typcn typcn-plus btn-icon-prepend"></i> Nouveau
+                      </a>
+                      <button type="button" class="btn btn-secondary">
+                        <i class="typcn typcn-printer btn-icon-prepend"></i> Imprimer
+                      </button>
                     </div>
+                      <div>
+                        <button id="recalculer" type="button" class="btn btn-primary">Recalculer effectifs</button>
+                      </div>
+                      <div>
+                        <table id="tableau-effectifs" class="table">
+                          <tbody>
+                            <tr>
+                              <td class="bouton">Eff.Total</td>
+                              <td id="total">942</td>
+                              <td class="bouton">Filles</td>
+                              <td id="filles">60</td>
+                              <td class="bouton">Garçons</td>
+                              <td id="garcons">742</td>
+                            </tr>
+                            <tr>
+                              <td class="bouton">Eff.Red</td>
+                              <td id="total-red">10</td>
+                              <td class="bouton">Red.Filles</td>
+                              <td id="filles-red">2</td>
+                              <td class="bouton">Red.Garçons</td>
+                              <td id="garcons-red">0</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    
+                      <!-- Inclure Bootstrap JS pour les fonctionnalités (si nécessaire) -->
+                      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                      <!-- Votre script JavaScript buttons recalculer éffectif -->
+                      <script>
+                        document.getElementById('recalculer').addEventListener('click', function() {
+                          // Simuler des valeurs recalculées (à remplacer par votre logique de calcul)
+                          let total = Math.floor(Math.random() * 1000);
+                          let filles = Math.floor(Math.random() * 100);
+                          let garcons = total - filles;
+                          let totalRed = Math.floor(Math.random() * 20);
+                          let fillesRed = Math.floor(Math.random() * 5);
+                          let garconsRed = totalRed - fillesRed;
+                    
+                          // Mettre à jour les valeurs des cellules du tableau
+                          document.getElementById('total').textContent = total;
+                          document.getElementById('filles').textContent = filles;
+                          document.getElementById('garcons').textContent = garcons;
+                          document.getElementById('total-red').textContent = totalRed;
+                          document.getElementById('filles-red').textContent = fillesRed;
+                          document.getElementById('garcons-red').textContent = garconsRed;
+                        });
+                      </script>
+                    
+                  </div>
                 </div>
+              </div>
+              
+              <style>
+                table {
+                  float: right;
+                  width: 60%; /* Augmentez la largeur pour accommoder plus de colonnes */
+                  border-collapse: collapse;
+                  margin: 5px auto;
+                }
+              
+                th,
+                td {
+                  border: 1px solid #ddd;
+                  padding: 4px;
+                  text-align: center;
+                }
+              
+                th {
+                  background-color: #f2f2f2;
+                }
+              
+                td.bouton {
+                  background-color: #ffcccb;
+                }
+              </style>
+              
             </div>
         </div>
       </div>

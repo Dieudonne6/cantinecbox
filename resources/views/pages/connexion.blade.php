@@ -35,14 +35,10 @@
               <h3 class="font-weight-light text-center text-uppercase">Connectez-vous</h3>
                 <form action="{{url('logins')}}" class="pt-3" method="POST">
                   {{csrf_field() }}
-                <div class="form-group">
-                  <select class="form-select form-control form-control-lg" name="login_usercontrat" aria-label="Default select example">
-                    <option selected>Selectionnez un utilisateur </option>
-                    @foreach ($login as $logins)
-                    <option value="{{$logins->login}}">{{$logins->login}}</option>
-                    @endforeach
-                  </select>
-                </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control form-control-lg" name="login_usercontrat" aria-label="Default input example" placeholder="Sélectionnez un utilisateur">
+                  </div>
+                  
                 <div class="form-group">
                   <input type="password" name="password_usercontrat" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Mot de passe">
                 </div>
