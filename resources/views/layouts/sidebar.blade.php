@@ -199,7 +199,7 @@
 
           {{-- Créations des classes --}}
           <li class="nav-item menu-item-has-children">
-            <a href="" class="nav-link">Créations des classes</a>
+            <a href="" class="nav-link">Gestion des classes</a>
             <ul class="sub-menus">
               <li>
                 <a href="{{url('/typesclasses')}}">Types classes</a>
@@ -263,7 +263,7 @@
             </ul>
           </li>
           
-          {{-- Intégrité --}}
+          {{-- Intégrité
           <li class="nav-item menu-item-has-children">
             <a href="" class="nav-link">Intégrité</a>
             <ul class="sub-menus">
@@ -274,7 +274,7 @@
                 <a href="{{url('/recaculereffectifs')}}">Recalculer Effectifs</a>
               </li>
             </ul>
-          </li>
+          </li> --}}
 
           {{-- Editions --}}
           <li class="nav-item"> <a class="nav-link" href="{{url('/editions')}}">Editions</a></li>

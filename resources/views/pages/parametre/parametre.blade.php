@@ -7,6 +7,7 @@
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               <button class="nav-link active" id="nav-cantine-tab" data-bs-toggle="tab" data-bs-target="#nav-cantine" type="button" role="tab" aria-controls="nav-cantine" aria-selected="true">Cantine</button>
+              <button class="nav-link" id="nav-inscriptions-tab" data-bs-toggle="tab" data-bs-target="#nav-inscriptions" type="button" role="tab" aria-controls="nav-inscriptions" aria-selected="true">Inscriptions et Discipline</button>
               {{-- <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Tables des paramères</button>
               <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Modifier les bornes de l'exercice</button>
               <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-ouverture" aria-selected="false">Op. Ouverture</button>
@@ -335,6 +336,487 @@
                     </div>
 
                   </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-inscriptions" role="tabpanel" aria-labelledby="nav-inscriptions-tab">
+              
+                <nav>
+                    <div class="nav nav-tabs" id="nav-inscriptions" role="tablist">
+                      <button class="nav-link active" id="nav-transfert-tab" data-bs-toggle="tab" data-bs-target="#nav-transfert" type="button" role="tab" aria-controls="nav-transfert" aria-selected="true">Transfert</button>
+                      <button class="nav-link" id="nav-importer-tab" data-bs-toggle="tab" data-bs-target="#nav-importer" type="button" role="tab" aria-controls="nav-importer" aria-selected="false">Importer</button>
+                      <button class="nav-link" id="nav-exporter-tab" data-bs-toggle="tab" data-bs-target="#nav-exporter" type="button" role="tab" aria-controls="nav-exporter" aria-selected="false">Exporter</button>
+                    </div>
+                  </nav>
+                  <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-transfert" role="tabpanel" aria-labelledby="nav-transfert-tab">
+                      <div class="card">
+
+                        <div class="row ">
+                            <div class="col">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Transfert</h4>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                                <div class="table-responsive">
+                                                    <table class="table custom-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Matricule</th>
+                                                                <th>Nom</th>
+                                                                <th>Prénom</th>
+                                                                <th>Classes</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                                <tr>
+                                                                    <td>00000844</td>
+                                                                    <td>ABOGOURIN</td>
+                                                                    <td>Mardiath</td>
+                                                                    <td>NON</td>
+                                                                    <td>
+                                                                        <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary p-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Transfert</button>
+                      
+                      <!-- Modal -->
+                      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation de transfert</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="col-12 grid-margin">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group row">
+                                                        <div class="col">
+                                                            <label>Source</label>
+                                                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
+                                                                <option>CE1</option>
+                                                                <option>Italy</option>
+                                                                <option>Russia</option>
+                                                                <option>Britain</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col">
+                                                          <label>Destination</label>
+                                                          <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
+                                                              <option>CM2</option>
+                                                              <option>Italy</option>
+                                                              <option>Russia</option>
+                                                              <option>Britain</option>
+                                                          </select>
+                                                      </div>
+                                                    </div>
+                                                    <div class="form-group row">      
+                                                <div class="col">
+                                                    <label>Nom</label>
+                                                    <div id="bloodhound">
+                                                        <input class="form-control" type="text" name="nom" id="nom" value="">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <label>Prénom</label>
+                                                    <div id="bloodhound">
+                                                        <input class="form-control" type="text" name="prenom" id="prenom" value="">
+                                                    </div>
+                                                </div>
+                                                    </div>
+                                                        <div class="col">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                                  Changer statut en Ancien
+                                                                </label>
+                                                              </div>
+                                                              <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                                                                <label class="form-check-label" for="flexRadioDefault2">
+                                                                  Ne pas changer de statut
+                                                                </label>
+                                                              </div>
+                                                        </div>
+                                                </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-primary">Confirmer le transfert</button>
+                              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler le transfert</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                    </div>
+                    </div>
+  
+                    <div class="tab-pane fade" id="nav-importer" role="tabpanel" aria-labelledby="nav-importer-tab">
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <div class="col-12 grid-margin">
+                              <div class="card">
+                                <div class="card-body">
+                                  <h4 class="card-title">Importation de données</h4>
+                                  <div class="form-group">
+                                    <h6>Configuration du fichier Excel</h6>
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                      <label class="form-check-label" for="flexRadioDefault1">
+                                        Dans le fichier excel les nom et prénoms sont dans des colonnes différentes
+                                      </label>
+                                    </div>
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                                      <label class="form-check-label" for="flexRadioDefault2">
+                                        Dans le fichier excel les nom et prénoms sont dans la même colonne
+                                      </label>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <button type="button" class="btn btn-primary">Cliquer ici pour ouvrir un modèle de fichier Excel</button>
+                                  </div>
+                                  <div class="form-group">
+                                    <button type="button" class="btn btn-primary">Cliquer ici pour localiser Excel...</button>
+                                  </div>
+                                  <div class="form-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                        <label class="form-check-label" for="defaultCheck1">Ecraser le fichier des élèves existants</label>
+                                      </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <button type="button" class="btn btn-primary">Afficher la conversion du fichier</button>
+                                  </div>
+                                  <div class="form-group">
+                                    <button type="button" class="btn btn-primary">Cliquer ici pour afficher les erreurs</button>
+                                  </div>
+                                  <div class="form-group">
+                                    <button type="button" class="btn btn-primary">Importer</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-8">
+                            <div class="col-12 grid-margin">
+                              <div class="card">
+                                <div class="card-body">
+                                  <div class="table-responsive">
+                                    <table class="table custom-table">
+                                      <thead>
+                                        <tr>
+                                          <th>Matricule</th>
+                                          <th>Nom</th>
+                                          <th>Prénom</th>
+                                          <th>Sexe</th>
+                                          <th>Statut</th>
+                                          <th>Classes</th>
+                                          <th>Date</th>
+                                          <th>Lieu</th>
+                                          <th>Nevers</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr>
+                                          <td>00000844</td>
+                                          <td>ABOGOURIN</td>
+                                          <td>Mardiath</td>
+                                          <td>Féminin</td>
+                                          <td>Ancien</td>
+                                          <td>CM2</td>
+                                          <td>02/08/2010</td>
+                                          <td>Cotonou</td>
+                                          <td></td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                        
+                    </div>
+  
+                    <div class="tab-pane fade" id="nav-exporter" role="tabpanel" aria-labelledby="nav-exporter-tab">
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-lg-10 card">
+                            <div class="card-body">
+                              <h4 class="card-title">Transfert de données</h4>
+                            <div class="row p-3">
+                              <div class="col-lg-3">
+                                <h6>Diriger vers</h6>
+                                <select  class="form-select">
+                                  <option> Fichier texte </option>
+                                  <option> Excel </option>
+                                  <option>  XML </option>
+                                </select>
+                              </div>
+                              <div class="col-lg-4">
+                                <h6>Repertoire de destination</h6>
+                                <input type="file" class="form-control" placeholder="\Tempo12">
+                              </div>
+                              <div class="col-lg-3">
+                                <h6>Nom du fichier</h6>
+                                <input type="text" class="form-control" placeholder="eleve">
+                              </div>
+                              <div class="col-lg-2 mt-4">
+                                <input type="submit" class="btn btn-primary" value="Demarer">
+                              </div>
+                            </div>
+                            <div class="table-responsive">
+                              <table id="" class="table table-striped">
+                                <thead>
+                                  <tr>
+                                    <th>N ORDRE</th>
+                                    <th>Matricule</th> 
+                                    <th>Nom</th>
+                                    <th>Prenom</th>
+                                    <th>Classe</th>
+                                    <th>Sexe</th>
+                                    <th> Statut</th>
+                                    <th>Datenais</th>
+                                    <th>Lieunais</th>
+                                    <th>Nevers</th>
+                                    <th>Moy1</th>
+                                    <th>Moy2</th>
+                                    <th>Moy3</th>
+                                    <th>Moyan</th>
+                                    <th>Rang1</th>
+                                    <th>Rang2</th>
+                                    <th>Rang3</th>
+                                    <th>Rangan</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>4</td>
+                                    <td>00004</td>
+                                    <td>KOUNOU</td>
+                                    <td>Orane</td>
+                                    <td>CE2B</td>
+                                    <td>Feminin</td>
+                                    <td><input type="checkbox" class=""></td>
+                                    <td>04/09/2021</td>
+                                    <td>cotonou</td>
+                                    <td>###</td>
+                                    <td>4</td>
+                                    <td>6</td>
+                                    <td>8</td>
+                                    <td>10</td>
+                                    <td>19</td>
+                                    <td>89</td>
+                                    <td>10</td>
+                                    <td>19</td>
+                                  </tr>    
+                                  <tr>
+                                    <td>4</td>
+                                    <td>00004</td>
+                                    <td>KOUNOU</td>
+                                    <td>Orane</td>
+                                    <td>CE2B</td>
+                                    <td>Feminin</td>
+                                    <td><input type="checkbox" class=""></td>
+                                    <td>04/09/2021</td>
+                                    <td>cotonou</td>
+                                    <td>###</td>
+                                    <td>4</td>
+                                    <td>6</td>
+                                    <td>8</td>
+                                    <td>10</td>
+                                    <td>19</td>
+                                    <td>89</td>
+                                    <td>10</td>
+                                    <td>19</td>
+                                  </tr>      
+                                </tbody>  
+                              </table>
+                            </div>
+                          </div>
+                          </div>
+                          <div class="col-lg-2 card">
+                            <h5>Colonnes</h5>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Matricule
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Nom
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Prenom
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                               Sexe
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Statut
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Classe
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Datenais
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Lieunais
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Nevers
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Moy1
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Moy2
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Moy3
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Moyan
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Rang1
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Rang2
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Rang3
+                              </label>
+                            </div>
+                            <div class="form-check m-0">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>
+                                Rangan
+                              </label>
+                            </div>
+                          </div>
+                      
+                          
+                        </div>
+                      </div>
+                      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                      
+                      <script>
+                        $(document).ready(function() {
+                            // Map checkbox labels to table column indices
+                            const columnMapping = {
+                                'Matricule': 1,
+                                'Nom': 2,
+                                'Prenom': 3,
+                                'Classe': 4,
+                                'Sexe': 5,
+                                'Statut': 6,
+                                'Datenais': 7,
+                                'Lieunais': 8,
+                                'Nevers': 9,
+                                'Moy1': 10,
+                                'Moy2': 11,
+                                'Moy3': 12,
+                                'Moyan': 13,
+                                'Rang1': 14,
+                                'Rang2': 15,
+                                'Rang3': 16,
+                                'Rangan': 17
+                            };
+                        
+                            // Hide/show columns based on checkbox state
+                            $('input[type=checkbox]').change(function() {
+                                let columnLabel = $(this).parent().text().trim();
+                                let columnIndex = columnMapping[columnLabel] + 1; // Adjust for 0-based index and th
+                        
+                                if ($(this).is(':checked')) {
+                                    $('table tr').each(function() {
+                                        $(this).find('td:nth-child(' + columnIndex + '), th:nth-child(' + columnIndex + ')').show();
+                                    });
+                                } else {
+                                    $('table tr').each(function() {
+                                        $(this).find('td:nth-child(' + columnIndex + '), th:nth-child(' + columnIndex + ')').hide();
+                                    });
+                                }
+                            });
+                        
+                            // Trigger change event on page load to apply initial visibility
+                            $('input[type=checkbox]').trigger('change');
+                        });
+                        </script>
+                        
+                      
+                    </div>
+  
+                  </div>
+
             </div>
 
             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...2</div>
