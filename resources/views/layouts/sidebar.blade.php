@@ -248,7 +248,7 @@
           <li class="nav-item"> <a class="nav-link" href="{{url('/discipline')}}">Discipline</a></li>
           
           {{-- Extraction de données --}}
-          <li class="nav-item menu-item-has-children">
+          {{-- <li class="nav-item menu-item-has-children">
             <a href="" class="nav-link">Extraction de données</a>
             <ul class="sub-menus">
               <li>
@@ -261,7 +261,7 @@
                 <a href="{{url('/importer')}}">Importer</a>
               </li>
             </ul>
-          </li>
+          </li> --}}
           
           {{-- Intégrité
           <li class="nav-item menu-item-has-children">
