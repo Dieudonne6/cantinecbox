@@ -2,93 +2,83 @@
 @section('content')
 
 <div class="main-panel-10">
-    <div class="card">
-        <style>
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-            th, td {
-                border: 1px solid #ddd;
-                padding: 10px;
-                text-align: left;
-            }
-            th {
-                background-color: #f4f4f4;
-            }
-            tr:hover {
-                background-color: #f1f1f1;
-            }
-        </style>
-    
-        <h3 style="text-align: center">Liste des Groupes</h3>
-    
-        <table id="classTable">
-        <thead>
-            <tr>
-                <th>Groupes</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Ens. Géneral</td>
-                <td>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modifgroup">
-                        Modifier
-                      </button>
-                    <button type="button" class="btn btn-danger">Supprimer</button>
-                </td>
-            </tr>
-            <tr>
-                <td>Ens. Primaire</td>
-                <td>
-                    <button type="button" class="btn btn-primary">Modifier</button>
-                    <button type="button" class="btn btn-danger">Supprimer</button>
-                </td>
-            </tr>
-            <tr>
-                <td>Ens. Maternelle</td>
-                <td>
-                    <button type="button" class="btn btn-primary">Modifier</button>
-                    <button type="button" class="btn btn-danger">Supprimer</button>
-                </td>
-            </tr>
-        </tbody>
-        </table>
-    
-        <script>
-       function filterTable() {
-        var input, filter, table, tr, td, i, j, txtValue;
-        input = document.getElementById("searchInput");
-        filter = input.value.toLowerCase();
-        table = document.getElementById("classTable");
-        tr = table.getElementsByTagName("tr");
-    
-        for (i = 1; i < tr.length; i++) {
-            tr[i].style.display = "none"; // Hide all rows initially
-            td = tr[i].getElementsByTagName("td");
-            for (j = 0; j < td.length; j++) {
-                if (td[j]) {
-                    txtValue = td[j].textContent || td[j].innerText;
-                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                        tr[i].style.display = ""; // Show the row if a match is found
-                        break;
-                    }
+    <div class="container d-flex justify-content-center">
+        <div class="card w-100">
+            <style>
+                .card {
+                    margin-top: 20px;
                 }
-            }
-        }
-       }
-        </script>
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    border: 1px solid #ddd;
+                    padding: 10px;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f4f4f4;
+                }
+                tr:hover {
+                    background-color: #f1f1f1;
+                }
+                .modal-dialog {
+                    max-width: 600px;
+                }
+                .modal-body {
+                    padding: 20px;
+                }
+                .form-group {
+                    margin-bottom: 15px;
+                }
+                .btn-close {
+                    margin-left: auto;
+                }
+            </style>
+        <div class="card-body">
+            <h4 class="card-title">Liste des groupes</h4>
+            <table id="classTable">
+                <thead>
+                    <tr>
+                        <th>Groupes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ens. Général</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modifgroup">
+                                Modifier
+                            </button>
+                            <button type="button" class="btn btn-danger">Supprimer</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ens. Primaire</td>
+                        <td>
+                            <button type="button" class="btn btn-primary">Modifier</button>
+                            <button type="button" class="btn btn-danger">Supprimer</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ens. Maternelle</td>
+                        <td>
+                            <button type="button" class="btn btn-primary">Modifier</button>
+                            <button type="button" class="btn btn-danger">Supprimer</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        
+        </div>
+        </div>
     </div>
-    
 </div>
 
-<!-- Button trigger modal -->
-
-  
-  <!-- Modal modification groupes-->
-  <div class="modal fade" id="modifgroup" tabindex="-1" aria-labelledby="modifgroupLabel" aria-hidden="true">
+<!-- Modal modification groupes-->
+<div class="modal fade" id="modifgroup" tabindex="-1" aria-labelledby="modifgroupLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -107,10 +97,9 @@
                             </select>
                         </div>
                         <div class="form-group w-50 mb-6">
-                            <button type="button" class="btn btn-success">Ajouter une classe</button>
+                            <button type="button" class="btn btn-primary">Ajouter une classe</button>
                         </div>
                     </div>
-
                     <table id="classTable">
                         <thead>
                             <tr>
@@ -133,5 +122,27 @@
     </div>
 </div>
 
+<script>
+    function filterTable() {
+        var input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("classTable");
+        tr = table.getElementsByTagName("tr");
 
+        for (i = 1; i < tr.length; i++) {
+            tr[i].style.display = "none"; // Hide all rows initially
+            td = tr[i].getElementsByTagName("td");
+            for (j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = ""; // Show the row if a match is found
+                        break;
+                    }
+                }
+            }
+        }
+    }
+</script>
 @endsection

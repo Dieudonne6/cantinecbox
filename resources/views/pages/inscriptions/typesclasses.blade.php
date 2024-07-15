@@ -8,14 +8,8 @@
       <div class="row">          
         <div class="col-12">
           <div class="card mb-6">
-                            <div class="card-header">
-                    <div class="row align-items-center">
-                        <div class="col-sm-6">
-                            <div class="page-title"><h4>Table des types de classes</h4></div>
-                        </div>
-                    </div>
-                </div>
             <div class="card-body">
+              <h4 class="card-title">Table des types de classes</h4>
               <div class="row gy-3">
                 <div class="demo-inline-spacing">
                   {{-- <a  class="btn btn-primary" href=" {{url('/nouveautypesclasses')}}">Nouveau</a> --}}
@@ -107,7 +101,7 @@
                             <!-- Button trigger modal -->
                             {{-- <a  class="btn btn-primary p-2 btn-sm" href="{{url('/modifiertypesclasses')}}">Modif</a> --}}
                             <button type="button" class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal2">
-                                Modif
+                                Modifier
                               </button>
                               
                               <!-- Modal -->
@@ -143,7 +137,7 @@
                                   </div>
                                 </div>
                               </div>
-                            <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Suppr
+                            <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Supprimer
                               {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
                             </button>
                           </div>

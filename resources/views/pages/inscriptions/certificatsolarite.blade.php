@@ -116,7 +116,7 @@
                 <td>
                     <div class="d-flex align-items-center">
                         <!-- Button trigger modal -->
-                        <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="typcn typcn-th-list btn-icon-append"></i>  
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">

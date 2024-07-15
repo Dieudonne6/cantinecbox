@@ -145,6 +145,8 @@ Route::get('/majpaiementeleve', [PagesController::class, 'majpaiementeleve']);
 Route::get('/photos', [PagesController::class, 'photos']);
 Route::get('/groupes', [PagesController::class, 'groupes']);
 
+Route::get('/paiementdesnoninscrits', [PagesController::class, 'paiementdesnoninscrits']);
+
 Route::get('/facturesclasses', [PagesController::class, 'facturesclasses']);
 Route::get('/reductioncollective', [PagesController::class, 'reductioncollective']);
 Route::get('/discipline', [PagesController::class, 'discipline']);
@@ -155,4 +157,10 @@ Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse']);
 Route::get('/gestionarriere', [PagesController::class, 'gestionarriere']);
 Route::get('/exporter', [PagesController::class, 'exporter']);
 Route::get('/listeselective', [PagesController::class, 'listeselective']);
+Route::get('/pointderecouvrement', [PagesController::class, 'pointderecouvrement']);
+Route::get('/etatdesrecouvrements', [PagesController::class, 'etatdesrecouvrements']);
 
+Route::get('/enquetesstatistiques', [PagesController::class, 'enquetesstatistiques']);
+Route::get('/etatdelacaisse', [PagesController::class, 'etatdelacaisse']);
+Route::get('/situationfinanciereglobale',[PagesController::class, 'situationfinanciereglobale']);
+Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite']);

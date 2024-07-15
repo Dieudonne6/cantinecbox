@@ -36,6 +36,7 @@
 <div class="card row">
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card-body">
+            <h4 class="card-title">Archives</h4>
             <div class="chartjs-size-monitor">
                 <div class="chartjs-size-monitor-expand"><div class=""></div></div>
                 <div class="chartjs-size-monitor-shrink"><div class=""></div></div>
@@ -64,20 +65,10 @@
                         <td>01/01/2000</td>
                         <td>Paris</td>
                         <td>
-                            <button type="button" class="btn btn-info p-2 btn-sm btn-icon-text mr-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <button type="button" class="btn btn-primary p-2 btn-sm btn-icon-text mr-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 <i class="typcn typcn-eye btn-icon-append">Voir plus</i>
                             </button>
                         </td>
-                    </tr>
-                    <tr>
-                        <td>67890</td>
-                        <td>Smith</td>
-                        <td>Jane</td>
-                        <td>4ème</td>
-                        <td>Féminin</td>
-                        <td>15/05/1999</td>
-                        <td>Lyon</td>
-                        <td><button class="btn btn-primary btn-sm">Modifier</button></td>
                     </tr>
                     <!-- Ajouter d'autres lignes ici -->
                 </tbody>
@@ -130,7 +121,7 @@
                             <div class="form-group row mt-1">
                                 <label for="sexe" class="col-sm-2 col-form-label">Sexe</label>
                                 <div class="col-sm-3">
-                                    <select class="form-control" id="sexe">
+                                    <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="sexe">
                                         <option>Masculin</option>
                                         <option>Féminin</option>
                                     </select>
@@ -139,7 +130,7 @@
                             <div class="form-group row mt-1 align-items-center">
                                 <label for="apte" class="col-sm-2 col-form-label">Apte</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" id="apte">
+                                    <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="apte">
                                         <option>Oui</option>
                                         <option>Non</option>
                                     </select>

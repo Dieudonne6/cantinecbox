@@ -8,14 +8,8 @@
       <div class="row">          
         <div class="col-12">
           <div class="card mb-6">
-                            <div class="card-header">
-                    <div class="row align-items-center">
-                        <div class="col-sm-6">
-                            <div class="page-title"><h4>Mise à jour des promotions</h4></div>
-                        </div>
-                    </div>
-                </div>
             <div class="card-body">
+              <h4 class="card-title">Mise à jour des promotions</h4>
               <div class="row gy-3">
                 <div class="demo-inline-spacing">
                   {{-- <a  class="btn btn-primary" href=" {{url('/nouveaupromotion')}}">Nouveau</a> --}}
@@ -59,7 +53,7 @@
                                               </div>
                                               <div class="col-sm-6">
                                                   <label><strong>Pour quel Enseignement</strong> (Choisir type d'enseignement)</label>
-                                                  <select class="form-select">
+                                                  <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                                       <option>Préscolaire</option>
                                                       <option>Primaire</option>
                                                       <option>Général</option>
@@ -130,7 +124,7 @@
                             {{-- <a  class="btn btn-primary p-2 btn-sm" href="{{url('/modifierpromotion')}}">Modif</a> --}}
                             <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal2">
-    Modif
+    Modifier
   </button>
   
   <!-- Modal -->
@@ -169,7 +163,7 @@
                               </div>
                               <div class="col-sm-6">
                                   <label><strong>Pour quel Enseignement</strong> (Choisir type d'enseignement)</label>
-                                  <select class="form-select">
+                                  <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                       <option>Préscolaire</option>
                                       <option>Primaire</option>
                                       <option>Général</option>
@@ -189,7 +183,7 @@
       </div>
     </div>
   </div>
-                            <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Suppr
+                            <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Supprimer
                               {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
                             </button>
                           </div>

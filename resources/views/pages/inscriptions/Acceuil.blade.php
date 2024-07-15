@@ -7,57 +7,100 @@
     <div class="content-wrapper">
         
       {{--  --}}
-      <div class="row">          
+      <div class="row">
         <div class="col-12">
-          <div class="card mb-6">
-            <div class="card-body">
-              <div class="row gy-3">
-                <div class="demo-inline-spacing">
-                  <a  class="btn btn-primary" href="{{url('/inscrireeleve')}}">Nouveau</a>
-                  {{-- <button type="button" class="btn btn-primary">Nouveau</button> --}}
-                  <button type="button" class="btn btn-secondary">Imprimer</button>  
-                  <a  class="btn btn-primary typcn-camera btn-icon-append" href="{{url('/photos')}}">Photos</a>
-                  <style>
-                    table {
-                      float: right;
-                      width: 10%;
-                      border-collapse: collapse;
-                      margin: 5px auto;
-                    }
-                    th, td {
-                      border: 1px solid #ddd;
-                      padding: 4px;
-                      text-align: center;
-                    }
-                    th {
-                      background-color: #f2f2f2;
-                    }
-                    td.bouton {
-                      background-color: #ffcccb;
-                    }
-                  </style>
-                  <table>
-                    <tbody>
-                      <td class="bouton">Star</td>
-                      <td>10,942</td>
-                      
-                        
-                      <td class="bouton">Star</td>
-                      <td>10,942</td>
-                      </tr>
-                      <td class="bouton">Star</td>
-                      <td>10,942</td>
-                      
-                        
-                      <td class="bouton">Star</td>
-                      <td>10,942</td>
-                    </tbody>
-                  </table>
+            <div class="card mb-6">
+              <div class="card-body">
+                <h4 class="card-title">Accueil</h4>
+                <div class="row gy-4">
+                  <div class="demo-inline-spacing d-flex justify-content-between align-items-start">
+                    <div>
+                      <a class="btn btn-primary" href="{{url('/inscrireeleve')}}">
+                        <i class="typcn typcn-plus btn-icon-prepend"></i> Nouveau
+                      </a>
+                      <button type="button" class="btn btn-secondary">
+                        <i class="typcn typcn-printer btn-icon-prepend"></i> Imprimer
+                      </button>
+                    </div>
+                      <div>
+                        <button id="recalculer" type="button" class="btn btn-primary">Recalculer effectifs</button>
+                      </div>
+                      <div>
+                        <table id="tableau-effectifs" class="table">
+                          <tbody>
+                            <tr>
+                              <td class="bouton">Eff.Total</td>
+                              <td id="total">942</td>
+                              <td class="bouton">Filles</td>
+                              <td id="filles">60</td>
+                              <td class="bouton">Garçons</td>
+                              <td id="garcons">742</td>
+                            </tr>
+                            <tr>
+                              <td class="bouton">Eff.Red</td>
+                              <td id="total-red">10</td>
+                              <td class="bouton">Red.Filles</td>
+                              <td id="filles-red">2</td>
+                              <td class="bouton">Red.Garçons</td>
+                              <td id="garcons-red">0</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    
+                      <!-- Inclure Bootstrap JS pour les fonctionnalités (si nécessaire) -->
+                      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                      <!-- Votre script JavaScript buttons recalculer éffectif -->
+                      <script>
+                        document.getElementById('recalculer').addEventListener('click', function() {
+                          // Simuler des valeurs recalculées (à remplacer par votre logique de calcul)
+                          let total = Math.floor(Math.random() * 1000);
+                          let filles = Math.floor(Math.random() * 100);
+                          let garcons = total - filles;
+                          let totalRed = Math.floor(Math.random() * 20);
+                          let fillesRed = Math.floor(Math.random() * 5);
+                          let garconsRed = totalRed - fillesRed;
+                    
+                          // Mettre à jour les valeurs des cellules du tableau
+                          document.getElementById('total').textContent = total;
+                          document.getElementById('filles').textContent = filles;
+                          document.getElementById('garcons').textContent = garcons;
+                          document.getElementById('total-red').textContent = totalRed;
+                          document.getElementById('filles-red').textContent = fillesRed;
+                          document.getElementById('garcons-red').textContent = garconsRed;
+                        });
+                      </script>
+                    
+                  </div>
                 </div>
               </div>
+              
+              <style>
+                table {
+                  float: right;
+                  width: 60%; /* Augmentez la largeur pour accommoder plus de colonnes */
+                  border-collapse: collapse;
+                  margin: 5px auto;
+                }
+              
+                th,
+                td {
+                  border: 1px solid #ddd;
+                  padding: 4px;
+                  text-align: center;
+                }
+              
+                th {
+                  background-color: #f2f2f2;
+                }
+              
+                td.bouton {
+                  background-color: #ffcccb;
+                }
+              </style>
+              
             </div>
-          </div>
-        </div>       
+        </div>
       </div>
 
       {{--  --}}
@@ -94,10 +137,10 @@
                     <td>
                       <div class="d-flex align-items-center">
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-info p-2 btn-sm btn-icon-text mr-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <button type="button" class="btn btn-primary p-2 btn-sm btn-icon-text mr-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
                           <i class="typcn typcn-eye btn-icon-append"></i>                          
                         </button>
-                        <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           <i class="typcn typcn-th-list btn-icon-append"></i>  
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
@@ -122,7 +165,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" style=" max-width: 600px">
+  <div class="modal-dialog modal-lg" style=" max-width: 1100px">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -143,26 +186,24 @@
         <div class="tab-content" id="nav-tabContent">
           <!--  -->
           <div class="tab-pane fade show active" id="nav-Infor" role="tabpanel" aria-labelledby="nav-Infor-tab" tabindex="0">
-            <form class="accordion-body col-md-10 mx-auto" style="background-color: #f0eff3">  
+            <form class="accordion-body col-md-12 mx-auto">  
               
                 <div class="form-group row mt-2">
-                    <label for="dateN" class="col-sm-4 col-form-label">Date de Naissance</label>
-                    <div class="col-sm-5">
+                    <label for="dateN" class="col-sm-2 col-form-label">Date de Naissance</label>
+                    <div class="col-sm-4">
                         <input type="date" class="form-control mt-2" id="dateN" placeholder="jj/mm/dd">
                     </div>
-                </div>
-                
-                <div class="form-group row mt-1">
-                    <label for="lieu" class="col-sm-4 col-form-label">Lieu</label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" id="lieu" placeholder="Lieu">
+
+                    <label for="lieu" class="col-sm-1 col-form-label">Lieu</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control mt-2" id="lieu" placeholder="Lieu">
                     </div>
                 </div>
         
                 <div class="form-group row mt-1">
                     <label for="sexe" class="col-sm-2 col-form-label">Sexe</label>
                     <div class="col-sm-3">
-                        <select class="form-control" id="sexe">
+                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="sexe">
                             <option>Masculin</option>
                             <option>Féminin</option>
                         </select>
@@ -170,7 +211,7 @@
         
                     <label for="typeEleve" class="col-sm-3 col-form-label">Types élèves</label>
                     <div class="col-sm-3">
-                        <select class="form-control" id="typeEleve">
+                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="typeEleve">
                             <option>Ancien</option>
                             <option>Nouveau</option>
                         </select>
@@ -187,7 +228,7 @@
                 <div class="form-group row mt-1 align-items-center">
                     <label for="apte" class="col-sm-2 col-form-label">Apte</label>
                     <div class="col-sm-2">
-                        <select class="form-control" id="apte">
+                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="apte">
                             <option>Oui</option>
                             <option>Non</option>
                         </select>
@@ -206,7 +247,7 @@
           </div>       
           <!--  -->
           <div class="tab-pane fade" id="nav-Detail" role="tabpanel" aria-labelledby="nav-Detail-tab" tabindex="0">
-            <form class="accordion-body col-md-12 mx-auto" style="background-color: #f0eff3;">
+            <form class="accordion-body col-md-12 mx-auto">
                 <div class="table-responsive mt-2">
                   <table class="table table-bordered table-striped">
                         <thead>
@@ -268,26 +309,31 @@
           </div>        
           <!--  -->
           <div class="tab-pane fade" id="nav-Deta" role="tabpanel" aria-labelledby="nav-Deta-tab" tabindex="0">
-            <div class="accordion-body col-md-10 mx-auto bg-light-gray">
+            <div class="accordion-body col-md-12 mx-auto bg-light-gray">
               <div class="col">
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-between align-items-center mt-2">
                   <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="checkDetails">
                     <label class="form-check-label" for="checkDetails">Détail des composantes</label>
                   </div>
+                  <a href="votre-lien-ici" style="text-decoration: none;">
+                    <button type="button" class="btn btn-primary btn-icon-text-center p-2">
+                      <i class="typcn typcn-upload btn-icon-prepend"></i>Imprimer récapitulatif des paiements
+                    </button>
+                  </a>
                 </div>
-                
-                <div class="table-responsive" style="height: 100px; overflow: auto;">
-                  <table class="table table-dark">
-                    <thead style="position: sticky; top: 0; z-index: 1; background: #343a40;">
+                               
+                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                  <table class="table table-hover">
+                    <thead class="thead-dark">
                       <tr>
-                        <th>n°Recu</th>
-                        <th>Date</th>
-                        <th>Montant</th>
+                        <th scope="col">n°Reçu</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Montant</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="table-active">
+                      <tr>
                         <td>130</td>
                         <td>05/06/2024</td>
                         <td>190 000</td>
@@ -303,123 +349,103 @@
                         <td>190 000</td>
                       </tr>
                     </tbody>
-                    <tfoot style="position: sticky; bottom: 0; z-index: 1; background: #343a40; ">
+                    <tfoot class="tfoot-dark">
                       <tr>
                         <td colspan="2" class="table-active">Somme</td>
                         <td>190 000</td>
                       </tr>
+                      <tr>
+                        <td colspan="2" class="table-active">Reste à Payer</td>
+                        <td>1 900</td>
+                      </tr>
                     </tfoot>
                   </table>
                 </div>
-                <div class="form-group row mt-2 p-10" style="background-color: #5f42c7;">
-                  <label for="dateN" class="col-sm-6 col-form-label">Reste à Payer</label>
-                  <div class="col-sm-6">
-                      <input type="montant" class="form-control mt-2" id="montant" placeholder="fcfa" style="margin-left;">
-                  </div>
-                </div>
-              </div>
-
-              <div style="display: flex; justify-content: center; align-items: center; margin: auto;">
-                <a href="votre-lien-ici" style="text-decoration: none;">
-                  <button type="button" class="btn btn-outline-danger btn-icon-text-center">
-                    <i class="typcn typcn-upload btn-icon-prepend"></i>Imprimer récapitulatif des paiements
-                  </button>
-                </a>
+                
               </div>
               
-            
-              <div class="card-body">               
-                <form class="forms-sample">
-                  <h4 class="card-title text-center">Réduction Montants dus</h4>
-                  <div class="form-group row p-2">
-                    <label for="scolarite" class="col-sm-2 col-form-label">[ 3,3% ] Scolarité</label>
-                    <div class="col-sm-4 mt-2">
-                      <input type="number" class="form-control" id="scolarite">
-                    </div>
-                    <label for="arriere" class="col-sm-2 col-form-label">[ 0,0% ] Arrièré</label>
-                    <div class="col-sm-4 mt-2">
-                      <input type="number" class="form-control" id="arriere">
-                    </div>
-                  </div>
-
-                  <div class="form-group row p-2">
-                    <label for="frais1" class="col-sm-2 col-form-label">Frais 1</label>
-                    <div class="col-sm-4">
-                      <input type="number" class="form-control" id="frais1">
-                    </div>
-                    <label for="frais2" class="col-sm-2 col-form-label">Frais 2</label>
-                    <div class="col-sm-4">
-                      <input type="number" class="form-control" id="frais2">
-                    </div>
-                  </div>
-
-                  <div class="form-group row p-2">
-                    <label for="frais3" class="col-sm-2 col-form-label">Frais 3</label>
-                    <div class="col-sm-4">
-                      <input type="number" class="form-control" id="frais3">
-                    </div>
-                    <label for="frais4" class="col-sm-2 col-form-label">Frais 4</label>
-                    <div class="col-sm-4">
-                      <input type="number" class="form-control" id="frais4">
-                    </div>
-                  </div>
-                </form>
+              <div class="card-body">
+                <h6 class="card-title text-center">Réduction Montants dus</h6>
+                <table class="table">
+                  <tbody style=" width: 50%;">
+                    <tr>
+                      <td>[ 3,3% ] Scolarité</td>
+                      <td><input type="number" class="form-control" id="scolarite"></td>
+                      <td>[ 0,0% ] Arriéré</td>
+                      <td><input type="number" class="form-control" id="arriere"></td>
+                    </tr>
+                    <tr>
+                      <td>Frais 1</td>
+                      <td><input type="number" class="form-control" id="frais1"></td>
+                      <td>Frais 2</td>
+                      <td><input type="number" class="form-control" id="frais2"></td>
+                    </tr>
+                    <tr>
+                      <td>Frais 3</td>
+                      <td><input type="number" class="form-control" id="frais3"></td>
+                      <td>Frais 4</td>
+                      <td><input type="number" class="form-control" id="frais4"></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-            
+              
             </div>
+            
             
             
           </div>
           <!--  -->
           <div class="tab-pane fade" id="nav-finan" role="tabpanel" aria-labelledby="nav-finan-tab" tabindex="0">
-            <div class="accordion-body col-md-10 mx-auto" style="background-color: #f0eff3"> 
-
-              <table class="table table-responsive table-striped table-hover mt-p-2">
-                <tbody class="table">
-                  <tr>
-                    <th scope="col" class="text-start">Scolarités perçus le 23/05/24</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Arrièrés perçus le 23/05/24</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Total</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Total recettes à ce jour</th>
-                    <td class="text-end">57 575 500</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Versé à la banque</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Recettes attendues ce jour</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Recettes attendues cette semaine</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="text-start">Recettes attendues ce mois</th>
-                    <td class="text-end">0</td>
-                  </tr>
-                </tbody>
-              </table>
-              
+            <div class="accordion-body col-md-12 mx-auto"> 
+              <div class="table-responsive mt-2">
+                <table class="table table-striped table-hover">
+                  <tbody>
+                    <tr>
+                      <th scope="row" class="text-start">Scolarités perçus le 23/05/24</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Arrièrés perçus le 23/05/24</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Total</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Total recettes à ce jour</th>
+                      <td class="text-end">57 575 500</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Versé à la banque</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Recettes attendues ce jour</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Recettes attendues cette semaine</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-start">Recettes attendues ce mois</th>
+                      <td class="text-end">0</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
+            
           </div>
           <!--  -->
           <div class="tab-pane fade" id="nav-Emploi" role="tabpanel" aria-labelledby="nav-Emploi-tab" tabindex="0">
-            <div class="accordion-body col-md-10 mx-auto" style="background-color: #f0eff3"> 
+            <div class="accordion-body col-md-12 mx-auto"> 
               <div class="container">
                 <div class="row">
                   <div class="col-md-4">
-                    <table class="table table-striped">
+                    <table class="table table-striped mt-2">
                       <thead>
                         <tr>
                           <th scope="col">Colonne 1</th>

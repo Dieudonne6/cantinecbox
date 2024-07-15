@@ -6,6 +6,7 @@
     <div class="col-lg-10 mx-auto">
       <div class="card">
         <div class="card-body">
+          <h4 class="card-title">Changement de profil</h4>
           <form class="accordion-body">
             <div class="row"> 
               <div class="col-lg-4">
@@ -164,7 +165,7 @@
                               <div class="form-group row">
                                 <label for="exampleInputUsername2" class="col-sm-12 col-form-label mb-0">Mode d'application de la reduction sur les echeancier</label>
                                 <div class="col-sm-12 mb-2">
-                                  <select class="form-select">
+                                  <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                     <option>Agir sur les dernier tranches</option>
                                     <option>Agir sur les dernier tranches</option>
                                   </select>

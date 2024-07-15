@@ -12,662 +12,646 @@
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
-                        <div class="col-12 grid-margin">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group row">
-                                                <div class="col-sm-6">
-                                                    <label>Classe</label>
-                                                    <select class="form-select">
-                                                        <option>CE1</option>
-                                                        <option>Italy</option>
-                                                        <option>Russia</option>
-                                                        <option>Britain</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                  <label>Classe d'entrée collège</label>
-                                                  <select class="form-select">
-                                                      <option>CM2</option>
-                                                      <option>Italy</option>
-                                                      <option>Russia</option>
-                                                      <option>Britain</option>
-                                                  </select>
-                                              </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                          <div class="col-md-4">
-                                            <div class="form-group row">
-                                                <div class="col">
-                                                    <label>Numéro d'ordre</label>
-                                                    <div id="bloodhound">
-                                                        <input class="form-control" type="text" placeholder="1082" name="prenom" id="prenom">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        </div>
-                                        <div class="col">
-                                          <div class="div">
-                                            <button type="button" class=" btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                              Données financières (Factures)
-                                            </button>
-                                            
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                              <div class="modal-dialog">
-                                                <div class="modal-content calcul-modal">
-                                                  <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Données financières</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                  </div>
-                                                  <div class="modal-body profile-content">
-                                                    <div class="row">
-                                                      <div class="" id="calcul-one">
-                                                        <form class="forms-sample">
-                                                          <div class="form-group row">
-                                                            <label for="exampleInputUsername2" class="col-sm-12">Profil de réduction</label>
-                                                            <div class="col-sm-12 mb-2">
-                                                              <select class="form-select">
-                                                                <option>Fils d'enseignant</option>
-                                                                <option>Plein Tarfif</option>
-                                                              </select>
-                                                            </div>
-                                                          </div>
-                                                          <button type="submit" class="btn btn-primary col-sm-10">Créer un profil de réduction</button>
-                                                          <hr>
-                                                          <div class="form-group row">
-                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Scolarité</label>
-                                                            <div class="col-sm-4">
-                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0">
-                                                            </div>
-                                                          </div>
-                                                          <div class="form-group row">
-                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Arrièré</label>
-                                                            <div class="col-sm-4">
-                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0">
-                                                            </div>
-                                                          </div>
-                                                          <div class="form-group row">
-                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label"></label>
-                                                            <div class="col-sm-4">
-                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0">
-                                                            </div>
-                                                          </div>
-                                                          <div class="form-group row">
-                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label"></label>
-                                                            <div class="col-sm-4">
-                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0">
-                                                            </div>
-                                                          </div>
-                                                          <div class="form-group row">
-                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label"></label>
-                                                            <div class="col-sm-4">
-                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0">
-                                                            </div>
-                                                          </div>
-                                                          <div class="form-group row">
-                                                            <label for="exampleInputUsername2" class="col-sm-8 col-form-label"></label>
-                                                            <div class="col-sm-4">
-                                                              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0">
-                                                            </div>
-                                                          </div>
-                                                        </form>
-                                                      </div>
-                                                    </div>
-                                                  </div><div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Valider</button>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                              <button type="button" class="btn btn-primary">Classe précédente</button>
-                                          </div>
-                                      </div>
-                                      <div class="col" style="margin-top: -150px;">
-                                        <form class="custom-mt-form">
-                                          <div class="form-group">
-                                            <label>Image de l'élève</label>
-                                            <div class="custom-file-container" id="customFileContainer">
-                                              <input type="file" name="pic" accept="image/*" class="form-control-file d-none" id="imageInput">
-                                              <div class="file-upload-label" onclick="document.getElementById('imageInput').click();">
-                                                <span>Select or Drop Image</span>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </form>
-                                      </div>
-                                      </div>
-                                    <hr>
-                                    <h4 class="card-title" style="margin-top: 15px">Informations personnelles</h4>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group row">
-                                                <div class="col-sm-8">
-                                                    <label>Matricule</label>
-                                                    <input type="text" placeholder="Auto" class="form-control">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4" style="margin-top: 16px;">
-                                            <div class="col" style="margin-left: -119px">
-                                              <button type="button" class="mt-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">
-                                                Vérifier archives
-                                              </button>
-                                              
-                                              <!-- Modal -->
-                                              <div class="modal fade" id="exampleModal1" tabindex="-2" aria-labelledby="exampleModalLabel1" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg">
-                                                  <div class="modal-content">
-                                                    <div class="modal-header">
-                                                      <h1 class="modal-title fs-5" id="exampleModalLabel1">Liste d'archives</h1>
-                                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body profile-content">
-                                                      <div class="row">
-                                                        <div class="col">
-                
-                                                          <div class="card">
-                                                            <div class="table-responsive" style="height: 300px; overflow: auto;">
-                                                              <table class="table table-bordered table-striped" style="min-width: 600px; font-size: 10px;">
-                                                                <thead>
-                                                                  <tr>
-                                                                    <th>Matricule</th>
-                                                                    <th>Nom</th>
-                                                                    <th>Prénoms</th>
-                                                                    <th>Sexe</th>
-                                                                    <th>Date nai</th>
-                                                                    <th>Lieunais</th>
-                                                                    <th>Photo</th>
-                                                                  </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                  <tr>
-                                                                    <td>00000704</td>
-                                                                    <td>ABDOU</td>
-                                                                    <td>Oumar</td>
-                                                                    <td>M</td>
-                                                                    <td>05/06/2022</td>
-                                                                    <td>Cotonou</td>
-                                                                    <td><img src="photo2.jpg" alt="" width="50"></td>
-                                                                    <td>
-                                                                      <button type="button" class="btn btn-primary"><i class="typcn typcn-archive btn-icon-append"></i></button>
-                                                                    </td>
-                                                                  </tr>
-                                                                </tbody>
-                                                              </table>
-                                                            </div>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <label>Profil de réduction</label>
-                                            <select class="form-select">
-                                                <option>Plein Tarif</option>
-                                                <option>Fils d'enseignant</option>
+                  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+                    <div class="col-12 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- Formulaire Classe -->
+                                <form class="accordion-body mx-auto">
+                                    <div class="form-group row mt-1">
+                                        <label for="classe" class="col-sm-2 col-form-label">Classe</label>
+                                        <div class="col-sm-3">
+                                            <select class="js-example-basic-multiple w-100" id="classe" onchange="window.location.href=this.value">
+                                                <option>CE1</option>
+                                                <option>Italy</option>
+                                                <option>Russia</option>
+                                                <option>Britain</option>
                                             </select>
                                         </div>
-                                        <div class="col" style="margin-left:35px; margin-top:15px;">
+                                        <label for="classe-entree" class="col-sm-3 col-form-label">Classe d'entrée collège</label>
+                                        <div class="col-sm-3">
+                                            <select class="js-example-basic-multiple w-100 select2-hidden-accessible" id="classe-entree" onchange="window.location.href=this.value">
+                                                <option>CM2</option>
+                                                <option>Italy</option>
+                                                <option>Russia</option>
+                                                <option>Britain</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row mt-3">
+                                        <label for="numero-ordre" class="col-sm-2 col-form-label">Numéro d'ordre</label>
+                                        <div class="col-sm-3">
+                                            <input class="form-control" type="text" id="numero-ordre" placeholder="1082" name="prenom">
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <button type="button" class="btn btn-secondary">Classe précédente</button>
+                                        </div>
+                                        <div class="col-sm-4 text-end">
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                Données financières (Factures)
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            
+                                <hr>
+                                <h4 class="card-title mt-3">Informations personnelles</h4>
+                                <form>
+                                    <!-- Section Photo -->
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <label for="photo">Photo</label>
+                                            <div class="mb-3">
+                                                <img id="photo-preview" src="#" alt="Aperçu de la photo" class="img-thumbnail" style="display: none; max-width: 100%;">
+                                            </div>
+                                            <input type="file" id="photo" name="photo" class="form-control" accept="image/*" onchange="previewPhoto(event)">
+                                        </div>
+                                    </div>
+                            
+                                    <!-- Section Identification -->
+                                    <div class="form-group row mt-3">
+                                        <div class="col-md-4">
+                                            <label for="matricule">Matricule</label>
+                                            <input type="text" id="matricule" class="form-control" placeholder="Auto">
+                                        </div>
+                                        <div class="col-md-4 d-flex align-items-center">
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">
+                                                Vérifier archives
+                                            </button>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="profil-reduction">Profil de réduction</label>
+                                            <select id="profil-reduction" class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
+                                                <option value="">Sélectionner</option>
+                                                <option value="plein-tarif">Plein Tarif</option>
+                                                <option value="fils-enseignant">Fils d'enseignant</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                            
+                                    <!-- Section Informations Personnelles -->
+                                    <div class="form-group row mt-3">
+                                        <div class="col-md-4">
+                                            <label for="nom">Nom</label>
+                                            <input type="text" id="nom" name="nom" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="prenom">Prénom</label>
+                                            <input type="text" id="prenom" name="prenom" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="date-naissance">Date de naissance</label>
+                                            <input type="date" id="date-naissance" name="date-naissance" class="form-control">
+                                        </div>
+                                    </div>
+                            
+                                    <div class="form-group row mt-3">
+                                        <div class="col-md-4">
+                                            <label for="lieu-naissance">Lieu de naissance</label>
+                                            <input type="text" id="lieu-naissance" name="lieu-naissance" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="date-inscription">Date d'inscription</label>
+                                            <input type="date" id="date-inscription" name="date-inscription" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="departement">Département</label>
+                                            <select class="js-example-basic-multiple w-100" id="departement" onchange="window.location.href=this.value">
+                                                <option value="">Sélectionner</option>
+                                                <option value="littoral">Littoral</option>
+                                                <option value="italie">Italie</option>
+                                                <option value="russie">Russie</option>
+                                                <option value="royaume-uni">Royaume-Uni</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                            
+                                    <!-- Section Détails Additionnels -->
+                                    <div class="form-group row mt-3">
+                                        <div class="col-md-4">
+                                            <label for="sexe">Sexe</label>
+                                            <select id="sexe" class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
+                                                <option value="">Sélectionner</option>
+                                                <option value="masculin">Masculin</option>
+                                                <option value="feminin">Féminin</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="type-eleve">Type d'élève</label>
+                                            <select id="type-eleve" class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
+                                                <option value="">Sélectionner</option>
+                                                <option value="nouveau">Nouveau</option>
+                                                <option value="ancien">Ancien</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="aptitude-sport">Aptitude Sport</label>
+                                            <select id="aptitude-sport" class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
+                                                <option value="">Sélectionner</option>
+                                                <option value="apte">Apte</option>
+                                                <option value="inapte">Inapte</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                            
+                                    <div class="form-group row mt-3">
+                                        <div class="col-md-4">
+                                            <label for="adresse-personnelle">Adresse personnelle</label>
+                                            <input type="text" id="adresse-personnelle" name="adresse-personnelle" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="etablissement-origine">Etablissement d'origine</label>
+                                            <input type="text" id="etablissement-origine" name="etablissement-origine" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="nationalite">Nationalité</label>
+                                            <input type="text" id="nationalite" name="nationalite" class="form-control">
+                                        </div>
+                                    </div>
+                            
+                                    <!-- Section Redoublant -->
+                                    <div class="form-group row mt-3">
+                                        <div class="col-md-4">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                                <label class="form-check-label" for="defaultCheck1">Cocher si c'est un redoublant</label>
+                                                <input class="form-check-input" type="checkbox" id="redoublant">
+                                                <label class="form-check-label" for="redoublant">Cocher si c'est un redoublant</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-group row">
-                                            <div class="col">
-                                                <label>Nom</label>
-                                                <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nom" id="nom" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <label>Prénom</label>
-                                                <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="prenom" id="prenom" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <label>Date de naissance</label>
-                                                <div id="the-basics">
-                                                    <input class="form-control" type="date" id="date" name="date" value="">
-                                                </div>
-                                            </div>
+                            
+                                    <hr>
+                                    <h4 class="card-title mt-3">Filiation</h4>
+                                    
+                                    <!-- Section Filiation -->
+                                    <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <label for="nom-pere">Nom du père</label>
+                                            <input type="text" id="nom-pere" name="nom-pere" class="form-control">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="nom-mere">Nom de la mère</label>
+                                            <input type="text" id="nom-mere" name="nom-mere" class="form-control">
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-group row">
-                                            <div class="col">
-                                                <label>Date d'inscription</label>
-                                                <div id="the-basics">
-                                                    <input class="form-control" type="date" id="date" name="date" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <label>Lieu de naissance</label>
-                                                <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nom" id="nom" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <label>Département</label>
-                                                <select class="form-select">
-                                                    <option>Littoral</option>
-                                                    <option>Italy</option>
-                                                    <option>Russia</option>
-                                                    <option>Britain</option>
-                                                </select>
-                                            </div>
+                            
+                                    <div class="form-group row mt-3">
+                                        <div class="col-md-6">
+                                            <label for="adresses-parents">Adresses parents</label>
+                                            <input type="text" id="adresses-parents" name="adresses-parents" class="form-control">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="autres-renseignements">Autres renseignements</label>
+                                            <input type="text" id="autres-renseignements" name="autres-renseignements" class="form-control">
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-group row">
-                                            <div class="col">
-                                                <label>Sexe</label>
-                                                <select class="form-select">
-                                                    <option>Masculin</option>
-                                                    <option>Feminin</option>
-                                                </select>
-                                            </div>
-                                            <div class="col">
-                                                <label>Type d'élève</label>
-                                                <select class="form-select">
-                                                    <option>Nouveau</option>
-                                                    <option>Ancien</option>
-                                                </select>
-                                            </div>
-                                            <div class="col">
-                                                <label>Aptitude Sport</label>
-                                                <select class="form-select">
-                                                    <option>Apte</option>
-                                                    <option>Inapte</option>
-                                                </select>
-                                            </div>
+                            
+                                    <!-- Section Contacts Parents -->
+                                    <div class="form-group row mt-3">
+                                        <div class="col-md-2">
+                                            <label for="contacts-parents">Contacts parents</label>
+                                            <select id="contacts-parents" class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
+                                                <option value="+229">+229</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label for="telephone-1">Téléphone 1</label>
+                                            <input type="text" id="telephone-1" name="telephone-1" class="form-control">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label for="telephone-2">Téléphone 2</label>
+                                            <input type="text" id="telephone-2" name="telephone-2" class="form-control">
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-group row">
-                                            <div class="col">
-                                                <label>Adresse personnelle</label>
-                                                <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="adresse_personnelle" id="adresse_personnelle" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <label>Etablissement d'origine</label>
-                                                <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="etablissement_origine" id="etablissement_origine" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <label>Nationalité</label>
-                                                <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nationalite" id="nationalite" value="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <h4 class="card-title" style="margin-top: 15px">Filiation</h4>
-                                        <div class="row">
-                                            <div class="form-group">
-                                                <div class="form-group row">
-                                                    <div class="col">
-                                                        <label>Nom du père</label>
-                                                        <div id="bloodhound">
-                                                            <input class="form-control" type="text" name="nom_pere" id="nom_pere" value="">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>Nom de la mère</label>
-                                                        <div id="bloodhound">
-                                                            <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="form-group row">
-                                                    <div class="col">
-                                                        <label>Adresses parents</label>
-                                                        <div id="bloodhound">
-                                                            <input class="form-control" type="text" name="adresses_parents" id="adresses_parents" value="">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>Autres renseignements</label>
-                                                        <div id="bloodhound">
-                                                            <input class="form-control" type="text" name="autres_renseignements" id="autres_renseignements" value="">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="form-group row">
-                                                    <div class="col-sm-2">
-                                                        <label>Contacts parents</label>
-                                                        <select class="form-select">
-                                                            <option>+229</option>
-                                                            <option>+229</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-lg-5">
-                                                        <label>Téléphone 1</label>
-                                                        <div id="bloodhound">
-                                                            <input class="form-control" type="text" name="telephone_1" id="telephone_1" value="">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-5">
-                                                        <label>Téléphone 2</label>
-                                                        <div id="bloodhound">
-                                                            <input class="form-control" type="text" name="telephone_2" id="telephone_2" value="">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="text-center">
-                                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                                    <button type="button" class="btn btn-danger">Annuler</button>
-                                                </div>
-                                            </div>
-                                        </div>
+                            
+                                    <!-- Section Actions -->
+                                    <div class="form-group mt-3 text-center">
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                        <button type="button" class="btn btn-danger">Annuler</button>
                                     </div>
-                                </div>
-                            </div>
+                                </form>
+                            
+                                <script>
+                                    function previewPhoto(event) {
+                                        var reader = new FileReader();
+                                        reader.onload = function(){
+                                            var output = document.getElementById('photo-preview');
+                                            output.src = reader.result;
+                                            output.style.display = 'block';
+                                        };
+                                        reader.readAsDataURL(event.target.files[0]);
+                                    }
+                                </script>
+                            </div>                           
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
-                      
-                      <div class="card">
+                </div>
+                
+                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+                    <div class="card">
                         <div class="card-body">
+                            <!-- Section: Health Information -->
                             <div class="form-group">
-                                <div class="form-group row">
+                                <div class="row">
                                     <div class="col">
-                                        <label>Maladies chroniques et allergies connues</label>
-                                        <div id="bloodhound">
-                                            <input class="form-control" type="text" name="nom" id="nom" value="">
+                                        <div class="d-flex align-items-center">
+                                            <label for="maladies_chroniques" class="mr-2">Maladies chroniques et allergies connues</label>
+                                            <input class="form-control" type="text" name="maladies_chroniques" id="maladies_chroniques" value="">
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <label>Interdit alimentaires</label>
-                                        <div id="bloodhound">
-                                            <input class="form-control" type="text" name="prenom" id="prenom" value="">
+                                        <div class="d-flex align-items-center">
+                                            <label for="interdit_alimentaires" class="mr-2">Interdit alimentaires</label>
+                                            <input class="form-control" type="text" name="interdit_alimentaires" id="interdit_alimentaires" value="">
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <label>Groupe sanguin</label>
-                                        <select class="form-select">
-                                          <option>A+</option>
-                                          <option>O+</option>
-                                          <option>B+</option>
-                                          <option>B-</option>
-                                      </select>
+                                        <div class="d-flex align-items-center">
+                                            <label for="groupe_sanguin" class="mr-2">Groupe sanguin</label>
+                                            <select class="form-control js-example-basic-multiple w-100" id="groupe_sanguin" name="groupe_sanguin">
+                                                <option>A+</option>
+                                                <option>O+</option>
+                                                <option>B+</option>
+                                                <option>B-</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="col">
-                                      <label>Type d'hémoglobine</label>
-                                      <select class="form-select">
-                                        <option>A</option>
-                                        <option>O</option>
-                                        <option>B</option>
-                                        <option>B</option>
-                                    </select>
-                                  </div>
+                                        <div class="d-flex align-items-center">
+                                            <label for="type_hemoglobine" class="mr-2">Type d'hémoglobine</label>
+                                            <select class="form-control js-example-basic-multiple w-100" id="type_hemoglobine" name="type_hemoglobine">
+                                                <option>A</option>
+                                                <option>O</option>
+                                                <option>B</option>
+                                                <option>AB</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <hr>
+                
+                            <!-- Section: Mother Information -->
                             <h4 class="card-title" style="margin-top: 15px">Mère</h4>
                             <div class="form-group">
-                                <div class="form-group row">
+                                <div class="row">
                                     <div class="col">
-                                        <label>Nom</label>
-                                        <div id="bloodhound">
-                                          <input class="form-control" type="text" name="nom" id="nom" value="">
-                                      </div>
-                                    </div>
-                                    <div class="col">
-                                        <label>Prénom</label>
-                                        <div id="bloodhound">
-                                            <input class="form-control" type="text" name="nom" id="nom" value="">
+                                        <div class="d-flex align-items-center">
+                                            <label for="nom_mere" class="mr-2">Nom</label>
+                                            <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
                                         </div>
                                     </div>
                                     <div class="col">
-                                      <label>Numéro de téléphone</label>
-                                      <div id="bloodhound">
-                                        <input class="form-control" type="text" name="numero_de_telephone" id="numero_de_telephone" value="">
+                                        <div class="d-flex align-items-center">
+                                            <label for="prenom_mere" class="mr-2">Prénom</label>
+                                            <input class="form-control" type="text" name="prenom_mere" id="prenom_mere" value="">
+                                        </div>
                                     </div>
-                                  </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="telephone_mere" class="mr-2">Numéro de téléphone</label>
+                                            <input class="form-control" type="text" name="telephone_mere" id="telephone_mere" value="">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="form-group row">
+                                <div class="row">
                                     <div class="col">
-                                        <label>Adresse e-mail</label>
-                                        <div id="bloodhound">
-                                          <input class="form-control" type="text" name="numero_de_telephone" id="numero_de_telephone" value="">
-                                      </div>
+                                        <div class="d-flex align-items-center">
+                                            <label for="email_mere" class="mr-2">Adresse e-mail</label>
+                                            <input class="form-control" type="text" name="email_mere" id="email_mere" value="">
+                                        </div>
                                     </div>
                                     <div class="col">
-                                        <label>Profession</label>
-                                        <div id="bloodhound">
-                                          <input class="form-control" type="text" name="adresse_email" id="adresse_email" value="">
-                                      </div>
+                                        <div class="d-flex align-items-center">
+                                            <label for="profession_mere" class="mr-2">Profession</label>
+                                            <input class="form-control" type="text" name="profession_mere" id="profession_mere" value="">
+                                        </div>
                                     </div>
                                     <div class="col">
-                                        <label>Adresse employeur</label>
-                                        <div id="bloodhound">
-                                          <input class="form-control" type="text" name="adresse_email" id="adresse_email" value="">
-                                      </div>
+                                        <div class="d-flex align-items-center">
+                                            <label for="adresse_employeur_mere" class="mr-2">Adresse employeur</label>
+                                            <input class="form-control" type="text" name="adresse_employeur_mere" id="adresse_employeur_mere" value="">
+                                        </div>
                                     </div>
                                     <div class="col">
-                                      <label>Adresse personnelle</label>
-                                      <div id="bloodhound">
-                                          <input class="form-control" type="textarea" name="adresse_personnelle" id="adresse_personnelle" value="">
-                                      </div>
-                                  </div>
+                                        <div class="d-flex align-items-center">
+                                            <label for="adresse_personnelle_mere" class="mr-2">Adresse personnelle</label>
+                                            <input class="form-control" type="textarea" name="adresse_personnelle_mere" id="adresse_personnelle_mere" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                
+                            <!-- Section: Father Information -->
+                            <h4 class="card-title" style="margin-top: 15px">Père</h4>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="nom_pere" class="mr-2">Nom</label>
+                                            <input class="form-control" type="text" name="nom_pere" id="nom_pere" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="prenom_pere" class="mr-2">Prénom</label>
+                                            <input class="form-control" type="text" name="prenom_pere" id="prenom_pere" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="telephone_pere" class="mr-2">Numéro de téléphone</label>
+                                            <input class="form-control" type="text" name="telephone_pere" id="telephone_pere" value="">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <hr>
-                                <h4 class="card-title" style="margin-top: 15px">Père</h4>
                                 <div class="row">
-                                    <div class="form-group">
-                                        <div class="form-group row">
-                                            <div class="col">
-                                                <label><strong>Nom</strong></label> 
-                                                <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nom_pere" id="nom_pere" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <label>Prénom</label>
-                                                <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                              <label>Numéro de téléphone</label>
-                                              <div id="bloodhound">
-                                                  <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
-                                              </div>
-                                          </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="email_pere" class="mr-2">Adresse e-mail</label>
+                                            <input class="form-control" type="text" name="email_pere" id="email_pere" value="">
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-group row">
-                                          <div class="col">
-                                            <label>Adresse e-mail</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="numero_de_telephone" id="numero_de_telephone" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                            <label>Profession</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="adresse_email" id="adresse_email" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                            <label>Adresse employeur</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="adresse_email" id="adresse_email" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                          <label>Adresse personnelle</label>
-                                          <div id="bloodhound">
-                                              <input class="form-control" type="textarea" name="adresse_personnelle" id="adresse_personnelle" value="">
-                                          </div>
-                                      </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="profession_pere" class="mr-2">Profession</label>
+                                            <input class="form-control" type="text" name="profession_pere" id="profession_pere" value="">
                                         </div>
                                     </div>
-                                    
-                                </div>
-                                <hr>
-                                <h4 class="card-title" style="margin-top: 15px">Tuteur</h4>
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="form-group row">
-                                            <div class="col">
-                                                <label>Nom</label>
-                                                <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nom_pere" id="nom_pere" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <label>Prénom</label>
-                                                <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                              <label>Numéro de téléphone</label>
-                                              <div id="bloodhound">
-                                                  <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
-                                              </div>
-                                          </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="adresse_employeur_pere" class="mr-2">Adresse employeur</label>
+                                            <input class="form-control" type="text" name="adresse_employeur_pere" id="adresse_employeur_pere" value="">
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-group row">
-                                          <div class="col">
-                                            <label>Adresse e-mail</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="numero_de_telephone" id="numero_de_telephone" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                            <label>Profession</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="adresse_email" id="adresse_email" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                            <label>Adresse employeur</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="adresse_email" id="adresse_email" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                          <label>Adresse personnelle</label>
-                                          <div id="bloodhound">
-                                              <input class="form-control" type="textarea" name="adresse_personnelle" id="adresse_personnelle" value="">
-                                          </div>
-                                      </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="adresse_personnelle_pere" class="mr-2">Adresse personnelle</label>
+                                            <input class="form-control" type="textarea" name="adresse_personnelle_pere" id="adresse_personnelle_pere" value="">
                                         </div>
                                     </div>
                                 </div>
-                                <hr>
-                                <h4 class="card-title" style="margin-top: 15px">Personne à contacter en cas d'urgence</h4>
+                            </div>
+                            <hr>
+                
+                            <!-- Section: Guardian Information -->
+                            <h4 class="card-title" style="margin-top: 15px">Tuteur</h4>
+                            <div class="form-group">
                                 <div class="row">
-                                    <div class="form-group">
-                                        <div class="form-group row">
-                                            <div class="col">
-                                                <label>Nom</label>
-                                                <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nom_pere" id="nom_pere" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <label>Prénom</label>
-                                                <div id="bloodhound">
-                                                    <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                              <label>Numéro de téléphone</label>
-                                              <div id="bloodhound">
-                                                  <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
-                                              </div>
-                                          </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="nom_tuteur" class="mr-2">Nom</label>
+                                            <input class="form-control" type="text" name="nom_tuteur" id="nom_tuteur" value="">
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-group row">
-                                          <div class="col">
-                                            <label>Adresse e-mail</label>
-                                            <div id="bloodhound">
-                                              <input class="form-control" type="text" name="numero_de_telephone" id="numero_de_telephone" value="">
-                                          </div>
-                                        </div>
-                                        <div class="col">
-                                          <label>Adresse personnelle</label>
-                                          <div id="bloodhound">
-                                              <input class="form-control" type="textarea" name="adresse_personnelle" id="adresse_personnelle" value="">
-                                          </div>
-                                      </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="prenom_tuteur" class="mr-2">Prénom</label>
+                                            <input class="form-control" type="text" name="prenom_tuteur" id="prenom_tuteur" value="">
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                      <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                          Autorisation d'utiliser les vidéos à des fins publicitaires</label>
-                                        </div>
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                                          <label class="form-check-label" for="flexCheckChecked">
-                                            Autorisation d'utiliser les images à des fins publicitaires</label>
-                                          </div>
-                                      </div>
-                                    
-
-
-
-                                    <div class="form-group">
-                                        <div class="text-center">
-                                            <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                            <button type="button" class="btn btn-danger">Annuler</button>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="telephone_tuteur" class="mr-2">Numéro de téléphone</label>
+                                            <input class="form-control" type="text" name="telephone_tuteur" id="telephone_tuteur" value="">
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="email_tuteur" class="mr-2">Adresse e-mail</label>
+                                            <input class="form-control" type="text" name="email_tuteur" id="email_tuteur" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="profession_tuteur" class="mr-2">Profession</label>
+                                            <input class="form-control" type="text" name="profession_tuteur" id="profession_tuteur" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="adresse_employeur_tuteur" class="mr-2">Adresse employeur</label>
+                                            <input class="form-control" type="text" name="adresse_employeur_tuteur" id="adresse_employeur_tuteur" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="adresse_personnelle_tuteur" class="mr-2">Adresse personnelle</label>
+                                            <input class="form-control" type="textarea" name="adresse_personnelle_tuteur" id="adresse_personnelle_tuteur" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                
+                            <!-- Section: Emergency Contact Information -->
+                            <h4 class="card-title" style="margin-top: 15px">Personne à contacter en cas d'urgence</h4>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="nom_urgence" class="mr-2">Nom</label>
+                                            <input class="form-control" type="text" name="nom_urgence" id="nom_urgence" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="prenom_urgence" class="mr-2">Prénom</label>
+                                            <input class="form-control" type="text" name="prenom_urgence" id="prenom_urgence" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="telephone_urgence" class="mr-2">Numéro de téléphone</label>
+                                            <input class="form-control" type="text" name="telephone_urgence" id="telephone_urgence" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="email_urgence" class="mr-2">Adresse e-mail</label>
+                                            <input class="form-control" type="text" name="email_urgence" id="email_urgence" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center">
+                                            <label for="adresse_personnelle_urgence" class="mr-2">Adresse personnelle</label>
+                                            <input class="form-control" type="textarea" name="adresse_personnelle_urgence" id="adresse_personnelle_urgence" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <!-- Section: Permissions -->
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Autorisation d'utiliser les vidéos à des fins publicitaires
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        Autorisation d'utiliser les images à des fins publicitaires
+                                    </label>
+                                </div>
+                            </div>
+                
+                            <!-- Section: Submit and Cancel Buttons -->
+                            <div class="form-group text-center">
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                <button type="button" class="btn btn-danger">Annuler</button>
                             </div>
                         </div>
-                      </div>
-
                     </div>
-                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">...</div>
-                    <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">...</div>
+                </div>
+                    {{-- <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">...</div>
+                    <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">...</div> --}}
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+  <!-- Modal n*1 -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content calcul-modal">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Données financières</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body profile-content">
+            <div class="row">
+              <div class="" id="calcul-one">
+                <form class="forms-sample">
+                  <div class="form-group row">
+                    <label for="profilReduction" class="col-sm-12">Profil de réduction</label>
+                    <div class="col-sm-12 mb-2">
+                      <select id="profilReduction" class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
+                        <option value="fils-enseignant">Fils d'enseignant</option>
+                        <option value="plein-tarif">Plein Tarif</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary col-sm-10">Créer un profil de réduction</button>
+                  <hr>
+                  <div class="form-group row">
+                    <label for="scolarite" class="col-sm-8 col-form-label">Scolarité</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" id="scolarite" placeholder="0">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="arriere" class="col-sm-8 col-form-label">Arriéré</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" id="arriere" placeholder="0">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="autre1" class="col-sm-8 col-form-label"></label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" id="autre1" placeholder="0">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="autre2" class="col-sm-8 col-form-label"></label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" id="autre2" placeholder="0">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="autre3" class="col-sm-8 col-form-label"></label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" id="autre3" placeholder="0">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="autre4" class="col-sm-8 col-form-label"></label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" id="autre4" placeholder="0">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="autre5" class="col-sm-8 col-form-label"></label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" id="autre5" placeholder="0">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Valider</button>
+          </div>
+        </div>
+    </div>
+      
+  </div>
+  <!-- Modal n*2-->
+  <div class="modal fade" id="exampleModal1" tabindex="-2" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+                                                  <div class="modal-dialog modal-lg">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                              <h1 class="modal-title fs-5" id="exampleModalLabel1">Liste d'archives</h1>
+                                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                          </div>
+                                                          <div class="modal-body profile-content">
+                                                              <div class="row">
+                                                                  <div class="col">
+                                                                      <div class="card">
+                                                                          <div class="table-responsive" style="height: 300px; overflow: auto;">
+                                                                              <table class="table table-bordered table-striped" style="min-width: 600px; font-size: 10px;">
+                                                                                  <thead>
+                                                                                      <tr>
+                                                                                          <th>Matricule</th>
+                                                                                          <th>Nom</th>
+                                                                                          <th>Prénoms</th>
+                                                                                          <th>Sexe</th>
+                                                                                          <th>Date nai</th>
+                                                                                          <th>Lieu nais</th>
+                                                                                          <th>Photo</th>
+                                                                                      </tr>
+                                                                                  </thead>
+                                                                                  <tbody>
+                                                                                      <tr>
+                                                                                          <td>00000704</td>
+                                                                                          <td>ABDOU</td>
+                                                                                          <td>Oumar</td>
+                                                                                          <td>M</td>
+                                                                                          <td>05/06/2022</td>
+                                                                                          <td>Cotonou</td>
+                                                                                          <td><img src="photo2.jpg" alt="" width="50"></td>
+                                                                                          <td>
+                                                                                              <button type="button" class="btn btn-primary"><i class="typcn typcn-archive btn-icon-append"></i></button>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                  </tbody>
+                                                                              </table>
+                                                                          </div>
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+  </div>
 <style>
   .custom-file-container {
     position: relative;

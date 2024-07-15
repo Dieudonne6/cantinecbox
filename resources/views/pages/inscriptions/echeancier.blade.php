@@ -9,120 +9,92 @@
           <h4 class="card-title">Mise a jour echeancier eleve</h4>
 
           <div class="row">
-            <div class="col-6" style="margin-top:3rem">
-              
+            <div class="col-4" style="margin-top:3rem">
               <div class="card">
                 <div class="card-body">
-                  {{-- <h4 class="card-title">Default form</h4> --}}
-                  {{-- <p class="card-description">
-                    Basic form layout
-                  </p> --}}
                   <form class="forms-sample">
-                    <div class="form-group">
-                      <label for="exampleInputUsername1">Matricule</label>
-                      <input type="text" class="form-control" id="exampleInputUsername1" >
+                    <div class="form-group d-flex align-items-center">
+                      <label for="exampleInputUsername1" class="mr-2">Matricule</label>
+                      <input type="text" class="form-control" id="exampleInputUsername1">
                     </div>
-                    <div class="form-group">
-                      <label for="exampleInputEmail1">Nom</label>
-                      <input type="email" class="form-control" id="exampleInputEmail1" >
+                    <div class="form-group d-flex align-items-center">
+                      <label for="exampleInputEmail1" class="mr-2">Nom</label>
+                      <input type="email" class="form-control" id="exampleInputEmail1">
                     </div>
-                    <div class="form-group">
-                      <label for="exampleInputPassword1">Prenom</label>
-                      <input type="password" class="form-control" id="exampleInputPassword1" >
+                    <div class="form-group d-flex align-items-center">
+                      <label for="exampleInputPassword1" class="mr-2">Prenom</label>
+                      <input type="password" class="form-control" id="exampleInputPassword1">
                     </div>
-                    {{-- <div class="form-group">
-                      <label for="exampleInputConfirmPassword1">Confirm Password</label>
-                      <input type="password" class="form-control" id="exampleInputConfirmPassword1" placeholder="Password">
-                    </div>
-                    <div class="form-check form-check-flat form-check-primary">
-                      <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input">
-                        Remember me
-                      </label>
-                    </div> --}}
-       
+                  </form>
                 </div>
               </div>
-       
             </div>
-
-            <div class="col-6">
-              
+          
+            <div class="col-8">
               <div class="card">
                 <div class="card-body">
-                  {{-- <h4 class="card-title">Typeahead</h4>
-                  <p class="card-description">
-                    A simple suggestion engine
-                  </p> --}}
                   <div class="form-group row">
-                    <div class="col">
-                      <label>Scolarite</label>
+                    <div class="col d-flex align-items-center">
+                      <label class="mr-2">Scolarite</label>
                       <div id="the-basics">
-                        <input class="form-control" type="text" >
+                        <input class="form-control" type="text">
                       </div>
                     </div>
-                    <div class="col">
-                      <label>Arriere</label>
+                    <div class="col d-flex align-items-center">
+                      <label class="mr-2">Arriere</label>
                       <div id="bloodhound">
-                        <input class="form-control" type="text" >
+                        <input class="form-control" type="text">
                       </div>
                     </div>
                   </div>
-
+          
                   <div class="form-group row">
-                    <div class="col">
-                      <label>Frais 1</label>
+                    <div class="col d-flex align-items-center">
+                      <label class="mr-2">Frais 1</label>
                       <div id="the-basics">
-                        <input class="form-control" type="text" >
+                        <input class="form-control" type="text">
                       </div>
                     </div>
-                    <div class="col">
-                      <label>Frais 2</label>
+                    <div class="col d-flex align-items-center">
+                      <label class="mr-2">Frais 2</label>
                       <div id="bloodhound">
-                        <input class="form-control" type="text" >
+                        <input class="form-control" type="text">
                       </div>
                     </div>
                   </div>
-
+          
                   <div class="form-group row">
-                    <div class="col">
-                      <label>Frais 3</label>
+                    <div class="col d-flex align-items-center">
+                      <label class="mr-2">Frais 3</label>
                       <div id="the-basics">
-                        <input class="form-control" type="text" >
+                        <input class="form-control" type="text">
                       </div>
                     </div>
-                    <div class="col">
-                      <label>Frais 4</label>
+                    <div class="col d-flex align-items-center">
+                      <label class="mr-2">Frais 4</label>
                       <div id="bloodhound">
-                        <input class="form-control" type="text" >
+                        <input class="form-control" type="text">
                       </div>
                     </div>
                   </div>
-
+          
                   <div class="form-group row">
-                    <label>Modifier le profil de reduction</label>
+                    <label class="col-12">Modifier le profil de reduction</label>
                     <div class="col">
                       <select class="js-example-basic-single form-control w-100">
                         <option value="AL">selectionner1</option>
                         <option value="WY">selectionner2</option>
                       </select>
                     </div>
-
                     <div class="col">
                       <button type="submit" class="btn btn-primary mr-2">Valider</button>
-                      {{-- <button class="btn btn-light">Cancel</button> --}}
                     </div>
-                  </form>
-       
                   </div>
                 </div>
               </div>
-       
             </div>
-
-
-
-          </div></br>
+          </div>
+          </br>
 
           <div class="row">
 
@@ -239,7 +211,7 @@
               <div class="row">
                 <div class="col-5">
                   <button type="button" class="btn btn-primary" >Ajouter</button>
-                  <button type="button" class="btn btn-danger" style="margin-top: 10px;">Fermer</button>
+                  <button type="button" class="btn btn-secondary" style="margin-top: 10px;">Fermer</button>
                 </div>
                 <div class="col-5">
                   <button type="button" class="btn btn-primary" style=" width:8rem ;">Imprimer</button>

@@ -6,12 +6,7 @@
     <div class="content-wrapper">
         <div class="card">
             <div class="card-body">
-                <div class="row justify-content-center">
-                    <div class="col">
-                        <div class="card-title">
-                            <h4> Configurer les comptes</h4>
-                        </div>
-                    </div>
+                <h4 class="card-title"> Configurer les comptes</h4>
                     <div class="col">
                         <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Voir la liste des comptes</button>
@@ -154,7 +149,7 @@
                 </div>
               </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
 
         </div>
       </div>
@@ -174,7 +169,7 @@
                             </div>
                             <div class="col">
                                 <label>Libellé</label>
-                                <select class="form-select">
+                                <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                     <option>AG │ ACTIVITES GENERALES</option>
                                     <option>MF │ MATERNELLE CAMP-GUEZO</option>
                                     <option>MM │ MATERNELLE CADJEHOUN</option>
@@ -194,7 +189,7 @@
                         </div>
                         <div class="col">
                             <label>Libellé</label>
-                            <select class="form-select">
+                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                 <option>AG │ ACTIVITES GENERALES</option>
                                 <option>MF │ MATERNELLE CAMP-GUEZO</option>
                                 <option>MM │ MATERNELLE CADJEHOUN</option>
@@ -214,7 +209,7 @@
                         </div>
                         <div class="col">
                             <label>Libellé</label>
-                            <select class="form-select">
+                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                 <option>AG │ ACTIVITES GENERALES</option>
                                 <option>MF │ MATERNELLE CAMP-GUEZO</option>
                                 <option>MM │ MATERNELLE CADJEHOUN</option>
@@ -234,7 +229,7 @@
                         </div>
                         <div class="col">
                             <label>Libellé</label>
-                            <select class="form-select">
+                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                 <option>AG │ ACTIVITES GENERALES</option>
                                 <option>MF │ MATERNELLE CAMP-GUEZO</option>
                                 <option>MM │ MATERNELLE CADJEHOUN</option>
@@ -254,7 +249,7 @@
                         </div>
                         <div class="col">
                             <label>Libellé</label>
-                            <select class="form-select">
+                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                 <option>AG │ ACTIVITES GENERALES</option>
                                 <option>MF │ MATERNELLE CAMP-GUEZO</option>
                                 <option>MM │ MATERNELLE CADJEHOUN</option>
@@ -274,7 +269,7 @@
                         </div>
                         <div class="col">
                             <label>Libellé</label>
-                            <select class="form-select">
+                            <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                 <option>AG │ ACTIVITES GENERALES</option>
                                 <option>MF │ MATERNELLE CAMP-GUEZO</option>
                                 <option>MM │ MATERNELLE CADJEHOUN</option>
@@ -288,10 +283,9 @@
                 <div class="form-group">
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary">Enregistrer</button>
-                        <button type="button" class="btn btn-danger">Annuler</button>
+                        <button type="button" class="btn btn-secondary">Annuler</button>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
     </div>

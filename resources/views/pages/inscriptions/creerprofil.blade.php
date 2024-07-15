@@ -10,14 +10,8 @@
       <div class="row">          
         <div class="col-12">
           <div class="card mb-6">
-                            <div class="card-header">
-                    <div class="row align-items-center">
-                        <div class="col-sm-6">
-                            <div class="page-title"><h4>Table réduction</h4></div>
-                        </div>
-                    </div>
-                </div>
             <div class="card-body">
+              <h4 class="card-title">Table réduction</h4>
               <div class="row gy-3">
                 <div class="demo-inline-spacing">
                   {{-- <a  class="btn btn-primary" href=" {{url('/nouveautypesclasses')}}">Nouveau</a> --}}
@@ -89,14 +83,14 @@
                 <div class="form-group row">
                   <label for="exampleInputUsername2" class="col-sm-12 col-form-label mb-0">Mode d'application de la reduction sur les echeancier</label>
                   <div class="col-sm-12 mb-2">
-                    <select class="form-select">
+                    <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                       <option>Agir sur les dernier tranches</option>
                       <option>Agir sur les dernier tranches</option>
                     </select>
                   </div>
                 </div>
                 <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
-                <button class="btn btn-light">Fermer</button>
+                <button class="btn btn-secondary">Fermer</button>
               </form>
             </div>
             <div class="col-lg-4 d-none" id="percentage">
@@ -153,7 +147,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="calculs">Afficher calculateur de pourcentage</button>              
+          <button type="button" class="btn btn-primary" id="calculs">Afficher calculateur de pourcentage</button>              
             <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
 
 
@@ -212,7 +206,7 @@
                             <!-- Button trigger modal -->
                             {{-- <a  class="btn btn-primary p-2 btn-sm" href="{{url('/modifiertypesclasses')}}">Modif</a> --}}
                             <button type="button" class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                Modif
+                                Modifier
                               </button>
                               <!-- Modal -->
                               <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -277,7 +271,7 @@
                                             <div class="form-group row">
                                               <label for="exampleInputUsername2" class="col-sm-12 col-form-label mb-0">Mode d'application de la reduction sur les echeancier</label>
                                               <div class="col-sm-12 mb-2">
-                                                <select class="form-select">
+                                                <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
                                                   <option>Agir sur les dernier tranches</option>
                                                   <option>Agir sur les dernier tranches</option>
                                                 </select>
@@ -350,11 +344,11 @@
                                   </div>
                                 </div>
                               </div>
-                              <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Suppr
+                              <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Supprimer
                                 {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
                               </button>
                               <!-- Button trigger modal -->
-                              <button class="btn btn-warning p-2 btn-sm dropdown" data-bs-toggle="modal" data-bs-target="#exampleModal3">Détails</button>
+                              <button class="btn btn-primary p-2 btn-sm dropdown" data-bs-toggle="modal" data-bs-target="#exampleModal3">Détails</button>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal3" tabindex="-3" aria-labelledby="exampleModalLabel3" aria-hidden="true">

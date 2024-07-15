@@ -431,4 +431,27 @@ class PagesController extends Controller
         return view ('pages.inscriptions.recaculereffectifs');
     }
 
+    public function enquetesstatistiques(){
+        return view ('pages.inscriptions.enquetesstatistiques');
+    }
+
+    public function etatdelacaisse(){
+        return view ('pages.inscriptions.etatdelacaisse');
+    }
+
+    public function situationfinanciereglobale(){
+        return view ('pages.inscriptions.situationfinanciereglobale');
+    }
+
+    public function pointderecouvrement(){
+        return view ('pages.inscriptions.pointderecouvrement');
+    }
+    public function paiementdesnoninscrits(){
+        return view ('pages.inscriptions.paiementdesnoninscrits');
+    }
+    
+    public function etatdesrecouvrements(){
+        return view ('pages.inscriptions.etatdesrecouvrements');
+    }
+
 }

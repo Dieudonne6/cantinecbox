@@ -5,6 +5,7 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
+                <h4 class="card-title">Liste des élèves par classe</h4>
                 <div class="row mb-3">
                     <div class="col-3">
                         <select class="form-control w-100" name="classe">
@@ -21,6 +22,18 @@
                                 <input type="text" class="form-control" id="titreEtat" placeholder=" " />
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-4">
+                        <button class="btn btn-primary w-100" onclick="printWithPhoto()">Imprimer avec photo</button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-primary w-100" onclick="printWithoutPhoto()">Imprimer sans photo</button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-primary w-100" onclick="printMaquettesDroits()">Maquettes droits</button>
                     </div>
                 </div>
 
@@ -132,18 +145,6 @@
                             <!-- Ajouter d'autres lignes ici -->
                         </tbody>
                     </table>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-4">
-                        <button class="btn btn-primary w-100" onclick="printWithPhoto()">Imprimer avec photo</button>
-                    </div>
-                    <div class="col-4">
-                        <button class="btn btn-secondary w-100" onclick="printWithoutPhoto()">Imprimer sans photo</button>
-                    </div>
-                    <div class="col-4">
-                        <button class="btn btn-success w-100" onclick="printMaquettesDroits()">Maquettes droits</button>
-                    </div>
                 </div>
             </div>
         </div>
