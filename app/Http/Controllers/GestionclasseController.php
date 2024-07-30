@@ -7,7 +7,7 @@ use App\Models\Typeclasse;
 
 class GestionclasseController extends Controller
 {
-
+  
   public function savetypeclasse(Request $request){
     $typeclasse = new Typeclasse();
     $typeclasse->TYPECLASSE = $request->input('TYPECLASSE');
@@ -18,6 +18,24 @@ class GestionclasseController extends Controller
     $typeclasse->save();
     return back()->with('status','Enregistrer avec succes');
   }
+  public function getclasse(){
+    $allclasse = Typeclasse::get();
+    return view('pages.inscriptions.typesclasses')->with('allclasse', $allclasse);   
+  }
+  public function updateTypeClasse(Request $request)
+  {
+    $typeclass = Typeclasse::where('TYPECLASSE', $request->input('TYPECLASSE'))->first();
+    if ($typeclass) {
+      $typeclass->TYPECLASSE = $request->input('TYPECLASSE');
+      $typeclass->LibelleType = $request->input('LibelleType');
+      $typeclass->save();
+      
+      return back()->with('status', 'Modifié avec succès');
+    }
+    
+    return back()->withErrors('Erreur lors de la modification.');
+  }
+  
   public function groupes(){
     
     return view('pages.inscriptions.groupes');

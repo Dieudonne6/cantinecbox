@@ -10,4 +10,15 @@ class Typeclasse extends Model
     use HasFactory;
     protected $table = 'typeclasses';
 
+    public $timestamps = false;
+    protected $primaryKey = 'id';
+    public $incrementing = true;
+    
+    protected $fillable = [
+        'TYPECLASSE',
+        'LibelleType',
+        // Autres colonnes nécessaires
+    ];
+
+   
 }
