@@ -7,6 +7,7 @@ use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ConnexionDBController;
 use App\Http\Controllers\EleveController;
 use App\Http\Controllers\EtatController;
+use App\Http\Controllers\GestionclasseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -164,3 +165,7 @@ Route::get('/enquetesstatistiques', [PagesController::class, 'enquetesstatistiqu
 Route::get('/etatdelacaisse', [PagesController::class, 'etatdelacaisse']);
 Route::get('/situationfinanciereglobale',[PagesController::class, 'situationfinanciereglobale']);
 Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite']);
+
+
+
+// Controller GestionclasseController
