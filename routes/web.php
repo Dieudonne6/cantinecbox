@@ -130,7 +130,6 @@ Route::get('/parametre', [PagesController::class, 'parametre']);
 Route::get('/echeancier', [PagesController::class, 'echeancier']);
 Route::get('/tabledesclasses', [PagesController::class, 'tabledesclasses']);
 Route::get('/enrclasse', [PagesController::class, 'enrclasse']);
-Route::get('/groupe', [PagesController::class, 'groupe']);
 Route::get('/certificat', [PagesController::class, 'certificatsolarite']);
 Route::get('/droitconstate', [PagesController::class, 'droitconstate']);
 
@@ -140,11 +139,10 @@ Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);
 
 Route::get('/paiementeleve', [PagesController::class, 'paiementeleve']);
 
-
+Route::get('/groupe', [PagesController::class, 'groupe']);
 Route::get('/duplicatainscription/{elevyo}',[ClassesController::class,'duplicatainscription']);
 Route::get('/majpaiementeleve', [PagesController::class, 'majpaiementeleve']);
 Route::get('/photos', [PagesController::class, 'photos']);
-Route::get('/groupes', [PagesController::class, 'groupes']);
 
 Route::get('/paiementdesnoninscrits', [PagesController::class, 'paiementdesnoninscrits']);
 
@@ -170,3 +168,6 @@ Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite']
 
 // Controller GestionclasseController
 Route::post('/savetypeclasse', [GestionclasseController::class, 'savetypeclasse']);
+
+Route::get('/groupes', [GestionclasseController::class, 'groupes']);
+

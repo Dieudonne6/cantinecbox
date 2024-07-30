@@ -355,9 +355,7 @@ class PagesController extends Controller
         return view('pages.inscriptions.photos');
     } 
 
-    public function groupes(){
-        return view('pages.inscriptions.groupes');
-    } 
+  
 
     public function facturesclasses(){
         return view('pages.inscriptions.facturesclasses');
