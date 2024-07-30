@@ -169,3 +169,4 @@ Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite']
 
 
 // Controller GestionclasseController
+Route::post('/savetypeclasse', [GestionclasseController::class, 'savetypeclasse']);
