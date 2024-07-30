@@ -165,7 +165,10 @@ Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite']
 
 
 // Controller GestionclasseController
+Route::post('/savetypeclasse', [GestionclasseController::class, 'savetypeclasse']);
 
 Route::get('/groupes', [GestionclasseController::class, 'groupes']);
 
 Route::get('/series', [GestionclasseController::class, 'series']);
+Route::get('/typesclasses', [GestionclasseController::class, 'getclasse']);
+Route::put('/modifiertypesclasses', [GestionclasseController::class, 'updateTypeClasse']);
