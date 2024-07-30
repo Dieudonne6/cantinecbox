@@ -74,8 +74,6 @@ Route::get('/profil', [PagesController::class, 'profil']);
 
 Route::get('/typesclasses', [PagesController::class, 'typesclasses']);
 
-Route::get('/series', [PagesController::class, 'series']);
-
 Route::get('/promotions', [PagesController::class, 'promotions']);
 
 Route::get('/creerprofil', [PagesController::class, 'creerprofil']);
@@ -170,3 +168,4 @@ Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite']
 
 Route::get('/groupes', [GestionclasseController::class, 'groupes']);
 
+Route::get('/series', [GestionclasseController::class, 'series']);
