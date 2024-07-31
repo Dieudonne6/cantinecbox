@@ -59,8 +59,8 @@
                     <td>
 
                       <a href='/paiementcontrat/{{$filterEleves->CODECLAS}}/{{$filterEleves->MATRICULE}}' class='btn btn-primary w-40'>Paiement</a>
-                      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Suspendre</button> 
-                      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo $filterEleves->MATRICULE; ?>">Suspendre</button> 
+                      <div class="modal fade" id="exampleModal<?php echo $filterEleves->MATRICULE; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">
@@ -72,12 +72,12 @@
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                              <form action="{{ url('supprimercontrat/'.$filterEleves->MATRICULE)}}" method="post">
+                              <form action="{{ url('supprimercontrat')}}" method="post">
                                 @csrf
                                 @method('DELETE')
-                                {{-- <a href='/admin/deletecashier/{{$eleves->MATRICULE}}' class='btn btn-danger w-50'>Suspendre</a> --}}
-                                <input type="submit" class="btn btn-danger" value="Suspendre">
-                              </form> 
+                                <input type="hidden" name="MATRICULE" value="<?php echo $filterEleves->MATRICULE; ?>">
+                                <input type="submit" class="btn btn-danger" value="Confirmer">
+                              </form>  
                             </div>
                           </div>
                         </div>
