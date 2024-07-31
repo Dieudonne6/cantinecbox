@@ -139,7 +139,6 @@ Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);
 
 Route::get('/paiementeleve', [PagesController::class, 'paiementeleve']);
 
-Route::get('/groupe', [PagesController::class, 'groupe']);
 Route::get('/duplicatainscription/{elevyo}',[ClassesController::class,'duplicatainscription']);
 Route::get('/majpaiementeleve', [PagesController::class, 'majpaiementeleve']);
 Route::get('/photos', [PagesController::class, 'photos']);
@@ -169,4 +168,12 @@ Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite']
 // Controller GestionclasseController
 
 Route::get('/groupes', [GestionclasseController::class, 'groupes']);
+Route::get('/groupes/{libelle}/classes', [GestionclasseController::class, 'ClassesParGroupe']);
+Route::get('/afficherTouteClasse', [GestionclasseController::class, 'afficherTouteClasse']);
+Route::post('/groupes/{libelle}/classes', [GestionclasseController::class, 'ajouterClasse']);
+Route::delete('/groupes/{libelle}/classes/{id}', [GestionclasseController::class, 'supprimerClasse']);
+Route::delete('/supprimergroupe/{id}', [GestionclasseController::class, 'supprimergroupe']);
+Route::get('/groupe', [GestionclasseController::class, 'groupe']);
+Route::post('/ajoutergroupe', [GestionclasseController::class, 'ajoutergroupe']);
+Route::delete('/suppgroupe/{id}', [GestionclasseController::class, 'suppGroupe']);
 

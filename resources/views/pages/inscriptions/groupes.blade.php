@@ -36,68 +36,101 @@
                     margin-left: auto;
                 }
             </style>
-        <div class="card-body">
-            <h4 class="card-title">Liste des groupes</h4>
-            <table id="classTable">
-                <thead>
-                    <tr>
-                        <th>Groupes</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Ens. Général</td>
-                        <td>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modifgroup">
-                                Modifier
-                            </button>
-                            <button type="button" class="btn btn-danger">Supprimer</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Ens. Primaire</td>
-                        <td>
-                            <button type="button" class="btn btn-primary">Modifier</button>
-                            <button type="button" class="btn btn-danger">Supprimer</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Ens. Maternelle</td>
-                        <td>
-                            <button type="button" class="btn btn-primary">Modifier</button>
-                            <button type="button" class="btn btn-danger">Supprimer</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        
-        </div>
+      <div class="card-body">
+            @if (session('success'))
+                <div id="statusAlert" class="alert alert-success btn-primary">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
+            @if (session('error'))
+                <div id="statusAlert" class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+        <h4 class="card-title">Liste des groupes</h4>
+        <table id="classTable">
+            <thead>
+                <tr>
+                    <th>Groupes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($listegroupe as $listegroupe)
+                <tr>
+                    <td>{{ $listegroupe->LibelleGroupe }}</td>
+                    <td>
+                        <a type="button" class="btn btn-primary" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#modifgroup"
+                        data-libelle="{{ $listegroupe->LibelleGroupe }}"
+                        onclick="openModal(this)">
+                         Modifier
+                     </a>
+
+                     <form action="/supprimergroupe/{{ $listegroupe->id }}" method="POST"  onsubmit="return confirmDelete()" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                     {{-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModaldelete<?php echo $listegroupe->id; ?>">Supprimer</button>  --}}
+              
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
         </div>
     </div>
 </div>
+
+{{-- modal de confirmation de suppression --}}
+
+<div class="modal fade" id="exampleModaldelete<?php echo $listegroupe->id; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation de suppression</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Êtes-vous sûr de vouloir supprimer ce contrat ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <form action="{{ url('/supprimergroupe')}}" method="post">
+            @csrf
+            @method('DELETE')
+            <input type="hidden" name="idtype" value="<?php echo $listegroupe->id; ?>">
+            <input type="submit" class="btn btn-danger" value="Confirmer">
+          </form>  
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!-- Modal modification groupes-->
 <div class="modal fade" id="modifgroup" tabindex="-1" aria-labelledby="modifgroupLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
+                <h5 class="modal-title" id="modifgroupTitle">Modifier le groupe</h5>
                 <button type="button" class="btn-close p-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="card">
                     <div class="row">
                         <div class="form-group w-50 mb-6">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}" autocomplete="off">
+                            <input type="hidden" id="groupeLibelle" name="groupeLibelle" value="">
                             <select class="js-example-basic-multiple w-100 select2-hidden-accessible" id="classSelect" name="classes" tabindex="-1" aria-hidden="true">
                                 <option value="">Sélectionner la classe</option>
-                                @foreach(['CE1A', 'CE1B', 'CE1C', 'CE1S', 'CE2A', 'CE2B', 'CE2C', 'CE2S', 'CIA', 'CIB', 'CIC', 'CIS', 'CM1A', 'CM1B', 'CM1C', 'CM1S', 'CM2A', 'CM2B', 'CM2C', 'CM2S', 'CPA', 'CPB', 'CPC', 'CPS', 'MAT1', 'MAT2', 'MAT2II', 'MAT3', 'MAT3II', 'PREMATER'] as $classe)
-                                    <option value="{{ $classe }}">{{ $classe }}</option>
-                                @endforeach
                             </select>
                         </div>
                         <div class="form-group w-50 mb-6">
-                            <button type="button" class="btn btn-primary">Ajouter une classe</button>
+                            <button type="button" id="ajouterClasse" class="btn btn-primary" onclick="ajouterClasse()">Ajouter une classe</button>
+                            {{-- <button type="button" id="ajouterClasse" class="btn btn-primary">Ajouter une classe</button> --}}
                         </div>
                     </div>
                     <table id="classTable">
@@ -107,13 +140,8 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach(['CE1A', 'CE1B', 'CE1C', 'CE1S', 'CE2A'] as $classe)
-                            <tr>
-                                <td>{{ $classe }}</td>
-                                <td><button type="button" class="btn btn-danger">Supprimer</button></td>
-                            </tr>
-                            @endforeach
+                        <tbody id="classTableBody">
+                            <!-- Les lignes de la table seront ajoutées ici -->
                         </tbody>
                     </table>
                 </div>
@@ -123,26 +151,322 @@
 </div>
 
 <script>
-    function filterTable() {
-        var input, filter, table, tr, td, i, j, txtValue;
-        input = document.getElementById("searchInput");
-        filter = input.value.toLowerCase();
-        table = document.getElementById("classTable");
-        tr = table.getElementsByTagName("tr");
+    document.addEventListener('DOMContentLoaded', function () {
+    var modal = document.getElementById('modifgroup');
+    var select = document.getElementById('classSelect');
+    var tableBody = document.getElementById('classTableBody');
+    var modalTitle = document.getElementById('modifgroupTitle');
 
-        for (i = 1; i < tr.length; i++) {
-            tr[i].style.display = "none"; // Hide all rows initially
-            td = tr[i].getElementsByTagName("td");
-            for (j = 0; j < td.length; j++) {
-                if (td[j]) {
-                    txtValue = td[j].textContent || td[j].innerText;
-                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                        tr[i].style.display = ""; // Show the row if a match is found
-                        break;
-                    }
-                }
+    modal.addEventListener('hidden.bs.modal', function () {
+        // Réinitialiser le select, le tableau et le titre lorsque le modal est caché
+        select.innerHTML = '<option value="">Sélectionner la classe</option>';
+        tableBody.innerHTML = '';
+        modalTitle.textContent = 'Modifier le groupe : '; // Réinitialiser le titre
+
+        // Forcer la suppression du backdrop
+        var backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+
+        // Retirer la classe `modal-open` du body
+        document.body.classList.remove('modal-open');
+        document.body.style.paddingRight = '';
+    });
+});
+
+function openModal(button) {
+    var groupeLibelle = button.getAttribute('data-libelle');
+    var modalTitle = document.getElementById('modifgroupTitle');
+    modalTitle.textContent = 'Modifier le groupe : ' + groupeLibelle;
+
+    // Effectuer une requête AJAX pour obtenir toutes les classes
+    fetch('/afficherTouteClasse')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(allClasses => {
+            var select = document.getElementById('classSelect');
+            select.innerHTML = '<option value="">Sélectionner la classe</option>'; // Réinitialiser le select
+
+            allClasses.forEach(function(classe) {
+                var option = document.createElement('option');
+                option.value = classe.CODECLAS;
+                option.textContent = classe.CODECLAS;
+                select.appendChild(option);
+            });
+
+            // Ensuite, obtenir les classes spécifiques au groupe
+            return fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes`);
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(classesByGroup => {
+            if (classesByGroup.message) {
+                console.log(classesByGroup.message);
+                return;
+            }
+
+            var tableBody = document.getElementById('classTableBody');
+            tableBody.innerHTML = ''; // Réinitialiser le tableau
+
+            classesByGroup.forEach(function(classe) {
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${classe.CODECLAS}</td>
+                        <td><button type="button" class="btn btn-danger" data-id="${classe.id}" onclick="supprimerClasse(this)">Supprimer</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Ouvrir le modal
+            var myModal = new bootstrap.Modal(document.getElementById('modifgroup'));
+            myModal.show();
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function ajouterClasse() {
+    var select = document.getElementById('classSelect');
+    var classCode = select ? select.value : null;
+    var modalTitle = document.getElementById('modifgroupTitle');
+    var groupeLibelle = modalTitle ? modalTitle.textContent.replace('Modifier le groupe : ', '').trim() : null;
+
+    if (!classCode) {
+        alert('Veuillez sélectionner une classe.');
+        return;
+    }
+
+    var csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+    if (!csrfTokenMeta) {
+        console.error('Le token CSRF est manquant.');
+        alert('Le token CSRF est manquant.'); 
+        return;
+    }
+
+    var csrfToken = csrfTokenMeta.getAttribute('content');
+
+    fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({ classCode: classCode })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => {
+                // throw new Error(data.message || 'Erreur lors de l\'ajout de la classe.');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert('Classe ajoutée avec succès !');
+
+        // Réinitialiser le modal
+        var modal = document.getElementById('modifgroup');
+        if (modal) {
+            var myModal = bootstrap.Modal.getInstance(modal);
+            if (myModal) {
+                myModal.hide();
             }
         }
+
+        // Recharger les données du groupe
+        openModal(document.querySelector('button[data-libelle="' + encodeURIComponent(groupeLibelle) + '"]'));
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Erreur: ' + error.message);
+    });
+}
+
+
+function supprimerClasse(button) {
+    var id = button.getAttribute('data-id');
+    var groupeLibelle = document.getElementById('modifgroupTitle').textContent.replace('Modifier le groupe : ', '').trim();
+
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette classe ?')) {
+        fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Afficher le message de succès
+            alert(data.message);  // Assurez-vous que la réponse contient 'message'
+
+            // Fermer le modal
+            var modal = document.getElementById('modifgroup');
+            var myModal = bootstrap.Modal.getInstance(modal);
+            myModal.hide();
+
+            // Recharger les données du groupe
+            openModal(document.querySelector('button[data-libelle="' + encodeURIComponent(groupeLibelle) + '"]'));
+        })
+        .catch(error => console.error('Error:', error));
     }
+}
+
+function confirmDelete() {
+        return confirm('Êtes-vous sûr de vouloir supprimer ce groupe?');
+    }
+
+
+
+{{-- <script>document.addEventListener('DOMContentLoaded', function () {
+    var modal = document.getElementById('modifgroup');
+    var select = document.getElementById('classSelect');
+    var tableBody = document.getElementById('classTableBody');
+    var modalTitle = document.getElementById('modifgroupTitle');
+    var ajouterClasseBtn = document.getElementById('ajouterClasse');
+
+    modal.addEventListener('hidden.bs.modal', function () {
+        // Réinitialiser le select, le tableau et le titre lorsque le modal est caché
+        select.innerHTML = '<option value="">Sélectionner la classe</option>';
+        tableBody.innerHTML = '';
+        modalTitle.textContent = 'Modifier le groupe : '; // Réinitialiser le titre
+
+        // Forcer la suppression du backdrop
+        var backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+
+        // Retirer la classe `modal-open` du body
+        document.body.classList.remove('modal-open');
+        document.body.style.paddingRight = '';
+    });
+
+    ajouterClasseBtn.addEventListener('click', function () {
+        var selectedClass = select.value;
+        var groupeLibelle = document.getElementById('groupeLibelle').value;
+
+        if (!selectedClass || !groupeLibelle) {
+            alert('Veuillez sélectionner une classe et un groupe.');
+            return;
+        }
+
+        // Effectuer une requête AJAX pour ajouter la classe au groupe
+        fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                classCode: classCode
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.message) {
+                console.log(data.message);
+                return;
+            }
+
+            // Ajoutez la classe au tableau
+            var row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${selectedClass}</td>
+                <td><button type="button" class="btn btn-danger">Supprimer</button></td>
+            `;
+            tableBody.appendChild(row);
+
+            // Réinitialiser le select
+            select.value = '';
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+function openModal(button) {
+    var groupeLibelle = button.getAttribute('data-libelle');
+    var modalTitle = document.getElementById('modifgroupTitle');
+    modalTitle.textContent = 'Modifier le groupe : ' + groupeLibelle;
+
+    // Mettre à jour la valeur cachée du groupe
+    document.getElementById('groupeLibelle').value = groupeLibelle;
+
+    // Effectuer une requête AJAX pour obtenir toutes les classes
+    fetch('/afficherTouteClasse')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(allClasses => {
+            var select = document.getElementById('classSelect');
+            select.innerHTML = '<option value="">Sélectionner la classe</option>'; // Réinitialiser le select
+
+            allClasses.forEach(function(classe) {
+                var option = document.createElement('option');
+                option.value = classe.CODECLAS;
+                option.textContent = classe.CODECLAS;
+                select.appendChild(option);
+            });
+
+            // Ensuite, obtenir les classes spécifiques au groupe
+            return fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes`);
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(classesByGroup => {
+            if (classesByGroup.message) {
+                console.log(classesByGroup.message);
+                return;
+            }
+
+            var tableBody = document.getElementById('classTableBody');
+            tableBody.innerHTML = ''; // Réinitialiser le tableau
+
+            classesByGroup.forEach(function(classe) {
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${classe.CODECLAS}</td>
+                    <td><button type="button" class="btn btn-danger">Supprimer</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Ouvrir le modal
+            var myModal = new bootstrap.Modal(document.getElementById('modifgroup'));
+            myModal.show();
+        })
+        .catch(error => console.error('Error:', error));
+} --}}
+
+
+
 </script>
+
+
+
 @endsection
