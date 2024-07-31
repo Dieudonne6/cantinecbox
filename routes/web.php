@@ -173,3 +173,4 @@ Route::get('/groupes', [GestionclasseController::class, 'groupes']);
 
 Route::get('/typesclasses', [GestionclasseController::class, 'getclasse']);
 Route::put('/modifiertypesclasses', [GestionclasseController::class, 'updateTypeClasse']);
+Route::delete('/supprimertype', [GestionclasseController::class, 'deletetype']);
