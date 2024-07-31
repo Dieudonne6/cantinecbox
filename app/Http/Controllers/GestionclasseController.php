@@ -8,25 +8,30 @@ use App\Models\Typeclasse;
 
 class GestionclasseController extends Controller
 {
-      public function groupes(){
-        
-        return view('pages.inscriptions.groupes');
-    }
+  public function groupes(){
+    return view('pages.inscriptions.groupes');
+  }
 
-    public function series(Request $request){
-
-      $series = DB::table('series')->select('SERIE', 'LIBELSERIE')->get();
-
-      return view ('pages.inscriptions.series')->with('series', $series);
+  public function series(Request $request){
+    $series = DB::table('series')->select('SERIE', 'LIBELSERIE')->get();
+    return view ('pages.inscriptions.series')->with('series', $series);
   }
   
   public function savetypeclasse(Request $request){
     $typeclasse = new Typeclasse();
-    $typeclasse->TYPECLASSE = $request->input('TYPECLASSE');
-    $typeclasse->LibelleType = $request->input('LibelleType');
-    $typeclasse->OuiNonScolarite = 1;
-    $typeclasse->OuiNonNotes = 1;
-    $typeclasse->OuiNonStat = 1;
+    if(strtolower($request->input('LibelleType')) == "systeme"){
+      $typeclasse->TYPECLASSE = $request->input('TYPECLASSE');
+      $typeclasse->LibelleType = $request->input('LibelleType');
+      $typeclasse->OuiNonScolarite = 0;
+      $typeclasse->OuiNonNotes = 0;
+      $typeclasse->OuiNonStat = 0;
+    } else {
+      $typeclasse->TYPECLASSE = $request->input('TYPECLASSE');
+      $typeclasse->LibelleType = $request->input('LibelleType');
+      $typeclasse->OuiNonScolarite = 1;
+      $typeclasse->OuiNonNotes = 1;
+      $typeclasse->OuiNonStat = 1;
+    }
     $typeclasse->save();
     return back()->with('status','Enregistrer avec succes');
   }
@@ -41,10 +46,8 @@ class GestionclasseController extends Controller
       $typeclass->TYPECLASSE = $request->input('TYPECLASSE');
       $typeclass->LibelleType = $request->input('LibelleType');
       $typeclass->save();
-      
       return back()->with('status', 'Modifié avec succès');
     }
-    
     return back()->withErrors('Erreur lors de la modification.');
   }
   public function deletetype(Request $request)

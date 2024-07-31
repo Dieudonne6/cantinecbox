@@ -58,7 +58,6 @@
                     </div>
                   </div>
                 </div>
-                <button type="button" class="btn btn-secondary">Imprimer</button>  
                 <style>
                   table {
                     float: right;
