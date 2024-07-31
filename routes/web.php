@@ -74,8 +74,6 @@ Route::get('/profil', [PagesController::class, 'profil']);
 
 Route::get('/typesclasses', [PagesController::class, 'typesclasses']);
 
-Route::get('/series', [PagesController::class, 'series']);
-
 Route::get('/promotions', [PagesController::class, 'promotions']);
 
 Route::get('/creerprofil', [PagesController::class, 'creerprofil']);
@@ -101,7 +99,7 @@ Route::post('/logins', [PagesController::class, 'logins']);
 Route::get('/inscription', [EleveController::class, 'inscription']);
 Route::get('/etatpaiement', [ClassesController::class, 'etatpaiement'])->name('etatpaiement');
 Route::post('/traitementetatpaiement', [ClassesController::class, 'traitementetatpaiement'])->name('traitementetatpaiement');
-Route::delete('/supprimercontrat/{MATRICULE}', [ClassesController::class, 'supprimercontrat']);
+Route::delete('/supprimercontrat', [ClassesController::class, 'supprimercontrat']);
 Route::delete('/supprimerpaiement/{id_paiementcontrat}', [ClassesController::class, 'supprimerpaiement']);
 Route::get('/etatpaiement1', [ClassesController::class, 'etatpaiement1']);
 Route::get('/essaipdf', [ClassesController::class, 'essaipdf']);
@@ -166,6 +164,7 @@ Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite']
 
 
 // Controller GestionclasseController
+Route::post('/savetypeclasse', [GestionclasseController::class, 'savetypeclasse']);
 
 Route::get('/groupes', [GestionclasseController::class, 'groupes']);
 Route::get('/groupes/{libelle}/classes', [GestionclasseController::class, 'ClassesParGroupe']);
@@ -177,3 +176,7 @@ Route::get('/groupe', [GestionclasseController::class, 'groupe']);
 Route::post('/ajoutergroupe', [GestionclasseController::class, 'ajoutergroupe']);
 Route::delete('/suppgroupe/{id}', [GestionclasseController::class, 'suppGroupe']);
 
+Route::get('/series', [GestionclasseController::class, 'series']);
+Route::get('/typesclasses', [GestionclasseController::class, 'getclasse']);
+Route::put('/modifiertypesclasses', [GestionclasseController::class, 'updateTypeClasse']);
+Route::delete('/supprimertype', [GestionclasseController::class, 'deletetype']);
