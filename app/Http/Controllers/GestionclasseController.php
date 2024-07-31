@@ -60,7 +60,7 @@ class GestionclasseController extends Controller
   }
   public function updateTypeClasse(Request $request)
   {
-    $typeclass = Typeclasse::where('TYPECLASSE', $request->input('TYPECLASSE'))->first();
+    $typeclass = Typeclasse::find($request->idtype);
     if ($typeclass) {
       $typeclass->TYPECLASSE = $request->input('TYPECLASSE');
       $typeclass->LibelleType = $request->input('LibelleType');
@@ -71,5 +71,19 @@ class GestionclasseController extends Controller
     
     return back()->withErrors('Erreur lors de la modification.');
   }
+  public function deletetype(Request $request)
+  {
+    $deletetyp = Typeclasse::find($request->idtype);
+    if ($deletetyp) {
+      $deletetyp->delete();
+      return back()->with('status', 'Supprimé avec succès');
+    } 
+    return back()->withErrors('Erreur lors de la suppression.');
+  }
+  
+  // public function groupes(){
+    
+  //   return view('pages.inscriptions.groupes');
+  // } 
 
 }

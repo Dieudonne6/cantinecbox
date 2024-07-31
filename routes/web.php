@@ -175,3 +175,4 @@ Route::post('/saveserie', [GestionclasseController::class, 'saveserie']);
 
 Route::get('/typesclasses', [GestionclasseController::class, 'getclasse']);
 Route::put('/modifiertypesclasses', [GestionclasseController::class, 'updateTypeClasse']);
+Route::delete('/supprimertype', [GestionclasseController::class, 'deletetype']);
