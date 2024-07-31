@@ -64,7 +64,7 @@ class GestionclasseController extends Controller
     $deleteserie = Serie::find($request->idcycle);
     if ($deleteserie) {
       $deleteserie->delete();
-      return back()->with('status', 'Supprimé000 avec succès');
+      return back()->with('status', 'Supprimé avec succès');
     } 
     return back()->withErrors('Erreur lors de la suppression.');
   }
