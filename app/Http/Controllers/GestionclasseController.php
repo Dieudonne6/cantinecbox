@@ -15,6 +15,7 @@ class GestionclasseController extends Controller
 
     public function series(Request $request){
       $series = Serie::get();
+      // dd($series);
       return view ('pages.inscriptions.series')->with('series', $series);
   }
 
@@ -23,13 +24,18 @@ class GestionclasseController extends Controller
     $series->SERIE = $request->input('SERIE');
     $series->LIBELSERIE = $request->input('LIBELSERIE');
     $series->CYCLE = $request->input('CYCLE');
+
+    if (Serie::where('SERIE', $series->SERIE)->exists()) {
+    return back()->with('status', 'Cette série existe déjà.');
+  }
     $series->save();
+
     return back()->with('status', 'Enregistrer avec succès');
   }
 
   public function updateserie(Request $request){
 
-    $series = Serie::where('SERIE', $request->input('SERIE'))->first();
+    $series = Serie::find($request->idcycle);
     if ($series) {
       $series->SERIE = $request->input('SERIE');
       $series->LIBELSERIE = $request->input('LIBELSERIE');
@@ -41,6 +47,16 @@ class GestionclasseController extends Controller
 
     return back()->withErrors('Erreur lors de la modification.');
 
+  }
+
+  public function deleteserie(Request $request)
+  {
+    $deleteserie = Serie::find($request->idcycle);
+    if ($deleteserie) {
+      $deleteserie->delete();
+      return back()->with('status', 'Supprimé avec succès');
+    } 
+    return back()->withErrors('Erreur lors de la suppression.');
   }
 
   
@@ -86,4 +102,6 @@ class GestionclasseController extends Controller
   //   return view('pages.inscriptions.groupes');
   // } 
 
+
+  
 }
