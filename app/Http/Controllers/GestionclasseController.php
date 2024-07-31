@@ -1,12 +1,24 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
+use App\Models\Serie;
 use Illuminate\Http\Request;
 use App\Models\Typeclasse;
 
 class GestionclasseController extends Controller
 {
+      public function groupes(){
+        
+        return view('pages.inscriptions.groupes');
+    }
+
+    public function series(Request $request){
+
+      $series = DB::table('series')->select('SERIE', 'LIBELSERIE')->get();
+
+      return view ('pages.inscriptions.series')->with('series', $series);
+  }
   
   public function savetypeclasse(Request $request){
     $typeclasse = new Typeclasse();
@@ -45,8 +57,9 @@ class GestionclasseController extends Controller
     return back()->withErrors('Erreur lors de la suppression.');
   }
   
-  public function groupes(){
+  // public function groupes(){
     
-    return view('pages.inscriptions.groupes');
-  } 
+  //   return view('pages.inscriptions.groupes');
+  // } 
+
 }

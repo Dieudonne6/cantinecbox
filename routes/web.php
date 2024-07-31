@@ -74,8 +74,6 @@ Route::get('/profil', [PagesController::class, 'profil']);
 
 Route::get('/typesclasses', [PagesController::class, 'typesclasses']);
 
-Route::get('/series', [PagesController::class, 'series']);
-
 Route::get('/promotions', [PagesController::class, 'promotions']);
 
 Route::get('/creerprofil', [PagesController::class, 'creerprofil']);
@@ -171,6 +169,7 @@ Route::post('/savetypeclasse', [GestionclasseController::class, 'savetypeclasse'
 
 Route::get('/groupes', [GestionclasseController::class, 'groupes']);
 
+Route::get('/series', [GestionclasseController::class, 'series']);
 Route::get('/typesclasses', [GestionclasseController::class, 'getclasse']);
 Route::put('/modifiertypesclasses', [GestionclasseController::class, 'updateTypeClasse']);
 Route::delete('/supprimertype', [GestionclasseController::class, 'deletetype']);
