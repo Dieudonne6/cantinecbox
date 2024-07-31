@@ -3,6 +3,11 @@
 
 <div class="main-panel-10">
     <div class="content-wrapper">
+      @if(Session::has('status'))
+    <div id="statusAlert" class="alert alert-succes btn-primary">
+      {{ Session::get('status')}}
+    </div>
+    @endif
         
       {{--  --}}
       <div class="row">          
@@ -25,36 +30,33 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <form action="{{url('/saveserie')}}" method="POST">
+            @csrf
             <div class="form-group">
                 <div class="form-group row">
                     <div class="col-sm-4">
                       <div>
                           <label><strong>Série</strong> (Donner un code pour la série à créer [2 caractères]. Ex: C)</label>
-                          <input type="text" placeholder="" class="form-control">
+                          <input name="SERIE" type="text" placeholder="" class="form-control">
                       </div>
                     </div>
                     <div class="col-sm-4">
                       <div>
                           <label><strong>Libellé série</strong> (Donner le libellé de la série à créer. Ex: Série C)</label>
-                          <input type="text" placeholder="" class="form-control">
+                          <input name="LIBELSERIE" type="text" placeholder="" class="form-control">
                       </div>
                     </div>
                     <div class="col-sm-4">
                         <label><strong>Préciser le Cycle</strong></label>
-                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                            <option>1er Cycle</option>
-                            <option>2eme Cycle</option>
-                            <option>3eme Cycle</option>
-                            <option>Aucun</option>
-                        </select>
-                    </div>
+                        <input type="text" name="CYCLE" placeholder="" class="form-control">                    </div>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Enregistrer</button>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
         </div>
+      </form>
       </div>
     </div>
   </div>
@@ -96,6 +98,7 @@
                   <tr>
                     <th>Série</th>
                     <th>Libellé série</th>
+                    <th> Cycle</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -106,11 +109,16 @@
                   <tr>
                     <td>{{ $serie->SERIE }}</td>
                     <td>{{ $serie->LIBELSERIE }}</td>
+                    <td>{{$serie->CYCLE}}</td>
                     <td>
                         <div class="">
                             <!-- Button trigger modal -->
                             {{-- <a  class="btn btn-primary p-2 btn-sm" href="{{url('/modifierserie')}}">Modif</a> --}}
-                            <button type="button" class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal2"> Modifier</button>
+                            <button type="button" class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal2"
+                              data-serie="{{ $serie->SERIE }}"
+                              data-libelle= "{{$serie->LIBELSERIE}}"
+                              data-cycle="{{$serie->CYCLE}}">
+                              Modifier</button>
   
                             <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Supprimer
                               {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
@@ -138,38 +146,56 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+            <form id="editserie" action="{{url('/updateserie')}}" method="POST">
+              @csrf
+              @method('PUT')
+              <input type="hidden" name="SERIE" id="edit-id">
               <div class="form-group">
                   <div class="form-group row">
                       <div class="col-sm-4">
                         <div>
                             <label><strong>Série</strong> (Donner un code pour la série à créer [2 caractères]. Ex: C)</label>
-                            <input type="text" placeholder="" class="form-control">
+                            <input type="text" name="SERIE" id="edit-serie" class="form-control">
                         </div>
                       </div>
                       <div class="col-sm-4">
                         <div>
                             <label><strong>Libellé série</strong> (Donner le libellé de la série à créer. Ex: Série C)</label>
-                            <input type="text" placeholder="" class="form-control">
+                            <input type="text" name="LIBELSERIE" id="edit-libelserie" class="form-control">
                         </div>
                       </div>
                       <div class="col-sm-4">
                           <label><strong>Préciser le Cycle</strong></label>
-                          <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                              <option>1er Cycle</option>
-                              <option>2eme Cycle</option>
-                              <option>3eme Cycle</option>
-                              <option>Aucun</option>
-                          </select>
+                          <input name="CYCLE" id="edit-cycle" class="form-control">
                       </div>
                   </div>
               </div>
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-primary">Enregistrer</button>
+              <button type="submit" class="btn btn-primary">Enregistrer</button>
               <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
           </div>
+        </form>
         </div>
       </div>
     </div>
 
+    <script>
+      var exampleModal2 = document.getElementById('exampleModal2');
+         exampleModal2.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var serie = button.getAttribute('data-serie');
+        var libelserie = button.getAttribute('data-libelserie');
+        var cycle = button.getAttribute('data-cycle');
+        
+        var modalSerieInput = document.getElementById('edit-serie');
+        var modalLibelserieInput = document.getElementById('edit-libelserie');
+        var modalCycleInput = document.getElementById('edit-cycle');
+        
+        modalSerieInput.value = serie;
+        modalLibelserieInput.value = libelserie;
+        modalCycleInput.value = cycle;
+      });
+      
+    </script>
 @endsection

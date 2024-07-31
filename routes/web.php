@@ -170,5 +170,8 @@ Route::post('/savetypeclasse', [GestionclasseController::class, 'savetypeclasse'
 Route::get('/groupes', [GestionclasseController::class, 'groupes']);
 
 Route::get('/series', [GestionclasseController::class, 'series']);
+Route::put('/updateserie', [GestionclasseController::class, 'updateserie']);
+Route::post('/saveserie', [GestionclasseController::class, 'saveserie']);
+
 Route::get('/typesclasses', [GestionclasseController::class, 'getclasse']);
 Route::put('/modifiertypesclasses', [GestionclasseController::class, 'updateTypeClasse']);

@@ -14,11 +14,35 @@ class GestionclasseController extends Controller
     }
 
     public function series(Request $request){
-
-      $series = DB::table('series')->select('SERIE', 'LIBELSERIE')->get();
-
+      $series = Serie::get();
       return view ('pages.inscriptions.series')->with('series', $series);
   }
+
+  public function saveserie(Request $request){
+    $series = new Serie();
+    $series->SERIE = $request->input('SERIE');
+    $series->LIBELSERIE = $request->input('LIBELSERIE');
+    $series->CYCLE = $request->input('CYCLE');
+    $series->save();
+    return back()->with('status', 'Enregistrer avec succès');
+  }
+
+  public function updateserie(Request $request){
+
+    $series = Serie::where('SERIE', $request->input('SERIE'))->first();
+    if ($series) {
+      $series->SERIE = $request->input('SERIE');
+      $series->LIBELSERIE = $request->input('LIBELSERIE');
+      $series->CYCLE = $request->input('CYCLE');
+      $series->save();
+      
+      return back()->with('status', 'Modifié avec succès');
+    }
+
+    return back()->withErrors('Erreur lors de la modification.');
+
+  }
+
   
   public function savetypeclasse(Request $request){
     $typeclasse = new Typeclasse();
