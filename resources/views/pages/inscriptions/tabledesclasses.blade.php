@@ -9,12 +9,7 @@
           <a type="button" class="btn btn-primary" href="{{url('/enrclasse')}}">Nouveau</a>
           <a type="button" class="btn btn-primary" href="{{url('/groupe')}}">Groupe</a>
           <button type="button" class="btn btn-secondary">Imprimer</button><br>
-          
-          {{-- </div> --}}
-          
-          {{-- <h5 style="text-align: center; color: rgb(188, 64, 64)">Scolarite</h5> --}}
           <div class="table-responsive pt-3">
-            
             <table id="myTable" class="table table-bordered">
               <thead>
                 <tr>
@@ -30,7 +25,6 @@
                 </tr>
               </thead>
               <tbody>
-                
                 <tr>
                   <td>CIS</td>
                   <td>CI/SOIR</td>
@@ -52,44 +46,14 @@
                       </ul>
                     </div>
                   </td>
-                </tr>
-                
-                
-                <tr>
-                  <td>CIS</td>
-                  <td>CI/SOIR</td>
-                  <td>Cours du Soir</td>
-                  <td>CI</td>
-                  <td>0</td>
-                  <td>Aucun</td>
-                  <td>Primaire</td>
-                  <td>2</td>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <!-- Button trigger modal -->
-                      <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="typcn typcn-th-list btn-icon-append"></i>  
-                      </button>
-                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
-                        <li><a class="dropdown-item" href="{{url('/paiementeleve')}}">Modifier</a></li>
-                        <li><a class="dropdown-item" href="{{url('/majpaiementeleve')}}">Supprimer</a></li>
-                        <li><a class="dropdown-item" href="{{url('/profil')}}">Modifier Groupe</a></li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-                
+                </tr> 
               </tbody>
             </table>
           </div>
           <br>
-          
         </div>
       </div>
     </div>
-    
-    
-    
     <!-- Modal -->
     <div class="modal fade" id="modifgroupe" tabindex="-1" aria-labelledby="modalnouveauLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -111,9 +75,6 @@
                 <option>Standard</option>
               </select>
             </div>
-            
-            
-            
           </div>
           <div class="modal-footer">
             {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button> --}}

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Serie;
 use Illuminate\Http\Request;
 use App\Models\Typeclasse;
+use App\Models\Classes;
+
 
 class GestionclasseController extends Controller
 {
@@ -59,7 +61,21 @@ class GestionclasseController extends Controller
     } 
     return back()->withErrors('Erreur lors de la suppression.');
   }
+
   
+   public function enregistrerclasse(Request $request){
+    $enrclasse = new Classes();
+    $enrclasse->CODECLAS = $request->input('nomclasse');
+    $enrclasse->LIBELCLAS = $request->input('libclasse');
+    $enrclasse->TypeCours = $request->input('typecours');
+    $enrclasse->TYPECLASSE = $request->input('typclasse');
+    $enrclasse->CYCLE = $request->input('cycle');
+    $enrclasse->SERIE = $request->input('typeserie');
+    $enrclasse->SERIE = $request->input('typeserie');
+
+    $enrclasse->save();
+    return back()->with('status','Enregistrer avec succes');
+  } 
   // public function groupes(){
     
   //   return view('pages.inscriptions.groupes');

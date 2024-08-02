@@ -14,6 +14,8 @@ use App\Models\Paramsfacture;
 use App\Models\User;
 use App\Models\Params2;
 use App\Models\Classes;
+use App\Models\Serie;
+use App\Models\Typeclasse;
 use App\Models\Duplicatafacture;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
@@ -316,8 +318,9 @@ class PagesController extends Controller
     public function enrclasse(){
         if(Session::has('account')){
         // $duplicatafactures = Duplicatafacture::all();
-
-        return view('pages.inscriptions.enregistrementclasse');
+        $typecla = Typeclasse::get();
+        $serie = Serie::get();
+        return view('pages.inscriptions.enregistrementclasse')->with('typecla', $typecla)->with('serie', $serie);
         } 
         return redirect('/');
 
