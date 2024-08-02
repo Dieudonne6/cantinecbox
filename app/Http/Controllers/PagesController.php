@@ -393,10 +393,6 @@ class PagesController extends Controller
         return view ('pages.inscriptions.typesclasses');
     }
 
-    public function series(){
-        return view ('pages.inscriptions.series');
-    }
-
     public function promotions(){
         return view ('pages.inscriptions.promotions');
     }

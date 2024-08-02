@@ -74,8 +74,6 @@ Route::get('/profil', [PagesController::class, 'profil']);
 
 Route::get('/typesclasses', [PagesController::class, 'typesclasses']);
 
-Route::get('/series', [PagesController::class, 'series']);
-
 Route::get('/promotions', [PagesController::class, 'promotions']);
 
 Route::get('/creerprofil', [PagesController::class, 'creerprofil']);
@@ -101,7 +99,7 @@ Route::post('/logins', [PagesController::class, 'logins']);
 Route::get('/inscription', [EleveController::class, 'inscription']);
 Route::get('/etatpaiement', [ClassesController::class, 'etatpaiement'])->name('etatpaiement');
 Route::post('/traitementetatpaiement', [ClassesController::class, 'traitementetatpaiement'])->name('traitementetatpaiement');
-Route::delete('/supprimercontrat/{MATRICULE}', [ClassesController::class, 'supprimercontrat']);
+Route::delete('/supprimercontrat', [ClassesController::class, 'supprimercontrat']);
 Route::delete('/supprimerpaiement/{id_paiementcontrat}', [ClassesController::class, 'supprimerpaiement']);
 Route::get('/etatpaiement1', [ClassesController::class, 'etatpaiement1']);
 Route::get('/essaipdf', [ClassesController::class, 'essaipdf']);
@@ -139,7 +137,6 @@ Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);
 
 Route::get('/paiementeleve', [PagesController::class, 'paiementeleve']);
 
-Route::get('/groupe', [PagesController::class, 'groupe']);
 Route::get('/duplicatainscription/{elevyo}',[ClassesController::class,'duplicatainscription']);
 Route::get('/majpaiementeleve', [PagesController::class, 'majpaiementeleve']);
 Route::get('/photos', [PagesController::class, 'photos']);
@@ -170,12 +167,16 @@ Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite']
 Route::post('/savetypeclasse', [GestionclasseController::class, 'savetypeclasse']);
 
 Route::get('/groupes', [GestionclasseController::class, 'groupes']);
+Route::get('/groupes/{libelle}/classes', [GestionclasseController::class, 'ClassesParGroupe']);
+Route::get('/afficherTouteClasse', [GestionclasseController::class, 'afficherTouteClasse']);
+Route::post('/groupes/{libelle}/classes', [GestionclasseController::class, 'ajouterClasse']);
+Route::delete('/groupes/{libelle}/classes/{id}', [GestionclasseController::class, 'supprimerClasse']);
+Route::delete('/supprimergroupe/{id}', [GestionclasseController::class, 'supprimergroupe']);
+Route::get('/groupe', [GestionclasseController::class, 'groupe']);
+Route::post('/ajoutergroupe', [GestionclasseController::class, 'ajoutergroupe']);
+Route::delete('/suppgroupe/{id}', [GestionclasseController::class, 'suppGroupe']);
 
 // Promotion
-// Route::get('/promotions', [GestionclasseController::class, 'indexpromo'])->name('promotions.index');
-// Route::post('/promotions', [GestionclasseController::class, 'store'])->name('promotions.store');
-// Route::put('/promotions/update/{CODEPROMO}', [GestionclasseController::class, 'update'])->name('promotions.update');
-// Route::delete('/promotions/{CODEPROMO}', [GestionclasseController::class, 'destroy'])->name('promotions.destroy');
 Route::get('/promotions', [GestionclasseController::class, 'index'])->name('promotions.index');
 Route::post('/promotions', [GestionclasseController::class, 'store'])->name('promotions.store');
 Route::put('/promotions/{codePromo}', [GestionclasseController::class, 'update'])->name('promotions.update');
@@ -185,3 +186,7 @@ Route::delete('/promotions/{codePromo}', [GestionclasseController::class, 'destr
 Route::get('/Acceuil', [GestionclasseController::class, 'indexEleves'])->name('eleves.index');
 Route::get('/eleve/{id}', [EleveController::class, 'Acceuil']);
 
+Route::get('/series', [GestionclasseController::class, 'series']);
+Route::get('/typesclasses', [GestionclasseController::class, 'getclasse']);
+Route::put('/modifiertypesclasses', [GestionclasseController::class, 'updateTypeClasse']);
+Route::delete('/supprimertype', [GestionclasseController::class, 'deletetype']);

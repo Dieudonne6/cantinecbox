@@ -1122,11 +1122,11 @@ public function essaipdf() {
                 }
                 
     
-                public function supprimercontrat($MATRICULE){
+                public function supprimercontrat(Request $request){
 
                         // $existingContrat = Contrat::where('eleve_contrat', $matricules)->exists();
 
-                    $contratss = Contrat::where('eleve_contrat', $MATRICULE)->first();
+                    $contratss = Contrat::where('eleve_contrat', $request->MATRICULE)->first();
                     if($contratss){
 
                         $idcontrat = $contratss['id_contrat'];
