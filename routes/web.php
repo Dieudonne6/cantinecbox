@@ -171,3 +171,17 @@ Route::post('/savetypeclasse', [GestionclasseController::class, 'savetypeclasse'
 
 Route::get('/groupes', [GestionclasseController::class, 'groupes']);
 
+// Promotion
+// Route::get('/promotions', [GestionclasseController::class, 'indexpromo'])->name('promotions.index');
+// Route::post('/promotions', [GestionclasseController::class, 'store'])->name('promotions.store');
+// Route::put('/promotions/update/{CODEPROMO}', [GestionclasseController::class, 'update'])->name('promotions.update');
+// Route::delete('/promotions/{CODEPROMO}', [GestionclasseController::class, 'destroy'])->name('promotions.destroy');
+Route::get('/promotions', [GestionclasseController::class, 'index'])->name('promotions.index');
+Route::post('/promotions', [GestionclasseController::class, 'store'])->name('promotions.store');
+Route::put('/promotions/{codePromo}', [GestionclasseController::class, 'update'])->name('promotions.update');
+Route::delete('/promotions/{codePromo}', [GestionclasseController::class, 'destroy'])->name('promotions.destroy');
+
+//Acceuil
+Route::get('/Acceuil', [GestionclasseController::class, 'indexEleves'])->name('eleves.index');
+Route::get('/eleve/{id}', [EleveController::class, 'Acceuil']);
+
