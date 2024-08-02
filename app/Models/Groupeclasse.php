@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Groupeclasse extends Model
 {
     use HasFactory;
+    public $timestamps = false;
+
     protected $table = 'groupeclasse';
 
 }

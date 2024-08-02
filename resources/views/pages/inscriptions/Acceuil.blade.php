@@ -3,7 +3,7 @@
 
 
 
-  <div class="main-panel-10">
+  <div class="main-panel-14">
     <div class="content-wrapper">
         
       {{--  --}}
@@ -106,59 +106,60 @@
       {{--  --}}
       <div class="row">
         <div class="col">
-                
           <div class="card">
             <div class="table-responsive" style="height: 300px; overflow: auto;">
-              <table class="table table-bordered table-striped" style="min-width: 600px; font-size: 10px;">
-                <thead>
-                  <tr>
-                    <th class="ml-5">Matricule</th>
-                    <th>Nom</th>
-                    <th>Prénoms</th>
-                    <th>Classe</th>
-                    <th>Sexe</th>
-                    <th>Red.</th>
-                    <th>Date nai</th>
-                    <th>Lieunais</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>#D1</td>
-                    <td>Consectetur adipisicing elit</td>
-                    <td>Beulah Cummings</td>
-                    <td>CIA</td>
-                    <td>M</td>
-                    <td class="checkboxes-select" rowspan="1" colspan="1" style="width: 18px;">
-                      <input type="checkbox" class="form-check-input-center">
-                    </td>
-                    <td>05/06/2022</td>
-                    <td>Cotonou</td>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary p-2 btn-sm btn-icon-text mr-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                          <i class="typcn typcn-eye btn-icon-append"></i>                          
-                        </button>
-                        <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="typcn typcn-th-list btn-icon-append"></i>  
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
-                          <li><a class="dropdown-item" href="#">Supprimer</a></li>
-                          <li><a class="dropdown-item" href="{{url('/modifiereleve')}}">Modifier</a></li>
-                          <li><a class="dropdown-item" href="{{url('/paiementeleve')}}">Paiement</a></li>
-                          <li><a class="dropdown-item" href="{{url('/majpaiementeleve')}}">Maj Paie</a></li>
-                          <li><a class="dropdown-item" href="{{url('/profil')}}">Profil</a></li>
-                          <li><a class="dropdown-item" href="{{ url('/echeancier')}}">Echéance</a></li>
-                          <li><a class="dropdown-item" href="#">Cursus</a></li>
-                        </ul>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                <table class="table table-bordered table-striped" style="min-width: 600px; font-size: 10px;">
+                    <thead>
+                        <tr>
+                            <th class="ml-5">Matricule</th>
+                            <th>Nom</th>
+                            <th>Prénoms</th>
+                            <th>Classe</th>
+                            <th>Sexe</th>
+                            <th>Red.</th>
+                            <th>Date nai</th>
+                            <th>Lieunais</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($eleves as $eleve)
+                            <tr>
+                                <td>{{ $eleve->MATRICULE }}</td>
+                                <td>{{ $eleve->NOM }}</td>
+                                <td>{{ $eleve->PRENOM }}</td>
+                                <td>{{ $eleve->CODECLAS }}</td>
+                                <td>{{ $eleve->SEXE }}</td>
+                                <td class="checkboxes-select" rowspan="1" colspan="1" style="width: 18px;">
+                                    <input type="checkbox" class="form-check-input-center" {{ $eleve->Reduction ? 'checked' : '' }}>
+                                </td>
+                                <td>{{ $eleve->DATENAIS }}</td>
+                                <td>{{ $eleve->LIEUNAIS }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-primary p-2 btn-sm btn-icon-text mr-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            <i class="typcn typcn-eye btn-icon-append"></i>                          
+                                        </button>
+                                        <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="typcn typcn-th-list btn-icon-append"></i>  
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
+                                            <li><a class="dropdown-item" href="#">Supprimer</a></li>
+                                            <li><a class="dropdown-item" href="{{url('/modifiereleve')}}">Modifier</a></li>
+                                            <li><a class="dropdown-item" href="{{url('/paiementeleve')}}">Paiement</a></li>
+                                            <li><a class="dropdown-item" href="{{url('/majpaiementeleve')}}">Maj Paie</a></li>
+                                            <li><a class="dropdown-item" href="{{url('/profil')}}">Profil</a></li>
+                                            <li><a class="dropdown-item" href="{{ url('/echeancier')}}">Echéance</a></li>
+                                            <li><a class="dropdown-item" href="#">Cursus</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-          </div>
+        </div>
         </div>
     </div>
   </div>
