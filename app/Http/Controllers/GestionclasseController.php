@@ -228,16 +228,33 @@ public function suppGroupe($id)
     $enrclasse->TYPECLASSE = $request->input('typclasse');
     $enrclasse->CYCLE = $request->input('cycle');
     $enrclasse->SERIE = $request->input('typeserie');
-    $enrclasse->SERIE = $request->input('typeserie');
-
+    $enrclasse->CODEPROMO = $request->input('typepromo');
+    $enrclasse->Niveau = $request->input('numero');
+    $enrclasse->TYPEENSEIG = $request->input('typeensei');
     $enrclasse->save();
     return back()->with('status','Enregistrer avec succes');
   } 
-  // public function groupes(){
-    
+  public function gettabledesclasses(){
+    // $classes = Classe::with('serie')->get();
 
-  //   return view('pages.inscriptions.groupes');
-  // } 
+    $classes = DB::table('classes')
+            ->join('series', 'classes.SERIE', '=', 'series.SERIE')
+            ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
+            // ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
+            ->select(
+                'classes.*',
+                'series.LIBELSERIE as serie_libelle',
+                'typeclasses.LibelleType as typeclasse_LibelleType',
+                // 'series.LIBELSERIE as serie_libelle'
+            )
+            ->get();
+
+ 
+    // dd($idserie);
+
+    return view('pages.inscriptions.tabledesclasses', compact('classes'));
+
+  }
 
   //Promotion
   public function index()

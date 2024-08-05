@@ -14,8 +14,11 @@ use App\Models\Paramsfacture;
 use App\Models\User;
 use App\Models\Params2;
 use App\Models\Classes;
+use App\Models\Promo;
 use App\Models\Serie;
 use App\Models\Typeclasse;
+use App\Models\Typeenseigne;
+
 use App\Models\Duplicatafacture;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
@@ -294,7 +297,14 @@ class PagesController extends Controller
         } 
         return redirect('/');
     } 
+    public function modifierclasse(){
+        if(Session::has('account')){
+        // $duplicatafactures = Duplicatafacture::all();
 
+        return view('pages.inscriptions.modifierclasse');
+        } 
+        return redirect('/');
+    } 
     public function majpaiementeleve(){
         if(Session::has('account')){
         // $duplicatafactures = Duplicatafacture::all();
@@ -320,7 +330,9 @@ class PagesController extends Controller
         // $duplicatafactures = Duplicatafacture::all();
         $typecla = Typeclasse::get();
         $serie = Serie::get();
-        return view('pages.inscriptions.enregistrementclasse')->with('typecla', $typecla)->with('serie', $serie);
+        $promo = Promo::get();
+        $typeenseigne = Typeenseigne::get();
+        return view('pages.inscriptions.enregistrementclasse')->with('typecla', $typecla)->with('serie', $serie)->with('promo', $promo)->with('typeenseigne', $typeenseigne);
         } 
         return redirect('/');
 

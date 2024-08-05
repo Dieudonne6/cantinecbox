@@ -9,7 +9,7 @@
     @endif
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Enregistrement des classes</h4>
+        <h4 class="card-title">Modifier les classes</h4>
         <form  action="{{url('enregistrerclasse')}}" method="POST">
           {{csrf_field()}}
           <div class="form-group row">

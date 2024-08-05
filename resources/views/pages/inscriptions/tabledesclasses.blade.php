@@ -9,7 +9,12 @@
           <a type="button" class="btn btn-primary" href="{{url('/enrclasse')}}">Nouveau</a>
           <a type="button" class="btn btn-primary" href="{{url('/groupe')}}">Groupe</a>
           <button type="button" class="btn btn-secondary">Imprimer</button><br>
+          
+          {{-- </div> --}}
+          
+          {{-- <h5 style="text-align: center; color: rgb(188, 64, 64)">Scolarite</h5> --}}
           <div class="table-responsive pt-3">
+            
             <table id="myTable" class="table table-bordered">
               <thead>
                 <tr>
@@ -25,15 +30,19 @@
                 </tr>
               </thead>
               <tbody>
+
+                @foreach ($classes as $classe)
+                
                 <tr>
-                  <td>CIS</td>
-                  <td>CI/SOIR</td>
-                  <td>Cours du Soir</td>
-                  <td>CI</td>
-                  <td>0</td>
-                  <td>Aucun</td>
-                  <td>Primaire</td>
-                  <td>2</td>
+                  <td>{{ $classe->CODECLAS }}</td>
+                  <td>{{ $classe->LIBELCLAS }}</td>
+                  <td>{{ $classe->typeclasse_LibelleType }}</td>
+                  <td>{{ $classe->CODEPROMO }}</td>
+                  <td>{{ $classe->CYCLE }}</td>
+                  {{-- <td>{{ ($classe->serie)->LIBELSERIE }}</td> --}}
+                  <td>{{ $classe->serie_libelle }}</td>
+                  <td>{{ $classe->TYPEENSEIG }}</td>
+                  <td>{{ $classe->EFFECTIF }}</td>
                   <td>
                     <div class="d-flex align-items-center">
                       <!-- Button trigger modal -->
@@ -46,14 +55,21 @@
                       </ul>
                     </div>
                   </td>
-                </tr> 
+                </tr>
+
+                @endforeach
+                
               </tbody>
             </table>
           </div>
           <br>
+          
         </div>
       </div>
     </div>
+    
+    
+    
     <!-- Modal -->
     <div class="modal fade" id="modifgroupe" tabindex="-1" aria-labelledby="modalnouveauLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -75,6 +91,9 @@
                 <option>Standard</option>
               </select>
             </div>
+            
+            
+            
           </div>
           <div class="modal-footer">
             {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button> --}}
@@ -86,4 +105,3 @@
     </div>
   </div>
   @endsection
-  
