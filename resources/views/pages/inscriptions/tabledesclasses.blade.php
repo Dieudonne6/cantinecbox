@@ -9,12 +9,7 @@
           <a type="button" class="btn btn-primary" href="{{url('/enrclasse')}}">Nouveau</a>
           <a type="button" class="btn btn-primary" href="{{url('/groupe')}}">Groupe</a>
           <button type="button" class="btn btn-secondary">Imprimer</button><br>
-          
-          {{-- </div> --}}
-          
-          {{-- <h5 style="text-align: center; color: rgb(188, 64, 64)">Scolarite</h5> --}}
           <div class="table-responsive pt-3">
-            
             <table id="myTable" class="table table-bordered">
               <thead>
                 <tr>
@@ -59,17 +54,14 @@
 
                 @endforeach
                 
+                </tr> 
               </tbody>
             </table>
           </div>
           <br>
-          
         </div>
       </div>
     </div>
-    
-    
-    
     <!-- Modal -->
     <div class="modal fade" id="modifgroupe" tabindex="-1" aria-labelledby="modalnouveauLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -91,9 +83,6 @@
                 <option>Standard</option>
               </select>
             </div>
-            
-            
-            
           </div>
           <div class="modal-footer">
             {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button> --}}
