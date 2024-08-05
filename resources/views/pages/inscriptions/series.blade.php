@@ -107,7 +107,12 @@
                       </div>
                       <div class="col-sm-4">
                           <label><strong>Préciser le Cycle</strong></label>
-                          <input type="text" name="CYCLE" value="<?php echo $serie->CYCLE; ?>" placeholder="" id="edit-cycle" class="form-control">
+                          <select name="CYCLE" class="js-example-basic-multiple w-100">
+                            <option value="1">1er Cycle</option>
+                            <option value="2">2eme Cycle</option>
+                            <option value="3">3eme Cycle</option>
+                            <option value="0">Aucun</option>
+                        </select>
                       </div>
                   </div>
               </div>
@@ -183,8 +188,13 @@
                     </div>
                     <div class="col-sm-4">
                         <label><strong>Préciser le Cycle</strong></label>
-                        <input type="text" name="CYCLE" placeholder="" class="form-control">
-                    </div>
+                        <select name="CYCLE" class="js-example-basic-multiple w-100">
+                          <option value="1">1er Cycle</option>
+                          <option value="2">2eme Cycle</option>
+                          <option value="3">3eme Cycle</option>
+                          <option value="0">Aucun</option>
+                      </select>
+                     </div>
                 </div>
             </div>
         </div>

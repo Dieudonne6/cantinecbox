@@ -184,3 +184,6 @@ Route::delete('/supprimerserie', [GestionclasseController::class, 'deleteserie']
 Route::get('/typesclasses', [GestionclasseController::class, 'getclasse']);
 Route::put('/modifiertypesclasses', [GestionclasseController::class, 'updateTypeClasse']);
 Route::delete('/supprimertype', [GestionclasseController::class, 'deletetype']);
+
+
+Route::get('/tabledesclasses', [GestionclasseController::class, 'gettabledesclasses']);

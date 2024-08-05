@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Classesgroupeclass;
 use App\Models\Groupeclasse;
-use App\Models\Classes;
+use App\Models\Classe;
 use App\Models\Typeclasse;
 
 
@@ -118,6 +118,43 @@ class GestionclasseController extends Controller
   //   return view('pages.inscriptions.groupes');
   // } 
 
+  // public function gettableclasses(){
 
-  
+  //   $classes = new Classes();
+  //   $classes->CODECLAS = $request->input('CODECLAS');
+  //   $classes->LIBELCLAS = $request->input('LIBELCLAS');
+  //   $classes->TYPECLASSE = $request->input('TYPECLASSE');
+  //   $classes->CODEPROMO = $request->input('CODEPROMO');
+  //   $classes->CYCLE = $request->input('CYCLE');
+  //   $classes->SERIE = $request->input('SERIE');
+  //   $classes->TYPEENSEIG = $request->input('TYPEENSEIG');
+  //   $classes->EFFECTIF = $request->input('EFFECTIF');
+
+  //   $series->save();
+
+  //   return view('pages.inscriptions.tabledesclasses')->with('status', 'Enregistrer avec succès');
+  // }
+
+  public function gettabledesclasses(){
+    // $classes = Classe::with('serie')->get();
+
+    $classes = DB::table('classes')
+            ->join('series', 'classes.SERIE', '=', 'series.SERIE')
+            ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
+            // ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
+            ->select(
+                'classes.*',
+                'series.LIBELSERIE as serie_libelle',
+                'typeclasses.LibelleType as typeclasse_LibelleType',
+                // 'series.LIBELSERIE as serie_libelle'
+            )
+            ->get();
+
+ 
+    // dd($idserie);
+
+    return view('pages.inscriptions.tabledesclasses', compact('classes'));
+
+  }
+
 }

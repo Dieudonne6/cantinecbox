@@ -30,16 +30,19 @@
                 </tr>
               </thead>
               <tbody>
+
+                @foreach ($classes as $classe)
                 
                 <tr>
-                  <td>CIS</td>
-                  <td>CI/SOIR</td>
-                  <td>Cours du Soir</td>
-                  <td>CI</td>
-                  <td>0</td>
-                  <td>Aucun</td>
-                  <td>Primaire</td>
-                  <td>2</td>
+                  <td>{{ $classe->CODECLAS }}</td>
+                  <td>{{ $classe->LIBELCLAS }}</td>
+                  <td>{{ $classe->typeclasse_LibelleType }}</td>
+                  <td>{{ $classe->CODEPROMO }}</td>
+                  <td>{{ $classe->CYCLE }}</td>
+                  {{-- <td>{{ ($classe->serie)->LIBELSERIE }}</td> --}}
+                  <td>{{ $classe->serie_libelle }}</td>
+                  <td>{{ $classe->TYPEENSEIG }}</td>
+                  <td>{{ $classe->EFFECTIF }}</td>
                   <td>
                     <div class="d-flex align-items-center">
                       <!-- Button trigger modal -->
@@ -53,31 +56,8 @@
                     </div>
                   </td>
                 </tr>
-                
-                
-                <tr>
-                  <td>CIS</td>
-                  <td>CI/SOIR</td>
-                  <td>Cours du Soir</td>
-                  <td>CI</td>
-                  <td>0</td>
-                  <td>Aucun</td>
-                  <td>Primaire</td>
-                  <td>2</td>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <!-- Button trigger modal -->
-                      <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="typcn typcn-th-list btn-icon-append"></i>  
-                      </button>
-                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
-                        <li><a class="dropdown-item" href="{{url('/paiementeleve')}}">Modifier</a></li>
-                        <li><a class="dropdown-item" href="{{url('/majpaiementeleve')}}">Supprimer</a></li>
-                        <li><a class="dropdown-item" href="{{url('/profil')}}">Modifier Groupe</a></li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
+
+                @endforeach
                 
               </tbody>
             </table>
