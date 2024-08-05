@@ -128,27 +128,7 @@ class GestionclasseController extends Controller
     $enrclasse->save();
     return back()->with('status','Enregistrer avec succes');
   } 
-  public function gettabledesclasses(){
-    // $classes = Classe::with('serie')->get();
-
-    $classes = DB::table('classes')
-            ->join('series', 'classes.SERIE', '=', 'series.SERIE')
-            ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
-            // ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
-            ->select(
-                'classes.*',
-                'series.LIBELSERIE as serie_libelle',
-                'typeclasses.LibelleType as typeclasse_LibelleType',
-                // 'series.LIBELSERIE as serie_libelle'
-            )
-            ->get();
-
  
-    // dd($idserie);
-
-    return view('pages.inscriptions.tabledesclasses', compact('classes'));
-
-  }
 
   //Promotion
   public function index()
