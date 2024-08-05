@@ -187,9 +187,16 @@ Route::get('/Acceuil', [GestionclasseController::class, 'indexEleves'])->name('e
 Route::get('/eleve/{id}', [EleveController::class, 'Acceuil']);
 
 Route::get('/series', [GestionclasseController::class, 'series']);
+Route::put('/modifierserie', [GestionclasseController::class, 'updateserie']);
+Route::post('/saveserie', [GestionclasseController::class, 'saveserie']);
+Route::delete('/supprimerserie', [GestionclasseController::class, 'deleteserie']);
+
 Route::get('/typesclasses', [GestionclasseController::class, 'getclasse']);
 Route::put('/modifiertypesclasses', [GestionclasseController::class, 'updateTypeClasse']);
 Route::delete('/supprimertype', [GestionclasseController::class, 'deletetype']);
 Route::post('/enregistrerclasse', [GestionclasseController::class, 'enregistrerclasse']);
 Route::put('/promotions/{codePromo}', [GestionclasseController::class, 'update'])->name('promotions.update');
 Route::get('/modifierclasse', [PagesController::class, 'modifierclasse']);
+
+
+Route::get('/tabledesclasses', [GestionclasseController::class, 'gettabledesclasses']);
