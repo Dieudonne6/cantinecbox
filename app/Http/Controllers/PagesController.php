@@ -325,18 +325,7 @@ class PagesController extends Controller
 
     }
 
-    public function enrclasse(){
-        if(Session::has('account')){
-        // $duplicatafactures = Duplicatafacture::all();
-        $typecla = Typeclasse::get();
-        $serie = Serie::get();
-        $promo = Promo::get();
-        $typeenseigne = Typeenseigne::get();
-        return view('pages.inscriptions.enregistrementclasse')->with('typecla', $typecla)->with('serie', $serie)->with('promo', $promo)->with('typeenseigne', $typeenseigne);
-        } 
-        return redirect('/');
 
-    }
 
     public function groupe(){
         if(Session::has('account')){

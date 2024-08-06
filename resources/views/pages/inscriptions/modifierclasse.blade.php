@@ -10,34 +10,36 @@
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">Modifier les classes</h4>
-        <form  action="{{url('enregistrerclasse')}}" method="POST">
-          {{csrf_field()}}
+        <form  action="{{url('modifieclasse/'.$typecla->CODECLAS)}}" method="POST">
+          @csrf
+          @method('PUT')
           <div class="form-group row">
+
             <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Nom classe</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" value="{{$typecla->CODECLAS}}" name="nomclasse" id="nomclasse"
+              <input type="text" class="form-control" value="{{ $typecla->CODECLAS }}" name="nomclasse" id="nomclasse"
               placeholder="Nom classe">
             </div>
           </div>
           <div class="form-group row">
             <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Libelle</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" name="libclasse"  value="{{$typecla->LIBELCLAS}}"  id="libclasse" placeholder="Libelle">
+               <input type="text" class="form-control" name="libclasse"  value="{{$typecla->LIBELCLAS}}"  id="libclasse" placeholder="Libelle">
             </div>
           </div>
-          {{-- <div class="form-group row">
+          <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Type Classe</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typclasse">
                 <option value="">Sélectionnez une classe</option>
-                @foreach ($typecla as $typecla)
-                  <option value="{{$typecla->TYPECLASSE}}">{{$typecla->LibelleType}}</option>
+                @foreach ($typeclah as $typeclat)
+                  <option value="{{$typeclat->TYPECLASSE}}">{{$typeclat->LibelleType}}</option>
                 @endforeach
               </select>
             </div>
-          </div> --}}
+          </div>
           
-          {{-- <div class="form-group row">
+          <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Enseignement</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typeensei">
@@ -47,24 +49,25 @@
                 @endforeach
               </select>
             </div>
-          </div> --}}
+          </div> 
           
-          {{-- <div class="form-group row">
+          <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Promotion</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typepromo">
                 <option value="">Sélectionnez une promotion</option>
+
                 @foreach ($promo as $promo)
                   <option value="{{$promo->CODEPROMO}}">{{$promo->LIBELPROMO}}</option>
                 @endforeach
               </select>
             </div>
-          </div> --}}
+          </div>
           
           <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">No d'ordre</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="No d'ordre" name="numero">
+              <input type="text" class="form-control" id="exampleInputUsername2" value="{{ $typecla->Niveau }}"   placeholder="No d'ordre" name="numero">
             </div>
           </div>
           
@@ -80,7 +83,7 @@
             </div> 
           </div>
           
-          {{-- <div class="form-group row">
+          <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Serie</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typeserie">
@@ -90,7 +93,7 @@
                 @endforeach
               </select>
             </div>
-          </div> --}}
+          </div>
           
           <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Cours Jour/Soir</label>
@@ -101,7 +104,7 @@
               </select>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Enregistrer</button>
+          <button type="submit" class="btn btn-primary">Modifier</button>
           <button type="button" class="btn btn-danger">Annuler</button>
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donnefinanciere">Donne financieres(Factures)</button>
       </form>
