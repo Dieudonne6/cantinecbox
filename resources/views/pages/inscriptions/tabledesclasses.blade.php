@@ -50,7 +50,7 @@
                         <i class="typcn typcn-th-list btn-icon-append"></i>  
                       </button>
                       <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
-                        <li><a class="dropdown-item" href="{{url('/enrclasse')}}">Modifier</a></li>
+                        <li><a class="dropdown-item" href="/modifierclasse/{{$classe->CODECLAS}}">Modifier</a></li>
                         <li><a class="dropdown-item" >Supprimer</a></li>
                       </ul>
                     </div>

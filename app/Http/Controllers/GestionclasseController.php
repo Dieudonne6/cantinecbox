@@ -235,5 +235,18 @@ class GestionclasseController extends Controller
 
   }
 
-
+  public function modifierclasse($CODECLAS){
+    $typecla = DB::table('classes')
+        ->join('series', 'classes.SERIE', '=', 'series.SERIE')
+        ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
+        ->select(
+            'classes.*',
+            'series.LIBELSERIE as serie_libelle',
+            'typeclasses.LibelleType as typeclasse_LibelleType'
+        )
+        ->where('classes.CODECLASS', '=', $CODECLAS) // Ajout de la condition where
+        ->get();
+    
+    return view('pages.inscriptions.modifierclasse')->with("typecla", $typecla);
+  }
 }

@@ -15,17 +15,17 @@
           <div class="form-group row">
             <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Nom classe</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control"  name="nomclasse" id="nomclasse"
+              <input type="text" class="form-control" value="{{$typecla->CODECLAS}}" name="nomclasse" id="nomclasse"
               placeholder="Nom classe">
             </div>
           </div>
           <div class="form-group row">
             <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Libelle</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" name="libclasse" id="libclasse" placeholder="Libelle">
+              <input type="text" class="form-control" name="libclasse"  value="{{$typecla->LIBELCLAS}}"  id="libclasse" placeholder="Libelle">
             </div>
           </div>
-          <div class="form-group row">
+          {{-- <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Type Classe</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typclasse">
@@ -35,9 +35,9 @@
                 @endforeach
               </select>
             </div>
-          </div>
+          </div> --}}
           
-          <div class="form-group row">
+          {{-- <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Enseignement</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typeensei">
@@ -47,9 +47,9 @@
                 @endforeach
               </select>
             </div>
-          </div>
+          </div> --}}
           
-          <div class="form-group row">
+          {{-- <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Promotion</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typepromo">
@@ -59,7 +59,7 @@
                 @endforeach
               </select>
             </div>
-          </div>
+          </div> --}}
           
           <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">No d'ordre</label>
@@ -80,7 +80,7 @@
             </div> 
           </div>
           
-          <div class="form-group row">
+          {{-- <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Serie</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typeserie">
@@ -90,7 +90,7 @@
                 @endforeach
               </select>
             </div>
-          </div>
+          </div> --}}
           
           <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Cours Jour/Soir</label>
