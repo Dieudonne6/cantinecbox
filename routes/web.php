@@ -184,8 +184,9 @@ Route::delete('/promotions/{codePromo}', [GestionclasseController::class, 'destr
 
 //Acceuil
 Route::get('/Acceuil', [GestionclasseController::class, 'indexEleves'])->name('eleves.index');
-Route::get('/eleve/{id}', [EleveController::class, 'Acceuil']);
 
+
+//Series
 Route::get('/series', [GestionclasseController::class, 'series']);
 Route::put('/modifierserie', [GestionclasseController::class, 'updateserie']);
 Route::post('/saveserie', [GestionclasseController::class, 'saveserie']);

@@ -16,6 +16,7 @@ use App\Models\Typeenseigne;
 
 use App\Models\Promo;
 use App\Models\Eleve;
+use App\Models\Notes;
 
 class GestionclasseController extends Controller
 {
@@ -186,13 +187,15 @@ class GestionclasseController extends Controller
       return redirect()->route('promotions.index');
   }
 
-  //Acceuil
   public function indexEleves()
-  {
-      $eleves = Eleve::all(); // Récupère tous les élèves
+{
+    $eleves = Eleve::all();
+    
+        // Récupérer les élèves avec leurs notes
+        $eleves = Eleve::with('notes')->get();
 
-      return view('pages.inscriptions.Acceuil', compact('eleves')); // Passe les données à la vue 'Acceuil'
-  }
+    return view('pages.inscriptions.Acceuil', compact('eleves'));
+}
 
   //   return view('pages.inscriptions.groupes');
   // } 

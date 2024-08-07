@@ -15,66 +15,68 @@
                                 </button>
                                 <!-- Add Promotion Modal -->
                                 <div class="modal fade" id="addPromotionModal" tabindex="-1" aria-labelledby="addPromotionModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
+                                    <div class="modal-dialog modal-md">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h1 class="modal-title fs-5" id="addPromotionModalLabel">Fiche d'une promotion</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <div class="card-body">
-                                                    <form method="POST" action="{{ route('promotions.store') }}">
-                                                        @csrf
-                                                        <div class="form-group row">
-                                                            <div class="col-sm-6">
-                                                                <label for="codePromotion"><strong>Code promotion </strong>(4 caractères max. Ex: TLE)</label>
-                                                                <input type="text" id="codePromotion" name="codePromotion" class="form-control" required>
-                                                                @error('codePromotion')
-                                                                    <div class="alert alert-danger">{{ $message }}</div>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="col-sm-6">
-                                                                <label for="libellePromotion"><strong>Libellé promotion</strong> (Ex: Terminale)</label>
-                                                                <input type="text" id="libellePromotion" name="libellePromotion" class="form-control" required>
-                                                                @error('libellePromotion')
-                                                                    <div class="alert alert-danger">{{ $message }}</div>
-                                                                @enderror
-                                                            </div>
+                                                <form method="POST" action="{{ route('promotions.store') }}">
+                                                    @csrf
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-6 mb-1">
+                                                            <label for="codePromotion"><strong>Code promotion </strong></label>
+                                                            <p>(4 caractères max. Ex: TLE)</p>
+                                                            <input type="text" id="codePromotion" name="codePromotion" class="form-control" required>
+                                                            @error('codePromotion')
+                                                                <div class="alert alert-danger">{{ $message }}</div>
+                                                            @enderror
                                                         </div>
-                                                        <div class="form-group row">
-                                                            <div class="col-sm-6">
-                                                                <label for="Niveau"><strong>Niveau dans la hiérarchie </strong>(Ex: 1 pour 6eme, 7 pour Tle)</label>
-                                                                <input type="number" id="Niveau" name="Niveau" class="form-control" required min="1" max="7">
-                                                                @error('Niveau')
-                                                                    <div class="alert alert-danger">{{ $message }}</div>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="col-sm-6">
-                                                                <label for="enseignement"><strong>Pour quel Enseignement</strong> (Choisir type d'enseignement)</label>
-                                                                <select id="enseignement" name="enseignement" class="form-control" required>
-                                                                    <option value="0">Préscolaire</option>
-                                                                    <option value="1">Primaire</option>
-                                                                    <option value="2">Général</option>
-                                                                    <option value="3">Technique</option>
-                                                                    <option value="4">Professionnel</option>
-                                                                    <option value="5">Supérieur</option>
-                                                                </select>
-                                                                @error('enseignement')
-                                                                    <div class="alert alert-danger">{{ $message }}</div>
-                                                                @enderror
-                                                            </div>
+                                                        <div class="col-sm-6 mb-1">
+                                                            <label for="libellePromotion"><strong>Libellé promotion</strong></label>
+                                                            <p>(Ex: Terminale)</p>
+                                                            <input type="text" id="libellePromotion" name="libellePromotion" class="form-control" required>
+                                                            @error('libellePromotion')
+                                                                <div class="alert alert-danger">{{ $message }}</div>
+                                                            @enderror
                                                         </div>
-                                                        <div class="modal-footer">
-                                                            <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-6 mb-1">
+                                                            <label for="Niveau"><strong>Niveau dans la hiérarchie </strong></label>
+                                                            <p>(Ex: 1 pour 6eme, 7 pour Tle)</p>
+                                                            <input type="number" id="Niveau" name="Niveau" class="form-control" required min="1" max="7">
+                                                            @error('Niveau')
+                                                                <div class="alert alert-danger">{{ $message }}</div>
+                                                            @enderror
                                                         </div>
-                                                    </form>
-                                                </div>
+                                                        <div class="col-sm-6 mb-1">
+                                                            <label for="enseignement"><strong>Pour quel Enseignement</strong></label>
+                                                            <p>(Choisir type d'enseignement)</p>
+                                                            <select id="enseignement" name="enseignement" class="form-control" required>
+                                                                <option value="0">Préscolaire</option>
+                                                                <option value="1">Primaire</option>
+                                                                <option value="2">Général</option>
+                                                                <option value="3">Technique</option>
+                                                                <option value="4">Professionnel</option>
+                                                                <option value="5">Supérieur</option>
+                                                            </select>
+                                                            @error('enseignement')
+                                                                <div class="alert alert-danger">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                
+                                                               
                                 <style>
                                     table {
                                         float: right;
@@ -117,7 +119,7 @@
                         
                                         <!-- Edit Promotion Modal -->
                                         <div class="modal fade" id="editPromotionModal{{ $promotion->CODEPROMO }}" tabindex="-1" aria-labelledby="editPromotionModalLabel{{ $promotion->CODEPROMO }}" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg">
+                                            <div class="modal-dialog modal-md">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="editPromotionModalLabel{{ $promotion->CODEPROMO }}">Modifier fiche d'une promotion</h1>
@@ -130,14 +132,16 @@
                                                                 @method('PUT')
                                                                 <div class="form-group row">
                                                                     <div class="col-sm-6">
-                                                                        <label for="editCodePromotion{{ $promotion->CODEPROMO }}"><strong>Code promotion </strong>(4 caractères max. Ex: TLE)</label>
+                                                                        <label for="editCodePromotion{{ $promotion->CODEPROMO }}"><strong>Code promotion</strong></label>
+                                                                        <p>(4 caractères max. Ex: TLE)</p>
                                                                         <input type="text" id="editCodePromotion{{ $promotion->CODEPROMO }}" name="codePromotion" class="form-control" value="{{ $promotion->CODEPROMO }}" required>
                                                                         @error('codePromotion')
                                                                             <div class="alert alert-danger">{{ $message }}</div>
                                                                         @enderror
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <label for="editLibellePromotion{{ $promotion->CODEPROMO }}"><strong>Libellé promotion</strong> (Ex: Terminale)</label>
+                                                                        <label for="editLibellePromotion{{ $promotion->CODEPROMO }}"><strong>Libellé promotion</strong></label>
+                                                                        <p>(Ex: Terminale)</p>
                                                                         <input type="text" id="editLibellePromotion{{ $promotion->CODEPROMO }}" name="libellePromotion" class="form-control" value="{{ $promotion->LIBELPROMO }}" required>
                                                                         @error('libellePromotion')
                                                                             <div class="alert alert-danger">{{ $message }}</div>
@@ -146,14 +150,16 @@
                                                                 </div>
                                                                 <div class="form-group row">
                                                                     <div class="col-sm-6">
-                                                                        <label for="editNiveauHierarchie{{ $promotion->CODEPROMO }}"><strong>Niveau dans la hiérarchie </strong>(Ex: 1 pour 6eme, 7 pour Tle)</label>
+                                                                        <label for="editNiveauHierarchie{{ $promotion->CODEPROMO }}"><strong>Niveau dans la hiérarchie</strong></label>
+                                                                        <p>(Ex: 1 pour 6eme, 7 pour Tle)</p>
                                                                         <input type="number" id="editNiveauHierarchie{{ $promotion->CODEPROMO }}" name="Niveau" class="form-control" value="{{ $promotion->Niveau }}" required min="1" max="7">
                                                                         @error('Niveau')
                                                                             <div class="alert alert-danger">{{ $message }}</div>
                                                                         @enderror
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <label for="editEnseignement{{ $promotion->CODEPROMO }}"><strong>Pour quel Enseignement</strong> (Choisir type d'enseignement)</label>
+                                                                        <label for="editEnseignement{{ $promotion->CODEPROMO }}"><strong>Pour quel Enseignement</strong></label>
+                                                                        <p>(Choisir type d'enseignement)</p>
                                                                         <select id="editEnseignement{{ $promotion->CODEPROMO }}" name="enseignement" class="form-control" required>
                                                                             <option value="0" {{ $promotion->TYPEENSEIG == 0 ? 'selected' : '' }}>Préscolaire</option>
                                                                             <option value="1" {{ $promotion->TYPEENSEIG == 1 ? 'selected' : '' }}>Primaire</option>
@@ -177,6 +183,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        
                         
                                         <button type="button" class="btn btn-danger p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deletePromotionModal{{ $promotion->CODEPROMO }}">
                                             Supprimer
