@@ -12,172 +12,65 @@ use App\Models\Classesgroupeclass;
 use App\Models\Groupeclasse;
 use App\Models\Classes;
 use App\Models\Typeclasse;
+use App\Models\Typeenseigne;
+
 use App\Models\Promo;
 use App\Models\Eleve;
 use App\Models\Notes;
 
-
-
-
 class GestionclasseController extends Controller
 {
       public function groupes(){
-        $listegroupe = Groupeclasse::all();
-
-        // $listeclasse = Classesgroupeclass::where('LibelleGroupe', '=', $libelle);
-        // dd($listegroupe);
-        return view('pages.inscriptions.groupes')->with('listegroupe' , $listegroupe);
-    } 
-
-    public function ClassesParGroupe($libelle)
-    {
-        try {
-            // Supposons que votre table ClasseGroupeClass a une colonne 'LibelleGroupe'
-            $classes = Classesgroupeclass::where('LibelleGroupe', $libelle)->get();
-
-            // Vérifiez les données récupérées
-            if ($classes->isEmpty()) {
-                return response()->json(['message' => 'Aucune classe trouvée pour ce groupe'], 404);
-            }
-
-            return response()->json($classes);
-        } catch (\Exception $e) {
-            // Log the error
-            \Log::error($e->getMessage());
-            return response()->json(['message' => 'Erreur interne du serveur'], 500);
-        }
+        
+        return view('pages.inscriptions.groupes');
     }
 
-    public function afficherTouteClasse()
-    {
-        $classes = Classes::all();
-        // dd($allClasses);
-        return response()->json($classes);
-    }
-
-    public function ajouterClasse(Request $request, $libelle)
-    {
-        try {
-
-    
-            $classCode = $request->input('classCode');
-    
-            // Vérifiez si la classe existe déjà pour le groupe
-            $existing = Classesgroupeclass::where('LibelleGroupe', $libelle)
-                                          ->where('CODECLAS', $classCode)
-                                          ->exists();
-    
-            if ($existing) {
-                return response()->json(['message' => 'La classe existe déjà dans ce groupe'], 400);
-            }
-    
-            // Ajoutez la classe au groupe
-            $classeGroupeClass = new Classesgroupeclass();
-            $classeGroupeClass->LibelleGroupe = $libelle;
-            $classeGroupeClass->CODECLAS = $classCode;
-            $classeGroupeClass->save();
-    
-            return response()->json(['message' => 'Classe ajoutée avec succès']);
-        } catch (\Exception $e) {
-            \Log::error($e->getMessage());
-            return response()->json(['message' => 'Erreur interne du serveur'], 500);
-        }
-    }
-    
-
-    public function supprimerClasse(Request $request, $libelle, $id)
-{
-    try {
-        $classeGroupeClass = Classesgroupeclass::where('id', $id)->first();
-
-        if (!$classeGroupeClass) {
-            return response()->json(['message' => 'Classe non trouvée'], 404);
-        }
-
-        $classeGroupeClass->delete();
-
-        return response()->json(['message' => 'Classe supprimée avec succès']);
-    } catch (\Exception $e) {
-        \Log::error($e->getMessage());
-        return response()->json(['message' => 'Erreur interne du serveur'], 500);
-    }
-}
-
-
-public function supprimerGroupe($id)
-{
-    try {
-        // Rechercher le groupe par ID
-        $groupe = Groupeclasse::find($id);
-
-        if (!$groupe) {
-            return redirect()->back()->with('error', 'Groupe non trouvé');
-        }
-
-        // Supprimer le groupe
-        $groupe->delete();
-
-        return redirect('/groupes')->with('success', 'Groupe supprimé avec succès');
-    } catch (\Exception $e) {
-        \Log::error($e->getMessage());
-        return redirect()->back()->with('error', 'Erreur interne du serveur');
-    }
-}
-
-public function groupe(){
-
-    $allgroupes = Groupeclasse::all();
-    return view('pages.inscriptions.groupe')->with('allgroupes', $allgroupes);
-
-    } 
-
-
-public function ajoutergroupe (Request $request) {
-
-    $nomgroupe = $request->nomgroupe;
-
-    $groupeexist = Groupeclasse::where('LibelleGroupe', '=', $nomgroupe)->exists();
-
-    if($groupeexist) {
-        return redirect('/groupe')->with('error', 'le groupe existe deja');
-    }
-
-    $nouveaugroupe = new Groupeclasse();
-    $nouveaugroupe->LibelleGroupe = $nomgroupe;
-    $nouveaugroupe->save();
-
-
-    return redirect('/groupe')->with('success', 'groupe ajouter avec success');
-}
-
-
-public function suppGroupe($id)
-{
-    try {
-        // Rechercher le groupe par ID
-        $groupe = Groupeclasse::find($id);
-
-        if (!$groupe) {
-            return redirect()->back()->with('error', 'Groupe non trouvé');
-        }
-
-        // Supprimer le groupe
-        $groupe->delete();
-
-        return redirect('/groupe')->with('success', 'Groupe supprimé avec succès');
-    } catch (\Exception $e) {
-        \Log::error($e->getMessage());
-        return redirect()->back()->with('error', 'Erreur interne du serveur');
-    }
-}
-
-
-
-
-  public function series(Request $request){
-    $series = DB::table('series')->select('SERIE', 'LIBELSERIE')->get();
-    return view ('pages.inscriptions.series')->with('series', $series);
+    public function series(Request $request){
+      $series = Serie::get();
+      // dd($series);
+      return view ('pages.inscriptions.series')->with('series', $series);
   }
+
+  public function saveserie(Request $request){
+    $series = new Serie();
+    $series->SERIE = $request->input('SERIE');
+    $series->LIBELSERIE = $request->input('LIBELSERIE');
+    $series->CYCLE = $request->input('CYCLE');
+
+    if (Serie::where('SERIE', $series->SERIE)->exists()) {
+    return back()->with('status', 'Cette série existe déjà.');
+  }
+    $series->save();
+
+    return back()->with('status', 'Enregistrer avec succès');
+  }
+
+  public function updateserie(Request $request){
+
+    $series = Serie::find($request->idcycle);
+    if ($series) {
+      $series->SERIE = $request->input('SERIE');
+      $series->LIBELSERIE = $request->input('LIBELSERIE');
+      $series->CYCLE = $request->input('CYCLE');
+      $series->save();
+      
+      return back()->with('status', 'Modifié avec succès');
+    }
+
+    return back()->withErrors('Erreur lors de la modification.');
+
+  }
+
+  public function deleteserie(Request $request)
+  {
+    $deleteserie = Serie::find($request->idcycle);
+    if ($deleteserie) {
+      $deleteserie->delete();
+      return back()->with('status', 'Supprimé avec succès');
+    } 
+    return back()->withErrors('Erreur lors de la suppression.');
+  }
+
   
   public function savetypeclasse(Request $request){
     $typeclasse = new Typeclasse();
@@ -221,12 +114,23 @@ public function suppGroupe($id)
     } 
     return back()->withErrors('Erreur lors de la suppression.');
   }
-  
-  // public function groupes(){
-    
 
-  //   return view('pages.inscriptions.groupes');
-  // } 
+  
+   public function enregistrerclasse(Request $request){
+    $enrclasse = new Classes();
+    $enrclasse->CODECLAS = $request->input('nomclasse');
+    $enrclasse->LIBELCLAS = $request->input('libclasse');
+    $enrclasse->TypeCours = $request->input('typecours');
+    $enrclasse->TYPECLASSE = $request->input('typclasse');
+    $enrclasse->CYCLE = $request->input('cycle');
+    $enrclasse->SERIE = $request->input('typeserie');
+    $enrclasse->CODEPROMO = $request->input('typepromo');
+    $enrclasse->Niveau = $request->input('numero');
+    $enrclasse->TYPEENSEIG = $request->input('typeensei');
+    $enrclasse->save();
+    return back()->with('status','Enregistrer avec succes');
+  } 
+ 
 
   //Promotion
   public function index()
@@ -296,5 +200,85 @@ public function suppGroupe($id)
   //   return view('pages.inscriptions.groupes');
   // } 
 
+  // public function gettableclasses(){
 
+  //   $classes = new Classes();
+  //   $classes->CODECLAS = $request->input('CODECLAS');
+  //   $classes->LIBELCLAS = $request->input('LIBELCLAS');
+  //   $classes->TYPECLASSE = $request->input('TYPECLASSE');
+  //   $classes->CODEPROMO = $request->input('CODEPROMO');
+  //   $classes->CYCLE = $request->input('CYCLE');
+  //   $classes->SERIE = $request->input('SERIE');
+  //   $classes->TYPEENSEIG = $request->input('TYPEENSEIG');
+  //   $classes->EFFECTIF = $request->input('EFFECTIF');
+
+  //   $series->save();
+
+  //   return view('pages.inscriptions.tabledesclasses')->with('status', 'Enregistrer avec succès');
+  // }
+
+  public function gettabledesclasses(){
+    // $classes = Classe::with('serie')->get();
+
+    $classes = DB::table('classes')
+            ->join('series', 'classes.SERIE', '=', 'series.SERIE')
+            ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
+            // ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
+            ->select(
+                'classes.*',
+                'series.LIBELSERIE as serie_libelle',
+                'typeclasses.LibelleType as typeclasse_LibelleType',
+                // 'series.LIBELSERIE as serie_libelle'
+            )
+            ->get();
+
+ 
+    // dd($idserie);
+
+    return view('pages.inscriptions.tabledesclasses', compact('classes'));
+
+  }
+  public function enrclasse(){
+    if(Session::has('account')){
+    // $duplicatafactures = Duplicatafacture::all();
+    $typecla = Typeclasse::get();
+    $serie = Serie::get();
+    $promo = Promo::get();
+    $typeenseigne = Typeenseigne::get();
+    return view('pages.inscriptions.enregistrementclasse')->with('typecla', $typecla)->with('serie', $serie)->with('promo', $promo)->with('typeenseigne', $typeenseigne);
+    } 
+    return redirect('/');
+
+  }
+  public function modifierclasse($CODECLAS){
+  $promo = Promo::get();
+  $typeclah = Typeclasse::get();
+  $serie = Serie::get();
+  $promo = Promo::get();
+  $typeenseigne = Typeenseigne::get();
+  $typecla = Classes::where('CODECLAS', $CODECLAS)->first();
+    if (!$typecla) {
+      abort(404, 'Classe non trouvée');
+    }
+    return view('pages.inscriptions.modifierclasse')->with('typecla', $typecla)->with('serie', $serie)->with('promo', $promo)->with('typeenseigne', $typeenseigne)->with('typeclah', $typeclah);
+  }
+  public function modifieclasse(Request $request, $CODECLAS){
+    $modifycla = Classes::where('CODECLAS', $CODECLAS)->firstOrFail();
+    if ($modifycla) {
+      $modifycla->CODECLAS = $request->input('nomclasse');
+      $modifycla->LIBELCLAS = $request->input('libclasse');
+      $modifycla->TypeCours = $request->input('typecours');
+      $modifycla->TYPECLASSE = $request->input('typclasse');
+      $modifycla->CYCLE = $request->input('cycle');
+      $modifycla->SERIE = $request->input('typeserie');
+      $modifycla->CODEPROMO = $request->input('typepromo');
+      $modifycla->Niveau = $request->input('numero');
+      $modifycla->TYPEENSEIG = $request->input('typeensei');
+      $modifycla->save();
+      return view('pages.inscriptions.tabledesclasses');
+
+    }
+    return back()->withErrors('Erreur lors de la modification.');
+
+  }
 }
