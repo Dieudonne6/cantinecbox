@@ -41,7 +41,7 @@
                   <td>{{ $classe->CYCLE }}</td>
                   {{-- <td>{{ ($classe->serie)->LIBELSERIE }}</td> --}}
                   <td>{{ $classe->serie_libelle }}</td>
-                  <td>{{ $classe->TYPEENSEIG }}</td>
+                  <td>{{ $classe->typeenseigne_type }}</td>
                   <td>{{ $classe->EFFECTIF }}</td>
                   <td>
                     <div class="d-flex align-items-center">

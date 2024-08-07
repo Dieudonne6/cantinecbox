@@ -220,12 +220,12 @@ class GestionclasseController extends Controller
     $classes = DB::table('classes')
             ->join('series', 'classes.SERIE', '=', 'series.SERIE')
             ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
-            // ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
+             ->join('typeenseigne', 'classes.TYPEENSEIG', '=', 'typeenseigne.idenseign')
             ->select(
                 'classes.*',
                 'series.LIBELSERIE as serie_libelle',
                 'typeclasses.LibelleType as typeclasse_LibelleType',
-                // 'series.LIBELSERIE as serie_libelle'
+                 'typeenseigne.idenseign as typeenseigne_type'
             )
             ->get();
 
