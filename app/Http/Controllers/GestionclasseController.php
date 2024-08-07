@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Classesgroupeclass;
 use App\Models\Groupeclasse;
-use App\Models\Classe;
-use App\Models\Typeclasse;
 use App\Models\Classes;
+use App\Models\Typeclasse;
 use App\Models\Typeenseigne;
 
 use App\Models\Promo;
 use App\Models\Eleve;
+use App\Models\Notes;
 
 class GestionclasseController extends Controller
 {
@@ -187,13 +187,15 @@ class GestionclasseController extends Controller
       return redirect()->route('promotions.index');
   }
 
-  //Acceuil
   public function indexEleves()
-  {
-      $eleves = Eleve::all(); // Récupère tous les élèves
+{
+    $eleves = Eleve::all();
+    
+        // Récupérer les élèves avec leurs notes
+        $eleves = Eleve::with('notes')->get();
 
-      return view('pages.inscriptions.Acceuil', compact('eleves')); // Passe les données à la vue 'Acceuil'
-  }
+    return view('pages.inscriptions.Acceuil', compact('eleves'));
+}
 
   //   return view('pages.inscriptions.groupes');
   // } 
@@ -222,11 +224,13 @@ class GestionclasseController extends Controller
             ->join('series', 'classes.SERIE', '=', 'series.SERIE')
             ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
             ->join('typeenseigne', 'classes.TYPEENSEIG', '=', 'typeenseigne.idenseign')
+             ->join('typeenseigne', 'classes.TYPEENSEIG', '=', 'typeenseigne.idenseign')
             ->select(
                 'classes.*',
                 'series.LIBELSERIE as serie_libelle',
                 'typeclasses.LibelleType as typeclasse_LibelleType',
                 'typeenseigne.type as typeenseigne_type',
+                 'typeenseigne.idenseign as typeenseigne_type'
             )
             ->get();
 
@@ -236,38 +240,47 @@ class GestionclasseController extends Controller
     return view('pages.inscriptions.tabledesclasses', compact('classes'));
 
   }
-
-  public function modifierclasse($CODECLAS){
-    $promo = Promo::get();
-    $typeclah = Typeclasse::get();
+  public function enrclasse(){
+    if(Session::has('account')){
+    // $duplicatafactures = Duplicatafacture::all();
+    $typecla = Typeclasse::get();
     $serie = Serie::get();
     $promo = Promo::get();
     $typeenseigne = Typeenseigne::get();
-    $typecla = Classes::where('CODECLAS', $CODECLAS)->first();
-      if (!$typecla) {
-        abort(404, 'Classe non trouvée');
-      }
-      return view('pages.inscriptions.modifierclasse')->with('typecla', $typecla)->with('serie', $serie)->with('promo', $promo)->with('typeenseigne', $typeenseigne)->with('typeclah', $typeclah);
-    }
-    public function modifieclasse(Request $request, $CODECLAS){
-      $modifycla = Classes::where('CODECLAS', $CODECLAS)->firstOrFail();
-      if ($modifycla) {
-        $modifycla->CODECLAS = $request->input('nomclasse');
-        $modifycla->LIBELCLAS = $request->input('libclasse');
-        $modifycla->TypeCours = $request->input('typecours');
-        $modifycla->TYPECLASSE = $request->input('typclasse');
-        $modifycla->CYCLE = $request->input('cycle');
-        $modifycla->SERIE = $request->input('typeserie');
-        $modifycla->CODEPROMO = $request->input('typepromo');
-        $modifycla->Niveau = $request->input('numero');
-        $modifycla->TYPEENSEIG = $request->input('typeensei');
-        $modifycla->save();
-        return view('pages.inscriptions.tabledesclasses');
-  
-      }
-      return back()->withErrors('Erreur lors de la modification.');
-  
-    }
+    return view('pages.inscriptions.enregistrementclasse')->with('typecla', $typecla)->with('serie', $serie)->with('promo', $promo)->with('typeenseigne', $typeenseigne);
+    } 
+    return redirect('/');
 
+  }
+  public function modifierclasse($CODECLAS){
+  $promo = Promo::get();
+  $typeclah = Typeclasse::get();
+  $serie = Serie::get();
+  $promo = Promo::get();
+  $typeenseigne = Typeenseigne::get();
+  $typecla = Classes::where('CODECLAS', $CODECLAS)->first();
+    if (!$typecla) {
+      abort(404, 'Classe non trouvée');
+    }
+    return view('pages.inscriptions.modifierclasse')->with('typecla', $typecla)->with('serie', $serie)->with('promo', $promo)->with('typeenseigne', $typeenseigne)->with('typeclah', $typeclah);
+  }
+  public function modifieclasse(Request $request, $CODECLAS){
+    $modifycla = Classes::where('CODECLAS', $CODECLAS)->firstOrFail();
+    if ($modifycla) {
+      $modifycla->CODECLAS = $request->input('nomclasse');
+      $modifycla->LIBELCLAS = $request->input('libclasse');
+      $modifycla->TypeCours = $request->input('typecours');
+      $modifycla->TYPECLASSE = $request->input('typclasse');
+      $modifycla->CYCLE = $request->input('cycle');
+      $modifycla->SERIE = $request->input('typeserie');
+      $modifycla->CODEPROMO = $request->input('typepromo');
+      $modifycla->Niveau = $request->input('numero');
+      $modifycla->TYPEENSEIG = $request->input('typeensei');
+      $modifycla->save();
+      return view('pages.inscriptions.tabledesclasses');
 
+    }
+    return back()->withErrors('Erreur lors de la modification.');
+
+  }
 }

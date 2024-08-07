@@ -127,7 +127,7 @@ Route::get('/listedesretardsdepaiement', [PagesController::class, 'listedesretar
 Route::get('/parametre', [PagesController::class, 'parametre']);
 Route::get('/echeancier', [PagesController::class, 'echeancier']);
 Route::get('/tabledesclasses', [PagesController::class, 'tabledesclasses']);
-Route::get('/enrclasse', [PagesController::class, 'enrclasse']);
+Route::get('/enrclasse', [GestionclasseController::class, 'enrclasse']);
 Route::get('/certificat', [PagesController::class, 'certificatsolarite']);
 Route::get('/droitconstate', [PagesController::class, 'droitconstate']);
 
@@ -184,8 +184,9 @@ Route::delete('/promotions/{codePromo}', [GestionclasseController::class, 'destr
 
 //Acceuil
 Route::get('/Acceuil', [GestionclasseController::class, 'indexEleves'])->name('eleves.index');
-Route::get('/eleve/{id}', [EleveController::class, 'Acceuil']);
 
+
+//Series
 Route::get('/series', [GestionclasseController::class, 'series']);
 Route::put('/modifierserie', [GestionclasseController::class, 'updateserie']);
 Route::post('/saveserie', [GestionclasseController::class, 'saveserie']);
