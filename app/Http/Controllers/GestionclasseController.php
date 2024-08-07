@@ -281,4 +281,5 @@ class GestionclasseController extends Controller
     return back()->withErrors('Erreur lors de la modification.');
 
   }
+  
 }

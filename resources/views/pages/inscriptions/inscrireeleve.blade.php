@@ -249,6 +249,8 @@
           <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
             <div class="card">
               <div class="card-body">
+                <form  action="{{url('enregistrerinfo')}}" method="POST">
+                  {{csrf_field()}}
                 <!-- Section: Health Information -->
                 <div class="form-group">
                   <div class="row">
@@ -514,6 +516,7 @@
                   <button type="submit" class="btn btn-primary">Enregistrer</button>
                   <button type="button" class="btn btn-danger">Annuler</button>
                 </div>
+              </form>
               </div>
             </div>
           </div>
@@ -624,20 +627,26 @@
                       <th>Date nai</th>
                       <th>Lieu nais</th>
                       <th>Photo</th>
+                      <th>Sortir l'eleve</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>00000704</td>
-                      <td>ABDOU</td>
-                      <td>Oumar</td>
-                      <td>M</td>
-                      <td>05/06/2022</td>
-                      <td>Cotonou</td>
+                      @foreach ($archive as $archive)
+                
+                      <tr>
+                        <td>{{ $archive->MATRICULE }}</td>
+                        <td>{{ $archive->NOM }}</td>
+                        <td>{{ $archive->PRENOM }}</td>
+                        <td>{{ $archive->SEXE }}</td>
+                        <td>{{ $archive->DATENAIS }}</td>
+                        <td>{{ $archive->LIEUNAIS }}</td>
+
                       <td><img src="photo2.jpg" alt="" width="50"></td>
                       <td>
-                        <button type="button" class="btn btn-primary"><i class="typcn typcn-archive btn-icon-append"></i></button>
+                        <button type="button" class="btn btn-primary" id="{{ $archive->MATRICULE }}"><i class="typcn typcn-archive btn-icon-append"></i></button>
                       </td>
+                      @endforeach
                     </tr>
                   </tbody>
                 </table>

@@ -199,5 +199,6 @@ Route::post('/enregistrerclasse', [GestionclasseController::class, 'enregistrerc
 Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifieclasse']);
 Route::get('/modifierclasse/{CODECLAS}', [GestionclasseController::class, 'modifierclasse']);
 
+Route::post('/enregistrerinfo', [GestionclasseController::class, 'enregistrerinfo']);
 
 Route::get('/tabledesclasses', [GestionclasseController::class, 'gettabledesclasses']);

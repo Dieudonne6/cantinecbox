@@ -18,6 +18,8 @@ use App\Models\Promo;
 use App\Models\Serie;
 use App\Models\Typeclasse;
 use App\Models\Typeenseigne;
+use App\Models\Elevea;
+use App\Models\Eleveplus;
 
 use App\Models\Duplicatafacture;
 use Illuminate\Support\Facades\Storage;
@@ -338,7 +340,8 @@ class PagesController extends Controller
     }
     
     public function inscrireeleve(){
-        return view('pages.inscriptions.inscrireeleve');
+        $archive = Elevea::get();
+        return view('pages.inscriptions.inscrireeleve')->with('archive', $archive);
         } 
         
         public function certificatsolarite(){
