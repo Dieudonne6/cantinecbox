@@ -27,9 +27,9 @@
   <link rel="shortcut icon" href="{{asset('assets/images/favicon.png')}}" />
 
   <style>
-    input::placeholder {
+    /* input::placeholder {
       color: #000 !important;
-    }
+    } */
     .profile-content .form-group {
        margin-bottom: 0 !important;
     }
@@ -181,7 +181,11 @@ $(document).ready(function(){
         }
     });
 });
-
+  $(document).ready(function() {
+      $('#nomclasse').on('input', function() {
+          $('#libclasse').val($(this).val());
+      });
+  });
 
 
   </script>

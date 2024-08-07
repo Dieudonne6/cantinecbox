@@ -4,18 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Typeclasse;
-use App\Models\Serie;
-use App\Models\Promo;
-use App\Models\Typeenseigne;
 
-class Classes extends Model
+class promo extends Model
 {
     use HasFactory;
-    protected $table = 'classes';
     public $timestamps = false;
-    protected $primaryKey = 'CODECLAS';
+    protected $table = 'promo';
+    protected $primaryKey = 'CODEPROMO';
     public $incrementing = false;
     protected $keyType = 'string';
-  
+
+    protected $fillable = [
+        'CODEPROMO',
+        'LIBELPROMO',
+        'Niveau',
+        'TYPEENSEIG'
+    ];
 }

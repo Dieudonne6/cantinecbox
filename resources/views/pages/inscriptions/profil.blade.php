@@ -11,13 +11,13 @@
             <div class="row"> 
               <div class="col-lg-4">
                 <div class="mb-2">
-                  <input type="" class="form-control" id="lieu" placeholder="Nom">
+                  <input type="" class="form-control" id="nom" placeholder="Nom">
                 </div>
                 <div class="mb-2">
-                  <input type="" class="form-control" id="lieu" placeholder="Prenom">
+                  <input type="" class="form-control" id="prenom" placeholder="Prenom">
                 </div>
                 <div class="mb-2">
-                  <input type="" class="form-control" id="lieu" placeholder="Classe">
+                  <input type="" class="form-control" id="classe" placeholder="Classe">
                 </div>
                 <div class="mb-2">
                   <select class="form-control">
@@ -28,7 +28,7 @@
                 </div>
               </div>
               <div class="col-lg-4">
-                <h5>Donnée classe</h5>
+                <h5>Données classes</h5>
                 <div class="mb-2">
                   <input type="" class="form-control"  placeholder="900">
                 </div>

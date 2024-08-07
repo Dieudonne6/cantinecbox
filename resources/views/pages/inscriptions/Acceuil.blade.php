@@ -3,7 +3,7 @@
 
 
 
-  <div class="main-panel-10">
+  <div class="main-panel-1">
     <div class="content-wrapper">
         
       {{--  --}}
@@ -12,7 +12,7 @@
             <div class="card mb-6">
               <div class="card-body">
                 <h4 class="card-title">Accueil</h4>
-                <div class="row gy-4">
+                <div class="row gy-6">
                   <div class="demo-inline-spacing d-flex justify-content-between align-items-start">
                     <div>
                       <a class="btn btn-primary" href="{{url('/inscrireeleve')}}">
@@ -106,15 +106,13 @@
       {{--  --}}
       <div class="row">
         <div class="col">
-                
           <div class="card">
-            <div class="table-responsive" style="height: 300px; overflow: auto;">
-              <table class="table table-bordered table-striped" style="min-width: 600px; font-size: 10px;">
+            <div class="table-responsive" style="height: 400px; overflow: auto;">
+              <table class="table table-bordered table-striped" style="min-width: 800px; font-size: 14px;">
                 <thead>
                   <tr>
                     <th class="ml-5">Matricule</th>
-                    <th>Nom</th>
-                    <th>Prénoms</th>
+                    <th>Nom & Prénoms</th>
                     <th>Classe</th>
                     <th>Sexe</th>
                     <th>Red.</th>
@@ -123,130 +121,122 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>#D1</td>
-                    <td>Consectetur adipisicing elit</td>
-                    <td>Beulah Cummings</td>
-                    <td>CIA</td>
-                    <td>M</td>
-                    <td class="checkboxes-select" rowspan="1" colspan="1" style="width: 18px;">
-                      <input type="checkbox" class="form-check-input-center">
-                    </td>
-                    <td>05/06/2022</td>
-                    <td>Cotonou</td>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary p-2 btn-sm btn-icon-text mr-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                          <i class="typcn typcn-eye btn-icon-append"></i>                          
-                        </button>
-                        <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="typcn typcn-th-list btn-icon-append"></i>  
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
-                          <li><a class="dropdown-item" href="#">Supprimer</a></li>
-                          <li><a class="dropdown-item" href="{{url('/modifiereleve')}}">Modifier</a></li>
-                          <li><a class="dropdown-item" href="{{url('/paiementeleve')}}">Paiement</a></li>
-                          <li><a class="dropdown-item" href="{{url('/majpaiementeleve')}}">Maj Paie</a></li>
-                          <li><a class="dropdown-item" href="{{url('/profil')}}">Profil</a></li>
-                          <li><a class="dropdown-item" href="{{ url('/echeancier')}}">Echéance</a></li>
-                          <li><a class="dropdown-item" href="#">Cursus</a></li>
-                        </ul>
-                      </div>
-                    </td>
-                  </tr>
+                  @foreach($eleves as $eleve)
+                    <tr>
+                      <td>{{ $eleve->MATRICULE }}</td>
+                      <td>{{ $eleve->NOM }} <br>{{$eleve->PRENOM }}</td>
+                      <td>{{ $eleve->CODECLAS }}</td>
+                      <td>
+                        @if($eleve->SEXE == 1)
+                          Masculin
+                        @elseif($eleve->SEXE == 2)
+                          Féminin
+                        @else
+                          Non spécifié
+                        @endif
+                      </td>
+                      <td class="checkboxes-select" rowspan="1" colspan="1" style="width: 24px;">
+                        <input type="checkbox" class="form-check-input-center" {{ $eleve->STATUT ? 'checked' : '' }}>
+                      </td>
+                      <td>{{ $eleve->DATENAIS }}</td>
+                      <td>{{ $eleve->LIEUNAIS }}</td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <!-- Button trigger modal -->
+                          <button type="button" class="btn btn-primary p-2 btn-sm btn-icon-text mr-2" data-bs-toggle="modal" data-bs-target="#exampleModal{{ $eleve->MATRICULE }}">
+                            <i class="typcn typcn-eye btn-icon-append"></i>
+                          </button>
+                          <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="typcn typcn-th-list btn-icon-append"></i>  
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
+                            <li><a class="dropdown-item" href="#">Supprimer</a></li>
+                            <li><a class="dropdown-item" href="{{url('/modifiereleve')}}">Modifier</a></li>
+                            <li><a class="dropdown-item" href="{{url('/paiementeleve')}}">Paiement</a></li>
+                            <li><a class="dropdown-item" href="{{url('/majpaiementeleve')}}">Maj Paie</a></li>
+                            <li><a class="dropdown-item" href="{{url('/profil')}}">Profil</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/echeancier')}}">Echéance</a></li>
+                            <li><a class="dropdown-item" href="#">Cursus</a></li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>
           </div>
         </div>
+      </div>
+      
     </div>
   </div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" style=" max-width: 1100px">
+@foreach($eleves as $eleve)
+<div class="modal fade" id="exampleModal{{ $eleve->MATRICULE }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" style="max-width: 1100px;">
     <div class="modal-content">
       <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Informations pour {{ $eleve->NOM }} {{ $eleve->PRENOM }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-
-       <div class="">
         <nav>
-          <div class="nav nav-tabs" id="nav-tab" role="tablist" style="font-size: 14px;">
-            <button class="nav-link active" id="nav-Infor-tab" data-bs-toggle="tab" data-bs-target="#nav-Infor" type="button" role="tab" aria-controls="nav-Infor" aria-selected="true">Informations générales</button>
-            <button class="nav-link" id="nav-Detail-tab" data-bs-toggle="tab" data-bs-target="#nav-Detail" type="button" role="tab" aria-controls="nav-Detail" aria-selected="false">Détail des notes</button>
-            <button class="nav-link" id="nav-Deta-tab" data-bs-toggle="tab" data-bs-target="#nav-Deta" type="button" role="tab" aria-controls="nav-Deta" aria-selected="false">Détails des paiements</button>
-            <button class="nav-link" id="nav-finan-tab" data-bs-toggle="tab" data-bs-target="#nav-finan" type="button" role="tab" aria-controls="nav-finan" aria-selected="false">Informations financières</button>
-            <button class="nav-link" id="nav-Emploi-tab" data-bs-toggle="tab" data-bs-target="#nav-Emploi" type="button" role="tab" aria-controls="nav-Emploi" aria-selected="false">Emploi du temps</button>
-            <button class="nav-link" id="nav-Position-tab" data-bs-toggle="tab" data-bs-target="#nav-Position" type="button" role="tab" aria-controls="nav-Position" aria-selected="false">Position Enseignants</button>
-          </div>         
+          <div class="nav nav-tabs" id="nav-tab{{ $eleve->MATRICULE }}" role="tablist" style="font-size: 14px;">
+            <button class="nav-link active" id="nav-Infor-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab" data-bs-target="#nav-Infor{{ $eleve->MATRICULE }}" type="button" role="tab" aria-controls="nav-Infor{{ $eleve->MATRICULE }}" aria-selected="true">Informations générales</button>
+            <button class="nav-link" id="nav-Detail-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab" data-bs-target="#nav-Detail{{ $eleve->MATRICULE }}" type="button" role="tab" aria-controls="nav-Detail{{ $eleve->MATRICULE }}" aria-selected="false">Détail des notes</button>
+            <button class="nav-link" id="nav-Deta-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab" data-bs-target="#nav-Deta{{ $eleve->MATRICULE }}" type="button" role="tab" aria-controls="nav-Deta{{ $eleve->MATRICULE }}" aria-selected="false">Détails des paiements</button>
+            <button class="nav-link" id="nav-finan-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab" data-bs-target="#nav-finan{{ $eleve->MATRICULE }}" type="button" role="tab" aria-controls="nav-finan{{ $eleve->MATRICULE }}" aria-selected="false">Informations financières</button>
+            <button class="nav-link" id="nav-Emploi-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab" data-bs-target="#nav-Emploi{{ $eleve->MATRICULE }}" type="button" role="tab" aria-controls="nav-Emploi{{ $eleve->MATRICULE }}" aria-selected="false">Emploi du temps</button>
+            <button class="nav-link" id="nav-Position-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab" data-bs-target="#nav-Position{{ $eleve->MATRICULE }}" type="button" role="tab" aria-controls="nav-Position{{ $eleve->MATRICULE }}" aria-selected="false">Position Enseignants</button>
+          </div>
         </nav>
-        <div class="tab-content" id="nav-tabContent">
-          <!--  -->
-          <div class="tab-pane fade show active" id="nav-Infor" role="tabpanel" aria-labelledby="nav-Infor-tab" tabindex="0">
-            <form class="accordion-body col-md-12 mx-auto">  
-              
-                <div class="form-group row mt-2">
-                    <label for="dateN" class="col-sm-2 col-form-label">Date de Naissance</label>
-                    <div class="col-sm-4">
-                        <input type="date" class="form-control mt-2" id="dateN" placeholder="jj/mm/dd">
-                    </div>
-
-                    <label for="lieu" class="col-sm-1 col-form-label">Lieu</label>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control mt-2" id="lieu" placeholder="Lieu">
-                    </div>
+        <div class="tab-content" id="nav-tabContent{{ $eleve->MATRICULE }}">
+          <!-- Informations générales -->
+          <div class="tab-pane fade show active" id="nav-Infor{{ $eleve->MATRICULE }}" role="tabpanel" aria-labelledby="nav-Infor-tab{{ $eleve->MATRICULE }}">
+            <form class="accordion-body col-md-12 mx-auto">
+              <!-- Date de Naissance et Lieu -->
+              <div class="form-group row mt-2">
+                <label for="dateN{{ $eleve->MATRICULE }}" class="col-sm-2 col-form-label">Date de Naissance</label>
+                <div class="col-sm-4">
+                  <input type="date" class="form-control" id="dateN{{ $eleve->MATRICULE }}" name="dateN" value="{{ $eleve->DATENAIS }}">
                 </div>
-        
-                <div class="form-group row mt-1">
-                    <label for="sexe" class="col-sm-2 col-form-label">Sexe</label>
-                    <div class="col-sm-3">
-                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="sexe">
-                            <option>Masculin</option>
-                            <option>Féminin</option>
-                        </select>
-                    </div>
-        
-                    <label for="typeEleve" class="col-sm-3 col-form-label">Types élèves</label>
-                    <div class="col-sm-3">
-                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="typeEleve">
-                            <option>Ancien</option>
-                            <option>Nouveau</option>
-                        </select>
-                    </div>
+                <label for="lieu{{ $eleve->MATRICULE }}" class="col-sm-2 col-form-label">Lieu</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="lieu{{ $eleve->MATRICULE }}" name="lieu" value="{{ $eleve->LIEUNAIS }}">
                 </div>
-        
-                <div class="form-group row mt-1">
-                    <label for="dateIn" class="col-sm-4 col-form-label">Date d'inscription</label>
-                    <div class="col-sm-5">
-                        <input type="date" class="form-control" id="dateIn" placeholder="jj/mm/dd">
-                    </div>
+              </div>
+              <!-- Sexe et Types élèves -->
+              <div class="form-group row mt-2">
+                <label for="sexe{{ $eleve->MATRICULE }}" class="col-sm-2 col-form-label">Sexe</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="sexe{{ $eleve->MATRICULE }}" name="sexe" value="{{ $eleve->SEXE == 1 ? 'Masculin' : ($eleve->SEXE == 2 ? 'Féminin' : '') }}">
                 </div>
-        
-                <div class="form-group row mt-1 align-items-center">
-                    <label for="apte" class="col-sm-2 col-form-label">Apte</label>
-                    <div class="col-sm-2">
-                        <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value" id="apte">
-                            <option>Oui</option>
-                            <option>Non</option>
-                        </select>
-                    </div>
-        
-                    <div class="col-sm-2 form-check" style="margin-left: 100px;">
-                      <input type="checkbox" class="form-check-input" id="statutRedoublant">
-                      <label class="form-check-label" for="statutRedoublant">
-                          Statut Redoublant
-                      </label>
-                  </div>
-                  
+                <label for="typeEleve{{ $eleve->MATRICULE }}" class="col-sm-2 col-form-label">Type Élève</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="typeEleve{{ $eleve->MATRICULE }}" name="typeEleve" value="{{ $eleve->STATUTG == 1 ? 'Nouveau' : ($eleve->STATUTG == 2 ? 'Ancien' : '') }}">
                 </div>
-                                            
-            </form> 
-          </div>       
-          <!--  -->
-          <div class="tab-pane fade" id="nav-Detail" role="tabpanel" aria-labelledby="nav-Detail-tab" tabindex="0">
+              </div>
+              <!-- Date d'inscription, Apte et Statut Redoublant -->
+              <div class="form-group row mt-2">
+                <label for="dateIn{{ $eleve->MATRICULE }}" class="col-sm-4 col-form-label">Date d'inscription</label>
+                <div class="col-sm-2">
+                  <input type="date" class="form-control" id="dateIn{{ $eleve->MATRICULE }}" name="dateIn" value="{{ $eleve->DATEINS }}">
+                </div>
+                <label for="apte{{ $eleve->MATRICULE }}" class="col-sm-2 col-form-label">Apte</label>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" id="apte{{ $eleve->MATRICULE }}" name="sexe" value="{{ $eleve->APTE == 0 ? 'Non' : ($eleve->APTE == 1 ? 'Oui' : '') }}">
+                </div>
+                <div class="col-sm-2 form-check">
+                  <input type="checkbox" class="form-check-input" id="statutRedoublant{{ $eleve->MATRICULE }}" name="statutRedoublant" value="{{ $eleve->STATUT == 0 ? ''  : ($eleve->STATUT == 1 ? 'checked' : '') }}>
+                  <label class="form-check-label" for="statutRedoublant{{ $eleve->MATRICULE }}">Statut Redoublant</label>
+                </div>
+              </div>
+            </form>
+          </div>   
+          <!-- Détails Notes -->
+          <div class="tab-pane fade" id="nav-Detail{{ $eleve->MATRICULE }}" role="tabpanel" aria-labelledby="nav-Detail-tab{{ $eleve->MATRICULE }}" tabindex="0">
             <form class="accordion-body col-md-12 mx-auto">
                 <div class="table-responsive mt-2">
                   <table class="table table-bordered table-striped">
@@ -262,24 +252,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                          @foreach($eleve->notes as $note)
                             <tr>
-                                <td>Français</td>
-                                <td>09</td>
-                                <td>15</td>
-                                <td>06</td>
-                                <td>10</td>
-                                <td>T13</td>
-                                <td>16</td>
+                              <td>{{ $note->CODEMAT }}</td>
+                              <td>{{ $note->MI }}</td>
+                              <td>{{ $note->DEV1 }}</td>
+                              <td>{{ $note->DEV2 }}</td>
+                              <td>{{ $note->DEV3 }}</td>
+                              <td>{{ $note->TEST }}</td>
+                              <td>{{ $note->MS }}</td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
+                          @endforeach
                         </tbody>
                   </table>
                 </div>
@@ -308,7 +291,7 @@
             </form>
           </div>        
           <!--  -->
-          <div class="tab-pane fade" id="nav-Deta" role="tabpanel" aria-labelledby="nav-Deta-tab" tabindex="0">
+          <div class="tab-pane fade" id="nav-Deta{{ $eleve->MATRICULE }}" role="tabpanel" aria-labelledby="nav-Deta-tab{{ $eleve->MATRICULE }}" tabindex="0">
             <div class="accordion-body col-md-12 mx-auto bg-light-gray">
               <div class="col">
                 <div class="d-flex justify-content-between align-items-center mt-2">
@@ -396,7 +379,7 @@
             
           </div>
           <!--  -->
-          <div class="tab-pane fade" id="nav-finan" role="tabpanel" aria-labelledby="nav-finan-tab" tabindex="0">
+          <div class="tab-pane fade" id="nav-finan{{ $eleve->MATRICULE }}" role="tabpanel" aria-labelledby="nav-finan-tab{{ $eleve->MATRICULE }}" tabindex="0">
             <div class="accordion-body col-md-12 mx-auto"> 
               <div class="table-responsive mt-2">
                 <table class="table table-striped table-hover">
@@ -440,7 +423,7 @@
             
           </div>
           <!--  -->
-          <div class="tab-pane fade" id="nav-Emploi" role="tabpanel" aria-labelledby="nav-Emploi-tab" tabindex="0">
+          <div class="tab-pane fade" id="nav-Emploi{{ $eleve->MATRICULE }}" role="tabpanel" aria-labelledby="nav-Emploi-tab{{ $eleve->MATRICULE }}" tabindex="0">
             <div class="accordion-body col-md-12 mx-auto"> 
               <div class="container">
                 <div class="row">
@@ -510,7 +493,7 @@
             </div>
           </div>
           <!--  -->
-          <div class="tab-pane fade" id="nav-Position" role="tabpanel" aria-labelledby="nav-Position-tab" tabindex="0">
+          <div class="tab-pane fade" id="nav-Position{{ $eleve->MATRICULE }}" role="tabpanel" aria-labelledby="nav-Position-tab{{ $eleve->MATRICULE }}" tabindex="0">
             <div class="accordion-body">
               <div id="dateTime" style="text-align: justify;"></div>
 
@@ -620,5 +603,6 @@
     </div>
   </div>
 </div>
+@endforeach
 
 @endsection

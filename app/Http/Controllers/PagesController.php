@@ -16,6 +16,13 @@ use App\Models\Params2;
 use App\Models\Classes;
 use App\Models\Departement;
 use App\Models\Reduction;
+use App\Models\Promo;
+use App\Models\Serie;
+use App\Models\Typeclasse;
+use App\Models\Typeenseigne;
+use App\Models\Elevea;
+use App\Models\Eleveplus;
+
 use App\Models\Duplicatafacture;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
@@ -292,7 +299,14 @@ class PagesController extends Controller
         } 
         return redirect('/');
     } 
+    public function modifierclasse(){
+        if(Session::has('account')){
+        // $duplicatafactures = Duplicatafacture::all();
 
+        return view('pages.inscriptions.modifierclasse');
+        } 
+        return redirect('/');
+    } 
     public function majpaiementeleve(){
         if(Session::has('account')){
         // $duplicatafactures = Duplicatafacture::all();
@@ -313,15 +327,7 @@ class PagesController extends Controller
 
     }
 
-    public function enrclasse(){
-        if(Session::has('account')){
-        // $duplicatafactures = Duplicatafacture::all();
 
-        return view('pages.inscriptions.enregistrementclasse');
-        } 
-        return redirect('/');
-
-    }
 
     public function groupe(){
         if(Session::has('account')){
@@ -353,8 +359,10 @@ class PagesController extends Controller
         $allClasse = Classes::all();
         $allReduction = Reduction::all();
         $allDepartement = Departement::all();
+        $archive = Elevea::get();
 
-        return view('pages.inscriptions.inscrireeleve', compact('allClasse', 'allReduction', 'allDepartement', 'newMatricule'));
+        return view('pages.inscriptions.inscrireeleve', compact('allClasse', 'allReduction', 'allDepartement', 'newMatricule', 'archive'));
+        // return view('pages.inscriptions.inscrireeleve')->with('archive', $archive);
         } 
         
         public function certificatsolarite(){
