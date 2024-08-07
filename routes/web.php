@@ -196,7 +196,11 @@ Route::put('/modifiertypesclasses', [GestionclasseController::class, 'updateType
 Route::delete('/supprimertype', [GestionclasseController::class, 'deletetype']);
 Route::post('/enregistrerclasse', [GestionclasseController::class, 'enregistrerclasse']);
 Route::put('/promotions/{codePromo}', [GestionclasseController::class, 'update'])->name('promotions.update');
-Route::get('/modifierclasse', [PagesController::class, 'modifierclasse']);
+// Route::get('/modifierclasse', [PagesController::class, 'modifierclasse']);
 
 
 Route::get('/tabledesclasses', [GestionclasseController::class, 'gettabledesclasses']);
+
+
+Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifieclasse']);
+Route::get('/modifierclasse/{CODECLAS}', [GestionclasseController::class, 'modifierclasse']);

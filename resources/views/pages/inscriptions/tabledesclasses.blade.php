@@ -41,7 +41,7 @@
                   <td>{{ $classe->CYCLE }}</td>
                   {{-- <td>{{ ($classe->serie)->LIBELSERIE }}</td> --}}
                   <td>{{ $classe->serie_libelle }}</td>
-                  <td>{{ $classe->TYPEENSEIG }}</td>
+                  <td>{{ $classe->typeenseigne_type }}</td>
                   <td>{{ $classe->EFFECTIF }}</td>
                   <td>
                     <div class="d-flex align-items-center">
@@ -50,7 +50,7 @@
                         <i class="typcn typcn-th-list btn-icon-append"></i>  
                       </button>
                       <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
-                        <li><a class="dropdown-item" href="{{url('/enrclasse')}}">Modifier</a></li>
+                        <li><a class="dropdown-item" href="/modifierclasse/{{$classe->CODECLAS}}">Modifier</a></li>
                         <li><a class="dropdown-item" >Supprimer</a></li>
                       </ul>
                     </div>

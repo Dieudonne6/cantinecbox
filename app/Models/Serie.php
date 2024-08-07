@@ -10,7 +10,7 @@ class Serie extends Model
     use HasFactory;
     protected $table = 'series';
     public $timestamps = false;
-    protected $primaryKey = 'SERIE';
+    // protected $primaryKey = 'SERIE';
 
     public function classes()
     {

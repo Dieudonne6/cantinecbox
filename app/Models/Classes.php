@@ -10,5 +10,8 @@ class Classes extends Model
     use HasFactory;
     protected $table = 'classes';
     public $timestamps = false;
+    protected $primaryKey = 'CODECLAS';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
 }

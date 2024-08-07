@@ -12,6 +12,8 @@ use App\Models\Classesgroupeclass;
 use App\Models\Groupeclasse;
 use App\Models\Classe;
 use App\Models\Typeclasse;
+use App\Models\Classes;
+use App\Models\Typeenseigne;
 
 use App\Models\Promo;
 use App\Models\Eleve;
@@ -219,12 +221,12 @@ class GestionclasseController extends Controller
     $classes = DB::table('classes')
             ->join('series', 'classes.SERIE', '=', 'series.SERIE')
             ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
-            // ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
+            ->join('typeenseigne', 'classes.TYPEENSEIG', '=', 'typeenseigne.idenseign')
             ->select(
                 'classes.*',
                 'series.LIBELSERIE as serie_libelle',
                 'typeclasses.LibelleType as typeclasse_LibelleType',
-                // 'series.LIBELSERIE as serie_libelle'
+                'typeenseigne.type as typeenseigne_type',
             )
             ->get();
 
@@ -234,6 +236,38 @@ class GestionclasseController extends Controller
     return view('pages.inscriptions.tabledesclasses', compact('classes'));
 
   }
+
+  public function modifierclasse($CODECLAS){
+    $promo = Promo::get();
+    $typeclah = Typeclasse::get();
+    $serie = Serie::get();
+    $promo = Promo::get();
+    $typeenseigne = Typeenseigne::get();
+    $typecla = Classes::where('CODECLAS', $CODECLAS)->first();
+      if (!$typecla) {
+        abort(404, 'Classe non trouvée');
+      }
+      return view('pages.inscriptions.modifierclasse')->with('typecla', $typecla)->with('serie', $serie)->with('promo', $promo)->with('typeenseigne', $typeenseigne)->with('typeclah', $typeclah);
+    }
+    public function modifieclasse(Request $request, $CODECLAS){
+      $modifycla = Classes::where('CODECLAS', $CODECLAS)->firstOrFail();
+      if ($modifycla) {
+        $modifycla->CODECLAS = $request->input('nomclasse');
+        $modifycla->LIBELCLAS = $request->input('libclasse');
+        $modifycla->TypeCours = $request->input('typecours');
+        $modifycla->TYPECLASSE = $request->input('typclasse');
+        $modifycla->CYCLE = $request->input('cycle');
+        $modifycla->SERIE = $request->input('typeserie');
+        $modifycla->CODEPROMO = $request->input('typepromo');
+        $modifycla->Niveau = $request->input('numero');
+        $modifycla->TYPEENSEIG = $request->input('typeensei');
+        $modifycla->save();
+        return view('pages.inscriptions.tabledesclasses');
+  
+      }
+      return back()->withErrors('Erreur lors de la modification.');
+  
+    }
 
 
 }

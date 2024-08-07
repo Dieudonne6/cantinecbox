@@ -12,6 +12,6 @@ class Classe extends Model
 
     public function serie()
     {
-        return $this->belongsTo(Serie::class, 'SERIE'); // Assurez-vous que le nom de la clé étrangère est correct
+        return $this->belongsTo(Serie::class, 'SERIE');
     }
 }
