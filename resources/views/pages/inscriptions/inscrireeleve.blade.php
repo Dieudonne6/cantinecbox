@@ -774,8 +774,6 @@
             <div class="card-body">
               <form  action="{{url('enregistrerinfo')}}" method="POST">
                 {{csrf_field()}}
-                <input type="hidden" name="matricule" value="{{ $newMatricule }}">
-
                 <!-- Section: Health Information -->
                 <div class="form-group">
                   <div class="row">
@@ -1227,15 +1225,31 @@
   
   <!-- Custom JavaScript -->
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var nomeleveInput = document.getElementById('nom');
-      var nompereInput = document.getElementById('nom-pere');
-      
-      if (nomeleveInput && nompereInput) {
-        nomeleveInput.addEventListener('input', function () {
-          nompereInput.value = nomeleveInput.value;
+    document.addEventListener('DOMContentLoaded', function() {
+      function handleDragOver(container, input) {
+        container.addEventListener('dragover', function(event) {
+          event.preventDefault();
+          container.classList.add('dragover');
+        });
+        
+        container.addEventListener('dragleave', function() {
+          container.classList.remove('dragover');
+        });
+        
+        container.addEventListener('drop', function(event) {
+          event.preventDefault();
+          container.classList.remove('dragover');
+          input.files = event.dataTransfer.files;
+        });
+        
+        container.addEventListener('click', function() {
+          input.click();
         });
       }
+      
+      var imageInput = document.getElementById('imageInput');
+      var customFileContainer = document.getElementById('customFileContainer');
+      handleDragOver(customFileContainer, imageInput);
     });
   </script>
   @endsection
