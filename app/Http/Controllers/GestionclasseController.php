@@ -13,6 +13,7 @@ use App\Models\Groupeclasse;
 use App\Models\Classes;
 use App\Models\Typeclasse;
 use App\Models\Typeenseigne;
+use App\Models\Eleveplus;
 
 use App\Models\Promo;
 use App\Models\Eleve;
@@ -132,6 +133,44 @@ class GestionclasseController extends Controller
   } 
  
 
+  public function enregistrerinfo(Request $request){
+    $enreninfo = new Eleveplus();
+    $enreninfo->maladiesconnues = $request->input('maladiesconnues');
+    $enreninfo->interditalimentaires = $request->input('interditalimentaires');
+    $enreninfo->groupesanguin = $request->input('groupesanguin');
+    $enreninfo->electroforez= $request->input('typehemoglobine');
+    $enreninfo->NOMMERE = $request->input('nommere');
+    $enreninfo->prenommere = $request->input('prenommere');
+    $enreninfo->telmere = $request->input('telephonemere');
+    $enreninfo->emailmere = $request->input('emailmere');
+    $enreninfo->professionmere = $request->input('professionmere');
+    $enreninfo->adremployeurmere = $request->input('adresseemployeurmere');
+    $enreninfo->adrmere = $request->input('adressepersonnellemere');
+    $enreninfo->NOMPERE = $request->input('nompere');
+    $enreninfo->prenompere = $request->input('prenompere');
+    $enreninfo->telpere = $request->input('telephonepere');
+    $enreninfo->emailpere = $request->input('emailpere');
+    $enreninfo->professionpere = $request->input('professionpere');
+    $enreninfo->adremployeurpere = $request->input('adresseemployeurpere');
+    $enreninfo->adrpere = $request->input('adressepersonnellepere');
+    $enreninfo->nomtutuer = $request->input('nomtuteur');
+    $enreninfo->prenomtuteur = $request->input('prenomtuteur');
+    $enreninfo->teltuteur = $request->input('telephonetuteur');
+    $enreninfo->emailtuteur = $request->input('emailtuteur');
+    $enreninfo->adremployeurpere = $request->input('adresseemployeurtuteur');
+    $enreninfo->adrtuteur = $request->input('adressepersonnelletuteur');
+    $enreninfo->professiontuteur = $request->input('professiontuteur');
+    $enreninfo->nomurgence = $request->input('nomurgence');
+    $enreninfo->prenomurgence = $request->input('prenomurgence');
+    $enreninfo->telurgence = $request->input('telephoneurgence');
+    $enreninfo->emailpere = $request->input('emailurgence');
+    $enreninfo->adrurgence = $request->input('adressepersonnelleurgence');
+    $enreninfo->autorisefilm = $request->input('autorisevideo');
+    $enreninfo->autoriseuseimage = $request->input('autoriseimage');
+
+    $enreninfo->save();
+    return back()->with('status','Enregistrer avec succes');
+  } 
   //Promotion
   public function index()
   {
@@ -283,5 +322,5 @@ class GestionclasseController extends Controller
     return back()->withErrors('Erreur lors de la modification.');
 
   }
-  
+
 }

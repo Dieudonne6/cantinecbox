@@ -11,6 +11,11 @@
             <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Informations complémentaires</button>
           </div>
         </nav>
+        @if(Session::has('status'))
+        <div id="statusAlert" class="alert alert-succes btn-primary">
+          {{ Session::get('status')}}
+        </div>
+        @endif
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
             <div class="col-12 grid-margin">
@@ -257,19 +262,19 @@
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="maladies_chroniques" class="mr-2">Maladies chroniques et allergies connues</label>
-                        <input class="form-control" type="text" name="maladies_chroniques" id="maladies_chroniques" value="">
+                        <input class="form-control" type="text" name="maladieschroniques" id="maladies_chroniques" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="interdit_alimentaires" class="mr-2">Interdit alimentaires</label>
-                        <input class="form-control" type="text" name="interdit_alimentaires" id="interdit_alimentaires" value="">
+                        <input class="form-control" type="text" name="interditalimentaires" id="interdit_alimentaires" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="groupe_sanguin" class="mr-2">Groupe sanguin</label>
-                        <select class="form-control js-example-basic-multiple w-100" id="groupe_sanguin" name="groupe_sanguin">
+                        <select class="form-control js-example-basic-multiple w-100" id="groupe_sanguin" name="groupesanguin">
                           <option>A+</option>
                           <option>O+</option>
                           <option>B+</option>
@@ -280,7 +285,7 @@
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="type_hemoglobine" class="mr-2">Type d'hémoglobine</label>
-                        <select class="form-control js-example-basic-multiple w-100" id="type_hemoglobine" name="type_hemoglobine">
+                        <select class="form-control js-example-basic-multiple w-100" id="type_hemoglobine" name="typehemoglobine">
                           <option>A</option>
                           <option>O</option>
                           <option>B</option>
@@ -299,19 +304,19 @@
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="nom_mere" class="mr-2">Nom</label>
-                        <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
+                        <input class="form-control" type="text" name="nommere" id="nom_mere" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="prenom_mere" class="mr-2">Prénom</label>
-                        <input class="form-control" type="text" name="prenom_mere" id="prenom_mere" value="">
+                        <input class="form-control" type="text" name="prenommere" id="prenom_mere" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="telephone_mere" class="mr-2">Numéro de téléphone</label>
-                        <input class="form-control" type="text" name="telephone_mere" id="telephone_mere" value="">
+                        <input class="form-control" type="text" name="telephonemere" id="telephone_mere" value="">
                       </div>
                     </div>
                   </div>
@@ -321,25 +326,25 @@
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="email_mere" class="mr-2">Adresse e-mail</label>
-                        <input class="form-control" type="text" name="email_mere" id="email_mere" value="">
+                        <input class="form-control" type="text" name="emailmere" id="email_mere" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="profession_mere" class="mr-2">Profession</label>
-                        <input class="form-control" type="text" name="profession_mere" id="profession_mere" value="">
+                        <input class="form-control" type="text" name="professionmere" id="profession_mere" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="adresse_employeur_mere" class="mr-2">Adresse employeur</label>
-                        <input class="form-control" type="text" name="adresse_employeur_mere" id="adresse_employeur_mere" value="">
+                        <input class="form-control" type="text" name="adresseemployeurmere" id="adresse_employeur_mere" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="adresse_personnelle_mere" class="mr-2">Adresse personnelle</label>
-                        <input class="form-control" type="textarea" name="adresse_personnelle_mere" id="adresse_personnelle_mere" value="">
+                        <input class="form-control" type="textarea" name="adressepersonnellemere" id="adresse_personnelle_mere" value="">
                       </div>
                     </div>
                   </div>
@@ -353,19 +358,19 @@
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="nom_pere" class="mr-2">Nom</label>
-                        <input class="form-control" type="text" name="nom_pere" id="nom_pere" value="">
+                        <input class="form-control" type="text" name="nompere" id="nom_pere" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="prenom_pere" class="mr-2">Prénom</label>
-                        <input class="form-control" type="text" name="prenom_pere" id="prenom_pere" value="">
+                        <input class="form-control" type="text" name="prenompere" id="prenom_pere" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="telephone_pere" class="mr-2">Numéro de téléphone</label>
-                        <input class="form-control" type="text" name="telephone_pere" id="telephone_pere" value="">
+                        <input class="form-control" type="text" name="telephonepere" id="telephone_pere" value="">
                       </div>
                     </div>
                   </div>
@@ -375,25 +380,25 @@
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="email_pere" class="mr-2">Adresse e-mail</label>
-                        <input class="form-control" type="text" name="email_pere" id="email_pere" value="">
+                        <input class="form-control" type="text" name="emailpere" id="email_pere" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="profession_pere" class="mr-2">Profession</label>
-                        <input class="form-control" type="text" name="profession_pere" id="profession_pere" value="">
+                        <input class="form-control" type="text" name="professionpere" id="profession_pere" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="adresse_employeur_pere" class="mr-2">Adresse employeur</label>
-                        <input class="form-control" type="text" name="adresse_employeur_pere" id="adresse_employeur_pere" value="">
+                        <input class="form-control" type="text" name="adresseemployeurpere" id="adresse_employeur_pere" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="adresse_personnelle_pere" class="mr-2">Adresse personnelle</label>
-                        <input class="form-control" type="textarea" name="adresse_personnelle_pere" id="adresse_personnelle_pere" value="">
+                        <input class="form-control" type="textarea" name="adressepersonnellepere" id="adresse_personnelle_pere" value="">
                       </div>
                     </div>
                   </div>
@@ -407,19 +412,19 @@
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="nom_tuteur" class="mr-2">Nom</label>
-                        <input class="form-control" type="text" name="nom_tuteur" id="nom_tuteur" value="">
+                        <input class="form-control" type="text" name="nomtuteur" id="nom_tuteur" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="prenom_tuteur" class="mr-2">Prénom</label>
-                        <input class="form-control" type="text" name="prenom_tuteur" id="prenom_tuteur" value="">
+                        <input class="form-control" type="text" name="prenomtuteur" id="prenom_tuteur" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="telephone_tuteur" class="mr-2">Numéro de téléphone</label>
-                        <input class="form-control" type="text" name="telephone_tuteur" id="telephone_tuteur" value="">
+                        <input class="form-control" type="text" name="telephonetuteur" id="telephone_tuteur" value="">
                       </div>
                     </div>
                   </div>
@@ -429,25 +434,25 @@
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="email_tuteur" class="mr-2">Adresse e-mail</label>
-                        <input class="form-control" type="text" name="email_tuteur" id="email_tuteur" value="">
+                        <input class="form-control" type="text" name="emailtuteur" id="email_tuteur" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="profession_tuteur" class="mr-2">Profession</label>
-                        <input class="form-control" type="text" name="profession_tuteur" id="profession_tuteur" value="">
+                        <input class="form-control" type="text" name="professiontuteur" id="profession_tuteur" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="adresse_employeur_tuteur" class="mr-2">Adresse employeur</label>
-                        <input class="form-control" type="text" name="adresse_employeur_tuteur" id="adresse_employeur_tuteur" value="">
+                        <input class="form-control" type="text" name="adresseemployeurtuteur" id="adresse_employeur_tuteur" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="adresse_personnelle_tuteur" class="mr-2">Adresse personnelle</label>
-                        <input class="form-control" type="textarea" name="adresse_personnelle_tuteur" id="adresse_personnelle_tuteur" value="">
+                        <input class="form-control" type="textarea" name="adressepersonnelletuteur" id="adresse_personnelle_tuteur" value="">
                       </div>
                     </div>
                   </div>
@@ -461,19 +466,19 @@
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="nom_urgence" class="mr-2">Nom</label>
-                        <input class="form-control" type="text" name="nom_urgence" id="nom_urgence" value="">
+                        <input class="form-control" type="text" name="nomurgence" id="nom_urgence" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="prenom_urgence" class="mr-2">Prénom</label>
-                        <input class="form-control" type="text" name="prenom_urgence" id="prenom_urgence" value="">
+                        <input class="form-control" type="text" name="prenomurgence" id="prenom_urgence" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="telephone_urgence" class="mr-2">Numéro de téléphone</label>
-                        <input class="form-control" type="text" name="telephone_urgence" id="telephone_urgence" value="">
+                        <input class="form-control" type="text" name="telephoneurgence" id="telephone_urgence" value="">
                       </div>
                     </div>
                   </div>
@@ -483,13 +488,13 @@
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="email_urgence" class="mr-2">Adresse e-mail</label>
-                        <input class="form-control" type="text" name="email_urgence" id="email_urgence" value="">
+                        <input class="form-control" type="text" name="emailurgence" id="email_urgence" value="">
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex align-items-center">
                         <label for="adresse_personnelle_urgence" class="mr-2">Adresse personnelle</label>
-                        <input class="form-control" type="textarea" name="adresse_personnelle_urgence" id="adresse_personnelle_urgence" value="">
+                        <input class="form-control" type="textarea" name="adressepersonnelleurgence" id="adresse_personnelle_urgence" value="">
                       </div>
                     </div>
                   </div>
@@ -498,13 +503,13 @@
                 <!-- Section: Permissions -->
                 <div class="form-group">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <input class="form-check-input" name="autorisevideo" type="checkbox" value="" id="flexCheckDefault">
                     <label class="form-check-label" for="flexCheckDefault">
                       Autorisation d'utiliser les vidéos à des fins publicitaires
                     </label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                    <input class="form-check-input" name="autoriseimage" type="checkbox" value="" id="flexCheckChecked" checked>
                     <label class="form-check-label" for="flexCheckChecked">
                       Autorisation d'utiliser les images à des fins publicitaires
                     </label>
