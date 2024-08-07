@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
-use App\Models\Serie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 use App\Models\Classesgroupeclass;
 use App\Models\Groupeclasse;
 use App\Models\Classes;
+use App\Models\Eleve;
+use App\Models\Serie;
 use App\Models\Typeclasse;
 
 
@@ -223,5 +225,98 @@ public function suppGroupe($id)
     
   //   return view('pages.inscriptions.groupes');
   // } 
+
+//   fonction d'ajout d'un nouveau eleve
+
+public function nouveaueleve (Request $request) {
+
+    // validation des donne 
+    // $request->validate([
+    //     'classe' => 'required',
+    //     'classeEntre' => 'required',
+    //     'numOrdre' => 'required',
+    //     'photo' => 'required',
+    //     'reduction' => 'required',
+    //     'nom' => 'required',
+    //     'prenom' => 'required',
+    //     'dateNaissance' => 'required',
+    //     'lieuNaissance' => 'required',
+    //     'dateInscription' => 'required',
+    //     'departement' => 'required',
+    //     'sexe' => 'required',
+    //     'typeEleve' => 'required',
+    //     'aptituteSport' => 'required',
+    //     'adressePersonnelle' => 'required',
+    //     'etablissementOrigine' => 'required',
+    //     'nationalite' => 'required',
+    //     'redoublant' => 'required',
+    //     'adressePersonnelle' => 'required',
+    //     'nomPere' => 'required',
+    //     'nomMere' => 'required',
+    //     'adressesParents' => 'required',
+    //     'autresRenseignements' => 'required',
+    //     'indicatifParent' => 'required',
+    //     'telephoneParent' => 'required',
+    //     'telephoneEleve' => 'required',
+    // ]);
+
+    // dd($request->input('nom'));
+
+    // Effectuer le traitement des photo
+    // $request->validate([
+    //     'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    // ]);
+    $imageName = $request->file('photo');
+    $imageContent = file_get_contents($imageName->getRealPath());
+
+    // Gestion des atributs MATRICULEX et CODEWEB
+    // Convertir le nouveau matricule en chaîne de caractères avec des zéros devant
+    $matricule = $request->input('numOrdre');
+    $formateMatricule = str_pad($matricule, 8, '0', STR_PAD_LEFT);
+    // dd($formateMatricule);
+
+    // Récupérer la valeur du checkbox de redoublant
+    $redoublant = $request->has('redoublant') ? 1 : 0;
+
+    $nouveauEleve = new Eleve();
+    $nouveauEleve->CODECLAS = $request->input('classe');
+
+    if(($request->input('classeEntre')) === 'idem'){
+        $nouveauEleve->ANCCLASSE = $request->input('classe');
+    }else{
+        $nouveauEleve->ANCCLASSE = $request->input('classeEntre');
+    }
+
+    $nouveauEleve->MATRICULE = $request->input('numOrdre'); // MATRICULE prend la valeur du champ numero d'ordre
+    $nouveauEleve->PHOTO = $imageContent;
+    $nouveauEleve->CodeReduction = $request->input('reduction');
+    $nouveauEleve->NOM = $request->input('nom');
+    $nouveauEleve->PRENOM = $request->input('prenom');
+    $nouveauEleve->DATENAIS = $request->input('dateNaissance');
+    $nouveauEleve->LIEUNAIS = $request->input('lieuNaissance');
+    $nouveauEleve->DATEINS = $request->input('dateInscription');
+    $nouveauEleve->CODEDEPT = $request->input('departement');
+    $nouveauEleve->SEXE = $request->input('sexe');
+    $nouveauEleve->STATUTG = $request->input('typeEleve');
+    $nouveauEleve->APTE = $request->input('aptituteSport');
+    $nouveauEleve->ADRPERS = $request->input('adressePersonnelle');
+    $nouveauEleve->ETABORIG = $request->input('etablissementOrigine');
+    $nouveauEleve->NATIONALITE = $request->input('nationalite');
+    $nouveauEleve->STATUT = $redoublant;
+    $nouveauEleve->NOMPERE = $request->input('nomPere');
+    $nouveauEleve->NOMMERE = $request->input('nomMere');
+    $nouveauEleve->ADRPAR = $request->input('adressesParents');
+    $nouveauEleve->AUTRE_RENS = $request->input('autresRenseignements');
+    $nouveauEleve->indicatif1 = $request->input('indicatifParent');
+    $nouveauEleve->TEL = $request->input('telephoneParent'); // TELEPHONE PARRENT
+    $nouveauEleve->TelEleve = $request->input('telephoneEleve'); // telephone eleve
+    $nouveauEleve->MATRICULEX = $formateMatricule; // VALEUR GENERER DYNAMIQUEMENT
+    $nouveauEleve->CODEWEB = $formateMatricule; // MEME VALEUR QUE MATRICULEX
+
+    $nouveauEleve->save();
+
+    return redirect()->route('inscrireeleve')->with('status', 'Élève enregistré avec succès');;
+
+}
 
 }

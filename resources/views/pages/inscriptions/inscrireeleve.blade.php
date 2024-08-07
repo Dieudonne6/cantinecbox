@@ -12,36 +12,50 @@
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
+                    @if (Session::has('status'))
+                        <div id="statusAlert" class="alert alert-success btn-primary">
+                            {{ Session::get('status') }}
+                        </div>
+                    @endif
+                    {{-- @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif --}}
                   <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
                                 <!-- Formulaire Classe -->
-                                <form class="accordion-body mx-auto">
+                                <form  action="{{ url('/nouveaueleve') }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
                                     <div class="form-group row mt-1">
                                         <label for="classe" class="col-sm-2 col-form-label">Classe</label>
                                         <div class="col-sm-3">
-                                            <select class="js-example-basic-multiple w-100" id="classe" onchange="window.location.href=this.value">
-                                                <option>CE1</option>
-                                                <option>Italy</option>
-                                                <option>Russia</option>
-                                                <option>Britain</option>
+                                            <select class="js-example-basic-multiple w-100" id="classe" name="classe">
+                                                @foreach ($allClasse as $classe)
+                                                    <option value="{{ $classe->CODECLAS }}">{{ $classe->CODECLAS }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <label for="classe-entree" class="col-sm-3 col-form-label">Classe d'entrée collège</label>
                                         <div class="col-sm-3">
-                                            <select class="js-example-basic-multiple w-100 select2-hidden-accessible" id="classe-entree" onchange="window.location.href=this.value">
-                                                <option>CM2</option>
-                                                <option>Italy</option>
-                                                <option>Russia</option>
-                                                <option>Britain</option>
+                                            <select class="js-example-basic-multiple w-100 select2-hidden-accessible" id="classe-entree" name="classeEntre">
+                                                <option value="idem">idem</option>
+                                                @foreach ($allClasse as $classe)
+                                                    <option value="{{ $classe->CODECLAS }}">{{ $classe->CODECLAS }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group row mt-3">
                                         <label for="numero-ordre" class="col-sm-2 col-form-label">Numéro d'ordre</label>
                                         <div class="col-sm-3">
-                                            <input class="form-control" type="text" id="numero-ordre" placeholder="1082" name="prenom">
+                                            <input class="form-control" type="text" id="numero-ordre" name="numOrdre" value="{{ $newMatricule }}"  readonly>
                                         </div>
                                         <div class="col-sm-3">
                                             <button type="button" class="btn btn-secondary">Classe précédente</button>
@@ -52,19 +66,16 @@
                                             </button>
                                         </div>
                                     </div>
-                                </form>
+                                {{-- </form> --}}
                             
                                 <hr>
                                 <h4 class="card-title mt-3">Informations personnelles</h4>
-                                <form>
+                                {{-- <form> --}}
                                     <!-- Section Photo -->
                                     <div class="form-group row">
                                         <div class="col-md-4">
                                             <label for="photo">Photo</label>
-                                            <div class="mb-3">
-                                                <img id="photo-preview" src="#" alt="Aperçu de la photo" class="img-thumbnail" style="display: none; max-width: 100%;">
-                                            </div>
-                                            <input type="file" id="photo" name="photo" class="form-control" accept="image/*" onchange="previewPhoto(event)">
+                                            <input type="file" id="photo" name="photo" class="form-control">
                                         </div>
                                     </div>
                             
@@ -72,7 +83,7 @@
                                     <div class="form-group row mt-3">
                                         <div class="col-md-4">
                                             <label for="matricule">Matricule</label>
-                                            <input type="text" id="matricule" class="form-control" placeholder="Auto">
+                                            <input type="text" id="matricule" class="form-control" value="AUTO" readonly>
                                         </div>
                                         <div class="col-md-4 d-flex align-items-center">
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">
@@ -81,10 +92,12 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label for="profil-reduction">Profil de réduction</label>
-                                            <select id="profil-reduction" class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                                                <option value="">Sélectionner</option>
-                                                <option value="plein-tarif">Plein Tarif</option>
-                                                <option value="fils-enseignant">Fils d'enseignant</option>
+                                            <select id="profil-reduction" name="reduction" class="js-example-basic-multiple w-100" >
+                                                @foreach ($allReduction as $reduction)
+                                                    <option value="{{ $reduction->CodeReduction }}">{{ $reduction->LibelleReduction }}</option>
+                                                @endforeach
+                                                {{-- <option value="plein-tarif">Plein Tarif</option>
+                                                <option value="fils-enseignant">Fils d'enseignant</option> --}}
                                             </select>
                                         </div>
                                     </div>
@@ -101,27 +114,29 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label for="date-naissance">Date de naissance</label>
-                                            <input type="date" id="date-naissance" name="date-naissance" class="form-control">
+                                            <input type="date" id="date-naissance" name="dateNaissance" class="form-control">
                                         </div>
                                     </div>
                             
                                     <div class="form-group row mt-3">
                                         <div class="col-md-4">
                                             <label for="lieu-naissance">Lieu de naissance</label>
-                                            <input type="text" id="lieu-naissance" name="lieu-naissance" class="form-control">
+                                            <input type="text" id="lieu-naissance" name="lieuNaissance" class="form-control">
                                         </div>
                                         <div class="col-md-4">
                                             <label for="date-inscription">Date d'inscription</label>
-                                            <input type="date" id="date-inscription" name="date-inscription" class="form-control">
+                                            <input type="date" id="date-inscription" name="dateInscription" class="form-control">
                                         </div>
                                         <div class="col-md-4">
                                             <label for="departement">Département</label>
-                                            <select class="js-example-basic-multiple w-100" id="departement" onchange="window.location.href=this.value">
-                                                <option value="">Sélectionner</option>
-                                                <option value="littoral">Littoral</option>
+                                            <select class="js-example-basic-multiple w-100" id="departement" name="departement">
+                                                @foreach ($allDepartement as $departement)
+                                                    <option value="{{ $departement->CODEDEPT }}">{{ $departement->LIBELDEP }}</option>
+                                                @endforeach
+                                                {{-- <option value="littoral">Littoral</option>
                                                 <option value="italie">Italie</option>
                                                 <option value="russie">Russie</option>
-                                                <option value="royaume-uni">Royaume-Uni</option>
+                                                <option value="royaume-uni">Royaume-Uni</option> --}}
                                             </select>
                                         </div>
                                     </div>
@@ -130,26 +145,27 @@
                                     <div class="form-group row mt-3">
                                         <div class="col-md-4">
                                             <label for="sexe">Sexe</label>
-                                            <select id="sexe" class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                                                <option value="">Sélectionner</option>
-                                                <option value="masculin">Masculin</option>
-                                                <option value="feminin">Féminin</option>
+                                            <select id="sexe" name="sexe" class="js-example-basic-multiple w-100">
+                                                <option  >Sélectionner</option>
+                                                <option value="1">Masculin</option>
+                                                <option value="2">Féminin</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="type-eleve">Type d'élève</label>
-                                            <select id="type-eleve" class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                                                <option value="">Sélectionner</option>
-                                                <option value="nouveau">Nouveau</option>
-                                                <option value="ancien">Ancien</option>
+                                            <select id="type-eleve" name="typeEleve" class="js-example-basic-multiple w-100">
+                                                <option  >Sélectionner</option>
+                                                <option value="1">Nouveau</option>
+                                                <option value="2">Ancien</option>
+                                                <option value="3">Transferer</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="aptitude-sport">Aptitude Sport</label>
-                                            <select id="aptitude-sport" class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                                                <option value="">Sélectionner</option>
-                                                <option value="apte">Apte</option>
-                                                <option value="inapte">Inapte</option>
+                                            <select id="aptitude-sport" name="aptituteSport" class="js-example-basic-multiple w-100">
+                                                <option  >Sélectionner</option>
+                                                <option value="1">Apte</option>
+                                                <option value="2">Inapte</option>
                                             </select>
                                         </div>
                                     </div>
@@ -157,11 +173,11 @@
                                     <div class="form-group row mt-3">
                                         <div class="col-md-4">
                                             <label for="adresse-personnelle">Adresse personnelle</label>
-                                            <input type="text" id="adresse-personnelle" name="adresse-personnelle" class="form-control">
+                                            <input type="text" id="adresse-personnelle" placeholder="Elève au ScoDelux" name="adressePersonnelle" class="form-control">
                                         </div>
                                         <div class="col-md-4">
                                             <label for="etablissement-origine">Etablissement d'origine</label>
-                                            <input type="text" id="etablissement-origine" name="etablissement-origine" class="form-control">
+                                            <input type="text" id="etablissement-origine" name="etablissementOrigine" class="form-control">
                                         </div>
                                         <div class="col-md-4">
                                             <label for="nationalite">Nationalité</label>
@@ -173,7 +189,7 @@
                                     <div class="form-group row mt-3">
                                         <div class="col-md-4">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="redoublant">
+                                                <input class="form-check-input" type="checkbox" name="redoublant" id="redoublant" value="1">
                                                 <label class="form-check-label" for="redoublant">Cocher si c'est un redoublant</label>
                                             </div>
                                         </div>
@@ -186,22 +202,22 @@
                                     <div class="form-group row">
                                         <div class="col-md-6">
                                             <label for="nom-pere">Nom du père</label>
-                                            <input type="text" id="nom-pere" name="nom-pere" class="form-control">
+                                            <input type="text" id="nom-pere" name="nomPere" class="form-control">
                                         </div>
                                         <div class="col-md-6">
                                             <label for="nom-mere">Nom de la mère</label>
-                                            <input type="text" id="nom-mere" name="nom-mere" class="form-control">
+                                            <input type="text" id="nom-mere" name="nomMere" class="form-control">
                                         </div>
                                     </div>
                             
                                     <div class="form-group row mt-3">
                                         <div class="col-md-6">
                                             <label for="adresses-parents">Adresses parents</label>
-                                            <input type="text" id="adresses-parents" name="adresses-parents" class="form-control">
+                                            <input type="text" id="adresses-parents" name="adressesParents" class="form-control">
                                         </div>
                                         <div class="col-md-6">
                                             <label for="autres-renseignements">Autres renseignements</label>
-                                            <input type="text" id="autres-renseignements" name="autres-renseignements" class="form-control">
+                                            <input type="text" id="autres-renseignements" name="autresRenseignements" class="form-control">
                                         </div>
                                     </div>
                             
@@ -209,27 +225,27 @@
                                     <div class="form-group row mt-3">
                                         <div class="col-md-2">
                                             <label for="contacts-parents">Contacts parents</label>
-                                            <select id="contacts-parents" class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
+                                            <select id="contacts-parents" name="indicatifParent" class="js-example-basic-multiple w-100">
                                                 <option value="+229">+229</option>
                                             </select>
                                         </div>
                                         <div class="col-md-5">
-                                            <label for="telephone-1">Téléphone 1</label>
-                                            <input type="text" id="telephone-1" name="telephone-1" class="form-control">
+                                            <label for="telephone-1">Téléphone Parent</label>
+                                            <input type="text" id="telephone-1" name="telephoneParent" class="form-control">
                                         </div>
                                         <div class="col-md-5">
-                                            <label for="telephone-2">Téléphone 2</label>
-                                            <input type="text" id="telephone-2" name="telephone-2" class="form-control">
+                                            <label for="telephone-2">Téléphone Eleve</label>
+                                            <input type="text" id="telephone-2" name="telephoneEleve" class="form-control">
                                         </div>
                                     </div>
                             
                                     <!-- Section Actions -->
                                     <div class="form-group mt-3 text-center">
                                         <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                        <button type="button" class="btn btn-danger">Annuler</button>
+                                        <button type="reset" class="btn btn-danger">Annuler</button>
                                     </div>
                                 </form>
-                            
+{{--                             
                                 <script>
                                     function previewPhoto(event) {
                                         var reader = new FileReader();
@@ -240,7 +256,7 @@
                                         };
                                         reader.readAsDataURL(event.target.files[0]);
                                     }
-                                </script>
+                                </script> --}}
                             </div>                           
                         </div>
                     </div>
@@ -255,13 +271,13 @@
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="maladies_chroniques" class="mr-2">Maladies chroniques et allergies connues</label>
-                                            <input class="form-control" type="text" name="maladies_chroniques" id="maladies_chroniques" value="">
+                                            <input class="form-control" type="text" name="maladies_chroniques" id="maladies_chroniques"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="interdit_alimentaires" class="mr-2">Interdit alimentaires</label>
-                                            <input class="form-control" type="text" name="interdit_alimentaires" id="interdit_alimentaires" value="">
+                                            <input class="form-control" type="text" name="interdit_alimentaires" id="interdit_alimentaires"  >
                                         </div>
                                     </div>
                                     <div class="col">
@@ -297,19 +313,19 @@
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="nom_mere" class="mr-2">Nom</label>
-                                            <input class="form-control" type="text" name="nom_mere" id="nom_mere" value="">
+                                            <input class="form-control" type="text" name="nom_mere" id="nom_mere"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="prenom_mere" class="mr-2">Prénom</label>
-                                            <input class="form-control" type="text" name="prenom_mere" id="prenom_mere" value="">
+                                            <input class="form-control" type="text" name="prenom_mere" id="prenom_mere"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="telephone_mere" class="mr-2">Numéro de téléphone</label>
-                                            <input class="form-control" type="text" name="telephone_mere" id="telephone_mere" value="">
+                                            <input class="form-control" type="text" name="telephone_mere" id="telephone_mere"  >
                                         </div>
                                     </div>
                                 </div>
@@ -319,25 +335,25 @@
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="email_mere" class="mr-2">Adresse e-mail</label>
-                                            <input class="form-control" type="text" name="email_mere" id="email_mere" value="">
+                                            <input class="form-control" type="text" name="email_mere" id="email_mere"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="profession_mere" class="mr-2">Profession</label>
-                                            <input class="form-control" type="text" name="profession_mere" id="profession_mere" value="">
+                                            <input class="form-control" type="text" name="profession_mere" id="profession_mere"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="adresse_employeur_mere" class="mr-2">Adresse employeur</label>
-                                            <input class="form-control" type="text" name="adresse_employeur_mere" id="adresse_employeur_mere" value="">
+                                            <input class="form-control" type="text" name="adresse_employeur_mere" id="adresse_employeur_mere"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="adresse_personnelle_mere" class="mr-2">Adresse personnelle</label>
-                                            <input class="form-control" type="textarea" name="adresse_personnelle_mere" id="adresse_personnelle_mere" value="">
+                                            <input class="form-control" type="textarea" name="adresse_personnelle_mere" id="adresse_personnelle_mere"  >
                                         </div>
                                     </div>
                                 </div>
@@ -351,19 +367,19 @@
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="nom_pere" class="mr-2">Nom</label>
-                                            <input class="form-control" type="text" name="nom_pere" id="nom_pere" value="">
+                                            <input class="form-control" type="text" name="nom_pere" id="nom_pere">
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="prenom_pere" class="mr-2">Prénom</label>
-                                            <input class="form-control" type="text" name="prenom_pere" id="prenom_pere" value="">
+                                            <input class="form-control" type="text" name="prenom_pere" id="prenom_pere">
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="telephone_pere" class="mr-2">Numéro de téléphone</label>
-                                            <input class="form-control" type="text" name="telephone_pere" id="telephone_pere" value="">
+                                            <input class="form-control" type="text" name="telephone_pere" id="telephone_pere"  >
                                         </div>
                                     </div>
                                 </div>
@@ -373,25 +389,25 @@
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="email_pere" class="mr-2">Adresse e-mail</label>
-                                            <input class="form-control" type="text" name="email_pere" id="email_pere" value="">
+                                            <input class="form-control" type="text" name="email_pere" id="email_pere"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="profession_pere" class="mr-2">Profession</label>
-                                            <input class="form-control" type="text" name="profession_pere" id="profession_pere" value="">
+                                            <input class="form-control" type="text" name="profession_pere" id="profession_pere"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="adresse_employeur_pere" class="mr-2">Adresse employeur</label>
-                                            <input class="form-control" type="text" name="adresse_employeur_pere" id="adresse_employeur_pere" value="">
+                                            <input class="form-control" type="text" name="adresse_employeur_pere" id="adresse_employeur_pere"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="adresse_personnelle_pere" class="mr-2">Adresse personnelle</label>
-                                            <input class="form-control" type="textarea" name="adresse_personnelle_pere" id="adresse_personnelle_pere" value="">
+                                            <input class="form-control" type="textarea" name="adresse_personnelle_pere" id="adresse_personnelle_pere"  >
                                         </div>
                                     </div>
                                 </div>
@@ -405,19 +421,19 @@
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="nom_tuteur" class="mr-2">Nom</label>
-                                            <input class="form-control" type="text" name="nom_tuteur" id="nom_tuteur" value="">
+                                            <input class="form-control" type="text" name="nom_tuteur" id="nom_tuteur"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="prenom_tuteur" class="mr-2">Prénom</label>
-                                            <input class="form-control" type="text" name="prenom_tuteur" id="prenom_tuteur" value="">
+                                            <input class="form-control" type="text" name="prenom_tuteur" id="prenom_tuteur"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="telephone_tuteur" class="mr-2">Numéro de téléphone</label>
-                                            <input class="form-control" type="text" name="telephone_tuteur" id="telephone_tuteur" value="">
+                                            <input class="form-control" type="text" name="telephone_tuteur" id="telephone_tuteur"  >
                                         </div>
                                     </div>
                                 </div>
@@ -427,25 +443,25 @@
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="email_tuteur" class="mr-2">Adresse e-mail</label>
-                                            <input class="form-control" type="text" name="email_tuteur" id="email_tuteur" value="">
+                                            <input class="form-control" type="text" name="email_tuteur" id="email_tuteur"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="profession_tuteur" class="mr-2">Profession</label>
-                                            <input class="form-control" type="text" name="profession_tuteur" id="profession_tuteur" value="">
+                                            <input class="form-control" type="text" name="profession_tuteur" id="profession_tuteur"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="adresse_employeur_tuteur" class="mr-2">Adresse employeur</label>
-                                            <input class="form-control" type="text" name="adresse_employeur_tuteur" id="adresse_employeur_tuteur" value="">
+                                            <input class="form-control" type="text" name="adresse_employeur_tuteur" id="adresse_employeur_tuteur"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="adresse_personnelle_tuteur" class="mr-2">Adresse personnelle</label>
-                                            <input class="form-control" type="textarea" name="adresse_personnelle_tuteur" id="adresse_personnelle_tuteur" value="">
+                                            <input class="form-control" type="textarea" name="adresse_personnelle_tuteur" id="adresse_personnelle_tuteur"  >
                                         </div>
                                     </div>
                                 </div>
@@ -459,19 +475,19 @@
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="nom_urgence" class="mr-2">Nom</label>
-                                            <input class="form-control" type="text" name="nom_urgence" id="nom_urgence" value="">
+                                            <input class="form-control" type="text" name="nom_urgence" id="nom_urgence"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="prenom_urgence" class="mr-2">Prénom</label>
-                                            <input class="form-control" type="text" name="prenom_urgence" id="prenom_urgence" value="">
+                                            <input class="form-control" type="text" name="prenom_urgence" id="prenom_urgence"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="telephone_urgence" class="mr-2">Numéro de téléphone</label>
-                                            <input class="form-control" type="text" name="telephone_urgence" id="telephone_urgence" value="">
+                                            <input class="form-control" type="text" name="telephone_urgence" id="telephone_urgence"  >
                                         </div>
                                     </div>
                                 </div>
@@ -481,13 +497,13 @@
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="email_urgence" class="mr-2">Adresse e-mail</label>
-                                            <input class="form-control" type="text" name="email_urgence" id="email_urgence" value="">
+                                            <input class="form-control" type="text" name="email_urgence" id="email_urgence"  >
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
                                             <label for="adresse_personnelle_urgence" class="mr-2">Adresse personnelle</label>
-                                            <input class="form-control" type="textarea" name="adresse_personnelle_urgence" id="adresse_personnelle_urgence" value="">
+                                            <input class="form-control" type="textarea" name="adresse_personnelle_urgence" id="adresse_personnelle_urgence"  >
                                         </div>
                                     </div>
                                 </div>
@@ -496,13 +512,13 @@
                             <!-- Section: Permissions -->
                             <div class="form-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <input class="form-check-input" type="checkbox"   id="flexCheckDefault">
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Autorisation d'utiliser les vidéos à des fins publicitaires
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                                    <input class="form-check-input" type="checkbox"   id="flexCheckChecked" checked>
                                     <label class="form-check-label" for="flexCheckChecked">
                                         Autorisation d'utiliser les images à des fins publicitaires
                                     </label>
@@ -540,7 +556,7 @@
                   <div class="form-group row">
                     <label for="profilReduction" class="col-sm-12">Profil de réduction</label>
                     <div class="col-sm-12 mb-2">
-                      <select id="profilReduction" class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
+                      <select id="profilReduction" class="js-example-basic-multiple w-100" >
                         <option value="fils-enseignant">Fils d'enseignant</option>
                         <option value="plein-tarif">Plein Tarif</option>
                       </select>
@@ -693,31 +709,15 @@
   
   <!-- Custom JavaScript -->
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    function handleDragOver(container, input) {
-      container.addEventListener('dragover', function(event) {
-        event.preventDefault();
-        container.classList.add('dragover');
-      });
-  
-      container.addEventListener('dragleave', function() {
-        container.classList.remove('dragover');
-      });
-  
-      container.addEventListener('drop', function(event) {
-        event.preventDefault();
-        container.classList.remove('dragover');
-        input.files = event.dataTransfer.files;
-      });
-  
-      container.addEventListener('click', function() {
-        input.click();
-      });
-    }
-  
-    var imageInput = document.getElementById('imageInput');
-    var customFileContainer = document.getElementById('customFileContainer');
-    handleDragOver(customFileContainer, imageInput);
-  });
-  </script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var nomeleveInput = document.getElementById('nom');
+        var nompereInput = document.getElementById('nom-pere');
+
+            if (nomeleveInput && nompereInput) {
+                nomeleveInput.addEventListener('input', function () {
+                    nompereInput.value = nomeleveInput.value;
+                });
+            }
+    });
+</script>
 @endsection

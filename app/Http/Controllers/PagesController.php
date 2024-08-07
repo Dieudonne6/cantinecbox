@@ -14,6 +14,8 @@ use App\Models\Paramsfacture;
 use App\Models\User;
 use App\Models\Params2;
 use App\Models\Classes;
+use App\Models\Departement;
+use App\Models\Reduction;
 use App\Models\Duplicatafacture;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
@@ -232,14 +234,12 @@ class PagesController extends Controller
         $request->validate([
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        $fileNameWhiteExt = $request->file('logo')->getClientOriginalName();
-        $fileName = pathinfo($fileNameWhiteExt, PATHINFO_FILENAME);
-        $ext = $request->file('logo')->getClientOriginalExtension();
-        $fileNameToStore = $fileName."_".time().".".$ext;
+        $imageName = $request->file('logo');
+        $imageContent = file_get_contents($imageName->getRealPath());
 
 
-        $path = $request->file('logo')->storeAs("public/logo", $fileNameToStore);
-        $emcef->logo = $fileNameToStore;
+
+        $emcef->logo = $imageContent;
 
         $emcef->save();
         return back()->with('status','Enregistrer avec succes');
@@ -334,7 +334,27 @@ class PagesController extends Controller
     }
     
     public function inscrireeleve(){
-        return view('pages.inscriptions.inscrireeleve');
+
+        // Récupérer le dernier matricule existant
+        $lastMatricule = Eleve::orderBy('MATRICULE', 'desc')->pluck('MATRICULE')->first();
+
+        // Générer le nouveau matricule
+        if ($lastMatricule) {
+            // En supposant que le matricule est de type numérique
+            $newMatricule = (int)$lastMatricule + 1;
+        } else {
+            // Si aucun matricule n'existe encore, initialiser à un numéro de départ
+            $newMatricule = 1;
+        }
+
+
+
+
+        $allClasse = Classes::all();
+        $allReduction = Reduction::all();
+        $allDepartement = Departement::all();
+
+        return view('pages.inscriptions.inscrireeleve', compact('allClasse', 'allReduction', 'allDepartement', 'newMatricule'));
         } 
         
         public function certificatsolarite(){

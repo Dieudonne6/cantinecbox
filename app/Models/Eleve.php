@@ -9,6 +9,8 @@ class Eleve extends Model
 {
     use HasFactory;
     protected $table = 'eleve';
+
+    public $timestamps = false;
     public function contrats()
     {
         return $this->hasMany(Contrat::class,'eleve_contrat', 'MATRICULE');
