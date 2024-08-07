@@ -138,7 +138,7 @@ class GestionclasseController extends Controller
     $enreninfo = new Eleveplus();
     $enreninfo->MATRICULE = $request->input('matricule');
 
-    $enreninfo->maladiesconnues = $request->input('maladiesconnues');
+    $enreninfo->maladiesconnues = $request->input('maladieschroniques');
     $enreninfo->interditalimentaires = $request->input('interditalimentaires');
     $enreninfo->groupesanguin = $request->input('groupesanguin');
     $enreninfo->electroforez= $request->input('typehemoglobine');
@@ -160,7 +160,7 @@ class GestionclasseController extends Controller
     $enreninfo->prenomtuteur = $request->input('prenomtuteur');
     $enreninfo->teltuteur = $request->input('telephonetuteur');
     $enreninfo->emailtuteur = $request->input('emailtuteur');
-    $enreninfo->adremployeurpere = $request->input('adresseemployeurtuteur');
+    $enreninfo->adremployeurtuteur = $request->input('adresseemployeurtuteur');
     $enreninfo->adrtuteur = $request->input('adressepersonnelletuteur');
     $enreninfo->professiontuteur = $request->input('professiontuteur');
     $enreninfo->nomurgence = $request->input('nomurgence');
