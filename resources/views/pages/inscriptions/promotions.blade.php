@@ -3,6 +3,13 @@
 
 <div class="main-panel-10">
     <div class="content-wrapper">
+
+        @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
+        
         <div class="row">
             <div class="col-12">
                 <div class="card mb-6">

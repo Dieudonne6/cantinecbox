@@ -312,60 +312,61 @@ public function supprimerGroupe($id)
     $enreninfo->save();
     return back()->with('status','Enregistrer avec succes');
   } 
-  //Promotion
-  public function index()
-  {
-      $promotions = Promo::all(); // Récupère toutes les promotions
-      return view('pages.inscriptions.promotions', compact('promotions')); // Utilise le bon nom de la vue
-  }
+//Promotion
+public function index()
+{
+    $promotions = Promo::all(); // Récupère toutes les promotions
+    return view('pages.inscriptions.promotions', compact('promotions')); // Utilise le bon nom de la vue
+}
 
-  public function store(Request $request)
-  {
-      $request->validate([
-          'codePromotion' => 'required|max:4|unique:promo,CODEPROMO',
-          'libellePromotion' => 'required',
-          'Niveau' => 'required|integer|min:1|max:7',
-          'enseignement' => 'required|integer'
-      ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'codePromotion' => 'required|max:4|unique:promo,CODEPROMO',
+        'libellePromotion' => 'required',
+        'Niveau' => 'required|integer|min:1|max:7',
+        'enseignement' => 'required|integer'
+    ]);
 
-      Promo::create([
-          'CODEPROMO' => $request->codePromotion,
-          'LIBELPROMO' => $request->libellePromotion,
-          'Niveau' => $request->Niveau,
-          'TYPEENSEIG' => $request->enseignement
-      ]);
+    Promo::create([
+        'CODEPROMO' => $request->codePromotion,
+        'LIBELPROMO' => $request->libellePromotion,
+        'Niveau' => $request->Niveau,
+        'TYPEENSEIG' => $request->enseignement
+    ]);
 
-      return redirect()->route('promotions.index');
-  }
+    return redirect()->route('promotions.index')->with('success', 'Promotion créée avec succès !');
+}
 
-  public function update(Request $request, $codePromo)
-  {
-      $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
+public function update(Request $request, $codePromo)
+{
+    $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
 
-      $request->validate([
-          'codePromotion' => 'required|max:4',
-          'libellePromotion' => 'required',
-          'Niveau' => 'required|integer|min:1|max:7',
-          'enseignement' => 'required|integer'
-      ]);
+    $request->validate([
+        'codePromotion' => 'required|max:4',
+        'libellePromotion' => 'required',
+        'Niveau' => 'required|integer|min:1|max:7',
+        'enseignement' => 'required|integer'
+    ]);
 
-      $promotion->update([
-          'CODEPROMO' => $request->codePromotion,
-          'LIBELPROMO' => $request->libellePromotion,
-          'Niveau' => $request->Niveau,
-          'TYPEENSEIG' => $request->enseignement
-      ]);
+    $promotion->update([
+        'CODEPROMO' => $request->codePromotion,
+        'LIBELPROMO' => $request->libellePromotion,
+        'Niveau' => $request->Niveau,
+        'TYPEENSEIG' => $request->enseignement
+    ]);
 
-      return redirect()->route('promotions.index');
-  }
+    return redirect()->route('promotions.index')->with('success', 'Promotion mise à jour avec succès !');
+}
 
-  public function destroy($codePromo)
-  {
-      $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
-      $promotion->delete();
+public function destroy($codePromo)
+{
+    $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
+    $promotion->delete();
 
-      return redirect()->route('promotions.index');
-  }
+    return redirect()->route('promotions.index')->with('success', 'Promotion supprimée avec succès !');
+}
+
 
   public function indexEleves()
 {
