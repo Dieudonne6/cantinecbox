@@ -413,24 +413,15 @@ class PagesController extends Controller
         return view('pages.inscriptions.listeselective');
     } 
 
-    public function modifiereleve(){
+    public function modifiereleve($MATRICULE){
          // Récupérer le dernier matricule existant
-         $lastMatricule = Eleve::orderBy('MATRICULE', 'desc')->pluck('MATRICULE')->first();
-
-         // Générer le nouveau matricule
-         if ($lastMatricule) {
-             // En supposant que le matricule est de type numérique
-             $newMatricule = (int)$lastMatricule + 1;
-         } else {
-             // Si aucun matricule n'existe encore, initialiser à un numéro de départ
-             $newMatricule = 1;
-         }
+         $Matricule = Eleve::find($MATRICULE);
          $allClasse = Classes::all();
          $allReduction = Reduction::all();
          $allDepartement = Departement::all();
          $archive = Elevea::get();
- 
-         return view('pages.inscriptions.modifiereleve', compact('allClasse', 'allReduction', 'allDepartement', 'newMatricule', 'archive'));
+         $alleleve = Eleveplus::where('MATRICULE', $MATRICULE)->first();
+         return view('pages.inscriptions.modifiereleve', compact('allClasse', 'allReduction', 'allDepartement', 'archive', 'alleleve', 'Matricule'));
     }
 
     public function typesclasses(){
@@ -491,5 +482,48 @@ class PagesController extends Controller
     public function etatdesrecouvrements(){
         return view ('pages.inscriptions.etatdesrecouvrements');
     }
+    public function modifieeleve(Request $request, $MATRICULE){
+        $modifyeleve = Eleveplus::find($MATRICULE);
+        if ($modifyeleve) {
+            $modifyeleve->maladiesconnues = $request->input('maladieschroniques');
+            $modifyeleve->interditalimentaires = $request->input('interditalimentaires');
+            $modifyeleve->groupesanguin = $request->input('groupesanguin');
+            $modifyeleve->electroforez = $request->input('typehemoglobine');
+            $modifyeleve->NOMMERE = $request->input('nommere');
+            $modifyeleve->prenommere = $request->input('prenommere');
+            $modifyeleve->telmere = $request->input('telephonemere');
+            $modifyeleve->emailmere = $request->input('emailmere');
+            $modifyeleve->professionmere = $request->input('professionmere');
+            $modifyeleve->adremployeurmere = $request->input('adresseemployeurmere');
+            $modifyeleve->adrmere = $request->input('adressepersonnellemere');
+            $modifyeleve->NOMPERE = $request->input('nompere');
+            $modifyeleve->prenompere = $request->input('prenompere');
+            $modifyeleve->telpere = $request->input('telephonepere');
+            $modifyeleve->emailpere = $request->input('emailpere');
+            $modifyeleve->professionpere = $request->input('professionpere');
+            $modifyeleve->adremployeurpere = $request->input('adresseemployeurpere');
+            $modifyeleve->adrpere = $request->input('adressepersonnellepere');
+            $modifyeleve->nomtutuer = $request->input('nomtuteur');
+            $modifyeleve->prenomtuteur = $request->input('prenomtuteur');
+            $modifyeleve->teltuteur = $request->input('telephonetuteur');
+            $modifyeleve->emailtuteur = $request->input('emailtuteur');
+            $modifyeleve->adremployeurtuteur = $request->input('adresseemployeurtuteur');
+            $modifyeleve->adrtuteur = $request->input('adressepersonnelletuteur');
+            $modifyeleve->professiontuteur = $request->input('professiontuteur');
+            $modifyeleve->nomurgence = $request->input('nomurgence');
+            $modifyeleve->prenomurgence = $request->input('prenomurgence');
+            $modifyeleve->telurgence = $request->input('telephoneurgence');
+            $modifyeleve->emailpere = $request->input('emailurgence');
+            $modifyeleve->adrurgence = $request->input('adressepersonnelleurgence');
+            $modifyeleve->autorisefilm = $request->input('autorisevideo');
+            $modifyeleve->autoriseuseimage = $request->input('autoriseimage');
+            $modifyeleve->update();
+            return back()->with('status','Modifier avec succes');
+    
+        } else {
+            return back()->withErrors('Erreur lors de la modification.');
 
+        }
+    
+      }
 }

@@ -279,7 +279,7 @@ public function supprimerGroupe($id)
     $enreninfo->maladiesconnues = $request->input('maladieschroniques');
     $enreninfo->interditalimentaires = $request->input('interditalimentaires');
     $enreninfo->groupesanguin = $request->input('groupesanguin');
-    $enreninfo->electroforez= $request->input('typehemoglobine');
+    $enreninfo->electroforez = $request->input('typehemoglobine');
     $enreninfo->NOMMERE = $request->input('nommere');
     $enreninfo->prenommere = $request->input('prenommere');
     $enreninfo->telmere = $request->input('telephonemere');
