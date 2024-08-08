@@ -21,10 +21,10 @@ class EleveController extends Controller
            // Supprimer l'élève
            $eleve->delete();
 
-           return redirect()->back()->with('success', 'Élève supprimé avec succès.');
+           return redirect()->back()->with('status', 'Élève supprimé avec succès.');
        }
 
-       return redirect()->back()->with('error', 'Élève non trouvé.');
+       return redirect()->back()->with('status', 'Élève non trouvé.');
    }
 
 }
