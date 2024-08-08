@@ -1140,7 +1140,7 @@
           <div class="col">
             <div class="card">
               <div class="table-responsive" style="height: 300px; overflow: auto;">
-                <table class="table table-bordered table-striped" style="min-width: 600px; font-size: 10px;">
+                <table class="table table-bordered table-striped"  style="min-width: 600px; font-size: 10px;">
                   <thead>
                     <tr>
                       <th>Matricule</th>
@@ -1167,7 +1167,28 @@
 
                       <td><img src="photo2.jpg" alt="" width="50"></td>
                       <td>
-                        <button type="button" class="btn btn-primary" id="{{ $archive->MATRICULE }}"><i class="typcn typcn-archive btn-icon-append"></i></button>
+                        <button type="button" class="btn btn-primary fill-form-btn" 
+                        data-matricule="{{ $archive->MATRICULE }}" 
+                        data-classe="{{ $archive->CODECLAS }}" 
+                        data-classeanterieur="{{ $archive->ANCCLASSE }}" 
+                        data-departement="{{ $archive->CODEDEPT }}" 
+                        data-addresseperso="{{ $archive->ADRPERS }}" 
+                        data-etaborigine="{{ $archive->ETABORIG }}" 
+                        data-nationnalite="{{ $archive->NATIONALITE }}" 
+                        data-nompere="{{ $archive->NOMPERE }}" 
+                        data-nommere="{{ $archive->NOMMERE }}" 
+                        data-adresseparent="{{ $archive->ADRPAR }}" 
+                        data-autrerenseignement="{{ $archive->AUTRE_RENS }}" 
+                        data-telephone="{{ $archive->TEL }}" 
+                        data-telephoneeleve="{{ $archive->TelEleve }}" 
+                        data-nom="{{ $archive->NOM }}"
+                        data-prenom="{{ $archive->PRENOM }}"
+                        data-sexe="{{ $archive->SEXE }}"
+                        data-datenaiss="{{ $archive->DATENAIS }}"
+                        data-apte="{{ $archive->APTE }}"
+                        data-lieunaiss="{{ $archive->LIEUNAIS }}">
+                        <i class="typcn typcn-archive btn-icon-append"></i>
+                        </button>
                       </td>
                       @endforeach
                     </tr>
@@ -1224,6 +1245,8 @@
   </style>
   
   <!-- Custom JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
         var nomeleveInput = document.getElementById('nom');
@@ -1234,6 +1257,67 @@
                     nompereInput.value = nomeleveInput.value;
                 });
             }
+    });
+
+
+    // script pour sortir un eleve de l'archive et le mettre dans le formulaire 
+
+    $(document).ready(function(){
+    $('.fill-form-btn').on('click', function() {
+        var matricule = $(this).data('matricule');
+        var nom = $(this).data('nom');
+        var prenom = $(this).data('prenom');
+        var sexe = $(this).data('sexe');
+        var datenaiss = $(this).data('datenaiss');
+        var lieunaiss = $(this).data('lieunaiss');
+        var classe = $(this).data('classe');
+        var classeanterieur = $(this).data('classeanterieur');
+        var departement = $(this).data('departement');
+        var addresseperso = $(this).data('addresseperso');
+        var etaborigine = $(this).data('etaborigine');
+        var nationnalite = $(this).data('nationnalite');
+        var nompere = $(this).data('nompere');
+        var nommere = $(this).data('nommere');
+        var adresseparent = $(this).data('adresseparent');
+        var autrerenseignement = $(this).data('autrerenseignement');
+        var telephone = $(this).data('telephone');
+        var telephoneeleve = $(this).data('telephoneeleve');
+        var apte = $(this).data('apte');
+
+        // Remplir le formulaire avec les informations de l'élève
+        $('#numero-ordre').val(matricule);
+        $('#nom').val(nom);
+        $('#prenom').val(prenom);
+        $('#formSexe').val(sexe);
+        $('#date-naissance').val(datenaiss);
+        $('#sexe').val(sexe).change();
+        $('#classe').val(classe);
+        $('#classe-entree').val(classeanterieur);
+        $('#departement').val(departement);
+        $('#adresse-personnelle').val(addresseperso);
+        $('#etablissement-origine').val(etaborigine);
+        $('#lieu-naissance').val(lieunaiss);
+        $('#lieu').val(nationnalite);
+        $('#nom-pere').val(nompere);
+        $('#nom-mere').val(nommere);
+        $('#adresses-parents').val(adresseparent);
+        $('#autres-renseignements').val(autrerenseignement);
+        $('#telephone-1').val(telephone);
+        $('#telephone-2').val(telephoneeleve);
+        $('#aptitude-sport').val(apte).change();
+
+        // Cocher ou décocher la case à cocher en fonction de la valeur
+        $('#formArchive').prop('checked', archive == 1); // Supposons que 1 signifie "coché" et 0 signifie "décoché"
+
+
+         // Fermer le modal
+        $('#exampleModal1').modal('hide');
+
+        // Optionnel : Faire défiler la page jusqu'au formulaire
+        // $('html, body').animate({
+        //     scrollTop: $("#formulaire").offset().top
+        // }, 1000);
+    });
     });
 </script>
 @endsection

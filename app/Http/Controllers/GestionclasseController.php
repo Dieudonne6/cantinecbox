@@ -22,8 +22,8 @@ use App\Models\Notes;
 class GestionclasseController extends Controller
 {
       public function groupes(){
-        
-        return view('pages.inscriptions.groupes');
+        $listegroupe = Groupeclasse::all();
+        return view('pages.inscriptions.groupes')->with('listegroupe', $listegroupe);
     }
 
     public function series(Request $request){
