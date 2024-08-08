@@ -68,7 +68,7 @@ Route::get('/changetrimestre', [PagesController::class, 'changetrimestre']);
 Route::get('/confimpression', [PagesController::class, 'confimpression']);
 
 Route::get('/Acceuil', [PagesController::class, 'Acceuil']);
-Route::get('/modifiereleve', [PagesController::class, 'modifiereleve']);
+Route::get('/modifiereleve/{MATRICULE}', [PagesController::class, 'modifiereleve']);
 Route::get('/profil', [PagesController::class, 'profil']);
 
 Route::get('/typesclasses', [PagesController::class, 'typesclasses']);
