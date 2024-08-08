@@ -165,51 +165,51 @@ public function supprimerGroupe($id)
         }
     }
 
-    public function series(Request $request){
-      $series = Serie::get();
-      // dd($series);
-      return view ('pages.inscriptions.series')->with('series', $series);
-  }
-
-  public function saveserie(Request $request){
-    $series = new Serie();
-    $series->SERIE = $request->input('SERIE');
-    $series->LIBELSERIE = $request->input('LIBELSERIE');
-    $series->CYCLE = $request->input('CYCLE');
-
-    if (Serie::where('SERIE', $series->SERIE)->exists()) {
-    return back()->with('status', 'Cette série existe déjà.');
-  }
-    $series->save();
-
-    return back()->with('status', 'Enregistrer avec succès');
-  }
-
-  public function updateserie(Request $request){
-
-    $series = Serie::find($request->idcycle);
-    if ($series) {
-      $series->SERIE = $request->input('SERIE');
-      $series->LIBELSERIE = $request->input('LIBELSERIE');
-      $series->CYCLE = $request->input('CYCLE');
-      $series->save();
-      
-      return back()->with('status', 'Modifié avec succès');
+    public function series(Request $request)
+    {
+        $series = Serie::get();
+        return view('pages.inscriptions.series')->with('series', $series);
     }
 
-    return back()->withErrors('Erreur lors de la modification.');
+    public function saveserie(Request $request)
+    {
+        $series = new Serie();
+        $series->SERIE = $request->input('SERIE');
+        $series->LIBELSERIE = $request->input('LIBELSERIE');
+        $series->CYCLE = $request->input('CYCLE');
 
-  }
+        if (Serie::where('SERIE', $series->SERIE)->exists()) {
+            return back()->with('status', 'Cette série existe déjà.');
+        }
 
-  public function deleteserie(Request $request)
-  {
-    $deleteserie = Serie::find($request->idcycle);
-    if ($deleteserie) {
-      $deleteserie->delete();
-      return back()->with('status', 'Supprimé avec succès');
-    } 
-    return back()->withErrors('Erreur lors de la suppression.');
-  }
+        $series->save();
+        return back()->with('status', 'Enregistré avec succès');
+    }
+
+    public function updateserie(Request $request)
+    {
+        $series = Serie::find($request->SERIE); // Using SERIE as the identifier
+        if ($series) {
+            $series->LIBELSERIE = $request->input('LIBELSERIE');
+            $series->CYCLE = $request->input('CYCLE');
+            $series->save();
+
+            return back()->with('status', 'Modifié avec succès');
+        }
+
+        return back()->withErrors('Erreur lors de la modification.');
+    }
+
+    public function deleteserie(Request $request)
+    {
+        $deleteserie = Serie::find($request->SERIE); // Using SERIE as the identifier
+        if ($deleteserie) {
+            $deleteserie->delete();
+            return back()->with('status', 'Supprimé avec succès');
+        }
+
+        return back()->withErrors('Erreur lors de la suppression.');
+    }
 
   
   public function savetypeclasse(Request $request){

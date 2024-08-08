@@ -5,10 +5,10 @@
     <div class="content-wrapper">
 
       @if(Session::has('status'))
-    <div id="statusAlert" class="alert alert-succes btn-primary">
-      {{ Session::get('status')}}
-    </div>
-    @endif
+        <div id="statusAlert" class="alert alert-success btn-primary">
+          {{ Session::get('status')}}
+        </div>
+      @endif
 
       <div class="row">          
         <div class="col-12">
@@ -71,15 +71,15 @@
                     <td>
                         <div class="">
                             <!-- Button modifier trigger modal -->
-                            <button type="button" class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalModifier<?php echo $serie->idcycle; ?>"> Modifier</button>
+                            <button type="button" class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalModifier{{ $serie->SERIE }}"> Modifier</button>
 
                             <!-- Button supprimer trigger modal -->
-                            <button type="button" class="btn btn-danger p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalDelete<?php echo $serie->idcycle; ?>">Supprimer</button>
+                            <button type="button" class="btn btn-danger p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalDelete{{ $serie->SERIE }}">Supprimer</button>
                           </div>
                     </td>
                   </tr>
     <!-- Modal bouton Modifier -->
-    <div class="modal fade" id="exampleModalModifier<?php echo $serie->idcycle; ?>" tabindex="-2" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal fade" id="exampleModalModifier{{ $serie->SERIE }}" tabindex="-2" aria-labelledby="exampleModalLabel2" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -90,28 +90,28 @@
             <form action="{{url('/modifierserie')}}" method="POST">
               @csrf
               @method('PUT')
-              <input type="hidden" name="idcycle" id="edit-id" value="<?php echo $serie->idcycle; ?>">
+              <input type="hidden" name="SERIE" id="edit-serie" value="{{ $serie->SERIE }}">
               <div class="form-group">
                   <div class="form-group row">
                       <div class="col-sm-4">
                         <div>
                             <label><strong>Série</strong> (Donner un code pour la série à créer [2 caractères]. Ex: C)</label>
-                            <input type="text" name="SERIE" value="<?php echo $serie->SERIE; ?>" placeholder="" id="edit-serie" class="form-control">
+                            <input type="text" name="SERIE" value="{{ $serie->SERIE }}" placeholder="" id="edit-serie" class="form-control">
                         </div>
                       </div>
                       <div class="col-sm-4">
                         <div>
                             <label><strong>Libellé série</strong> (Donner le libellé de la série à créer. Ex: Série C)</label>
-                            <input type="text" name="LIBELSERIE" value="<?php echo $serie->LIBELSERIE; ?>" placeholder="" id="edit-libelserie" class="form-control">
+                            <input type="text" name="LIBELSERIE" value="{{ $serie->LIBELSERIE }}" placeholder="" id="edit-libelserie" class="form-control">
                         </div>
                       </div>
                       <div class="col-sm-4">
                           <label><strong>Préciser le Cycle</strong></label>
                           <select name="CYCLE" class="js-example-basic-multiple w-100">
-                            <option value="1">1er Cycle</option>
-                            <option value="2">2eme Cycle</option>
-                            <option value="3">3eme Cycle</option>
-                            <option value="0">Aucun</option>
+                            <option value="1" {{ $serie->CYCLE == 1 ? 'selected' : '' }}>1er Cycle</option>
+                            <option value="2" {{ $serie->CYCLE == 2 ? 'selected' : '' }}>2eme Cycle</option>
+                            <option value="3" {{ $serie->CYCLE == 3 ? 'selected' : '' }}>3eme Cycle</option>
+                            <option value="0" {{ $serie->CYCLE == 0 ? 'selected' : '' }}>Aucun</option>
                         </select>
                       </div>
                   </div>
@@ -128,7 +128,7 @@
 
 
         <!-- Modal bouton supprimer -->
-    <div class="modal fade" id="exampleModalDelete<?php echo $serie->idcycle; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModalDelete{{ $serie->SERIE }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -143,7 +143,7 @@
             <form action="{{ url('/supprimerserie')}}" method="POST">
               @csrf
               @method('DELETE')
-              <input type="hidden" name="idcycle" value="<?php echo $serie->idcycle; ?>">
+              <input type="hidden" name="SERIE" value="{{ $serie->SERIE }}">
               <input type="submit" class="btn btn-danger" value="Confirmer">
             </form>  
           </div>
