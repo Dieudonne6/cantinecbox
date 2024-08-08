@@ -10,5 +10,6 @@ class Eleveplus extends Model
     use HasFactory;
     protected $connection = 'mysql2';
     protected $table = 'eleveplus';
+    protected $primaryKey = 'MATRICULE';
     public $timestamps = false;
 }

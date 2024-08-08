@@ -265,28 +265,30 @@
             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
               <div class="card">
                 <div class="card-body">
-                  <form  action="{{url('enregistrerinfo')}}" method="POST">
-                    {{csrf_field()}}
-                    <input type="hidden" name="matricule" value="{{ $newMatricule }}">
+                 
+                    <form  action="{{url('modifieeleve/'.$newMatricule)}}" method="POST">
+                      @csrf
+                      @method('PUT')
+                    {{-- <input type="hidden" name="matricule" value="{{ $newMatricule }}"> --}}
                     <!-- Section: Health Information -->
                     <div class="form-group">
                       <div class="row">
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="maladies_chroniques" class="mr-2">Maladies chroniques et allergies connues</label>
-                            <input class="form-control" type="text" name="maladieschroniques" id="maladies_chroniques" value="">
+                            <input class="form-control" type="text" name="maladieschroniques" id="maladies_chroniques" value="{{ $alleleve->maladiesconnues }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="interdit_alimentaires" class="mr-2">Interdit alimentaires</label>
-                            <input class="form-control" type="text" name="interditalimentaires" id="interdit_alimentaires" value="">
+                            <input class="form-control" type="text" name="interditalimentaires" id="interdit_alimentaires" value="{{ $alleleve->interditalimentaires }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="groupe_sanguin" class="mr-2">Groupe sanguin</label>
-                            <select class="form-control js-example-basic-multiple w-100" id="groupe_sanguin" name="groupesanguin">
+                            <select class="form-control js-example-basic-multiple w-100" id="groupe_sanguin" name="groupesanguin" value="{{ $alleleve->groupesanguin }}">
                               <option>A+</option>
                               <option>O+</option>
                               <option>B+</option>
@@ -297,7 +299,7 @@
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="type_hemoglobine" class="mr-2">Type d'hémoglobine</label>
-                            <select class="form-control js-example-basic-multiple w-100" id="type_hemoglobine" name="typehemoglobine">
+                            <select class="form-control js-example-basic-multiple w-100" id="type_hemoglobine" name="typehemoglobine" value="{{ $alleleve->electroforez }}">
                               <option>A</option>
                               <option>O</option>
                               <option>B</option>
@@ -316,19 +318,19 @@
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="nom_mere" class="mr-2">Nom</label>
-                            <input class="form-control" type="text" name="nommere" id="nom_mere" value="">
+                            <input class="form-control" type="text" name="nommere" id="nom_mere" value="{{ $alleleve->NOMMERE }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="prenom_mere" class="mr-2">Prénom</label>
-                            <input class="form-control" type="text" name="prenommere" id="prenom_mere" value="">
+                            <input class="form-control" type="text" name="prenommere" id="prenom_mere" value="{{ $alleleve->prenommere }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="telephone_mere" class="mr-2">Numéro de téléphone</label>
-                            <input class="form-control" type="text" name="telephonemere" id="telephone_mere" value="">
+                            <input class="form-control" type="text" name="telephonemere" id="telephone_mere" value="{{ $alleleve->telmere }}">
                           </div>
                         </div>
                       </div>
@@ -338,25 +340,25 @@
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="email_mere" class="mr-2">Adresse e-mail</label>
-                            <input class="form-control" type="text" name="emailmere" id="email_mere" value="">
+                            <input class="form-control" type="text" name="emailmere" id="email_mere" value="{{ $alleleve->emailmere }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="profession_mere" class="mr-2">Profession</label>
-                            <input class="form-control" type="text" name="professionmere" id="profession_mere" value="">
+                            <input class="form-control" type="text" name="professionmere" id="profession_mere" value="{{ $alleleve->professionmere }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="adresse_employeur_mere" class="mr-2">Adresse employeur</label>
-                            <input class="form-control" type="text" name="adresseemployeurmere" id="adresse_employeur_mere" value="">
+                            <input class="form-control" type="text" name="adresseemployeurmere" id="adresse_employeur_mere" value="{{ $alleleve->adremployeurmere }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="adresse_personnelle_mere" class="mr-2">Adresse personnelle</label>
-                            <input class="form-control" type="textarea" name="adressepersonnellemere" id="adresse_personnelle_mere" value="">
+                            <input class="form-control" type="textarea" name="adressepersonnellemere" id="adresse_personnelle_mere" value="{{ $alleleve->adrmere }}">
                           </div>
                         </div>
                       </div>
@@ -370,19 +372,19 @@
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="nom_pere" class="mr-2">Nom</label>
-                            <input class="form-control" type="text" name="nompere" id="nom_pere" value="">
+                            <input class="form-control" type="text" name="nompere" id="nom_pere" value="{{ $alleleve->NOMPERE }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="prenom_pere" class="mr-2">Prénom</label>
-                            <input class="form-control" type="text" name="prenompere" id="prenom_pere" value="">
+                            <input class="form-control" type="text" name="prenompere" id="prenom_pere" value="{{ $alleleve->prenompere }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="telephone_pere" class="mr-2">Numéro de téléphone</label>
-                            <input class="form-control" type="text" name="telephonepere" id="telephone_pere" value="">
+                            <input class="form-control" type="text" name="telephonepere" id="telephone_pere" value="{{ $alleleve->telpere }}">
                           </div>
                         </div>
                       </div>
@@ -392,25 +394,25 @@
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="email_pere" class="mr-2">Adresse e-mail</label>
-                            <input class="form-control" type="text" name="emailpere" id="email_pere" value="">
+                            <input class="form-control" type="text" name="emailpere" id="email_pere" value="{{ $alleleve->emailpere }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="profession_pere" class="mr-2">Profession</label>
-                            <input class="form-control" type="text" name="professionpere" id="profession_pere" value="">
+                            <input class="form-control" type="text" name="professionpere" id="profession_pere" value="{{ $alleleve->professionpere }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="adresse_employeur_pere" class="mr-2">Adresse employeur</label>
-                            <input class="form-control" type="text" name="adresseemployeurpere" id="adresse_employeur_pere" value="">
+                            <input class="form-control" type="text" name="adresseemployeurpere" id="adresse_employeur_pere" value="{{ $alleleve->adremployeurpere }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="adresse_personnelle_pere" class="mr-2">Adresse personnelle</label>
-                            <input class="form-control" type="textarea" name="adressepersonnellepere" id="adresse_personnelle_pere" value="">
+                            <input class="form-control" type="textarea" name="adressepersonnellepere" id="adresse_personnelle_pere" value="{{ $alleleve->adrpere }}">
                           </div>
                         </div>
                       </div>
@@ -424,19 +426,19 @@
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="nom_tuteur" class="mr-2">Nom</label>
-                            <input class="form-control" type="text" name="nomtuteur" id="nom_tuteur" value="">
+                            <input class="form-control" type="text" name="nomtuteur" id="nom_tuteur" value="{{ $alleleve->nomtutuer }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="prenom_tuteur" class="mr-2">Prénom</label>
-                            <input class="form-control" type="text" name="prenomtuteur" id="prenom_tuteur" value="">
+                            <input class="form-control" type="text" name="prenomtuteur" id="prenom_tuteur" value="{{ $alleleve->prenomtuteur }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="telephone_tuteur" class="mr-2">Numéro de téléphone</label>
-                            <input class="form-control" type="text" name="telephonetuteur" id="telephone_tuteur" value="">
+                            <input class="form-control" type="text" name="telephonetuteur" id="telephone_tuteur" value="{{ $alleleve->teltuteur }}">
                           </div>
                         </div>
                       </div>
@@ -446,25 +448,25 @@
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="email_tuteur" class="mr-2">Adresse e-mail</label>
-                            <input class="form-control" type="text" name="emailtuteur" id="email_tuteur" value="">
+                            <input class="form-control" type="text" name="emailtuteur" id="email_tuteur" value="{{ $alleleve->emailtuteur }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="profession_tuteur" class="mr-2">Profession</label>
-                            <input class="form-control" type="text" name="professiontuteur" id="profession_tuteur" value="">
+                            <input class="form-control" type="text" name="professiontuteur" id="profession_tuteur" value="{{ $alleleve->professiontuteur }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="adresse_employeur_tuteur" class="mr-2">Adresse employeur</label>
-                            <input class="form-control" type="text" name="adresseemployeurtuteur" id="adresse_employeur_tuteur" value="">
+                            <input class="form-control" type="text" name="adresseemployeurtuteur" id="adresse_employeur_tuteur" value="{{ $alleleve->adremployeurtuteur }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="adresse_personnelle_tuteur" class="mr-2">Adresse personnelle</label>
-                            <input class="form-control" type="textarea" name="adressepersonnelletuteur" id="adresse_personnelle_tuteur" value="">
+                            <input class="form-control" type="textarea" name="adressepersonnelletuteur" id="adresse_personnelle_tuteur" value="{{ $alleleve->adrtuteur }}">
                           </div>
                         </div>
                       </div>
@@ -478,19 +480,19 @@
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="nom_urgence" class="mr-2">Nom</label>
-                            <input class="form-control" type="text" name="nomurgence" id="nom_urgence" value="">
+                            <input class="form-control" type="text" name="nomurgence" id="nom_urgence" value="{{ $alleleve->nomurgence }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="prenom_urgence" class="mr-2">Prénom</label>
-                            <input class="form-control" type="text" name="prenomurgence" id="prenom_urgence" value="">
+                            <input class="form-control" type="text" name="prenomurgence" id="prenom_urgence" value="{{ $alleleve->prenomurgence }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="telephone_urgence" class="mr-2">Numéro de téléphone</label>
-                            <input class="form-control" type="text" name="telephoneurgence" id="telephone_urgence" value="">
+                            <input class="form-control" type="text" name="telephoneurgence" id="telephone_urgence" value="{{ $alleleve->telurgence }}">
                           </div>
                         </div>
                       </div>
@@ -500,13 +502,13 @@
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="email_urgence" class="mr-2">Adresse e-mail</label>
-                            <input class="form-control" type="text" name="emailurgence" id="email_urgence" value="">
+                            <input class="form-control" type="text" name="emailurgence" id="email_urgence" value="{{ $alleleve->emailtuteur }}">
                           </div>
                         </div>
                         <div class="col">
                           <div class="d-flex align-items-center">
                             <label for="adresse_personnelle_urgence" class="mr-2">Adresse personnelle</label>
-                            <input class="form-control" type="textarea" name="adressepersonnelleurgence" id="adresse_personnelle_urgence" value="">
+                            <input class="form-control" type="textarea" name="adressepersonnelleurgence" id="adresse_personnelle_urgence" value="{{ $alleleve->adrurgence }}">
                           </div>
                         </div>
                       </div>
@@ -515,13 +517,13 @@
                     <!-- Section: Permissions -->
                     <div class="form-group">
                       <div class="form-check">
-                        <input class="form-check-input" name="autorisevideo" type="checkbox" value="" id="flexCheckDefault">
+                        <input class="form-check-input" name="autorisevideo" type="checkbox" value="{{ $alleleve->autorisefilm }}" id="flexCheckDefault">
                         <label class="form-check-label" for="flexCheckDefault">
                           Autorisation d'utiliser les vidéos à des fins publicitaires
                         </label>
                       </div>
                       <div class="form-check">
-                        <input class="form-check-input" name="autoriseimage" type="checkbox" value="" id="flexCheckChecked" checked>
+                        <input class="form-check-input" name="autoriseimage" type="checkbox" value="{{ $alleleve->autoriseuseimage }}" id="flexCheckChecked" checked>
                         <label class="form-check-label" for="flexCheckChecked">
                           Autorisation d'utiliser les images à des fins publicitaires
                         </label>
@@ -546,7 +548,7 @@
   </div>
   
   <!-- Modal n*1 -->
- 
+  
 </div>
 </div>
 
@@ -663,30 +665,30 @@
                         <td>{{ $archive->SEXE }}</td>
                         <td>{{ $archive->DATENAIS }}</td>
                         <td>{{ $archive->LIEUNAIS }}</td>
-
-                      <td><img src="photo2.jpg" alt="" width="50"></td>
-                      <td>
-                        <button type="button" class="btn btn-primary fill-form-btn" 
-                        data-matricule="{{ $archive->MATRICULE }}" 
-                        data-classe="{{ $archive->CODECLAS }}" 
-                        data-classeanterieur="{{ $archive->ANCCLASSE }}" 
-                        data-departement="{{ $archive->CODEDEPT }}" 
-                        data-addresseperso="{{ $archive->ADRPERS }}" 
-                        data-etaborigine="{{ $archive->ETABORIG }}" 
-                        data-nationnalite="{{ $archive->NATIONALITE }}" 
-                        data-nompere="{{ $archive->NOMPERE }}" 
-                        data-nommere="{{ $archive->NOMMERE }}" 
-                        data-adresseparent="{{ $archive->ADRPAR }}" 
-                        data-autrerenseignement="{{ $archive->AUTRE_RENS }}" 
-                        data-telephone="{{ $archive->TEL }}" 
-                        data-telephoneeleve="{{ $archive->TelEleve }}" 
-                        data-nom="{{ $archive->NOM }}"
-                        data-prenom="{{ $archive->PRENOM }}"
-                        data-sexe="{{ $archive->SEXE }}"
-                        data-datenaiss="{{ $archive->DATENAIS }}"
-                        data-apte="{{ $archive->APTE }}"
-                        data-lieunaiss="{{ $archive->LIEUNAIS }}">
-                        <i class="typcn typcn-archive btn-icon-append"></i>
+                        
+                        <td><img src="photo2.jpg" alt="" width="50"></td>
+                        <td>
+                          <button type="button" class="btn btn-primary fill-form-btn" 
+                          data-matricule="{{ $archive->MATRICULE }}" 
+                          data-classe="{{ $archive->CODECLAS }}" 
+                          data-classeanterieur="{{ $archive->ANCCLASSE }}" 
+                          data-departement="{{ $archive->CODEDEPT }}" 
+                          data-addresseperso="{{ $archive->ADRPERS }}" 
+                          data-etaborigine="{{ $archive->ETABORIG }}" 
+                          data-nationnalite="{{ $archive->NATIONALITE }}" 
+                          data-nompere="{{ $archive->NOMPERE }}" 
+                          data-nommere="{{ $archive->NOMMERE }}" 
+                          data-adresseparent="{{ $archive->ADRPAR }}" 
+                          data-autrerenseignement="{{ $archive->AUTRE_RENS }}" 
+                          data-telephone="{{ $archive->TEL }}" 
+                          data-telephoneeleve="{{ $archive->TelEleve }}" 
+                          data-nom="{{ $archive->NOM }}"
+                          data-prenom="{{ $archive->PRENOM }}"
+                          data-sexe="{{ $archive->SEXE }}"
+                          data-datenaiss="{{ $archive->DATENAIS }}"
+                          data-apte="{{ $archive->APTE }}"
+                          data-lieunaiss="{{ $archive->LIEUNAIS }}">
+                          <i class="typcn typcn-archive btn-icon-append"></i>
                         </button>
                       </td>
                       @endforeach
@@ -744,7 +746,7 @@
   
   <!-- Custom JavaScript -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+  
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       function handleDragOver(container, input) {
@@ -772,12 +774,12 @@
       var customFileContainer = document.getElementById('customFileContainer');
       handleDragOver(customFileContainer, imageInput);
     });
-
-
+    
+    
     // script pour sortir un eleve de l'archive et le mettre dans le formulaire 
-
+    
     $(document).ready(function(){
-    $('.fill-form-btn').on('click', function() {
+      $('.fill-form-btn').on('click', function() {
         var matricule = $(this).data('matricule');
         var nom = $(this).data('nom');
         var prenom = $(this).data('prenom');
@@ -797,7 +799,7 @@
         var telephone = $(this).data('telephone');
         var telephoneeleve = $(this).data('telephoneeleve');
         var apte = $(this).data('apte');
-
+        
         // Remplir le formulaire avec les informations de l'élève
         $('#numero-ordre').val(matricule);
         $('#nom').val(nom);
@@ -819,19 +821,20 @@
         $('#telephone-1').val(telephone);
         $('#telephone-2').val(telephoneeleve);
         $('#aptitude-sport').val(apte).change();
-
+        
         // Cocher ou décocher la case à cocher en fonction de la valeur
         $('#formArchive').prop('checked', archive == 1); // Supposons que 1 signifie "coché" et 0 signifie "décoché"
-
-
-         // Fermer le modal
+        
+        
+        // Fermer le modal
         $('#exampleModal1').modal('hide');
-
+        
         // Optionnel : Faire défiler la page jusqu'au formulaire
         // $('html, body').animate({
         //     scrollTop: $("#formulaire").offset().top
         // }, 1000);
+      });
     });
-    });
-</script>
-@endsection
+  </script>
+  @endsection
+  
