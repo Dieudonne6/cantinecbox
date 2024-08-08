@@ -10,7 +10,7 @@ class Eleve extends Model
 {
     use HasFactory;
     protected $table = 'eleve';
-
+    protected $primaryKey = 'MATRICULE';
     public $timestamps = false;
     protected $fillable = ['MATRICULE','NOM','PRENOM','CODECLAS','SEXE','Reduction','DATENAIS','LIEUNAIS'];
     
