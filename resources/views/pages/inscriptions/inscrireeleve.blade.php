@@ -145,7 +145,7 @@
                       <div class="form-group row mt-3">
                         <div class="col-md-4">
                           <label for="sexe">Sexe</label>
-                          <select id="sexe" name="sexe" class="js-example-basic-multiple w-100">
+                          <select id="sexe" name="sexe" class="js-example-basic-multiple w-100" >
                             <option  >Sélectionner</option>
                             <option value="1">Masculin</option>
                             <option value="2">Féminin</option>

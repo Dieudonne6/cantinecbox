@@ -31,8 +31,9 @@
               <div class="card">
                 <div class="card-body">
                   <!-- Formulaire Classe -->
-                  <form  action="{{ url('/nouveaueleve') }}" method="POST" enctype="multipart/form-data">
+                  <form  action="{{ url('modifieleve/'.$Matricule->MATRICULE) }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
                     <div class="form-group row mt-1">
                       <label for="classe" class="col-sm-2 col-form-label">Classe</label>
                       <div class="col-sm-3">
@@ -75,7 +76,7 @@
                       <div class="form-group row">
                         <div class="col-md-4">
                           <label for="photo">Photo</label>
-                          <input type="file" id="photo" name="photo" class="form-control">
+                          <input type="file" id="photo" name="photo" class="form-control" value="{{ $modifieleve->PHOTO }}">
                         </div>
                       </div>
                       
@@ -83,7 +84,7 @@
                       <div class="form-group row mt-3">
                         <div class="col-md-4">
                           <label for="matricule">Matricule</label>
-                          <input type="text" id="matricule" class="form-control" value="AUTO" readonly>
+                          <input type="text" id="matricule" class="form-control" value="{{ $modifieleve->MATRICULE }}" readonly>
                         </div>
                         <div class="col-md-4 d-flex align-items-center">
                           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">
@@ -92,7 +93,7 @@
                         </div>
                         <div class="col-md-4">
                           <label for="profil-reduction">Profil de réduction</label>
-                          <select id="profil-reduction" name="reduction" class="js-example-basic-multiple w-100" >
+                          <select id="profil-reduction" name="reduction" class="js-example-basic-multiple w-100" value="{{ $modifieleve->CodeReduction }}">
                             @foreach ($allReduction as $reduction)
                             <option value="{{ $reduction->CodeReduction }}">{{ $reduction->LibelleReduction }}</option>
                             @endforeach
@@ -106,30 +107,30 @@
                       <div class="form-group row mt-3">
                         <div class="col-md-4">
                           <label for="nom">Nom</label>
-                          <input type="text" id="nom" name="nom" class="form-control">
+                          <input type="text" id="nom" name="nom" class="form-control" value="{{ $modifieleve->NOM }}">
                         </div>
                         <div class="col-md-4">
                           <label for="prenom">Prénom</label>
-                          <input type="text" id="prenom" name="prenom" class="form-control">
+                          <input type="text" id="prenom" name="prenom" class="form-control" value="{{ $modifieleve->PRENOM }}">
                         </div>
                         <div class="col-md-4">
                           <label for="date-naissance">Date de naissance</label>
-                          <input type="date" id="date-naissance" name="dateNaissance" class="form-control">
+                          <input type="date" id="date-naissance" name="dateNaissance" class="form-control" value="{{ $modifieleve->DATENAIS }}">
                         </div>
                       </div>
                       
                       <div class="form-group row mt-3">
                         <div class="col-md-4">
                           <label for="lieu-naissance">Lieu de naissance</label>
-                          <input type="text" id="lieu-naissance" name="lieuNaissance" class="form-control">
+                          <input type="text" id="lieu-naissance" name="lieuNaissance" class="form-control" value="{{ $modifieleve->LIEUNAIS }}">>
                         </div>
                         <div class="col-md-4">
                           <label for="date-inscription">Date d'inscription</label>
-                          <input type="date" id="date-inscription" name="dateInscription" class="form-control">
+                          <input type="date" id="date-inscription" name="dateInscription" class="form-control" value="{{ $modifieleve->DATEINS }}">
                         </div>
                         <div class="col-md-4">
                           <label for="departement">Département</label>
-                          <select class="js-example-basic-multiple w-100" id="departement" name="departement">
+                          <select class="js-example-basic-multiple w-100" id="departement" name="departement" value="{{ $modifieleve->CODEDEPT }}">
                             @foreach ($allDepartement as $departement)
                             <option value="{{ $departement->CODEDEPT }}">{{ $departement->LIBELDEP }}</option>
                             @endforeach
@@ -145,16 +146,14 @@
                       <div class="form-group row mt-3">
                         <div class="col-md-4">
                           <label for="sexe">Sexe</label>
-                          <select id="sexe" name="sexe" class="js-example-basic-multiple w-100">
-                            <option  >Sélectionner</option>
+                          <select id="sexe" name="sexe" class="js-example-basic-multiple w-100" value="{{ $modifieleve->SEXE }}">
                             <option value="1">Masculin</option>
                             <option value="2">Féminin</option>
                           </select>
                         </div>
                         <div class="col-md-4">
                           <label for="type-eleve">Type d'élève</label>
-                          <select id="type-eleve" name="typeEleve" class="js-example-basic-multiple w-100">
-                            <option  >Sélectionner</option>
+                          <select id="type-eleve" name="typeEleve" class="js-example-basic-multiple w-100" value="{{ $modifieleve->STATUTG }}">
                             <option value="1">Nouveau</option>
                             <option value="2">Ancien</option>
                             <option value="3">Transferer</option>
@@ -162,8 +161,7 @@
                         </div>
                         <div class="col-md-4">
                           <label for="aptitude-sport">Aptitude Sport</label>
-                          <select id="aptitude-sport" name="aptituteSport" class="js-example-basic-multiple w-100">
-                            <option  >Sélectionner</option>
+                          <select id="aptitude-sport" name="aptituteSport" class="js-example-basic-multiple w-100" value="{{ $modifieleve->APTE }}">
                             <option value="1">Apte</option>
                             <option value="2">Inapte</option>
                           </select>
@@ -173,15 +171,15 @@
                       <div class="form-group row mt-3">
                         <div class="col-md-4">
                           <label for="adresse-personnelle">Adresse personnelle</label>
-                          <input type="text" id="adresse-personnelle" placeholder="Elève au ScoDelux" name="adressePersonnelle" class="form-control">
+                          <input type="text" id="adresse-personnelle" placeholder="Elève au ScoDelux" name="adressePersonnelle" class="form-control" value="{{ $modifieleve->ADRPERS }}">
                         </div>
                         <div class="col-md-4">
                           <label for="etablissement-origine">Etablissement d'origine</label>
-                          <input type="text" id="etablissement-origine" name="etablissementOrigine" class="form-control">
+                          <input type="text" id="etablissement-origine" name="etablissementOrigine" class="form-control" value="{{ $modifieleve->ETABORIG }}">
                         </div>
                         <div class="col-md-4">
                           <label for="nationalite">Nationalité</label>
-                          <input type="text" id="nationalite" name="nationalite" class="form-control">
+                          <input type="text" id="nationalite" name="nationalite" class="form-control" value="{{ $modifieleve->NATIONALITE }}">
                         </div>
                       </div>
                       
@@ -202,22 +200,22 @@
                       <div class="form-group row">
                         <div class="col-md-6">
                           <label for="nom-pere">Nom du père</label>
-                          <input type="text" id="nom-pere" name="nomPere" class="form-control">
+                          <input type="text" id="nom-pere" name="nomPere" class="form-control" value="{{ $modifieleve->NOMPERE }}">
                         </div>
                         <div class="col-md-6">
                           <label for="nom-mere">Nom de la mère</label>
-                          <input type="text" id="nom-mere" name="nomMere" class="form-control">
+                          <input type="text" id="nom-mere" name="nomMere" class="form-control"value="{{ $modifieleve->NOMMERE }}">
                         </div>
                       </div>
                       
                       <div class="form-group row mt-3">
                         <div class="col-md-6">
                           <label for="adresses-parents">Adresses parents</label>
-                          <input type="text" id="adresses-parents" name="adressesParents" class="form-control">
+                          <input type="text" id="adresses-parents" name="adressesParents" class="form-control" value="{{ $modifieleve->ADRPAR }}">
                         </div>
                         <div class="col-md-6">
                           <label for="autres-renseignements">Autres renseignements</label>
-                          <input type="text" id="autres-renseignements" name="autresRenseignements" class="form-control">
+                          <input type="text" id="autres-renseignements" name="autresRenseignements" class="form-control" value="{{ $modifieleve->AUTRE_RENS }}">
                         </div>
                       </div>
                       
@@ -225,17 +223,17 @@
                       <div class="form-group row mt-3">
                         <div class="col-md-2">
                           <label for="contacts-parents">Contacts parents</label>
-                          <select id="contacts-parents" name="indicatifParent" class="js-example-basic-multiple w-100">
+                          <select id="contacts-parents" name="indicatifParent" class="js-example-basic-multiple w-100" value="{{ $modifieleve->indicatif1 }}">
                             <option value="+229">+229</option>
                           </select>
                         </div>
                         <div class="col-md-5">
                           <label for="telephone-1">Téléphone Parent</label>
-                          <input type="text" id="telephone-1" name="telephoneParent" class="form-control">
+                          <input type="text" id="telephone-1" name="telephoneParent" class="form-control" value="{{ $modifieleve->TEL }}">
                         </div>
                         <div class="col-md-5">
                           <label for="telephone-2">Téléphone Eleve</label>
-                          <input type="text" id="telephone-2" name="telephoneEleve" class="form-control">
+                          <input type="text" id="telephone-2" name="telephoneEleve" class="form-control" value="{{ $modifieleve->TelEleve }}">
                         </div>
                       </div>
                       

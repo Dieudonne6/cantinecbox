@@ -70,6 +70,8 @@ Route::get('/confimpression', [PagesController::class, 'confimpression']);
 Route::get('/Acceuil', [PagesController::class, 'Acceuil']);
 Route::get('/modifiereleve/{MATRICULE}', [PagesController::class, 'modifiereleve']);
 Route::put('/modifieeleve/{MATRICULE}', [PagesController::class, 'modifieeleve']);
+Route::put('/modifieleve/{MATRICULE}', [PagesController::class, 'modifieleve']);
+
 
 Route::get('/profil', [PagesController::class, 'profil']);
 

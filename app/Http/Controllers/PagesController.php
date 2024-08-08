@@ -421,7 +421,8 @@ class PagesController extends Controller
          $allDepartement = Departement::all();
          $archive = Elevea::get();
          $alleleve = Eleveplus::where('MATRICULE', $MATRICULE)->first();
-         return view('pages.inscriptions.modifiereleve', compact('allClasse', 'allReduction', 'allDepartement', 'archive', 'alleleve', 'Matricule'));
+         $modifieleve = Eleve::where('MATRICULE', $MATRICULE)->first();
+         return view('pages.inscriptions.modifiereleve', compact('allClasse', 'allReduction', 'allDepartement', 'archive', 'alleleve', 'Matricule', 'modifieleve'));
     }
 
     public function typesclasses(){
@@ -526,4 +527,53 @@ class PagesController extends Controller
         }
     
       }
+
+      public function modifieleve(Request $request, $MATRICULE) {
+        $modifieleve = Eleve::find($MATRICULE);
+    
+        if ($modifieleve) {
+            // Gestion des attributs de l'élève à modifier
+            $imageContent = null;
+            if ($request->hasFile('photo')) {
+                $imageName = $request->file('photo');
+                $imageContent = file_get_contents($imageName->getRealPath());
+                $modifieleve->PHOTO = $imageContent;
+            }
+    
+            $redoublant = $request->has('redoublant') ? 1 : 0;
+            $formateMatricule = str_pad($request->input('numOrdre'), 8, '0', STR_PAD_LEFT);
+    
+            $modifieleve->MATRICULE = $request->input('numOrdre');
+            $modifieleve->CodeReduction = $request->input('reduction');
+            $modifieleve->NOM = $request->input('nom');
+            $modifieleve->PRENOM = $request->input('prenom');
+            $modifieleve->DATENAIS = $request->input('dateNaissance');
+            $modifieleve->LIEUNAIS = $request->input('lieuNaissance');
+            $modifieleve->DATEINS = $request->input('dateInscription');
+            $modifieleve->CODEDEPT = $request->input('departement');
+            $modifieleve->SEXE = $request->input('sexe');
+            $modifieleve->STATUTG = $request->input('typeEleve');
+            $modifieleve->APTE = $request->input('aptituteSport');
+            $modifieleve->ADRPERS = $request->input('adressePersonnelle');
+            $modifieleve->ETABORIG = $request->input('etablissementOrigine');
+            $modifieleve->NATIONALITE = $request->input('nationalite');
+            $modifieleve->STATUT = $redoublant;
+            $modifieleve->NOMPERE = $request->input('nomPere');
+            $modifieleve->NOMMERE = $request->input('nomMere');
+            $modifieleve->ADRPAR = $request->input('adressesParents');
+            $modifieleve->AUTRE_RENS = $request->input('autresRenseignements');
+            $modifieleve->indicatif1 = $request->input('indicatifParent');
+            $modifieleve->TEL = $request->input('telephoneParent');
+            $modifieleve->TelEleve = $request->input('telephoneEleve');
+            $modifieleve->MATRICULEX = $formateMatricule;
+            $modifieleve->CODEWEB = $formateMatricule;
+    
+            $modifieleve->update();
+    
+            return back()->with('status', 'Modification effectuée avec succès');
+        }
+    
+        return back()->withErrors('Erreur lors de la modification.');
+    }
+    
 }
