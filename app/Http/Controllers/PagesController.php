@@ -414,7 +414,23 @@ class PagesController extends Controller
     } 
 
     public function modifiereleve(){
-        return view ('pages.inscriptions.modifiereleve');
+         // Récupérer le dernier matricule existant
+         $lastMatricule = Eleve::orderBy('MATRICULE', 'desc')->pluck('MATRICULE')->first();
+
+         // Générer le nouveau matricule
+         if ($lastMatricule) {
+             // En supposant que le matricule est de type numérique
+             $newMatricule = (int)$lastMatricule + 1;
+         } else {
+             // Si aucun matricule n'existe encore, initialiser à un numéro de départ
+             $newMatricule = 1;
+         }
+         $allClasse = Classes::all();
+         $allReduction = Reduction::all();
+         $allDepartement = Departement::all();
+         $archive = Elevea::get();
+ 
+         return view('pages.inscriptions.modifiereleve', compact('allClasse', 'allReduction', 'allDepartement', 'newMatricule', 'archive'));
     }
 
     public function typesclasses(){
