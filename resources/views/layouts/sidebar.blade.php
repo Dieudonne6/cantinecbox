@@ -600,7 +600,7 @@
 
         {{-- Paramètres --}}
 
-
+   {{--
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#Cantine" aria-expanded="false" aria-controls="Cantine">
                 <i class="typcn typcn-document-text menu-icon"></i>
@@ -623,15 +623,15 @@
                             <li>
                                 <a href="{{ url('/etatdroits') }}">Etat des droits constatés</a>
                             </li>
-                            {{-- <li>
+                            <li>
                 <a href="{{url('/lettrederelance')}}">Lettre de relance</a>
-              </li> --}}
+              </li> 
                         </ul>
                     </li>
                     <li class="nav-item"> <a class="nav-link" href="{{ url('/duplicatafacture') }}">Duplicata
                             facture</a></li>
 
-                    {{-- <div class="dropdown">
+                  <div class="dropdown">
             <li class="nav-item">
             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton90" data-toggle="dropdown" 
             aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Etats </button>
@@ -639,11 +639,11 @@
               <a class="dropdown-item" href="#" _msttexthash="20" _msthash="20" _mstvisible="1">Etat des paiements</a>
               <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Etat des droits constatés</a>
               <a class="dropdown-item" href="#" _msttexthash="21" _msthash="21" _mstvisible="1">Lettre de relance</a>
-            </div> --}}
+            </div>
 
                 </ul>
             </div>
-        </li>
+        </li> --}}
         <li class="nav-item">
             <a class="nav-link" href="{{ url('/parametre') }}">
                 <i class="typcn typcn-globe-outline menu-icon"></i>
