@@ -68,8 +68,7 @@ Route::get('/changetrimestre', [PagesController::class, 'changetrimestre']);
 Route::get('/confimpression', [PagesController::class, 'confimpression']);
 
 Route::get('/Acceuil', [PagesController::class, 'Acceuil']);
-Route::get('/inscrireeleve', [PagesController::class, 'inscrireeleve']);
-Route::get('/modifiereleve', [PagesController::class, 'modifiereleve']);
+Route::get('/modifiereleve/{MATRICULE}', [PagesController::class, 'modifiereleve']);
 Route::get('/profil', [PagesController::class, 'profil']);
 
 Route::get('/typesclasses', [PagesController::class, 'typesclasses']);
@@ -184,7 +183,7 @@ Route::delete('/promotions/{codePromo}', [GestionclasseController::class, 'destr
 
 //Acceuil
 Route::get('/Acceuil', [GestionclasseController::class, 'indexEleves'])->name('eleves.index');
-
+Route::delete('/eleves/{matricule}', [EleveController::class, 'destroy'])->name('eleves.destroy');
 
 //Series
 Route::get('/series', [GestionclasseController::class, 'series']);
@@ -195,10 +194,13 @@ Route::delete('/supprimerserie', [GestionclasseController::class, 'deleteserie']
 Route::get('/typesclasses', [GestionclasseController::class, 'getclasse']);
 Route::put('/modifiertypesclasses', [GestionclasseController::class, 'updateTypeClasse']);
 Route::delete('/supprimertype', [GestionclasseController::class, 'deletetype']);
+Route::get('/inscrireeleve', [PagesController::class, 'inscrireeleve'])->name('inscrireeleve');
+Route::post('/nouveaueleve', [GestionclasseController::class, 'nouveaueleve']);
 Route::post('/enregistrerclasse', [GestionclasseController::class, 'enregistrerclasse']);
 Route::put('/promotions/{codePromo}', [GestionclasseController::class, 'update'])->name('promotions.update');
 // Route::get('/modifierclasse', [PagesController::class, 'modifierclasse']);
 
+Route::post('/enregistrerinfo', [GestionclasseController::class, 'enregistrerinfo']);
 
 Route::get('/tabledesclasses', [GestionclasseController::class, 'gettabledesclasses']);
 

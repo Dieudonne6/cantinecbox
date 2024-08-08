@@ -10,11 +10,17 @@ class Serie extends Model
     use HasFactory;
     protected $table = 'series';
     public $timestamps = false;
-    // protected $primaryKey = 'SERIE';
+    protected $primaryKey = 'SERIE';
+    protected $fillable = [
+        'SERIE',
+        'LIBELSERIE',
+        'CYCLE',
+    ];
+    protected $keyType = 'string';
 
-    public function classes()
-    {
-        return $this->hasMany(Classe::class, 'SERIE'); // Assurez-vous que le nom de la clé étrangère est correct
-    }
+    // public function classes()
+    // {
+    //     return $this->hasMany(Classe::class, 'SERIE'); // Assurez-vous que le nom de la clé étrangère est correct
+    // }
 
 }

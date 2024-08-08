@@ -150,8 +150,11 @@
                             <i class="typcn typcn-th-list btn-icon-append"></i>  
                           </button>
                           <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
-                            <li><a class="dropdown-item" href="#">Supprimer</a></li>
-                            <li><a class="dropdown-item" href="{{url('/modifiereleve')}}">Modifier</a></li>
+                            <li>
+                              <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $eleve->MATRICULE }}">
+                                  Supprimer
+                              </a>
+                            </li>                            <li><a class="dropdown-item" href="/modifiereleve/{{$eleve->MATRICULE }}">Modifier</a></li>
                             <li><a class="dropdown-item" href="{{url('/paiementeleve')}}">Paiement</a></li>
                             <li><a class="dropdown-item" href="{{url('/majpaiementeleve')}}">Maj Paie</a></li>
                             <li><a class="dropdown-item" href="{{url('/profil')}}">Profil</a></li>
@@ -171,7 +174,30 @@
       
     </div>
   </div>
-
+  @foreach($eleves as $eleve)
+  <!-- Modal de suppression -->
+  <div class="modal fade" id="deleteModal{{ $eleve->MATRICULE }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $eleve->MATRICULE }}" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="deleteModalLabel{{ $eleve->MATRICULE }}">Confirmer la suppression</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  Êtes-vous sûr de vouloir supprimer l'élève {{ $eleve->NOM }} {{ $eleve->PRENOM }} ?
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                  <form action="{{ route('eleves.destroy', $eleve->MATRICULE) }}" method="POST">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" class="btn btn-danger">Supprimer</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+  @endforeach
 <!-- Modal -->
 @foreach($eleves as $eleve)
 <div class="modal fade" id="exampleModal{{ $eleve->MATRICULE }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
