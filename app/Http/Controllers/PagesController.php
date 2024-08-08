@@ -415,22 +415,13 @@ class PagesController extends Controller
 
     public function modifiereleve($MATRICULE){
          // Récupérer le dernier matricule existant
-         $lastMatricule = Eleve::orderBy('MATRICULE', 'desc')->pluck('MATRICULE')->first();
-
-         // Générer le nouveau matricule
-         if ($lastMatricule) {
-             // En supposant que le matricule est de type numérique
-             $newMatricule = (int)$lastMatricule + 1;
-         } else {
-             // Si aucun matricule n'existe encore, initialiser à un numéro de départ
-             $newMatricule = 1;
-         }
+         $Matricule = Eleve::find($MATRICULE);
          $allClasse = Classes::all();
          $allReduction = Reduction::all();
          $allDepartement = Departement::all();
          $archive = Elevea::get();
          $alleleve = Eleveplus::where('MATRICULE', $MATRICULE)->first();
-         return view('pages.inscriptions.modifiereleve', compact('allClasse', 'allReduction', 'allDepartement', 'newMatricule', 'archive', 'alleleve'));
+         return view('pages.inscriptions.modifiereleve', compact('allClasse', 'allReduction', 'allDepartement', 'archive', 'alleleve', 'Matricule'));
     }
 
     public function typesclasses(){
@@ -492,7 +483,7 @@ class PagesController extends Controller
         return view ('pages.inscriptions.etatdesrecouvrements');
     }
     public function modifieeleve(Request $request, $MATRICULE){
-        $modifyeleve = Eleveplus::where('MATRICULE', $MATRICULE)->firstOrFail();
+        $modifyeleve = Eleveplus::find($MATRICULE);
         if ($modifyeleve) {
             $modifyeleve->maladiesconnues = $request->input('maladieschroniques');
             $modifyeleve->interditalimentaires = $request->input('interditalimentaires');
@@ -529,8 +520,10 @@ class PagesController extends Controller
             $modifyeleve->update();
             return back()->with('status','Modifier avec succes');
     
+        } else {
+            return back()->withErrors('Erreur lors de la modification.');
+
         }
-        return back()->withErrors('Erreur lors de la modification.');
     
       }
 }

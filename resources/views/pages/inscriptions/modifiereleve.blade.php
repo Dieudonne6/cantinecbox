@@ -55,7 +55,7 @@
                     <div class="form-group row mt-3">
                       <label for="numero-ordre" class="col-sm-2 col-form-label">Numéro d'ordre</label>
                       <div class="col-sm-3">
-                        <input class="form-control" type="text" id="numero-ordre" name="numOrdre" value="{{ $newMatricule }}"  readonly>
+                        <input class="form-control" type="text" id="numero-ordre" name="numOrdre" value="{{ $Matricule->MATRICULE }}"  readonly>
                       </div>
                       <div class="col-sm-3">
                         <button type="button" class="btn btn-secondary">Classe précédente</button>
@@ -266,7 +266,7 @@
               <div class="card">
                 <div class="card-body">
                  
-                    <form  action="{{url('modifieeleve/'.$newMatricule)}}" method="POST">
+                    <form  action="{{url('modifieeleve/'.$Matricule->MATRICULE)}}" method="POST">
                       @csrf
                       @method('PUT')
                     {{-- <input type="hidden" name="matricule" value="{{ $newMatricule }}"> --}}
