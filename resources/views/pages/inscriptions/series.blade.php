@@ -96,7 +96,7 @@
                       <div class="col-sm-4">
                         <div>
                             <label><strong>Série</strong> (Donner un code pour la série à créer [2 caractères]. Ex: C)</label>
-                            <input type="text" name="SERIE" value="{{ $serie->SERIE }}" placeholder="" id="edit-serie" class="form-control">
+                            <input type="text" name="SERIE" value="{{ $serie->SERIE }}" placeholder="" id="edit-serie" class="form-control" readonly>
                         </div>
                       </div>
                       <div class="col-sm-4">

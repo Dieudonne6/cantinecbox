@@ -18,13 +18,13 @@
             <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Nom classe</label>
             <div class="col-sm-9">
               <input type="text" class="form-control" value="{{ $typecla->CODECLAS }}" name="nomclasse" id="nomclasse"
-              placeholder="Nom classe">
+              placeholder="Nom classe" readonly>
             </div>
           </div>
           <div class="form-group row">
             <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Libelle</label>
             <div class="col-sm-9">
-               <input type="text" class="form-control" name="libclasse"  value="{{$typecla->LIBELCLAS}}"  id="libclasse" placeholder="Libelle">
+              <input type="text" class="form-control" name="libclasse"  value="{{$typecla->LIBELCLAS}}"  id="libclasse" placeholder="Libelle">
             </div>
           </div>
           <div class="form-group row">

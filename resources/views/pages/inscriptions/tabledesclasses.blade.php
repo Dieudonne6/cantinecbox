@@ -4,6 +4,12 @@
   <div class="col-12">
     <div class="card">
       <div class="card-body">
+
+      @if(Session::has('status'))
+      <div id="statusAlert" class="alert alert-success btn-primary">
+        {{ Session::get('status')}}
+      </div>
+    @endif
         <h4 class="card-title">Mise a jour des classes</h4>
         {{-- <div class="row"> --}}
           <a type="button" class="btn btn-primary" href="{{url('/enrclasse')}}">Nouveau</a>
@@ -51,12 +57,37 @@
                       </button>
                       <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
                         <li><a class="dropdown-item" href="/modifierclasse/{{$classe->CODECLAS}}">Modifier</a></li>
-                        <li><a class="dropdown-item" >Supprimer</a></li>
+                        <li>
+                          <a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#exampleModalDelete{{ $classe->CODECLAS }}" >Supprimer</a>
+                        </li>
                       </ul>
                     </div>
                   </td>
                 </tr>
 
+        <!-- Modal bouton supprimer -->
+        <div class="modal fade" id="exampleModalDelete{{ $classe->CODECLAS }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation de suppression</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer cette classe ?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form action="{{ url('/supprimerclass')}}" method="POST">
+                  @csrf
+                  @method('DELETE')
+                  <input type="hidden" name="CODECLAS" value="{{ $classe->CODECLAS }}">
+                  <input type="submit" class="btn btn-danger" value="Confirmer">
+                </form>  
+              </div>
+            </div>
+          </div>
+        </div>
                 @endforeach
                 
                 </tr> 

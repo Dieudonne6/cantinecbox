@@ -210,6 +210,16 @@ public function supprimerGroupe($id)
 
         return back()->withErrors('Erreur lors de la suppression.');
     }
+    public function deleteclass(Request $request)
+    {
+        $deleteclas = Classes::find($request->CODECLAS); // Using SERIE as the identifier
+        if ($deleteclas) {
+            $deleteclas->delete();
+            return back()->with('status', 'Supprimé avec succès');
+        }
+
+        return back()->withErrors('Erreur lors de la suppression.');
+    }
 
   
   public function savetypeclasse(Request $request){
@@ -541,7 +551,6 @@ public function nouveaueleve (Request $request) {
   public function modifieclasse(Request $request, $CODECLAS){
     $modifycla = Classes::find($CODECLAS);
     if ($modifycla) {
-      $modifycla->CODECLAS = $request->input('nomclasse');
       $modifycla->LIBELCLAS = $request->input('libclasse');
       $modifycla->TypeCours = $request->input('typecours');
       $modifycla->TYPECLASSE = $request->input('typclasse');

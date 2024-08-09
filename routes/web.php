@@ -208,6 +208,7 @@ Route::post('/enregistrerinfo', [GestionclasseController::class, 'enregistrerinf
 
 Route::get('/tabledesclasses', [GestionclasseController::class, 'gettabledesclasses']);
 Route::get('/modifierclasse/{CODECLAS}', [GestionclasseController::class, 'modifierclasse']);
+Route::delete('/supprimerclass', [GestionclasseController::class, 'deleteclass']);
 
 
 Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifieclasse']);
