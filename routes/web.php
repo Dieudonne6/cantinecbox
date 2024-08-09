@@ -207,7 +207,7 @@ Route::put('/promotions/{codePromo}', [GestionclasseController::class, 'update']
 Route::post('/enregistrerinfo', [GestionclasseController::class, 'enregistrerinfo']);
 
 Route::get('/tabledesclasses', [GestionclasseController::class, 'gettabledesclasses']);
+Route::get('/modifierclasse/{CODECLAS}', [GestionclasseController::class, 'modifierclasse']);
 
 
 Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifieclasse']);
-Route::get('/modifierclasse/{CODECLAS}', [GestionclasseController::class, 'modifierclasse']);

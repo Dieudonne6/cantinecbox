@@ -539,7 +539,7 @@ public function nouveaueleve (Request $request) {
     return view('pages.inscriptions.modifierclasse')->with('typecla', $typecla)->with('serie', $serie)->with('promo', $promo)->with('typeenseigne', $typeenseigne)->with('typeclah', $typeclah);
   }
   public function modifieclasse(Request $request, $CODECLAS){
-    $modifycla = Classes::where('CODECLAS', $CODECLAS)->firstOrFail();
+    $modifycla = Classes::find($CODECLAS);
     if ($modifycla) {
       $modifycla->CODECLAS = $request->input('nomclasse');
       $modifycla->LIBELCLAS = $request->input('libclasse');
@@ -550,12 +550,13 @@ public function nouveaueleve (Request $request) {
       $modifycla->CODEPROMO = $request->input('typepromo');
       $modifycla->Niveau = $request->input('numero');
       $modifycla->TYPEENSEIG = $request->input('typeensei');
-      $modifycla->save();
-      return view('pages.inscriptions.tabledesclasses');
+      $modifycla->update();
+      return back()->with('status','Modifier avec succes');
+    }
+    else {
+      return back()->withErrors('Erreur lors de la modification.');
 
     }
-    return back()->withErrors('Erreur lors de la modification.');
-
   }
 
 }

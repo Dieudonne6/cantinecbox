@@ -10,7 +10,7 @@
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">Modifier les classes</h4>
-        <form  action="{{url('modifieclasse/'.$typecla->CODECLAS)}}" method="POST">
+        <form action="{{url('modifieclasse/'.$typecla->CODECLAS)}}" method="POST">
           @csrf
           @method('PUT')
           <div class="form-group row">
