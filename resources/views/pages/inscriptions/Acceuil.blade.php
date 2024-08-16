@@ -32,6 +32,9 @@
       </div>
       @endif
       {{--  --}}
+      <div id="contenu">
+
+        <div>
       <div class="row">
         <div class="col-12">
           <div class="card mb-6">
@@ -43,6 +46,7 @@
                     <a class="btn btn-primary btn-sm" href="{{url('/inscrireeleve')}}">
                       <i class="typcn typcn-plus btn-icon-prepend"></i> Nouveau
                     </a>
+
                     <button type="button" class="btn btn-secondary btn-sm" onclick="imprimerPage()">
                       <i class="typcn typcn-printer btn-icon-prepend"></i> Imprimer
                     </button>
@@ -683,3 +687,36 @@
   }
 </script>
 @endsection
+
+<script>
+  function imprimerPage() {
+      var table = document.getElementById('myTae');
+
+      // Masque les colonnes avec la classe hide-on-print
+      var columns = table.querySelectorAll('.hide-on-print');
+      columns.forEach(function(column) {
+          column.style.display = 'none';
+      });
+
+      var page = window.open('', '_blank');
+      page.document.write('<html><head><title>Paiement</title>');
+        page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
+
+      page.document.write('<style>@media print { .dt-end { display: none !important; } }</style>');
+      page.document.write('<style>@media print { .dt-start { display: none !important; } }</style>');
+      page.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ddd; padding: 8px; } .cell-classe { background-color: #f8f9fa; } .cell-eleve { background-color: #e9ecef; } .cell-montant { background-color: #dee2e6; } .cell-mois { background-color: #ced4da; } .cell-date { background-color: #adb5bd; } .cell-reference { background-color: #6c757d; } .cell-action { background-color: #343a40; color: #fff; } tbody tr:nth-child(even) { background-color: #f1f3f5; } tbody tr:nth-child(odd) { background-color: #ffffff; } </style>');
+      page.document.write('</head><body>');
+      page.document.write('<div>' + document.getElementById('contenu').innerHTML + '</div>');
+      page.document.write('</body></html>');
+      page.document.close();
+      page.onload = function() {
+          page.print();
+          page.close();
+      };
+
+      // Restaure les colonnes après l'impression
+      columns.forEach(function(column) {
+          column.style.display = '';
+      });
+  }
+</script>

@@ -9,5 +9,8 @@ class Reduction extends Model
 {
     use HasFactory;
     protected $table = 'reduction';
+    public $timestamps = false;
+    protected $primaryKey = 'CodeReduction'; // Clé primaire 
+
 
 }

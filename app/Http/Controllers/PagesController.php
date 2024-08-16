@@ -192,10 +192,17 @@ class PagesController extends Controller
 
         if($account){
                 if (Hash::check($request->password_usercontrat, $account->motdepasse)) {
-
-                Session::put('account', $account);
-                $id_usercontrat = $account->id_usercontrat;
-                Session::put('id_usercontrat', $id_usercontrat);
+                    Session::put('account', $account);
+                    $id_usercontrat = $account->id_usercontrat;
+                    $image = $account->image;
+    
+                    $nom_user = $account->nomuser;
+                    Session::put('image', $image);
+    
+                    $prenom_user = $account->prenomuser;
+                    Session::put('id_usercontrat', $id_usercontrat);
+                    Session::put('nom_user', $nom_user);
+                    Session::put('prenom_user', $prenom_user);
                 return redirect("vitrine");
             } else{
                 return back()->with('status', 'Mot de passe ou email incorrecte');
@@ -257,13 +264,17 @@ class PagesController extends Controller
     public function enregistreruser(Request $request){
         $login = new User();
         $password_crypte = Hash::make($request->password);
+        $login->nomgroupe = 1;
         $login->login = $request->input('login');
         $login->nomuser = $request->input('nom');
         $login->prenomuser = $request->input('prenom');
+        $imagenam = $request->file('image');
+        $imageconten = file_get_contents($imagenam->getRealPath());
+        $login->image = $imageconten;
         $login->motdepasse = $password_crypte;
-        $login->nomgroupe = '';
         $login->administrateur = 1;
         $login->user_actif = 1;
+        $login->save();
         // $login->motdepasse ='';
         // $login->motdepasse ='';
 
@@ -434,7 +445,84 @@ class PagesController extends Controller
     }
 
     public function creerprofil(){
-        return view ('pages.inscriptions.creerprofil');
+
+        // Récupérer le dernier code de reduction existant
+        $lastCode = Reduction::orderBy('CodeReduction', 'desc')->pluck('CodeReduction')->first();
+
+        // Générer le nouveau matricule
+        if ($lastCode) {
+            // En supposant que le matricule est de type numérique
+            $newCode = (int)$lastCode + 1;
+        } else {
+            // Si aucun matricule n'existe encore, initialiser à un numéro de départ
+            $newCode = 1;
+        }
+        $reductions = Reduction::all();
+        return view ('pages.inscriptions.creerprofil')->with('reductions', $reductions)->with('newCode', $newCode);
+    }
+
+    public function ajouterprofreduction(Request $request) {
+        $reduction = new Reduction();
+        $reduction->Codereduction = $request->input('Codereduction');
+        $reduction->LibelleReduction = $request->input('LibelleReduction');
+        $reduction->Reduction_scolarite = $request->input('Reduction_scolarite');
+        $reduction->Reduction_arriere = $request->input('Reduction_arriere');
+        $reduction->Reduction_frais1 = $request->input('Reduction_frais1');
+        $reduction->Reduction_frais2 = $request->input('Reduction_frais2');
+        $reduction->Reduction_frais3 = $request->input('Reduction_frais3');
+        $reduction->Reduction_frais4 = $request->input('Reduction_frais4');
+        $reduction->mode = $request->input('mode');
+        $reduction->save();
+
+        return back()->with('status', 'Profil de reduction creer avec succes.');
+    }
+
+    public function modifreductions(Request $request)
+    {
+        // Validation des données
+        // $request->validate([
+        //     'codeReduction' => 'required|string|max:255',
+        //     'libelleReduction' => 'required|string|max:255',
+        //     'reductionScolarite' => 'required|numeric',
+        //     'reductionArriere' => 'required|numeric',
+        //     'reductionFrais1' => 'required|numeric',
+        //     'reductionFrais2' => 'required|numeric',
+        //     'reductionFrais3' => 'required|numeric',
+        //     'reductionFrais4' => 'required|numeric',
+        //     'reductionApplication' => 'required|integer',
+        // ]);
+
+        $codereduc = $request->input('CodeReduction');
+        // Récupérer la réduction à modifier
+        $reduction = Reduction::where('CodeReduction', $codereduc)->first();
+        // dd($reduction);
+        // Mettre à jour les champs de la réduction
+        // $reduction->codeReduction = $request->input('Codereduction');
+        $reduction->LibelleReduction = $request->input('LibelleReduction');
+        $reduction->Reduction_scolarite = $request->input('Reduction_scolarite');
+        $reduction->Reduction_arriere = $request->input('Reduction_arriere');
+        $reduction->Reduction_frais1 = $request->input('Reduction_frais1');
+        $reduction->Reduction_frais2 = $request->input('Reduction_frais2');
+        $reduction->Reduction_frais3 = $request->input('Reduction_frais3');
+        $reduction->Reduction_frais4 = $request->input('Reduction_frais4');
+        $reduction->mode = $request->input('mode');
+
+        // Sauvegarder les modifications
+        $reduction->save();
+
+        // Retourner une réponse JSON
+        return back()->with('status', 'Réduction modifiée avec succès.');
+    }
+
+    public function delreductions($codeRedu) {
+            // Trouver la réduction par CodeReduction
+            $reduct = Reduction::where('CodeReduction', $codeRedu)->first();
+        // dd($reduct);
+            // Supprimer la réduction
+            $reduct->delete();
+
+            // Rediriger avec un message de succès
+            return back()->with('status', 'Réduction supprimée avec succès.');
     }
 
     public function paramcomposantes(){
