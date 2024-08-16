@@ -185,36 +185,27 @@
             <div class="collapse" id="ui-basic">
                 <ul class="nav flex-column sub-menu">
                 
-                    {{-- <div class="dropdown">
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-        <i class="typcn typcn-document-text menu-icon"></i>
-        <span class="menu-title">Inscriptions<br>& disciplines</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="ui-basic">
-        <ul class="nav flex-column sub-menu">
-          {{-- Acceuil  --}}   
-          <li class="nav-item"> <a class="nav-link" href="{{url('/Acceuil')}}">Accueil</a></li>
+                
+          <li class="nav-item"> <a class="nav-link {{ request()->is('Acceuil') ? 'active' : '' }}"  href="{{url('/Acceuil')}}">Accueil</a></li>
 
           {{-- Créations des classes --}}
           <li class="nav-item menu-item-has-children">
             <a href="" class="nav-link">Gestion des classes</a>
             <ul class="sub-menus">
               <li>
-                <a href="{{url('/typesclasses')}}">Types classes</a>
+                <a class="nav-link {{ request()->is('typesclasses') ? 'active' : '' }}" href="{{url('/typesclasses')}}">Types classes</a>
               </li>
               <li>
-                <a href="{{url('/series')}}">Séries</a>
+                <a class="nav-link {{ request()->is('series') ? 'active' : '' }}" href="{{url('/series')}}">Séries</a>
               </li>
               <li>
-                <a href="{{url('/promotions')}}">Promotions</a>
+                <a class="nav-link {{ request()->is('promotions') ? 'active' : '' }}" href="{{url('/promotions')}}">Promotions</a>
               </li>
               <li>
-                <a href="{{url('/tabledesclasses')}}">Table des classes</a>
+                <a class="nav-link {{ request()->is('tabledesclasses') ? 'active' : '' }}" href="{{url('/tabledesclasses')}}">Table des classes</a>
               </li>
               <li>
-                <a href="{{url('/groupes')}}">Grouper</a>
+                <a class="nav-link {{ request()->is('groupes') ? 'active' : '' }}" href="{{url('/groupes')}}">Grouper</a>
               </li>
             </ul>
           </li>
@@ -224,28 +215,28 @@
             <a href="" class="nav-link">Scolarité</a>
             <ul class="sub-menus">
               <li>
-                <a href="{{url('/creerprofil')}}">Créer profils</a>
+                <a class="nav-link {{ request()->is('creerprofil') ? 'active' : '' }}" href="{{url('/creerprofil')}}">Créer profils</a>
               </li>
               <li>
-                <a href="{{url('/paramcomposantes')}}">Parametrage composantes</a>
+                <a class="nav-link {{ request()->is('paramcomposantes') ? 'active' : '' }}" href="{{url('/paramcomposantes')}}">Parametrage composantes</a>
               </li>
               <li>
-                <a href="{{url('/facturesclasses')}}">Factures classes</a>
+                <a class="nav-link {{ request()->is('facturesclasses') ? 'active' : '' }}" href="{{url('/facturesclasses')}}">Factures classes</a>
               </li>
               <li>
-                <a href="{{url('/reductioncollective')}}">Réductions collectives</a>
+                <a class="nav-link {{ request()->is('reductioncollective') ? 'active' : '' }}" href="{{url('/reductioncollective')}}">Réductions collectives</a>
               </li>
               <li>
-                <a href="{{url('/paiementdesnoninscrits')}}">Paiement des non inscrits</a>
+                <a class="nav-link {{ request()->is('paiementdesnoninscrits') ? 'active' : '' }}" href="{{url('/paiementdesnoninscrits')}}">Paiement des non inscrits</a>
               </li>
               <li>
-                <a href="{{url('/duplicatarecu')}}"> Duplicata</a>
+                <a class="nav-link {{ request()->is('duplicatarecu') ? 'active' : '' }}" href="{{url('/duplicatarecu')}}"> Duplicata</a>
               </li>
             </ul>
           </li>
 
           {{-- Dicipline --}}
-          <li class="nav-item"> <a class="nav-link" href="{{url('/discipline')}}">Discipline</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{ request()->is('discipline') ? 'active' : '' }}" href="{{url('/series')}}">Discipline</a></li>
           
           {{-- Extraction de données --}}
           {{-- <li class="nav-item menu-item-has-children">
@@ -277,10 +268,10 @@
           </li> --}}
 
           {{-- Editions --}}
-          <li class="nav-item"> <a class="nav-link" href="{{url('/editions')}}">Editions</a></li>
+          <li class="nav-item"> <a class="nav-link {{ request()->is('editions') ? 'active' : '' }}" href="{{url('/editions')}}">Editions</a></li>
 
           {{-- Archives --}}
-          <li class="nav-item"> <a class="nav-link" href="{{url('/archive')}}">Archives</a></li>
+          <li class="nav-item"> <a class="nav-link {{ request()->is('archive') ? 'active' : '' }}" href="{{url('/archive')}}">Archives</a></li>
           {{-- <div class="dropdown">
             <li class="nav-item">
             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton90" data-toggle="dropdown" 
@@ -645,7 +636,7 @@
             </div>
         </li> --}}
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('/parametre') }}">
+            <a class="nav-link" href="{{url('/parametre')}}">
                 <i class="typcn typcn-globe-outline menu-icon"></i>
                 <span class="menu-title" _msttexthash="234962" _msthash="98">Paramètres</span>
             </a>
@@ -686,15 +677,6 @@
     </li>  --}}
     </ul>
 
-    <div class="center-container" style=" display: flex; justify-content: center; align-items: center; height: 100vh;">
-        <form id="logout-form" action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit" class="logout-button"
-                style="background-color: #dc3434; color: white; border: none; padding: 5px 10px; font-size: 16px; cursor: pointer; border-radius: 12px;">
-                Déconnexion
-            </button>
-        </form>
-
-    </div>
+   
 
 </nav>

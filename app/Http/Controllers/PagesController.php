@@ -192,10 +192,17 @@ class PagesController extends Controller
 
         if($account){
                 if (Hash::check($request->password_usercontrat, $account->motdepasse)) {
-
-                Session::put('account', $account);
-                $id_usercontrat = $account->id_usercontrat;
-                Session::put('id_usercontrat', $id_usercontrat);
+                    Session::put('account', $account);
+                    $id_usercontrat = $account->id_usercontrat;
+                    $image = $account->image;
+    
+                    $nom_user = $account->nomuser;
+                    Session::put('image', $image);
+    
+                    $prenom_user = $account->prenomuser;
+                    Session::put('id_usercontrat', $id_usercontrat);
+                    Session::put('nom_user', $nom_user);
+                    Session::put('prenom_user', $prenom_user);
                 return redirect("vitrine");
             } else{
                 return back()->with('status', 'Mot de passe ou email incorrecte');
@@ -257,13 +264,17 @@ class PagesController extends Controller
     public function enregistreruser(Request $request){
         $login = new User();
         $password_crypte = Hash::make($request->password);
+        $login->nomgroupe = 1;
         $login->login = $request->input('login');
         $login->nomuser = $request->input('nom');
         $login->prenomuser = $request->input('prenom');
+        $imagenam = $request->file('image');
+        $imageconten = file_get_contents($imagenam->getRealPath());
+        $login->image = $imageconten;
         $login->motdepasse = $password_crypte;
-        $login->nomgroupe = '';
         $login->administrateur = 1;
         $login->user_actif = 1;
+        $login->save();
         // $login->motdepasse ='';
         // $login->motdepasse ='';
 
