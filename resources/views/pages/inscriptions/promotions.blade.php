@@ -105,7 +105,7 @@
         <div class="row">
             <div class="col">
                 <div class="card">
-                    <div class="table-responsive" style="height: 300px; overflow: auto;">
+                    <div class="table-responsive" style="overflow: auto;">
                         <table class="table table-striped" style="min-width: 600px; font-size: 12px;">
                             <thead>
                                 <tr>
