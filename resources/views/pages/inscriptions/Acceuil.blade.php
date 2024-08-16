@@ -23,7 +23,7 @@
       }
   }
 </style>
-  <div class="main-panel-1">
+  <div class="main-panel-10">
     <div class="content-wrapper">
       
       @if(Session::has('status'))
@@ -111,7 +111,7 @@
           <div class="card">
             <div id="contenu">
 
-            <div class="table-responsive" style="height: 400px; overflow: auto;">
+            <div class="table-responsive" style=" overflow: auto;">
               <table id="myTable" class="table table-bordered table-striped" style="min-width: 800px; font-size: 14px;">
                 <thead>
                   <tr>
