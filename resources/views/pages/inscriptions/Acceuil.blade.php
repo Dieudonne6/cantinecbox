@@ -1,6 +1,28 @@
 @extends('layouts.master')
 
 @section('content')
+
+<style>
+  /* Styles spécifiques pour l'impression sur papier A4 */
+  @media print and (size: A4) {
+      table {
+          font-size: 5pt; /* Ajuste la taille de la police pour A4 */
+      }
+      th, td {
+          padding: 3px; /* Ajuste le padding pour A4 */
+      }
+  }
+
+  /* Styles spécifiques pour l'impression sur papier A3 */
+  @media print and (size: A3) {
+      table {
+          font-size: 6pt; /* Ajuste la taille de la police pour A3 */
+      }
+      th, td {
+          padding: 4px; /* Ajuste le padding pour A3 */
+      }
+  }
+</style>
   <div class="main-panel-1">
     <div class="content-wrapper">
       
@@ -21,7 +43,7 @@
                     <a class="btn btn-primary btn-sm" href="{{url('/inscrireeleve')}}">
                       <i class="typcn typcn-plus btn-icon-prepend"></i> Nouveau
                     </a>
-                    <button type="button" class="btn btn-secondary btn-sm">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="imprimerPage()">
                       <i class="typcn typcn-printer btn-icon-prepend"></i> Imprimer
                     </button>
                   </div>
@@ -79,23 +101,7 @@
             </style>
       
             <!-- Your recalculating script -->
-            <script>
-              document.getElementById('recalculer').addEventListener('click', function() {
-                let total = Math.floor(Math.random() * 1000);
-                let filles = Math.floor(Math.random() * 100);
-                let garcons = total - filles;
-                let totalRed = Math.floor(Math.random() * 20);
-                let fillesRed = Math.floor(Math.random() * 5);
-                let garconsRed = totalRed - fillesRed;
-      
-                document.getElementById('total').textContent = total;
-                document.getElementById('filles').textContent = filles;
-                document.getElementById('garcons').textContent = garcons;
-                document.getElementById('total-red').textContent = totalRed;
-                document.getElementById('filles-red').textContent = fillesRed;
-                document.getElementById('garcons-red').textContent = garconsRed;
-              });
-            </script>
+
           </div>
         </div>
       </div>
@@ -103,6 +109,8 @@
       <div class="row">
         <div class="col">
           <div class="card">
+            <div id="contenu">
+
             <div class="table-responsive" style="height: 400px; overflow: auto;">
               <table id="myTable" class="table table-bordered table-striped" style="min-width: 800px; font-size: 14px;">
                 <thead>
@@ -173,6 +181,7 @@
                 </tbody>
               </table>
             </div>
+          </div>
           </div>
         </div>
       </div>      
@@ -623,4 +632,56 @@
   </div>
   @endforeach
 
+
+  <script>
+    document.getElementById('recalculer').addEventListener('click', function() {
+      let total = Math.floor(Math.random() * 1000);
+      let filles = Math.floor(Math.random() * 100);
+      let garcons = total - filles;
+      let totalRed = Math.floor(Math.random() * 20);
+      let fillesRed = Math.floor(Math.random() * 5);
+      let garconsRed = totalRed - fillesRed;
+
+      document.getElementById('total').textContent = total;
+      document.getElementById('filles').textContent = filles;
+      document.getElementById('garcons').textContent = garcons;
+      document.getElementById('total-red').textContent = totalRed;
+      document.getElementById('filles-red').textContent = fillesRed;
+      document.getElementById('garcons-red').textContent = garconsRed;
+    });
+  </script>
+
+<script>
+  function imprimerPage() {
+      var table = document.getElementById('myTable');
+      table.classList.remove('dataTable');
+
+      // Masque les colonnes avec la classe hide-on-print
+      var columns = table.querySelectorAll('.hide-on-print');
+      columns.forEach(function(column) {
+          column.style.display = 'none';
+      });
+
+      var page = window.open('', '_blank');
+      page.document.write('<html><head><title>Liste des eleves</title>');
+      page.document.write('<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />');
+      page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
+      // page.document.write('<style>@media print { .dt-end { display: none !important; } }</style>');
+      // page.document.write('<style>@media print { .dt-start { display: none !important; } }</style>');
+      page.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ddd; padding: 8px; } .cell-classe { background-color: #f8f9fa; } .cell-eleve { background-color: #e9ecef; } .cell-montant { background-color: #dee2e6; } .cell-mois { background-color: #ced4da; } .cell-date { background-color: #adb5bd; } .cell-reference { background-color: #6c757d; } .cell-action { background-color: #343a40; color: #fff; } tbody tr:nth-child(even) { background-color: #f1f3f5; } tbody tr:nth-child(odd) { background-color: #ffffff; } </style>');
+      page.document.write('</head><body>');
+      page.document.write('<div>' + document.getElementById('contenu').innerHTML + '</div>');
+      page.document.write('</body></html>');
+      page.document.close();
+      page.onload = function() {
+          page.print();
+          page.close();
+      };
+
+      // Restaure les colonnes après l'impression
+      columns.forEach(function(column) {
+          column.style.display = '';
+      });
+  }
+</script>
 @endsection

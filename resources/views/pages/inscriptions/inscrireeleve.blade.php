@@ -17,15 +17,16 @@
             {{ Session::get('status') }}
           </div>
           @endif
-          {{-- @if ($errors->any())
-          <div class="alert alert-danger">
-            <ul>
-              @foreach ($errors->all() as $error)
-              <li>{{ $error }}</li>
-              @endforeach
-            </ul>
+          {{-- erreur concernant l'inscription d'un eleve --}}
+          @if($errors->any())
+          <div id="statusAlert" class="alert alert-danger">
+              <ul>
+                  @foreach($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
           </div>
-          @endif --}}
+          @endif
           <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
             <div class="col-12 grid-margin">
               <div class="card">
@@ -146,7 +147,7 @@
                         <div class="col-md-4">
                           <label for="sexe">Sexe</label>
                           <select id="sexe" name="sexe" class="js-example-basic-multiple w-100" >
-                            <option  >Sélectionner</option>
+                            {{-- <option  >Sélectionner</option> --}}
                             <option value="1">Masculin</option>
                             <option value="2">Féminin</option>
                           </select>
@@ -154,7 +155,7 @@
                         <div class="col-md-4">
                           <label for="type-eleve">Type d'élève</label>
                           <select id="type-eleve" name="typeEleve" class="js-example-basic-multiple w-100">
-                            <option  >Sélectionner</option>
+                            {{-- <option  >Sélectionner</option> --}}
                             <option value="1">Nouveau</option>
                             <option value="2">Ancien</option>
                             <option value="3">Transferer</option>
@@ -163,7 +164,7 @@
                         <div class="col-md-4">
                           <label for="aptitude-sport">Aptitude Sport</label>
                           <select id="aptitude-sport" name="aptituteSport" class="js-example-basic-multiple w-100">
-                            <option  >Sélectionner</option>
+                            {{-- <option  >Sélectionner</option> --}}
                             <option value="1">Apte</option>
                             <option value="2">Inapte</option>
                           </select>
