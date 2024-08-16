@@ -16,6 +16,8 @@ use App\Models\Serie;
 use App\Models\Typeclasse;
 use App\Models\Typeenseigne;
 use App\Models\Eleveplus;
+use App\Http\Requests\inscriptionEleveRequest;
+
 
 use App\Models\Promo;
 use App\Models\Notes;
@@ -393,44 +395,9 @@ public function destroy($codePromo)
 
 //   fonction d'ajout d'un nouveau eleve
 
-public function nouveaueleve (Request $request) {
+public function nouveaueleve (inscriptionEleveRequest $request) {
 
-    // validation des donne 
-    // $request->validate([
-    //     'classe' => 'required',
-    //     'classeEntre' => 'required',
-    //     'numOrdre' => 'required',
-    //     'photo' => 'required',
-    //     'reduction' => 'required',
-    //     'nom' => 'required',
-    //     'prenom' => 'required',
-    //     'dateNaissance' => 'required',
-    //     'lieuNaissance' => 'required',
-    //     'dateInscription' => 'required',
-    //     'departement' => 'required',
-    //     'sexe' => 'required',
-    //     'typeEleve' => 'required',
-    //     'aptituteSport' => 'required',
-    //     'adressePersonnelle' => 'required',
-    //     'etablissementOrigine' => 'required',
-    //     'nationalite' => 'required',
-    //     'redoublant' => 'required',
-    //     'adressePersonnelle' => 'required',
-    //     'nomPere' => 'required',
-    //     'nomMere' => 'required',
-    //     'adressesParents' => 'required',
-    //     'autresRenseignements' => 'required',
-    //     'indicatifParent' => 'required',
-    //     'telephoneParent' => 'required',
-    //     'telephoneEleve' => 'required',
-    // ]);
-
-    // dd($request->input('nom'));
-
-    // Effectuer le traitement des photo
-    // $request->validate([
-    //     'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    // ]);
+   
     $imageName = $request->file('photo');
     $imageContent = file_get_contents($imageName->getRealPath());
 
