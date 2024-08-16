@@ -5,7 +5,11 @@
 
 <div class="main-panel-10">
     <div class="content-wrapper">
-        
+      @if (Session::has('status'))
+      <div id="statusAlert" class="alert alert-success btn-primary">
+        {{ Session::get('status') }}
+      </div>
+      @endif
       {{--  --}}
       <div class="row">          
         <div class="col-12">
@@ -16,12 +20,12 @@
                 <div class="demo-inline-spacing">
                   {{-- <a  class="btn btn-primary" href=" {{url('/nouveautypesclasses')}}">Nouveau</a> --}}
                   <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nouveaumodal">
     Nouveau
   </button>
   
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabe" aria-hidden="true">
+  <div class="modal fade" id="nouveaumodal" tabindex="-1" aria-labelledby="exampleModalLabe" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content calcul-modal">
         <div class="modal-header">
@@ -29,63 +33,69 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body profile-content">
+          {{-- @if (Session::has('status'))
+          <div id="statusAlert" class="alert alert-success btn-primary">
+            {{ Session::get('status') }}
+          </div>
+          @endif --}}
           <div class="row">
             <div class="" id="calcul-one">
-              <form class="forms-sample">
+              <form class="forms-sample" action="{{ url('/ajouterprofreduction') }}" method="POST">
+                @csrf
                 <div class="form-group row">
                   <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Numero reduction</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0">
+                    <input type="text" class="form-control" id="exampleInputUsername2" name="Codereduction" value="{{ $newCode }}" readonly>
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Libelle reduction</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" placeholder="">
+                    <input type="text" class="form-control" id="exampleInputUsername2" name="LibelleReduction" placeholder="">
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur scolarite</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00000000000">
+                    <input type="text" class="form-control" id="exampleInputUsername2" name="Reduction_scolarite" placeholder="0,00000000000%">
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur arriere</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                    <input type="text" class="form-control" id="exampleInputUsername2" name="Reduction_arriere" placeholder="0,00%">
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                    <input type="text" class="form-control" id="exampleInputUsername2" name="Reduction_frais1" placeholder="0,00%">
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                    <input type="text" class="form-control" id="exampleInputUsername2" name="Reduction_frais2" placeholder="0,00%">
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                    <input type="text" class="form-control" id="exampleInputUsername2" name="Reduction_frais3" placeholder="0,00%">
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
+                    <input type="text" class="form-control" id="exampleInputUsername2" name="Reduction_frais4" placeholder="0,00%">
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="exampleInputUsername2" class="col-sm-12 col-form-label mb-0">Mode d'application de la reduction sur les echeancier</label>
                   <div class="col-sm-12 mb-2">
-                    <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                      <option>Agir sur les dernier tranches</option>
-                      <option>Agir sur les dernier tranches</option>
+                    <select class="js-example-basic-multiple w-100" name="mode">
+                      <option value="1">Agir sur les dernier tranches</option>
+                      <option value="2">Repartir equitablement sur toutes les tranches</option>
                     </select>
                   </div>
                 </div>
@@ -156,7 +166,7 @@
       </div>
     </div>
   </div>
-                  <button type="button" class="btn btn-secondary">Imprimer</button>  
+                  {{-- <button type="button" class="btn btn-secondary">Imprimer</button>   --}}
                   <style>
                     table {
                       float: right;
@@ -198,239 +208,259 @@
                   </tr>
                 </thead>
                 <tbody>
+                  @foreach ($reductions as $reduction)
+                      
                   <tr>
-                    <td>0</td>
-                    <td>Plein Tarif</td>
+                    <td>{{ $reduction->CodeReduction }}</td>
+                    <td>{{ $reduction->LibelleReduction }}</td>
                     <td>
                         <div class="">
                             <!-- Button trigger modal -->
                             {{-- <a  class="btn btn-primary p-2 btn-sm" href="{{url('/modifiertypesclasses')}}">Modif</a> --}}
-                            <button type="button" class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <button type="button" class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#modifModal"
+                            data-code="{{ $reduction->CodeReduction }}"
+                            data-libelle="{{ $reduction->LibelleReduction }}"
+                            data-scolarite="{{ $reduction->Reduction_scolarite }}"
+                            data-arriere="{{ $reduction->Reduction_arriere }}"
+                            data-frais1="{{ $reduction->Reduction_frais1 }}"
+                            data-frais2="{{ $reduction->Reduction_frais2 }}"
+                            data-frais3="{{ $reduction->Reduction_frais3 }}"
+                            data-frais4="{{ $reduction->Reduction_frais4 }}">
                                 Modifier
                               </button>
-                              <!-- Modal -->
-                              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <!--Modification Modal -->
+                              <div class="modal fade" id="modifModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
-                                  <div class="modal-content calcul-modal">
-                                    <div class="modal-header">
-                                      <h1 class="modal-title fs-5" id="exampleModalLabel">Modifier fiche de reduction</h1>
-                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body profile-content">
-                                      <div class="row">
-                                        <div class="" id="calcul-one">
-                                          <form class="forms-sample">
-                                            <div class="form-group row">
-                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Numero reduction</label>
-                                              <div class="col-sm-4">
-                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0">
-                                              </div>
-                                            </div>
-                                            <div class="form-group row">
-                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Libelle reduction</label>
-                                              <div class="col-sm-4">
-                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="">
-                                              </div>
-                                            </div>
-                                            <div class="form-group row">
-                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur scolarite</label>
-                                              <div class="col-sm-4">
-                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00000000000">
-                                              </div>
-                                            </div>
-                                            <div class="form-group row">
-                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur arriere</label>
-                                              <div class="col-sm-4">
-                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
-                                              </div>
-                                            </div>
-                                            <div class="form-group row">
-                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
-                                              <div class="col-sm-4">
-                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
-                                              </div>
-                                            </div>
-                                            <div class="form-group row">
-                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
-                                              <div class="col-sm-4">
-                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
-                                              </div>
-                                            </div>
-                                            <div class="form-group row">
-                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
-                                              <div class="col-sm-4">
-                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
-                                              </div>
-                                            </div>
-                                            <div class="form-group row">
-                                              <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
-                                              <div class="col-sm-4">
-                                                <input type="text" class="form-control" id="exampleInputUsername2" placeholder="0,00%">
-                                              </div>
-                                            </div>
-                                            <div class="form-group row">
-                                              <label for="exampleInputUsername2" class="col-sm-12 col-form-label mb-0">Mode d'application de la reduction sur les echeancier</label>
-                                              <div class="col-sm-12 mb-2">
-                                                <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                                                  <option>Agir sur les dernier tranches</option>
-                                                  <option>Agir sur les dernier tranches</option>
-                                                </select>
-                                              </div>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
-                                            <button class="btn btn-light">Fermer</button>
-                                          </form>
+                                    <div class="modal-content calcul-modal">
+                                        <div class="modal-header">
+                                            <h1 class="modal-titlemodif fs-5" id="exampleModalLabel">Modifier fiche de réduction</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <div class="col-lg-4 d-none" id="percentage">
-                                          <h6>Calculateur de pourcentage de reduction</h6>
-                                          <div class="row">
-                                            <div class="col-lg-6">
-                                              <p>Avant redcution</p>
-                                              <div class="mb-2">
-                                                <input type="text"  class="form-control" placeholder="133000">
-                                              </div>
-                                              <div class="mb-2">
-                                                <input type="text"  class="form-control" placeholder="133000">
-                                              </div>
-                                              <div class="mb-2">
-                                                <input type="text"  class="form-control" placeholder="133000">
-                                              </div>
-                                              <div class="mb-2">
-                                                <input type="text"  class="form-control" placeholder="133000">
-                                              </div>
-                                              <div class="mb-2">
-                                                <input type="text"  class="form-control" placeholder="133000">
-                                              </div>
-                                              <div>
-                                                <input type="text"  class="form-control" placeholder="133000">
-                                              </div>
+                                        <div class="modal-body profile-content">
+                                            <div class="row">
+                                                <div class="" id="calcul-one">
+                                                    <form class="forms-sample" id="modificationForm" action="{{ url('/modifreductions') }}" method="POST">
+                                                      @csrf
+                                                      @method('PUT')
+                                                      <input type="hidden" id="modalReductionId" name="CodeReduction">
+                                                        <div class="form-group row">
+                                                            <label for="modalCodeReduction" class="col-sm-8 col-form-label">Numéro réduction</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="modalCodeReduction" name="Codereduction" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="modalLibelleReduction" class="col-sm-8 col-form-label">Libellé réduction</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="modalLibelleReduction" name="LibelleReduction">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="modalReductionScolarite" class="col-sm-8 col-form-label">Réduction accordée sur scolarité</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="modalReductionScolarite" name="Reduction_scolarite">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="modalReductionArriere" class="col-sm-8 col-form-label">Réduction accordée sur arriérés</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="modalReductionArriere" name="Reduction_arriere">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="modalReductionFrais1" class="col-sm-8 col-form-label">Réduction accordée sur frais 1</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="modalReductionFrais1" name="Reduction_frais1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="modalReductionFrais2" class="col-sm-8 col-form-label">Réduction accordée sur frais 2</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="modalReductionFrais2" name="Reduction_frais2">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="modalReductionFrais3" class="col-sm-8 col-form-label">Réduction accordée sur frais 3</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="modalReductionFrais3" name="Reduction_frais3">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="modalReductionFrais4" class="col-sm-8 col-form-label">Réduction accordée sur frais 4</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="modalReductionFrais4" name="Reduction_frais4">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="modalModeApplication" class="col-sm-12 col-form-label mb-0">Mode d'application de la réduction sur les échéanciers</label>
+                                                            <div class="col-sm-12 mb-2">
+                                                                <select class="js-example-basic-multiple w-100" id="modalModeApplication" name="mode">
+                                                                    <option value="1">Agir sur les dernières tranches</option>
+                                                                    <option value="2">Repartir equitablement sur toutes les tranches</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary mr-2">Modifier</button>
+                                                        <button class="btn btn-light" data-bs-dismiss="modal">Fermer</button>
+                                                    </form>
+                                                </div>
+                                                <div class="col-lg-4 d-none" id="percentage">
+                                                    <h6>Calculateur de pourcentage de réduction</h6>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <p>Avant réduction</p>
+                                                            <div class="mb-2">
+                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div>
+                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <p>Après réduction</p>
+                                                            <div class="mb-2">
+                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            </div>
+                                                            <div>
+                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            </div>
+                                                        </div>
+                                                        <div class="my-4 col-lg-12">
+                                                            <button type="button" class="btn btn-secondary" id="closecalculate">Fermer le calculateur</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-lg-6">
-                                              <p>Apres reduction</p>
-                                              <div class="mb-2">
-                                                <input type="text"  class="form-control" placeholder="133000">
-                                              </div>
-                                              <div class="mb-2">
-                                                <input type="text"  class="form-control" placeholder="133000">
-                                              </div>
-                                              <div class="mb-2">
-                                                <input type="text"  class="form-control" placeholder="133000">
-                                              </div>
-                                              <div class="mb-2">
-                                                <input type="text"  class="form-control" placeholder="133000">
-                                              </div>
-                                              <div class="mb-2">
-                                                <input type="text"  class="form-control" placeholder="133000">
-                                              </div>
-                                              <div>
-                                                <input type="text"  class="form-control" placeholder="133000">
-                                              </div>
-                                            </div>
-                                            <div class="my-4 col-lg-12">
-                                              <button type="button" class="btn btn-secondary" id="closecalculate">Fermer le calculateur</button>
-              
-                                            </div>
-                                          </div>
                                         </div>
-                                      </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                      <button type="button" class="btn btn-secondary" id="calculs">Afficher calculateur de pourcentage</button>              
-                                        <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-
-
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" id="calculs">Afficher calculateur de pourcentage</button>
+                                            <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel"></div>
                                         </div>
                                     </div>
-                                  </div>
                                 </div>
-                              </div>
-                              <button class="btn btn-danger p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Supprimer
-                                {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
-                              </button>
-                              <!-- Button trigger modal -->
-                              <button class="btn btn-primary p-2 btn-sm dropdown" data-bs-toggle="modal" data-bs-target="#exampleModal3">Détails</button>
+                            </div>
+                            {{-- <button class="btn btn-danger p-2 btn-sm" type="button" id="deleteButton" data-code-reduction="{{ $reduction->CodeReduction }}">Supprimer</button> --}}
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal3" tabindex="-3" aria-labelledby="exampleModalLabel3" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel3">Détails de la Réductions</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="main-panel-10">
-          <div class="content-wrapper">
-              <div class="card">
-                  <div class="card-body">
-                      <div class="row">
-                          <div class="form-group">
-                              <div class="form-group row">
-                                  <div class="col">
-                                      <label>Réduction accordée sur scolarité</label>
-                                      <div id="bloodhound">
-                                          <input class="form-control" type="text" placeholder="0,0333"  name="nom_pere" id="nom_pere" value="">
-                                      </div>
-                                  </div>
-                                  <div class="col">
-                                      <label>Réduction accordée sur </label>
-                                      <div id="bloodhound">
-                                          <input class="form-control" type="text" placeholder="0,00" name="nom_mere" id="nom_mere" value="">
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="form-group">
-                              <div class="form-group row">
-                                <div class="col">
-                                  <label>Réduction accordée sur arrièrée</label>
-                                  <div id="bloodhound">
-                                    <input class="form-control" type="text" placeholder="0,00" name="numero_de_telephone" id="numero_de_telephone" value="">
-                                </div>
-                              </div>
-                              <div class="col">
-                                  <label>Réduction accordée sur</label>
-                                  <div id="bloodhound">
-                                    <input class="form-control" type="text" placeholder="0,00" name="adresse_email" id="adresse_email" value="">
-                                </div>
-                              </div>
-                              </div>
-                          </div>
-                          
-                          <div class="form-group">
-                            <div class="form-group row">
-                              <div class="col">
-                                <label>Réduction accordée sur arrièrée</label>
-                                <div id="bloodhound">
-                                  <input class="form-control" type="text" placeholder="0,00" name="numero_de_telephone" id="numero_de_telephone" value="">
-                              </div>
-                            </div>
-                            <div class="col">
-                                <label>Réduction accordée sur</label>
-                                <div id="bloodhound">
-                                  <input class="form-control" type="text" placeholder="0,00" name="adresse_email" id="adresse_email" value="">
-                              </div>
-                            </div>
-                            </div>
+                               <!-- Modal Trigger for Deletion -->
+            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $reduction->CodeReduction }}">Supprimer</button>
+
+            <!-- Modal for Deletion -->
+            <div class="modal fade" id="deleteModal{{ $reduction->CodeReduction }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation de suppression</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+                        <div class="modal-body">
+                            Êtes-vous sûr de vouloir supprimer cette réduction ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <form action="{{ url('delreductions/' . $reduction->CodeReduction) }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <input type="submit" class="btn btn-danger" value="Confirmer">
+                            </form>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                              <!-- Button trigger modal -->
+                               <!-- Bouton Détails avec data-attributes -->
+                              <button class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#detailsModal"
+                              data-code="{{ $reduction->CodeReduction }}"
+                              data-libelle="{{ $reduction->LibelleReduction }}"
+                              data-scolarite="{{ $reduction->Reduction_scolarite }}"
+                              data-arriere="{{ $reduction->Reduction_arriere }}"
+                              data-frais1="{{ $reduction->Reduction_frais1 }}"
+                              data-frais2="{{ $reduction->Reduction_frais2 }}"
+                              data-frais3="{{ $reduction->Reduction_frais3 }}"
+                              data-frais4="{{ $reduction->Reduction_frais4 }}">
+                              Détails
+                              </button>
+                              {{-- <button class="btn btn-primary p-2 btn-sm dropdown" data-bs-toggle="modal" data-bs-target="#exampleModal3">Détails</button> --}}
+
+                             <!-- Modal Détails -->
+                    <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h1 class="modal-title fs-5" id="detailsModalLabel">Détails de la Réduction</h1>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                  <div class="form-group">
+                                      <label>Code Réduction</label>
+                                      <input type="text" class="form-control" id="modalCodeReduction" readonly>
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Libellé Réduction</label>
+                                      <input type="text" class="form-control" id="modalLibelleReduction" readonly>
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Réduction accordée sur scolarité</label>
+                                      <input type="text" class="form-control" id="modalReductionScolarite" readonly>
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Réduction accordée sur arriérés</label>
+                                      <input type="text" class="form-control" id="modalReductionArriere" readonly>
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Réduction accordée sur frais 1</label>
+                                      <input type="text" class="form-control" id="modalReductionFrais1" readonly>
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Réduction accordée sur frais 2</label>
+                                      <input type="text" class="form-control" id="modalReductionFrais2" readonly>
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Réduction accordée sur frais 3</label>
+                                      <input type="text" class="form-control" id="modalReductionFrais3" readonly>
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Réduction accordée sur frais 4</label>
+                                      <input type="text" class="form-control" id="modalReductionFrais4" readonly>
+                                  </div>
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                              </div>
+                          </div>
                       </div>
-                  </div>
-              </div>
-          </div>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Enregistrer</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
-      </div>
-    </div>
-  </div>
-</div>
+                    </div>
                             </div>
 
                           </div>
                     </td>
                   </tr>
+                  @endforeach
+
                 </tbody>
               </table>
             </div>
@@ -438,4 +468,131 @@
         </div>
     </div>
   </div>
+
+
+
+  <script>
+
+    // afficher les information dans le modal de detail
+    document.addEventListener('DOMContentLoaded', function () {
+        var detailsModal = document.getElementById('detailsModal');
+        detailsModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget; // Bouton qui a déclenché le modal
+    
+            // Récupérer les informations des data-attributes
+            var codeReduction = button.getAttribute('data-code');
+            var libelleReduction = button.getAttribute('data-libelle');
+            var reductionScolarite = button.getAttribute('data-scolarite');
+            var reductionArriere = button.getAttribute('data-arriere');
+            var reductionFrais1 = button.getAttribute('data-frais1');
+            var reductionFrais2 = button.getAttribute('data-frais2');
+            var reductionFrais3 = button.getAttribute('data-frais3');
+            var reductionFrais4 = button.getAttribute('data-frais4');
+    
+            // Mettre à jour les champs du modal avec les informations correspondantes
+            detailsModal.querySelector('#modalCodeReduction').value = codeReduction;
+            detailsModal.querySelector('#modalLibelleReduction').value = libelleReduction;
+            detailsModal.querySelector('#modalReductionScolarite').value = reductionScolarite;
+            detailsModal.querySelector('#modalReductionArriere').value = reductionArriere;
+            detailsModal.querySelector('#modalReductionFrais1').value = reductionFrais1;
+            detailsModal.querySelector('#modalReductionFrais2').value = reductionFrais2;
+            detailsModal.querySelector('#modalReductionFrais3').value = reductionFrais3;
+            detailsModal.querySelector('#modalReductionFrais4').value = reductionFrais4;
+
+            // Mettre à jour le titre du modal avec le libellé de la réduction
+            var modalTitle = detailsModal.querySelector('.modal-title');
+            modalTitle.textContent = 'Détails de la Réduction : ' + libelleReduction;
+
+        });
+    });
+
+
+    // afficher les infos du modal pour la modification
+    document.addEventListener('DOMContentLoaded', function () {
+        var detailsModal = document.getElementById('modifModal');
+        detailsModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget; // Bouton qui a déclenché le modal
+    
+            // Récupérer les informations des data-attributes
+            var codeReduction = button.getAttribute('data-code');
+            var libelleReduction = button.getAttribute('data-libelle');
+            var reductionScolarite = button.getAttribute('data-scolarite');
+            var reductionArriere = button.getAttribute('data-arriere');
+            var reductionFrais1 = button.getAttribute('data-frais1');
+            var reductionFrais2 = button.getAttribute('data-frais2');
+            var reductionFrais3 = button.getAttribute('data-frais3');
+            var reductionFrais4 = button.getAttribute('data-frais4');
+    
+            // Mettre à jour les champs du modal avec les informations correspondantes
+            document.getElementById('modalReductionId').value = codeReduction;
+            detailsModal.querySelector('#modalCodeReduction').value = codeReduction;
+            detailsModal.querySelector('#modalLibelleReduction').value = libelleReduction;
+            detailsModal.querySelector('#modalReductionScolarite').value = reductionScolarite;
+            detailsModal.querySelector('#modalReductionArriere').value = reductionArriere;
+            detailsModal.querySelector('#modalReductionFrais1').value = reductionFrais1;
+            detailsModal.querySelector('#modalReductionFrais2').value = reductionFrais2;
+            detailsModal.querySelector('#modalReductionFrais3').value = reductionFrais3;
+            detailsModal.querySelector('#modalReductionFrais4').value = reductionFrais4;
+
+            // Mettre à jour le titre du modal avec le libellé de la réduction
+            var modalTitle = detailsModal.querySelector('.modal-titlemodif');
+            modalTitle.textContent = 'Modifier fiche de Réduction: ' + libelleReduction;
+
+        });
+    });
+
+// confirmation avant suppresion
+
+// document.addEventListener('DOMContentLoaded', function() {
+//   document.getElementById('deleteButton').addEventListener('click', function() {
+//     // Afficher une boîte de confirmation
+//     const confirmation = confirm("Êtes-vous sûr de vouloir supprimer cette réduction ?");
+    
+//     if (confirmation) {
+//       // Si l'utilisateur confirme, rediriger vers la route de suppression
+//       const codeReduction = this.getAttribute('data-code-reduction');
+//       window.location.href = `/delreductions/${codeReduction}`;
+//     }
+//   });
+// });
+
+
+
+    // requette ajax pour la modification
+
+//     document.getElementById('modificationForm').addEventListener('submit', function(event) {
+//     event.preventDefault(); // Empêcher le rechargement de la page
+
+//     // Récupérer les données du formulaire
+//     var formData = new FormData(this);
+
+//     // Récupérer l'ID de la réduction pour construire l'URL de la requête PUT
+//     var codereduction = document.getElementById('modalReductionId').value;
+
+//     // Envoyer les données au serveur via AJAX
+//     fetch('/modifreductions/' + codereduction, {
+//         method: 'PUT',
+//         body: formData,
+//         headers: {
+//             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+//         }
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.success) {
+//             // Afficher un message de succès, fermer le modal, etc.
+//             alert('Modification effectuée avec succès');
+//             $('#modifModal').modal('hide');
+//             // Mettre à jour l'interface utilisateur si nécessaire
+//         } else {
+//             // Gérer les erreurs
+//             alert('Erreur lors de la modification : ' + data.message);
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Erreur:', error);
+//         alert('Erreur lors de la modification.');
+//     });
+// });
+    </script>
 @endsection

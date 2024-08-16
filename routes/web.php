@@ -80,6 +80,9 @@ Route::get('/typesclasses', [PagesController::class, 'typesclasses']);
 Route::get('/promotions', [PagesController::class, 'promotions']);
 
 Route::get('/creerprofil', [PagesController::class, 'creerprofil']);
+Route::post('/ajouterprofreduction', [PagesController::class, 'ajouterprofreduction']);
+Route::put('/modifreductions', [PagesController::class, 'modifreductions']);
+Route::delete('/delreductions/{codeRedu}', [PagesController::class, 'delreductions']);
 
 Route::get('/paramcomposantes', [PagesController::class, 'paramcomposantes']);
 
