@@ -1,170 +1,193 @@
 @extends('layouts.master')
 
 @section('content')
-<div class="main-panel-10">
+
+<style>
+  /* Styles spécifiques pour l'impression sur papier A4 */
+  @media print and (size: A4) {
+      table {
+          font-size: 5pt; /* Ajuste la taille de la police pour A4 */
+      }
+      th, td {
+          padding: 3px; /* Ajuste le padding pour A4 */
+      }
+  }
+
+  /* Styles spécifiques pour l'impression sur papier A3 */
+  @media print and (size: A3) {
+      table {
+          font-size: 6pt; /* Ajuste la taille de la police pour A3 */
+      }
+      th, td {
+          padding: 4px; /* Ajuste le padding pour A3 */
+      }
+  }
+</style>
+  <div class="main-panel-1">
     <div class="content-wrapper">
-        
-        @if(Session::has('status'))
-        <div id="statusAlert" class="alert alert-success btn-primary">
-            {{ Session::get('status')}}
+      
+      @if(Session::has('status'))
+      <div id="statusAlert" class="alert alert-success btn-primary">
+        {{ Session::get('status')}}
+      </div>
+      @endif
+      {{--  --}}
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-6">
+            <div class="card-body">
+              <h4 class="card-title">Accueil</h4>
+              <div class="row gy-6">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <a class="btn btn-primary btn-sm" href="{{url('/inscrireeleve')}}">
+                      <i class="typcn typcn-plus btn-icon-prepend"></i> Nouveau
+                    </a>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="imprimerPage()">
+                      <i class="typcn typcn-printer btn-icon-prepend"></i> Imprimer
+                    </button>
+                  </div>
+                  <div>
+                    <button id="recalculer" type="button" class="btn btn-primary btn-sm">Recalculer effectifs</button>
+                  </div>
+                  <div>
+                    <table id="tableau-effectifs" class="table">
+                      <tbody>
+                        <tr>
+                          <td class="bouton">Eff.Total</td>
+                          <td id="total">942</td>
+                          <td class="bouton">Filles</td>
+                          <td id="filles">60</td>
+                          <td class="bouton">Garçons</td>
+                          <td id="garcons">742</td>
+                        </tr>
+                        <tr>
+                          <td class="bouton">Eff.Red</td>
+                          <td id="total-red">10</td>
+                          <td class="bouton">Red.Filles</td>
+                          <td id="filles-red">2</td>
+                          <td class="bouton">Red.Garçons</td>
+                          <td id="garcons-red">0</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <style>
+              table {
+                float: right;
+                width: 60%;
+                border-collapse: collapse;
+                margin: 5px auto;
+              }
+      
+              th,
+              td {
+                border: 1px solid #ddd;
+                padding: 4px;
+                text-align: center;
+              }
+      
+              th {
+                background-color: #f2f2f2;
+              }
+      
+              td.bouton {
+                background-color: #ffcccb;
+              }
+            </style>
+      
+            <!-- Your recalculating script -->
+
+          </div>
         </div>
-        @endif
-        
-        <div class="row">
-            <div class="col-12">
-                <div class="card mb-6">
-                    <div class="card-body">
-                        <h4 class="card-title">Accueil</h4>
-                        <div class="row gy-6">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <a class="btn btn-primary btn-sm" href="{{ url('/inscrireeleve') }}">
-                                        <i class="typcn typcn-plus btn-icon-prepend"></i> Nouveau
-                                    </a>
-                                    <button type="button" class="btn btn-secondary btn-sm">
-                                        <i class="typcn typcn-printer btn-icon-prepend"></i> Imprimer
-                                    </button>
-                                </div>
-                                <div>
-                                    <button id="recalculer" type="button" class="btn btn-primary btn-sm">Recalculer effectifs</button>
-                                </div>
-                                <div>
-                                    <table id="tableau-effectifs" class="table">
-                                        <tbody>
-                                            <tr>
-                                                <td class="bouton">Eff.Total</td>
-                                                <td id="total">942</td>
-                                                <td class="bouton">Filles</td>
-                                                <td id="filles">60</td>
-                                                <td class="bouton">Garçons</td>
-                                                <td id="garcons">742</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="bouton">Eff.Red</td>
-                                                <td id="total-red">10</td>
-                                                <td class="bouton">Red.Filles</td>
-                                                <td id="filles-red">2</td>
-                                                <td class="bouton">Red.Garçons</td>
-                                                <td id="garcons-red">0</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+      </div>
+      {{--  --}}
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div id="contenu">
+
+            <div class="table-responsive" style="height: 400px; overflow: auto;">
+              <table id="myTable" class="table table-bordered table-striped" style="min-width: 800px; font-size: 14px;">
+                <thead>
+                  <tr>
+                    <th class="ml-5">Matricule</th>
+                    <th>Nom & Prénoms</th>
+                    <th>Classe</th>
+                    <th>Sexe</th>
+                    <th>Red.</th>
+                    <th>Date nai</th>
+                    <th>Lieunais</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($eleves as $eleve)
+                    <tr>
+                      <td>{{ $eleve->MATRICULE }}</td>
+                      <td>{{ $eleve->NOM }} <br>{{$eleve->PRENOM }}</td>
+                      <td>{{ $eleve->CODECLAS }}</td>
+                      <td>
+                        @if($eleve->SEXE == 1)
+                          Masculin
+                        @elseif($eleve->SEXE == 2)
+                          Féminin
+                        @else
+                          Non spécifié
+                        @endif
+                      </td>
+                      <td class="checkboxes-select"  style="width: 24px;">
+                        <input type="checkbox" class="form-check-input-center" {{ $eleve->STATUT ? 'checked' : '' }}>
+                      </td>
+                      @php
+                      $dateNaissance = $eleve->DATENAIS;
+                      
+                      // Convertir et formater la date au format d-m-Y
+                      $dateFormatted = \Carbon\Carbon::parse($dateNaissance)->format('d-m-Y');
+                      @endphp
+                      
+                      <td>{{ $dateFormatted }}</td>
+                      <td>{{ $eleve->LIEUNAIS }}</td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <!-- Button trigger modal -->
+                          <button type="button" class="btn btn-primary p-2 btn-sm btn-icon-text mr-2" data-bs-toggle="modal" data-bs-target="#exampleModal{{ $eleve->MATRICULE }}">
+                            <i class="typcn typcn-eye btn-icon-append"></i>
+                          </button>
+                          <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="typcn typcn-th-list btn-icon-append"></i>  
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
+                            <li>
+                              <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $eleve->MATRICULE }}">
+                                  Supprimer
+                              </a>
+                            </li>                            
+                            <li><a class="dropdown-item" href="/modifiereleve/{{$eleve->MATRICULE }}">Modifier</a></li>
+                            <li><a class="dropdown-item" href="{{url('/paiementeleve')}}">Paiement</a></li>
+                            <li><a class="dropdown-item" href="{{url('/majpaiementeleve')}}">Maj Paie</a></li>
+                            <li><a class="dropdown-item" href="{{url('/profil')}}">Profil</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/echeancier')}}">Echéance</a></li>
+                            <li><a class="dropdown-item" href="#">Cursus</a></li>
+                          </ul>
                         </div>
-                    </div>
-
-                    <!-- Move this to a CSS file or <head> -->
-                    <style>
-                        #tableau-effectifs {
-                            float: right;
-                            width: 60%;
-                            border-collapse: collapse;
-                            margin: 5px auto;
-                        }
-
-                        #tableau-effectifs th,
-                        #tableau-effectifs td {
-                            border: 1px solid #ddd;
-                            padding: 4px;
-                            text-align: center;
-                        }
-
-                        #tableau-effectifs th {
-                            background-color: #f2f2f2;
-                        }
-
-                        #tableau-effectifs td.bouton {
-                            background-color: #ffcccb;
-                        }
-                    </style>
-
-                    <!-- Move this to a JS file or before the closing </body> -->
-                    <script>
-                        document.getElementById('recalculer').addEventListener('click', function() {
-                            const total = Math.floor(Math.random() * 1000);
-                            const filles = Math.floor(Math.random() * 100);
-                            const garcons = total - filles;
-                            const totalRed = Math.floor(Math.random() * 20);
-                            const fillesRed = Math.floor(Math.random() * 5);
-                            const garconsRed = totalRed - fillesRed;
-
-                            document.getElementById('total').textContent = total;
-                            document.getElementById('filles').textContent = filles;
-                            document.getElementById('garcons').textContent = garcons;
-                            document.getElementById('total-red').textContent = totalRed;
-                            document.getElementById('filles-red').textContent = fillesRed;
-                            document.getElementById('garcons-red').textContent = garconsRed;
-                        });
-                    </script>
-                </div>
+                      </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
             </div>
+          </div>
+          </div>
         </div>
-        
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="table">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th class="ml-5">Matricule</th>
-                                    <th>Nom & Prénoms</th>
-                                    <th>Classe</th>
-                                    <th>Sexe</th>
-                                    <th>Red.</th>
-                                    <th>Date nai</th>
-                                    <th>Lieu nais</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($eleves as $eleve)
-                                <tr>
-                                    <td>{{ $eleve->MATRICULE }}</td>
-                                    <td>{{ $eleve->NOM }} <br> {{ $eleve->PRENOM }}</td>
-                                    <td>{{ $eleve->CODECLAS }}</td>
-                                    <td>
-                                        @if($eleve->SEXE == 1) Masculin
-                                        @elseif($eleve->SEXE == 2) Féminin
-                                        @else Non spécifié
-                                        @endif
-                                    </td>
-                                    <td class="checkboxes-select" style="width: 24px;">
-                                        <input type="checkbox" class="form-check-input-center" {{ $eleve->STATUT ? 'checked' : '' }}>
-                                    </td>
-                                    <td>{{ $eleve->DATENAIS }}</td>
-                                    <td>{{ $eleve->LIEUNAIS }}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <button type="button" class="btn btn-primary p-2 btn-sm btn-icon-text mr-2" data-bs-toggle="modal" data-bs-target="#exampleModal{{ $eleve->MATRICULE }}">
-                                                <i class="typcn typcn-eye btn-icon-append"></i>
-                                            </button>
-                                            <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="typcn typcn-th-list btn-icon-append"></i>
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
-                                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $eleve->MATRICULE }}">Supprimer</a></li>
-                                                <li><a class="dropdown-item" href="/modifiereleve/{{ $eleve->MATRICULE }}">Modifier</a></li>
-                                                <li><a class="dropdown-item" href="{{ url('/paiementeleve') }}">Paiement</a></li>
-                                                <li><a class="dropdown-item" href="{{ url('/majpaiementeleve') }}">Maj Paie</a></li>
-                                                <li><a class="dropdown-item" href="{{ url('/profil') }}">Profil</a></li>
-                                                <li><a class="dropdown-item" href="{{ url('/echeancier') }}">Echéance</a></li>
-                                                <li><a class="dropdown-item" href="#">Cursus</a></li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
+      </div>      
     </div>
-</div>
+  </div>
+
 
 @foreach($eleves as $eleve)
 <!-- Modal de suppression -->
@@ -607,4 +630,56 @@
               </script>
 @endforeach
 
+
+  <script>
+    document.getElementById('recalculer').addEventListener('click', function() {
+      let total = Math.floor(Math.random() * 1000);
+      let filles = Math.floor(Math.random() * 100);
+      let garcons = total - filles;
+      let totalRed = Math.floor(Math.random() * 20);
+      let fillesRed = Math.floor(Math.random() * 5);
+      let garconsRed = totalRed - fillesRed;
+
+      document.getElementById('total').textContent = total;
+      document.getElementById('filles').textContent = filles;
+      document.getElementById('garcons').textContent = garcons;
+      document.getElementById('total-red').textContent = totalRed;
+      document.getElementById('filles-red').textContent = fillesRed;
+      document.getElementById('garcons-red').textContent = garconsRed;
+    });
+  </script>
+
+<script>
+  function imprimerPage() {
+      var table = document.getElementById('myTable');
+      table.classList.remove('dataTable');
+
+      // Masque les colonnes avec la classe hide-on-print
+      var columns = table.querySelectorAll('.hide-on-print');
+      columns.forEach(function(column) {
+          column.style.display = 'none';
+      });
+
+      var page = window.open('', '_blank');
+      page.document.write('<html><head><title>Liste des eleves</title>');
+      page.document.write('<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />');
+      page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
+      // page.document.write('<style>@media print { .dt-end { display: none !important; } }</style>');
+      // page.document.write('<style>@media print { .dt-start { display: none !important; } }</style>');
+      page.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ddd; padding: 8px; } .cell-classe { background-color: #f8f9fa; } .cell-eleve { background-color: #e9ecef; } .cell-montant { background-color: #dee2e6; } .cell-mois { background-color: #ced4da; } .cell-date { background-color: #adb5bd; } .cell-reference { background-color: #6c757d; } .cell-action { background-color: #343a40; color: #fff; } tbody tr:nth-child(even) { background-color: #f1f3f5; } tbody tr:nth-child(odd) { background-color: #ffffff; } </style>');
+      page.document.write('</head><body>');
+      page.document.write('<div>' + document.getElementById('contenu').innerHTML + '</div>');
+      page.document.write('</body></html>');
+      page.document.close();
+      page.onload = function() {
+          page.print();
+          page.close();
+      };
+
+      // Restaure les colonnes après l'impression
+      columns.forEach(function(column) {
+          column.style.display = '';
+      });
+  }
+</script>
 @endsection

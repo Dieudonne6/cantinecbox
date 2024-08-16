@@ -1,5 +1,25 @@
 @extends('layouts.master')
 @section('content')
+
+<style>
+  /* Styles spécifiques pour l'impression */
+
+      /* Masquer les colonnes non imprimées */
+  @media print {
+    .print-hide {
+      display: none !important;
+    }
+    
+    /* Supprimer les bordures pour les colonnes non imprimées */
+    .print-hide,
+    .print-hide + td {
+      border: none !important;
+    }
+  }
+</style>
+
+
+
 <div class="container">
   <div class="col-12">
     <div class="card">
@@ -14,12 +34,12 @@
         {{-- <div class="row"> --}}
           <a type="button" class="btn btn-primary" href="{{url('/enrclasse')}}">Nouveau</a>
           <a type="button" class="btn btn-primary" href="{{url('/groupe')}}">Groupe</a>
-          <button type="button" class="btn btn-secondary">Imprimer</button><br>
+          <button onclick="imprimerPage()" class="btn btn-secondary">Imprimer</button><br>
           
           {{-- </div> --}}
           
           {{-- <h5 style="text-align: center; color: rgb(188, 64, 64)">Scolarite</h5> --}}
-          <div class="table-responsive pt-3">
+          <div class="table-responsive pt-3" id="contenu">
             
             <table id="myTable" class="table table-bordered">
               <thead>
@@ -32,7 +52,7 @@
                   <th>Serie</th>
                   <th>Enseignement</th>
                   <th>Effectifs</th>
-                  <th>Action</th>
+                  <th class="print-hide">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -49,7 +69,7 @@
                   <td>{{ $classe->serie_libelle }}</td>
                   <td>{{ $classe->typeenseigne_type }}</td>
                   <td>{{ $classe->EFFECTIF }}</td>
-                  <td>
+                  <td class="print-hide">
                     <div class="d-flex align-items-center">
                       <!-- Button trigger modal -->
                       <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -137,3 +157,55 @@
     </div>
   </div>
   @endsection
+
+  <script>
+    function imprimerPage() {
+      var table = document.getElementById('myTable');
+      var contenu = document.getElementById('contenu').innerHTML;
+  
+      if (!contenu) {
+        alert('Le contenu à imprimer est vide.');
+        return;
+      }
+  
+      // Cloner le tableau pour manipulation
+      var tableClone = table.cloneNode(true);
+  
+      // Masquer les colonnes non imprimées
+      var columnsToHide = tableClone.querySelectorAll('.print-hide');
+  
+      columnsToHide.forEach(function(cell) {
+        var colIndex = cell.cellIndex;
+  
+        // Masquer toutes les cellules dans cette colonne
+        tableClone.querySelectorAll('td:nth-child(' + (colIndex + 1) + '), th:nth-child(' + (colIndex + 1) + ')').forEach(function(cell) {
+          cell.style.display = 'none';
+        });
+      });
+  
+      // Préparer le contenu HTML pour l'impression
+      var simplifiedContent = '<div>' + tableClone.outerHTML + '</div>';
+  
+      var page = window.open('', 'blank_');
+      if (!page) {
+        alert('Impossible d\'ouvrir une nouvelle fenêtre.');
+        return;
+      }
+  
+      page.document.write('<html><head><title>Liste des classes</title>');
+      page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
+      page.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ddd; padding: 4px; } tbody tr:nth-child(even) { background-color: #f1f3f5; } tbody tr:nth-child(odd) { background-color: #ffffff; } </style>');
+      page.document.write('</head><body>');
+      page.document.write(simplifiedContent);
+      page.document.write('</body></html>');
+      page.document.close();
+
+
+      setTimeout(function() {
+        page.print();
+        page.close();
+      }, 500);
+    }
+  </script>
+  
+  
