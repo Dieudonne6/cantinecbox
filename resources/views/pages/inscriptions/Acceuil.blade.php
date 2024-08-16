@@ -104,7 +104,7 @@
         <div class="col">
           <div class="card">
             <div class="table-responsive" style="height: 400px; overflow: auto;">
-              <table class="table table-bordered table-striped" style="min-width: 800px; font-size: 14px;">
+              <table id="myTable" class="table table-bordered table-striped" style="min-width: 800px; font-size: 14px;">
                 <thead>
                   <tr>
                     <th class="ml-5">Matricule</th>
@@ -114,6 +114,7 @@
                     <th>Red.</th>
                     <th>Date nai</th>
                     <th>Lieunais</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -131,10 +132,17 @@
                           Non spécifié
                         @endif
                       </td>
-                      <td class="checkboxes-select" rowspan="1" colspan="1" style="width: 24px;">
+                      <td class="checkboxes-select"  style="width: 24px;">
                         <input type="checkbox" class="form-check-input-center" {{ $eleve->STATUT ? 'checked' : '' }}>
                       </td>
-                      <td>{{ $eleve->DATENAIS }}</td>
+                      @php
+                      $dateNaissance = $eleve->DATENAIS;
+                      
+                      // Convertir et formater la date au format d-m-Y
+                      $dateFormatted = \Carbon\Carbon::parse($dateNaissance)->format('d-m-Y');
+                      @endphp
+                      
+                      <td>{{ $dateFormatted }}</td>
                       <td>{{ $eleve->LIEUNAIS }}</td>
                       <td>
                         <div class="d-flex align-items-center">
