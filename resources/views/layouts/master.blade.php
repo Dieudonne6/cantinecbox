@@ -6,16 +6,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  
   <title>@yield('title')</title>
   <!-- base:css -->
   <link rel="stylesheet" href="{{asset('assets/vendors/typicons/typicons.css')}}">
   <link rel="stylesheet" href="{{asset('assets/vendors/css/vendor.bundle.base.css')}}">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="{{asset('assets/bootstrap.min.css')}}" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
   <script src="{{ asset('davidshimjs-qrcodejs-04f46c6/qrcode.js') }}"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
+  <link rel="stylesheet" href="{{asset('assets/all.min.css')}}">
+  <link rel="stylesheet" href="{{asset('assets/dataTables.css')}}" />
   <!-- endinject -->
   <!-- plugin css for this page -->
   <link rel="stylesheet" href="{{asset('assets/vendors/select2/select2.min.css')}}">
@@ -27,9 +26,9 @@
   <link rel="shortcut icon" href="{{asset('assets/images/favicon.png')}}" />
 
   <style>
-    /* input::placeholder {
+    input::placeholder {
       color: #000 !important;
-    } */
+    }
     .profile-content .form-group {
        margin-bottom: 0 !important;
     }
@@ -43,12 +42,19 @@
       overflow: hidden;
     }
     .menu-item-has-children:hover::after {
-transform: translateY(-3.5rem) rotate(-90deg);
+transform: translateY(-8rem) rotate(-90deg);
 }
 .menu-item-has-children {
 position: relative;
 padding: 0;
+/* display: flex;
+align-items: center;  */
 }
+/* .menu-item-has-children > .nav-link {
+    padding-right: 20px; 
+    display: inline-block;
+    vertical-align: middle;
+} */
 .menu-item-has-children::after{
 content: "";
 position: absolute;
@@ -77,6 +83,15 @@ transition: transform 0.6s;
   box-shadow: 0px 1px 15px 1px rgba(230, 234, 236, 0.35);
   border: 1px solid #f3f3f3;
 }
+.footer {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin-top: auto;
+  padding: 0;
+}
 .sub-menus li a {
   color: #000 !important;
 }
@@ -90,8 +105,48 @@ transition: transform 0.6s;
 .menu-item-has-children:hover .sub-menus{
 display: block;
 }
-
-
+.nav-logout {
+  box-shadow: none;
+  border: none;
+  background-color: #fff;
+  padding: 0;
+  margin-left: 1.5rem;
+}
+.sidebar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  max-width: 240px;
+  width: 100%;
+  overflow-y: auto; 
+  z-index: 1000; 
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); 
+} 
+.main-panel {
+  margin-left: 240px; 
+  width: calc(100% - 240px);
+  padding: 20px;
+  position: relative;
+  /* height: 100%; */
+}
+.rotate-after::after {
+    transform: translateY(-8rem) rotate(-90deg) !important;
+    transition: transform 0.3s ease !important;
+}
+.nav-link.active {
+  color: #ffffff !important; /* Couleur du texte lorsque le lien est actif */
+  background-color: #713dad !important; /* Couleur de fond lorsque le lien est actif */
+}
+.sidebar .nav.sub-menu .nav-item::before {
+  content: none !important;
+}
+.nav-link:hover {
+  /* margin: 0.5rem 0; */
+  background-color: #2c26341d; 
+}
+.nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
+  color: #ffff;
+}
   </style>
   
 </head>
@@ -118,7 +173,8 @@ display: block;
   <script src="{{asset('assets/js/todolist.js')}}"></script>
   <!-- endinject -->
   <!-- plugin js for this page -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{{asset('assets/jquery-3.6.0.min.js')}}"></script>
+  <script src="{{asset('assets/bootstrap.bundle.min.js')}}"></script>
 
   <script src="{{asset('assets/vendors/typeahead.js/typeahead.bundle.min.js')}}"></script>
   <script src="{{asset('assets/vendors/select2/select2.min.js')}}"></script>
@@ -128,9 +184,9 @@ display: block;
 
   <script src="{{asset('assets/js/typeahead.js')}}"></script>
   {{-- <script src="{{asset('assets/js/select2.js')}}"></script> --}}
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+
+  <script src="{{asset('assets/dataTables.js')}}"></script>
   <script>
     var statusAlert = document.getElementById('statusAlert');
     if (statusAlert) {
@@ -156,9 +212,31 @@ display: block;
 </script> --}}
 
 <script>
+   $(document).ready(function() {
+    $('.sub-menu .nav-link').each(function() {
+      if ($(this).hasClass('active')) {
+        var parentCollapse = $(this).closest('.collapse');
+        parentCollapse.addClass('show');
+        parentCollapse.prev('a.nav-link').removeClass('collapsed').attr('aria-expanded', 'true');         
+      }
+      $('.sub-menus .nav-link').each(function() {
+        if ($(this).hasClass('active')) {
+          $(this).closest('.sub-menus').addClass('d-block'); 
+          $(this).closest('.menu-item-has-children').addClass('rotate-after');     
+        }
+      });
+    });
+    // $('.sub-menus .nav-link').each(function() {
+    //     if ($(this).hasClass('active')) {
+    //         var parentCollapse = $(this).closest('.collapse');
+    //         parentCollapse.addClass('show');
+    //         parentCollapse.prev('a.nav-link').removeClass('collapsed').attr('aria-expanded', 'true');         
+    //     }
+    // });
+});
+
 $(document).ready(function(){
     $('#myTable').DataTable({
-        "paging": false, // Désactiver la pagination
         "language": {
             "sProcessing":     "Traitement en cours...",
             "sSearch":         "Rechercher&nbsp;:",
