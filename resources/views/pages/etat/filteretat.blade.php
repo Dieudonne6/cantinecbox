@@ -3,29 +3,25 @@
 @extends('layouts.master')
 @section('content')
 <style>
-    /* Styles spécifiques pour l'impression sur papier A4 */
-    @media print and (size: A4) {
-        table {
-            font-size: 5pt; /* Ajuste la taille de la police pour A4 */
-        }
-        th, td {
-            padding: 3px; /* Ajuste le padding pour A4 */
-        }
-    }
+  /* Styles spécifiques pour l'impression sur papier A4 */
+  @media print and (size: A4) {
+      table {
+          font-size: 5pt; /* Ajuste la taille de la police pour A4 */
+      }
+      th, td {
+          padding: 3px; /* Ajuste le padding pour A4 */
+      }
+  }
 
-    /* Optimisation des marges et padding pour l'écran et l'impression */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    th, td {
-        border: 1px solid #ddd;
-        padding: 4px; /* Ajuste le padding pour une meilleure lisibilité */
-        font-size: 10pt; /* Taille de police pour l'écran */
-    }
-    th {
-        background-color: #f2f2f2;
-    }
+  /* Styles spécifiques pour l'impression sur papier A3 */
+  @media print and (size: A3) {
+      table {
+          font-size: 6pt; /* Ajuste la taille de la police pour A3 */
+      }
+      th, td {
+          padding: 4px; /* Ajuste le padding pour A3 */
+      }
+  }
 </style>
 
 <body>
@@ -34,7 +30,7 @@
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">Etats des droits constatés</h4>
-        <form action="{{url('/filteretat')}}" method="POST">
+        {{-- <form action="{{url('/filteretat')}}" method="POST">
           {{csrf_field()}}
           <div class="form-group row">
             <div class="col-lg-3">
@@ -57,17 +53,18 @@
               <button type="submit" class="btn btn-primary">Afficher</button>
             </div>
             <div class="col-lg-2 offset-2">
-              <button onclick="imprimerPage()" class="btn btn-primary">Imprimer</button>
+              <button onclick="imprimePage()" class="btn btn-primary">Imprimer</button>
             </div>
           </div>
-        </form>
+        </form> --}}
         
-        <div id="contenu" class="tables">
+        <div id="contenu">
           <div>
             <h4 class="card-title" style="text-align: center; font-weight:bold;">Etats des droits constatés ANNEE-ACADEMIQUE: {{ $annee }} - {{ $anneesuivant }} | CLASSE: {{ $classe }}</h4>
           </div><br>
-          <div >
-            <table id="myTable">
+          <div class="table-responsive pt-3">
+            {{-- <table id="myTable" class="table table-striped table-sm" > --}}
+            <table id="myTable" class="table table-bordered" >
               <thead>
                 <tr>
                   <th>N</th>
@@ -102,7 +99,6 @@
                         @foreach ($eleve->contrats as $contrat)
                         @foreach ($contrat->paiements as $paiement)
                         @if ($paiement->mois_paiementcontrat == $mois->id_moiscontrat)
-                        <!-- Afficher la date et le montant si le paiement correspond au mois -->
                         {{ \Carbon\Carbon::parse($paiement->date_paiementcontrat)->format('d/m/Y') }}</br></br>
                         {{ $paiement->montant_paiementcontrat }}
                         @php
@@ -143,22 +139,51 @@
 </body>
 @endsection
 
+
 <script>
-function imprimerPage() {
-  var table = document.getElementById('myTable');
-  table.classList.remove('dataTable');
+
+  function imprimePage() {
+      // Désactiver la pagination
+      let table = $('#myTable').DataTable();
+      let currentPage = table.page();  // Sauvegarder la page actuelle
+      table.page.len(-1).draw();  // Afficher toutes les lignes
   
-  var page = window.open('', 'blank_');
-  page.document.write('<html><head><title>EDC_annee_{{ $annee }}_{{ $anneesuivant }}_classe_{{ $classe }}</title>');
-  page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
-  page.document.write('<style>@media print { .dt-end { display: none !important; } }</style>');
-  page.document.write('<style>@media print { .dt-start { display: none !important; } }</style>');
-  page.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ddd; padding: 4px; } tbody tr:nth-child(even) { background-color: #f1f3f5; } tbody tr:nth-child(odd) { background-color: #ffffff; } </style>');
-  page.document.write('</head><body>');
-  page.document.write(document.getElementById('contenu').innerHTML);
-  page.document.write('</body></html>');
-  page.document.close();
-  page.print();
-  page.close();
-}
-</script>
+      // Attendre un court instant pour être sûr que le tableau est complètement rendu
+      setTimeout(function() {
+          // Masque les colonnes avec la classe hide-on-print
+          var tableElement = document.getElementById('myTable');
+          tableElement.classList.remove('dataTable');
+  
+          // var columns = tableElement.querySelectorAll('.hide-on-print');
+          // columns.forEach(function(column) {
+          //     column.style.display = 'none';
+          // });
+  
+          var page = window.open('', '_blank');
+          page.document.write('<html><head><title>EDC_annee_{{ $annee }}_{{ $anneesuivant }}_classe_{{ $classe }}</title>');
+          page.document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >');
+          page.document.write('<style>@media print { .dt-end { display: none !important; } }</style>');
+          page.document.write('<style>@media print { .dt-start { display: none !important; } }</style>');
+          page.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ddd; padding: 4px; } tbody tr:nth-child(even) { background-color: #f1f3f5; } tbody tr:nth-child(odd) { background-color: #ffffff; } </style>');
+          page.document.write('</head><body>');
+          page.document.write('<div>' + document.getElementById('contenu').innerHTML + '</div>');
+          page.document.write('</body></html>');
+          page.document.close();
+          page.onload = function() {
+              page.print();
+              page.close();
+  
+              // Restaurer la pagination après l'impression
+              table.page.len(10).draw();  // Remettre la taille de la page comme avant (par exemple : 10)
+              table.page(currentPage).draw(false);  // Retour à la page actuelle
+  
+              // Restaure les colonnes après l'impression
+              columns.forEach(function(column) {
+                  column.style.display = '';
+              });
+          };
+      }, 200);
+  }
+  
+  
+  </script>

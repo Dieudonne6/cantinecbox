@@ -84,7 +84,7 @@
                                         {{-- <img src="path/to/logo.png" alt="Logo" class="logo"> --}}
                                    
                                         @if($logoUrl)
-                                        <img src="{{ asset('storage/logo/' . $logoUrl) }}" alt="Logo" class="logo">
+                                        <img src="data:image/jpeg;base64,{{ base64_encode($logoUrl) }}" alt="Logo" class="logo">
                                         @else
                                             <p>Aucun logo disponible.</p>
                                         @endif
@@ -99,8 +99,8 @@
                                 <div class="content">
                                     <p>Chers parents,</p><br><br>
                                     <p>Sauf erreur ou omission de notre part, nous rappelons qu'au titre des frais de
-                                        {{-- cantine <strong> 2022_2023 </strong> de votre enfant, vous restez devoir dans nos livres, la somme de {{ $result['total_du'] }} --}}
-                                        cantine <strong> {{ $databaseName }} </strong> de votre enfant, vous restez devoir dans nos livres, la somme de {{ $result['total_du'] }}
+                                        cantine <strong> 2022_2023 </strong> de votre enfant, vous restez devoir dans nos livres, la somme de {{ $result['total_du'] }}
+                                        {{-- cantine <strong> {{ $databaseName }} </strong> de votre enfant, vous restez devoir dans nos livres, la somme de {{ $result['total_du'] }} --}}
                                         pour le compte de <strong> {{ implode(', ', $result['mois_impayes']) }}</strong>.</p><br>
                                     <p>Vous êtes invités à régler ce solde au plus tard le <strong>{{ $result['datebuttoire'] }}</strong></p>
                                     <p>Vous remerciant par avance pour votre compréhension.</p>

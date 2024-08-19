@@ -13,7 +13,7 @@
             @endif
             <h4 class="card-title">Enregistrement d'un utilisateur</h4>
           
-            <form action="{{ url('/enregistreruser') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ url('/enregistreruser') }}" method="POST">
               @csrf
               <div class="form-group">
                 <label for="exampleInputUsername1">Nom d'utilisateur</label>
@@ -31,10 +31,7 @@
                 <label for="exampleInputConfirmPassword1">Mot de passe</label>
                 <input type="password" class="form-control" name="password" id="exampleInputConfirmPassword1" placeholder="Mot de passe">
               </div>
-              <div class="form-group">
-                <label for="exampleInputConfirmPassword1">Photos</label>
-                <input type="file" class="form-control" name="image" id="exampleInputConfirmPassword1" placeholder="Photo">
-              </div>
+            
               <button type="submit" class="btn btn-primary mr-2">Envoyer</button>
               <button class="btn btn-light">Annuler</button>
             </form>
