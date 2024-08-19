@@ -3,9 +3,9 @@
 <div class="container">
   <div class="col-12">
     @if(Session::has('status'))
-    <div id="statusAlert" class="alert alert-succes btn-primary">
+      <div id="statusAlert" class="alert alert-succes btn-primary">
       {{ Session::get('status')}}
-    </div>
+      </div>
     @endif
     <div class="card">
       <div class="card-body">
@@ -35,8 +35,7 @@
                 @endforeach
               </select>
             </div>
-          </div>
-          
+          </div>          
           <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Enseignement</label>
             <div class="col-sm-9">
@@ -47,8 +46,7 @@
                 @endforeach
               </select>
             </div>
-          </div>
-          
+          </div>         
           <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Promotion</label>
             <div class="col-sm-9">
@@ -59,15 +57,13 @@
                 @endforeach
               </select>
             </div>
-          </div>
-          
+          </div>         
           <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">No d'ordre</label>
             <div class="col-sm-9">
               <input type="text" class="form-control" id="exampleInputUsername2" placeholder="No d'ordre" name="numero">
             </div>
-          </div>
-          
+          </div>          
           <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Cycle</label>
             <div class="col-sm-9">
@@ -78,8 +74,7 @@
                 <option value="3">3</option>
               </select>
             </div> 
-          </div>
-          
+          </div>         
           <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Serie</label>
             <div class="col-sm-9">
@@ -90,8 +85,7 @@
                 @endforeach
               </select>
             </div>
-          </div>
-          
+          </div>         
           <div class="form-group row">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Cours Jour/Soir</label>
             <div class="col-sm-9">
@@ -101,10 +95,20 @@
               </select>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Enregistrer</button>
-          <button type="button" class="btn btn-danger">Annuler</button>
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donnefinanciere">Donne financieres(Factures)</button>
-      </form>
+          <div class="form-group row">
+            <div class="col-auto">
+              <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+            <div class="col-auto">
+              <button type="button" class="btn btn-danger">Annuler</button>
+            </div>
+            <div class="col-auto">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donnefinanciere">Donne financières (Factures)</button>
+            </div>
+          </div>
+          <br>
+        </form>
+        <br>
       </div>
     </div>
   </div>
