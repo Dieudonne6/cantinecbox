@@ -13,7 +13,7 @@
   
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog custom-modal-size">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="exampleModalLabel">Selection d'un compte</h1>
@@ -23,126 +23,28 @@
             <div class="card">
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table id="myTable" class="table table-hover">
                       <thead>
                         <tr>
-                            <th>Taux</th>
-                          <th>Comptes</th>
+                            <th>Comptes</th>
                           <th>Libellé</th>
                           <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
+
+                        @foreach ($comptes as $compte)
+
                         <tr>
-                          <td class="text-info"> 28.76% <i class=""></i></td>
-                          <td>Jacob</td>
-                          <td>Photoshop</td>
+                          <td class="text-info">{{$compte->NCOMPTE}}</td>
+                          <td> {{$compte->LIBELCPTE}} </td>
                           <td>
-                            <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sélectionner
-                                {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
-                            </button>
+                            <button class="btn btn-primary p-2 btn-sm dropdown" type="button" onclick="selectCompte('{{$compte->NCOMPTE}}')">Sélectionner</button>
                           </td>
                         </tr>
-                        <tr>
-                            <td class="text-info"> 28.76% <i class=""></i></td>
-                            <td>Jacob</td>
-                            <td>Photoshop</td>
-                            <td>
-                              <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sélectionner
-                                  {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
-                              </button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-info"> 28.76% <i class=""></i></td>
-                            <td>Jacob</td>
-                            <td>Photoshop</td>
-                            <td>
-                              <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sélectionner
-                                  {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
-                              </button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-info"> 28.76% <i class=""></i></td>
-                            <td>Jacob</td>
-                            <td>Photoshop</td>
-                            <td>
-                              <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sélectionner
-                                  {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
-                              </button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-info"> 28.76% <i class=""></i></td>
-                            <td>Jacob</td>
-                            <td>Photoshop</td>
-                            <td>
-                              <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sélectionner
-                                  {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
-                              </button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-info"> 28.76% <i class=""></i></td>
-                            <td>Jacob</td>
-                            <td>Photoshop</td>
-                            <td>
-                              <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sélectionner
-                                  {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
-                              </button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-info"> 28.76% <i class=""></i></td>
-                            <td>Jacob</td>
-                            <td>Photoshop</td>
-                            <td>
-                              <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sélectionner
-                                  {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
-                              </button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-info"> 28.76% <i class=""></i></td>
-                            <td>Jacob</td>
-                            <td>Photoshop</td>
-                            <td>
-                              <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sélectionner
-                                  {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
-                              </button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-info"> 28.76% <i class=""></i></td>
-                            <td>Jacob</td>
-                            <td>Photoshop</td>
-                            <td>
-                              <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sélectionner
-                                  {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
-                              </button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-info"> 28.76% <i class=""></i></td>
-                            <td>Jacob</td>
-                            <td>Photoshop</td>
-                            <td>
-                              <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sélectionner
-                                  {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
-                              </button>
-                            </td>
-                          </tr>
-                        <tr>
-                            <td class="text-info"> 70.43% <i class=""></i></td>
-                            <td>Franck</td>
-                            <td>Plein Tarif</td>
-                            <td>
-                              <button class="btn btn-primary p-2 btn-sm dropdown" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sélectionner
-                                  {{-- <i class="typcn typcn-trash btn-icon-append"></i>   --}}
-                              </button>
-                            </td>
-                          </tr>
+
+                        @endforeach
+                        
                       </tbody>
                     </table>
                   </div>
@@ -164,17 +66,17 @@
                             <div class="col">
                                 <label>Frais scolarité</label>
                                 <div id="bloodhound">
-                                    <input class="form-control" type="text" placeholder=""  name="" id="" value="">
+                                    <input class="form-control" type="text" placeholder=""  name="" id="compteInput" value="">
                                 </div>
                             </div>
                             <div class="col">
                                 <label>Libellé</label>
                                 <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                                    <option>AG │ ACTIVITES GENERALES</option>
-                                    <option>MF │ MATERNELLE CAMP-GUEZO</option>
-                                    <option>MM │ MATERNELLE CADJEHOUN</option>
-                                    <option>PC │ PRIMAIRE CADJEHOUN</option>
-                                    <option>PM │ PRIMAIRE CAMP-GUEZO</option>
+                                  <option value="AG │ ACTIVITES GENERALES">AG │ ACTIVITES GENERALES</option>
+                                  <option value="MF │ MATERNELLE CAMP-GUEZO">MF │ MATERNELLE CAMP-GUEZO</option>
+                                  <option value="MM │ MATERNELLE CADJEHOUN">MM │ MATERNELLE CADJEHOUN</option>
+                                  <option value="PC │ PRIMAIRE CADJEHOUN">PC │ PRIMAIRE CADJEHOUN</option>
+                                  <option value="PM │ PRIMAIRE CAMP-GUEZO">PM │ PRIMAIRE CAMP-GUEZO</option>
                                 </select>
                             </div>
                         </div>
@@ -184,17 +86,17 @@
                           <div class="col">
                             <label>Arrièrés</label>
                             <div id="bloodhound">
-                              <input class="form-control" type="text" placeholder="" name="numero_de_telephone" id="numero_de_telephone" value="">
+                              <input class="form-control" type="text" placeholder="" name="" id="" value="">
                           </div>
                         </div>
                         <div class="col">
                             <label>Libellé</label>
                             <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                                <option>AG │ ACTIVITES GENERALES</option>
-                                <option>MF │ MATERNELLE CAMP-GUEZO</option>
-                                <option>MM │ MATERNELLE CADJEHOUN</option>
-                                <option>PC │ PRIMAIRE CADJEHOUN</option>
-                                <option>PM │ PRIMAIRE CAMP-GUEZO</option>
+                              <option value="AG │ ACTIVITES GENERALES">AG │ ACTIVITES GENERALES</option>
+                              <option value="MF │ MATERNELLE CAMP-GUEZO">MF │ MATERNELLE CAMP-GUEZO</option>
+                              <option value="MM │ MATERNELLE CADJEHOUN">MM │ MATERNELLE CADJEHOUN</option>
+                              <option value="PC │ PRIMAIRE CADJEHOUN">PC │ PRIMAIRE CADJEHOUN</option>
+                              <option value="PM │ PRIMAIRE CAMP-GUEZO">PM │ PRIMAIRE CAMP-GUEZO</option>
                             </select>
                         </div>
                         </div>
@@ -204,17 +106,17 @@
                           <div class="col">
                             <label></label>
                             <div id="bloodhound">
-                              <input class="form-control" type="text" placeholder="" name="numero_de_telephone" id="numero_de_telephone" value="">
+                              <input class="form-control" type="text" placeholder="" name="" id="" value="">
                           </div>
                         </div>
                         <div class="col">
                             <label>Libellé</label>
                             <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                                <option>AG │ ACTIVITES GENERALES</option>
-                                <option>MF │ MATERNELLE CAMP-GUEZO</option>
-                                <option>MM │ MATERNELLE CADJEHOUN</option>
-                                <option>PC │ PRIMAIRE CADJEHOUN</option>
-                                <option>PM │ PRIMAIRE CAMP-GUEZO</option>
+                                <option value="AG │ ACTIVITES GENERALES">AG │ ACTIVITES GENERALES</option>
+                                <option value="MF │ MATERNELLE CAMP-GUEZO">MF │ MATERNELLE CAMP-GUEZO</option>
+                                <option value="MM │ MATERNELLE CADJEHOUN">MM │ MATERNELLE CADJEHOUN</option>
+                                <option value="PC │ PRIMAIRE CADJEHOUN">PC │ PRIMAIRE CADJEHOUN</option>
+                                <option value="PM │ PRIMAIRE CAMP-GUEZO">PM │ PRIMAIRE CAMP-GUEZO</option>
                             </select>
                         </div>
                         </div>
@@ -224,17 +126,17 @@
                           <div class="col">
                             <label></label>
                             <div id="bloodhound">
-                              <input class="form-control" type="text" placeholder="" name="numero_de_telephone" id="numero_de_telephone" value="">
+                              <input class="form-control" type="text" placeholder="" name="" id="" value="">
                           </div>
                         </div>
                         <div class="col">
                             <label>Libellé</label>
                             <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                                <option>AG │ ACTIVITES GENERALES</option>
-                                <option>MF │ MATERNELLE CAMP-GUEZO</option>
-                                <option>MM │ MATERNELLE CADJEHOUN</option>
-                                <option>PC │ PRIMAIRE CADJEHOUN</option>
-                                <option>PM │ PRIMAIRE CAMP-GUEZO</option>
+                              <option value="AG │ ACTIVITES GENERALES">AG │ ACTIVITES GENERALES</option>
+                              <option value="MF │ MATERNELLE CAMP-GUEZO">MF │ MATERNELLE CAMP-GUEZO</option>
+                              <option value="MM │ MATERNELLE CADJEHOUN">MM │ MATERNELLE CADJEHOUN</option>
+                              <option value="PC │ PRIMAIRE CADJEHOUN">PC │ PRIMAIRE CADJEHOUN</option>
+                              <option value="PM │ PRIMAIRE CAMP-GUEZO">PM │ PRIMAIRE CAMP-GUEZO</option>
                             </select>
                         </div>
                         </div>
@@ -244,17 +146,17 @@
                           <div class="col">
                             <label></label>
                             <div id="bloodhound">
-                              <input class="form-control" type="text" placeholder="" name="numero_de_telephone" id="numero_de_telephone" value="">
+                              <input class="form-control" type="text" placeholder="" name="" id="" value="">
                           </div>
                         </div>
                         <div class="col">
                             <label>Libellé</label>
                             <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                                <option>AG │ ACTIVITES GENERALES</option>
-                                <option>MF │ MATERNELLE CAMP-GUEZO</option>
-                                <option>MM │ MATERNELLE CADJEHOUN</option>
-                                <option>PC │ PRIMAIRE CADJEHOUN</option>
-                                <option>PM │ PRIMAIRE CAMP-GUEZO</option>
+                              <option value="AG │ ACTIVITES GENERALES">AG │ ACTIVITES GENERALES</option>
+                              <option value="MF │ MATERNELLE CAMP-GUEZO">MF │ MATERNELLE CAMP-GUEZO</option>
+                              <option value="MM │ MATERNELLE CADJEHOUN">MM │ MATERNELLE CADJEHOUN</option>
+                              <option value="PC │ PRIMAIRE CADJEHOUN">PC │ PRIMAIRE CADJEHOUN</option>
+                              <option value="PM │ PRIMAIRE CAMP-GUEZO">PM │ PRIMAIRE CAMP-GUEZO</option>
                             </select>
                         </div>
                         </div>
@@ -264,17 +166,17 @@
                           <div class="col">
                             <label></label>
                             <div id="bloodhound">
-                              <input class="form-control" type="text" placeholder="" name="numero_de_telephone" id="numero_de_telephone" value="">
+                              <input class="form-control" type="text" placeholder="" name="" id="" value="">
                           </div>
                         </div>
                         <div class="col">
                             <label>Libellé</label>
                             <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
-                                <option>AG │ ACTIVITES GENERALES</option>
-                                <option>MF │ MATERNELLE CAMP-GUEZO</option>
-                                <option>MM │ MATERNELLE CADJEHOUN</option>
-                                <option>PC │ PRIMAIRE CADJEHOUN</option>
-                                <option>PM │ PRIMAIRE CAMP-GUEZO</option>
+                              <option value="AG │ ACTIVITES GENERALES">AG │ ACTIVITES GENERALES</option>
+                              <option value="MF │ MATERNELLE CAMP-GUEZO">MF │ MATERNELLE CAMP-GUEZO</option>
+                              <option value="MM │ MATERNELLE CADJEHOUN">MM │ MATERNELLE CADJEHOUN</option>
+                              <option value="PC │ PRIMAIRE CADJEHOUN">PC │ PRIMAIRE CADJEHOUN</option>
+                              <option value="PM │ PRIMAIRE CAMP-GUEZO">PM │ PRIMAIRE CAMP-GUEZO</option>
                             </select>
                         </div>
                         </div>
@@ -290,5 +192,20 @@
     </div>
     </div>
 
+<style>
+  .custom-modal-size {
+  max-width: 40%; /* Ajustez ce pourcentage selon vos besoins */
+}
 
-    @endsection
+</style>
+
+<script>
+function selectCompte(ncompte) {
+    document.getElementById('compteInput').value = ncompte;
+    var modalElement = document.getElementById('exampleModal');
+    var modal = bootstrap.Modal.getInstance(modalElement); // Récupérer l'instance du modal
+    modal.hide(); // Masquer le modal
+  }
+</script>
+
+@endsection
