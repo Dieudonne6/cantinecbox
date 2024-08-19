@@ -9,6 +9,7 @@ use App\Models\Serie;
 use App\Models\Promo;
 use App\Models\Typeenseigne;
 
+
 class Classes extends Model
 {
     use HasFactory;

@@ -104,7 +104,7 @@
                     <div class="form-group">
                         <div class="form-group row">
                           <div class="col">
-                            <label></label>
+                            <label>Frais 1</label>
                             <div id="bloodhound">
                               <input class="form-control" type="text" placeholder="" name="" id="" value="">
                           </div>
@@ -124,7 +124,7 @@
                     <div class="form-group">
                         <div class="form-group row">
                           <div class="col">
-                            <label></label>
+                            <label>Frais 2</label>
                             <div id="bloodhound">
                               <input class="form-control" type="text" placeholder="" name="" id="" value="">
                           </div>
@@ -144,7 +144,7 @@
                     <div class="form-group">
                         <div class="form-group row">
                           <div class="col">
-                            <label></label>
+                            <label>Frais 3</label>
                             <div id="bloodhound">
                               <input class="form-control" type="text" placeholder="" name="" id="" value="">
                           </div>
@@ -164,7 +164,7 @@
                     <div class="form-group">
                         <div class="form-group row">
                           <div class="col">
-                            <label></label>
+                            <label>Frais 4</label>
                             <div id="bloodhound">
                               <input class="form-control" type="text" placeholder="" name="" id="" value="">
                           </div>

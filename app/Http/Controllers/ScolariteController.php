@@ -15,4 +15,10 @@ class ScolariteController extends Controller
 
         return view ('pages.inscriptions.paramcomposantes')->with('comptes', $comptes);
     }
+
+    public function getfactureclasses(){
+        $factures = Classe::get();
+
+        return view ('pages.inscriptions.facturesclasses')->with('factures', $factures);
+    }
 }
