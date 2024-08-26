@@ -223,45 +223,25 @@
         </div>
 
         <!-- Modal -->
-        {{-- <div class="modal fade" id="exampleModal{{ $eleve->MATRICULE }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+        <div class="modal fade" id="exampleModal{{ $eleve->MATRICULE }}" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-lg" style="max-width: 1100px;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Informations pour {{ $eleve->NOM }}
-                            {{ $eleve->PRENOM }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-dialog modal-lg" style="max-width: 1100px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Informations pour {{ $eleve->NOM }} {{ $eleve->PRENOM }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab{{ $eleve->MATRICULE }}" role="tablist" style="font-size: 14px;">
+                        @foreach (['Infor' => 'Informations générales', 'Detail' => 'Détail des notes', 'Deta' => 'Détails des paiements', 'finan' => 'Informations financières', 'Emploi' => 'Emploi du temps', 'Position' => 'Position Enseignants'] as $key => $label)
+                            <button class="nav-link{{ $loop->first ? ' active' : '' }}" id="nav-{{ $key }}-tab{{ $eleve->MATRICULE }}"
+                                data-bs-toggle="tab" data-bs-target="#nav-{{ $key }}{{ $eleve->MATRICULE }}"
+                                type="button" role="tab" aria-controls="nav-{{ $key }}{{ $eleve->MATRICULE }}"
+                                aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ $label }}</button>
+                        @endforeach
                     </div>
-                    <div class="modal-body">
-                        <nav>
-                            <div class="nav nav-tabs" id="nav-tab{{ $eleve->MATRICULE }}" role="tablist"
-                                style="font-size: 14px;">
-                                <button class="nav-link active" id="nav-Infor-tab{{ $eleve->MATRICULE }}"
-                                    data-bs-toggle="tab" data-bs-target="#nav-Infor{{ $eleve->MATRICULE }}"
-                                    type="button" role="tab" aria-controls="nav-Infor{{ $eleve->MATRICULE }}"
-                                    aria-selected="true">Informations générales</button>
-                                <button class="nav-link" id="nav-Detail-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab"
-                                    data-bs-target="#nav-Detail{{ $eleve->MATRICULE }}" type="button" role="tab"
-                                    aria-controls="nav-Detail{{ $eleve->MATRICULE }}" aria-selected="false">Détail des
-                                    notes</button>
-                                <button class="nav-link" id="nav-Deta-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab"
-                                    data-bs-target="#nav-Deta{{ $eleve->MATRICULE }}" type="button" role="tab"
-                                    aria-controls="nav-Deta{{ $eleve->MATRICULE }}" aria-selected="false">Détails des
-                                    paiements</button>
-                                <button class="nav-link" id="nav-finan-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab"
-                                    data-bs-target="#nav-finan{{ $eleve->MATRICULE }}" type="button" role="tab"
-                                    aria-controls="nav-finan{{ $eleve->MATRICULE }}" aria-selected="false">Informations
-                                    financières</button>
-                                <button class="nav-link" id="nav-Emploi-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab"
-                                    data-bs-target="#nav-Emploi{{ $eleve->MATRICULE }}" type="button" role="tab"
-                                    aria-controls="nav-Emploi{{ $eleve->MATRICULE }}" aria-selected="false">Emploi du
-                                    temps</button>
-                                <button class="nav-link" id="nav-Position-tab{{ $eleve->MATRICULE }}"
-                                    data-bs-toggle="tab" data-bs-target="#nav-Position{{ $eleve->MATRICULE }}"
-                                    type="button" role="tab" aria-controls="nav-Position{{ $eleve->MATRICULE }}"
-                                    aria-selected="false">Position Enseignants</button>
-                            </div>
-                        </nav>
+                </nav>
                         <div class="tab-content" id="nav-tabContent{{ $eleve->MATRICULE }}">
                             <!-- Informations générales -->
                             <div class="tab-pane fade show active" id="nav-Infor{{ $eleve->MATRICULE }}" role="tabpanel"
@@ -317,10 +297,10 @@
                                         </div>
                                         <div class="col-sm-2 form-check">
                                             <input type="checkbox" class="form-check-input"
-                                                id="statutRedoublant{{ $eleve->MATRICULE }}" name="statutRedoublant"
-                                                value="{{ $eleve->STATUT == 0 ? '' : ($eleve->STATUT == 1 ? 'checked' : '') }}>
-                  <label class="form-check-label
-                                                for="statutRedoublant{{ $eleve->MATRICULE }}">Statut Redoublant</label>
+                                                id="statutRedoublant{{ $eleve->MATRICULE }}" 
+                                                name="statutRedoublant"
+                                                {{ $eleve->STATUT == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="statutRedoublant{{ $eleve->MATRICULE }}">Statut Redoublant</label>        
                                         </div>
                                     </div>
                                 </form>
@@ -656,7 +636,7 @@
                 </div>
             </div>
         </div>
-        </div> --}}
+        
         <!-- Scripts JavaScript à placer à la fin du body pour optimiser le chargement -->
         <script>
             // JavaScript pour afficher le jour de la semaine et l'heure actuelle
@@ -726,12 +706,12 @@
                 '<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />');
             page.document.write(
                 '<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" >'
-                );
+            );
             // page.document.write('<style>@media print { .dt-end { display: none !important; } }</style>');
             // page.document.write('<style>@media print { .dt-start { display: none !important; } }</style>');
             page.document.write(
                 '<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ddd; padding: 8px; } .cell-classe { background-color: #f8f9fa; } .cell-eleve { background-color: #e9ecef; } .cell-montant { background-color: #dee2e6; } .cell-mois { background-color: #ced4da; } .cell-date { background-color: #adb5bd; } .cell-reference { background-color: #6c757d; } .cell-action { background-color: #343a40; color: #fff; } tbody tr:nth-child(even) { background-color: #f1f3f5; } tbody tr:nth-child(odd) { background-color: #ffffff; } </style>'
-                );
+            );
             page.document.write('</head><body>');
             page.document.write('<div>' + document.getElementById('contenu').innerHTML + '</div>');
             page.document.write('</body></html>');
@@ -748,5 +728,3 @@
         }
     </script>
 @endsection
-
-

@@ -8,6 +8,7 @@ use App\Http\Controllers\ConnexionDBController;
 use App\Http\Controllers\EleveController;
 use App\Http\Controllers\EtatController;
 use App\Http\Controllers\GestionclasseController;
+use App\Http\Controllers\ScolariteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -218,3 +219,5 @@ Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifi
 
 
 Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
+Route::get('/paramcomposantes', [ScolariteController::class, 'getparamcomposantes']);
+// Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifieclasse']);

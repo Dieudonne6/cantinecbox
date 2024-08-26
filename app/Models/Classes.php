@@ -9,6 +9,7 @@ use App\Models\Serie;
 use App\Models\Promo;
 use App\Models\Typeenseigne;
 
+
 class Classes extends Model
 {
     use HasFactory;
@@ -17,5 +18,5 @@ class Classes extends Model
     protected $primaryKey = 'CODECLAS';
     public $incrementing = false;
     protected $keyType = 'string';
-  
+     
 }
