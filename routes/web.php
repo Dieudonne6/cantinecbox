@@ -215,3 +215,6 @@ Route::delete('/supprimerclass', [GestionclasseController::class, 'deleteclass']
 
 
 Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifieclasse']);
+
+
+Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
