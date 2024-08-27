@@ -185,9 +185,13 @@
             <div class="collapse" id="ui-basic">
                 <ul class="nav flex-column sub-menu">
                 
-                
-          <li class="nav-item"> <a class="nav-link {{ request()->is('Acceuil') ? 'active' : '' }}"  href="{{url('/Acceuil')}}">Accueil</a></li>
-
+                  @php
+                  $routesAccueil = ['Acceuil', 'inscrireeleve','modifiereleve', 'paiementeleve', 'majpaiementeleve', 'echeancier']; // Liste des noms de routes associées à l'accueil
+                  @endphp
+                  
+                  <li class="nav-item">
+                  <a class="nav-link {{ in_array(request()->route()->getName(), $routesAccueil) ? 'active' : '' }}" href="{{ route('Acceuil') }}">Accueil</a>
+                  </li>
           {{-- Créations des classes --}}
           <li class="nav-item menu-item-has-children">
             <a href="" class="nav-link">Gestion des classes</a>
@@ -201,9 +205,14 @@
               <li>
                 <a class="nav-link {{ request()->is('promotions') ? 'active' : '' }}" href="{{url('/promotions')}}">Promotions</a>
               </li>
-              <li>
-                <a class="nav-link {{ request()->is('tabledesclasses') ? 'active' : '' }}" href="{{url('/tabledesclasses')}}">Table des classes</a>
+              @php
+              $routesClass = ['tabledesclasses', 'enrclasse','modifierclasse']; // Liste des noms de routes associées à l'accueil
+              @endphp
+              
+              <li class="nav-item">
+              <a class="nav-link {{ in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}" href="{{ route('tabledesclasses') }}">Table des classes</a>
               </li>
+              
               <li>
                 <a class="nav-link {{ request()->is('groupes') ? 'active' : '' }}" href="{{url('/groupes')}}">Grouper</a>
               </li>

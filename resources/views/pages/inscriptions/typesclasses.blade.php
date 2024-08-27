@@ -40,6 +40,14 @@
                               <li>{{ $error }}</li>
                           @endforeach
                       </ul>
+                     
+                  </div>
+                  @endif
+                  <?php $error = Session::get('error');?>
+
+                  @if(Session::has('error'))
+                  <div id="statusAlert" class="alert alert-danger">
+                    {{ Session::get('error')}}
                   </div>
                   @endif
                         <form id="myformclas" action="{{url('/savetypeclasse')}}" method="POST">
@@ -225,11 +233,11 @@
   document.addEventListener('DOMContentLoaded', function() {
           var myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
   
-          @if ($errors->any())
+          @if ($error || $errors->any())
               myModal.show();
           @endif
   
-          // Réinitialiser les champs du formulaire à la fermeture du modal
+          Réinitialiser les champs du formulaire à la fermeture du modal
           document.getElementById('exampleModal').addEventListener('hidden.bs.modal', function () {
               document.getElementById('myformclas').reset();
               document.querySelectorAll('#myformclas .form-control').forEach(input => input.value = '');
