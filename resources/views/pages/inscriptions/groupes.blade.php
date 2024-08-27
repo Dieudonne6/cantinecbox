@@ -182,7 +182,7 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -280,7 +280,18 @@
             var myModal = new bootstrap.Modal(document.getElementById('modifgroup'));
             myModal.show();
         })
+
+        
         .catch(error => console.error('Error:', error));
+                // Forcer la suppression du backdrop
+                var backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+
+        // Retirer la classe `modal-open` du body
+        document.body.classList.remove('modal-open');
+        document.body.style.paddingRight = '';
     }
 
     function ajouterClasse() {
