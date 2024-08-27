@@ -28,6 +28,14 @@ class inscriptionEleveRequest extends FormRequest
             'TYPECLASSE' =>'required',
             ];
         }
+
+        if ($this->routeIs('saveserie')){
+            $rules = [
+                'SERIE' =>'required',
+                'LIBELSERIE' =>'required',
+            ];
+        }
+
         if ($this->routeIs('enregistrerclasse')) {
             $rules = [
             'nomclasse' =>'required',
@@ -80,6 +88,8 @@ class inscriptionEleveRequest extends FormRequest
             'cycle' =>'Cycle est obligatoire',
             'typeserie' =>'Serie est obligatoire',
             'typecours' =>'Cours Jour/Soir est obligatoire',
+            'SERIE' => 'Serie est obligatoire',
+            'LIBELSERIE' =>'Libelle serie est obligatoire',
         ];
     }
 }

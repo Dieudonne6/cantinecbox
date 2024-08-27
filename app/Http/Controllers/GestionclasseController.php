@@ -173,7 +173,7 @@ public function supprimerGroupe($id)
         return view('pages.inscriptions.series')->with('series', $series);
     }
 
-    public function saveserie(Request $request)
+    public function saveserie(inscriptionEleveRequest $request)
     {
         $series = new Serie();
         $series->SERIE = $request->input('SERIE');

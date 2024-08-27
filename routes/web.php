@@ -196,7 +196,7 @@ Route::delete('/eleves/{matricule}', [EleveController::class, 'destroy'])->name(
 //Series
 Route::get('/series', [GestionclasseController::class, 'series']);
 Route::put('/modifierserie', [GestionclasseController::class, 'updateserie']);
-Route::post('/saveserie', [GestionclasseController::class, 'saveserie']);
+Route::post('/saveserie', [GestionclasseController::class, 'saveserie'])->name('saveserie');;
 Route::delete('/supprimerserie', [GestionclasseController::class, 'deleteserie']);
 
 Route::get('/typesclasses', [GestionclasseController::class, 'getclasse']);

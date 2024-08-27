@@ -5,7 +5,7 @@
     <div class="content-wrapper">
 
       @if(Session::has('status'))
-        <div id="statusAlert" class="alert alert-success btn-primary">
+        <div id="statusAlert" class="alert alert-danger btn-primary">
           {{ Session::get('status')}}
         </div>
       @endif
@@ -161,30 +161,41 @@
 
   <!-- Modal bouton Nouveau-->
   <div class="modal fade" id="exampleModalNouveau" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Fiche d'une série</h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Enregistrement d'une série</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="{{url('/saveserie')}}" method="POST" >
+          @if($errors->any())
+          <div id="statusAlert" class="alert alert-danger">
+              <ul>
+                  @foreach($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+          </div>
+          @endif
+          <form id="myformclas" action="{{url('/saveserie')}}" method="POST" >
             @csrf
             <div class="form-group">
-                <div class="form-group row">
-                    <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="col">
                       <div>
                           <label><strong>Série</strong> (Donner un code pour la série à créer [2 caractères]. Ex: C)</label>
                           <input type="text" name="SERIE" placeholder="" class="form-control" required minlength="2" maxlength="3" pattern="^[A-Z][A-Z0-9]{1,2}$" title="La série doit commencer par une lettre majuscule et comporter entre 2 et 3 caractères, uniquement des lettres majuscules ou des chiffres.">
                       </div>
                     </div>
-                    <div class="col-sm-4">
+                    <br>
+                    <div class="col">
                       <div>
                           <label><strong>Libellé série</strong> (Donner le libellé de la série à créer. Ex: Série C)</label>
-                          <input type="text" name="LIBELSERIE" placeholder="" class="form-control" required>
+                          <input type="text" name="LIBELSERIE" placeholder="" class="form-control" >
                       </div>
                     </div>
-                    <div class="col-sm-4">
+                    <br>
+                    <div class="col">
                         <label><strong>Préciser le Cycle</strong></label>
                         <select name="CYCLE" class="js-example-basic-multiple w-100" required>
                           <option value="1">1er Cycle</option>
@@ -206,3 +217,21 @@
   </div>
 
 @endsection
+<script>
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+          var myModal = new bootstrap.Modal(document.getElementById('exampleModalNouveau'));
+  
+          @if ($errors->any())
+              myModal.show();
+          @endif
+  
+          // Réinitialiser les champs du formulaire à la fermeture du modal
+          document.getElementById('exampleModalNouveau').addEventListener('hidden.bs.modal', function () {
+              document.getElementById('myformclas').reset();
+              document.querySelectorAll('#myformclas .form-control').forEach(input => input.value = '');
+          });
+      });
+    </script>
+  
