@@ -16,6 +16,12 @@
         </ul>
     </div>
     @endif
+
+    @if(Session::has('error'))
+    <div id="statusAlert" class="alert alert-danger">
+      {{ Session::get('error')}}
+    </div>
+    @endif
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">Enregistrement des classes</h4>

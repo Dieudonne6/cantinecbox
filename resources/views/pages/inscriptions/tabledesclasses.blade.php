@@ -29,7 +29,7 @@
                             {{ Session::get('status') }}
                         </div>
                     @endif
-                    <h4 class="card-title">Mise a jour des classes</h4>
+                    <h4 class="card-title">Tables des classes</h4>
                     {{-- <div class="row"> --}}
                     <a type="button" class="btn btn-primary" href="{{ url('/enrclasse') }}">Nouveau</a>
                     <a type="button" class="btn btn-primary" href="{{ url('/groupe') }}">Groupe</a>

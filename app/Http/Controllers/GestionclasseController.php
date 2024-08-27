@@ -174,7 +174,7 @@ public function supprimerGroupe($id)
         return view('pages.inscriptions.series')->with('series', $series);
     }
 
-    public function saveserie(Request $request)
+    public function saveserie(inscriptionEleveRequest $request)
     {
         $series = new Serie();
         $series->SERIE = $request->input('SERIE');
@@ -226,7 +226,15 @@ public function supprimerGroupe($id)
 
   
   public function savetypeclasse(inscriptionEleveRequest $request){
+    $typeclas = $request->input('TYPECLASSE');
+    $typeclas = Typeclasse::where('TYPECLASSE', '=', $typeclas)->exists();
+
+    if($typeclas) {
+        return back()->with('error', 'Le type de classe existe déja');
+    }
+
     $typeclasse = new Typeclasse();
+
     if(strtolower($request->input('LibelleType')) == "systeme"){
       $typeclasse->TYPECLASSE = $request->input('TYPECLASSE');
       $typeclasse->LibelleType = $request->input('LibelleType');
@@ -270,6 +278,13 @@ public function supprimerGroupe($id)
 
   
    public function enregistrerclasse(inscriptionEleveRequest $request){
+    $enreclas = $request->input('nomclasse');
+    $enreclas = Classes::where('CODECLAS', '=', $enreclas)->exists();
+
+    if($enreclas) {
+        return back()->with('error', 'La classe existe déja');
+    }
+
     $enrclasse = new Classes();
     $enrclasse->CODECLAS = $request->input('nomclasse');
     $enrclasse->LIBELCLAS = $request->input('libclasse');
