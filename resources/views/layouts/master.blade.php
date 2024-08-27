@@ -91,6 +91,7 @@ transition: transform 0.6s;
   left: 0;
   margin-top: auto;
   padding: 0;
+  background-color: #fff;
 }
 .sub-menus li a {
   color: #000 !important;
@@ -125,7 +126,7 @@ display: block;
 .main-panel {
   margin-left: 240px; 
   width: calc(100% - 240px);
-  padding: 20px;
+  padding: 0 20px 20px 20px 70px;
   position: relative;
   /* height: 100%; */
 }
