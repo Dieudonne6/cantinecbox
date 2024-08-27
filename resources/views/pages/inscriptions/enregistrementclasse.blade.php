@@ -31,33 +31,34 @@
             <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Nom classe</label>
             <div class="col-sm-9">
               <input type="text" class="form-control"  name="nomclasse" id="nomclasse"
-              placeholder="Nom classe">
+              placeholder="Nom classe" value="{{ old('nomclasse') }}">
             </div>
           </div>
           <div class="form-group row mb-0">
             <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Libelle</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" name="libclasse" id="libclasse" placeholder="Libelle">
+              <input type="text" class="form-control" value="{{ old('libclasse') }}" name="libclasse" id="libclasse" placeholder="Libelle">
             </div>
           </div>
           <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Type Classe</label>
             <div class="col-sm-9">
-              <select class="form-control js-example-basic-multiple w-100" name="typclasse">
+              <select class="form-control js-example-basic-multiple w-100"  name="typclasse">
                 <option value="">Sélectionnez une classe</option>
                 @foreach ($typecla as $typecla)
-                  <option value="{{$typecla->TYPECLASSE}}">{{$typecla->LibelleType}}</option>
+                  <option value="{{$typecla->TYPECLASSE}}" {{ old('typclasse') == $typecla->TYPECLASSE ? 'selected' : '' }}>{{$typecla->LibelleType}}</option>
                 @endforeach
+                
               </select>
             </div>
           </div>          
           <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Enseignement</label>
             <div class="col-sm-9">
-              <select class="form-control js-example-basic-multiple w-100" name="typeensei">
+              <select class="form-control js-example-basic-multiple w-100"  name="typeensei">
                 <option value="">Sélectionnez un type d'enseignement</option>
                 @foreach ($typeenseigne as $typeenseig)
-                  <option value="{{$typeenseig->idenseign}}">{{$typeenseig->type}}</option>
+                  <option value="{{$typeenseig->idenseign}}" {{ old('typeensei') == $typeenseig->idenseign ? 'selected' : '' }}>{{$typeenseig->type}}</option>
                 @endforeach
               </select>
             </div>
@@ -65,28 +66,29 @@
           <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Promotion</label>
             <div class="col-sm-9">
-              <select class="form-control js-example-basic-multiple w-100" name="typepromo">
-                <option value="">Sélectionnez une promotion</option>
+              <select class="form-control js-example-basic-multiple w-100"  name="typepromo">
+                <option value="{{ old('typepromo') }}">Sélectionnez une promotion</option>
                 @foreach ($promo as $promo)
-                  <option value="{{$promo->CODEPROMO}}">{{$promo->LIBELPROMO}}</option>
+                  <option value="{{$promo->CODEPROMO}}"  {{ old('typepromo') == $promo->CODEPROMO ? 'selected' : '' }}>{{$promo->LIBELPROMO}}</option>
                 @endforeach
+                
               </select>
             </div>
           </div>         
           <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">No d'ordre</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="exampleInputUsername2" placeholder="No d'ordre" name="numero">
+              <input type="text" class="form-control" id="exampleInputUsername2" value="{{ old('numero') }}" placeholder="No d'ordre" name="numero">
             </div>
           </div>          
           <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Cycle</label>
             <div class="col-sm-9">
-              <select class="form-control js-example-basic-multiple w-100" id="exampleSelectGender" name="cycle">
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+              <select class="form-control js-example-basic-multiple w-100"  id="exampleSelectGender" name="cycle">
+                <option value="0" {{ old('cycle') == '0' ? 'selected' : '' }}>0</option>
+                <option value="1" {{ old('cycle') == '1' ? 'selected' : '' }}>1</option>
+                <option value="2" {{ old('cycle') == '2' ? 'selected' : '' }}>2</option>
+                <option value="3" {{ old('cycle') == '3' ? 'selected' : '' }}>3</option>
               </select>
             </div> 
           </div>         
@@ -95,8 +97,10 @@
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typeserie">
                 <option value="">Sélectionnez une série</option>
-                @foreach ($serie as $serie)
-                  <option value="{{$serie->SERIE}}">{{$serie->LIBELSERIE}}</option>
+                @foreach ($serie as $item)
+                  <option value="{{ $item->SERIE }}" {{ old('typeserie') == $item->SERIE ? 'selected' : '' }}>
+                    {{ $item->LIBELSERIE }}
+                  </option>
                 @endforeach
               </select>
             </div>
@@ -104,10 +108,11 @@
           <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Cours Jour/Soir</label>
             <div class="col-sm-9">
-              <select class="form-control js-example-basic-multiple w-100" id="exampleSelectGender" name="typecours">
-                <option value="">Jour</option>
-                <option value="Soir">Soir</option>
-              </select>
+              <select class="form-control js-example-basic-multiple w-100" name="typecours" id="typecours" class="form-control">
+                <option value="">Sélectionnez le type de cours</option>
+                <option value="jour" {{ old('typecours') == 'jour' ? 'selected' : '' }}>Jour</option>
+                <option value="soir" {{ old('typecours') == 'soir' ? 'selected' : '' }}>Soir</option>
+             </select>
             </div>
           </div>
           <div class="form-group row mb-5">

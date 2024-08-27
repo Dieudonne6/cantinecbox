@@ -107,7 +107,7 @@
     {{--  --}}
     <div class="row">
       <div class="col">
-        <div class="card">
+        <div class="card p-3">
           <div class="table-responsive" style="overflow: auto;">
             <table id="myTable" class="table table-striped" style="min-width: 600px; font-size: 10px;">
               <thead>
