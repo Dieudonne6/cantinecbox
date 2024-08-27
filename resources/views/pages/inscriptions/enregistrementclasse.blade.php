@@ -7,25 +7,34 @@
       {{ Session::get('status')}}
       </div>
     @endif
+    @if($errors->any())
+    <div id="statusAlert" class="alert alert-danger">
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">Enregistrement des classes</h4>
         <form  action="{{url('enregistrerclasse')}}" method="POST">
           {{csrf_field()}}
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Nom classe</label>
             <div class="col-sm-9">
               <input type="text" class="form-control"  name="nomclasse" id="nomclasse"
               placeholder="Nom classe">
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Libelle</label>
             <div class="col-sm-9">
               <input type="text" class="form-control" name="libclasse" id="libclasse" placeholder="Libelle">
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Type Classe</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typclasse">
@@ -36,7 +45,7 @@
               </select>
             </div>
           </div>          
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Enseignement</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typeensei">
@@ -47,7 +56,7 @@
               </select>
             </div>
           </div>         
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Promotion</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typepromo">
@@ -58,13 +67,13 @@
               </select>
             </div>
           </div>         
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">No d'ordre</label>
             <div class="col-sm-9">
               <input type="text" class="form-control" id="exampleInputUsername2" placeholder="No d'ordre" name="numero">
             </div>
           </div>          
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Cycle</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" id="exampleSelectGender" name="cycle">
@@ -86,7 +95,7 @@
               </select>
             </div>
           </div>         
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Cours Jour/Soir</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" id="exampleSelectGender" name="typecours">
@@ -95,7 +104,7 @@
               </select>
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-5">
             <div class="col-auto">
               <button type="submit" class="btn btn-primary">Enregistrer</button>
             </div>
@@ -106,7 +115,6 @@
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donnefinanciere">Donne financières (Factures)</button>
             </div>
           </div>
-          <br>
         </form>
         <br>
       </div>

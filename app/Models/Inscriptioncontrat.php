@@ -16,5 +16,5 @@ class Inscriptioncontrat extends Model
 
 
     protected $fillable = ['id_contrat', 'id_moiscontrat', 'anne_inscrption'];
-
+      
 }

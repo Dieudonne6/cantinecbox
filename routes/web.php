@@ -134,7 +134,7 @@ Route::get('/listedesretardsdepaiement', [PagesController::class, 'listedesretar
 Route::get('/parametre', [PagesController::class, 'parametre']);
 Route::get('/echeancier', [PagesController::class, 'echeancier']);
 Route::get('/tabledesclasses', [PagesController::class, 'tabledesclasses']);
-Route::get('/enrclasse', [GestionclasseController::class, 'enrclasse']);
+Route::get('/enrclasse', [GestionclasseController::class, 'enrclasse'])->name('enrclasse');
 Route::get('/certificat', [PagesController::class, 'certificatsolarite']);
 Route::get('/droitconstate', [PagesController::class, 'droitconstate']);
 
@@ -171,7 +171,7 @@ Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite']
 
 
 // Controller GestionclasseController
-Route::post('/savetypeclasse', [GestionclasseController::class, 'savetypeclasse']);
+Route::post('/savetypeclasse', [GestionclasseController::class, 'savetypeclasse'])->name('savetypeclasse');
 
 Route::get('/groupes', [GestionclasseController::class, 'groupes']);
 Route::get('/groupes/{libelle}/classes', [GestionclasseController::class, 'ClassesParGroupe']);
@@ -203,8 +203,8 @@ Route::get('/typesclasses', [GestionclasseController::class, 'getclasse']);
 Route::put('/modifiertypesclasses', [GestionclasseController::class, 'updateTypeClasse']);
 Route::delete('/supprimertype', [GestionclasseController::class, 'deletetype']);
 Route::get('/inscrireeleve', [PagesController::class, 'inscrireeleve'])->name('inscrireeleve');
-Route::post('/nouveaueleve', [GestionclasseController::class, 'nouveaueleve']);
-Route::post('/enregistrerclasse', [GestionclasseController::class, 'enregistrerclasse']);
+Route::post('/nouveaueleve', [GestionclasseController::class, 'nouveaueleve'])->name('nouveaueleve');
+Route::post('/enregistrerclasse', [GestionclasseController::class, 'enregistrerclasse'])->name('enregistrerclasse');
 Route::put('/promotions/{codePromo}', [GestionclasseController::class, 'update'])->name('promotions.update');
 // Route::get('/modifierclasse', [PagesController::class, 'modifierclasse']);
 
@@ -218,5 +218,6 @@ Route::delete('/supprimerclass', [GestionclasseController::class, 'deleteclass']
 Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifieclasse']);
 
 
+Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
 Route::get('/paramcomposantes', [ScolariteController::class, 'getparamcomposantes']);
-Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifieclasse']);
+// Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifieclasse']);

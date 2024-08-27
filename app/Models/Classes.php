@@ -18,5 +18,5 @@ class Classes extends Model
     protected $primaryKey = 'CODECLAS';
     public $incrementing = false;
     protected $keyType = 'string';
-  
+     
 }

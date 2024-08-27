@@ -224,7 +224,7 @@ public function supprimerGroupe($id)
     }
 
   
-  public function savetypeclasse(Request $request){
+  public function savetypeclasse(inscriptionEleveRequest $request){
     $typeclasse = new Typeclasse();
     if(strtolower($request->input('LibelleType')) == "systeme"){
       $typeclasse->TYPECLASSE = $request->input('TYPECLASSE');
@@ -268,7 +268,7 @@ public function supprimerGroupe($id)
   }
 
   
-   public function enregistrerclasse(Request $request){
+   public function enregistrerclasse(inscriptionEleveRequest $request){
     $enrclasse = new Classes();
     $enrclasse->CODECLAS = $request->input('nomclasse');
     $enrclasse->LIBELCLAS = $request->input('libclasse');

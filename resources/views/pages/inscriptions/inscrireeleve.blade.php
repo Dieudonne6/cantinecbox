@@ -86,7 +86,7 @@
                           <label for="matricule">Matricule</label>
                           <input type="text" id="matricule" class="form-control" value="AUTO" readonly>
                         </div>
-                        <div class="col-md-4 d-flex align-items-center">
+                        <div class="col-md-4 d-flex align-items-center" style="margin-top: 2rem">
                           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">
                             Vérifier archives
                           </button>
@@ -187,10 +187,10 @@
                       </div>
                       
                       <!-- Section Redoublant -->
-                      <div class="form-group row mt-3">
+                      <div class="form-group row">
                         <div class="col-md-4">
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="redoublant" id="redoublant" value="1">
+                            <input class="form-check-input" type="checkbox" name="redoublant" id="redoublant" value="1" style="margin-left: 0.30rem;">
                             <label class="form-check-label" for="redoublant">Cocher si c'est un redoublant</label>
                           </div>
                         </div>
@@ -272,39 +272,44 @@
                     <!-- Section: Health Information -->
                     <div class="form-group">
                       <div class="row">
-                        <div class="col">
-                          <div class="d-flex align-items-center">
+                        <div class="col-md-5">
+                          {{-- <div class="d-flex align-items-center"> --}}
                             <label for="maladies_chroniques" class="mr-2">Maladies chroniques et allergies connues</label>
                             <input class="form-control" type="text" name="maladieschroniques" id="maladies_chroniques" value="">
-                          </div>
+                          {{-- </div> --}}
                         </div>
-                        <div class="col">
-                          <div class="d-flex align-items-center">
+                        <div class="col-md-3">
+                          {{-- <div class="d-flex align-items-center"> --}}
                             <label for="interdit_alimentaires" class="mr-2">Interdit alimentaires</label>
                             <input class="form-control" type="text" name="interditalimentaires" id="interdit_alimentaires" value="">
-                          </div>
+                          {{-- </div> --}}
                         </div>
-                        <div class="col">
-                          <div class="d-flex align-items-center">
+                        <div class="col-md-2">
+                          {{-- <div class="d-flex align-items-center"> --}}
                             <label for="groupe_sanguin" class="mr-2">Groupe sanguin</label>
                             <select class="form-control js-example-basic-multiple w-100" id="groupe_sanguin" name="groupesanguin">
                               <option>A+</option>
-                              <option>O+</option>
+                              <option>A-</option>
                               <option>B+</option>
                               <option>B-</option>
+                              <option>O+</option>
+                              <option>O-</option>
+                              <option>AB+</option>
+                              <option>AB-</option>
                             </select>
-                          </div>
+                          {{-- </div> --}}
                         </div>
-                        <div class="col">
-                          <div class="d-flex align-items-center">
-                            <label for="type_hemoglobine" class="mr-2">Type d'hémoglobine</label>
-                            <select class="form-control js-example-basic-multiple w-100" id="type_hemoglobine" name="typehemoglobine">
+                        <div class="col-md-1">
+                          {{-- <div class="d-flex align-items-center"> --}}
+                            <label for="type_hemoglobine" class="mr-2">Hémoglobine</label>
+                            <input type="text" class="form-control" id="type_hemoglobine" name="typehemoglobine" style="width: 110px">
+                            {{-- <select class="form-control js-example-basic-multiple w-100" id="type_hemoglobine" name="typehemoglobine">
                               <option>A</option>
                               <option>O</option>
                               <option>B</option>
                               <option>AB</option>
-                            </select>
-                          </div>
+                            </select> --}}
+                          {{-- </div> --}}
                         </div>
                       </div>
                     </div>
@@ -516,13 +521,13 @@
                     <!-- Section: Permissions -->
                     <div class="form-group">
                       <div class="form-check">
-                        <input class="form-check-input" name="autorisevideo" type="checkbox" value="" id="flexCheckDefault">
+                        <input class="form-check-input" name="autorisevideo" type="checkbox" value="" id="flexCheckDefault" style="margin-left: 0.4rem">
                         <label class="form-check-label" for="flexCheckDefault">
                           Autorisation d'utiliser les vidéos à des fins publicitaires
                         </label>
                       </div>
                       <div class="form-check">
-                        <input class="form-check-input" name="autoriseimage" type="checkbox" value="" id="flexCheckChecked" checked>
+                        <input class="form-check-input" name="autoriseimage" type="checkbox" value="" id="flexCheckChecked" checked style="margin-left: 0.4rem">
                         <label class="form-check-label" for="flexCheckChecked">
                           Autorisation d'utiliser les images à des fins publicitaires
                         </label>

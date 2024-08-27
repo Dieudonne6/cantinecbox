@@ -13,7 +13,7 @@
         <form action="{{url('modifieclasse/'.$typecla->CODECLAS)}}" method="POST">
           @csrf
           @method('PUT')
-          <div class="form-group row">
+          <div class="form-group row mb-0">
 
             <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Nom classe</label>
             <div class="col-sm-9">
@@ -21,13 +21,13 @@
               placeholder="Nom classe" readonly>
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Libelle</label>
             <div class="col-sm-9">
               <input type="text" class="form-control" name="libclasse"  value="{{$typecla->LIBELCLAS}}"  id="libclasse" placeholder="Libelle">
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Type Classe</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typclasse">
@@ -39,7 +39,7 @@
             </div>
           </div>
           
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Enseignement</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typeensei">
@@ -51,7 +51,7 @@
             </div>
           </div> 
           
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Promotion</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typepromo">
@@ -64,14 +64,14 @@
             </div>
           </div>
           
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">No d'ordre</label>
             <div class="col-sm-9">
               <input type="text" class="form-control" id="exampleInputUsername2" value="{{ $typecla->Niveau }}"   placeholder="No d'ordre" name="numero">
             </div>
           </div>
           
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Cycle</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" id="exampleSelectGender" name="cycle">
@@ -83,7 +83,7 @@
             </div> 
           </div>
           
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Serie</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typeserie">
@@ -95,7 +95,7 @@
             </div>
           </div>
           
-          <div class="form-group row">
+          <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Cours Jour/Soir</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" id="exampleSelectGender" name="typecours">
@@ -104,9 +104,19 @@
               </select>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Modifier</button>
-          <button type="button" class="btn btn-danger">Annuler</button>
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donnefinanciere">Donne financieres(Factures)</button>
+         
+          <div class="form-group row mb-5">
+            <div class="col-auto">
+              <button type="submit" class="btn btn-primary">Modifier</button>
+            </div>
+            <div class="col-auto">
+              <button type="button" class="btn btn-danger">Annuler</button>
+            </div>
+            <div class="col-auto">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donnefinanciere">Donne financières (Factures)</button>
+            </div>
+          </div>
+          <br>
       </form>
       </div>
     </div>
