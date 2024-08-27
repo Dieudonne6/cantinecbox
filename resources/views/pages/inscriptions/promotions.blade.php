@@ -132,9 +132,9 @@
                             <table class="table table-striped" style="min-width: 600px; font-size: 12px;" id="myTable">
                                 <thead>
                                     <tr>
-                                        <th>Code promotion</th>
-                                        <th>Libellé promotion</th>
-                                        <th>Action</th>
+                                        <th style="text-align: center; !impoortant">Code promotion</th>
+                                        <th style="text-align: center; !impoortant">Libellé promotion</th>
+                                        <th style="text-align: center; !impoortant">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>

@@ -87,7 +87,7 @@
                   }
                   th, td {
                     /* border: 1px solid #aaa1a1; */
-                    padding: 4px;
+                    /* padding: 4px; */
                     text-align: center;
                   }
                   th {
@@ -112,9 +112,9 @@
             <table id="myTable" class="table table-striped" style="min-width: 600px; font-size: 10px;">
               <thead>
                 <tr>
-                  <th class="">Code type</th>
-                  <th>Libellé</th>
-                  <th>Action</th>
+                  <th >Code type</th>
+                  <th style="text-align: center; !impoortant">Libellé</th>
+                  <th style="text-align: center; !impoortant">Action</th>
                 </tr>
               </thead>
               <tbody>
