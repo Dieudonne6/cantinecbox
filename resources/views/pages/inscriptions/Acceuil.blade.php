@@ -253,13 +253,13 @@
                                             Naissance</label>
                                         <div class="col-sm-4">
                                             <input type="date" class="form-control" id="dateN{{ $eleve->MATRICULE }}"
-                                                name="dateN" value="{{ $eleve->DATENAIS }}">
+                                                name="dateN" value="{{ $eleve->DATENAIS }}" readonly>
                                         </div>
                                         <label for="lieu{{ $eleve->MATRICULE }}"
                                             class="col-sm-2 col-form-label">Lieu</label>
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control" id="lieu{{ $eleve->MATRICULE }}"
-                                                name="lieu" value="{{ $eleve->LIEUNAIS }}">
+                                                name="lieu" value="{{ $eleve->LIEUNAIS }}" readonly>
                                         </div>
                                     </div>
                                     <!-- Sexe et Types élèves -->
@@ -269,14 +269,14 @@
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control" id="sexe{{ $eleve->MATRICULE }}"
                                                 name="sexe"
-                                                value="{{ $eleve->SEXE == 1 ? 'Masculin' : ($eleve->SEXE == 2 ? 'Féminin' : '') }}">
+                                                value="{{ $eleve->SEXE == 1 ? 'Masculin' : ($eleve->SEXE == 2 ? 'Féminin' : '') }}" readonly>
                                         </div>
                                         <label for="typeEleve{{ $eleve->MATRICULE }}"
                                             class="col-sm-2 col-form-label">Type Élève</label>
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control"
                                                 id="typeEleve{{ $eleve->MATRICULE }}" name="typeEleve"
-                                                value="{{ $eleve->STATUTG == 1 ? 'Nouveau' : ($eleve->STATUTG == 2 ? 'Ancien' : '') }}">
+                                                value="{{ $eleve->STATUTG == 1 ? 'Nouveau' : ($eleve->STATUTG == 2 ? 'Ancien' : '') }}" readonly>
                                         </div>
                                     </div>
                                     <!-- Date d'inscription, Apte et Statut Redoublant -->
@@ -286,20 +286,20 @@
                                         <div class="col-sm-2">
                                             <input type="date" class="form-control"
                                                 id="dateIn{{ $eleve->MATRICULE }}" name="dateIn"
-                                                value="{{ $eleve->DATEINS }}">
+                                                value="{{ $eleve->DATEINS }}" readonly>
                                         </div>
                                         <label for="apte{{ $eleve->MATRICULE }}"
                                             class="col-sm-2 col-form-label">Apte</label>
                                         <div class="col-sm-2">
                                             <input type="text" class="form-control" id="apte{{ $eleve->MATRICULE }}"
                                                 name="sexe"
-                                                value="{{ $eleve->APTE == 0 ? 'Non' : ($eleve->APTE == 1 ? 'Oui' : '') }}">
+                                                value="{{ $eleve->APTE == 0 ? 'Non' : ($eleve->APTE == 1 ? 'Oui' : '') }}" readonly>
                                         </div>
                                         <div class="col-sm-2 form-check">
                                             <input type="checkbox" class="form-check-input"
                                                 id="statutRedoublant{{ $eleve->MATRICULE }}" 
                                                 name="statutRedoublant"
-                                                {{ $eleve->STATUT == 1 ? 'checked' : '' }}>
+                                                {{ $eleve->STATUT == 1 ? 'checked' : '' }} readonly>
                                             <label class="form-check-label" for="statutRedoublant{{ $eleve->MATRICULE }}">Statut Redoublant</label>        
                                         </div>
                                     </div>
@@ -366,7 +366,7 @@
                                     <div class="col">
                                         <div class="d-flex justify-content-between align-items-center mt-2">
                                             <div class="form-check">
-                                                <input type="checkbox" class="form-check-input" id="checkDetails">
+                                                <input type="checkbox" class="form-check-input" id="checkDetails" readonly>
                                                 <label class="form-check-label" for="checkDetails">Détail des
                                                     composantes</label>
                                             </div>
@@ -422,21 +422,21 @@
                                             <tbody style=" width: 50%;">
                                                 <tr>
                                                     <td>[ 3,3% ] Scolarité</td>
-                                                    <td><input type="number" class="form-control" id="scolarite"></td>
+                                                    <td><input type="number" class="form-control" id="scolarite" readonly></td>
                                                     <td>[ 0,0% ] Arriéré</td>
-                                                    <td><input type="number" class="form-control" id="arriere"></td>
+                                                    <td><input type="number" class="form-control" id="arriere" readonly></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Frais 1</td>
-                                                    <td><input type="number" class="form-control" id="frais1"></td>
+                                                    <td><input type="number" class="form-control" id="frais1" readonly></td>
                                                     <td>Frais 2</td>
-                                                    <td><input type="number" class="form-control" id="frais2"></td>
+                                                    <td><input type="number" class="form-control" id="frais2" readonly></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Frais 3</td>
-                                                    <td><input type="number" class="form-control" id="frais3"></td>
+                                                    <td><input type="number" class="form-control" id="frais3" readonly></td>
                                                     <td>Frais 4</td>
-                                                    <td><input type="number" class="form-control" id="frais4"></td>
+                                                    <td><input type="number" class="form-control" id="frais4" readonly></td>
                                                 </tr>
                                             </tbody>
                                         </table>

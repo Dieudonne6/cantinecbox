@@ -48,7 +48,7 @@
                     {{ session('error') }}
                 </div>
             @endif
-        <h4 class="card-title">Liste des groupes</h4>
+        <h4 class="card-title">Gestion des groupes</h4>
         <table id="classTable">
             <thead>
                 <tr>
@@ -69,10 +69,10 @@
                          Modifier
                      </a>
 
-                     <form action="/supprimergroupe/{{ $listegroupe->id }}" method="POST"  onsubmit="return confirmDelete()" style="display:inline;">
+                     <form action="/supprimergroupe/{{ $listegroupe->id }}" method="POST"   style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal1" onclick="setDeleteFormAction('{{ $listegroupe->id }}')">Supprimer</button>
                     </form>
                      {{-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModaldelete<?php echo $listegroupe->id; ?>">Supprimer</button>  --}}
               
@@ -86,30 +86,6 @@
     </div>
 </div>
 
-{{-- modal de confirmation de suppression --}}
-
-<div class="modal fade" id="exampleModaldelete<?php echo $listegroupe->id; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation de suppression</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          Êtes-vous sûr de vouloir supprimer ce contrat ?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-          <form action="{{ url('/supprimergroupe')}}" method="post">
-            @csrf
-            @method('DELETE')
-            <input type="hidden" name="idtype" value="<?php echo $listegroupe->id; ?>">
-            <input type="submit" class="btn btn-danger" value="Confirmer">
-          </form>  
-        </div>
-      </div>
-    </div>
-  </div>
 
 <!-- Modal modification groupes-->
 <div class="modal fade" id="modifgroup" tabindex="-1" aria-labelledby="modifgroupLabel" aria-hidden="true">
@@ -121,7 +97,7 @@
             </div>
             <div class="modal-body">
                 <div class="card">
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="form-group w-50 mb-6">
                             <input type="hidden" id="groupeLibelle" name="groupeLibelle" value="">
                             <select class="js-example-basic-multiple w-100 select2-hidden-accessible" id="classSelect" name="classes" tabindex="-1" aria-hidden="true">
@@ -131,7 +107,7 @@
                         <div class="form-group w-50 mb-6">
                             <button type="button" id="ajouterClasse" class="btn btn-primary" onclick="ajouterClasse()">Ajouter une classe</button>
                             {{-- <button type="button" id="ajouterClasse" class="btn btn-primary">Ajouter une classe</button> --}}
-                        </div>
+                        </div>  
                     </div>
                     <table id="classTable">
                         <thead>
@@ -150,12 +126,70 @@
     </div>
 </div>
 
+
+{{-- modal de confirmation de suppression de classe --}}
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmer la suppression</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        <div class="modal-body">
+            Êtes-vous sûr de vouloir supprimer cette classe ?
+          </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteButton">Supprimer</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="alertModalLabel">Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <strong id="alertModalMessage"></strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de confirmation de suppression de groupe -->
+<div class="modal fade" id="confirmDeleteModal1" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmDeleteLabel">Confirmer la suppression</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Êtes-vous sûr de vouloir supprimer ce groupe ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     var modal = document.getElementById('modifgroup');
     var select = document.getElementById('classSelect');
     var tableBody = document.getElementById('classTableBody');
-    var modalTitle = document.getElementById('modifgroupTitle');
+    // var modalTitle = document.getElementById('modifgroupTitle');
 
     modal.addEventListener('hidden.bs.modal', function () {
         // Réinitialiser le select, le tableau et le titre lorsque le modal est caché
@@ -173,9 +207,25 @@
         document.body.classList.remove('modal-open');
         document.body.style.paddingRight = '';
     });
-});
+    });
 
-function openModal(button) {
+    function setDeleteFormAction(groupeId) {
+        var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        confirmDeleteBtn.onclick = function() {
+            var form = document.querySelector('form[action="/supprimergroupe/' + groupeId + '"]');
+            if (form) {
+                form.submit();
+            }
+        };
+    }
+
+    function showAlert(message) {
+    document.getElementById('alertModalMessage').textContent = message;
+    var alertModal = new bootstrap.Modal(document.getElementById('alertModal'));
+    alertModal.show();
+}
+
+    function openModal(button) {
     var groupeLibelle = button.getAttribute('data-libelle');
     var modalTitle = document.getElementById('modifgroupTitle');
     modalTitle.textContent = 'Modifier le groupe : ' + groupeLibelle;
@@ -231,16 +281,16 @@ function openModal(button) {
             myModal.show();
         })
         .catch(error => console.error('Error:', error));
-}
+    }
 
-function ajouterClasse() {
+    function ajouterClasse() {
     var select = document.getElementById('classSelect');
     var classCode = select ? select.value : null;
     var modalTitle = document.getElementById('modifgroupTitle');
     var groupeLibelle = modalTitle ? modalTitle.textContent.replace('Modifier le groupe : ', '').trim() : null;
 
     if (!classCode) {
-        alert('Veuillez sélectionner une classe.');
+        showAlert('Veuillez sélectionner une classe.');
         return;
     }
 
@@ -270,7 +320,7 @@ function ajouterClasse() {
         return response.json();
     })
     .then(data => {
-        alert('Classe ajoutée avec succès !');
+        showAlert('Classe ajoutée avec succès !');
 
         // Réinitialiser le modal
         var modal = document.getElementById('modifgroup');
@@ -281,21 +331,36 @@ function ajouterClasse() {
             }
         }
 
+                    // Retirer backdrop et modal-open au cas où
+                    var backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
+            document.body.classList.remove('modal-open');
+            document.body.style.paddingRight = '';
+
         // Recharger les données du groupe
         openModal(document.querySelector('button[data-libelle="' + encodeURIComponent(groupeLibelle) + '"]'));
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Erreur: ' + error.message);
+        // alert('Erreur: ' + error.message);
     });
-}
+    }
 
 
-function supprimerClasse(button) {
+    function supprimerClasse(button) {
     var id = button.getAttribute('data-id');
     var groupeLibelle = document.getElementById('modifgroupTitle').textContent.replace('Modifier le groupe : ', '').trim();
 
-    if (confirm('Êtes-vous sûr de vouloir supprimer cette classe ?')) {
+        // Ouvrir la modale de confirmation
+        var confirmModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        confirmModal.show();
+
+        // Gestion de l'événement de confirmation
+        var confirmButton = document.getElementById('confirmDeleteButton');
+
+    confirmButton.onclick = function() {
         fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes/${id}`, {
             method: 'DELETE',
             headers: {
@@ -311,21 +376,34 @@ function supprimerClasse(button) {
         })
         .then(data => {
             // Afficher le message de succès
-            alert(data.message);  // Assurez-vous que la réponse contient 'message'
+            showAlert(data.message);  // Assurez-vous que la réponse contient 'message'
 
             // Fermer le modal
             var modal = document.getElementById('modifgroup');
             var myModal = bootstrap.Modal.getInstance(modal);
             myModal.hide();
 
+            // Retirer backdrop et modal-open au cas où
+            var backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
+            document.body.classList.remove('modal-open');
+            document.body.style.paddingRight = '';
+        // })
+
             // Recharger les données du groupe
             openModal(document.querySelector('button[data-libelle="' + encodeURIComponent(groupeLibelle) + '"]'));
         })
         .catch(error => console.error('Error:', error));
-    }
-}
 
-function confirmDelete() {
+
+        // Fermer la modale de confirmation
+        confirmModal.hide();
+    }
+    }
+
+    function confirmDelete() {
         return confirm('Êtes-vous sûr de vouloir supprimer ce groupe?');
     }
 

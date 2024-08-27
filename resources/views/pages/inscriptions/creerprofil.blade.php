@@ -38,123 +38,128 @@
             {{ Session::get('status') }}
           </div>
           @endif --}}
+
+
           <div class="row">
             <div class="" id="calcul-one">
-              <form class="forms-sample" action="{{ url('/ajouterprofreduction') }}" method="POST">
-                @csrf
-                <div class="form-group row">
-                  <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Numero reduction</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" name="Codereduction" value="{{ $newCode }}" readonly>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Libelle reduction</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" name="LibelleReduction" placeholder="">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur scolarite</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" name="Reduction_scolarite" placeholder="0,00000000000%">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur arriere</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" name="Reduction_arriere" placeholder="0,00%">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" name="Reduction_frais1" placeholder="0,00%">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" name="Reduction_frais2" placeholder="0,00%">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" name="Reduction_frais3" placeholder="0,00%">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="exampleInputUsername2" name="Reduction_frais4" placeholder="0,00%">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="exampleInputUsername2" class="col-sm-12 col-form-label mb-0">Mode d'application de la reduction sur les echeancier</label>
-                  <div class="col-sm-12 mb-2">
-                    <select class="js-example-basic-multiple w-100" name="mode">
-                      <option value="1">Agir sur les dernier tranches</option>
-                      <option value="2">Repartir equitablement sur toutes les tranches</option>
-                    </select>
-                  </div>
-                </div>
-                <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
-                <button class="btn btn-secondary">Fermer</button>
-              </form>
+                <form class="forms-sample" action="{{ url('/ajouterprofreduction') }}" method="POST">
+                    @csrf
+                    <!-- Autres champs ici... -->
+                    <div class="form-group row">
+                      <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Numero reduction</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control" id="exampleInputUsername2" name="Codereduction" value="{{ $newCode }}" readonly>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Libelle reduction</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control" id="exampleInputUsername2" name="LibelleReduction" placeholder="">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur scolarite</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="ReductionScolarite" name="Reduction_scolarite" placeholder="0,00000000000%">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur arriere</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="ReductionArriere" name="Reduction_arriere" placeholder="0,00%">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur frais 1</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="ReductionFrais1" name="Reduction_frais1" placeholder="0,00%">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur frais 2</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="ReductionFrais2" name="Reduction_frais2" placeholder="0,00%">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur frais 3</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="ReductionFrais3" name="Reduction_frais3" placeholder="0,00%">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur frais 4</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="ReductionFrais4" name="Reduction_frais4" placeholder="0,00%">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="exampleInputUsername2" class="col-sm-12 col-form-label mb-0">Mode d'application de la reduction sur les echeancier</label>
+                        <div class="col-sm-12 mb-2">
+                            <select class="js-example-basic-multiple w-100" name="mode">
+                                <option value="1">Agir sur les dernier tranches</option>
+                                <option value="2">Repartir equitablement sur toutes les tranches</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
+                    <button class="btn btn-secondary">Fermer</button>
+                </form>
             </div>
             <div class="col-lg-4 d-none" id="percentage">
-              <h6>Calculateur de pourcentage de reduction</h6>
-              <div class="row">
-                <div class="col-lg-6">
-                  <p>Avant redcution</p>
-                  <div class="mb-2">
-                    <input type="text"  class="form-control" placeholder="133000">
-                  </div>
-                  <div class="mb-2">
-                    <input type="text"  class="form-control" placeholder="133000">
-                  </div>
-                  <div class="mb-2">
-                    <input type="text"  class="form-control" placeholder="133000">
-                  </div>
-                  <div class="mb-2">
-                    <input type="text"  class="form-control" placeholder="133000">
-                  </div>
-                  <div class="mb-2">
-                    <input type="text"  class="form-control" placeholder="133000">
-                  </div>
-                  <div>
-                    <input type="text"  class="form-control" placeholder="133000">
-                  </div>
+                <h6>Calculateur de pourcentage de reduction</h6>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p>Avant redcution</p>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" id="avantScolarite" placeholder="0">
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" id="avantArriere" placeholder="0">
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" id="avantFrais1" placeholder="0">
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" id="avantFrais2" placeholder="0">
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" id="avantFrais3" placeholder="0">
+                        </div>
+                        <div>
+                            <input type="text" class="form-control" id="avantFrais4" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <p>Apres reduction</p>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" id="apresScolarite" placeholder="0">
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" id="apresArriere" placeholder="0">
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" id="apresFrais1" placeholder="0">
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" id="apresFrais2" placeholder="0">
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" id="apresFrais3" placeholder="0">
+                        </div>
+                        <div>
+                            <input type="text" class="form-control" id="apresFrais4" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="my-4 col-lg-12">
+                        <button type="button" class="btn btn-secondary" id="closecalculate">Fermer le calculateur</button>
+                    </div>
                 </div>
-                <div class="col-lg-6">
-                  <p>Apres reduction</p>
-                  <div class="mb-2">
-                    <input type="text"  class="form-control" placeholder="133000">
-                  </div>
-                  <div class="mb-2">
-                    <input type="text"  class="form-control" placeholder="133000">
-                  </div>
-                  <div class="mb-2">
-                    <input type="text"  class="form-control" placeholder="133000">
-                  </div>
-                  <div class="mb-2">
-                    <input type="text"  class="form-control" placeholder="133000">
-                  </div>
-                  <div class="mb-2">
-                    <input type="text"  class="form-control" placeholder="133000">
-                  </div>
-                  <div>
-                    <input type="text"  class="form-control" placeholder="133000">
-                  </div>
-                </div>
-                <div class="my-4 col-lg-12">
-                  <button type="button" class="btn btn-secondary" id="closecalculate">Fermer le calculateur</button>
-
-                </div>
-              </div>
             </div>
-          </div>
+        </div>
+
+
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" id="calculs">Afficher calculateur de pourcentage</button>              
@@ -505,6 +510,96 @@
 
         });
     });
+
+
+
+
+
+// calculateur de pourcentage
+document.addEventListener('DOMContentLoaded', (event) => {
+    function calculatePercentage(avant, apres) {
+        if (avant == 0) {
+            return 0;
+        }
+        return ((avant - apres) / avant * 100).toFixed(2) + '%';
+    }
+
+    const avantScolarite = document.getElementById('avantScolarite');
+    const apresScolarite = document.getElementById('apresScolarite');
+    const reductionScolarite = document.getElementById('ReductionScolarite');
+
+    avantScolarite.addEventListener('input', () => {
+        reductionScolarite.value = calculatePercentage(parseFloat(avantScolarite.value), parseFloat(apresScolarite.value));
+    });
+
+    apresScolarite.addEventListener('input', () => {
+        reductionScolarite.value = calculatePercentage(parseFloat(avantScolarite.value), parseFloat(apresScolarite.value));
+    });
+
+    const avantArriere = document.getElementById('avantArriere');
+    const apresArriere = document.getElementById('apresArriere');
+    const reductionArriere = document.getElementById('ReductionArriere');
+
+    avantArriere.addEventListener('input', () => {
+        reductionArriere.value = calculatePercentage(parseFloat(avantArriere.value), parseFloat(apresArriere.value));
+    });
+
+    apresArriere.addEventListener('input', () => {
+        reductionArriere.value = calculatePercentage(parseFloat(avantArriere.value), parseFloat(apresArriere.value));
+    });
+
+    const avantFrais1 = document.getElementById('avantFrais1');
+    const apresFrais1 = document.getElementById('apresFrais1');
+    const reductionFrais1 = document.getElementById('ReductionFrais1');
+
+    avantFrais1.addEventListener('input', () => {
+        reductionFrais1.value = calculatePercentage(parseFloat(avantFrais1.value), parseFloat(apresFrais1.value));
+    });
+
+    apresFrais1.addEventListener('input', () => {
+        reductionFrais1.value = calculatePercentage(parseFloat(avantFrais1.value), parseFloat(apresFrais1.value));
+    });
+
+    const avantFrais2 = document.getElementById('avantFrais2');
+    const apresFrais2 = document.getElementById('apresFrais2');
+    const reductionFrais2 = document.getElementById('ReductionFrais2');
+
+    avantFrais2.addEventListener('input', () => {
+        reductionFrais2.value = calculatePercentage(parseFloat(avantFrais2.value), parseFloat(apresFrais2.value));
+    });
+
+    apresFrais2.addEventListener('input', () => {
+        reductionFrais2.value = calculatePercentage(parseFloat(avantFrais2.value), parseFloat(apresFrais2.value));
+    });
+
+    const avantFrais3 = document.getElementById('avantFrais3');
+    const apresFrais3 = document.getElementById('apresFrais3');
+    const reductionFrais3 = document.getElementById('ReductionFrais3');
+
+    avantFrais3.addEventListener('input', () => {
+        reductionFrais3.value = calculatePercentage(parseFloat(avantFrais3.value), parseFloat(apresFrais3.value));
+    });
+
+    apresFrais3.addEventListener('input', () => {
+        reductionFrais3.value = calculatePercentage(parseFloat(avantFrais3.value), parseFloat(apresFrais3.value));
+    });
+
+    const avantFrais4 = document.getElementById('avantFrais4');
+    const apresFrais4 = document.getElementById('apresFrais4');
+    const reductionFrais4 = document.getElementById('ReductionFrais4');
+
+    avantFrais4.addEventListener('input', () => {
+        reductionFrais4.value = calculatePercentage(parseFloat(avantFrais4.value), parseFloat(apresFrais4.value));
+    });
+
+    apresFrais4.addEventListener('input', () => {
+        reductionFrais4.value = calculatePercentage(parseFloat(avantFrais4.value), parseFloat(apresFrais4.value));
+    });
+});
+
+
+
+
 
 
     // afficher les infos du modal pour la modification

@@ -14,7 +14,7 @@
         <div class="col-12">
           <div class="card mb-6">
             <div class="card-body">
-              <h4 class="card-title">Mise à jour des séries</h4>
+              <h4 class="card-title">Gestion des séries</h4>
               <div class="row gy-3">
                 <div class="demo-inline-spacing">
                   <!-- Button nouveau trigger modal -->
@@ -49,8 +49,8 @@
         <div class="col">
                 
           <div class="card">
-            <div class="table-responsive" style="overflow: auto;">
-              <table class="table table-striped" style="min-width: 600px; font-size: 10px;">
+            <div class="table-responsive" style="overflow: auto;" >
+              <table class="table table-striped" style="min-width: 600px; font-size: 10px;" id="myTable">
                 <thead>
                   <tr>
                     <th class="">Série</th>
@@ -100,12 +100,12 @@
                       <div class="col-sm-4">
                         <div>
                             <label><strong>Libellé série</strong> (Donner le libellé de la série à créer. Ex: Série C)</label>
-                            <input type="text" name="LIBELSERIE" value="{{ $serie->LIBELSERIE }}" placeholder="" id="edit-libelserie" class="form-control">
+                            <input type="text" name="LIBELSERIE" value="{{ $serie->LIBELSERIE }}" placeholder="" id="edit-libelserie" class="form-control" required>
                         </div>
                       </div>
                       <div class="col-sm-4">
                           <label><strong>Préciser le Cycle</strong></label>
-                          <select name="CYCLE" class="js-example-basic-multiple w-100">
+                          <select name="CYCLE" class="js-example-basic-multiple w-100" required>
                             <option value="1" {{ $serie->CYCLE == 1 ? 'selected' : '' }}>1er Cycle</option>
                             <option value="2" {{ $serie->CYCLE == 2 ? 'selected' : '' }}>2eme Cycle</option>
                             <option value="3" {{ $serie->CYCLE == 3 ? 'selected' : '' }}>3eme Cycle</option>
@@ -175,18 +175,18 @@
                     <div class="col-sm-4">
                       <div>
                           <label><strong>Série</strong> (Donner un code pour la série à créer [2 caractères]. Ex: C)</label>
-                          <input type="text" name="SERIE" placeholder="" class="form-control">
+                          <input type="text" name="SERIE" placeholder="" class="form-control" required minlength="2" maxlength="3" pattern="^[A-Z][A-Z0-9]{1,2}$" title="La série doit commencer par une lettre majuscule et comporter entre 2 et 3 caractères, uniquement des lettres majuscules ou des chiffres.">
                       </div>
                     </div>
                     <div class="col-sm-4">
                       <div>
                           <label><strong>Libellé série</strong> (Donner le libellé de la série à créer. Ex: Série C)</label>
-                          <input type="text" name="LIBELSERIE" placeholder="" class="form-control">
+                          <input type="text" name="LIBELSERIE" placeholder="" class="form-control" required>
                       </div>
                     </div>
                     <div class="col-sm-4">
                         <label><strong>Préciser le Cycle</strong></label>
-                        <select name="CYCLE" class="js-example-basic-multiple w-100">
+                        <select name="CYCLE" class="js-example-basic-multiple w-100" required>
                           <option value="1">1er Cycle</option>
                           <option value="2">2eme Cycle</option>
                           <option value="3">3eme Cycle</option>
