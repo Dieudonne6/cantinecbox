@@ -87,7 +87,7 @@
                   }
                   th, td {
                     /* border: 1px solid #aaa1a1; */
-                    /* padding: 4px; */
+                    padding: 4px;
                     text-align: center;
                   }
                   th {
@@ -112,9 +112,9 @@
             <table id="myTable" class="table table-striped" style="min-width: 600px; font-size: 10px;">
               <thead>
                 <tr>
-                  <th >Code type</th>
-                  <th style="text-align: center; !impoortant">Libellé</th>
-                  <th style="text-align: center; !impoortant">Action</th>
+                  <th class="text-center">Code type</th>
+                  <th class="text-center">Libellé</th>
+                  <th class="text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -237,11 +237,11 @@
               myModal.show();
           @endif
   
-          Réinitialiser les champs du formulaire à la fermeture du modal
-          document.getElementById('exampleModal').addEventListener('hidden.bs.modal', function () {
-              document.getElementById('myformclas').reset();
-              document.querySelectorAll('#myformclas .form-control').forEach(input => input.value = '');
-          });
+          // Réinitialiser les champs du formulaire à la fermeture du modal
+          // document.getElementById('exampleModal').addEventListener('hidden.bs.modal', function () {
+          //     document.getElementById('myformclas').reset();
+          //     document.querySelectorAll('#myformclas .form-control').forEach(input => input.value = '');
+          // });
       });
     </script>
   
