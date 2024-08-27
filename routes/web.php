@@ -187,6 +187,7 @@ Route::delete('/suppgroupe/{id}', [GestionclasseController::class, 'suppGroupe']
 Route::get('/promotions', [GestionclasseController::class, 'index'])->name('promotions.index');
 Route::post('/promotions', [GestionclasseController::class, 'store'])->name('promotions.store');
 Route::put('/promotions/{codePromo}', [GestionclasseController::class, 'update'])->name('promotions.update');
+
 Route::delete('/promotions/{codePromo}', [GestionclasseController::class, 'destroy'])->name('promotions.destroy');
 
 //Acceuil

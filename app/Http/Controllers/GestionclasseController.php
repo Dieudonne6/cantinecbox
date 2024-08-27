@@ -18,6 +18,8 @@ use App\Models\Typeenseigne;
 use App\Models\Eleveplus;
 use App\Http\Requests\inscriptionEleveRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Database\QueryException;
+
 
 
 use App\Models\Promo;
@@ -347,75 +349,67 @@ public function index()
     return view('pages.inscriptions.promotions', compact('promotions')); // Utilise le bon nom de la vue
 }
 
- // Méthode store
- public function store(Request $request)
- {
-     $request->validate([
-         'codePromotion' => [
-             'required',
-             'max:4',
-             'regex:/^[A-Z]{1,3}[A-Z0-9]$/',
-             Rule::unique('promo', 'CODEPROMO')
-         ],
-         'libellePromotion' => [
-             'required',
-             'max:15',
-             'regex:/^[A-Z][a-zA-Z\s]*$/', // La première lettre en majuscule, le reste peut contenir des lettres et des espaces
-         ],
-         'Niveau' => 'required|integer|min:1|max:7',
-         'enseignement' => 'required|integer'
-     ]);
- 
-     Promo::create([
-         'CODEPROMO' => $request->codePromotion,
-         'LIBELPROMO' => $request->libellePromotion,
-         'Niveau' => $request->Niveau,
-         'TYPEENSEIG' => $request->enseignement
-     ]);
- 
-     return redirect()->route('promotions.index')->with('success', 'Promotion créée avec succès !');
- }
- 
- 
+// Méthode store
+public function store(inscriptionEleveRequest $request)
+{
+        Promo::create([
+            'CODEPROMO' => $request->codePromotion,
+            'LIBELPROMO' => $request->libellePromotion,
+            'Niveau' => $request->Niveau,
+            'TYPEENSEIG' => $request->enseignement
+        ]);
+        return redirect()->route('promotions.index')->with('error', 'Erreur lors de la création de la promotion.');
+    
+}
+
 // Méthode update
 public function update(Request $request, $codePromo)
 {
-    $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
+    try {
+        $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
 
-    $request->validate([
-        'codePromotion' => [
-            'required',
-            'max:4',
-            'regex:/^[A-Z]{1,3}[A-Z0-9]$/',
-            Rule::unique('promo', 'CODEPROMO')->ignore($promotion->CODEPROMO, 'CODEPROMO')
-        ],
-        'libellePromotion' => [
-            'required',
-            'max:15',
-            'regex:/^[A-Z][a-zA-Z\s]*$/', // La première lettre en majuscule, le reste peut contenir des lettres et des espaces
-        ],
-        'Niveau' => 'required|integer|min:1|max:7',
-        'enseignement' => 'required|integer'
-    ]);
+        $request->validate([
+            'codePromotion' => [
+                'required',
+                'max:4',
+                'regex:/^[A-Z0-9]{1,4}$/',
+                Rule::unique('promo', 'CODEPROMO')->ignore($promotion->CODEPROMO, 'CODEPROMO')
+            ],
+            'libellePromotion' => [
+                'required',
+                'max:15',
+                'regex:/^[A-Z][a-zA-Z0-9\s]*$/',
+            ],
+            'Niveau' => 'required|integer|min:1|max:7',
+            'enseignement' => 'required|integer'
+        ]);
 
-    $promotion->update([
-        'CODEPROMO' => $request->codePromotion,
-        'LIBELPROMO' => $request->libellePromotion,
-        'Niveau' => $request->Niveau,
-        'TYPEENSEIG' => $request->enseignement
-    ]);
+        $promotion->update([
+            'CODEPROMO' => $request->codePromotion,
+            'LIBELPROMO' => $request->libellePromotion,
+            'Niveau' => $request->Niveau,
+            'TYPEENSEIG' => $request->enseignement
+        ]);
 
-    return redirect()->route('promotions.index')->with('success', 'Promotion mise à jour avec succès !');
+        return redirect()->route('promotions.index')->with('success', 'Promotion mise à jour avec succès !');
+    } catch (QueryException $e) {
+        return redirect()->route('promotions.index')->with('error', 'Erreur lors de la mise à jour de la promotion.');
+    }
 }
 
-
+// Méthode destroy
 public function destroy($codePromo)
 {
-    $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
-    $promotion->delete();
+    try {
+        $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
+        $promotion->delete();
 
-    return redirect()->route('promotions.index')->with('success', 'Promotion supprimée avec succès !');
+        return redirect()->route('promotions.index')->with('success', 'Promotion supprimée avec succès !');
+    } catch (QueryException $e) {
+        return redirect()->route('promotions.index')->with('error', 'Erreur lors de la suppression de la promotion.');
+    }
 }
+
 
   public function indexEleves()
 {

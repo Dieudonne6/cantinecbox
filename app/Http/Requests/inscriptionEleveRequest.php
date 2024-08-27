@@ -36,6 +36,14 @@ class inscriptionEleveRequest extends FormRequest
             ];
         }
 
+        if($this->routeIs('promotions.store')){
+            $rules = [
+                'codePromotion' =>'required',
+                'libellePromotion' =>'required',
+                'Niveau' =>'required',
+            ];
+        } 
+
         if ($this->routeIs('enregistrerclasse')) {
             $rules = [
             'nomclasse' =>'required',
@@ -90,6 +98,9 @@ class inscriptionEleveRequest extends FormRequest
             'typecours' =>'Cours Jour/Soir est obligatoire',
             'SERIE' => 'Serie est obligatoire',
             'LIBELSERIE' =>'Libelle serie est obligatoire',
+            'codePromotion.required' => 'Code Promotion est obligatoire',
+            'libellePromotion.required' => 'Libelle Promotion est obligatoire',
+            'Niveau.required' => 'Niveau hierachie est obligatoire',
         ];
     }
 }
