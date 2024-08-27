@@ -281,9 +281,9 @@
                                     </div>
                                     <!-- Date d'inscription, Apte et Statut Redoublant -->
                                     <div class="form-group row mt-2">
-                                        <label for="dateIn{{ $eleve->MATRICULE }}" class="col-sm-4 col-form-label">Date
+                                        <label for="dateIn{{ $eleve->MATRICULE }}" class="col-sm-2 col-form-label">Date
                                             d'inscription</label>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-4">
                                             <input type="date" class="form-control"
                                                 id="dateIn{{ $eleve->MATRICULE }}" name="dateIn"
                                                 value="{{ $eleve->DATEINS }}" readonly>
@@ -295,12 +295,12 @@
                                                 name="sexe"
                                                 value="{{ $eleve->APTE == 0 ? 'Non' : ($eleve->APTE == 1 ? 'Oui' : '') }}" readonly>
                                         </div>
-                                        <div class="col-sm-2 form-check">
+                                        <div class="col-sm-2 form-check" style="margin-left: 4rem">
                                             <input type="checkbox" class="form-check-input"
                                                 id="statutRedoublant{{ $eleve->MATRICULE }}" 
                                                 name="statutRedoublant"
                                                 {{ $eleve->STATUT == 1 ? 'checked' : '' }} readonly>
-                                            <label class="form-check-label" for="statutRedoublant{{ $eleve->MATRICULE }}">Statut Redoublant</label>        
+                                            <label class="form-check-label mt-1" for="statutRedoublant{{ $eleve->MATRICULE }}">Statut Redoublant</label>        
                                         </div>
                                     </div>
                                 </form>

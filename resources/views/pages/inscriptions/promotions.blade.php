@@ -15,9 +15,9 @@
                         <div class="card-body">
                             <h4 class="card-title">Gestion des promotions</h4>
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#addPromotionModal">
-                            Nouveau
-                        </button>
+                                data-bs-target="#addPromotionModal">
+                                Nouveau
+                            </button>
                             <div class="row gy-3">
                                 <div class="col text-end">
                                     <!-- Add Promotion Modal -->
@@ -36,24 +36,25 @@
                                                         @csrf
                                                         <div class="form-group row">
                                                             <div class="col-sm-6 mb-1">
-                                                                <label for="codePromotion"><strong>Code promotion
-                                                                    </strong></label>
+                                                                <label for="codePromotion"><strong>Code
+                                                                        promotion</strong></label>
                                                                 <p>(Ex: TLE4)</p>
                                                                 <input type="text" id="codePromotion"
                                                                     name="codePromotion" class="form-control"
-                                                                    pattern="[A-Z0-9]{4}" maxlength="4" required>
+                                                                    pattern="[A-Z]*[0-9][A-Z]*" maxlength="4" required
+                                                                    title="Le code promotion doit contenir uniquement des lettres majuscules avec un seul chiffre, jusqu'à 4 caractères">
+
                                                                 @error('codePromotion')
                                                                     <div class="alert alert-danger">{{ $message }}</div>
                                                                 @enderror
                                                             </div>
-
                                                             <div class="col-sm-6 mb-1">
                                                                 <label for="libellePromotion"><strong>Libellé
                                                                         promotion</strong></label>
                                                                 <p>(Ex: Terminale)</p>
                                                                 <input type="text" id="libellePromotion"
                                                                     name="libellePromotion" class="form-control"
-                                                                    pattern="[A-Za-z]" maxlength="14" required>
+                                                                    pattern="[A-Za-z ]{1,14}" maxlength="14" required>
                                                                 @error('libellePromotion')
                                                                     <div class="alert alert-danger">{{ $message }}</div>
                                                                 @enderror
@@ -61,12 +62,12 @@
                                                         </div>
                                                         <div class="form-group row">
                                                             <div class="col-sm-6 mb-1">
-                                                                <label for="Niveau"><strong>Niveau dans la hiérarchie
-                                                                    </strong></label>
+                                                                <label for="Niveau"><strong>Niveau dans la
+                                                                        hiérarchie</strong></label>
                                                                 <p>(Ex: 1 pour 6eme, 7 pour Tle)</p>
                                                                 <input type="number" id="Niveau" name="Niveau"
-                                                                    class="form-control" max="1" required
-                                                                    min="1" max="7">
+                                                                    class="form-control" min="1" max="7"
+                                                                    required>
                                                                 @error('Niveau')
                                                                     <div class="alert alert-danger">{{ $message }}</div>
                                                                 @enderror
@@ -96,6 +97,7 @@
                                                                 data-bs-dismiss="modal">Annuler</button>
                                                         </div>
                                                     </form>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -174,7 +176,8 @@
                                                                                 <input type="text"
                                                                                     id="editCodePromotion{{ $promotion->CODEPROMO }}"
                                                                                     name="codePromotion"
-                                                                                    class="form-control" pattern="[A-Z0-9]{4}" maxlength="4"
+                                                                                    class="form-control"
+                                                                                    pattern="[A-Z0-9]{4}" maxlength="4"
                                                                                     value="{{ $promotion->CODEPROMO }}"
                                                                                     required>
                                                                                 @error('codePromotion')
@@ -190,7 +193,9 @@
                                                                                 <input type="text"
                                                                                     id="editLibellePromotion{{ $promotion->CODEPROMO }}"
                                                                                     name="libellePromotion"
-                                                                                    class="form-control" pattern="[A-Za-z]" maxlength="14"
+                                                                                    class="form-control"
+                                                                                    pattern="[A-Za-z ]{1,14}"
+                                                                                    maxlength="14"
                                                                                     value="{{ $promotion->LIBELPROMO }}"
                                                                                     required>
                                                                                 @error('libellePromotion')
@@ -257,6 +262,7 @@
                                                                                 data-bs-dismiss="modal">Annuler</button>
                                                                         </div>
                                                                     </form>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -311,5 +317,7 @@
                 </div>
             </div>
         </div>
+        <br>
+        <br>
     </div>
 @endsection

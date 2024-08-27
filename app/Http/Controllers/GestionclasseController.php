@@ -17,6 +17,7 @@ use App\Models\Typeclasse;
 use App\Models\Typeenseigne;
 use App\Models\Eleveplus;
 use App\Http\Requests\inscriptionEleveRequest;
+use Illuminate\Validation\Rule;
 
 
 use App\Models\Promo;
@@ -331,32 +332,53 @@ public function index()
     return view('pages.inscriptions.promotions', compact('promotions')); // Utilise le bon nom de la vue
 }
 
-public function store(Request $request)
-{
-    $request->validate([
-        'codePromotion' => 'required|max:4|unique:promo,CODEPROMO',
-        'libellePromotion' => 'required',
-        'Niveau' => 'required|integer|min:1|max:7',
-        'enseignement' => 'required|integer'
-    ]);
-
-    Promo::create([
-        'CODEPROMO' => $request->codePromotion,
-        'LIBELPROMO' => $request->libellePromotion,
-        'Niveau' => $request->Niveau,
-        'TYPEENSEIG' => $request->enseignement
-    ]);
-
-    return redirect()->route('promotions.index')->with('success', 'Promotion créée avec succès !');
-}
-
+ // Méthode store
+ public function store(Request $request)
+ {
+     $request->validate([
+         'codePromotion' => [
+             'required',
+             'max:4',
+             'regex:/^[A-Z]{1,3}[A-Z0-9]$/',
+             Rule::unique('promo', 'CODEPROMO')
+         ],
+         'libellePromotion' => [
+             'required',
+             'max:15',
+             'regex:/^[A-Z][a-zA-Z\s]*$/', // La première lettre en majuscule, le reste peut contenir des lettres et des espaces
+         ],
+         'Niveau' => 'required|integer|min:1|max:7',
+         'enseignement' => 'required|integer'
+     ]);
+ 
+     Promo::create([
+         'CODEPROMO' => $request->codePromotion,
+         'LIBELPROMO' => $request->libellePromotion,
+         'Niveau' => $request->Niveau,
+         'TYPEENSEIG' => $request->enseignement
+     ]);
+ 
+     return redirect()->route('promotions.index')->with('success', 'Promotion créée avec succès !');
+ }
+ 
+ 
+// Méthode update
 public function update(Request $request, $codePromo)
 {
     $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
 
     $request->validate([
-        'codePromotion' => 'required|max:4',
-        'libellePromotion' => 'required',
+        'codePromotion' => [
+            'required',
+            'max:4',
+            'regex:/^[A-Z]{1,3}[A-Z0-9]$/',
+            Rule::unique('promo', 'CODEPROMO')->ignore($promotion->CODEPROMO, 'CODEPROMO')
+        ],
+        'libellePromotion' => [
+            'required',
+            'max:15',
+            'regex:/^[A-Z][a-zA-Z\s]*$/', // La première lettre en majuscule, le reste peut contenir des lettres et des espaces
+        ],
         'Niveau' => 'required|integer|min:1|max:7',
         'enseignement' => 'required|integer'
     ]);
@@ -371,6 +393,7 @@ public function update(Request $request, $codePromo)
     return redirect()->route('promotions.index')->with('success', 'Promotion mise à jour avec succès !');
 }
 
+
 public function destroy($codePromo)
 {
     $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
@@ -378,7 +401,6 @@ public function destroy($codePromo)
 
     return redirect()->route('promotions.index')->with('success', 'Promotion supprimée avec succès !');
 }
-
 
   public function indexEleves()
 {
@@ -536,4 +558,3 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
   }
 
 }
-
