@@ -33,6 +33,8 @@
                     }
                     th {
                       /* background-color: #f2f2f2; */
+                      /* align-items: center;
+                      text-align: center; */
                     }
                     td.bouton {
                       /* background-color: #ffcccb; */
@@ -53,10 +55,10 @@
               <table class="table table-striped" style="min-width: 600px; font-size: 10px;" id="myTable">
                 <thead>
                   <tr>
-                    <th class="">Série</th>
-                    <th>Libellé série</th>
-                    <th>Cycle</th>
-                    <th>Action</th>
+                    <th style="text-align: center; !impoortant">Série</th>
+                    <th style="text-align: center; !impoortant">Libellé série</th>
+                    <th >Cycle</th>
+                    <th style="text-align: center; !impoortant">Action</th>
                   </tr>
                 </thead>
                 <tbody>
