@@ -21,15 +21,38 @@ class inscriptionEleveRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-         'classe' => 'required',
-         'classeEntre' => 'required',
-         'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-         'reduction' => 'required',
-         'nom' => 'required',
-         'prenom' => 'required',
-         'aptituteSport' => 'nullable',
-        ];
+        $rules = [];
+        if ($this->routeIs('savetypeclasse')) {
+            $rules = [
+            'LibelleType' =>'required',
+            'TYPECLASSE' =>'required',
+            ];
+        }
+        if ($this->routeIs('enregistrerclasse')) {
+            $rules = [
+            'nomclasse' =>'required',
+            'libclasse' =>'required',
+            'typclasse' =>'required',
+            'typeensei' =>'required',
+            'typepromo' =>'required',
+            'numero' =>'required',
+            'cycle' =>'required',
+            'typeserie' =>'required',
+            'typecours' =>'required',
+            ];
+        }
+        if ($this->routeIs('nouveaueleve')) {
+            $rules = [
+            'classe' => 'required',
+            'classeEntre' => 'required',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'reduction' => 'required',
+            'nom' => 'required',
+            'prenom' => 'required',
+            'aptituteSport' => 'nullable',
+            ];
+        }
+        return $rules;
     }
 
     public function messages() {
@@ -46,6 +69,17 @@ class inscriptionEleveRequest extends FormRequest
             'prenom.required' => 'Le prenom de l\'eleve est obligatoire.',
             'prenom.required' => 'Le prenom de l\'eleve est obligatoire.',
             'prenom.required' => 'Le prenom de l\'eleve est obligatoire.',
+            'LibelleType.required' => 'Libellé groupe est obligatoire',
+            'TYPECLASSE' => 'Code groupe est obligatoire',
+            'nomclasse' =>'Nom classe est obligatoire',
+            'libclasse' =>'Libelle est obligatoire',
+            'typclasse' =>'Type Classe est obligatoire',
+            'typeensei' =>'Enseignement est obligatoire',
+            'typepromo' =>'Promotion est obligatoire',
+            'numero' =>'No d\'ordre est obligatoire',
+            'cycle' =>'Cycle est obligatoire',
+            'typeserie' =>'Serie est obligatoire',
+            'typecours' =>'Cours Jour/Soir est obligatoire',
         ];
     }
 }

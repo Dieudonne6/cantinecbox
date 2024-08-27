@@ -8,6 +8,7 @@
       {{ Session::get('status')}}
     </div>
     @endif
+ 
     <div class="row">          
       <div class="col-12">
         <div class="card mb-6">
@@ -23,6 +24,8 @@
                 
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                     {{-- erreur concernant l'inscription d'un eleve --}}
+  
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -30,7 +33,16 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        <form action="{{url('/savetypeclasse')}}" method="POST">
+                        @if($errors->any())
+                  <div id="statusAlert" class="alert alert-danger">
+                      <ul>
+                          @foreach($errors->all() as $error)
+                              <li>{{ $error }}</li>
+                          @endforeach
+                      </ul>
+                  </div>
+                  @endif
+                        <form id="myformclas" action="{{url('/savetypeclasse')}}" method="POST">
                           @csrf
                           <div class="form-group">
                             <div class="form-group">
@@ -89,7 +101,7 @@
       <div class="col">
         <div class="card">
           <div class="table-responsive" style="overflow: auto;">
-            <table class="table table-striped" style="min-width: 600px; font-size: 10px;">
+            <table id="myTable" class="table table-striped" style="min-width: 600px; font-size: 10px;">
               <thead>
                 <tr>
                   <th class="">Code type</th>
@@ -207,3 +219,21 @@
   </div>
 </div>
 @endsection
+<script>
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+          var myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+  
+          @if ($errors->any())
+              myModal.show();
+          @endif
+  
+          // Réinitialiser les champs du formulaire à la fermeture du modal
+          document.getElementById('exampleModal').addEventListener('hidden.bs.modal', function () {
+              document.getElementById('myformclas').reset();
+              document.querySelectorAll('#myformclas .form-control').forEach(input => input.value = '');
+          });
+      });
+    </script>
+  
