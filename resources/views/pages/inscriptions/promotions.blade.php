@@ -2,6 +2,11 @@
 @section('content')
     <div class="main-panel-10">
         <div class="content-wrapper">
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
 
             @if (session('success'))
                 <div class="alert alert-success">
@@ -32,7 +37,16 @@
                                                         aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form method="POST" action="{{ route('promotions.store') }}">
+                                                    @if($errors->any())
+                                                    <div id="statusAlert" class="alert alert-danger">
+                                                        <ul>
+                                                            @foreach($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                    @endif
+                                                    <form id="myformclas" method="POST" action="{{ route('promotions.store') }}">
                                                         @csrf
                                                         <div class="form-group row">
                                                             <div class="col-sm-6 mb-1">
@@ -40,24 +54,16 @@
                                                                         promotion</strong></label>
                                                                 <p>(Ex: TLE4)</p>
                                                                 <input type="text" id="codePromotion"
-                                                                    name="codePromotion" class="form-control"
-                                                                    pattern="[A-Z]*[0-9][A-Z]*" maxlength="4" required
-                                                                    title="Le code promotion doit contenir uniquement des lettres majuscules avec un seul chiffre, jusqu'à 4 caractères">
+                                                                    name="codePromotion" class="form-control" required minlength="2" maxlength="4" pattern="^[A-Z0-9]{1,4}$" title="La série doit commencer par une lettre majuscule ou un chifrre et comporter entre 2 et 4 caractères, uniquement des lettres majuscules ou des lettres majuscules et des chiffres .">
 
-                                                                @error('codePromotion')
-                                                                    <div class="alert alert-danger">{{ $message }}</div>
-                                                                @enderror
-                                                            </div>
+                                                           </div>
                                                             <div class="col-sm-6 mb-1">
                                                                 <label for="libellePromotion"><strong>Libellé
                                                                         promotion</strong></label>
                                                                 <p>(Ex: Terminale)</p>
                                                                 <input type="text" id="libellePromotion"
-                                                                    name="libellePromotion" class="form-control"
-                                                                    pattern="[A-Za-z ]{1,14}" maxlength="14" required>
-                                                                @error('libellePromotion')
-                                                                    <div class="alert alert-danger">{{ $message }}</div>
-                                                                @enderror
+                                                                    name="libellePromotion" class="form-control" required>
+
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
@@ -68,9 +74,7 @@
                                                                 <input type="number" id="Niveau" name="Niveau"
                                                                     class="form-control" min="1" max="7"
                                                                     required>
-                                                                @error('Niveau')
-                                                                    <div class="alert alert-danger">{{ $message }}</div>
-                                                                @enderror
+
                                                             </div>
                                                             <div class="col-sm-6 mb-1">
                                                                 <label for="enseignement"><strong>Pour quel
@@ -85,9 +89,7 @@
                                                                     <option value="4">Professionnel</option>
                                                                     <option value="5">Supérieur</option>
                                                                 </select>
-                                                                @error('enseignement')
-                                                                    <div class="alert alert-danger">{{ $message }}</div>
-                                                                @enderror
+
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -180,10 +182,7 @@
                                                                                     pattern="[A-Z0-9]{4}" maxlength="4"
                                                                                     value="{{ $promotion->CODEPROMO }}"
                                                                                     required>
-                                                                                @error('codePromotion')
-                                                                                    <div class="alert alert-danger">
-                                                                                        {{ $message }}</div>
-                                                                                @enderror
+
                                                                             </div>
                                                                             <div class="col-sm-6">
                                                                                 <label
@@ -194,119 +193,79 @@
                                                                                     id="editLibellePromotion{{ $promotion->CODEPROMO }}"
                                                                                     name="libellePromotion"
                                                                                     class="form-control"
-                                                                                    pattern="[A-Za-z ]{1,14}"
-                                                                                    maxlength="14"
                                                                                     value="{{ $promotion->LIBELPROMO }}"
                                                                                     required>
-                                                                                @error('libellePromotion')
-                                                                                    <div class="alert alert-danger">
-                                                                                        {{ $message }}</div>
-                                                                                @enderror
+
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row">
                                                                             <div class="col-sm-6">
                                                                                 <label
-                                                                                    for="editNiveauHierarchie{{ $promotion->CODEPROMO }}"><strong>Niveau
+                                                                                    for="editNiveau{{ $promotion->CODEPROMO }}"><strong>Niveau
                                                                                         dans la hiérarchie</strong></label>
-                                                                                <p>(Ex: 1 pour 6eme, 7 pour Tle)</p>
                                                                                 <input type="number"
-                                                                                    id="editNiveauHierarchie{{ $promotion->CODEPROMO }}"
+                                                                                    id="editNiveau{{ $promotion->CODEPROMO }}"
                                                                                     name="Niveau" class="form-control"
+                                                                                    min="1" max="7"
                                                                                     value="{{ $promotion->Niveau }}"
-                                                                                    required min="1"
-                                                                                    max="7">
-                                                                                @error('Niveau')
-                                                                                    <div class="alert alert-danger">
-                                                                                        {{ $message }}</div>
-                                                                                @enderror
+                                                                                    required>
+
                                                                             </div>
                                                                             <div class="col-sm-6">
                                                                                 <label
                                                                                     for="editEnseignement{{ $promotion->CODEPROMO }}"><strong>Pour
-                                                                                        quel Enseignement</strong></label>
-                                                                                <p>(Choisir type d'enseignement)</p>
+                                                                                        quel enseignement</strong></label>
                                                                                 <select
                                                                                     id="editEnseignement{{ $promotion->CODEPROMO }}"
                                                                                     name="enseignement"
                                                                                     class="form-control" required>
                                                                                     <option value="0"
-                                                                                        {{ $promotion->TYPEENSEIG == 0 ? 'selected' : '' }}>
+                                                                                        {{ $promotion->enseignement == 0 ? 'selected' : '' }}>
                                                                                         Préscolaire</option>
                                                                                     <option value="1"
-                                                                                        {{ $promotion->TYPEENSEIG == 1 ? 'selected' : '' }}>
+                                                                                        {{ $promotion->enseignement == 1 ? 'selected' : '' }}>
                                                                                         Primaire</option>
                                                                                     <option value="2"
-                                                                                        {{ $promotion->TYPEENSEIG == 2 ? 'selected' : '' }}>
+                                                                                        {{ $promotion->enseignement == 2 ? 'selected' : '' }}>
                                                                                         Général</option>
                                                                                     <option value="3"
-                                                                                        {{ $promotion->TYPEENSEIG == 3 ? 'selected' : '' }}>
+                                                                                        {{ $promotion->enseignement == 3 ? 'selected' : '' }}>
                                                                                         Technique</option>
                                                                                     <option value="4"
-                                                                                        {{ $promotion->TYPEENSEIG == 4 ? 'selected' : '' }}>
+                                                                                        {{ $promotion->enseignement == 4 ? 'selected' : '' }}>
                                                                                         Professionnel</option>
                                                                                     <option value="5"
-                                                                                        {{ $promotion->TYPEENSEIG == 5 ? 'selected' : '' }}>
+                                                                                        {{ $promotion->enseignement == 5 ? 'selected' : '' }}>
                                                                                         Supérieur</option>
                                                                                 </select>
-                                                                                @error('enseignement')
-                                                                                    <div class="alert alert-danger">
-                                                                                        {{ $message }}</div>
-                                                                                @enderror
+
                                                                             </div>
                                                                         </div>
                                                                         <div class="modal-footer">
                                                                             <button type="submit"
                                                                                 class="btn btn-primary">Enregistrer</button>
-                                                                            <button type="button" class="btn btn-danger"
+                                                                            <button type="button"
+                                                                                class="btn btn-secondary"
                                                                                 data-bs-dismiss="modal">Annuler</button>
                                                                         </div>
                                                                     </form>
-
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
 
-
-                                                <button type="button" class="btn btn-danger p-2 btn-sm"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#deletePromotionModal{{ $promotion->CODEPROMO }}">
-                                                    Supprimer
-                                                </button>
-
-                                                <!-- Delete Promotion Modal -->
-                                                <div class="modal fade"
-                                                    id="deletePromotionModal{{ $promotion->CODEPROMO }}" tabindex="-1"
-                                                    aria-labelledby="deletePromotionModalLabel{{ $promotion->CODEPROMO }}"
-                                                    aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title"
-                                                                    id="deletePromotionModalLabel{{ $promotion->CODEPROMO }}">
-                                                                    Supprimer la promotion</h5>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                Voulez-vous vraiment supprimer cette promotion?
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <form method="POST"
-                                                                    action="{{ route('promotions.destroy', $promotion->CODEPROMO) }}">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit"
-                                                                        class="btn btn-danger">Supprimer</button>
-                                                                </form>
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Annuler</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <!-- Delete Button -->
+                                                <form method="POST"
+                                                    action="{{ route('promotions.destroy', $promotion->CODEPROMO) }}"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette promotion ?');">
+                                                        Supprimer
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -316,8 +275,26 @@
                     </div>
                 </div>
             </div>
+
         </div>
-        <br>
-        <br>
     </div>
 @endsection
+
+<script>
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+            var myModal = new bootstrap.Modal(document.getElementById('addPromotionModal'));
+    
+            @if ($errors->any())
+                myModal.show();
+            @endif
+    
+            // Réinitialiser les champs du formulaire à la fermeture du modal
+            document.getElementById('addPromotionModal').addEventListener('hidden.bs.modal', function () {
+                document.getElementById('myformclas').reset();
+                document.querySelectorAll('#myformclas .form-control').forEach(input => input.value = '');
+            });
+        });
+      </script>
+    
