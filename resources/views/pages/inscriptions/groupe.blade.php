@@ -23,7 +23,7 @@
                             {{-- <p>Ajout d'un nouveau groupe</p> --}}
                             <label for="exampleInputUsername2" class="col-sm-2 col-form-label">Nouveau groupe</label>
                             <div class="col-sm-3">
-                                <input type="text" class="form-control" id="nomgroupe" name="nomgroupe" placeholder="Nom groupe">
+                                <input type="text" class="form-control" id="nomgroupe" name="nomgroupe" placeholder="Nom groupe" required>
                             </div>
                             <div class="col-sm-3">
                                 {{-- <input type="text" class="form-control" id="exampleInputUsername2" placeholder="Libelle"> --}}
@@ -55,7 +55,8 @@
                                                 <form action="/suppgroupe/{{ $allgroupe->id }}" method="POST"  onsubmit="return confirmDelete()" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal1" onclick="setDeleteFormAction('{{ $allgroupe->id }}')">Supprimer</button>
+                                                    {{-- <button type="submit" class="btn btn-danger btn-sm">Supprimer</button> --}}
                                                 </form>
                                             </td>
                                         </tr>
@@ -74,8 +75,38 @@
             </div>
         </div>
     </div>
+
+    
+<!-- Modal de confirmation de suppression de groupe -->
+<div class="modal fade" id="confirmDeleteModal1" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmDeleteLabel">Confirmer la suppression</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Êtes-vous sûr de vouloir supprimer ce groupe ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Supprimer</button>
+        </div>
+      </div>
+    </div>
+</div>
     
     <script>
+
+    function setDeleteFormAction(groupeId) {
+        var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        confirmDeleteBtn.onclick = function() {
+            var form = document.querySelector('form[action="/suppgroupe/' + groupeId + '"]');
+            if (form) {
+                form.submit();
+            }
+        };
+    }
         function confirmDelete()
          {
             return confirm('Êtes-vous sûr de vouloir supprimer ce groupe?');
