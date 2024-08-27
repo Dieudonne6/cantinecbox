@@ -20,8 +20,8 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div class="card">
-                <div class="card-body">
+            {{-- <div class="card"> --}}
+                {{-- <div class="card-body"> --}}
                   <div class="table-responsive">
                     <table id="myTable" class="table table-hover">
                       <thead>
@@ -48,8 +48,8 @@
                       </tbody>
                     </table>
                   </div>
-                </div>
-              </div>
+                {{-- </div> --}}
+              {{-- </div> --}}
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
 
