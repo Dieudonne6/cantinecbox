@@ -187,8 +187,15 @@ public function supprimerGroupe($id)
         $series->LIBELSERIE = $request->input('LIBELSERIE');
         $series->CYCLE = $request->input('CYCLE');
 
+
+                // Vérifier si la SERIE existe déjà
         if (Serie::where('SERIE', $series->SERIE)->exists()) {
             return back()->with('error', 'Cette série existe déjà.')->withInput();
+        }
+
+            // Vérifier si le LIBELSERIE existe déjà
+        if (Serie::where('LIBELSERIE', $series->LIBELSERIE)->exists()) {
+        return back()->with('error', 'Ce libellé de série existe déjà.')->withInput();
         }
 
         $series->save();
