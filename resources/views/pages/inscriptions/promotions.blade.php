@@ -53,17 +53,18 @@
                                                         @csrf
                                                         <div class="form-group row">
                                                             <div class="col-sm-6 mb-1">
-                                                                <label for="codePromotion"><strong>Code
-                                                                        promotion</strong>
+                                                                <label for="codePromotion"><strong>Code promotion</strong>
                                                                     <p>(Ex: TLE4)</p>
                                                                 </label>
 
                                                                 <input type="text" id="codePromotion"
                                                                     name="codePromotion" class="form-control"
                                                                     value="{{ old('codePromotion') }}" required
-                                                                    minlength="2" maxlength="4" pattern="^[A-Z0-9]{1,4}$"
-                                                                    title="Le code promo doit comporter entre 2 et 4 caractères, uniquement des lettres majuscules ou des chiffres.">
+                                                                    minlength="2" maxlength="4"
+                                                                    pattern="^(?=.*[A-Z])[A-Z0-9]{2,4}$"
+                                                                    title="Le code promo doit comporter entre 2 et 4 caractères, avec au moins une lettre majuscule et des chiffres.">
                                                             </div>
+
 
                                                             <div class="col-sm-6 mb-1">
                                                                 <label for="libellePromotion"><strong>Libellé
@@ -73,8 +74,8 @@
                                                                 <input type="text" id="libellePromotion"
                                                                     name="libellePromotion" class="form-control" required
                                                                     minlength="2" maxlength="14"
-                                                                    pattern="^[A-Za-z0-9éè]{1,14}$"
-                                                                    title="Le libellé doit commencer par une lettre majuscule ou un chifrre et comporter entre 2 et 14 caractères, uniquement des lettres majuscules et minuscules ou des lettres majuscules et des chiffres .">
+                                                                    pattern="^(?=.*[A-Z])[A-Za-z0-9éè]{2,14}$"
+                                                                    title="Le libellé doit comporter entre 2 et 14 caractères, avec au moins une lettre majuscule et peut contenir des lettres, des chiffres et des accents.">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
@@ -202,7 +203,7 @@
                                                                                     name="codePromotion"
                                                                                     class="form-control" required
                                                                                     minlength="2" maxlength="4"
-                                                                                    pattern="^[A-Z0-9]{1,4}$"
+                                                                                    pattern="^(?=.*[A-Z])[A-Z0-9]{2,4}$"
                                                                                     value="{{ $promotion->CODEPROMO }}"
                                                                                     title="Le code promo doit commencer par une lettre majuscule ou un chifrre et comporter entre 2 et 4 caractères, uniquement des lettres majuscules ou des lettres majuscules et des chiffres .">
                                                                             </div>
@@ -217,7 +218,7 @@
                                                                                     name="libellePromotion"
                                                                                     class="form-control" required
                                                                                     minlength="2" maxlength="14"
-                                                                                    pattern="^[A-Za-z0-9éè]{1,14}$"
+                                                                                    pattern="^(?=.*[A-Z])[A-Za-z0-9éè]{2,14}$"
                                                                                     value="{{ $promotion->LIBELPROMO }}"
                                                                                     title="Le libellé doit commencer par une lettre majuscule ou un chifrre et comporter entre 2 et 14 caractères, uniquement des lettres majuscules et minuscules ou des lettres majuscules et des chiffres .">
                                                                             </div>
