@@ -33,19 +33,24 @@
               <select class="form-control js-example-basic-multiple w-100" name="typclasse">
                 <option value="">Sélectionnez une classe</option>
                 @foreach ($typeclah as $typeclat)
-                  <option value="{{$typeclat->TYPECLASSE}}">{{$typeclat->LibelleType}}</option>
+                    <option value="{{ $typeclat->TYPECLASSE }}"
+                        @if ($typecla->TYPECLASSE == $typeclat->TYPECLASSE) selected @endif>
+                        {{ $typeclat->LibelleType }}
+                    </option>
                 @endforeach
-              </select>
+            </select>
             </div>
           </div>
-          
           <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Enseignement</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typeensei">
                 <option value="">Sélectionnez un type d'enseignement</option>
                 @foreach ($typeenseigne as $typeenseig)
-                  <option value="{{$typeenseig->idenseign}}">{{$typeenseig->type}}</option>
+                  <option value="{{$typeenseig->idenseign}}"
+                    @if ($typecla->TYPEENSEIG == $typeenseig->idenseign) selected @endif>
+                    {{$typeenseig->type}}
+                  </option>
                 @endforeach
               </select>
             </div>
@@ -56,9 +61,10 @@
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typepromo">
                 <option value="">Sélectionnez une promotion</option>
-
                 @foreach ($promo as $promo)
-                  <option value="{{$promo->CODEPROMO}}">{{$promo->LIBELPROMO}}</option>
+                  <option value="{{$promo->CODEPROMO}}"
+                    @if ($typecla->CODEPROMO == $promo->CODEPROMO) selected @endif>
+                    {{$promo->LIBELPROMO}}</option>
                 @endforeach
               </select>
             </div>
@@ -74,11 +80,11 @@
           <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Cycle</label>
             <div class="col-sm-9">
-              <select class="form-control js-example-basic-multiple w-100" id="exampleSelectGender" name="cycle">
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+                <select  class="js-example-basic-multiple w-100" id="exampleSelectGender" name="cycle">
+                  <option value="0" {{ $typecla->CYCLE == 0 ? 'selected' : '' }}>Aucun</option>
+                  <option value="1" {{ $typecla->CYCLE == 1 ? 'selected' : '' }}>1er Cycle</option>
+                  <option value="2" {{ $typecla->CYCLE == 2 ? 'selected' : '' }}>2eme Cycle</option>
+                  <option value="3" {{ $typecla->CYCLE == 3 ? 'selected' : '' }}>3eme Cycle</option>
               </select>
             </div> 
           </div>
@@ -89,7 +95,9 @@
               <select class="form-control js-example-basic-multiple w-100" name="typeserie">
                 <option value="">Sélectionnez une série</option>
                 @foreach ($serie as $serie)
-                  <option value="{{$serie->SERIE}}">{{$serie->LIBELSERIE}}</option>
+                  <option value="{{$serie->SERIE}}"
+                    @if ($typecla->SERIE == $serie->SERIE) selected @endif>
+                    {{$serie->LIBELSERIE}}</option>
                 @endforeach
               </select>
             </div>

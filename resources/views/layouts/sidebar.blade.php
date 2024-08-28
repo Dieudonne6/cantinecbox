@@ -210,7 +210,7 @@
               @endphp
               
               <li class="nav-item">
-              <a class="nav-link {{ in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}" href="{{ route('tabledesclasses') }}">Table des classes</a>
+              <a class="nav-link {{ in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}" href="{{ route('tabledesclasses') }}">Gestions des classes</a>
               </li>
               
               <li>

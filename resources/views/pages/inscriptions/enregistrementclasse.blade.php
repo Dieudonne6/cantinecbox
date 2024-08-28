@@ -84,10 +84,10 @@
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Cycle</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100"  id="exampleSelectGender" name="cycle">
-                <option value="0" {{ old('cycle') == '0' ? 'selected' : '' }}>0</option>
-                <option value="1" {{ old('cycle') == '1' ? 'selected' : '' }}>1</option>
-                <option value="2" {{ old('cycle') == '2' ? 'selected' : '' }}>2</option>
-                <option value="3" {{ old('cycle') == '3' ? 'selected' : '' }}>3</option>
+                <option value="0" {{ old('cycle') == '0' ? 'selected' : '' }}>Aucun</option>
+                <option value="1" {{ old('cycle') == '1' ? 'selected' : '' }}>1ere Cycle</option>
+                <option value="2" {{ old('cycle') == '2' ? 'selected' : '' }}>2eme Cycle</option>
+                <option value="3" {{ old('cycle') == '3' ? 'selected' : '' }}>3eme Cycle</option>
               </select>
             </div> 
           </div>         

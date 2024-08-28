@@ -234,10 +234,16 @@ public function supprimerGroupe($id)
   public function savetypeclasse(inscriptionEleveRequest $request){
     $typeclas = $request->input('TYPECLASSE');
     $typeclas = Typeclasse::where('TYPECLASSE', '=', $typeclas)->exists();
+    $typeclaslib = $request->input('LibelleType');
+    $typeclaslib = Typeclasse::where('LibelleType', '=', $typeclaslib)->exists();
 
     if($typeclas) {
-        return back()->with('error', 'Le type de classe existe déja');
-    }  
+        return back()->with('error', 'Le code groupe existe déja')->withInput();
+    } 
+    if($typeclaslib) {
+        return back()->with('error', 'Le libellé groupe existe déja')->withInput();
+    } 
+   
 
     $typeclasse = new Typeclasse();
 
@@ -286,11 +292,16 @@ public function supprimerGroupe($id)
    public function enregistrerclasse(inscriptionEleveRequest $request){
     $enreclas = $request->input('nomclasse');
     $enreclas = Classes::where('CODECLAS', '=', $enreclas)->exists();
+    $enreclaslib = $request->input('libclasse');
+    $enreclaslib = Classes::where('LIBELCLAS', '=', $enreclaslib)->exists();
 
     if($enreclas) {
-        return back()->with('error', 'La classe existe déja');
+        return back()->with('error', 'Le nom de la classe existe déja')->withInput();
+    } 
+    if ($enreclaslib){
+        return back()->with('error', 'Le libellé de la classe existe déja')->withInput();
     }
-
+    
     $enrclasse = new Classes();
     $enrclasse->CODECLAS = $request->input('nomclasse');
     $enrclasse->LIBELCLAS = $request->input('libclasse');
@@ -535,14 +546,13 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
 
   }
   public function modifierclasse($CODECLAS){
-  $promo = Promo::get();
   $typeclah = Typeclasse::get();
   $serie = Serie::get();
   $promo = Promo::get();
   $typeenseigne = Typeenseigne::get();
   $typecla = Classes::where('CODECLAS', $CODECLAS)->first();
     if (!$typecla) {
-      abort(404, 'Classe non trouvée');
+        abort(404, 'Classe non trouvée');
     }
     return view('pages.inscriptions.modifierclasse')->with('typecla', $typecla)->with('serie', $serie)->with('promo', $promo)->with('typeenseigne', $typeenseigne)->with('typeclah', $typeclah);
   }

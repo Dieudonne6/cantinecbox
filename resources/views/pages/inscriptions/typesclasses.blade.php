@@ -13,7 +13,7 @@
       <div class="col-12">
         <div class="card mb-6">
           <div class="card-body">
-            <h4 class="card-title">Table des types de classes</h4>
+            <h4 class="card-title">Gestion des types de classes</h4>
             <div class="row gy-3">
               <div class="demo-inline-spacing">
                 {{-- <a  class="btn btn-primary" href=" {{url('/nouveautypesclasses')}}">Nouveau</a> --}}
@@ -42,7 +42,6 @@
                   </div>
                   @endif
                   <?php $error = Session::get('error');?>
-
                   @if(Session::has('error'))
                   <div id="statusAlert" class="alert alert-danger">
                     {{ Session::get('error')}}
