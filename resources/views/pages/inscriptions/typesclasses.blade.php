@@ -54,13 +54,13 @@
                               <div class="col mb-4">
                                 <div>
                                   <label><strong>Code groupe</strong></label>
-                                  <input type="text" name="TYPECLASSE" placeholder="6" class="form-control">
+                                  <input type="text" name="TYPECLASSE" placeholder="6" value="{{ old('TYPECLASSE') }}" class="form-control">
                                 </div>
                               </div>
                               <div class="col">
                                 <div>
                                   <label><strong>Libellé groupe</strong> (Donner le libellé du groupe à créer. Ex : Examen Blanc)</label>
-                                  <input type="text" name="LibelleType" placeholder="Examen Blanc" class="form-control">
+                                  <input type="text" name="LibelleType" value="{{ old('LibelleType') }}" placeholder="Examen Blanc" class="form-control">
                                 </div>
                               </div>
                             </div>
