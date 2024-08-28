@@ -350,64 +350,60 @@ public function index()
 }
 
 // Méthode store
-public function store(inscriptionEleveRequest $request)
+public function store(Request $request)
 {
-        Promo::create([
-            'CODEPROMO' => $request->codePromotion,
-            'LIBELPROMO' => $request->libellePromotion,
-            'Niveau' => $request->Niveau,
-            'TYPEENSEIG' => $request->enseignement
-        ]);
-        return redirect()->route('promotions.index')->with('error', 'Erreur lors de la création de la promotion.');
+    $request->validate([
+        'codePromotion' => 'required|max:4',
+        'libellePromotion' => 'required|max:15',
+        'Niveau' => 'required|integer|min:1|max:7',
+        'enseignement' => 'required|integer'
+    ]);
+
+    // Vérifier si le code promo existe déjà
+    if (Promo::where('CODEPROMO', $request->codePromotion)->exists()) {
+        return redirect()->back()
+                         ->withErrors(['codePromotion' => 'Le code promo existe déjà. Veuillez en choisir un autre.'])
+                         ->withInput();
+    }
+
+    // Enregistrer la nouvelle promotion
+    Promo::create([
+        'CODEPROMO' => $request->codePromotion,
+        'LIBELPROMO' => $request->libellePromotion,
+        'Niveau' => $request->Niveau,
+        'TYPEENSEIG' => $request->enseignement
+    ]);
     
+    return redirect()->route('promotions.index')->with('success', 'Promotion créée avec succès !');
 }
 
-// Méthode update
 public function update(Request $request, $codePromo)
 {
-    try {
-        $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
+    $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
 
-        $request->validate([
-            'codePromotion' => [
-                'required',
-                'max:4',
-                'regex:/^[A-Z0-9]{1,4}$/',
-                Rule::unique('promo', 'CODEPROMO')->ignore($promotion->CODEPROMO, 'CODEPROMO')
-            ],
-            'libellePromotion' => [
-                'required',
-                'max:15',
-                'regex:/^[A-Z][a-zA-Z0-9\s]*$/',
-            ],
-            'Niveau' => 'required|integer|min:1|max:7',
-            'enseignement' => 'required|integer'
-        ]);
+    $request->validate([
+        'codePromotion' => 'required|max:4',
+        'libellePromotion' => 'required',
+        'Niveau' => 'required|integer|min:1|max:7',
+        'enseignement' => 'required|integer'
+    ]);
 
-        $promotion->update([
-            'CODEPROMO' => $request->codePromotion,
-            'LIBELPROMO' => $request->libellePromotion,
-            'Niveau' => $request->Niveau,
-            'TYPEENSEIG' => $request->enseignement
-        ]);
+    $promotion->update([
+        'CODEPROMO' => $request->codePromotion,
+        'LIBELPROMO' => $request->libellePromotion,
+        'Niveau' => $request->Niveau,
+        'TYPEENSEIG' => $request->enseignement
+    ]);
 
-        return redirect()->route('promotions.index')->with('success', 'Promotion mise à jour avec succès !');
-    } catch (QueryException $e) {
-        return redirect()->route('promotions.index')->with('error', 'Erreur lors de la mise à jour de la promotion.');
-    }
+    return redirect()->route('promotions.index')->with('success', 'Promotion mise à jour avec succès !');
 }
 
-// Méthode destroy
 public function destroy($codePromo)
 {
-    try {
-        $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
-        $promotion->delete();
+    $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
+    $promotion->delete();
 
-        return redirect()->route('promotions.index')->with('success', 'Promotion supprimée avec succès !');
-    } catch (QueryException $e) {
-        return redirect()->route('promotions.index')->with('error', 'Erreur lors de la suppression de la promotion.');
-    }
+    return redirect()->route('promotions.index')->with('success', 'Promotion supprimée avec succès !');
 }
 
 
