@@ -10,9 +10,9 @@
     @if($errors->any())
     <div id="statusAlert" class="alert alert-danger">
         <ul>
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
+          @foreach($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
         </ul>
     </div>
     @endif
@@ -44,11 +44,10 @@
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">Type Classe</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100"  name="typclasse">
-                <option value="">Sélectionnez une classe</option>
+                <option value="">Sélectionnez un type de classe</option>
                 @foreach ($typecla as $typecla)
                   <option value="{{$typecla->TYPECLASSE}}" {{ old('typclasse') == $typecla->TYPECLASSE ? 'selected' : '' }}>{{$typecla->LibelleType}}</option>
                 @endforeach
-                
               </select>
             </div>
           </div>          
