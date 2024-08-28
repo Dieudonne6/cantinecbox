@@ -24,8 +24,6 @@
                 
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                     {{-- erreur concernant l'inscription d'un eleve --}}
-  
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -52,31 +50,27 @@
                   @endif
                         <form id="myformclas" action="{{url('/savetypeclasse')}}" method="POST">
                           @csrf
-                          <div class="form-group">
                             <div class="form-group">
                               <div class="col mb-4">
                                 <div>
                                   <label><strong>Code groupe</strong></label>
-                                  <input type="text" name="TYPECLASSE" placeholder="6" class="form-control">
+                                  <input type="text" name="TYPECLASSE" placeholder="6" value="{{ old('TYPECLASSE') }}" class="form-control">
                                 </div>
                               </div>
                               <div class="col">
                                 <div>
                                   <label><strong>Libellé groupe</strong> (Donner le libellé du groupe à créer. Ex : Examen Blanc)</label>
-                                  <input type="text" name="LibelleType" placeholder="Examen Blanc" class="form-control">
+                                  <input type="text" name="LibelleType" value="{{ old('LibelleType') }}" placeholder="Examen Blanc" class="form-control">
                                 </div>
                               </div>
                             </div>
-                          </div>
                           <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Enregistrer</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                           </div>
                         </form>
                       </div>
-                      
-                    </div>
-                  </div>
+                                        </div>
                 </div>
                 <style>
                   table {
@@ -88,14 +82,9 @@
                   th, td {
                     /* border: 1px solid #aaa1a1; */
                     padding: 4px;
-                    text-align: center;
+                    text-align: center; 
                   }
-                  th {
-                    /* background-color: #f2f2f2; */
-                  }
-                  td.bouton {
-                    /* background-color: #ffcccb; */
-                  }
+                 
                 </style>
               </div>
             </div>
@@ -107,7 +96,7 @@
     {{--  --}}
     <div class="row">
       <div class="col">
-        <div class="card">
+        <div class="card p-3">
           <div class="table-responsive" style="overflow: auto;">
             <table id="myTable" class="table table-striped" style="min-width: 600px; font-size: 10px;">
               <thead>
@@ -128,37 +117,7 @@
                       data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo $allclass->idtype; ?>">
                       Modifier
                     </button>
-                    <div class="modal fade" id="exampleModal<?php echo $allclass->idtype; ?>" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel2">Modifier un type de classe</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <form id="editTypeClasseForm" action="{{ url('/modifiertypesclasses') }}" method="POST">
-                              @csrf
-                              @method('PUT')
-                              <input type="hidden" name="idtype" id="edit-id" value="<?php echo $allclass->idtype; ?>">
-                              <div class="form-group">
-                                <div class="col mb-3">
-                                  <label><strong>Code groupe</strong></label>
-                                  <input type="text" name="TYPECLASSE" value="<?php echo $allclass->TYPECLASSE; ?>" id="edit-typeclasse" class="form-control">
-                                </div>
-                                <div class="col">
-                                  <label><strong>Libellé groupe</strong> (Donner le libellé du groupe à créer. Ex : Examen Blanc)</label>
-                                  <input type="text" name="LibelleType" value="<?php echo $allclass->LibelleType; ?>" id="edit-libelle" class="form-control">
-                                </div>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                   
                     <!-- Modal -->
                     <button type="button" class="btn btn-danger p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModaldelete<?php echo $allclass->idtype; ?>">Supprimer</button> 
                     <div class="modal fade" id="exampleModaldelete<?php echo $allclass->idtype; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -186,7 +145,40 @@
                   </div>
                 </td>
               </tr>
-              <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+              <div class="modal fade" id="exampleModal<?php echo $allclass->idtype; ?>" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel2">Modifier un type de classe</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <div class="modal-body">
+                      
+                      <form id="editTypeClasseForm" action="{{ url('/modifiertypesclasses') }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="idtype" id="edit-id" value="<?php echo $allclass->idtype; ?>">
+                        <div class="form-group">
+                          <div class="col mb-3">
+                            <label><strong>Code groupe</strong></label>
+                            <input type="text" name="TYPECLASSE" value="<?php echo $allclass->TYPECLASSE; ?>" id="edit-typeclasse" class="form-control">
+                          </div>
+                          <div class="col">
+                            <label><strong>Libellé groupe</strong> (Donner le libellé du groupe à créer. Ex : Examen Blanc)</label>
+                            <input type="text" name="LibelleType" value="<?php echo $allclass->LibelleType; ?>" id="edit-libelle" class="form-control">
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary">Enregistrer</button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {{-- <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -216,7 +208,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> --}}
               @endforeach
             </tbody>
           </table>
