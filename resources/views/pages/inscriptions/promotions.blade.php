@@ -1,5 +1,7 @@
 @extends('layouts.master')
 @section('content')
+
+
     <div class="main-panel-10">
         <div class="content-wrapper">
 
@@ -72,11 +74,13 @@
                                                                     <p>(Ex: Terminale)</p>
                                                                 </label>
                                                                 <input type="text" id="libellePromotion"
-                                                                    name="libellePromotion" class="form-control" required
+                                                                    name="libellePromotion" class="form-control"
+                                                                    value="{{ old('libellePromotion') }}" required
                                                                     minlength="2" maxlength="14"
-                                                                    pattern="^(?=.*[A-Z])[A-Za-z0-9éè]{2,14}$"
-                                                                    title="Le libellé doit comporter entre 2 et 14 caractères, avec au moins une lettre majuscule et peut contenir des lettres, des chiffres et des accents.">
+                                                                    pattern="^[A-Z][A-Za-z0-9éè]{1,13}$"
+                                                                    title="Le libellé doit commencer par une lettre majuscule et comporter entre 2 et 14 caractères, uniquement des lettres, chiffres ou des lettres accentuées.">
                                                             </div>
+
                                                         </div>
                                                         <div class="form-group row">
                                                             <div class="col-sm-6 mb-1">
@@ -94,7 +98,8 @@
                                                                     <p>(Choisir type d'enseignement)</p>
                                                                 </label>
                                                                 <select id="enseignement" name="enseignement"
-                                                                    class="form-control" required>
+                                                                    class="js-example-basic-multiple form-control w-100"
+                                                                    required>
                                                                     <option value="0">Préscolaire</option>
                                                                     <option value="1">Primaire</option>
                                                                     <option value="2">Général</option>
@@ -102,7 +107,9 @@
                                                                     <option value="4">Professionnel</option>
                                                                     <option value="5">Supérieur</option>
                                                                 </select>
+
                                                             </div>
+
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="submit"
@@ -181,11 +188,6 @@
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                @if (session('success'))
-                                                                    <div class="alert alert-success">
-                                                                        {{ session('success') }}
-                                                                    </div>
-                                                                @endif
                                                                 <div class="card-body">
                                                                     <form method="POST"
                                                                         action="{{ route('promotions.update', $promotion->CODEPROMO) }}">
@@ -218,9 +220,9 @@
                                                                                     name="libellePromotion"
                                                                                     class="form-control" required
                                                                                     minlength="2" maxlength="14"
-                                                                                    pattern="^(?=.*[A-Z])[A-Za-z0-9éè]{2,14}$"
+                                                                                    pattern="^[A-Z][A-Za-z0-9éè]{1,13}$"
                                                                                     value="{{ $promotion->LIBELPROMO }}"
-                                                                                    title="Le libellé doit commencer par une lettre majuscule ou un chifrre et comporter entre 2 et 14 caractères, uniquement des lettres majuscules et minuscules ou des lettres majuscules et des chiffres .">
+                                                                                    title="Le libellé doit commencer par une lettre majuscule et comporter entre 2 et 14 caractères, uniquement des lettres, chiffres ou des lettres accentuées.">
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row">
@@ -248,7 +250,8 @@
                                                                                 <select
                                                                                     id="editEnseignement{{ $promotion->CODEPROMO }}"
                                                                                     name="enseignement"
-                                                                                    class="form-control" required>
+                                                                                    class="js-example-basic-multiple form-control w-100"
+                                                                                    required>
                                                                                     <option value="0"
                                                                                         {{ $promotion->TYPEENSEIG == 0 ? 'selected' : '' }}>
                                                                                         Préscolaire</option>
@@ -268,6 +271,7 @@
                                                                                         {{ $promotion->TYPEENSEIG == 5 ? 'selected' : '' }}>
                                                                                         Supérieur</option>
                                                                                 </select>
+
 
                                                                             </div>
                                                                         </div>
@@ -343,6 +347,10 @@
             @if ($error || $errors->any())
                 myModal.show();
             @endif
+        });
+
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2();
         });
     </script>
 @endsection
