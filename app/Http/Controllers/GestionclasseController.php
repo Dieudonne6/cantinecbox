@@ -39,7 +39,11 @@ class GestionclasseController extends Controller
     {
         try {
             // Supposons que votre table ClasseGroupeClass a une colonne 'LibelleGroupe'
-            $classes = Classesgroupeclass::where('LibelleGroupe', $libelle)->get();
+            $classes = Classesgroupeclass::where('LibelleGroupe', $libelle)
+                              ->orderBy('id', 'desc')
+                              ->get();
+
+            // $classes = Classesgroupeclass::where('LibelleGroupe', $libelle)->get();
 
             // Vérifiez les données récupérées
             if ($classes->isEmpty()) {
@@ -74,7 +78,7 @@ class GestionclasseController extends Controller
                                           ->exists();
 
             if ($existing) {
-                return response()->json(['message' => 'La classe existe déjà dans ce groupe'], 400);
+                return response()->json(['error' => 'Cette classe est déjà associée à ce groupe.'], 409);
             }
 
             // Ajoutez la classe au groupe
@@ -184,7 +188,7 @@ public function supprimerGroupe($id)
         $series->CYCLE = $request->input('CYCLE');
 
         if (Serie::where('SERIE', $series->SERIE)->exists()) {
-            return back()->with('status', 'Cette série existe déjà.');
+            return back()->with('error', 'Cette série existe déjà.')->withInput();
         }
 
         $series->save();
@@ -233,7 +237,7 @@ public function supprimerGroupe($id)
 
     if($typeclas) {
         return back()->with('error', 'Le type de classe existe déja');
-    }
+    }  
 
     $typeclasse = new Typeclasse();
 

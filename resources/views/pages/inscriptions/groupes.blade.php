@@ -61,13 +61,13 @@
                 <tr>
                     <td>{{ $listegroupe->LibelleGroupe }}</td>
                     <td>
-                        <a type="button" class="btn btn-primary" 
+                    <a type="button" class="btn btn-primary" 
                         data-bs-toggle="modal" 
                         data-bs-target="#modifgroup"
                         data-libelle="{{ $listegroupe->LibelleGroupe }}"
                         onclick="openModal(this)">
                          Modifier
-                     </a>
+                    </a>
 
                      <form action="/supprimergroupe/{{ $listegroupe->id }}" method="POST"   style="display:inline;">
                         @csrf
@@ -185,30 +185,24 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     var modal = document.getElementById('modifgroup');
-    var select = document.getElementById('classSelect');
-    var tableBody = document.getElementById('classTableBody');
-    // var modalTitle = document.getElementById('modifgroupTitle');
+    var myModal = new bootstrap.Modal(modal);
 
-    modal.addEventListener('hidden.bs.modal', function () {
-        // Réinitialiser le select, le tableau et le titre lorsque le modal est caché
-        select.innerHTML = '<option value="">Sélectionner la classe</option>';
-        tableBody.innerHTML = '';
-        modalTitle.textContent = 'Modifier le groupe : '; // Réinitialiser le titre
-
-        // Forcer la suppression du backdrop
+    modal.addEventListener('hidden.bs.modal', function() {
+        // Supprimer le backdrop si nécessaire
         var backdrop = document.querySelector('.modal-backdrop');
         if (backdrop) {
             backdrop.remove();
         }
 
-        // Retirer la classe `modal-open` du body
+        // Supprimer la classe modal-open du body
         document.body.classList.remove('modal-open');
         document.body.style.paddingRight = '';
     });
-    });
 
+
+});
     function setDeleteFormAction(groupeId) {
         var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         confirmDeleteBtn.onclick = function() {
@@ -219,13 +213,20 @@
         };
     }
 
-    function showAlert(message) {
-    document.getElementById('alertModalMessage').textContent = message;
+    function showAlert(message, callback) {
     var alertModal = new bootstrap.Modal(document.getElementById('alertModal'));
+    document.getElementById('alertModalMessage').textContent = message;
     alertModal.show();
+
+    // Assurez-vous que le callback est appelé lorsque le modal d'alerte est caché
+    alertModal._element.addEventListener('hidden.bs.modal', function () {
+        if (callback) {
+            callback();
+        }
+    }, { once: true });
 }
 
-    function openModal(button) {
+function openModal(button) {
     var groupeLibelle = button.getAttribute('data-libelle');
     var modalTitle = document.getElementById('modifgroupTitle');
     modalTitle.textContent = 'Modifier le groupe : ' + groupeLibelle;
@@ -259,11 +260,6 @@
             return response.json();
         })
         .then(classesByGroup => {
-            if (classesByGroup.message) {
-                console.log(classesByGroup.message);
-                return;
-            }
-
             var tableBody = document.getElementById('classTableBody');
             tableBody.innerHTML = ''; // Réinitialiser le tableau
 
@@ -271,7 +267,7 @@
                 var row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${classe.CODECLAS}</td>
-                        <td><button type="button" class="btn btn-danger" data-id="${classe.id}" onclick="supprimerClasse(this)">Supprimer</button></td>
+                    <td><button type="button" class="btn btn-danger" data-id="${classe.id}" onclick="supprimerClasse(this)">Supprimer</button></td>
                 `;
                 tableBody.appendChild(row);
             });
@@ -280,35 +276,36 @@
             var myModal = new bootstrap.Modal(document.getElementById('modifgroup'));
             myModal.show();
         })
-
-        
         .catch(error => console.error('Error:', error));
-                // Forcer la suppression du backdrop
-                var backdrop = document.querySelector('.modal-backdrop');
-        if (backdrop) {
-            backdrop.remove();
-        }
+}
 
-        // Retirer la classe `modal-open` du body
-        document.body.classList.remove('modal-open');
-        document.body.style.paddingRight = '';
-    }
-
-    function ajouterClasse() {
+function ajouterClasse() {
     var select = document.getElementById('classSelect');
     var classCode = select ? select.value : null;
     var modalTitle = document.getElementById('modifgroupTitle');
     var groupeLibelle = modalTitle ? modalTitle.textContent.replace('Modifier le groupe : ', '').trim() : null;
 
     if (!classCode) {
-        showAlert('Veuillez sélectionner une classe.');
+        showAlert('Veuillez sélectionner une classe.', function() {
+            var modal = document.getElementById('modifgroup');
+            var myModal = bootstrap.Modal.getInstance(modal);
+            if (myModal) {
+                myModal.show(); // Réouvrir le modal
+            }
+        });
         return;
     }
 
     var csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
     if (!csrfTokenMeta) {
         console.error('Le token CSRF est manquant.');
-        alert('Le token CSRF est manquant.'); 
+        showAlert('Le token CSRF est manquant.', function() {
+            var modal = document.getElementById('modifgroup');
+            var myModal = bootstrap.Modal.getInstance(modal);
+            if (myModal) {
+                myModal.show(); // Réouvrir le modal
+            }
+        });
         return;
     }
 
@@ -323,41 +320,57 @@
         body: JSON.stringify({ classCode: classCode })
     })
     .then(response => {
+        if (response.status === 409) {
+            return response.json().then(data => {
+                showAlert(data.error, function() {
+                    var modal = document.getElementById('modifgroup');
+                    var myModal = bootstrap.Modal.getInstance(modal);
+                    if (myModal) {
+                        myModal.show(); // Réouvrir le modal
+                    }
+                });
+                throw new Error(data.error);
+            });
+        }
+
         if (!response.ok) {
             return response.json().then(data => {
-                // throw new Error(data.message || 'Erreur lors de l\'ajout de la classe.');
+                throw new Error(data.message || 'Erreur lors de l\'ajout de la classe.');
             });
         }
         return response.json();
     })
     .then(data => {
-        showAlert('Classe ajoutée avec succès !');
-
-        // Réinitialiser le modal
-        var modal = document.getElementById('modifgroup');
-        if (modal) {
+        showAlert('Classe ajoutée avec succès !', function() {
+            // Fermer le modal
+            var modal = document.getElementById('modifgroup');
             var myModal = bootstrap.Modal.getInstance(modal);
             if (myModal) {
-                myModal.hide();
+                myModal.hide(); // Fermer le modal
             }
-        }
 
-                    // Retirer backdrop et modal-open au cas où
-                    var backdrop = document.querySelector('.modal-backdrop');
+            // Assurez-vous que le modal est complètement caché avant de réouvrir
+            setTimeout(function() {
+
+            var backdrop = document.querySelector('.modal-backdrop');
             if (backdrop) {
                 backdrop.remove();
             }
             document.body.classList.remove('modal-open');
             document.body.style.paddingRight = '';
-
-        // Recharger les données du groupe
-        openModal(document.querySelector('button[data-libelle="' + encodeURIComponent(groupeLibelle) + '"]'));
+                var modal = document.getElementById('modifgroup');
+                var myModal = bootstrap.Modal.getInstance(modal);
+                myModal.show();
+                // Recharger et réouvrir le modal avec les données du groupe
+                // openModal(document.querySelector('button[data-libelle="' + encodeURIComponent(groupeLibelle) + '"]'));
+            }, 500); // Ajuster le délai si nécessaire
+        });
     })
     .catch(error => {
         console.error('Error:', error);
-        // alert('Erreur: ' + error.message);
     });
-    }
+}
+// }
 
 
     function supprimerClasse(button) {
@@ -418,139 +431,6 @@
         return confirm('Êtes-vous sûr de vouloir supprimer ce groupe?');
     }
 
-
-
-{{-- <script>document.addEventListener('DOMContentLoaded', function () {
-    var modal = document.getElementById('modifgroup');
-    var select = document.getElementById('classSelect');
-    var tableBody = document.getElementById('classTableBody');
-    var modalTitle = document.getElementById('modifgroupTitle');
-    var ajouterClasseBtn = document.getElementById('ajouterClasse');
-
-    modal.addEventListener('hidden.bs.modal', function () {
-        // Réinitialiser le select, le tableau et le titre lorsque le modal est caché
-        select.innerHTML = '<option value="">Sélectionner la classe</option>';
-        tableBody.innerHTML = '';
-        modalTitle.textContent = 'Modifier le groupe : '; // Réinitialiser le titre
-
-        // Forcer la suppression du backdrop
-        var backdrop = document.querySelector('.modal-backdrop');
-        if (backdrop) {
-            backdrop.remove();
-        }
-
-        // Retirer la classe `modal-open` du body
-        document.body.classList.remove('modal-open');
-        document.body.style.paddingRight = '';
-    });
-
-    ajouterClasseBtn.addEventListener('click', function () {
-        var selectedClass = select.value;
-        var groupeLibelle = document.getElementById('groupeLibelle').value;
-
-        if (!selectedClass || !groupeLibelle) {
-            alert('Veuillez sélectionner une classe et un groupe.');
-            return;
-        }
-
-        // Effectuer une requête AJAX pour ajouter la classe au groupe
-        fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({
-                classCode: classCode
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.message) {
-                console.log(data.message);
-                return;
-            }
-
-            // Ajoutez la classe au tableau
-            var row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${selectedClass}</td>
-                <td><button type="button" class="btn btn-danger">Supprimer</button></td>
-            `;
-            tableBody.appendChild(row);
-
-            // Réinitialiser le select
-            select.value = '';
-        })
-        .catch(error => console.error('Error:', error));
-    });
-});
-
-function openModal(button) {
-    var groupeLibelle = button.getAttribute('data-libelle');
-    var modalTitle = document.getElementById('modifgroupTitle');
-    modalTitle.textContent = 'Modifier le groupe : ' + groupeLibelle;
-
-    // Mettre à jour la valeur cachée du groupe
-    document.getElementById('groupeLibelle').value = groupeLibelle;
-
-    // Effectuer une requête AJAX pour obtenir toutes les classes
-    fetch('/afficherTouteClasse')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(allClasses => {
-            var select = document.getElementById('classSelect');
-            select.innerHTML = '<option value="">Sélectionner la classe</option>'; // Réinitialiser le select
-
-            allClasses.forEach(function(classe) {
-                var option = document.createElement('option');
-                option.value = classe.CODECLAS;
-                option.textContent = classe.CODECLAS;
-                select.appendChild(option);
-            });
-
-            // Ensuite, obtenir les classes spécifiques au groupe
-            return fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes`);
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(classesByGroup => {
-            if (classesByGroup.message) {
-                console.log(classesByGroup.message);
-                return;
-            }
-
-            var tableBody = document.getElementById('classTableBody');
-            tableBody.innerHTML = ''; // Réinitialiser le tableau
-
-            classesByGroup.forEach(function(classe) {
-                var row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${classe.CODECLAS}</td>
-                    <td><button type="button" class="btn btn-danger">Supprimer</button></td>
-                `;
-                tableBody.appendChild(row);
-            });
-
-            // Ouvrir le modal
-            var myModal = new bootstrap.Modal(document.getElementById('modifgroup'));
-            myModal.show();
-        })
-        .catch(error => console.error('Error:', error));
-} --}}
 
 
 
