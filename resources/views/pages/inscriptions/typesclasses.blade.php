@@ -42,7 +42,6 @@
                   </div>
                   @endif
                   <?php $error = Session::get('error');?>
-
                   @if(Session::has('error'))
                   <div id="statusAlert" class="alert alert-danger">
                     {{ Session::get('error')}}
@@ -236,4 +235,3 @@
           // });
       });
     </script>
-  
