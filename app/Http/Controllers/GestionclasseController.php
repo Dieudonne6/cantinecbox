@@ -187,8 +187,15 @@ public function supprimerGroupe($id)
         $series->LIBELSERIE = $request->input('LIBELSERIE');
         $series->CYCLE = $request->input('CYCLE');
 
+
+                // Vérifier si la SERIE existe déjà
         if (Serie::where('SERIE', $series->SERIE)->exists()) {
             return back()->with('error', 'Cette série existe déjà.')->withInput();
+        }
+
+            // Vérifier si le LIBELSERIE existe déjà
+        if (Serie::where('LIBELSERIE', $series->LIBELSERIE)->exists()) {
+        return back()->with('error', 'Ce libellé de série existe déjà.')->withInput();
         }
 
         $series->save();
@@ -367,9 +374,10 @@ public function index()
 // Méthode store
 public function store(Request $request)
 {
+    // Validation des champs du formulaire
     $request->validate([
         'codePromotion' => 'required|max:4',
-        'libellePromotion' => 'required|max:15',
+        'libellePromotion' => 'required|max:14', // Limite ajustée pour correspondre à votre validation HTML
         'Niveau' => 'required|integer|min:1|max:7',
         'enseignement' => 'required|integer'
     ]);
@@ -377,7 +385,14 @@ public function store(Request $request)
     // Vérifier si le code promo existe déjà
     if (Promo::where('CODEPROMO', $request->codePromotion)->exists()) {
         return redirect()->back()
-                         ->withErrors(['codePromotion' => 'Le code promo existe déjà. Veuillez en choisir un autre.'])
+                         ->withErrors(['codePromotion' => 'Le code promotion existe déjà. Veuillez en choisir un autre.'])
+                         ->withInput();
+    }
+
+    // Vérifier si le libellé de la promotion existe déjà
+    if (Promo::where('LIBELPROMO', $request->libellePromotion)->exists()) {
+        return redirect()->back()
+                         ->withErrors(['libellePromotion' => 'Le libellé de la promotion existe déjà. Veuillez en choisir un autre.'])
                          ->withInput();
     }
 
@@ -389,6 +404,7 @@ public function store(Request $request)
         'TYPEENSEIG' => $request->enseignement
     ]);
     
+    // Redirection avec un message de succès
     return redirect()->route('promotions.index')->with('success', 'Promotion créée avec succès !');
 }
 
@@ -398,7 +414,7 @@ public function update(Request $request, $codePromo)
 
     $request->validate([
         'codePromotion' => 'required|max:4',
-        'libellePromotion' => 'required',
+        'libellePromotion' => 'required|max:14', // Limite ajustée pour correspondre à votre validation HTML
         'Niveau' => 'required|integer|min:1|max:7',
         'enseignement' => 'required|integer'
     ]);
@@ -412,6 +428,7 @@ public function update(Request $request, $codePromo)
 
     return redirect()->route('promotions.index')->with('success', 'Promotion mise à jour avec succès !');
 }
+
 
 public function destroy($codePromo)
 {

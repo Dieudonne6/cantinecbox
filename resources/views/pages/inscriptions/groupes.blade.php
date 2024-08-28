@@ -351,18 +351,8 @@ function ajouterClasse() {
 
             // Assurez-vous que le modal est complètement caché avant de réouvrir
             setTimeout(function() {
-
-            var backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-                backdrop.remove();
-            }
-            document.body.classList.remove('modal-open');
-            document.body.style.paddingRight = '';
-                var modal = document.getElementById('modifgroup');
-                var myModal = bootstrap.Modal.getInstance(modal);
-                myModal.show();
                 // Recharger et réouvrir le modal avec les données du groupe
-                // openModal(document.querySelector('button[data-libelle="' + encodeURIComponent(groupeLibelle) + '"]'));
+                openModal(document.querySelector('a[data-libelle="' + groupeLibelle + '"]'));
             }, 500); // Ajuster le délai si nécessaire
         });
     })
