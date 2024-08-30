@@ -73,7 +73,7 @@
           <div class="form-group row mb-0">
             <label for="exampleSelectGender" class="col-sm-3 col-form-label">No d'ordre</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="exampleInputUsername2" value="{{ $typecla->Niveau }}"   placeholder="No d'ordre" name="numero">
+              <input type="text" class="form-control" id="exampleInputUsername2" minlength="1" maxlength="3" value="{{ $typecla->Niveau }}"   placeholder="No d'ordre" name="numero">
             </div>
           </div>
           

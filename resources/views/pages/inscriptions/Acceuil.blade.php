@@ -225,23 +225,26 @@
         <!-- Modal -->
         <div class="modal fade" id="exampleModal{{ $eleve->MATRICULE }}" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
-                <div class="modal-dialog modal-lg" style="max-width: 1100px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Informations pour {{ $eleve->NOM }} {{ $eleve->PRENOM }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <nav>
-                    <div class="nav nav-tabs" id="nav-tab{{ $eleve->MATRICULE }}" role="tablist" style="font-size: 14px;">
-                        @foreach (['Infor' => 'Informations générales', 'Detail' => 'Détail des notes', 'Deta' => 'Détails des paiements', 'finan' => 'Informations financières', 'Emploi' => 'Emploi du temps', 'Position' => 'Position Enseignants'] as $key => $label)
-                            <button class="nav-link{{ $loop->first ? ' active' : '' }}" id="nav-{{ $key }}-tab{{ $eleve->MATRICULE }}"
-                                data-bs-toggle="tab" data-bs-target="#nav-{{ $key }}{{ $eleve->MATRICULE }}"
-                                type="button" role="tab" aria-controls="nav-{{ $key }}{{ $eleve->MATRICULE }}"
-                                aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ $label }}</button>
-                        @endforeach
+            <div class="modal-dialog modal-lg" style="max-width: 1100px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Informations pour {{ $eleve->NOM }}
+                            {{ $eleve->PRENOM }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                </nav>
+                    <div class="modal-body">
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab{{ $eleve->MATRICULE }}" role="tablist"
+                                style="font-size: 14px;">
+                                @foreach (['Infor' => 'Informations générales', 'Detail' => 'Détail des notes', 'Deta' => 'Détails des paiements', 'finan' => 'Informations financières', 'Emploi' => 'Emploi du temps', 'Position' => 'Position Enseignants'] as $key => $label)
+                                    <button class="nav-link{{ $loop->first ? ' active' : '' }}"
+                                        id="nav-{{ $key }}-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab"
+                                        data-bs-target="#nav-{{ $key }}{{ $eleve->MATRICULE }}" type="button"
+                                        role="tab" aria-controls="nav-{{ $key }}{{ $eleve->MATRICULE }}"
+                                        aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ $label }}</button>
+                                @endforeach
+                            </div>
+                        </nav>
                         <div class="tab-content" id="nav-tabContent{{ $eleve->MATRICULE }}">
                             <!-- Informations générales -->
                             <div class="tab-pane fade show active" id="nav-Infor{{ $eleve->MATRICULE }}" role="tabpanel"
@@ -269,14 +272,16 @@
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control" id="sexe{{ $eleve->MATRICULE }}"
                                                 name="sexe"
-                                                value="{{ $eleve->SEXE == 1 ? 'Masculin' : ($eleve->SEXE == 2 ? 'Féminin' : '') }}" readonly>
+                                                value="{{ $eleve->SEXE == 1 ? 'Masculin' : ($eleve->SEXE == 2 ? 'Féminin' : '') }}"
+                                                readonly>
                                         </div>
                                         <label for="typeEleve{{ $eleve->MATRICULE }}"
                                             class="col-sm-2 col-form-label">Type Élève</label>
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control"
                                                 id="typeEleve{{ $eleve->MATRICULE }}" name="typeEleve"
-                                                value="{{ $eleve->STATUTG == 1 ? 'Nouveau' : ($eleve->STATUTG == 2 ? 'Ancien' : '') }}" readonly>
+                                                value="{{ $eleve->STATUTG == 1 ? 'Nouveau' : ($eleve->STATUTG == 2 ? 'Ancien' : '') }}"
+                                                readonly>
                                         </div>
                                     </div>
                                     <!-- Date d'inscription, Apte et Statut Redoublant -->
@@ -293,14 +298,15 @@
                                         <div class="col-sm-2">
                                             <input type="text" class="form-control" id="apte{{ $eleve->MATRICULE }}"
                                                 name="sexe"
-                                                value="{{ $eleve->APTE == 0 ? 'Non' : ($eleve->APTE == 1 ? 'Oui' : '') }}" readonly>
+                                                value="{{ $eleve->APTE == 0 ? 'Non' : ($eleve->APTE == 1 ? 'Oui' : '') }}"
+                                                readonly>
                                         </div>
                                         <div class="col-sm-2 form-check" style="margin-left: 4rem">
                                             <input type="checkbox" class="form-check-input"
-                                                id="statutRedoublant{{ $eleve->MATRICULE }}" 
-                                                name="statutRedoublant"
+                                                id="statutRedoublant{{ $eleve->MATRICULE }}" name="statutRedoublant"
                                                 {{ $eleve->STATUT == 1 ? 'checked' : '' }} readonly>
-                                            <label class="form-check-label mt-1" for="statutRedoublant{{ $eleve->MATRICULE }}">Statut Redoublant</label>        
+                                            <label class="form-check-label mt-1"
+                                                for="statutRedoublant{{ $eleve->MATRICULE }}">Statut Redoublant</label>
                                         </div>
                                     </div>
                                 </form>
@@ -366,7 +372,8 @@
                                     <div class="col">
                                         <div class="d-flex justify-content-between align-items-center mt-2">
                                             <div class="form-check">
-                                                <input type="checkbox" class="form-check-input" id="checkDetails" readonly>
+                                                <input type="checkbox" class="form-check-input" id="checkDetails"
+                                                    readonly>
                                                 <label class="form-check-label" for="checkDetails">Détail des
                                                     composantes</label>
                                             </div>
@@ -422,21 +429,27 @@
                                             <tbody style=" width: 50%;">
                                                 <tr>
                                                     <td>[ 3,3% ] Scolarité</td>
-                                                    <td><input type="number" class="form-control" id="scolarite" readonly></td>
+                                                    <td><input type="number" class="form-control" id="scolarite"
+                                                            readonly></td>
                                                     <td>[ 0,0% ] Arriéré</td>
-                                                    <td><input type="number" class="form-control" id="arriere" readonly></td>
+                                                    <td><input type="number" class="form-control" id="arriere"
+                                                            readonly></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Frais 1</td>
-                                                    <td><input type="number" class="form-control" id="frais1" readonly></td>
+                                                    <td><input type="number" class="form-control" id="frais1"
+                                                            readonly></td>
                                                     <td>Frais 2</td>
-                                                    <td><input type="number" class="form-control" id="frais2" readonly></td>
+                                                    <td><input type="number" class="form-control" id="frais2"
+                                                            readonly></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Frais 3</td>
-                                                    <td><input type="number" class="form-control" id="frais3" readonly></td>
+                                                    <td><input type="number" class="form-control" id="frais3"
+                                                            readonly></td>
                                                     <td>Frais 4</td>
-                                                    <td><input type="number" class="form-control" id="frais4" readonly></td>
+                                                    <td><input type="number" class="form-control" id="frais4"
+                                                            readonly></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -636,42 +649,39 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Scripts JavaScript à placer à la fin du body pour optimiser le chargement -->
-        <script>
-            // JavaScript pour afficher le jour de la semaine et l'heure actuelle
-            function afficherDateHeure() {
-                // Récupérer la date et l'heure actuelles
-                let date = new Date();
-
-                // Obtenir le jour de la semaine
-                let joursSemaine = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
-                let jour = joursSemaine[date.getDay()];
-
-                // Formater l'heure
-                let heures = date.getHours();
-                let minutes = date.getMinutes();
-                let secondes = date.getSeconds();
-                let heureFormatee =
-                    `${heures.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secondes.toString().padStart(2, '0')}`;
-
-                // Créer une chaîne de texte avec jour et heure
-                let texteAffichage = `Aujourd'hui, c'est ${jour}. Il est actuellement ${heureFormatee}.`;
-
-                // Afficher le texte dans l'élément HTML correspondant
-                document.getElementById("dateTime").textContent = texteAffichage;
-            }
-
-            // Appeler la fonction pour l'exécuter initialement
-            afficherDateHeure();
-
-            // Actualiser l'affichage de l'heure chaque seconde
-            setInterval(afficherDateHeure, 1000);
-        </script>
     @endforeach
 
-
+    <!-- Scripts JavaScript à placer à la fin du body pour optimiser le chargement -->
     <script>
+        // JavaScript pour afficher le jour de la semaine et l'heure actuelle
+        function afficherDateHeure() {
+            // Récupérer la date et l'heure actuelles
+            let date = new Date();
+
+            // Obtenir le jour de la semaine
+            let joursSemaine = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+            let jour = joursSemaine[date.getDay()];
+
+            // Formater l'heure
+            let heures = date.getHours();
+            let minutes = date.getMinutes();
+            let secondes = date.getSeconds();
+            let heureFormatee =
+                `${heures.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secondes.toString().padStart(2, '0')}`;
+
+            // Créer une chaîne de texte avec jour et heure
+            let texteAffichage = `Aujourd'hui, c'est ${jour}. Il est actuellement ${heureFormatee}.`;
+
+            // Afficher le texte dans l'élément HTML correspondant
+            document.getElementById("dateTime").textContent = texteAffichage;
+        }
+
+        // Appeler la fonction pour l'exécuter initialement
+        afficherDateHeure();
+
+        // Actualiser l'affichage de l'heure chaque seconde
+        setInterval(afficherDateHeure, 1000);
+
         document.getElementById('recalculer').addEventListener('click', function() {
             let total = Math.floor(Math.random() * 1000);
             let filles = Math.floor(Math.random() * 100);
@@ -687,9 +697,7 @@
             document.getElementById('filles-red').textContent = fillesRed;
             document.getElementById('garcons-red').textContent = garconsRed;
         });
-    </script>
 
-    <script>
         function imprimerPage() {
             var table = document.getElementById('myTable');
             table.classList.remove('dataTable');

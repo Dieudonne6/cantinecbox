@@ -245,7 +245,7 @@
           </li>
 
           {{-- Dicipline --}}
-          <li class="nav-item"> <a class="nav-link" href="{{ request()->is('discipline') ? 'active' : '' }}" href="{{url('/series')}}">Discipline</a></li>
+          <li class="nav-item"> <a class="nav-link {{ request()->is('discipline') ? 'active' : '' }}" href="{{url('/discipline')}}">Discipline</a></li>
           
           {{-- Extraction de données --}}
           {{-- <li class="nav-item menu-item-has-children">
