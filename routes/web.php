@@ -222,3 +222,5 @@ Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifi
 Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
 Route::get('/paramcomposantes', [ScolariteController::class, 'getparamcomposantes']);
 // Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifieclasse']);
+
+Route::get('/facturesclasses', [ScolariteController::class, 'getfacturesclasses']);
