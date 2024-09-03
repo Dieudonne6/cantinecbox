@@ -506,6 +506,19 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
 
     $nouveauEleve->save();
 
+    $infoclasse = Classes::where('CODECLAS', ($request->input('classe')))->first();
+    $TYPEENSEIG = $infoclasse->TYPEENSEIG;
+    $TYPECLASSE = $infoclasse->TYPECLASSE;
+    $SERIE = $infoclasse->SERIE;
+    // dd($SERIE);
+
+    $infoeleve = Eleve::where('MATRICULE', ($request->input('numOrdre')))->first();
+    $infoeleve->TYPEENSEIG = $TYPEENSEIG;
+    $infoeleve->TYPECLASSE = $TYPECLASSE;
+    $infoeleve->SERIE = $SERIE;
+    $infoeleve->save();
+
+
     return redirect()->route('inscrireeleve')->with('status', 'Élève enregistré avec succès');
 
 }

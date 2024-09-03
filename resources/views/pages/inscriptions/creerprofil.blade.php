@@ -54,7 +54,7 @@
                     <div class="form-group row">
                       <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Libelle reduction</label>
                       <div class="col-sm-4">
-                        <input type="text" class="form-control" id="exampleInputUsername2" name="LibelleReduction" placeholder="">
+                        <input type="text" class="form-control" id="exampleInputUsername2" name="LibelleReduction" placeholder="" required>
                       </div>
                     </div>
                     <div class="form-group row">
@@ -107,47 +107,47 @@
                 </form>
             </div>
             <div class="col-lg-4 d-none" id="percentage">
-                <h6>Calculateur de pourcentage de reduction</h6>
+                <h6 style="margin-top: 1rem">Calculateur de pourcentage de reduction</h6>
                 <div class="row">
                     <div class="col-lg-6">
-                        <p>Avant redcution</p>
-                        <div class="mb-2">
+                        <p >Avant reduction</p>
+                        <div class="mt-4">
                             <input type="text" class="form-control" id="avantScolarite" placeholder="0">
                         </div>
-                        <div class="mb-2">
+                        <div class="mt-3">
                             <input type="text" class="form-control" id="avantArriere" placeholder="0">
                         </div>
-                        <div class="mb-2">
+                        <div class="mt-2">
                             <input type="text" class="form-control" id="avantFrais1" placeholder="0">
                         </div>
-                        <div class="mb-2">
+                        <div class="mt-3">
                             <input type="text" class="form-control" id="avantFrais2" placeholder="0">
                         </div>
-                        <div class="mb-2">
+                        <div class="mt-3">
                             <input type="text" class="form-control" id="avantFrais3" placeholder="0">
                         </div>
-                        <div>
+                        <div class="mt-3">
                             <input type="text" class="form-control" id="avantFrais4" placeholder="0">
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <p>Apres reduction</p>
-                        <div class="mb-2">
+                        <div class="mt-4">
                             <input type="text" class="form-control" id="apresScolarite" placeholder="0">
                         </div>
-                        <div class="mb-2">
+                        <div class="mt-3">
                             <input type="text" class="form-control" id="apresArriere" placeholder="0">
                         </div>
-                        <div class="mb-2">
+                        <div class="mt-2">
                             <input type="text" class="form-control" id="apresFrais1" placeholder="0">
                         </div>
-                        <div class="mb-2">
+                        <div class="mt-3">
                             <input type="text" class="form-control" id="apresFrais2" placeholder="0">
                         </div>
-                        <div class="mb-2">
+                        <div class="mt-3">
                             <input type="text" class="form-control" id="apresFrais3" placeholder="0">
                         </div>
-                        <div>
+                        <div class="mt-3">
                             <input type="text" class="form-control" id="apresFrais4" placeholder="0">
                         </div>
                     </div>
@@ -236,14 +236,14 @@
                               <!--Modification Modal -->
                               <div class="modal fade" id="modifModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
-                                    <div class="modal-content calcul-modal">
+                                    <div class="modal-content calcul-modals">
                                         <div class="modal-header">
                                             <h1 class="modal-titlemodif fs-5" id="exampleModalLabel">Modifier fiche de réduction</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body profile-content">
                                             <div class="row">
-                                                <div class="" id="calcul-one">
+                                                <div class="" id="calcul-ones">
                                                     <form class="forms-sample" id="modificationForm" action="{{ url('/modifreductions') }}" method="POST">
                                                       @csrf
                                                       @method('PUT')
@@ -309,61 +309,64 @@
                                                         <button class="btn btn-light" data-bs-dismiss="modal">Fermer</button>
                                                     </form>
                                                 </div>
-                                                <div class="col-lg-4 d-none" id="percentage">
-                                                    <h6>Calculateur de pourcentage de réduction</h6>
+                                                <div class="col-lg-4 d-none" id="percentages">
+                                                    <h6 style="margin-top: 1rem">Calculateur de pourcentage <br> de reduction</h6>
                                                     <div class="row">
                                                         <div class="col-lg-6">
-                                                            <p>Avant réduction</p>
-                                                            <div class="mb-2">
-                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            <p >Avant reduction</p>
+                                                            <div class="mt-5">
+                                                                <input type="text" class="form-control" id="avantScolaritemodif" placeholder="0">
                                                             </div>
-                                                            <div class="mb-2">
-                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            <div class="mt-3">
+                                                                <input type="text" class="form-control" id="avantArrieremodif" placeholder="0">
                                                             </div>
-                                                            <div class="mb-2">
-                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            <div class="mt-2">
+                                                                <input type="text" class="form-control" id="avantFrais1modif" placeholder="0">
                                                             </div>
-                                                            <div class="mb-2">
-                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            <div class="mt-3">
+                                                                <input type="text" class="form-control" id="avantFrais2modif" placeholder="0">
                                                             </div>
-                                                            <div class="mb-2">
-                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            <div class="mt-3">
+                                                                <input type="text" class="form-control" id="avantFrais3modif" placeholder="0">
                                                             </div>
-                                                            <div>
-                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            <div class="mt-3">
+                                                                <input type="text" class="form-control" id="avantFrais4modif" placeholder="0">
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-6">
-                                                            <p>Après réduction</p>
-                                                            <div class="mb-2">
-                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            <p>Apres reduction</p>
+                                                            <div class="mt-5">
+                                                                <input type="text" class="form-control" id="apresScolaritemodif" placeholder="0">
                                                             </div>
-                                                            <div class="mb-2">
-                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            <div class="mt-3">
+                                                                <input type="text" class="form-control" id="apresArrieremodif" placeholder="0">
                                                             </div>
-                                                            <div class="mb-2">
-                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            <div class="mt-2">
+                                                                <input type="text" class="form-control" id="apresFrais1modif" placeholder="0">
                                                             </div>
-                                                            <div class="mb-2">
-                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            <div class="mt-3">
+                                                                <input type="text" class="form-control" id="apresFrais2modif" placeholder="0">
                                                             </div>
-                                                            <div class="mb-2">
-                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            <div class="mt-3">
+                                                                <input type="text" class="form-control" id="apresFrais3modif" placeholder="0">
                                                             </div>
-                                                            <div>
-                                                                <input type="text" class="form-control" placeholder="133000">
+                                                            <div class="mt-3">
+                                                                <input type="text" class="form-control" id="apresFrais4modif" placeholder="0">
                                                             </div>
                                                         </div>
                                                         <div class="my-4 col-lg-12">
-                                                            <button type="button" class="btn btn-secondary" id="closecalculate">Fermer le calculateur</button>
+                                                            <button type="button" class="btn btn-secondary" id="closecalculates">Fermer le calculateur</button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" id="calculs">Afficher calculateur de pourcentage</button>
-                                            <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel"></div>
+                                            <button type="button" class="btn btn-secondary" id="calculss">Afficher calculateur de pourcentage</button>
+                                            <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -515,7 +518,7 @@
 
 
 
-// calculateur de pourcentage
+// calculateur de pourcentage pour nouveau
 document.addEventListener('DOMContentLoaded', (event) => {
     function calculatePercentage(avant, apres) {
         if (avant == 0) {
@@ -524,16 +527,23 @@ document.addEventListener('DOMContentLoaded', (event) => {
         return ((avant - apres) / avant * 100).toFixed(2) + '%';
     }
 
+    function calculatePercentage1(avant, apres) {
+        if (avant == 0) {
+            return 0;
+        }
+        return ((avant - apres) / avant * 100).toFixed(8) + '%';
+    }
+
     const avantScolarite = document.getElementById('avantScolarite');
     const apresScolarite = document.getElementById('apresScolarite');
     const reductionScolarite = document.getElementById('ReductionScolarite');
 
     avantScolarite.addEventListener('input', () => {
-        reductionScolarite.value = calculatePercentage(parseFloat(avantScolarite.value), parseFloat(apresScolarite.value));
+        reductionScolarite.value = calculatePercentage1(parseFloat(avantScolarite.value), parseFloat(apresScolarite.value));
     });
 
     apresScolarite.addEventListener('input', () => {
-        reductionScolarite.value = calculatePercentage(parseFloat(avantScolarite.value), parseFloat(apresScolarite.value));
+        reductionScolarite.value = calculatePercentage1(parseFloat(avantScolarite.value), parseFloat(apresScolarite.value));
     });
 
     const avantArriere = document.getElementById('avantArriere');
@@ -597,6 +607,96 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 });
 
+
+
+// calculateur de pourcentage pour modifier
+document.addEventListener('DOMContentLoaded', (event) => {
+    function calculatePercentage(avant, apres) {
+        if (avant == 0) {
+            return 0;
+        }
+        return ((avant - apres) / avant * 100).toFixed(2) + '%';
+    }
+
+    function calculatePercentage1(avant, apres) {
+        if (avant == 0) {
+            return 0;
+        }
+        return ((avant - apres) / avant * 100).toFixed(8) + '%';
+    }
+
+    const avantScolarite = document.getElementById('avantScolaritemodif');
+    const apresScolarite = document.getElementById('apresScolaritemodif');
+    const reductionScolarite = document.getElementById('modalReductionScolarite');
+
+    avantScolarite.addEventListener('input', () => {
+        reductionScolarite.value = calculatePercentage1(parseFloat(avantScolarite.value), parseFloat(apresScolarite.value));
+    });
+
+    apresScolarite.addEventListener('input', () => {
+        reductionScolarite.value = calculatePercentage1(parseFloat(avantScolarite.value), parseFloat(apresScolarite.value));
+    });
+
+    const avantArriere = document.getElementById('avantArrieremodif');
+    const apresArriere = document.getElementById('apresArrieremodif');
+    const reductionArriere = document.getElementById('modalReductionArriere');
+
+    avantArriere.addEventListener('input', () => {
+        reductionArriere.value = calculatePercentage(parseFloat(avantArriere.value), parseFloat(apresArriere.value));
+    });
+
+    apresArriere.addEventListener('input', () => {
+        reductionArriere.value = calculatePercentage(parseFloat(avantArriere.value), parseFloat(apresArriere.value));
+    });
+
+    const avantFrais1 = document.getElementById('avantFrais1modif');
+    const apresFrais1 = document.getElementById('apresFrais1modif');
+    const reductionFrais1 = document.getElementById('modalReductionFrais1');
+
+    avantFrais1.addEventListener('input', () => {
+        reductionFrais1.value = calculatePercentage(parseFloat(avantFrais1.value), parseFloat(apresFrais1.value));
+    });
+
+    apresFrais1.addEventListener('input', () => {
+        reductionFrais1.value = calculatePercentage(parseFloat(avantFrais1.value), parseFloat(apresFrais1.value));
+    });
+
+    const avantFrais2 = document.getElementById('avantFrais2modif');
+    const apresFrais2 = document.getElementById('apresFrais2modif');
+    const reductionFrais2 = document.getElementById('modalReductionFrais2');
+
+    avantFrais2.addEventListener('input', () => {
+        reductionFrais2.value = calculatePercentage(parseFloat(avantFrais2.value), parseFloat(apresFrais2.value));
+    });
+
+    apresFrais2.addEventListener('input', () => {
+        reductionFrais2.value = calculatePercentage(parseFloat(avantFrais2.value), parseFloat(apresFrais2.value));
+    });
+
+    const avantFrais3 = document.getElementById('avantFrais3modif');
+    const apresFrais3 = document.getElementById('apresFrais3modif');
+    const reductionFrais3 = document.getElementById('modalReductionFrais3');
+
+    avantFrais3.addEventListener('input', () => {
+        reductionFrais3.value = calculatePercentage(parseFloat(avantFrais3.value), parseFloat(apresFrais3.value));
+    });
+
+    apresFrais3.addEventListener('input', () => {
+        reductionFrais3.value = calculatePercentage(parseFloat(avantFrais3.value), parseFloat(apresFrais3.value));
+    });
+
+    const avantFrais4 = document.getElementById('avantFrais4modif');
+    const apresFrais4 = document.getElementById('apresFrais4modif');
+    const reductionFrais4 = document.getElementById('modalReductionFrais4');
+
+    avantFrais4.addEventListener('input', () => {
+        reductionFrais4.value = calculatePercentage(parseFloat(avantFrais4.value), parseFloat(apresFrais4.value));
+    });
+
+    apresFrais4.addEventListener('input', () => {
+        reductionFrais4.value = calculatePercentage(parseFloat(avantFrais4.value), parseFloat(apresFrais4.value));
+    });
+});
 
 
 
