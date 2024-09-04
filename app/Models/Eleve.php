@@ -26,5 +26,9 @@ class Eleve extends Model
     {
         return $this->hasMany(Contrat::class, 'eleve_contrat', 'MATRICULE');
     }
+    public function classe()
+    {
+        return $this->belongsTo(Classes::class, 'CODECLAS', 'CODECLAS');
+    }
 
 }

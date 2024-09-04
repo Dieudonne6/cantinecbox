@@ -441,12 +441,17 @@ public function destroy($codePromo)
 
   public function indexEleves()
 {
-    $eleves = Eleve::all();
-    
+    $eleves = Eleve::with('classe.promo')->get();;
+    $allClass = Classes::all();
+    $serie = Serie::get();
+    $promotion = Promo::all();
+    $typeenseigne = Typeenseigne::get();
+    $typeclah = Typeclasse::get();
+
         // Récupérer les élèves avec leurs notes
         $eleves = Eleve::with('notes')->get();
 
-    return view('pages.inscriptions.Acceuil', compact('eleves'));
+    return view('pages.inscriptions.Acceuil', compact('eleves','allClass','serie','promotion','typeclah','typeenseigne'));
 }
 
   //   return view('pages.inscriptions.groupes');
