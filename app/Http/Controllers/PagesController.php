@@ -461,16 +461,29 @@ class PagesController extends Controller
         return view ('pages.inscriptions.creerprofil')->with('reductions', $reductions)->with('newCode', $newCode);
     }
 
+    private function convertToDecimal($percentage)
+{
+    // Retirer le signe % et convertir en valeur décimale
+    if (strpos($percentage, '%') !== false) {
+        $percentage = str_replace('%', '', $percentage);
+    }
+    
+    return floatval($percentage) / 100;
+}
+
     public function ajouterprofreduction(Request $request) {
         $reduction = new Reduction();
         $reduction->Codereduction = $request->input('Codereduction');
         $reduction->LibelleReduction = $request->input('LibelleReduction');
-        $reduction->Reduction_scolarite = $request->input('Reduction_scolarite');
-        $reduction->Reduction_arriere = $request->input('Reduction_arriere');
-        $reduction->Reduction_frais1 = $request->input('Reduction_frais1');
-        $reduction->Reduction_frais2 = $request->input('Reduction_frais2');
-        $reduction->Reduction_frais3 = $request->input('Reduction_frais3');
-        $reduction->Reduction_frais4 = $request->input('Reduction_frais4');
+
+        // Convertir les pourcentages en valeurs décimales
+        $reduction->Reduction_scolarite = $this->convertToDecimal($request->input('Reduction_scolarite'));
+        $reduction->Reduction_arriere = $this->convertToDecimal($request->input('Reduction_arriere'));
+        $reduction->Reduction_frais1 = $this->convertToDecimal($request->input('Reduction_frais1'));
+        $reduction->Reduction_frais2 = $this->convertToDecimal($request->input('Reduction_frais2'));
+        $reduction->Reduction_frais3 = $this->convertToDecimal($request->input('Reduction_frais3'));
+        $reduction->Reduction_frais4 = $this->convertToDecimal($request->input('Reduction_frais4'));
+
         $reduction->mode = $request->input('mode');
         $reduction->save();
 
@@ -498,13 +511,13 @@ class PagesController extends Controller
         // dd($reduction);
         // Mettre à jour les champs de la réduction
         // $reduction->codeReduction = $request->input('Codereduction');
-        $reduction->LibelleReduction = $request->input('LibelleReduction');
-        $reduction->Reduction_scolarite = $request->input('Reduction_scolarite');
-        $reduction->Reduction_arriere = $request->input('Reduction_arriere');
-        $reduction->Reduction_frais1 = $request->input('Reduction_frais1');
-        $reduction->Reduction_frais2 = $request->input('Reduction_frais2');
-        $reduction->Reduction_frais3 = $request->input('Reduction_frais3');
-        $reduction->Reduction_frais4 = $request->input('Reduction_frais4');
+        $reduction->LibelleReduction = $this->convertToDecimal($request->input('LibelleReduction'));
+        $reduction->Reduction_scolarite = $this->convertToDecimal($request->input('Reduction_scolarite'));
+        $reduction->Reduction_arriere =$this->convertToDecimal( $request->input('Reduction_arriere'));
+        $reduction->Reduction_frais1 = $this->convertToDecimal($request->input('Reduction_frais1'));
+        $reduction->Reduction_frais2 = $this->convertToDecimal($request->input('Reduction_frais2'));
+        $reduction->Reduction_frais3 = $this->convertToDecimal($request->input('Reduction_frais3'));
+        $reduction->Reduction_frais4 = $this->convertToDecimal($request->input('Reduction_frais4'));
         $reduction->mode = $request->input('mode');
 
         // Sauvegarder les modifications
