@@ -441,7 +441,7 @@ public function destroy($codePromo)
 
   public function indexEleves()
 {
-    $eleves = Eleve::with('classe.promo')->get();;
+    // $eleves = Eleve::with('classe.promo')->get();
     $allClass = Classes::all();
     $serie = Serie::get();
     $promotion = Promo::all();
