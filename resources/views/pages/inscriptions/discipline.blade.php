@@ -4,16 +4,16 @@
 
     <div class="container card mt-3">
         @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-@if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <div class="row">
 
             <div class="card-body">
@@ -189,7 +189,7 @@
                             @if (!empty($eleves))
                                 <div class="table-container">
                                     <h4 class="my-4">Liste des élèves</h4>
-                                    <table class="table table-striped" id="myTable">
+                                    <table class="table table-striped text-center" id="myTable">
                                         <thead>
                                             <tr>
                                                 <th>Nom</th>
@@ -206,21 +206,44 @@
                                                     <td>{{ $eleve->CODECLAS }}</td>
                                                     <td>
                                                         <!-- Modal pour voir les fautes -->
-                                                        <button type="button" class="btn btn-secondary"
+                                                        <button type="button" class="btn btn-secondary btn-sm me-2"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#modalVoirFautes-{{ $eleve->MATRICULE }}">
                                                             Voir Plus
                                                         </button>
 
-                                                        <!-- Modal pour ajouter une faute -->
-                                                        <button type="button" class="btn btn-primary"
+                                                        <!-- Bouton pour ajouter une faute -->
+                                                        <button type="button" class="btn btn-primary btn-sm me-2"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#modalAjouterFaute-{{ $eleve->MATRICULE }}">
                                                             Ajouter faute
                                                         </button>
 
-                                                        <a href="{{ route('pages.etat.imprimer_fautes', $eleve->MATRICULE) }}" class="btn btn-primary">Imprimer les fautes</a>
-                                                        <a href="{{ route('pages.etat.imprimer_absences', $eleve->MATRICULE) }}" class="btn btn-primary">Imprimer les absences</a>
+                                                        <!-- Groupe de boutons Imprimer avec menu déroulant -->
+                                                        <div class="btn-group">
+                                                            <button type="button"
+                                                                class="btn btn-secondary btn-sm dropdown-toggle"
+                                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                                Imprimer
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a class="dropdown-item"
+                                                                        href="{{ route('pages.etat.imprimer_fautes', $eleve->MATRICULE) }}">
+                                                                        Imprimer les fautes
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a class="dropdown-item"
+                                                                        href="{{ route('pages.etat.imprimer_absences', $eleve->MATRICULE) }}">
+                                                                        Imprimer les absences
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+
+
+
 
 
                                                         <!-- Original Modal Voir les fautes -->
@@ -309,7 +332,7 @@
                                                                         </div>
                                                                         <div class="modal-body">
                                                                             <form
-                                                                                action="{{ route('fautes.update', $faute->MATRICULE ) }}"
+                                                                                action="{{ route('fautes.update', $faute->MATRICULE) }}"
                                                                                 method="POST">
                                                                                 @csrf
                                                                                 @method('PUT')
@@ -473,7 +496,8 @@
                                     <div
                                         style="display: flex; align-items: center; justify-content: space-between; margin: 10px;">
                                         <h4 style="margin: 0;">Liste des fautes</h4>
-                                        <a href="{{ route('pages.etat.imprimerfaute') }}" class="btn btn-primary">Imprimer les Fautes</a>
+                                        <a href="{{ route('pages.etat.imprimerfaute') }}"
+                                            class="btn btn-primary">Imprimer les Fautes</a>
 
                                     </div>
 
@@ -502,9 +526,11 @@
                                 </div>
 
                                 <div id="absencesTable" style="display: none;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between; margin: 10px;">
+                                    <div
+                                        style="display: flex; align-items: center; justify-content: space-between; margin: 10px;">
                                         <h4 style="margin: 0;">Liste des absences</h4>
-                                        <a href="{{ route('pages.etat.imprimerabsence') }}" class="btn btn-primary">Imprimer les Absences</a>
+                                        <a href="{{ route('pages.etat.imprimerabsence') }}"
+                                            class="btn btn-primary">Imprimer les Absences</a>
                                     </div>
                                     <table class="table table-striped" id="myTable">
                                         <thead>

@@ -339,7 +339,7 @@ public function imprimereleveAbsence($MATRICULE)
     $absences = Absence::where('MATRICULE', $MATRICULE)->get();
 
     // Si tu veux afficher une page imprimable
-    return view('pages.etat.impression_fautes', compact('eleve', 'absences'));
+    return view('pages.etat.impression_absences', compact('eleve', 'absences'));
 
     // Ou si tu veux générer un PDF (nécessite une librairie comme domPDF ou snappy)
     // $pdf = PDF::loadView('pages.eleves.impression_fautes', compact('eleve', 'fautes'));

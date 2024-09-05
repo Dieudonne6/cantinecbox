@@ -169,7 +169,7 @@ Route::get('/fautes/imprimer', [GestionclasseController::class, 'imprimerfautes'
 Route::get('/absences/imprimer', [GestionclasseController::class, 'imprimerabsences'])->name('pages.etat.imprimerabsence');
 // web.php
 Route::get('/pages/{matricule}/impression-fautes', [GestionclasseController::class, 'imprimereleveFautes'])->name('pages.etat.imprimer_fautes');
-Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::class, 'imprimereleveAbsences'])->name('pages.etat.imprimer_absences');
+Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::class, 'imprimereleveAbsence'])->name('pages.etat.imprimer_absences');
 
 
 Route::get('/archive', [PagesController::class, 'archive']);
