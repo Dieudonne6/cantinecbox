@@ -11,4 +11,5 @@ class Classesgroupeclass extends Model
     public $timestamps = false;
 
     protected $table = 'classes_groupeclasse';
+    protected $fillable = ['LibelleGroupe', 'CODECLAS'];
 }

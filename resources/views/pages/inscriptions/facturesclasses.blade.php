@@ -22,9 +22,11 @@
                     <td data-label="Libellé">{{$facture->LIBELCLAS}}</td>
                     <td data-label="Enseignement">{{$facture->typeenseigne_type}}</td>
                     <td data-label="Actions">
+                        <a class="btn btn-primary" href="{{ url('detailfacturesclasses/'.$facture->CODECLAS) }}">Facture</a>
+{{-- 
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{$facture->CODECLAS}}">
                             Facture
-                        </button>
+                        </button> --}}
                     </td>
                 </tr>
                 @endforeach

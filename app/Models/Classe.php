@@ -9,6 +9,11 @@ class Classe extends Model
 {
     use HasFactory;
     protected $table = 'classes';
+    protected $primaryKey = 'CODECLAS';
+    public $incrementing = false;
+    protected $keyType = 'string';
+    public $timestamps = false;
+
 
     public function serie()
     {

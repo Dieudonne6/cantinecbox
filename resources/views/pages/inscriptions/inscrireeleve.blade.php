@@ -37,7 +37,7 @@
                     <div class="form-group row mt-1">
                       <label for="classe" class="col-sm-2 col-form-label">Classe</label>
                       <div class="col-sm-3">
-                        <select class="js-example-basic-multiple w-100" id="classe" name="classe">
+                        <select class="js-example-basic-multiple w-100" id="classe" name="classe" value="{{ old('classe') }}">
                           @foreach ($allClasse as $classe)
                           <option value="{{ $classe->CODECLAS }}">{{ $classe->CODECLAS }}</option>
                           @endforeach
@@ -45,7 +45,7 @@
                       </div>
                       <label for="classe-entree" class="col-sm-3 col-form-label">Classe d'entrée collège</label>
                       <div class="col-sm-3">
-                        <select class="js-example-basic-multiple w-100 select2-hidden-accessible" id="classe-entree" name="classeEntre">
+                        <select class="js-example-basic-multiple w-100 select2-hidden-accessible" id="classe-entree" name="classeEntre" value="{{ old('classeEntre') }}">
                           <option value="idem">idem</option>
                           @foreach ($allClasse as $classe)
                           <option value="{{ $classe->CODECLAS }}">{{ $classe->CODECLAS }}</option>
@@ -93,7 +93,7 @@
                         </div>
                         <div class="col-md-4">
                           <label for="profil-reduction">Profil de réduction</label>
-                          <select id="profil-reduction" name="reduction" class="js-example-basic-multiple w-100" >
+                          <select id="profil-reduction" name="reduction" class="js-example-basic-multiple w-100" value="{{ old('reduction') }}">
                             @foreach ($allReduction as $reduction)
                             <option value="{{ $reduction->CodeReduction }}">{{ $reduction->LibelleReduction }}</option>
                             @endforeach
@@ -107,32 +107,32 @@
                       <div class="form-group row mt-3">
                         <div class="col-md-4">
                           <label for="nom">Nom</label>
-                          <input type="text" id="nom" name="nom" class="form-control">
+                          <input type="text" id="nom" name="nom" class="form-control" value="{{ old('nom') }}">
                         </div>
                         <div class="col-md-4">
                           <label for="prenom">Prénom</label>
-                          <input type="text" id="prenom" name="prenom" class="form-control">
+                          <input type="text" id="prenom" name="prenom" class="form-control" value="{{ old('prenom') }}">
                         </div>
                         <div class="col-md-4">
                           <label for="date-naissance">Date de naissance</label>
-                          <input type="date" id="date-naissance" name="dateNaissance" class="form-control">
+                          <input type="date" id="date-naissance" name="dateNaissance" class="form-control" value="{{ old('dateNaissance') }}">
                         </div>
                       </div>
                       
                       <div class="form-group row mt-3">
                         <div class="col-md-4">
                           <label for="lieu-naissance">Lieu de naissance</label>
-                          <input type="text" id="lieu-naissance" name="lieuNaissance" class="form-control">
+                          <input type="text" id="lieu-naissance" name="lieuNaissance" class="form-control" value="{{ old('lieuNaissance') }}">
                         </div>
                         <div class="col-md-4">
                           <label for="date-inscription">Date d'inscription</label>
-                          <input type="date" id="date-inscription" name="dateInscription" class="form-control">
+                          <input type="date" id="date-inscription" name="dateInscription" class="form-control" value="{{ old('dateInscription') }}">
                         </div>
                         <div class="col-md-4">
                           <label for="departement">Département</label>
-                          <select class="js-example-basic-multiple w-100" id="departement" name="departement">
+                          <select class="js-example-basic-multiple w-100" id="departement" name="departement" >
                             @foreach ($allDepartement as $departement)
-                            <option value="{{ $departement->CODEDEPT }}">{{ $departement->LIBELDEP }}</option>
+                            <option value="{{ $departement->CODEDEPT }}" {{ old('departement') == $departement->CODEDEPT ? 'selected' : '' }}>{{ $departement->LIBELDEP }}</option>
                             @endforeach
                             {{-- <option value="littoral">Littoral</option>
                             <option value="italie">Italie</option>
@@ -146,7 +146,7 @@
                       <div class="form-group row mt-3">
                         <div class="col-md-4">
                           <label for="sexe">Sexe</label>
-                          <select id="sexe" name="sexe" class="js-example-basic-multiple w-100" >
+                          <select id="sexe" name="sexe" class="js-example-basic-multiple w-100" value="{{ old('sexe') }}">
                             {{-- <option  >Sélectionner</option> --}}
                             <option value="1">Masculin</option>
                             <option value="2">Féminin</option>
@@ -154,16 +154,16 @@
                         </div>
                         <div class="col-md-4">
                           <label for="type-eleve">Type d'élève</label>
-                          <select id="type-eleve" name="typeEleve" class="js-example-basic-multiple w-100">
+                          <select id="type-eleve" name="typeEleve" class="js-example-basic-multiple w-100"  value="{{ old('typeEleve') }}">
                             {{-- <option  >Sélectionner</option> --}}
-                            <option value="1">Nouveau</option>
+                            <option value="1" selected>Nouveau</option>
                             <option value="2">Ancien</option>
                             <option value="3">Transferer</option>
                           </select>
                         </div>
                         <div class="col-md-4">
                           <label for="aptitude-sport">Aptitude Sport</label>
-                          <select id="aptitude-sport" name="aptituteSport" class="js-example-basic-multiple w-100">
+                          <select id="aptitude-sport" name="aptituteSport" class="js-example-basic-multiple w-100" value="{{ old('aptituteSport') }}">
                             {{-- <option  >Sélectionner</option> --}}
                             <option value="1">Apte</option>
                             <option value="2">Inapte</option>
@@ -174,15 +174,15 @@
                       <div class="form-group row mt-3">
                         <div class="col-md-4">
                           <label for="adresse-personnelle">Adresse personnelle</label>
-                          <input type="text" id="adresse-personnelle" placeholder="Elève au ScoDelux" name="adressePersonnelle" class="form-control">
+                          <input type="text" id="adresse-personnelle" placeholder="Elève au ScoDelux" name="adressePersonnelle" class="form-control" value="{{ old('adressePersonnelle') }}">
                         </div>
                         <div class="col-md-4">
                           <label for="etablissement-origine">Etablissement d'origine</label>
-                          <input type="text" id="etablissement-origine" name="etablissementOrigine" class="form-control">
+                          <input type="text" id="etablissement-origine" name="etablissementOrigine" class="form-control" value="{{ old('etablissementOrigine') }}">
                         </div>
                         <div class="col-md-4">
                           <label for="nationalite">Nationalité</label>
-                          <input type="text" id="nationalite" name="nationalite" class="form-control">
+                          <input type="text" id="nationalite" name="nationalite" class="form-control" value="{{ old('nationalite') }}">
                         </div>
                       </div>
                       
@@ -190,7 +190,7 @@
                       <div class="form-group row">
                         <div class="col-md-4">
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="redoublant" id="redoublant" value="1" style="margin-left: 0.30rem;">
+                            <input class="form-check-input" type="checkbox" name="redoublant" id="redoublant" value="1" style="margin-left: 0.30rem;" value="{{ old('redoublant') }}">
                             <label class="form-check-label" for="redoublant">Cocher si c'est un redoublant</label>
                           </div>
                         </div>
@@ -203,22 +203,22 @@
                       <div class="form-group row">
                         <div class="col-md-6">
                           <label for="nom-pere">Nom du père</label>
-                          <input type="text" id="nom-pere" name="nomPere" class="form-control">
+                          <input type="text" id="nom-pere" name="nomPere" class="form-control" value="{{ old('nomPere') }}">
                         </div>
                         <div class="col-md-6">
                           <label for="nom-mere">Nom de la mère</label>
-                          <input type="text" id="nom-mere" name="nomMere" class="form-control">
+                          <input type="text" id="nom-mere" name="nomMere" class="form-control" value="{{ old('nomMere') }}">
                         </div>
                       </div>
                       
                       <div class="form-group row mt-3">
                         <div class="col-md-6">
                           <label for="adresses-parents">Adresses parents</label>
-                          <input type="text" id="adresses-parents" name="adressesParents" class="form-control">
+                          <input type="text" id="adresses-parents" name="adressesParents" class="form-control" value="{{ old('adressesParents') }}">
                         </div>
                         <div class="col-md-6">
                           <label for="autres-renseignements">Autres renseignements</label>
-                          <input type="text" id="autres-renseignements" name="autresRenseignements" class="form-control">
+                          <input type="text" id="autres-renseignements" name="autresRenseignements" class="form-control" value="{{ old('autresRenseignements') }}">
                         </div>
                       </div>
                       
@@ -226,17 +226,17 @@
                       <div class="form-group row mt-3">
                         <div class="col-md-2">
                           <label for="contacts-parents">Contacts parents</label>
-                          <select id="contacts-parents" name="indicatifParent" class="js-example-basic-multiple w-100">
+                          <select id="contacts-parents" name="indicatifParent" class="js-example-basic-multiple w-100" value="{{ old('indicatifParent') }}">
                             <option value="+229">+229</option>
                           </select>
                         </div>
                         <div class="col-md-5">
                           <label for="telephone-1">Téléphone Parent</label>
-                          <input type="text" id="telephone-1" name="telephoneParent" class="form-control">
+                          <input type="text" id="telephone-1" name="telephoneParent" class="form-control" value="{{ old('telephoneParent') }}">
                         </div>
                         <div class="col-md-5">
                           <label for="telephone-2">Téléphone Eleve</label>
-                          <input type="text" id="telephone-2" name="telephoneEleve" class="form-control">
+                          <input type="text" id="telephone-2" name="telephoneEleve" class="form-control" value="{{ old('telephoneEleve') }}">
                         </div>
                       </div>
                       

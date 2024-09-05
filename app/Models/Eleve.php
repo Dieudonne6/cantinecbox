@@ -31,4 +31,9 @@ class Eleve extends Model
         return $this->belongsTo(Classes::class, 'CODECLAS', 'CODECLAS');
     }
 
+    // Relation avec le modèle Faute
+    public function fautes() {
+        return $this->hasMany(Faute::class, 'MATRICULE', 'MATRICULE');
+    }
+
 }
