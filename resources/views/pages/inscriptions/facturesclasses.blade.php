@@ -16,27 +16,18 @@
                 </tr>
             </thead>
             <tbody>
+              @foreach ($factures as $facture)
                 <tr>
-                    <td data-label="Groupe Pédagogique">Groupe 1</td>
-                    <td data-label="Libellé">Mathématiques</td>
-                    <td data-label="Enseignement">M. Dupont</td>
+                    <td data-label="Groupe Pédagogique">{{$facture->CODECLAS}}</td>
+                    <td data-label="Libellé">{{$facture->LIBELCLAS}}</td>
+                    <td data-label="Enseignement">{{$facture->typeenseigne_type}}</td>
                     <td data-label="Actions">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Facture
-                        </button>
-                    </td>
-
-                </tr>
-                <tr>
-                    <td data-label="Groupe Pédagogique">Groupe 2</td>
-                    <td data-label="Libellé">Sciences</td>
-                    <td data-label="Enseignement">Mme. Martin</td>
-                    <td data-label="Actions">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{$facture->CODECLAS}}">
                             Facture
                         </button>
                     </td>
                 </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
@@ -47,279 +38,100 @@
 @endsection
   
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="max-width: 80%;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Enrégistrement des classes</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div class="d-flex align-items-start">
-                <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                  <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Scolarité</button>
-                  <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Echéancier de paiement</button>
-                  <button class="nav-link" id="v-pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#v-pills-disabled" type="button" role="tab" aria-controls="v-pills-disabled" aria-selected="false" disabled>Disabled</button>
-                  <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</button>
-                  <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>
-                </div>
-                <div class="tab-content" id="v-pills-tabContent">
-                  <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">
-
-                    <div class="form-group row mt-1">
-                        <label for="lieu" class="col-sm-4 col-form-label">Nom de la classe</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="lieu" placeholder=" text ">
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="lieu" placeholder=" text ">
-                        </div>
-                    </div>
-        
-                    <div class="row">
-                            <div class="form-group row mt-1">
-                                <label class="col-sm-3 col-form-label" for="lieu"><button>Défaut</button></label>
-                                <div class="col-sm-7">
-                                    <table>
-                                        <tr>
-                                            <th>Nouveaux</th>
-                                            <th>Anciens</th>
-                                        </tr>
-                                        <tr>
-                                            <td>Ligne 1</td>
-                                            <td>Cellule 2</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cellule 1</td>
-                                            <td>Ligne 2</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cellule 1</td>
-                                            <td>Ligne 3</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cellule 1</td>
-                                            <td>Ligne 4</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cellule 1</td>
-                                            <td>Ligne 5</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cellule 1</td>
-                                            <td>Ligne 6</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            
-                        </div>
-                    </div>
-                  </div>
-
-                  <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">
-                    <div class="row">
-                      <div class="card">
-                        <div class="card-body">
-                          <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-                              L'échéancier prend en compte les frais de scolarité seulement
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="flexCheckChecked" checked>
-                            <label class="form-check-label" for="flexCheckChecked">
-                              L'échéancier prend en compte tous les frais [195000] et [190000]
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                  
-                      <div class="col-md-6 grid-margin stretch-card">
-                        <div class="card">
-                          <div class="card-body">
-                            <div class="form-group row mt-1">
-                              <label for="nbEcheance" class="col-sm-4 col-form-label">Nb. échéance</label>
-                              <div class="col-sm-4">
-                                <input type="text" class="form-control" id="nbEcheance" placeholder=" ">
-                              </div>
-                            </div>
-                            <div class="form-group row mt-1">
-                              <label for="dateDebut" class="col-sm-6 col-form-label">Date de début de paiement</label>
-                              <div class="col-sm-5">
-                                <input type="date" class="form-control" id="dateDebut" placeholder="jj/mm/aa">
-                              </div>
-                            </div>
-                            <div class="form-group row mt-1">
-                              <label for="periodicite" class="col-sm-3 col-form-label">Périodicité</label>
-                              <div class="col-sm-2">
-                                <input type="text" class="form-control" id="periodicite" placeholder=" ">
-                              </div>
-                              <label class="col-sm-3 col-form-label">Mois</label>
-                              <label class="col-sm-4 col-form-label">>= 7 pour exprimer jours</label>
-                            </div>
-                            <div class="table-responsive" style="height: 100px; overflow: auto;">
-                                <table class="table table-dark">
-                                  <thead style="position: sticky; top: 0; z-index: 1; background: #10bebe;">
-                                    <tr>
-                                      <th>Tranche</th>
-                                      <th>% nouv</th>
-                                      <th>% anc</th>
-                                      <th>Montant</th>
-                                      <th>Montant2</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr class="table-active">
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>02024</td>
-                                      <td>190 000</td>
-                                    </tr>
-                                    <tr>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>02024</td>
-                                      <td>190 000</td>
-                                    </tr>
-                                    <tr>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>02024</td>
-                                      <td>190 000</td>
-                                    </tr>
-                                  </tbody>
-                                  <tfoot style="position: sticky; bottom: 0; z-index: 1; background: #10bebe;">
-                                    <tr>
-                                      <td colspan="1" class="table-active"></td>
-                                      <td>190 000</td>
-                                      <td>190 000</td>
-                                      <td>190 000</td>
-                                      <td>190 000</td>
-                                    </tr>
-                                  </tfoot>
-                                </table>
-                              </div>
-                          </div>
-                        </div>
-                      </div>
-                  
-                      <div class="col-md-6 grid-margin stretch-card">
-                        <div class="card">
-                          <div class="card-body">
-                            <h5 style="text-align: center";>Nouveaux élèves</h5>
-                            <div class="table-responsive" style="height: 100px; overflow: auto;">
-                                <table class="table table-dark">
-                                  <thead style="position: sticky; top: 0; z-index: 1; background: #343a40;">
-                                    <tr>
-                                      <th>Tranche</th>
-                                      <th>% nouv</th>
-                                      <th>% anc</th>
-                                      <th>Montant</th>
-                                      <th>Montant2</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr class="table-active">
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>02024</td>
-                                      <td>190 000</td>
-                                    </tr>
-                                    <tr>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>02024</td>
-                                      <td>190 000</td>
-                                    </tr>
-                                    <tr>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>02024</td>
-                                      <td>190 000</td>
-                                    </tr>
-                                  </tbody>
-                                  <tfoot style="position: sticky; bottom: 0; z-index: 1; background: #343a40;">
-                                    <tr>
-                                      <td colspan="1" class="table-active"></td>
-                                      <td>190 000</td>
-                                      <td>190 000</td>
-                                      <td>190 000</td>
-                                      <td>190 000</td>
-                                    </tr>
-                                  </tfoot>
-                                </table>
-                              </div>
-                          </div>
-                          <div class="card-body">
-                            <h5 style="text-align: center;">Anciens élèves</h5>
-                            <div class="table-responsive" style="height: 100px; overflow: auto;">
-                                <table class="table table-dark">
-                                  <thead style="position: sticky; top: 0; z-index: 1; background: #343a40;">
-                                    <tr>
-                                      <th>Tranche</th>
-                                      <th>% nouv</th>
-                                      <th>% anc</th>
-                                      <th>Montant</th>
-                                      <th>Montant2</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr class="table-active">
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>02024</td>
-                                      <td>190 000</td>
-                                    </tr>
-                                    <tr>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>02024</td>
-                                      <td>190 000</td>
-                                    </tr>
-                                    <tr>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>130</td>
-                                      <td>02024</td>
-                                      <td>190 000</td>
-                                    </tr>
-                                  </tbody>
-                                  <tfoot style="position: sticky; bottom: 0; z-index: 1; background: #343a40;">
-                                    <tr>
-                                      <td colspan="1" class="table-active"></td>
-                                      <td>190 000</td>
-                                      <td>190 000</td>
-                                      <td>190 000</td>
-                                      <td>190 000</td>
-                                    </tr>
-                                  </tfoot>
-                                </table>
-                            </div>
-                            <button type="button" style="" class="btn btn-secondary mt-2">Créer</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+  @foreach ($factures as $facture)
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal{{ $facture->CODECLAS }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ $facture->CODECLAS }}" aria-hidden="true">
+      <div class="modal-dialog" style="max-width: 80%;">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel{{ $facture->CODECLAS }}">Enregistrement des classes</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Valider & Fermer</button>
-        </div>
+              <div class="modal-body">
+                  <ul class="nav nav-tabs" id="myTab{{ $facture->CODECLAS }}" role="tablist">
+                      <li class="nav-item" role="presentation">
+                          <button class="nav-link active" id="scolarite-tab{{ $facture->CODECLAS }}" data-bs-toggle="tab" data-bs-target="#scolarite{{ $facture->CODECLAS }}" type="button" role="tab" aria-controls="scolarite{{ $facture->CODECLAS }}" aria-selected="true">Scolarité</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="echeancier-tab{{ $facture->CODECLAS }}" data-bs-toggle="tab" data-bs-target="#echeancier{{ $facture->CODECLAS }}" type="button" role="tab" aria-controls="echeancier{{ $facture->CODECLAS }}" aria-selected="false">Échéancier de paiement</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="messages-tab{{ $facture->CODECLAS }}" data-bs-toggle="tab" data-bs-target="#messages{{ $facture->CODECLAS }}" type="button" role="tab" aria-controls="messages{{ $facture->CODECLAS }}" aria-selected="false">Messages</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="settings-tab{{ $facture->CODECLAS }}" data-bs-toggle="tab" data-bs-target="#settings{{ $facture->CODECLAS }}" type="button" role="tab" aria-controls="settings{{ $facture->CODECLAS }}" aria-selected="false">Paramètres</button>
+                      </li>
+                  </ul>
+                  <div class="tab-content mt-3" id="myTabContent{{ $facture->CODECLAS }}">
+                      <div class="tab-pane fade show active" id="scolarite{{ $facture->CODECLAS }}" role="tabpanel" aria-labelledby="scolarite-tab{{ $facture->CODECLAS }}">
+                          <!-- Contenu de l'onglet Scolarité -->
+                          <div class="row">
+                              <div class="col">
+                                  <div class="row">
+                                      <div class="col-3">
+                                          <p>Nom de la classe</p>
+                                          <input type="text" class="form-control" name="CODECLAS" value="{{ $facture->CODECLAS }}" placeholder="CE1A">
+                                      </div>
+                                      <div class="col-3">
+                                          <p>Libellé de la classe</p>
+                                          <input type="text" class="form-control" name="LIBELCLAS" value="{{ $facture->LIBELCLAS }}" placeholder="CE1A">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col">
+                                  <div class="row">
+                                      <div class="col-4">
+                                          <p>Scolarité Nouveau élève</p>
+                                          <input type="text" class="form-control" style="border: 0.1px solid;" name="APAYER" value="{{ $facture->APAYER }}">
+                                          <p>Frais 1</p>
+                                          <input type="text" class="form-control" style="border: 0.1px solid;" name="FRAIS1" value="{{ $facture->FRAIS1 }}">
+                                          <p>Frais 2</p>
+                                          <input type="text" class="form-control" style="border: 0.1px solid;" name="FRAIS2" value="{{ $facture->FRAIS2 }}">
+                                          <p>Frais 3</p>
+                                          <input type="text" class="form-control" style="border: 0.1px solid;" name="FRAIS3" value="{{ $facture->FRAIS3 }}">
+                                          <p>Frais 4</p>
+                                          <input type="text" class="form-control" style="border: 0.1px solid;" name="FRAIS4" value="{{ $facture->FRAIS4 }}">
+                                      </div>
+                                      <div class=" col-4">
+                                        <p>Scolarité Ancien élève</p>
+                                        <div class=" mb">
+                                            <input type="text" class="form-control" style="border: 0.1px solid;" placeholder="" name="APAYER2" value="{{$facture->APAYER2}}">
+                                        </div>
+                                        <div class=" mb" style="margin-top: 21px;">
+                                            <input type="text" class="form-control" style="border: 0.1px solid;" placeholder="" name="FRAIS1_A" value="{{$facture->FRAIS1_A}}">
+                                        </div>
+                                        <div class=" mb" style="margin-top: 21px;">
+                                            <input type="text" class="form-control" style="border: 0.1px solid;" placeholder="" name="FRAIS2_A" value="{{$facture->FRAIS2_A}}">
+                                        </div>
+                                        <div class=" mb" style="margin-top: 21px;">
+                                            <input type="text" class="form-control" style="border: 0.1px solid;" placeholder="" name="FRAIS3_A" value="{{$facture->FRAIS3_A}}">
+                                        </div>
+                                        <div class=" mb" style="margin-top: 21px;">
+                                            <input type="text" class="form-control" style="border: 0.1px solid;" placeholder="" name="FRAIS4_A" value="{{$facture->FRAIS4_A}}">
+                                        </div>
+                                    </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="tab-pane fade" id="echeancier{{ $facture->CODECLAS }}" role="tabpanel" aria-labelledby="echeancier-tab{{ $facture->CODECLAS }}">
+                          <!-- Contenu de l'onglet Échéancier de paiement -->
+                      </div>
+                      <div class="tab-pane fade" id="messages{{ $facture->CODECLAS }}" role="tabpanel" aria-labelledby="messages-tab{{ $facture->CODECLAS }}">
+                          <!-- Contenu de l'onglet Messages -->
+                      </div>
+                      <div class="tab-pane fade" id="settings{{ $facture->CODECLAS }}" role="tabpanel" aria-labelledby="settings-tab{{ $facture->CODECLAS }}">
+                          <!-- Contenu de l'onglet Paramètres -->
+                      </div>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Valider & Fermer</button>
+              </div>
+          </div>
       </div>
-    </div>
   </div>
+  @endforeach
 
   
   <style>

@@ -406,10 +406,25 @@ $(document).ready(function(){
       $('#calcul-one').addClass('col-lg-8');
       $('.calcul-modal').css({'width': '800px'});
     });
+
+    $('#calculss').on('click', function() {
+      $('#percentages').removeClass('d-none');
+      
+      $('#calcul-ones').addClass('col-lg-8');
+      $('.calcul-modals').css({'width': '800px'});
+    });
+
     $('#closecalculate').on('click', function() {
       $('#percentage').addClass('d-none');
       $('#calcul-one').removeClass('col-lg-8');
       $('.calcul-modal').css({'width': '500px'});
+
+    });
+
+    $('#closecalculates').on('click', function() {
+      $('#percentages').addClass('d-none');
+      $('#calcul-ones').removeClass('col-lg-8');
+      $('.calcul-modals').css({'width': '500px'});
 
     });
     

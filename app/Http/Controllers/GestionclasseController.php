@@ -612,12 +612,17 @@ public function destroy($codePromo)
 
   public function indexEleves()
 {
-    $eleves = Eleve::all();
-    
+    $eleves = Eleve::with('classe.promo')->get();;
+    $allClass = Classes::all();
+    $serie = Serie::get();
+    $promotion = Promo::all();
+    $typeenseigne = Typeenseigne::get();
+    $typeclah = Typeclasse::get();
+
         // Récupérer les élèves avec leurs notes
         $eleves = Eleve::with('notes')->get();
 
-    return view('pages.inscriptions.Acceuil', compact('eleves'));
+    return view('pages.inscriptions.Acceuil', compact('eleves','allClass','serie','promotion','typeclah','typeenseigne'));
 }
 
   //   return view('pages.inscriptions.groupes');
@@ -676,6 +681,19 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
     $nouveauEleve->CODEWEB = $formateMatricule; // MEME VALEUR QUE MATRICULEX
 
     $nouveauEleve->save();
+
+    $infoclasse = Classes::where('CODECLAS', ($request->input('classe')))->first();
+    $TYPEENSEIG = $infoclasse->TYPEENSEIG;
+    $TYPECLASSE = $infoclasse->TYPECLASSE;
+    $SERIE = $infoclasse->SERIE;
+    // dd($SERIE);
+
+    $infoeleve = Eleve::where('MATRICULE', ($request->input('numOrdre')))->first();
+    $infoeleve->TYPEENSEIG = $TYPEENSEIG;
+    $infoeleve->TYPECLASSE = $TYPECLASSE;
+    $infoeleve->SERIE = $SERIE;
+    $infoeleve->save();
+
 
     return redirect()->route('inscrireeleve')->with('status', 'Élève enregistré avec succès');
 

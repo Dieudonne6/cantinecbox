@@ -20,4 +20,5 @@ class Promo extends Model
         'Niveau',
         'TYPEENSEIG'
     ];
+    
 }

@@ -18,5 +18,10 @@ class Classes extends Model
     protected $primaryKey = 'CODECLAS';
     public $incrementing = false;
     protected $keyType = 'string';
+
+    public function promo()
+    {
+        return $this->belongsTo(Promo::class, 'CODEPROMO', 'CODEPROMO');
+    }
      
 }
