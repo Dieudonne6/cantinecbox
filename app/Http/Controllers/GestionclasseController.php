@@ -518,6 +518,23 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
     $infoeleve->SERIE = $SERIE;
     $infoeleve->save();
 
+    // dd($infoclasse);
+    if(($request->input('typeEleve')) == 2) {
+        $infoeleve->APAYER = $infoclasse->APAYER2;
+        $infoeleve->FRAIS1 = $infoclasse->FRAIS1_A;
+        $infoeleve->FRAIS2 = $infoclasse->FRAIS2_A;
+        $infoeleve->FRAIS3 = $infoclasse->FRAIS3_A;
+        $infoeleve->FRAIS4 = $infoclasse->FRAIS4_A;
+        $infoeleve->save();
+    } else {
+        $infoeleve->APAYER = $infoclasse->APAYER;
+        $infoeleve->FRAIS1 = $infoclasse->FRAIS1;
+        $infoeleve->FRAIS2 = $infoclasse->FRAIS2;
+        $infoeleve->FRAIS3 = $infoclasse->FRAIS3;
+        $infoeleve->FRAIS4 = $infoclasse->FRAIS4;
+        $infoeleve->save();
+    }
+
 
     return redirect()->route('inscrireeleve')->with('status', 'Élève enregistré avec succès');
 
