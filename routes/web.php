@@ -9,6 +9,9 @@ use App\Http\Controllers\EleveController;
 use App\Http\Controllers\EtatController;
 use App\Http\Controllers\GestionclasseController;
 use App\Http\Controllers\ScolariteController;
+use App\Http\Controllers\Faute;
+use App\Http\Controllers\Tfautes;
+use App\Http\Controllers\Absence;
 
 /*
 |--------------------------------------------------------------------------
@@ -152,7 +155,23 @@ Route::get('/paiementdesnoninscrits', [PagesController::class, 'paiementdesnonin
 
 // Route::get('/facturesclasses', [PagesController::class, 'facturesclasses']);
 Route::get('/reductioncollective', [PagesController::class, 'reductioncollective']);
-Route::get('/discipline', [PagesController::class, 'discipline']);
+
+Route::get('/discipline', [GestionclasseController::class, 'discipline'])->name('discipline');
+Route::post('/faute', [GestionclasseController::class, 'Tstore'])->name('faute.store');
+Route::put('/faute/{id}', [GestionclasseController::class, 'Tupdate'])->name('faute.update');
+Route::delete('/faute/{id}', [GestionclasseController::class, 'Tdestroy'])->name('faute.destroy');
+Route::post('/fautes', [GestionclasseController::class, 'fautestore'])->name('fautes.store');
+Route::get('/eleve/{MATRICULE}/fautes', [GestionclasseController::class, 'showFaults'])->name('eleve.faults');
+// Routes pour les fautes
+Route::put('/fautes/{id}', [GestionclasseController::class, 'fauteupdate'])->name('fautes.update');
+Route::delete('/fautes/{MATRICULE}', [GestionclasseController::class, 'fautedestroy'])->name('fautes.destroy');
+Route::get('/fautes/imprimer', [GestionclasseController::class, 'imprimerfautes'])->name('pages.etat.imprimerfaute');
+Route::get('/absences/imprimer', [GestionclasseController::class, 'imprimerabsences'])->name('pages.etat.imprimerabsence');
+// web.php
+Route::get('/pages/{matricule}/impression-fautes', [GestionclasseController::class, 'imprimereleveFautes'])->name('pages.etat.imprimer_fautes');
+Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::class, 'imprimereleveAbsences'])->name('pages.etat.imprimer_absences');
+
+
 Route::get('/archive', [PagesController::class, 'archive']);
 Route::get('/editions', [PagesController::class, 'editions']);
 Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse']);

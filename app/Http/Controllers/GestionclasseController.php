@@ -13,6 +13,9 @@ use App\Models\Groupeclasse;
 use App\Models\Classes;
 use App\Models\Eleve;
 use App\Models\Serie;
+use App\Models\Faute;
+use App\Models\Tfautes;
+use App\Models\Absence;
 use App\Models\Typeclasse;
 use App\Models\Typeenseigne;
 use App\Models\Eleveplus;
@@ -174,6 +177,174 @@ public function supprimerGroupe($id)
         }
     }
 
+public function discipline(Request $request)
+{
+    // Récupérer toutes les fautes
+    $fautes = Faute::get();
+
+    // Récupérer toutes les fautes dans scoracine
+    $tfautes = Tfautes::get();
+
+    // Récupérer toutes les absences
+    $absences = Absence::get();
+
+    // Récupérer tous les groupes de la table classes_groupeclasse
+    $classesGroupeclasse = Classesgroupeclass::select('LibelleGroupe', 'CODECLAS')->distinct()->get();
+
+    // Si un CODECLAS est sélectionné, récupérer les élèves correspondants
+    $eleves = [];
+    if ($request->has('groupe')) {
+        $codeclas = $request->input('groupe');
+        $eleves = Eleve::where('CODECLAS', $codeclas)->get();
+    }
+
+    // Passer toutes les données à la vue
+    return view('pages.inscriptions.discipline', compact('fautes', 'tfautes', 'absences', 'classesGroupeclasse', 'eleves'));
+}
+
+public function showFaults($MATRICULE)
+{
+    // Récupérer l'élève par son matricule
+    $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
+
+    // Vérifiez si l'élève existe
+    if (!$eleve) {
+        return redirect()->back()->with('error', 'Élève non trouvé.');
+    }
+
+    // Récupérer les fautes associées à cet élève
+    $fautes = $eleve->fautes; // Assurez-vous que la relation est définie dans le modèle Eleve
+
+    // Retourner la vue avec les données de l'élève et les fautes
+    return view('pages.inscriptions.discipline', compact('eleve', 'fautes'));
+}
+
+public function Tstore(Request $request)
+{
+    $data = $request->validate([
+        'LibelFaute' => 'required|string|max:255',
+        'Sanction_Indicative' => 'required|string|max:255',
+        'Sanction_en_heure' => 'required|integer',
+        'Sanction_en_points' => 'required|integer',
+    ]);
+
+    Tfautes::create($data);
+
+    return redirect()->route('discipline')->with('success', 'Faute et sanction ajoutées avec succès.');
+}
+
+public function Tupdate(Request $request, $id)
+{
+    $data = $request->validate([
+        'LibelFaute' => 'required|string|max:255',
+        'Sanction_Indicative' => 'required|string|max:255',
+        'Sanction_en_heure' => 'required|integer',
+        'Sanction_en_points' => 'required|integer',
+    ]);
+    $tfaute = Tfautes::where('idTFautes', $id)->firstOrFail();
+    $tfaute->update($data);
+
+    return redirect()->route('discipline')->with('success', 'Faute et sanction modifiées avec succès.');
+}
+
+public function Tdestroy($id)
+{
+    $tfaute = Tfautes::where('idTFautes', $id)->firstOrFail();
+    $tfaute->delete();
+
+    return redirect()->route('discipline')->with('success', 'Faute supprimée avec succès.');
+}
+
+public function fautestore(Request $request)
+{
+    // Valider les données du formulaire
+    $request->validate([
+        'faute' => 'required|string|max:255',
+        'sanction' => 'required|string|max:255',
+        'nbheure' => 'required|integer',
+        'collective' => 'required|boolean',
+        'eleve_id' => 'required|exists:eleve,MATRICULE',
+    ]);
+
+    // Créer un nouvel enregistrement dans la table fautes
+    Faute::create([
+        'MATRICULE' => $request->eleve_id,  // Utilisation de eleve_id pour MATRICULE
+        'FAUTE' => $request->faute,
+        'SANCTION' => $request->sanction,
+        'NBHEURE' => $request->nbheure,
+        'COLLECTIVE' => $request->collective,
+        'DATEOP' => now(), 
+    ]);
+
+    // Rediriger avec un message de succès
+    return back()->with('success', 'Faute ajoutée avec succès.');
+}
+
+
+public function fauteupdate(Request $request, $id)
+{
+    $faute = Faute::where('IDFAUTES', $id)->firstOrFail();
+    $faute->update($request->all());
+    return redirect()->route('discipline')->with('success', 'Faute et sanction modifiées avec succès.');
+}
+
+public function fautedestroy($id)
+{
+    $faute = Faute::find($id);
+    $faute->delete();
+    return redirect()->back()->with('success', 'Faute supprimée avec succès.');
+}
+
+public function imprimerfautes()
+{
+    // Récupérer les données de la table Fautes
+    $fautes = Faute::all();
+
+    // Retourner la vue avec les fautes
+    return view('pages.etat.imprimerfaute', compact('fautes'));
+}
+
+public function imprimerabsences()
+{
+    // Récupérer les données de la table Fautes
+    $absences = Absence::all();
+
+    // Retourner la vue avec les fautes
+    return view('pages.etat.imprimerabsence', compact('absences'));
+}
+   
+// EleveController.php
+public function imprimereleveFautes($MATRICULE)
+{
+    // Récupérer l'élève
+    $eleve = Eleve::find($MATRICULE);
+    
+    // Récupérer les fautes associées à cet élève
+    $fautes = Faute::where('MATRICULE', $MATRICULE)->get();
+
+    // Si tu veux afficher une page imprimable
+    return view('pages.etat.impression_fautes', compact('eleve', 'fautes'));
+
+    // Ou si tu veux générer un PDF (nécessite une librairie comme domPDF ou snappy)
+    // $pdf = PDF::loadView('pages.eleves.impression_fautes', compact('eleve', 'fautes'));
+    // return $pdf->download('fautes_eleve_'.$eleve->nom.'.pdf');
+}
+
+public function imprimereleveAbsence($MATRICULE)
+{
+    // Récupérer l'élève
+    $eleve = Eleve::find($MATRICULE);
+    
+    // Récupérer les fautes associées à cet élève
+    $absences = Absence::where('MATRICULE', $MATRICULE)->get();
+
+    // Si tu veux afficher une page imprimable
+    return view('pages.etat.impression_fautes', compact('eleve', 'absences'));
+
+    // Ou si tu veux générer un PDF (nécessite une librairie comme domPDF ou snappy)
+    // $pdf = PDF::loadView('pages.eleves.impression_fautes', compact('eleve', 'fautes'));
+    // return $pdf->download('fautes_eleve_'.$eleve->nom.'.pdf');
+}
     public function series(Request $request)
     {
         $series = Serie::get();
@@ -441,12 +612,17 @@ public function destroy($codePromo)
 
   public function indexEleves()
 {
-    $eleves = Eleve::all();
-    
+    $eleves = Eleve::with('classe.promo')->get();;
+    $allClass = Classes::all();
+    $serie = Serie::get();
+    $promotion = Promo::all();
+    $typeenseigne = Typeenseigne::get();
+    $typeclah = Typeclasse::get();
+
         // Récupérer les élèves avec leurs notes
         $eleves = Eleve::with('notes')->get();
 
-    return view('pages.inscriptions.Acceuil', compact('eleves'));
+    return view('pages.inscriptions.Acceuil', compact('eleves','allClass','serie','promotion','typeclah','typeenseigne'));
 }
 
   //   return view('pages.inscriptions.groupes');
