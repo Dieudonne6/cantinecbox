@@ -153,7 +153,7 @@ Route::get('/photos', [PagesController::class, 'photos']);
 
 Route::get('/paiementdesnoninscrits', [PagesController::class, 'paiementdesnoninscrits']);
 
-Route::get('/facturesclasses', [PagesController::class, 'facturesclasses']);
+// Route::get('/facturesclasses', [PagesController::class, 'facturesclasses']);
 Route::get('/reductioncollective', [PagesController::class, 'reductioncollective']);
 
 Route::get('/discipline', [GestionclasseController::class, 'discipline'])->name('discipline');
@@ -243,3 +243,5 @@ Route::get('/paramcomposantes', [ScolariteController::class, 'getparamcomposante
 // Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifieclasse']);
 
 Route::get('/facturesclasses', [ScolariteController::class, 'getfacturesclasses']);
+Route::get('/detailfacturesclasses/{CODECLAS}', [ScolariteController::class, 'detailfacturesclasses']);
+Route::post('/detailfacclasse/{CODECLAS}', [ScolariteController::class, 'detailfacclasse']);
