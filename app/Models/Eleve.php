@@ -27,4 +27,9 @@ class Eleve extends Model
         return $this->hasMany(Contrat::class, 'eleve_contrat', 'MATRICULE');
     }
 
+    // Relation avec le modèle Faute
+    public function fautes() {
+        return $this->hasMany(Faute::class, 'MATRICULE', 'MATRICULE');
+    }
+
 }
