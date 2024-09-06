@@ -2,7 +2,6 @@
 @section('content')
 @php
     use Carbon\Carbon;
-    @endphp
 @endphp
 <style>
     /* Masquer la sidebar et la navbar pendant l'impression */
@@ -84,7 +83,7 @@
             <div class="card-body">
                 
                 <div>
-                <h4 style="text-align: center; font-weight:bold">Liste des fautes de {{ $eleve->NOM }} {{ $eleve->PRENOM }}</h4>
+                <h4 style="text-align: center; font-weight:bold">Liste des absences de {{ $eleve->NOM }} {{ $eleve->PRENOM }}</h4>
                 </div><br>
                 <div class="table-responsive pt-3">
           {{--   <div class="table-container"> --}}
