@@ -16,7 +16,8 @@ class Tfautes extends Model
         'LibelFaute', 
         'Sanction_Indicative', 
         'Sanction_en_heure', 
-        'Sanction_en_points'
+        'Sanction_en_points',
+        'Absence'
     ];
     public $timestamps = false; // Désactive les timestamps si non utilisés
 }

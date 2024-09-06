@@ -240,23 +240,36 @@ public function Tstore(Request $request)
         'Sanction_en_heure' => 'required|integer',
         'Sanction_en_points' => 'required|integer',
     ]);
-
-    Tfautes::create($data);
-
+    $absencess = $request->has('absence') ? 1 : 0;
+    $tfaute = new Tfautes();
+    $tfaute->LibelFaute = $request->input("LibelFaute");
+    $tfaute->Sanction_Indicative = $request->input("Sanction_Indicative");
+    $tfaute->Sanction_en_heure = $request->input("Sanction_en_heure");
+    $tfaute->Sanction_en_points = $request->input("Sanction_en_points");
+    $tfaute->Absence_ = $absencess;
+    $tfaute->save();
+/*     Tfautes::create($data); 
+ */
     return redirect()->route('discipline')->with('success', 'Faute et sanction ajoutées avec succès.');
 }
 
 public function Tupdate(Request $request, $id)
-{
-    $data = $request->validate([
-        'LibelFaute' => 'required|string|max:255',
-        'Sanction_Indicative' => 'required|string|max:255',
-        'Sanction_en_heure' => 'required|integer',
-        'Sanction_en_points' => 'required|integer',
-    ]);
+{    
+    try {
+        $data = $request->validate([
+            'LibelFaute' => 'required|string|max:255',
+            'Sanction_Indicative' => 'nullable|string|max:255',
+            'Sanction_en_heure' => 'required|integer',
+            'Sanction_en_points' => 'required|integer',
+        ]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        
+        dd($e->errors());
+    }
     $tfaute = Tfautes::where('idTFautes', $id)->firstOrFail();
+    $tfaute->Absence_ = $request->has('absence') ? 1 : 0;
     $tfaute->update($data);
-
+    $tfaute->save();
     return redirect()->route('discipline')->with('success', 'Faute et sanction modifiées avec succès.');
 }
 

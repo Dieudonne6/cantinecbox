@@ -246,3 +246,6 @@ Route::get('/paramcomposantes', [ScolariteController::class, 'getparamcomposante
 Route::get('/facturesclasses', [ScolariteController::class, 'getfacturesclasses']);
 Route::get('/detailfacturesclasses/{CODECLAS}', [ScolariteController::class, 'detailfacturesclasses']);
 Route::post('/detailfacclasse/{CODECLAS}', [ScolariteController::class, 'detailfacclasse']);
+Route::get('/listedesclasses', [ClassesController::class, 'listeclasses']);
+Route::post('/appliquereduc', [PagesController::class, 'applyReductions']);
+Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
