@@ -32,8 +32,8 @@
                                     onchange="document.getElementById('groupeForm').submit();">
                                     <option value="">Sélectionner un groupe</option>
                                     @foreach ($classesGroupeclasse->unique('LibelleGroupe') as $item)
-                                        <option value="{{ $item->CODECLAS }}"
-                                            {{ request('groupe') == $item->CODECLAS ? 'selected' : '' }}>
+                                        <option value="{{ $item->LibelleGroupe }}"
+                                            {{ request('groupe') == $item->LibelleGroupe ? 'selected' : '' }}>
                                             {{ $item->LibelleGroupe }}
                                         </option>
                                     @endforeach

@@ -132,7 +132,7 @@
                 </select>
               </div>
               <div class="text-center">
-                <button onclick="imprimerPage()" type="button" class="btn btn-primary" style="display: block">
+                <button onclick="imprimerPage()" type="button" class="btn btn-primary">
                   Imprimer 
                 </button>
               </div>
@@ -151,12 +151,13 @@
                   <th>Nom & Prénoms</th>
                   <th>Classe</th>
                   <th>Sexe</th>
-                  {{-- <th class="d-none"></th>
                   <th class="d-none"></th>
                   <th class="d-none"></th>
                   <th class="d-none"></th>
-                  <th class="d-none"></th> --}}
-                  {{-- <th>Promo</th> --}}
+                  <th class="d-none"></th>
+                  <th class="d-none"></th>
+                  <th class="d-none">Promo</th>
+                  <th class="d-none">Cycle</th> 
                   <th>Red.</th>
                   <th>Date nai</th>
                   <th>Lieunais</th>
@@ -164,10 +165,8 @@
                 </tr>
               </thead>
          
-              <tbody>@foreach ($eleves as $eleve)
-               
+              <tbody>@foreach ($eleves as $eleve) 
                 <tr>
-
                   <td>{{ $eleve->MATRICULEX }}</td>
                   <td>{{ $eleve->NOM }} <br>{{ $eleve->PRENOM }}</td>
                   <td data-classe="{{ $eleve->CODECLAS }}">{{ $eleve->CODECLAS }}</td>
@@ -181,13 +180,13 @@
                     @endif
                   </td>
                   {{-- <td class="" data-promi="{{ $eleve->classe->promo->CODEPROMO }}">{{ $eleve->classe->promo->LIBELPROMO }}</td> --}}
-
-                  <li class="d-none" data-promo="{{ $eleve->classe->promo->CODEPROMO }}"></li>
-                  <li class="d-none" data-category="{{ $eleve->STATUTG }}"></li>
-                  <li class="d-none"  data-statut="{{ $eleve->STATUT }}"></li>
-                  <li class="d-none" data-serie="{{ $eleve->SERIE }}"></li>
-                  <li class="d-none" data-typeenseign="{{ $eleve->TYPEENSEIGN }}"></li>
-                  <li class="d-none" data-typeclasse="{{ $eleve->TYPECLASSE }}"></li> 
+                  <td class="d-none" data-cycle="{{ $eleve->classe->CYCLE}}">{{ $eleve->classe->CYCLE}}</td>
+                  <td class="d-none" data-promo="{{ $eleve->classe->promo->CODEPROMO }}"></td>
+                  <td class="d-none" data-category="{{ $eleve->STATUTG }}"></td>
+                  <td class="d-none"  data-statut="{{ $eleve->STATUT }}"></td>
+                  <td class="d-none" data-serie="{{ $eleve->SERIE }}"></td>
+                  <td class="d-none" data-typeenseign="{{ $eleve->TYPEENSEIGN }}"></td>
+                  <td class="d-none" data-typeclasse="{{ $eleve->TYPECLASSE }}"></td> 
 
                   <td class="checkboxes-select" style="width: 24px;">
                     <input type="checkbox" class="form-check-input-center"
@@ -764,6 +763,8 @@ function imprimerPage() {
         let selectedEnseign = $('#filterEnseign option:selected').text().trim();
         let selectedTypeClas = $('#filterTypeClas option:selected').text().trim();
         let selectedCategory = $('#filterCategory option:selected').text().trim();
+        let selectedCycle = $('#filterCycle option:selected').text().trim();
+        let selectedPromo = $('#filterPromo option:selected').text().trim();
 
         // Créer une chaîne de critères sélectionnés
         let criteria = '<div>';
@@ -790,7 +791,12 @@ function imprimerPage() {
         if (selectedCategory && selectedCategory !== "Selectionnez la catégorie") {
             criteria += `<p><strong>Catégorie :</strong> ${selectedCategory}</p>`;
         }
-
+        if (selectedCycle && selectedCycle !== "Selectionnez le cycle") {
+            criteria += `<p><strong>Cycle :</strong> ${selectedCycle}</p>`;
+        }
+        if (selectedPromo && selectedPromo !== "Selectionnez la promotion") {
+            criteria += `<p><strong>Promotion :</strong> ${selectedPromo}</p>`;
+        }
         criteria += '</div>';
 
         // Créer un élément invisible pour l'impression
@@ -843,11 +849,12 @@ function imprimerPage() {
         printDiv.setAttribute("id", "printDiv");
         
         window.print();
-        
+        window.location.reload();
+
         // Nettoyer après l'impression
         document.body.removeChild(printDiv);
         document.head.removeChild(style);
-    }, 200);
+    }, 100);
 }
 
 $(document).ready(function() {
@@ -865,6 +872,8 @@ $(document).ready(function() {
     var selectedTypeClas = $('#filterTypeClas').val(); 
     var selectedCategory = $('#filterCategory').val(); 
     var selectedPromo = $('#filterPromo').val(); 
+    var selectedCycle = $('#filterCycle').val(); 
+
     var hasVisibleRows = false;
     let table = $('#myTab').DataTable();
     let currentPage = table.page();  
@@ -874,13 +883,14 @@ $(document).ready(function() {
       var row = $(this);
       var rowClasse = row.find('td[data-classe]').data('classe');
       var rowSexe = row.find('td[data-sexe]').data('sexe');
-      var rowStatut = row.find('li[data-statut]').data('statut'); 
-      var rowSerie = row.find('li[data-serie]').data('serie'); 
-      var rowCategory = row.find('li[data-category]').data('category'); 
-      var rowEnseign = row.find('li[data-typeenseign]').data('typeenseign'); 
-      var rowTypeclas = row.find('li[data-typeclasse]').data('typeclasse'); 
-      var rowPromo = row.find('li[data-promo]').data('promo');
-      
+      var rowStatut = row.find('td[data-statut]').data('statut'); 
+      var rowSerie = row.find('td[data-serie]').data('serie'); 
+      var rowCategory = row.find('td[data-category]').data('category'); 
+      var rowEnseign = row.find('td[data-typeenseign]').data('typeenseign'); 
+      var rowTypeclas = row.find('td[data-typeclasse]').data('typeclasse'); 
+      var rowPromo = row.find('td[data-promo]').data('promo');
+      var rowCycle = row.find('td[data-cycle]').data('cycle');
+
       var showRow = true;
 
       if (selectedClasse !== "" && selectedClasse !== "Toute la classe" && rowClasse !== selectedClasse) {
@@ -914,6 +924,9 @@ $(document).ready(function() {
             if (selectedPromo !== "" && rowPromo != selectedPromo) {
                 showRow = false;
             }
+            if (selectedCycle !== "" && rowCycle != selectedCycle) {
+                showRow = false;
+            }
 
       if (showRow) {
         row.show();
@@ -928,11 +941,9 @@ $(document).ready(function() {
     }
     });
      }, 50);
-    
-  
   }
 
-  $('#filterClasse, #filterSexe, #filterStatut, #filterSerie, #filterTypeClas, #filterEnseign, #filterCategory, #filterPromo').on('change', filterTableByClass);
+  $('#filterClasse, #filterSexe, #filterStatut, #filterSerie, #filterTypeClas, #filterEnseign, #filterCategory, #filterPromo, #filterCycle').on('change', filterTableByClass);
 });
 
 
