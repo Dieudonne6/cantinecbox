@@ -191,11 +191,20 @@ public function discipline(Request $request)
     // Récupérer tous les groupes de la table classes_groupeclasse
     $classesGroupeclasse = Classesgroupeclass::select('LibelleGroupe', 'CODECLAS')->distinct()->get();
 
+    // dd($classesGroupeclasse);
     // Si un CODECLAS est sélectionné, récupérer les élèves correspondants
     $eleves = [];
     if ($request->has('groupe')) {
-        $codeclas = $request->input('groupe');
-        $eleves = Eleve::where('CODECLAS', $codeclas)->get();
+        $groupe = $request->input('groupe');
+        // $eleves = Eleve::where('CODECLAS', $codeclas)->get();
+
+
+
+        // Récupérer toutes les classes appartenant au groupe sélectionné
+        $classes = Classesgroupeclass::where('LibelleGroupe', $groupe)->pluck('CODECLAS'); // Suppose que GROUPE est l'attribut du groupe
+        // dd($classes);
+        // Récupérer les élèves qui appartiennent à toutes les classes du groupe
+        $eleves = Eleve::whereIn('CODECLAS', $classes)->get();
     }
 
     // Passer toutes les données à la vue
