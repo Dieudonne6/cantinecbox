@@ -69,25 +69,30 @@
                     <form action="{{ url('detailfacclasse/'.$CODECLAS) }}" method="post">
                         @csrf
                     <div class="row">
-                        <h5 style="margin-left: 0.5rem;">Nouveaux</h5>
-                        <h5 style="margin-top: -1.8rem; margin-left: 15rem;">Anciens</h5>
-                            
-                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="APAYER" id="classe"  style="width: 40%;" value="{{ $donneClasse->APAYER }}">
-                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="APAYER2" id="classe"  style="width: 40%;" value="{{ $donneClasse->APAYER2 }}">
+                        <h5 style="margin-left: 7.5rem;">Nouveaux</h5>
+                        <h5 style="margin-top: -1.8rem; margin-left: 18rem;">Anciens</h5>
+                        
+                        <label for="" style="width: 20%;">Scolarite</label>
+                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="APAYER" id="classe"  style="width: 30%;" value="{{ $donneClasse->APAYER }}" placeholder="scolarite">
+                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="APAYER2" id="classe"  style="width: 30%;" value="{{ $donneClasse->APAYER2 }}" placeholder="scolarite">
 
-                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS1" id="classe"  style="width: 40%" value="{{ $donneClasse->FRAIS1 }}">
-                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS1_A" id="classe"  style="width: 40%;" value="{{ $donneClasse->FRAIS1_A }}">
+                        <label for="" style="width: 20%;">Frais 1</label>
+                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS1" id="classe"  style="width: 30%;" value="{{ $donneClasse->FRAIS1 }}" placeholder="Frais 1">
+                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS1_A" id="classe"  style="width: 30%;;" value="{{ $donneClasse->FRAIS1_A }}" placeholder="Frais 1">
 
-                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS2" id="classe"  style="width: 40%" value="{{ $donneClasse->FRAIS2 }}">
-                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS2_A" id="classe"  style="width: 40%;" value="{{ $donneClasse->FRAIS2_A }}">
+                        <label for="" style="width: 20%;">Frais 2</label>
+                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS2" id="classe"  style="width: 30%;" value="{{ $donneClasse->FRAIS2 }}" placeholder="Frais 2">
+                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS2_A" id="classe"  style="width: 30%;;" value="{{ $donneClasse->FRAIS2_A }}" placeholder="Frais 2">
 
-                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS3" id="classe"  style="width: 40%" value="{{ $donneClasse->FRAIS3 }}">
-                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS3_A" id="classe"  style="width: 40%;" value="{{ $donneClasse->FRAIS3_A }}">
+                        <label for="" style="width: 20%;">Frais 3</label>
+                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS3" id="classe"  style="width: 30%;" value="{{ $donneClasse->FRAIS3 }}" placeholder="Frais 3">
+                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS3_A" id="classe"  style="width: 30%;;" value="{{ $donneClasse->FRAIS3_A }}" placeholder="Frais 3">
 
-                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS4" id="classe"  style="width: 40%" value="{{ $donneClasse->FRAIS4 }}">
-                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS4_A" id="classe"  style="width: 40%;" value="{{ $donneClasse->FRAIS4_A }}">
+                        <label for="" style="width: 20%;">Frais 4</label>
+                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS4" id="classe"  style="width: 30%;" value="{{ $donneClasse->FRAIS4 }}" placeholder="Frais 4">
+                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS4_A" id="classe"  style="width: 30%;;" value="{{ $donneClasse->FRAIS4_A }}" placeholder="Frais 4">
 
-                    </div></br>
+                    </div>
                     <input class="btn-sm btn-primary" type="submit" style="margin-left: 22.4rem;" value="Valider">
 
                     </form>
