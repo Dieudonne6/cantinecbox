@@ -334,9 +334,7 @@ public function imprimereleveFautes($MATRICULE)
     // Si tu veux afficher une page imprimable
     return view('pages.etat.impression_fautes', compact('eleve', 'fautes'));
 
-    // Ou si tu veux générer un PDF (nécessite une librairie comme domPDF ou snappy)
-    // $pdf = PDF::loadView('pages.eleves.impression_fautes', compact('eleve', 'fautes'));
-    // return $pdf->download('fautes_eleve_'.$eleve->nom.'.pdf');
+ 
 }
 
 public function imprimereleveAbsence($MATRICULE)

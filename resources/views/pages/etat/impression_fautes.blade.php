@@ -56,6 +56,21 @@
             }
         }
     }
+
+    .sidebar, .navbar, .footer, .noprint {
+            display: none !important;
+        }
+
+        /* Centrer le contenu horizontalement et occuper tout l'espace */
+        body {
+            width: 100% !important;
+            margin-left: -7rem  !important;  /*Centrer la page */
+            margin-top: -5rem  !important;
+        }
+
+        .page-body-wrapper{
+            background: white !important;
+        }
 </style>
 
 <body>

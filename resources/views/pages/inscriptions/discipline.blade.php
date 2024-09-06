@@ -228,8 +228,7 @@
                                                             </button>
                                                             <ul class="dropdown-menu">
                                                                 <li>
-                                                                    <a class="dropdown-item"
-                                                                        href="{{ route('pages.etat.imprimer_fautes', $eleve->MATRICULE) }}">
+                                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="ouvrirModalImpression('{{ route('pages.etat.imprimer_fautes', $eleve->MATRICULE) }}')">
                                                                         Imprimer les fautes
                                                                     </a>
                                                                 </li>
@@ -242,6 +241,7 @@
                                                             </ul>
                                                         </div>
 
+                                               
 
 
 
@@ -750,6 +750,27 @@
         </div>
     </div>
 
+
+             {{-- modal impression --}}
+             <div class="modal fade" id="imprimerModal" tabindex="-1" aria-labelledby="imprimerModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="imprimerModalLabel">Impression des fautes</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <!-- Iframe pour afficher le contenu à imprimer -->
+                      <iframe id="impressionIframe" style="width: 100%; height: 500px;" frameborder="0"></iframe>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                      <button type="button" class="btn btn-primary" onclick="imprimerContenu()">Imprimer</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var editFauteModal = document.getElementById('editFauteModal');
@@ -782,6 +803,23 @@
 
             document.getElementById('delete_idTFautes').value = idTFautes;
         });
+
+        function ouvrirModalImpression(url) {
+    // Charger le contenu de l'URL dans l'iframe
+    document.getElementById('impressionIframe').src = url;
+
+    // Ouvrir le modal
+    var myModal = new bootstrap.Modal(document.getElementById('imprimerModal'), {
+        keyboard: false
+    });
+    myModal.show();
+}
+
+function imprimerContenu() {
+    var iframe = document.getElementById('impressionIframe');
+    iframe.contentWindow.focus(); // S'assurer que l'iframe est bien focalisé
+    iframe.contentWindow.print(); // Lancer l'impression du contenu de l'iframe
+}
     </script>
 
 @endsection
