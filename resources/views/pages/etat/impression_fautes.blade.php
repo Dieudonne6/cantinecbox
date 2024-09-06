@@ -74,6 +74,7 @@
         .page-body-wrapper{
             background: white !important;
         }
+
 </style>
 
 <body>

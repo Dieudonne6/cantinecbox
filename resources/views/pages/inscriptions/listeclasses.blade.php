@@ -50,7 +50,7 @@
         </div>
     </div>
 </body>
-{{-- @endsection --}}
+
 
 <style>
     .card-body {
