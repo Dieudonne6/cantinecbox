@@ -22,6 +22,7 @@ use App\Models\Typeclasse;
 use App\Models\Typeenseigne;
 use App\Models\Elevea;
 use App\Models\Eleveplus;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Duplicatafacture;
 use Illuminate\Support\Facades\Storage;
@@ -401,8 +402,40 @@ class PagesController extends Controller
     }
     
     public function reductioncollective(){
-        return view('pages.inscriptions.reductioncollective');
-    } 
+        $reductions = DB::table('reduction')->get();
+        $eleves = Eleve::all();
+        $classes = Classes::all();
+        return view('pages.inscriptions.reductioncollective', compact('classes', 'eleves', 'reductions'));
+    }
+    
+    public function recupmatricule(Request $request){
+        $string = $request->input('eleves');
+        $array = explode(' ', $string);
+    }
+
+    public function applyReductions(Request $request)
+    {
+        $reduction = Reduction::find($request->input('reduction'));
+
+        if (!$reduction) {
+            return redirect()->back()->with('error', 'La classe ou la réduction n\'existe pas');
+        }
+        foreach ($request->input('eleves') as $eleveData) {
+            $array = explode(' ', $eleveData); // Sépare la chaîne par espaces
+            $eleveId = intval(array_pop($array)); // Récupère le dernier élément et le convertit en entier
+            
+            // Trouver l'élève par ID
+            $eleve = Eleve::find($eleveId);
+
+            if ($eleve) {
+                $eleve->CodeReduction = $reduction->CodeReduction;
+                $eleve->update();
+            }
+        }
+        
+        return redirect()->back()->with('success', 'Réductions appliquées avec succès');
+    }
+
 
     public function discipline(){
         return view('pages.inscriptions.discipline');

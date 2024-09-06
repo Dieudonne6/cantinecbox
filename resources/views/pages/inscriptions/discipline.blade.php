@@ -682,13 +682,14 @@
                                                 <td>
                                                     <!-- Bouton Modifier -->
                                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#editFauteModal"
-                                                        data-id="{{ $tfaute->idTFautes }}"
-                                                        data-libelfaute="{{ $tfaute->LibelFaute }}"
-                                                        data-sanctionindicative="{{ $tfaute->Sanction_Indicative }}"
-                                                        data-sanctionheure="{{ $tfaute->Sanction_en_heure }}"
-                                                        data-sanctionpoints="{{ $tfaute->Sanction_en_points }}">
-                                                        <i class="bi bi-pencil-fill"></i> Modifier
+                                                    data-bs-target="#editFauteModal"
+                                                    data-id="{{ $tfaute->idTFautes }}"
+                                                    data-libelfaute="{{ $tfaute->LibelFaute }}"
+                                                    data-sanctionindicative="{{ $tfaute->Sanction_Indicative }}"
+                                                    data-sanctionheure="{{ $tfaute->Sanction_en_heure }}"
+                                                    data-sanctionpoints="{{ $tfaute->Sanction_en_points }}"
+                                                    data-absence="{{ $tfaute->Absence_ }}">
+                                                    <i class="bi bi-pencil-fill"></i> Modifier
                                                     </button>
 
                                                     <!-- Bouton Supprimer -->
@@ -758,6 +759,11 @@
                             <input type="number" class="form-control" id="Sanction_en_points" name="Sanction_en_points"
                                 required>
                         </div>
+                        <label class="checkbox-container">
+                            <input class="custom-checkbox" name="absence" value="1" type="checkbox">
+                            <span class="checkmark"></span>
+                            Cocher si c'est une absence
+                        </label>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -802,6 +808,11 @@
                             <input type="number" class="form-control" id="edit_Sanction_en_points"
                                 name="Sanction_en_points">
                         </div>
+                        <label class="checkbox-container">
+                            <input class="custom-checkbox" name="absence" value="1" type="checkbox">
+                            <span class="checkmark"></span>
+                            Cocher si c'est une absence
+                        </label>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
@@ -832,26 +843,30 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var editFauteModal = document.getElementById('editFauteModal');
-            editFauteModal.addEventListener('show.bs.modal', function(event) {
-                var button = event.relatedTarget;
-                var idTFautes = button.getAttribute('data-id');
-                var LibelFaute = button.getAttribute('data-libelfaute');
-                var Sanction_Indicative = button.getAttribute('data-sanctionindicative');
-                var Sanction_en_heure = button.getAttribute('data-sanctionheure');
-                var Sanction_en_points = button.getAttribute('data-sanctionpoints');
+document.addEventListener('DOMContentLoaded', function() {
+    var editFauteModal = document.getElementById('editFauteModal');
+    editFauteModal.addEventListener('show.bs.modal', function(event) {
+        var button = event.relatedTarget;
+        var idTFautes = button.getAttribute('data-id');
+        var LibelFaute = button.getAttribute('data-libelfaute');
+        var Sanction_Indicative = button.getAttribute('data-sanctionindicative');
+        var Sanction_en_heure = button.getAttribute('data-sanctionheure');
+        var Sanction_en_points = button.getAttribute('data-sanctionpoints');
+        var absence = button.getAttribute('data-absence');
 
-                var form = document.getElementById('editFauteForm');
-                form.action = "{{ route('faute.update', '') }}/" + idTFautes;
+        var form = document.getElementById('editFauteForm');
+        form.action = "{{ route('faute.update', '') }}/" + idTFautes;
 
-                document.getElementById('edit_idTFautes').value = idTFautes;
-                document.getElementById('edit_LibelFaute').value = LibelFaute;
-                document.getElementById('edit_Sanction_Indicative').value = Sanction_Indicative;
-                document.getElementById('edit_Sanction_en_heure').value = Sanction_en_heure;
-                document.getElementById('edit_Sanction_en_points').value = Sanction_en_points;
-            });
-        });
+        document.getElementById('edit_idTFautes').value = idTFautes;
+        document.getElementById('edit_LibelFaute').value = LibelFaute;
+        document.getElementById('edit_Sanction_Indicative').value = Sanction_Indicative;
+        document.getElementById('edit_Sanction_en_heure').value = Sanction_en_heure;
+        document.getElementById('edit_Sanction_en_points').value = Sanction_en_points;
+
+        // Gérer l'état de la case à cocher absence
+        document.getElementById('edit_absence').checked = (absence == 1); // Coche si absence vaut 1
+    });
+});
         // Remplir la modale de suppression avec l'ID de la faute
         var deleteFauteModal = document.getElementById('deleteFauteModal');
         deleteFauteModal.addEventListener('show.bs.modal', function(event) {
@@ -866,3 +881,73 @@
     </script>
 
 @endsection
+
+<style>
+    /* From Uiverse.io by DaniloMGutavo */ 
+.checkbox-container {
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+}
+
+.custom-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.custom-checkbox:checked ~ .checkmark {
+  background-color: #2196F3;
+  box-shadow: 0 3px 7px rgba(33, 150, 243, 0.3);
+}
+
+.custom-checkbox:checked ~ .checkmark:after {
+  display: block;
+}
+
+@keyframes checkAnim {
+  0% {
+    height: 0;
+  }
+
+  100% {
+    height: 10px;
+  }
+}
+
+.custom-checkbox:checked ~ .checkmark:after {
+  animation: checkAnim 0.2s forwards;
+}
+
+</style>
