@@ -165,7 +165,7 @@ Route::post('/fautes', [GestionclasseController::class, 'fautestore'])->name('fa
 Route::get('/eleve/{MATRICULE}/fautes', [GestionclasseController::class, 'showFaults'])->name('eleve.faults');
 // Routes pour les fautes
 Route::put('/fautess/{id}', [GestionclasseController::class, 'fauteupdate'])->name('fautes.update');
-Route::delete('/fautes/{MATRICULE}', [GestionclasseController::class, 'fautedestroy'])->name('fautes.destroy');
+Route::delete('/fautes/{id}', [GestionclasseController::class, 'fautedestroy'])->name('fautes.dest');
 Route::get('/fautes/imprimer', [GestionclasseController::class, 'imprimerfautes'])->name('pages.etat.imprimerfaute');
 Route::get('/absences/imprimer', [GestionclasseController::class, 'imprimerabsences'])->name('pages.etat.imprimerabsence');
 // web.php

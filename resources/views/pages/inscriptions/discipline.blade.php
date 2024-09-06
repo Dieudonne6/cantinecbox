@@ -42,7 +42,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="row">
+                {{-- <div class="row">
                     <!-- Plage Horaire Section -->
                     <div class="col-md-6" style=" padding: 10px;">
                         <div class="card">
@@ -122,7 +122,7 @@
                         </div>
 
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- JavaScript pour gérer la dynamique -->
                 <script>
@@ -294,7 +294,7 @@
 
                                                                                             <!-- Formulaire pour la suppression -->
                                                                                             <form
-                                                                                                action="{{ route('fautes.destroy', $faute->MATRICULE) }}"
+                                                                                                action="{{ url('fautes.dest/'.$faute->IDFAUTES) }}"
                                                                                                 method="POST"
                                                                                                 style="display:inline;">
                                                                                                 @csrf

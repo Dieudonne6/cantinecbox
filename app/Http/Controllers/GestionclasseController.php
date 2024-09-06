@@ -260,13 +260,13 @@ public function Tupdate(Request $request, $id)
     return redirect()->route('discipline')->with('success', 'Faute et sanction modifiées avec succès.');
 }
 
-// public function Tdestroy($id)
-// {
-//     $tfaute = Tfautes::where('idTFautes', $id)->firstOrFail();
-//     $tfaute->delete();
+public function Tdestroy($id)
+{
+    $tfaute = Tfautes::where('idTFautes', $id)->firstOrFail();
+    $tfaute->delete();
 
-//     return redirect()->route('discipline')->with('success', 'Faute supprimée avec succès.');
-// }
+    return redirect()->route('discipline')->with('success', 'Faute supprimée avec succès.');
+}
 
 public function fautestore(Request $request)
 {
@@ -318,8 +318,6 @@ public function fautestore(Request $request)
     return back()->with('success', 'Faute ajoutée avec succès.');
 }
 
-
-
 public function fauteupdate(Request $request, $id)
 {
         $data = $request->validate([
@@ -341,9 +339,10 @@ public function fauteupdate(Request $request, $id)
 
 public function fautedestroy($id)
 {
-    $faute = Faute::find($id);
+    $faute = Faute::where('IDFAUTES', $id)->firstOrFail();
+    dd($faute);
     $faute->delete();
-    return redirect()->back()->with('success', 'Faute supprimée avec succès.');
+    return redirect()->route('discipline')->with('success', 'Faute supprimée avec succès.');
 }
 
 public function imprimerfautes()
