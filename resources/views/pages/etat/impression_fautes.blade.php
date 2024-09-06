@@ -1,5 +1,8 @@
 @extends('layouts.master')
 @section('content')
+@php
+    use Carbon\Carbon;
+@endphp
 <style>
     /* Masquer la sidebar et la navbar pendant l'impression */
     @media print {
@@ -96,7 +99,8 @@
                             <tbody>
                                 @foreach ($fautes as $faute)
                                     <tr>
-                                        <td>{{ $faute->DATEOP }}</td>
+                                        <td>{{ Carbon::parse($faute->DATEOP)->format('d/m/Y') }}</td>
+                                        {{-- <td>{{ $faute->DATEOP }}</td> --}}
                                         <td>{{ $faute->FAUTE }}</td>
                                         <td>{{ $faute->SANCTION }}</td>
                                         <td>{{ $faute->NBHEURE }}</td>
