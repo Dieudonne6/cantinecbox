@@ -11,6 +11,7 @@ class Faute extends Model
     
     // Assurez-vous que la table existe et que les colonnes correspondent
     protected $table = 'fautes';
+    protected $primaryKey = 'IDFAUTES';
 
     // Définir les attributs que vous souhaitez récupérer
     protected $fillable = ['IDFAUTES', 'MATRICULE', 'DATEOP', 'FAUTE', 'SANCTION', 'NBHEURE', 'SEMESTRE', 'COLLECTIVE',

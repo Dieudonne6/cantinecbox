@@ -12,6 +12,7 @@ use App\Http\Controllers\ScolariteController;
 use App\Http\Controllers\Faute;
 use App\Http\Controllers\Tfautes;
 use App\Http\Controllers\Absence;
+use App\Http\Controllers\Matieres;
 
 /*
 |--------------------------------------------------------------------------
@@ -163,8 +164,8 @@ Route::delete('/faute/{id}', [GestionclasseController::class, 'Tdestroy'])->name
 Route::post('/fautes', [GestionclasseController::class, 'fautestore'])->name('fautes.store');
 Route::get('/eleve/{MATRICULE}/fautes', [GestionclasseController::class, 'showFaults'])->name('eleve.faults');
 // Routes pour les fautes
-Route::put('/fautes/{id}', [GestionclasseController::class, 'fauteupdate'])->name('fautes.update');
-Route::delete('/fautes/{MATRICULE}', [GestionclasseController::class, 'fautedestroy'])->name('fautes.destroy');
+Route::put('/fautess/{id}', [GestionclasseController::class, 'fauteupdate'])->name('fautes.update');
+Route::delete('/fautes/{id}', [GestionclasseController::class, 'fautedestroy'])->name('fautes.dest');
 Route::get('/fautes/imprimer', [GestionclasseController::class, 'imprimerfautes'])->name('pages.etat.imprimerfaute');
 Route::get('/absences/imprimer', [GestionclasseController::class, 'imprimerabsences'])->name('pages.etat.imprimerabsence');
 // web.php
@@ -245,3 +246,6 @@ Route::get('/paramcomposantes', [ScolariteController::class, 'getparamcomposante
 Route::get('/facturesclasses', [ScolariteController::class, 'getfacturesclasses']);
 Route::get('/detailfacturesclasses/{CODECLAS}', [ScolariteController::class, 'detailfacturesclasses']);
 Route::post('/detailfacclasse/{CODECLAS}', [ScolariteController::class, 'detailfacclasse']);
+Route::get('/listedesclasses', [ClassesController::class, 'listeclasses']);
+Route::post('/appliquereduc', [PagesController::class, 'applyReductions']);
+Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);

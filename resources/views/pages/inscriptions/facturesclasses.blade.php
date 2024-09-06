@@ -9,7 +9,7 @@
         <table id="myTable">
             <thead>
                 <tr>
-                    <th>Groupe Pédagogique</th>
+                    <th></th>
                     <th>Libellé</th>
                     <th>Enseignement</th>
                     <th>Actions</th>

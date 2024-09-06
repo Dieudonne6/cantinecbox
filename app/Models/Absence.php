@@ -8,7 +8,26 @@ use Illuminate\Database\Eloquent\Model;
 class Absence extends Model
 {
     use HasFactory;
-    protected $table = 'absence'; // Nom de la table si ce n'est pas le pluriel du modèle
+
+    protected $table = 'absence';
     public $timestamps = false; // Désactive les timestamps si non utilisés
 
+    protected $fillable = [
+        'IDABSENCE',
+        'MATRICULE',
+        'DATEOP',
+        'CODEMAT',
+        'SEMESTRE',
+        'MOTIF',
+        'ABSENT',
+        'RETARD',
+        'HEURES',
+        'MOTIFVALALBLE',
+        'guid',
+        'guid_matri',
+        'SiTE',
+        'guid_mat',
+        'anneeacademique',
+        'PERIODE',
+    ];
 }

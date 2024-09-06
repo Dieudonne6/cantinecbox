@@ -189,7 +189,7 @@
                             @if (!empty($eleves))
                                 <div class="table-container">
                                     <h4 class="my-4">Liste des élèves</h4>
-                                    <table class="table table-striped text-center" id="myTable">
+                                    <table class="table table-striped" id="myTable">
                                         <thead>
                                             <tr>
                                                 <th>Nom</th>
@@ -294,7 +294,7 @@
 
                                                                                             <!-- Formulaire pour la suppression -->
                                                                                             <form
-                                                                                                action="{{ route('fautes.destroy', $faute->MATRICULE) }}"
+                                                                                                action="{{ url('fautes.dest/'.$faute->IDFAUTES) }}"
                                                                                                 method="POST"
                                                                                                 style="display:inline;">
                                                                                                 @csrf
@@ -332,7 +332,7 @@
                                                                         </div>
                                                                         <div class="modal-body">
                                                                             <form
-                                                                                action="{{ route('fautes.update', $faute->MATRICULE) }}"
+                                                                                action="{{ url('fautess/'.$faute->IDFAUTES) }}"
                                                                                 method="POST">
                                                                                 @csrf
                                                                                 @method('PUT')
@@ -389,6 +389,7 @@
                                                         @endforeach
 
 
+
                                                         <!-- Modal Ajouter une faute -->
                                                         <div class="modal fade"
                                                             id="modalAjouterFaute-{{ $eleve->MATRICULE }}" tabindex="-1"
@@ -412,14 +413,33 @@
                                                                             <div class="row">
                                                                                 <div class="col-md-6">
                                                                                     <div class="mb-3">
-                                                                                        <label for="nouvelleFaute"
-                                                                                            class="form-label">Nouvelle
-                                                                                            faute</label>
-                                                                                        <input type="text"
+                                                                                        <label for="DATEOP"
+                                                                                            class="form-label">Date</label>
+                                                                                        <input type="date"
                                                                                             class="form-control"
-                                                                                            id="nouvelleFaute"
-                                                                                            name="faute" required>
+                                                                                            id="DATEOP"
+                                                                                            name="date_faute"
+                                                                                            value="{{ date('Y-m-d') }}"
+                                                                                            required>
                                                                                     </div>
+                                                                                </div>
+
+                                                                                <div class="col-md-6">
+                                                                                    <label for="nouvelleFaute">Sélectionner
+                                                                                        une faute</label>
+                                                                                    <select class="form-control"
+                                                                                        id="nouvelleFaute" name="faute"
+                                                                                        required>
+                                                                                        <option value="">Sélectionnez
+                                                                                            une faute</option>
+                                                                                        @foreach ($tfautes as $tfaute)
+                                                                                            <option
+                                                                                                value="{{ $tfaute->idTFautes }}"
+                                                                                                data-heure="{{ $tfaute->Sanction_en_heure }}">
+                                                                                                {{ $tfaute->LibelFaute }}
+                                                                                            </option>
+                                                                                        @endforeach
+                                                                                    </select>
                                                                                 </div>
 
                                                                                 <div class="col-md-6">
@@ -433,34 +453,95 @@
                                                                                             name="sanction" required>
                                                                                     </div>
                                                                                 </div>
-                                                                            </div>
 
-                                                                            <div class="row">
+
+                                                                                <!-- Champ pour afficher la sanction en heures -->
                                                                                 <div class="col-md-6">
                                                                                     <div class="mb-3">
                                                                                         <label for="heure"
-                                                                                            class="form-label">En
+                                                                                            class="form-label">Sanction en
                                                                                             heure</label>
                                                                                         <input type="number"
                                                                                             class="form-control"
                                                                                             id="heure" name="nbheure"
+                                                                                            min="0" max="24"
                                                                                             required>
                                                                                     </div>
                                                                                 </div>
 
                                                                                 <div class="col-md-6">
                                                                                     <div class="mb-3">
+                                                                                        <label
+                                                                                            class="form-label">Heure</label>
+                                                                                        <input type="time"
+                                                                                            class="form-control"
+                                                                                            name="HEURE"
+                                                                                            value="{{ date('H:i') }}">
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-md-6">
+                                                                                    <div class="mb-3">
                                                                                         <label for="collective"
-                                                                                            class="form-label">Collective</label>
+                                                                                            class="form-label">Matière</label>
                                                                                         <select class="form-control"
-                                                                                            id="collective"
-                                                                                            name="collective" required>
-                                                                                            <option value="1">Oui
-                                                                                            </option>
-                                                                                            <option value="0">Non
-                                                                                            </option>
+                                                                                            id="matière" name="matière"
+                                                                                            required>
+                                                                                            @foreach ($matieres as $matiere)
+                                                                                                <option
+                                                                                                    value="{{ $matiere->CODEMAT }}">
+                                                                                                    {{ $matiere->LIBELMAT }}
+                                                                                                </option>
+                                                                                            @endforeach
                                                                                         </select>
                                                                                     </div>
+                                                                                </div>
+
+                                                                                <div class="col-md-9">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="motif"
+                                                                                            class="form-label">MOTIF</label>
+                                                                                        <textarea rows="4" class="form-control" id="sanctionPrev" name="sanction" required></textarea>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-md-3">
+                                                                                    <div class="form-check mb-2"
+                                                                                        style="margin-top: 60px !important;">
+                                                                                        <input class="form-check-input"
+                                                                                            type="checkbox" value="1"
+                                                                                            id="valideCheck"
+                                                                                            name="valide" required
+                                                                                            style="margin-left:0.5em !important;">
+                                                                                        <label class="form-check-label"
+                                                                                            for="valideCheck">
+                                                                                            Valable
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-md-12 d-flex">
+                                                                                    <div
+                                                                                        class="form-check form-check-inline">
+                                                                                        <input class="form-check-input"
+                                                                                            type="radio"
+                                                                                            name="inlineRadioOptions"
+                                                                                            id="inlineRadio1"
+                                                                                            value="option1">
+                                                                                        <label class="form-check-label"
+                                                                                            for="inlineRadio1">ABSENT</label>
+                                                                                    </div>
+                                                                                    <div
+                                                                                        class="form-check form-check-inline">
+                                                                                        <input class="form-check-input"
+                                                                                            type="radio"
+                                                                                            name="inlineRadioOptions"
+                                                                                            id="inlineRadio2"
+                                                                                            value="option2">
+                                                                                        <label class="form-check-label"
+                                                                                            for="inlineRadio2">RETARD</label>
+                                                                                    </div>
+
                                                                                 </div>
                                                                             </div>
 
@@ -601,13 +682,14 @@
                                                 <td>
                                                     <!-- Bouton Modifier -->
                                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#editFauteModal"
-                                                        data-id="{{ $tfaute->idTFautes }}"
-                                                        data-libelfaute="{{ $tfaute->LibelFaute }}"
-                                                        data-sanctionindicative="{{ $tfaute->Sanction_Indicative }}"
-                                                        data-sanctionheure="{{ $tfaute->Sanction_en_heure }}"
-                                                        data-sanctionpoints="{{ $tfaute->Sanction_en_points }}">
-                                                        <i class="bi bi-pencil-fill"></i> Modifier
+                                                    data-bs-target="#editFauteModal"
+                                                    data-id="{{ $tfaute->idTFautes }}"
+                                                    data-libelfaute="{{ $tfaute->LibelFaute }}"
+                                                    data-sanctionindicative="{{ $tfaute->Sanction_Indicative }}"
+                                                    data-sanctionheure="{{ $tfaute->Sanction_en_heure }}"
+                                                    data-sanctionpoints="{{ $tfaute->Sanction_en_points }}"
+                                                    data-absence="{{ $tfaute->Absence_ }}">
+                                                    <i class="bi bi-pencil-fill"></i> Modifier
                                                     </button>
 
                                                     <!-- Bouton Supprimer -->
@@ -677,6 +759,11 @@
                             <input type="number" class="form-control" id="Sanction_en_points" name="Sanction_en_points"
                                 required>
                         </div>
+                        <label class="checkbox-container">
+                            <input class="custom-checkbox" name="absence" value="1" type="checkbox">
+                            <span class="checkmark"></span>
+                            Cocher si c'est une absence
+                        </label>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -721,6 +808,11 @@
                             <input type="number" class="form-control" id="edit_Sanction_en_points"
                                 name="Sanction_en_points">
                         </div>
+                        <label class="checkbox-container">
+                            <input class="custom-checkbox" name="absence" value="1" type="checkbox">
+                            <span class="checkmark"></span>
+                            Cocher si c'est une absence
+                        </label>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
@@ -772,26 +864,30 @@
             </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var editFauteModal = document.getElementById('editFauteModal');
-            editFauteModal.addEventListener('show.bs.modal', function(event) {
-                var button = event.relatedTarget;
-                var idTFautes = button.getAttribute('data-id');
-                var LibelFaute = button.getAttribute('data-libelfaute');
-                var Sanction_Indicative = button.getAttribute('data-sanctionindicative');
-                var Sanction_en_heure = button.getAttribute('data-sanctionheure');
-                var Sanction_en_points = button.getAttribute('data-sanctionpoints');
+document.addEventListener('DOMContentLoaded', function() {
+    var editFauteModal = document.getElementById('editFauteModal');
+    editFauteModal.addEventListener('show.bs.modal', function(event) {
+        var button = event.relatedTarget;
+        var idTFautes = button.getAttribute('data-id');
+        var LibelFaute = button.getAttribute('data-libelfaute');
+        var Sanction_Indicative = button.getAttribute('data-sanctionindicative');
+        var Sanction_en_heure = button.getAttribute('data-sanctionheure');
+        var Sanction_en_points = button.getAttribute('data-sanctionpoints');
+        var absence = button.getAttribute('data-absence');
 
-                var form = document.getElementById('editFauteForm');
-                form.action = "{{ route('faute.update', '') }}/" + idTFautes;
+        var form = document.getElementById('editFauteForm');
+        form.action = "{{ route('faute.update', '') }}/" + idTFautes;
 
-                document.getElementById('edit_idTFautes').value = idTFautes;
-                document.getElementById('edit_LibelFaute').value = LibelFaute;
-                document.getElementById('edit_Sanction_Indicative').value = Sanction_Indicative;
-                document.getElementById('edit_Sanction_en_heure').value = Sanction_en_heure;
-                document.getElementById('edit_Sanction_en_points').value = Sanction_en_points;
-            });
-        });
+        document.getElementById('edit_idTFautes').value = idTFautes;
+        document.getElementById('edit_LibelFaute').value = LibelFaute;
+        document.getElementById('edit_Sanction_Indicative').value = Sanction_Indicative;
+        document.getElementById('edit_Sanction_en_heure').value = Sanction_en_heure;
+        document.getElementById('edit_Sanction_en_points').value = Sanction_en_points;
+
+        // Gérer l'état de la case à cocher absence
+        document.getElementById('edit_absence').checked = (absence == 1); // Coche si absence vaut 1
+    });
+});
         // Remplir la modale de suppression avec l'ID de la faute
         var deleteFauteModal = document.getElementById('deleteFauteModal');
         deleteFauteModal.addEventListener('show.bs.modal', function(event) {
@@ -823,3 +919,73 @@ function imprimerContenu() {
     </script>
 
 @endsection
+
+<style>
+    /* From Uiverse.io by DaniloMGutavo */ 
+.checkbox-container {
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+}
+
+.custom-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.custom-checkbox:checked ~ .checkmark {
+  background-color: #2196F3;
+  box-shadow: 0 3px 7px rgba(33, 150, 243, 0.3);
+}
+
+.custom-checkbox:checked ~ .checkmark:after {
+  display: block;
+}
+
+@keyframes checkAnim {
+  0% {
+    height: 0;
+  }
+
+  100% {
+    height: 10px;
+  }
+}
+
+.custom-checkbox:checked ~ .checkmark:after {
+  animation: checkAnim 0.2s forwards;
+}
+
+</style>

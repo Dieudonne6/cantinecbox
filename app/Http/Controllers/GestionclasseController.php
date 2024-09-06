@@ -15,6 +15,7 @@ use App\Models\Eleve;
 use App\Models\Serie;
 use App\Models\Faute;
 use App\Models\Tfautes;
+use App\Models\Matieres;
 use App\Models\Absence;
 use App\Models\Typeclasse;
 use App\Models\Typeenseigne;
@@ -181,6 +182,9 @@ public function discipline(Request $request)
 {
     // Récupérer toutes les fautes
     $fautes = Faute::get();
+    
+        // Récupérer toutes les matières
+        $matieres = Matieres::get();
 
     // Récupérer toutes les fautes dans scoracine
     $tfautes = Tfautes::get();
@@ -208,7 +212,7 @@ public function discipline(Request $request)
     }
 
     // Passer toutes les données à la vue
-    return view('pages.inscriptions.discipline', compact('fautes', 'tfautes', 'absences', 'classesGroupeclasse', 'eleves'));
+    return view('pages.inscriptions.discipline', compact('fautes', 'tfautes', 'absences', 'classesGroupeclasse', 'eleves', 'matieres'));
 }
 
 public function showFaults($MATRICULE)
@@ -236,23 +240,36 @@ public function Tstore(Request $request)
         'Sanction_en_heure' => 'required|integer',
         'Sanction_en_points' => 'required|integer',
     ]);
-
-    Tfautes::create($data);
-
+    $absencess = $request->has('absence') ? 1 : 0;
+    $tfaute = new Tfautes();
+    $tfaute->LibelFaute = $request->input("LibelFaute");
+    $tfaute->Sanction_Indicative = $request->input("Sanction_Indicative");
+    $tfaute->Sanction_en_heure = $request->input("Sanction_en_heure");
+    $tfaute->Sanction_en_points = $request->input("Sanction_en_points");
+    $tfaute->Absence_ = $absencess;
+    $tfaute->save();
+/*     Tfautes::create($data); 
+ */
     return redirect()->route('discipline')->with('success', 'Faute et sanction ajoutées avec succès.');
 }
 
 public function Tupdate(Request $request, $id)
-{
-    $data = $request->validate([
-        'LibelFaute' => 'required|string|max:255',
-        'Sanction_Indicative' => 'required|string|max:255',
-        'Sanction_en_heure' => 'required|integer',
-        'Sanction_en_points' => 'required|integer',
-    ]);
+{    
+    try {
+        $data = $request->validate([
+            'LibelFaute' => 'required|string|max:255',
+            'Sanction_Indicative' => 'nullable|string|max:255',
+            'Sanction_en_heure' => 'required|integer',
+            'Sanction_en_points' => 'required|integer',
+        ]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        
+        dd($e->errors());
+    }
     $tfaute = Tfautes::where('idTFautes', $id)->firstOrFail();
+    $tfaute->Absence_ = $request->has('absence') ? 1 : 0;
     $tfaute->update($data);
-
+    $tfaute->save();
     return redirect()->route('discipline')->with('success', 'Faute et sanction modifiées avec succès.');
 }
 
@@ -267,41 +284,78 @@ public function Tdestroy($id)
 public function fautestore(Request $request)
 {
     // Valider les données du formulaire
-    $request->validate([
-        'faute' => 'required|string|max:255',
-        'sanction' => 'required|string|max:255',
-        'nbheure' => 'required|integer',
-        'collective' => 'required|boolean',
-        'eleve_id' => 'required|exists:eleve,MATRICULE',
-    ]);
+      // Créer un nouvel enregistrement dans la table fautes
 
-    // Créer un nouvel enregistrement dans la table fautes
-    Faute::create([
-        'MATRICULE' => $request->eleve_id,  // Utilisation de eleve_id pour MATRICULE
+      if ($request->inlineRadioOptions === 'option1') { // Si ABSENT
+        Absence::create([
+            'MATRICULE' => $request->eleve_id,
+            'DATEOP' => $request->date_faute,
+            'CODEMAT' => $request->matière,
+            'MOTIF' => $request->motif,
+            'ABSENT' => 1, // Valeur pour ABSENT
+            'RETARD' => 0, // Valeur pour RETARD
+            'HEURES' => $request->HEURE,
+            'MOTIFVALALBLE' => $request->motif, // Assurez-vous que ce champ correspond
+        ]);
+    } elseif ($request->inlineRadioOptions === 'option2') { // Si RETARD
+        Absence::create([
+            'MATRICULE' => $request->eleve_id,
+            'DATEOP' => $request->date_faute,
+            'CODEMAT' => $request->matière,
+            'MOTIF' => $request->motif,
+            'ABSENT' => 0, // Valeur pour ABSENT
+            'RETARD' => 1, // Valeur pour RETARD
+            'HEURES' => $request->HEURE,
+            'MOTIFVALALBLE' => $request->motif, // Assurez-vous que ce champ correspond
+            ]);
+    }
+    
+    $idabs = Absence::orderBy("IDABSENCE", "desc")->first();
+    $idabss = $idabs->IDABSENCE;
+
+    $faute = Faute::create([
+        'MATRICULE' => $request->eleve_id,
+        'DATEOP' => $request->date_faute,
         'FAUTE' => $request->faute,
         'SANCTION' => $request->sanction,
         'NBHEURE' => $request->nbheure,
+        'SEMESTRE' => $request->semestre,
         'COLLECTIVE' => $request->collective,
-        'DATEOP' => now(), 
+        'IDABSENCE' => $idabss, // Valeur par défaut, à mettre à jour si nécessaire
+        'idTFautes' => $request->faute, // Assurez-vous que ce champ correspond
     ]);
+
+    // Si l'option est 'ABSENT', ajouter une entrée dans la table absences
 
     // Rediriger avec un message de succès
     return back()->with('success', 'Faute ajoutée avec succès.');
 }
 
-
 public function fauteupdate(Request $request, $id)
 {
-    $faute = Faute::where('IDFAUTES', $id)->firstOrFail();
-    $faute->update($request->all());
+        $data = $request->validate([
+            'FAUTE' => 'required|string|max:255',
+            'SANCTION' => 'required|string|max:255',
+            'NBHEURE' => 'required|integer',
+            'COLLECTIVE' => 'required|string|max:255',
+            
+        ]);
+        $faute = Faute::where('IDFAUTES', $id)->first();
+        $faute->FAUTE = $request->input("FAUTE");
+        $faute->SANCTION = $request->input("SANCTION");
+        $faute->NBHEURE = $request->input("NBHEURE");
+        $faute->COLLECTIVE = $request->input("COLLECTIVE");
+        //$faute->update($data);
+        $faute->save();
     return redirect()->route('discipline')->with('success', 'Faute et sanction modifiées avec succès.');
 }
 
 public function fautedestroy($id)
 {
-    $faute = Faute::find($id);
+    $faute = Faute::where('IDFAUTES', $id)->firstOrFail();
+    dd($faute);
     $faute->delete();
-    return redirect()->back()->with('success', 'Faute supprimée avec succès.');
+    return redirect()->route('discipline')->with('success', 'Faute supprimée avec succès.');
 }
 
 public function imprimerfautes()
