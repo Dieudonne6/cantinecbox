@@ -161,6 +161,7 @@ Route::get('/discipline', [GestionclasseController::class, 'discipline'])->name(
 Route::post('/faute', [GestionclasseController::class, 'Tstore'])->name('faute.store');
 Route::put('/faute/{id}', [GestionclasseController::class, 'Tupdate'])->name('faute.update');
 Route::delete('/faute/{id}', [GestionclasseController::class, 'Tdestroy'])->name('faute.destroy');
+
 Route::post('/fautes', [GestionclasseController::class, 'fautestore'])->name('fautes.store');
 Route::get('/eleve/{MATRICULE}/fautes', [GestionclasseController::class, 'showFaults'])->name('eleve.faults');
 // Routes pour les fautes
@@ -243,9 +244,11 @@ Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
 Route::get('/paramcomposantes', [ScolariteController::class, 'getparamcomposantes']);
 // Route::put('/modifieclasse/{CODECLAS}', [GestionclasseController::class, 'modifieclasse']);
 
-Route::get('/facturesclasses', [ScolariteController::class, 'getfacturesclasses']);
-Route::get('/detailfacturesclasses/{CODECLAS}', [ScolariteController::class, 'detailfacturesclasses']);
+Route::get('/facturesclasses', [ScolariteController::class, 'getfacturesclasses'])->name('facturesclasses');
+Route::get('/detailfacturesclasses/{CODECLAS}', [ScolariteController::class, 'detailfacturesclasses'])->name('detailfacturesclasses');
 Route::post('/detailfacclasse/{CODECLAS}', [ScolariteController::class, 'detailfacclasse']);
 Route::get('/listedesclasses', [ClassesController::class, 'listeclasses']);
 Route::post('/appliquereduc', [PagesController::class, 'applyReductions']);
 Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
+
+Route::get('/pagedetail/{MATRICULE}', [GestionclasseController::class, 'pagedetail'])->name('pagedetail');

@@ -178,19 +178,20 @@ public function supprimerGroupe($id)
         }
     }
 
+
 public function discipline(Request $request)
 {
     // Récupérer toutes les fautes
-    $fautes = Faute::get();
+    $fautes = Faute::all();
     
         // Récupérer toutes les matières
-        $matieres = Matieres::get();
+        $matieres = Matieres::all();
 
     // Récupérer toutes les fautes dans scoracine
-    $tfautes = Tfautes::get();
+    $tfautes = Tfautes::all();
 
     // Récupérer toutes les absences
-    $absences = Absence::get();
+    $absences = Absence::all();
 
     // Récupérer tous les groupes de la table classes_groupeclasse
     $classesGroupeclasse = Classesgroupeclass::select('LibelleGroupe', 'CODECLAS')->distinct()->get();
@@ -353,8 +354,8 @@ public function fauteupdate(Request $request, $id)
 public function fautedestroy($id)
 {
     $faute = Faute::where('IDFAUTES', $id)->firstOrFail();
-    dd($faute);
     $faute->delete();
+    
     return redirect()->route('discipline')->with('success', 'Faute supprimée avec succès.');
 }
 
@@ -861,5 +862,21 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
 
     }
   }
+
+    public function pagedetail($MATRICULE)
+{
+      $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
+    // $eleves = Eleve::with('classe.promo')->get();
+    $allClass = Classes::all();
+    $serie = Serie::get();
+    $promotion = Promo::all();
+    $typeenseigne = Typeenseigne::get();
+    $typeclah = Typeclasse::get();
+
+        // Récupérer les élèves avec leurs notes
+        // $eleves = Eleve::with('notes')->get();
+
+    return view('pages.inscriptions.pagedetail', compact('eleve','allClass','serie','promotion','typeclah','typeenseigne'));
+}
 
 }

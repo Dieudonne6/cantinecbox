@@ -241,11 +241,6 @@
                                                                 </li>
                                                             </ul>
                                                         </div>
-
-
-
-
-
                                                         <!-- Original Modal Voir les fautes -->
                                                         <div class="modal fade"
                                                             id="modalVoirFautes-{{ $eleve->MATRICULE }}" tabindex="-1"
@@ -293,14 +288,10 @@
                                                                                             </button>
 
                                                                                             <!-- Formulaire pour la suppression -->
-                                                                                            <form
-                                                                                                action="{{ url('fautes.dest/'.$faute->IDFAUTES) }}"
-                                                                                                method="POST"
-                                                                                                style="display:inline;">
+                                                                                            <form method="POST" action="{{ route('fautes.dest', $faute->IDFAUTES) }}" style="display:inline;">
                                                                                                 @csrf
                                                                                                 @method('DELETE')
-                                                                                                <button type="submit"
-                                                                                                    class="btn btn-danger">Supprimer</button>
+                                                                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer cette faute ?')">Supprimer</button>
                                                                                             </form>
                                                                                         </td>
                                                                                     </tr>

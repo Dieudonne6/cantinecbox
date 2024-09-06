@@ -186,7 +186,7 @@
                 <ul class="nav flex-column sub-menu">
                 
                   @php
-                  $routesAccueil = ['Acceuil', 'inscrireeleve','modifiereleve', 'paiementeleve', 'majpaiementeleve', 'echeancier']; // Liste des noms de routes associées à l'accueil
+                  $routesAccueil = ['Acceuil', 'inscrireeleve','modifiereleve', 'paiementeleve', 'majpaiementeleve', 'echeancier', 'pagedetail']; // Liste des noms de routes associées à l'accueil
                   @endphp
                   
                   <li class="nav-item">
@@ -229,8 +229,12 @@
               <li>
                 <a class="nav-link {{ request()->is('paramcomposantes') ? 'active' : '' }}" href="{{url('/paramcomposantes')}}">Parametrage composantes</a>
               </li>
+              @php
+              $routesfacture = ['facturesclasses', 'detailfacturesclasses']; // Liste des noms de routes associées à l'accueil
+              @endphp
               <li>
-                <a class="nav-link {{ request()->is('facturesclasses') ? 'active' : '' }}" href="{{url('/facturesclasses')}}">Factures classes</a>
+                <a class="nav-link {{ in_array(request()->route()->getName(), $routesfacture) ? 'active' : '' }}" href="{{ route('facturesclasses') }}">Factures  classes</a>
+
               </li>
               <li>
                 <a class="nav-link {{ request()->is('reductioncollective') ? 'active' : '' }}" href="{{url('/reductioncollective')}}">Réductions collectives</a>
