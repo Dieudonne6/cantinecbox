@@ -436,6 +436,12 @@ class PagesController extends Controller
         return redirect()->back()->with('success', 'Réductions appliquées avec succès');
     }
 
+    public function listedesreductions(){
+        $eleves = Eleve::all();
+        $reductions = Reduction::all();
+        $classes = Classes::all();
+        return view('pages.inscriptions.listedesreductions', compact('eleves', 'reductions', 'classes'));
+    }
 
     public function discipline(){
         return view('pages.inscriptions.discipline');
