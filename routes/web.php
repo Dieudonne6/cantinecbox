@@ -251,5 +251,5 @@ Route::post('/detailfacclasse/{CODECLAS}', [ScolariteController::class, 'detailf
 Route::get('/listedesclasses', [ClassesController::class, 'listeclasses']);
 Route::post('/appliquereduc', [PagesController::class, 'applyReductions']);
 Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
-
+Route::get('/listedesreductions', [PagesController::class, 'listedesreductions']);
 Route::get('/pagedetail/{MATRICULE}', [GestionclasseController::class, 'pagedetail'])->name('pagedetail');

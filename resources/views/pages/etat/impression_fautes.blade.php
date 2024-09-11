@@ -24,7 +24,7 @@
             border-collapse: collapse; /* Fusionner les bordures */
             margin: 0 auto; /* Centrer le tableau */
         }
-
+    
         th, td {
             font-size: 10pt; /* Ajuster la taille de la police pour impression */
             padding: 5px;

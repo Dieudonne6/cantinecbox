@@ -21,6 +21,7 @@ use App\Models\Paiementcontrat;
 use App\Models\Moiscontrat;
 use App\Models\Facturenormalise;
 use App\Models\Usercontrat;
+use App\Models\Typeenseigne;
 use App\Models\User;
 use App\Models\Paramsfacture;
 use App\Models\Params2;
@@ -269,11 +270,13 @@ class ClassesController extends Controller
 
     public function listeclasses()
     {
-        // Récupérer la liste des classes depuis la base de données
+        // Récupérer tous les types d'enseignement
+        $types = TypeEnseigne::all();
+
+        // Récupérer toutes les classes
         $classes = Classes::all();
 
-        // Retourner la vue avec les données
-        return view('pages.inscriptions.listeclasses', compact('classes'));
+        return view('pages.inscriptions.listedesclasses', compact('types', 'classes'));
     }
     
         
@@ -300,7 +303,7 @@ public function savepaiementcontrat(Request $request) {
                 
 
 
-                // recuperer les nom des mois cochee
+                // recuperer les nom des mois cocheee
 
                 // Array des noms des mois
                 $nomsMoisCoches = [];
@@ -873,7 +876,7 @@ public function savepaiementcontrat(Request $request) {
         $elevyo = Session::get('elevyo');
     
         $paramse = Paramsfacture::first(); 
-    
+
         $logoUrl = $paramse ? $paramse->logo: null; 
     }
 
@@ -1477,7 +1480,7 @@ private function savepaiementcontrat2($paiement){
     
 
 
-    // recuperer les nom des mois cochee
+    // recuperer les nom des mois cocheee
 
     // Array des noms des mois
     $nomsMoisCoches = [];
