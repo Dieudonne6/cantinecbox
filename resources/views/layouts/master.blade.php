@@ -478,6 +478,29 @@ align-items: center;  */
 
         });
     </script>
+
+<script>
+    $('#submitBtn1').click(function() {
+      var selectedValues = $('.js-example-basic-multiple').val(); // Récupérer les valeurs sélectionnées
+      
+      if (selectedValues.length > 0) {
+          // Utiliser une route Laravel correctement définie pour éviter la duplication
+          var url = `{{ url('eleveparclassespecifique') }}/` + selectedValues.join(',');
+          
+          // Si l'utilisateur est déjà sur la page, utiliser replace() pour forcer le rechargement
+          if (window.location.href === url) {
+              window.location.replace(url); // Remplacer l'URL actuelle pour forcer le rechargement
+          } else {
+              window.location.href = url; // Sinon rediriger normalement
+          }
+      } else {
+          alert('Veuillez sélectionner au moins une classe.');
+      }
+  });
+</script>
+
+
+
 </body>
 
 </html>

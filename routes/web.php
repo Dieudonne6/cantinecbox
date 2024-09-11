@@ -177,6 +177,7 @@ Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::c
 Route::get('/archive', [PagesController::class, 'archive']);
 Route::get('/editions', [PagesController::class, 'editions']);
 Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse']);
+Route::get('/eleveparclassespecifique/{classeCode}', [PagesController::class, 'eleveparclassespecifique']);
 
 Route::get('/gestionarriere', [PagesController::class, 'gestionarriere']);
 Route::get('/exporter', [PagesController::class, 'exporter']);
