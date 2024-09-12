@@ -1,0 +1,28 @@
+    public function imprimerProfilTypeClasse(Request $request) {
+        $typeClasse = $request->input('typeclasse');
+        $reductions = Reduction::all();
+        $typeclasse = Typeclasse::all();
+        $eleves = Eleve::with('reduction') // Charge la relation 'reduction'
+            ->where('CodeReduction', '!=', null) // Filtrer les élèves ayant une réduction
+            ->get();
+    
+        // Regrouper les élèves par CodeReduction
+        $elevesParReduction = $eleves->groupBy('CodeReduction');
+    
+        return view('pages.inscriptions.profiltypeclasse', compact('typeClasse', 'reductions', 'typeclasse', 'elevesParReduction'));
+    }
+---------------------------------------
+@php
+                                  use App\Models\Typeclasse;
+                                  $typeclasse = Typeclasse::all();
+                                  @endphp
+                                  <select name="typeclasse" id="typeclasse">
+                                    @foreach ($typeclasse as $type)
+                                        <option value="{{ $type->TYPECLASSE }}">{{ $type->LibelleType }}</option>
+                                    @endforeach
+                                  </select>
+
+                                  <button type="button" class="btn btn-primary" id="imprimerBtn" onclick="window.location.href='{{ route('impression.profil.type.classe') }}?typeclasse=' + document.getElementById('typeclasse').value;">Imprimer</button>
+
+-----------------------------------------
+Route::get('/imprimer-profil-type-classe', [PagesController::class, 'imprimerProfilTypeClasse'])->name('impression.profil.type.classe');
