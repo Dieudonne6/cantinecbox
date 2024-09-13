@@ -133,6 +133,15 @@
                           <div class="col-12">
                               <div class="form-group row">
                                   <!-- Contenu du modal -->
+                                  @php
+                                  use App\Models\Typeclasse;
+                                  $typeclasse = Typeclasse::all();
+                                  @endphp
+                                  <select name="typeclasse" id="typeclasse">
+                                    @foreach ($typeclasse as $type)
+                                        <option value="{{ $type->TYPECLASSE }}">{{ $type->LibelleType }}</option>
+                                    @endforeach
+                                  </select>
                               </div>
                           </div>
                       </div>
@@ -142,7 +151,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <button type="button" class="btn btn-primary">Imprimer</button>
+        <button type="button" class="btn btn-primary" id="imprimerBtn" onclick="window.location.href='{{ route('impression.profil.type.classe') }}?typeclasse=' + document.getElementById('typeclasse').value;">Imprimer</button>
       </div>
     </div>
   </div>
