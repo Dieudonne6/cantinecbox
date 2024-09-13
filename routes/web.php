@@ -178,6 +178,7 @@ Route::get('/archive', [PagesController::class, 'archive']);
 Route::get('/editions', [PagesController::class, 'editions']);
 Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse']);
 Route::get('/eleveparclassespecifique/{classeCode}', [PagesController::class, 'eleveparclassespecifique']);
+Route::get('/registreeleves', [PagesController::class, 'registreeleves']);
 
 Route::get('/gestionarriere', [PagesController::class, 'gestionarriere']);
 Route::get('/exporter', [PagesController::class, 'exporter']);

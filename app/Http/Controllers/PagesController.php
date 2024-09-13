@@ -544,6 +544,11 @@ class PagesController extends Controller
             ->with('fraiscontrats', $fraiscontrat);
     }
 
+
+    public function registreeleves() {
+        return view('pages.inscriptions.registreeleves');
+    }
+
     public function listeselective(){
         return view('pages.inscriptions.listeselective');
     } 
