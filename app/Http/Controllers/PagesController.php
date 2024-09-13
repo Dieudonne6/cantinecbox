@@ -820,5 +820,22 @@ class PagesController extends Controller
     
         return back()->withErrors('Erreur lors de la modification.');
     }
+
+    public function registreeleve(Request $request){
+        $type = $request->query('type');
+        $infoparamcontrat = Paramcontrat::first();
+        $anneencours = $infoparamcontrat->anneencours_paramcontrat;
+        $annesuivante = $anneencours + 1;
+        $annescolaire = $anneencours.'-'.$annesuivante;
+        if($type == 1 ){
+            $infoelevenom = Eleve::orderby('NOM', 'asc')->get();
+            // dd($infoelevenom);
+            return view('pages.etat.registrefiche', compact('annescolaire', 'infoelevenom'));
+        }else{
+            $infoelevematricule = Eleve::orderby('MATRICULE', 'asc')->get();
+            // dd($infoelevematricule);
+            return view('pages.etat.registretableau', compact('annescolaire', 'infoelevematricule'));
+        }
+    }
     
 }
