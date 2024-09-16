@@ -32,54 +32,55 @@ use Illuminate\Support\Facades\Auth;
 
 class PagesController extends Controller
 {
- 
-    public function inscriptioncantine(){
-        if(Session::has('account')){
-        // Liste des mots à exclure
-        $excludedWords = ["DELETE", 'NON'];
-    
-        // Construire la requête initiale
-        $query = Classes::query();
-    
-        // Ajouter des conditions pour exclure les mots
-        foreach ($excludedWords as $word) {
-            $query->where('CODECLAS', 'not like', '%' . $word . '%');
+    public function inscriptioncantine()
+    {
+        if (Session::has('account')) {
+            // Liste des mots à exclure
+            $excludedWords = ['DELETE', 'NON'];
+
+            // Construire la requête initiale
+            $query = Classes::query();
+
+            // Ajouter des conditions pour exclure les mots
+            foreach ($excludedWords as $word) {
+                $query->where('CODECLAS', 'not like', '%' . $word . '%');
+            }
+
+            // Récupérer les résultats
+            $class = $query->get();
+
+            // Retourner la vue avec les résultats
+            return view('pages.inscriptioncantine')->with('class', $class);
         }
-    
-        // Récupérer les résultats
-        $class = $query->get();
-    
-        // Retourner la vue avec les résultats
-        return view('pages.inscriptioncantine')->with('class', $class);
-       } 
-       return redirect('/');
+        return redirect('/');
     }
-    
+
     public function getEleves($codeClass)
     {
         $eleves = Eleve::where('CODECLAS', $codeClass)
-        ->leftJoin('contrat', 'eleve.MATRICULE', '=', 'contrat.eleve_contrat')
-        ->where(function ($query) {
-            $query->whereNull('contrat.eleve_contrat') // Élèves sans contrat
-                  ->orWhere('contrat.statut_contrat', 0); // Élèves avec contrat ayant statut 0
-        })
-        ->select('eleve.*')
-        ->distinct()   // Assurez-vous de sélectionner uniquement les colonnes de la table eleves
-        ->get();
+            ->leftJoin('contrat', 'eleve.MATRICULE', '=', 'contrat.eleve_contrat')
+            ->where(function ($query) {
+                $query
+                    ->whereNull('contrat.eleve_contrat') // Élèves sans contrat
+                    ->orWhere('contrat.statut_contrat', 0); // Élèves avec contrat ayant statut 0
+            })
+            ->select('eleve.*')
+            ->distinct() // Assurez-vous de sélectionner uniquement les colonnes de la table eleves
+            ->get();
 
         // $eleves = Eleve::where('CODECLAS', $codeClass)
         // ->whereHas('contrats', function($query) {
         //     $query->where('statut_contrat', 0);
         // })
         // ->get();
-       return response()->json($eleves);
+        return response()->json($eleves);
     }
     public function getMontant($codeClass)
     {
         // Suppose that the params table has one row
         $params = Paramcontrat::first();
 
-        if (($codeClass === "MAT1") || ($codeClass === "MAT2")  || ($codeClass === "MAT2II")  || ($codeClass === "MAT3")  || ($codeClass === "MAT3II")  || ($codeClass === "PREMATER")) {
+        if ($codeClass === 'MAT1' || $codeClass === 'MAT2' || $codeClass === 'MAT2II' || $codeClass === 'MAT3' || $codeClass === 'MAT3II' || $codeClass === 'PREMATER') {
             $montant = $params->fraisinscription_mat;
         } else {
             $montant = $params->fraisinscription2_paramcontrat;
@@ -87,26 +88,32 @@ class PagesController extends Controller
 
         return response()->json(['montant' => $montant]);
     }
-    public function paiement(){
+    public function paiement()
+    {
         return view('pages.paiement');
-    } 
+    }
 
-    public function nouveaucontrat(){
+    public function nouveaucontrat()
+    {
         return view('pages.nouveaucontrat');
     }
-    public function exporter(){
+    public function exporter()
+    {
         return view('pages.inscriptions.exporter');
     }
-    public function listedeseleves(){
+    public function listedeseleves()
+    {
         return view('pages.inscriptions.listedeseleves');
     }
-    
-    public function frais(){
+
+    public function frais()
+    {
         $param = Paramcontrat::first();
         return view('pages.frais', ['param' => $param]);
     }
 
-    public function fraisnouveau(Request $request){
+    public function fraisnouveau(Request $request)
+    {
         $param = new Paramcontrat();
         $param->anneencours_paramcontrat = $request->input('anneencours_paramcontrat');
         $param->fraisinscription_paramcontrat = $request->input('fraisinscription_paramcontrat');
@@ -114,10 +121,11 @@ class PagesController extends Controller
         $param->fraisinscription2_paramcontrat = $request->input('fraisinscription2_paramcontrat');
         $param->coutmensuel_paramcontrat = $request->input('coutmensuel_paramcontrat');
         $param->save();
-        return back()->with('status','Enregistrer avec succes');
+        return back()->with('status', 'Enregistrer avec succes');
     }
-    
-    public function modifierfrais($id_paramcontrat, Request $request){
+
+    public function modifierfrais($id_paramcontrat, Request $request)
+    {
         // $test = $request->input('id_paramcontrat');
         // dd($test);
         $params = Paramcontrat::find($id_paramcontrat);
@@ -128,92 +136,90 @@ class PagesController extends Controller
         $params->fraisinscription2_paramcontrat = $request->input('fraisinscription2_paramcontrat');
         $params->coutmensuel_paramcontrat = $request->input('coutmensuel_paramcontrat');
         $params->update();
-        return back()->with('status','Modifier avec succes');
+        return back()->with('status', 'Modifier avec succes');
     }
-  
-    public function connexiondonnees(){
+
+    public function connexiondonnees()
+    {
         return view('pages.connexiondonnees');
-
     }
-  
-    public function dashbord(){
+
+    public function dashbord()
+    {
         return view('pages.dashbord');
-
     }
 
-
-    public function statistique(){
+    public function statistique()
+    {
         return view('pages.tableaudebord.statistique');
-
     }
 
-    public function recouvrementsM(){
+    public function recouvrementsM()
+    {
         return view('pages.tableaudebord.recouvrementsM');
-
     }
 
-    public function hsuppression(){
+    public function hsuppression()
+    {
         return view('pages.tableaudebord.hsuppression');
-
     }
 
-    public function changetrimestre(){
+    public function changetrimestre()
+    {
         return view('pages.parametre.changetrimestre');
-
     }
 
-    public function confimpression(){
+    public function confimpression()
+    {
         return view('pages.parametre.confimpression');
-
     }
 
-    public function Acceuil(){
+    public function Acceuil()
+    {
         return view('pages.inscriptions.Acceuil');
-
     }
-    public function listedesretardsdepaiement(){
+    public function listedesretardsdepaiement()
+    {
         return view('pages.inscriptions.listedesretardsdepaiement');
-
     }
-    public function profil(){
+    public function profil()
+    {
         return view('pages.inscriptions.profil');
-
     }
-    public function gestionarriere(){
+    public function gestionarriere()
+    {
         return view('pages.inscriptions.gestionarriere');
-
     }
-    public function connexion(){
+    public function connexion()
+    {
         $login = User::get();
         return view('pages.connexion', ['login' => $login]);
     }
 
-    public function logins(Request $request){
-        $account = User::where("login",$request->login_usercontrat)->first();
+    public function logins(Request $request)
+    {
+        $account = User::where('login', $request->login_usercontrat)->first();
 
-        if($account){
-                if (Hash::check($request->password_usercontrat, $account->motdepasse)) {
-                    Session::put('account', $account);
-                    $id_usercontrat = $account->id_usercontrat;
-                    $image = $account->image;
-    
-                    $nom_user = $account->nomuser;
-                    Session::put('image', $image);
-    
-                    $prenom_user = $account->prenomuser;
-                    Session::put('id_usercontrat', $id_usercontrat);
-                    Session::put('nom_user', $nom_user);
-                    Session::put('prenom_user', $prenom_user);
-                return redirect("vitrine");
-            } else{
+        if ($account) {
+            if (Hash::check($request->password_usercontrat, $account->motdepasse)) {
+                Session::put('account', $account);
+                $id_usercontrat = $account->id_usercontrat;
+                $image = $account->image;
+
+                $nom_user = $account->nomuser;
+                Session::put('image', $image);
+
+                $prenom_user = $account->prenomuser;
+                Session::put('id_usercontrat', $id_usercontrat);
+                Session::put('nom_user', $nom_user);
+                Session::put('prenom_user', $prenom_user);
+                return redirect('vitrine');
+            } else {
                 return back()->with('status', 'Mot de passe ou email incorrecte');
-
             }
         } else {
             return back()->with('status', 'Mot de passe ou email incorrecte');
-
         }
-
     }
     public function logout(Request $request)
     {
@@ -224,23 +230,28 @@ class PagesController extends Controller
         return redirect('/');
     }
 
-    public function vitrine(){
-        if(Session::has('account')){
-        $totaleleve = Eleve::count();
-        $totalcantineinscritactif = Contrat::where('statut_contrat', 1)->count();
-        $totalcantineinscritinactif = Contrat::where('statut_contrat', 0)->count();
+    public function vitrine()
+    {
+        if (Session::has('account')) {
+            $totaleleve = Eleve::count();
+            $totalcantineinscritactif = Contrat::where('statut_contrat', 1)->count();
+            $totalcantineinscritinactif = Contrat::where('statut_contrat', 0)->count();
 
-        // dd($totalcantineinscritactif);
-        return view('pages.vitrine')->with('totalcantineinscritactif', $totalcantineinscritactif)->with('totalcantineinscritinactif', $totalcantineinscritinactif)->with('totaleleve', $totaleleve);
-        }return redirect('/');
+            // dd($totalcantineinscritactif);
+            return view('pages.vitrine')->with('totalcantineinscritactif', $totalcantineinscritactif)->with('totalcantineinscritinactif', $totalcantineinscritinactif)->with('totaleleve', $totaleleve);
+        }
+        return redirect('/');
     }
-    public function paramsfacture(){
+    public function paramsfacture()
+    {
         return view('pages.paramsfacture');
     }
-    public function echeancier(){
+    public function echeancier()
+    {
         return view('pages.inscriptions.echeancier');
     }
-    public function paramsemecef(Request $request){
+    public function paramsemecef(Request $request)
+    {
         $emcef = new Paramsfacture();
         $emcef->ifu = $request->input('ifu');
         $emcef->token = $request->input('token');
@@ -252,17 +263,17 @@ class PagesController extends Controller
         $imageName = $request->file('logo');
         $imageContent = file_get_contents($imageName->getRealPath());
 
-
-
         $emcef->logo = $imageContent;
 
         $emcef->save();
-        return back()->with('status','Enregistrer avec succes');
+        return back()->with('status', 'Enregistrer avec succes');
     }
-    public function inscriptions(){
+    public function inscriptions()
+    {
         return view('pages.etat.inscriptions');
     }
-    public function enregistreruser(Request $request){
+    public function enregistreruser(Request $request)
+    {
         $login = new User();
         $password_crypte = Hash::make($request->password);
         $login->nomgroupe = 1;
@@ -279,94 +290,92 @@ class PagesController extends Controller
         // $login->motdepasse ='';
         // $login->motdepasse ='';
 
-        
         // $login->motdepasse ='';
 
         $login->save();
-        return back()->with('status','Enregistrer avec succes');
-
+        return back()->with('status', 'Enregistrer avec succes');
     }
 
-    public function parametre(){
-        if(Session::has('account')){
-        $param = Paramcontrat::first();
-        return view('pages.parametre.parametre', ['param' => $param]);
-        }return redirect('/');
-    } 
-
-    public function duplicatafacture(){
-        if(Session::has('account')){
-        $duplicatafactures = Duplicatafacture::all();
-
-        return view('pages.duplicatafacture')->with('duplicatafactures', $duplicatafactures);
-        } 
+    public function parametre()
+    {
+        if (Session::has('account')) {
+            $param = Paramcontrat::first();
+            return view('pages.parametre.parametre', ['param' => $param]);
+        }
         return redirect('/');
-    } 
-
-    public function paiementeleve(){
-        if(Session::has('account')){
-        // $duplicatafactures = Duplicatafacture::all();
-
-        return view('pages.inscriptions.Paiement');
-        } 
-        return redirect('/');
-    } 
-    public function modifierclasse(){
-        if(Session::has('account')){
-        // $duplicatafactures = Duplicatafacture::all();
-
-        return view('pages.inscriptions.modifierclasse');
-        } 
-        return redirect('/');
-    } 
-    public function majpaiementeleve(){
-        if(Session::has('account')){
-        // $duplicatafactures = Duplicatafacture::all();
-
-        return view('pages.inscriptions.MajPaiement');
-        } 
-        return redirect('/');
-
     }
 
-    public function tabledesclasses(){
-        if(Session::has('account')){
-        // $duplicatafactures = Duplicatafacture::all();
+    public function duplicatafacture()
+    {
+        if (Session::has('account')) {
+            $duplicatafactures = Duplicatafacture::all();
 
-        return view('pages.inscriptions.tabledesclasses');
-        } 
+            return view('pages.duplicatafacture')->with('duplicatafactures', $duplicatafactures);
+        }
         return redirect('/');
-
     }
 
+    public function paiementeleve()
+    {
+        if (Session::has('account')) {
+            // $duplicatafactures = Duplicatafacture::all();
 
-
-    public function groupe(){
-        if(Session::has('account')){
-        // $duplicatafactures = Duplicatafacture::all();
-
-        return view('pages.inscriptions.groupe');
-        } 
+            return view('pages.inscriptions.Paiement');
+        }
         return redirect('/');
-
     }
-    
-    public function inscrireeleve(){
+    public function modifierclasse()
+    {
+        if (Session::has('account')) {
+            // $duplicatafactures = Duplicatafacture::all();
 
+            return view('pages.inscriptions.modifierclasse');
+        }
+        return redirect('/');
+    }
+    public function majpaiementeleve()
+    {
+        if (Session::has('account')) {
+            // $duplicatafactures = Duplicatafacture::all();
+
+            return view('pages.inscriptions.MajPaiement');
+        }
+        return redirect('/');
+    }
+
+    public function tabledesclasses()
+    {
+        if (Session::has('account')) {
+            // $duplicatafactures = Duplicatafacture::all();
+
+            return view('pages.inscriptions.tabledesclasses');
+        }
+        return redirect('/');
+    }
+
+    public function groupe()
+    {
+        if (Session::has('account')) {
+            // $duplicatafactures = Duplicatafacture::all();
+
+            return view('pages.inscriptions.groupe');
+        }
+        return redirect('/');
+    }
+
+    public function inscrireeleve()
+    {
         // Récupérer le dernier matricule existant
         $lastMatricule = Eleve::orderBy('MATRICULE', 'desc')->pluck('MATRICULE')->first();
 
         // Générer le nouveau matricule
         if ($lastMatricule) {
             // En supposant que le matricule est de type numérique
-            $newMatricule = (int)$lastMatricule + 1;
+            $newMatricule = (int) $lastMatricule + 1;
         } else {
             // Si aucun matricule n'existe encore, initialiser à un numéro de départ
             $newMatricule = 1;
         }
-
-
-
 
         $allClasse = Classes::all();
         $allReduction = Reduction::all();
@@ -375,40 +384,88 @@ class PagesController extends Controller
 
         return view('pages.inscriptions.inscrireeleve', compact('allClasse', 'allReduction', 'allDepartement', 'newMatricule', 'archive'));
         // return view('pages.inscriptions.inscrireeleve')->with('archive', $archive);
-        } 
-        
-        public function certificatsolarite(){
-            return view('pages.inscriptions.certificatsolarite');
-            } 
+    }
 
-                public function droitconstate(){
-                    if(Session::has('account')){
-                    // $duplicatafactures = Duplicatafacture::all();
+    public function certificatscolarite($CODECLAS = null, $matricule = null)
+    {
+        // Si un matricule est fourni, cela signifie que l'on veut générer le PDF pour un élève spécifique
+        if ($matricule) {
+            $eleves = Eleve::where('MATRICULE', $matricule)->first();
+            $eleveplus = Eleveplus::first();
+            $nomecole = Params2::first();
             
-                    return view('pages.inscriptions.droitconstate');
-                    } 
-                    return redirect('/');
-            
-                }
-
-    public function photos(){
-        return view('pages.inscriptions.photos');
-    } 
-
-  
-
-    public function facturesclasses(){
-        return view('pages.inscriptions.facturesclasses');
+            return view('pages.inscriptions.pdfcertificatscolarite', compact('eleves', 'eleveplus', 'nomecole'));
+        }
+    
+        // Si aucun matricule n'est fourni, on affiche la vue normale avec les classes et les élèves
+        $classe = Classes::all();
+    
+        // Si une classe est sélectionnée, récupérer les élèves de cette classe
+        if ($CODECLAS) {
+            $eleves = Eleve::where('CODECLAS', $CODECLAS)->get();
+        } else {
+            $eleves = collect(); // Aucun élève si pas de classe sélectionnée
+        }
+    
+        return view('pages.inscriptions.certificatsolarite', compact('classe', 'eleves'));
     }
     
-    public function reductioncollective(){
+    public function impression(Request $request)
+    {
+        // Récupérer les matricules des élèves sélectionnés depuis la requête
+        $matricules = explode(',', $request->input('matricules', ''));
+        $classe = $request->input('classe');
+        
+        // Récupérer l'observation depuis la requête
+        $observation = $request->input('observation', '');
+    
+        // Récupérer les élèves sélectionnés
+        $eleves = Eleve::whereIn('MATRICULE', $matricules)->get();
+        $eleveplus = Eleveplus::first();
+        $nomecole = Params2::first();
+    
+        // Vérifiez si les données ont été trouvées
+        if ($eleves->isEmpty() || !$eleveplus || !$nomecole) {
+            return redirect()->back()->with('erreur', 'Données non trouvées.');
+        }
+    
+        // Générer les certificats pour les élèves sélectionnés
+        return view('pages.inscriptions.pdfcertificatscolarite', compact('eleves', 'eleveplus', 'nomecole', 'observation'));
+    }
+    
+    
+
+    
+    public function droitconstate()
+    {
+        if (Session::has('account')) {
+            // $duplicatafactures = Duplicatafacture::all();
+
+            return view('pages.inscriptions.droitconstate');
+        }
+        return redirect('/');
+    }
+
+    public function photos()
+    {
+        return view('pages.inscriptions.photos');
+    }
+
+    public function facturesclasses()
+    {
+        return view('pages.inscriptions.facturesclasses');
+    }
+
+    public function reductioncollective()
+    {
         $reductions = DB::table('reduction')->get();
         $eleves = Eleve::all();
         $classes = Classes::all();
         return view('pages.inscriptions.reductioncollective', compact('classes', 'eleves', 'reductions'));
     }
-    
-    public function recupmatricule(Request $request){
+
+    public function recupmatricule(Request $request)
+    {
         $string = $request->input('eleves');
         $array = explode(' ', $string);
     }
@@ -423,7 +480,7 @@ class PagesController extends Controller
         foreach ($request->input('eleves') as $eleveData) {
             $array = explode(' ', $eleveData); // Sépare la chaîne par espaces
             $eleveId = intval(array_pop($array)); // Récupère le dernier élément et le convertit en entier
-            
+
             // Trouver l'élève par ID
             $eleve = Eleve::find($eleveId);
 
@@ -432,46 +489,51 @@ class PagesController extends Controller
                 $eleve->update();
             }
         }
-        
+
         return redirect()->back()->with('success', 'Réductions appliquées avec succès');
     }
 
-    public function listedesreductions(){
+    public function listedesreductions()
+    {
         $eleves = Eleve::all();
         $reductions = Reduction::all();
         $classes = Classes::all();
         return view('pages.inscriptions.listedesreductions', compact('eleves', 'reductions', 'classes'));
     }
 
-    public function discipline(){
+    public function discipline()
+    {
         return view('pages.inscriptions.discipline');
-    } 
+    }
 
-    public function archive(){
+    public function archive()
+    {
         return view('pages.inscriptions.archive');
-    } 
+    }
 
-        public function editions(){
+    public function editions()
+    {
         return view('pages.inscriptions.editions');
-    } 
+    }
 
-    public function eleveparclasse(){
-        $classes = Classes::get();    
+    public function eleveparclasse()
+    {
+        $classes = Classes::get();
         return view('pages.inscriptions.eleveparclasse')->with('classes', $classes);
-    } 
+    }
 
     public function eleveparclassespecifique($classeCode)
     {
         $CODECLASArray = explode(',', $classeCode);
-    
+
         $eleves = Eleve::orderBy('NOM', 'asc')->get();
         $classesAExclure = ['NON', 'DELETE'];
-    
+
         $classes = Classes::whereNotIn('CODECLAS', $classesAExclure)->get();
-        $fraiscontrat = Paramcontrat::first(); 
-    
+        $fraiscontrat = Paramcontrat::first();
+
         $contratValideMatricules = Contrat::where('statut_contrat', 1)->pluck('eleve_contrat');
-    
+
         // Filtrer les élèves en fonction des classes sélectionnées
         $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
             ->whereIn('CODECLAS', $CODECLASArray)
@@ -480,8 +542,8 @@ class PagesController extends Controller
             // ->groupBy('CODECLAS')
             ->get();
 
-            // Requête pour récupérer les élèves avec l'effectif total, le nombre de filles et le nombre de garçons par classe
-            $statistiquesClasses = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+        // Requête pour récupérer les élèves avec l'effectif total, le nombre de filles et le nombre de garçons par classe
+        $statistiquesClasses = Eleve::whereIn('MATRICULE', $contratValideMatricules)
             ->whereIn('CODECLAS', $CODECLASArray)
             ->select(
                 'CODECLAS',
@@ -507,95 +569,91 @@ class PagesController extends Controller
                 // Anciens (statutG = 2)
                 DB::raw('SUM(CASE WHEN statutG = 2 THEN 1 ELSE 0 END) as total_anciens'),
                 DB::raw('SUM(CASE WHEN statutG = 2 AND SEXE = 1 THEN 1 ELSE 0 END) as total_garcons_anciens'),
-                DB::raw('SUM(CASE WHEN statutG = 2 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_anciens')
+                DB::raw('SUM(CASE WHEN statutG = 2 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_anciens'),
             )
             ->groupBy('CODECLAS')
             ->get();
 
-
-            // requette pour recuperer le nombre d'eleve par codereduction
-            $reductionsParClasse = DB::table('eleve')
+        // requette pour recuperer le nombre d'eleve par codereduction
+        $reductionsParClasse = DB::table('eleve')
             ->join('reduction', 'eleve.CodeReduction', '=', 'reduction.CodeReduction') // Liaison avec la table des réductions
             ->whereIn('eleve.MATRICULE', $contratValideMatricules)
             ->whereIn('eleve.CODECLAS', $CODECLASArray)
             ->select(
-                'eleve.CODECLAS', 
+                'eleve.CODECLAS',
                 'reduction.libelleReduction', // Nom de la réduction
-                DB::raw('COUNT(*) as total') // Nombre d'élèves ayant cette réduction
+                DB::raw('COUNT(*) as total'), // Nombre d'élèves ayant cette réduction
             )
             ->groupBy('eleve.CODECLAS', 'reduction.libelleReduction')
             ->get();
 
-            // requette pour grouper les eleve par classe
-            $elevesGroupes = $filterEleves->groupBy('CODECLAS');
+        // requette pour grouper les eleve par classe
+        $elevesGroupes = $filterEleves->groupBy('CODECLAS');
 
-    
-            // dd($filterEleves);
+        // dd($filterEleves);
         Session::put('fraiscontrats', $fraiscontrat);
         Session::put('fill', $filterEleves);
-    
-        return view('pages.inscriptions.eleveparclasse1')
-            ->with("filterEleve", $filterEleves)
-            ->with('classe', $classes)
-            ->with('eleve', $eleves)
-            ->with('elevesGroupes', $elevesGroupes)
-            ->with('statistiquesClasses', $statistiquesClasses)
-            ->with('reductionsParClasse', $reductionsParClasse)
-            ->with('fraiscontrats', $fraiscontrat);
+
+        return view('pages.inscriptions.eleveparclasse1')->with('filterEleve', $filterEleves)->with('classe', $classes)->with('eleve', $eleves)->with('elevesGroupes', $elevesGroupes)->with('statistiquesClasses', $statistiquesClasses)->with('reductionsParClasse', $reductionsParClasse)->with('fraiscontrats', $fraiscontrat);
     }
 
-    public function listeselective(){
+    public function listeselective()
+    {
         return view('pages.inscriptions.listeselective');
-    } 
-
-    public function modifiereleve($MATRICULE){
-         // Récupérer le dernier matricule existant
-         $Matricule = Eleve::find($MATRICULE);
-         $allClasse = Classes::all();
-         $allReduction = Reduction::all();
-         $allDepartement = Departement::all();
-         $archive = Elevea::get();
-         $alleleve = Eleveplus::where('MATRICULE', $MATRICULE)->first();
-         $modifieleve = Eleve::where('MATRICULE', $MATRICULE)->first();
-         return view('pages.inscriptions.modifiereleve', compact('allClasse', 'allReduction', 'allDepartement', 'archive', 'alleleve', 'Matricule', 'modifieleve'));
     }
 
-    public function typesclasses(){
-        return view ('pages.inscriptions.typesclasses');
+    public function modifiereleve($MATRICULE)
+    {
+        // Récupérer le dernier matricule existant
+        $Matricule = Eleve::find($MATRICULE);
+        $allClasse = Classes::all();
+        $allReduction = Reduction::all();
+        $allDepartement = Departement::all();
+        $archive = Elevea::get();
+        $alleleve = Eleveplus::where('MATRICULE', $MATRICULE)->first();
+        $modifieleve = Eleve::where('MATRICULE', $MATRICULE)->first();
+        return view('pages.inscriptions.modifiereleve', compact('allClasse', 'allReduction', 'allDepartement', 'archive', 'alleleve', 'Matricule', 'modifieleve'));
     }
 
-    public function promotions(){
-        return view ('pages.inscriptions.promotions');
+    public function typesclasses()
+    {
+        return view('pages.inscriptions.typesclasses');
     }
 
-    public function creerprofil(){
+    public function promotions()
+    {
+        return view('pages.inscriptions.promotions');
+    }
 
+    public function creerprofil()
+    {
         // Récupérer le dernier code de reduction existant
         $lastCode = Reduction::orderBy('CodeReduction', 'desc')->pluck('CodeReduction')->first();
 
         // Générer le nouveau matricule
         if ($lastCode) {
             // En supposant que le matricule est de type numérique
-            $newCode = (int)$lastCode + 1;
+            $newCode = (int) $lastCode + 1;
         } else {
             // Si aucun matricule n'existe encore, initialiser à un numéro de départ
             $newCode = 1;
         }
         $reductions = Reduction::all();
-        return view ('pages.inscriptions.creerprofil')->with('reductions', $reductions)->with('newCode', $newCode);
+        return view('pages.inscriptions.creerprofil')->with('reductions', $reductions)->with('newCode', $newCode);
     }
 
     private function convertToDecimal($percentage)
-{
-    // Retirer le signe % et convertir en valeur décimale
-    if (strpos($percentage, '%') !== false) {
-        $percentage = str_replace('%', '', $percentage);
-    }
-    
-    return floatval($percentage) / 100;
-}
+    {
+        // Retirer le signe % et convertir en valeur décimale
+        if (strpos($percentage, '%') !== false) {
+            $percentage = str_replace('%', '', $percentage);
+        }
 
-    public function ajouterprofreduction(Request $request) {
+        return floatval($percentage) / 100;
+    }
+
+    public function ajouterprofreduction(Request $request)
+    {
         $reduction = new Reduction();
         $reduction->Codereduction = $request->input('Codereduction');
         $reduction->LibelleReduction = $request->input('LibelleReduction');
@@ -637,7 +695,7 @@ class PagesController extends Controller
         // $reduction->codeReduction = $request->input('Codereduction');
         $reduction->LibelleReduction = $this->convertToDecimal($request->input('LibelleReduction'));
         $reduction->Reduction_scolarite = $this->convertToDecimal($request->input('Reduction_scolarite'));
-        $reduction->Reduction_arriere =$this->convertToDecimal( $request->input('Reduction_arriere'));
+        $reduction->Reduction_arriere = $this->convertToDecimal($request->input('Reduction_arriere'));
         $reduction->Reduction_frais1 = $this->convertToDecimal($request->input('Reduction_frais1'));
         $reduction->Reduction_frais2 = $this->convertToDecimal($request->input('Reduction_frais2'));
         $reduction->Reduction_frais3 = $this->convertToDecimal($request->input('Reduction_frais3'));
@@ -651,64 +709,78 @@ class PagesController extends Controller
         return back()->with('status', 'Réduction modifiée avec succès.');
     }
 
-    public function delreductions($codeRedu) {
-            // Trouver la réduction par CodeReduction
-            $reduct = Reduction::where('CodeReduction', $codeRedu)->first();
+    public function delreductions($codeRedu)
+    {
+        // Trouver la réduction par CodeReduction
+        $reduct = Reduction::where('CodeReduction', $codeRedu)->first();
         // dd($reduct);
-            // Supprimer la réduction
-            $reduct->delete();
+        // Supprimer la réduction
+        $reduct->delete();
 
-            // Rediriger avec un message de succès
-            return back()->with('status', 'Réduction supprimée avec succès.');
-    }
-
-    public function paramcomposantes(){
-        return view ('pages.inscriptions.paramcomposantes');
+        // Rediriger avec un message de succès
+        return back()->with('status', 'Réduction supprimée avec succès.');
     }
 
-    public function duplicatarecu(){
-        return view ('pages.inscriptions.duplicatarecu');
+    public function paramcomposantes()
+    {
+        return view('pages.inscriptions.paramcomposantes');
     }
 
-    public function transfert(){
-        return view ('pages.inscriptions.transfert');
+    public function duplicatarecu()
+    {
+        return view('pages.inscriptions.duplicatarecu');
     }
 
-    public function importer(){
-        return view ('pages.inscriptions.importer');
+    public function transfert()
+    {
+        return view('pages.inscriptions.transfert');
     }
 
-    public function verrouillage(){
-        return view ('pages.inscriptions.verrouillage');
+    public function importer()
+    {
+        return view('pages.inscriptions.importer');
     }
 
-    public function recaculereffectifs(){
-        return view ('pages.inscriptions.recaculereffectifs');
+    public function verrouillage()
+    {
+        return view('pages.inscriptions.verrouillage');
     }
 
-    public function enquetesstatistiques(){
-        return view ('pages.inscriptions.enquetesstatistiques');
+    public function recaculereffectifs()
+    {
+        return view('pages.inscriptions.recaculereffectifs');
     }
 
-    public function etatdelacaisse(){
-        return view ('pages.inscriptions.etatdelacaisse');
+    public function enquetesstatistiques()
+    {
+        return view('pages.inscriptions.enquetesstatistiques');
     }
 
-    public function situationfinanciereglobale(){
-        return view ('pages.inscriptions.situationfinanciereglobale');
+    public function etatdelacaisse()
+    {
+        return view('pages.inscriptions.etatdelacaisse');
     }
 
-    public function pointderecouvrement(){
-        return view ('pages.inscriptions.pointderecouvrement');
+    public function situationfinanciereglobale()
+    {
+        return view('pages.inscriptions.situationfinanciereglobale');
     }
-    public function paiementdesnoninscrits(){
-        return view ('pages.inscriptions.paiementdesnoninscrits');
+
+    public function pointderecouvrement()
+    {
+        return view('pages.inscriptions.pointderecouvrement');
     }
-    
-    public function etatdesrecouvrements(){
-        return view ('pages.inscriptions.etatdesrecouvrements');
+    public function paiementdesnoninscrits()
+    {
+        return view('pages.inscriptions.paiementdesnoninscrits');
     }
-    public function modifieeleve(Request $request, $MATRICULE){
+
+    public function etatdesrecouvrements()
+    {
+        return view('pages.inscriptions.etatdesrecouvrements');
+    }
+    public function modifieeleve(Request $request, $MATRICULE)
+    {
         $modifyeleve = Eleveplus::find($MATRICULE);
         if ($modifyeleve) {
             $modifyeleve->maladiesconnues = $request->input('maladieschroniques');
@@ -744,18 +816,16 @@ class PagesController extends Controller
             $modifyeleve->autorisefilm = $request->input('autorisevideo');
             $modifyeleve->autoriseuseimage = $request->input('autoriseimage');
             $modifyeleve->update();
-            return back()->with('status','Modifier avec succes');
-    
+            return back()->with('status', 'Modifier avec succes');
         } else {
             return back()->withErrors('Erreur lors de la modification.');
-
         }
-    
-      }
+    }
 
-      public function modifieleve(Request $request, $MATRICULE) {
+    public function modifieleve(Request $request, $MATRICULE)
+    {
         $modifieleve = Eleve::find($MATRICULE);
-    
+
         if ($modifieleve) {
             // Gestion des attributs de l'élève à modifier
             $imageContent = null;
@@ -764,10 +834,10 @@ class PagesController extends Controller
                 $imageContent = file_get_contents($imageName->getRealPath());
                 $modifieleve->PHOTO = $imageContent;
             }
-    
+
             $redoublant = $request->has('redoublant') ? 1 : 0;
             $formateMatricule = str_pad($request->input('numOrdre'), 8, '0', STR_PAD_LEFT);
-    
+
             $modifieleve->MATRICULE = $request->input('numOrdre');
             $modifieleve->CodeReduction = $request->input('reduction');
             $modifieleve->NOM = $request->input('nom');
@@ -792,13 +862,12 @@ class PagesController extends Controller
             $modifieleve->TelEleve = $request->input('telephoneEleve');
             $modifieleve->MATRICULEX = $formateMatricule;
             $modifieleve->CODEWEB = $formateMatricule;
-    
+
             $modifieleve->update();
-    
+
             return back()->with('status', 'Modification effectuée avec succès');
         }
-    
+
         return back()->withErrors('Erreur lors de la modification.');
     }
-    
 }

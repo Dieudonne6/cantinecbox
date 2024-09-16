@@ -139,7 +139,11 @@ Route::get('/parametre', [PagesController::class, 'parametre']);
 Route::get('/echeancier', [PagesController::class, 'echeancier'])->name('echeancier');
 Route::get('/tabledesclasses', [PagesController::class, 'tabledesclasses']);
 Route::get('/enrclasse', [GestionclasseController::class, 'enrclasse'])->name('enrclasse');
-Route::get('/certificat', [PagesController::class, 'certificatsolarite']);
+Route::get('/certificatsolarite/{CODECLAS?}/{matricule?}', [PagesController::class, 'certificatscolarite']);
+
+Route::post('certificatsolarite/impression', [PagesController::class, 'impression'])->name('certificatsolarite.impression');
+
+
 Route::get('/droitconstate', [PagesController::class, 'droitconstate']);
 
 Route::post('logout', [PagesController::class, 'logout'])->name('logout');
