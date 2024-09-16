@@ -60,6 +60,7 @@
          
       <button><a href="{{ url('/listedesclasses') }}"><i class="fas fa-list"></i> Liste des classes</a></button>
       <button><a href="{{ url('/eleveparclasse') }}"><i class="fas fa-list"></i> Liste des eleves par classes</a></button>
+      <button data-bs-toggle="modal" data-bs-target="#modalregistre"><i class="fas fa-list"></i> Registre des eleves</button>
       <button><a href="{{ url('/certificatsolarite') }}"><i class="fas fa-certificate"></i> Certificats de scolarité</a></button>
       <button><a href="{{ url('/attestationsdescolarite') }}"><i class="fas fa-file-alt"></i> Attestations de scolarité</a></button>
       <button><a href="{{ url('/enquetesstatistiques') }}"><i class="fas fa-chart-bar"></i> Enquêtes statistiques</a></button>
@@ -85,8 +86,41 @@
 
 <!-- Button trigger modal -->
 
+
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="modalregistrebb" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="printModalLabel">Choisir l'option d'impression</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="printOption" id="optionFiche" value="fiche">
+            <label class="form-check-label" for="optionFiche">
+              Registre par fiche
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="printOption" id="optionTableau" value="tableau">
+            <label class="form-check-label" for="optionTableau">
+              Registre tableau
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-primary" id="btnImprimer">Imprimer</button>
+      </div>
+    </div>
+  </div>
+</div> --}}
+
+<!-- Modal pour registre des eleves -->
+<div class="modal fade" id="modalregistre" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -96,22 +130,22 @@
       <div class="modal-body">
           <div class="form-check">
               <label class="form-check-label">
-                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="">
-               Registre par fiche
+                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="1" checked>
+                Registre par fiche
               </label>
-              <p>Le registre sait créer sur le nom</p>
-            </div>
-            <div class="form-check">
+              <p>Le registre est trié sur le nom</p>
+          </div>
+          <div class="form-check">
               <label class="form-check-label">
-                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option2" checked>
-               Registre par tableau
+                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="0">
+                Registre par tableau
               </label>
-              <p>Le registre sait créer sur le matricule</p>
-            </div>
+              <p>Le registre est trié sur le matricule</p>
+          </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <button type="button" class="btn btn-primary">Imprimer</button>
+        <a type="button" id="btnImprimerregistre" class="btn btn-primary">Imprimer</a>
       </div>
     </div>
   </div>
@@ -132,6 +166,15 @@
                           <div class="col-12">
                               <div class="form-group row">
                                   <!-- Contenu du modal -->
+                                  @php
+                                  use App\Models\Typeclasse;
+                                  $typeclasse = Typeclasse::all();
+                                  @endphp
+                                  <select name="typeclasse" id="typeclasse">
+                                    @foreach ($typeclasse as $type)
+                                        <option value="{{ $type->TYPECLASSE }}">{{ $type->LibelleType }}</option>
+                                    @endforeach
+                                  </select>
                               </div>
                           </div>
                       </div>
@@ -141,10 +184,25 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <button type="button" class="btn btn-primary">Imprimer</button>
+        <button type="button" class="btn btn-primary" id="imprimerBtn" onclick="window.location.href='{{ route('impression.profil.type.classe') }}?typeclasse=' + document.getElementById('typeclasse').value;">Imprimer</button>
       </div>
     </div>
   </div>
 </div>
+
+
+<script>
+  document.getElementById('btnImprimerregistre').addEventListener('click', function() {
+    // Récupérer l'option sélectionnée (1 ou 0)
+    const selectedOption = document.querySelector('input[name="optionsRadios"]:checked').value;
+    
+    // Modifier l'URL avec le paramètre d'option sélectionnée
+    const url = "{{ url('/registreelev') }}?type=" + selectedOption;
+    
+    // Rediriger vers l'URL avec le paramètre
+    // window.location.href = url;
+    window.open(url, '_blank');
+  });
+</script>
 
 @endsection

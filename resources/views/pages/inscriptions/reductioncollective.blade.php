@@ -54,62 +54,18 @@
         </div>
     </div>
 </div>
-            <!-- Modal pour les détails de réduction -->
-            <div id="reduction-modal" class="modal-custom" style="display:none;">
-                <div class="modal-content">
-                    <span class="close" onclick="closeReductionModal()">&times;</span>
-                    <h4 class="modal-title" id="reduction-title" style="text-align:center;">Détails du profil de réduction</h4>
-                    <div class="modal-body">
-                        <table class="table table-borderless">
-                            <tr>
-                                <th style="text-align:center;">Code Réduction</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="code-reduction" class="form-control" readonly></td>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center;">Libellé Réduction</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="libelle-reduction" class="form-control" readonly></td>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center;">Réduction accordée sur scolarité</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="reduction-scolarite" class="form-control" readonly></td>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center;">Réduction accordée sur arriérés</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="reduction-arrieres" class="form-control" readonly></td>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center;">Réduction accordée sur frais 1</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="reduction-frais1" class="form-control" readonly></td>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center;">Réduction accordée sur frais 2</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="reduction-frais2" class="form-control" readonly></td>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center;">Réduction accordée sur frais 3</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="reduction-frais3" class="form-control" readonly></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <button class="btn btn-secondary" onclick="closeReductionModal()">Fermer</button>
-                </div>
-            </div>
 
-            @endsection
+<!-- Modal pour les détails de réduction -->
+<div id="reduction-modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeReductionModal()">&times;</span>
+        <h4>Détails sur le profil de réduction</h4>
+        <p id="reduction-details"></p>
+        <button class="btn btn-secondary" onclick="closeReductionModal()">Fermer</button>
+    </div>
+</div>
+
+@endsection
 
 <script>
     const elevesByClasse = @json($eleves->groupBy('CODECLAS'));
@@ -215,47 +171,96 @@
 
     function openReductionModal() {
         const selectedValue = document.getElementById('reduction-select').value;
-        if (!selectedValue) return;
 
-        const reduction = reductions.find(r => r.CodeReduction == selectedValue);
-        if (!reduction) return;
+        if (selectedValue) {
+            const reduction = reductions.find(r => r.CodeReduction == selectedValue);
 
-        document.getElementById('code-reduction').value = reduction.CodeReduction;
-        document.getElementById('libelle-reduction').value = reduction.LibelleReduction;
-        document.getElementById('reduction-scolarite').value = reduction.Reduction_scolarite;
-        document.getElementById('reduction-arrieres').value = reduction.Reduction_arriere;
-        document.getElementById('reduction-frais1').value = reduction.Reduction_frais1;
-        document.getElementById('reduction-frais2').value = reduction.Reduction_frais2;
-        document.getElementById('reduction-frais3').value = reduction.Reduction_frais3;
-
-        const modal = document.getElementById('reduction-modal');
-        modal.style.display = 'block';
-
-        // Centrer le modal
-/*         const modalContent = document.querySelector('.modal-content');
-        const windowHeight = window.innerHeight;
-        const modalHeight = modalContent.offsetHeight;
-        modalContent.style.marginTop = `${(windowHeight - modalHeight) / 2}px`; */
+            if (reduction) {
+                document.getElementById('reduction-details').innerHTML = `
+                    <p> Réduction sur Scolarité: ${reduction.Reduction_scolarite}</p>
+                    <p> Réduction sur Arriérés: ${reduction.Reduction_arriere}</p>
+                    <p> Réduction sur Frais 1: ${reduction.Reduction_frais1}</p>
+                    <p> Réduction sur Frais 2: ${reduction.Reduction_frais2}</p>
+                    <p> Réduction sur Frais 3: ${reduction.Reduction_frais3}</p>
+                `;
+            }
+            
+            document.getElementById('reduction-modal').style.display = 'block';
+        }
     }
 
     function closeReductionModal() {
         document.getElementById('reduction-modal').style.display = 'none';
     }
 
-    function clearSelection() {
-        const checkboxes = document.querySelectorAll('.individual-checkbox');
-        checkboxes.forEach(checkbox => checkbox.checked = false);
+    window.onload = function() {
+        displayEleves(); // Affiche les élèves au chargement de la page
+    }
+    function applyReductions() {
+    const selectedClass = document.getElementById('class-select').value;
+    const selectedReduction = document.getElementById('reduction-select').value;
+    const selectedEleves = [];
+
+    const checkboxes = document.querySelectorAll('.individual-checkbox:checked');
+    checkboxes.forEach(checkbox => {
+        selectedEleves.push({
+            nom: checkbox.closest('tr').children[1].textContent.trim(),
+            sexe: checkbox.getAttribute('data-sexe')
+        });
+    });
+
+    if (!selectedReduction || selectedEleves.length === 0) {
+        alert("Veuillez sélectionner un profil de réduction et au moins un élève.");
+        return;
     }
 
-    window.onload = function () {
-        displayEleves();
-    }
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/appliquereduc'; // Remplacez par la route de votre application
+
+    const csrfToken = '{{ csrf_token() }}'; // Ajouter CSRF token pour les applications Laravel
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = '_token';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
+
+    const classInput = document.createElement('input');
+    classInput.type = 'hidden';
+    classInput.name = 'class';
+    classInput.value = selectedClass;
+    form.appendChild(classInput);
+
+    const reductionInput = document.createElement('input');
+    reductionInput.type = 'hidden';
+    reductionInput.name = 'reduction';
+    reductionInput.value = selectedReduction;
+    form.appendChild(reductionInput);
+
+    selectedEleves.forEach((eleve, index) => {
+        const eleveInput = document.createElement('input');
+        eleveInput.type = 'hidden';
+        eleveInput.name = `eleves[${index}]`;
+        eleveInput.value = eleve.nom;
+        form.appendChild(eleveInput);
+
+        const sexeInput = document.createElement('input');
+        sexeInput.type = 'hidden';
+        sexeInput.name = `eleves_sexe[${index}]`;
+        sexeInput.value = eleve.sexe;
+        form.appendChild(sexeInput);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
 </script>
 
 <style>
     body {
     font-family: Arial, sans-serif;
-    }
+}
 
 .table-container {
     max-width: 100%;
@@ -269,10 +274,7 @@ table {
     width: 100%;
     border-collapse: collapse;
 }
-    table.table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+
 thead th {
     position: sticky;
     top: 0;
@@ -294,6 +296,7 @@ th {
     display: none;
 }
 
+
 tr:hover {
     background-color: #f1f1f1;
 }
@@ -303,7 +306,7 @@ tbody tr {
 }
 
 #reduction-modal {
-    position:absolute;
+    position: fixed;
     z-index: 9999;
     left: 600;
     top: 200;
@@ -313,54 +316,28 @@ tbody tr {
     background-color: rgb(255, 255, 255); 
 }
 
-    .modal-body {
-        padding: 15px;
-    }
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px; 
+    height: 250px; 
+    position: relative;
+}
 
-    .modal-content {
-        background-color: #fefefe;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 300px; 
-        height: 250px; 
-        position: relative;
-    }
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+}
 
-    .close {
-        color: #aaa;
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .close:hover,
-    .close:focus {
-        color: black;
-    }
-        .modal-custom {
-        position: fixed;
-        z-index: 9999;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 40%;
-        height: auto;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-    }
-    .modal-title {
-    font-size: 20px;
-    margin-bottom: 20px;
-    text-align: center;
-    }
-        table.table th, table.table td {
-        padding: 8px 10px;
-        border-bottom: 1px solid #ddd;
-    }
-
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
 </style>

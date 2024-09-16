@@ -501,8 +501,27 @@ class PagesController extends Controller
         return view('pages.inscriptions.listedesreductions', compact('eleves', 'reductions', 'classes'));
     }
 
-    public function discipline()
-    {
+
+    // public function discipline()
+    // {
+
+    public function imprimerProfilTypeClasse(Request $request) {
+        $typeClasse = $request->input('typeclasse');
+        $reductions = Reduction::all();
+        $typeclasse = Typeclasse::all();
+        $eleves = Eleve::with('reduction') // Charge la relation 'reduction'
+            ->where('TYPECLASSE', $typeClasse) // Filtrer les élèves par type de classe
+            ->where('CodeReduction', '!=', null) // Filtrer les élèves ayant une réduction
+            ->paginate(10); // Paginer les résultats par 10 élèves par page
+    
+        // Regrouper les élèves par CodeReduction
+        $elevesParReduction = $eleves->groupBy('CodeReduction');
+    
+        return view('pages.inscriptions.profiltypeclasse', compact('typeClasse', 'reductions', 'typeclasse', 'elevesParReduction', 'eleves'));
+    }
+
+    public function discipline(){
+
         return view('pages.inscriptions.discipline');
     }
 
@@ -597,8 +616,11 @@ class PagesController extends Controller
         return view('pages.inscriptions.eleveparclasse1')->with('filterEleve', $filterEleves)->with('classe', $classes)->with('eleve', $eleves)->with('elevesGroupes', $elevesGroupes)->with('statistiquesClasses', $statistiquesClasses)->with('reductionsParClasse', $reductionsParClasse)->with('fraiscontrats', $fraiscontrat);
     }
 
-    public function listeselective()
-    {
+    public function registreeleves() {
+        return view('pages.inscriptions.registreeleves');
+    }
+
+    public function listeselective(){
         return view('pages.inscriptions.listeselective');
     }
 
@@ -870,4 +892,22 @@ class PagesController extends Controller
 
         return back()->withErrors('Erreur lors de la modification.');
     }
+
+    public function registreeleve(Request $request){
+        $type = $request->query('type');
+        $infoparamcontrat = Paramcontrat::first();
+        $anneencours = $infoparamcontrat->anneencours_paramcontrat;
+        $annesuivante = $anneencours + 1;
+        $annescolaire = $anneencours.'-'.$annesuivante;
+        if($type == 1 ){
+            $infoelevenom = Eleve::orderby('NOM', 'asc')->get();
+            // dd($infoelevenom);
+            return view('pages.etat.registrefiche', compact('annescolaire', 'infoelevenom'));
+        }else{
+            $infoelevematricule = Eleve::orderby('MATRICULE', 'asc')->get();
+            // dd($infoelevematricule);
+            return view('pages.etat.registretableau', compact('annescolaire', 'infoelevematricule'));
+        }
+    }
+    
 }

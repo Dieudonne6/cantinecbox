@@ -182,6 +182,8 @@ Route::get('/archive', [PagesController::class, 'archive']);
 Route::get('/editions', [PagesController::class, 'editions']);
 Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse']);
 Route::get('/eleveparclassespecifique/{classeCode}', [PagesController::class, 'eleveparclassespecifique']);
+Route::get('/registreeleves', [PagesController::class, 'registreeleves']);
+Route::get('/registreelev', [PagesController::class, 'registreeleve']);
 
 Route::get('/gestionarriere', [PagesController::class, 'gestionarriere']);
 Route::get('/exporter', [PagesController::class, 'exporter']);
@@ -255,5 +257,6 @@ Route::post('/detailfacclasse/{CODECLAS}', [ScolariteController::class, 'detailf
 Route::get('/listedesclasses', [ClassesController::class, 'listeclasses']);
 Route::post('/appliquereduc', [PagesController::class, 'applyReductions']);
 Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
+Route::get('/imprimer-profil-type-classe', [PagesController::class, 'imprimerProfilTypeClasse'])->name('impression.profil.type.classe');
 Route::get('/listedesreductions', [PagesController::class, 'listedesreductions']);
 Route::get('/pagedetail/{MATRICULE}', [GestionclasseController::class, 'pagedetail'])->name('pagedetail');
