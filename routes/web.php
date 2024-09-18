@@ -255,7 +255,7 @@ Route::get('/facturesclasses', [ScolariteController::class, 'getfacturesclasses'
 Route::get('/detailfacturesclasses/{CODECLAS}', [ScolariteController::class, 'detailfacturesclasses'])->name('detailfacturesclasses');
 Route::post('/detailfacclasse/{CODECLAS}', [ScolariteController::class, 'detailfacclasse']);
 Route::get('/listedesclasses', [ClassesController::class, 'listeclasses']);
-Route::post('/appliquereduc', [PagesController::class, 'applyReductions']);
+Route::post('/appliquereduc', [PagesController::class, 'applyReductions'])->name('apply.reductions');
 Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
 Route::get('/imprimer-profil-type-classe', [PagesController::class, 'imprimerProfilTypeClasse'])->name('impression.profil.type.classe');
 Route::get('/listedesreductions', [PagesController::class, 'listedesreductions']);

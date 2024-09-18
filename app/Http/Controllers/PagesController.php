@@ -464,6 +464,17 @@ class PagesController extends Controller
         return view('pages.inscriptions.reductioncollective', compact('classes', 'eleves', 'reductions'));
     }
 
+    public function getEleveWithReduction($matricule)
+    {
+        $eleve = Eleve::with('reduction')->where('MATRICULE', $matricule)->first();
+
+        if (!$eleve) {
+            return redirect()->back()->with('error', 'Élève non trouvé.');
+        }
+
+        return view('pages.inscriptions.eleve_detail', compact('eleve'));
+    }
+    
     public function recupmatricule(Request $request)
     {
         $string = $request->input('eleves');
@@ -486,6 +497,23 @@ class PagesController extends Controller
 
             if ($eleve) {
                 $eleve->CodeReduction = $reduction->CodeReduction;
+                $eleve->update();
+            }
+            if ($eleve->reduction) {
+                if ($eleve->reduction->typereduction === 'P') {
+                    $eleve->APAYER = $eleve->APAYER - ($eleve->APAYER * $eleve->reduction->Reduction_scolarite);
+                    $eleve->FRAIS1 = $eleve->FRAIS1 - ($eleve->FRAIS1 * $eleve->reduction->Reduction_frais1);
+                    $eleve->FRAIS2 = $eleve->FRAIS2 - ($eleve->FRAIS2 * $eleve->reduction->Reduction_frais2);
+                    $eleve->FRAIS3 = $eleve->FRAIS3 - ($eleve->FRAIS3 * $eleve->reduction->Reduction_frais3);
+                    $eleve->FRAIS4 = $eleve->FRAIS4 - ($eleve->FRAIS4 * $eleve->reduction->Reduction_frais4);
+                }
+                if ($eleve->reduction->typereduction === 'F') {
+                    $eleve->APAYER = $eleve->APAYER - $eleve->reduction->Reduction_fixe_sco;
+                    $eleve->FRAIS1 = $eleve->FRAIS1 - $eleve->reduction->Reduction_fixe_frais1;
+                    $eleve->FRAIS2 = $eleve->FRAIS2 - $eleve->reduction->Reduction_fixe_frais2;
+                    $eleve->FRAIS3 = $eleve->FRAIS3 - $eleve->reduction->Reduction_fixe_frais3;
+                    $eleve->FRAIS4 = $eleve->FRAIS4 - $eleve->reduction->Reduction_fixe_frais4;
+                }
                 $eleve->update();
             }
         }
