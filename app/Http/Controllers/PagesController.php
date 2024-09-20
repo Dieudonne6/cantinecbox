@@ -246,9 +246,11 @@ class PagesController extends Controller
     {
         return view('pages.paramsfacture');
     }
-    public function echeancier()
+    public function echeancier($id)
     {
-        return view('pages.inscriptions.echeancier');
+        $eleve = Eleve::find($id); // Récupère l'élève spécifique par son identifiant
+        $reductions = DB::table('reduction')->get();
+        return view('pages.inscriptions.echeancier', compact('eleve', 'reductions'));
     }
     public function paramsemecef(Request $request)
     {
@@ -480,44 +482,65 @@ class PagesController extends Controller
         $string = $request->input('eleves');
         $array = explode(' ', $string);
     }
-
     public function applyReductions(Request $request)
     {
         $reduction = Reduction::find($request->input('reduction'));
-
+    
         if (!$reduction) {
             return redirect()->back()->with('error', 'La classe ou la réduction n\'existe pas');
         }
+    
         foreach ($request->input('eleves') as $eleveData) {
             $array = explode(' ', $eleveData); // Sépare la chaîne par espaces
             $eleveId = intval(array_pop($array)); // Récupère le dernier élément et le convertit en entier
-
+    
             // Trouver l'élève par ID
             $eleve = Eleve::find($eleveId);
-
+    
             if ($eleve) {
                 $eleve->CodeReduction = $reduction->CodeReduction;
                 $eleve->update();
-            }
-            if ($eleve->reduction) {
-                if ($eleve->reduction->typereduction === 'P') {
-                    $eleve->APAYER = $eleve->APAYER - ($eleve->APAYER * $eleve->reduction->Reduction_scolarite);
-                    $eleve->FRAIS1 = $eleve->FRAIS1 - ($eleve->FRAIS1 * $eleve->reduction->Reduction_frais1);
-                    $eleve->FRAIS2 = $eleve->FRAIS2 - ($eleve->FRAIS2 * $eleve->reduction->Reduction_frais2);
-                    $eleve->FRAIS3 = $eleve->FRAIS3 - ($eleve->FRAIS3 * $eleve->reduction->Reduction_frais3);
-                    $eleve->FRAIS4 = $eleve->FRAIS4 - ($eleve->FRAIS4 * $eleve->reduction->Reduction_frais4);
+    
+                if ($eleve->reduction) {
+                    if ($eleve->reduction->typereduction === 'P') {
+                        $eleve->APAYER = $eleve->classe->APAYER - ($eleve->APAYER * $eleve->reduction->Reduction_scolarite);
+                        $eleve->FRAIS1 = $eleve->classe->FRAIS1 - ($eleve->FRAIS1 * $eleve->reduction->Reduction_frais1);
+                        $eleve->FRAIS2 = $eleve->classe->FRAIS2 - ($eleve->FRAIS2 * $eleve->reduction->Reduction_frais2);
+                        $eleve->FRAIS3 = $eleve->classe->FRAIS3 - ($eleve->FRAIS3 * $eleve->reduction->Reduction_frais3);
+                        $eleve->FRAIS4 = $eleve->classe->FRAIS4 - ($eleve->FRAIS4 * $eleve->reduction->Reduction_frais4);
+                        $eleve->ARRIERE = $eleve->ARRIERE - ($eleve->ARRIERE * $eleve->reduction->Reduction_arriere);
+                    }
+                    if ($eleve->reduction->typereduction === 'F') {
+                        $eleve->APAYER = $eleve->classe->APAYER - $eleve->reduction->Reduction_fixe_sco;
+                        $eleve->FRAIS1 = $eleve->classe->FRAIS1 - $eleve->reduction->Reduction_fixe_frais1;
+                        $eleve->FRAIS2 = $eleve->classe->FRAIS2 - $eleve->reduction->Reduction_fixe_frais2;
+                        $eleve->FRAIS3 = $eleve->classe->FRAIS3 - $eleve->reduction->Reduction_fixe_frais3;
+                        $eleve->FRAIS4 = $eleve->classe->FRAIS4 - $eleve->reduction->Reduction_fixe_frais4;
+                        $eleve->ARRIERE = $eleve->ARRIERE - $eleve->reduction->Reduction_fixe_arriere;
+                    }
+                    $eleve->update();
                 }
-                if ($eleve->reduction->typereduction === 'F') {
-                    $eleve->APAYER = $eleve->APAYER - $eleve->reduction->Reduction_fixe_sco;
-                    $eleve->FRAIS1 = $eleve->FRAIS1 - $eleve->reduction->Reduction_fixe_frais1;
-                    $eleve->FRAIS2 = $eleve->FRAIS2 - $eleve->reduction->Reduction_fixe_frais2;
-                    $eleve->FRAIS3 = $eleve->FRAIS3 - $eleve->reduction->Reduction_fixe_frais3;
-                    $eleve->FRAIS4 = $eleve->FRAIS4 - $eleve->reduction->Reduction_fixe_frais4;
+    
+                // Mettre à jour la table echeance
+                $echeance = DB::table('echeance')
+                    ->where('MATRICULE', $eleve->MATRICULE)
+                    ->where('NUMERO', 1)
+                    ->first();
+    
+                if ($echeance) {
+                    if ($eleve->reduction->typereduction === 'P') {
+                        $nouvelArriere = $echeance->ARRIERE - ($echeance->ARRIERE * $eleve->reduction->Reduction_arriere);
+                    } else {
+                        $nouvelArriere = $echeance->ARRIERE - $eleve->reduction->Reduction_fixe_arriere;
+                    }
+                    DB::table('echeance') 
+                        ->where('MATRICULE', $eleve->MATRICULE)
+                        ->where('NUMERO', 1)
+                        ->update(['ARRIERE' => $nouvelArriere]);
                 }
-                $eleve->update();
             }
         }
-
+    
         return redirect()->back()->with('success', 'Réductions appliquées avec succès');
     }
 

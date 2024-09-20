@@ -136,7 +136,7 @@ Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
 Route::get('/listedesretardsdepaiement', [PagesController::class, 'listedesretardsdepaiement']);
 
 Route::get('/parametre', [PagesController::class, 'parametre']);
-Route::get('/echeancier', [PagesController::class, 'echeancier'])->name('echeancier');
+Route::get('/echeancier/{MATRICULE}', [PagesController::class, 'echeancier'])->name('echeancier');
 Route::get('/tabledesclasses', [PagesController::class, 'tabledesclasses']);
 Route::get('/enrclasse', [GestionclasseController::class, 'enrclasse'])->name('enrclasse');
 Route::get('/certificatsolarite/{CODECLAS?}/{matricule?}', [PagesController::class, 'certificatscolarite']);

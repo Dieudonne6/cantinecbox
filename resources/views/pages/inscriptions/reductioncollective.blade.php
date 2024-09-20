@@ -150,18 +150,11 @@
         const checkboxes = document.querySelectorAll('.individual-checkbox:checked');
         checkboxes.forEach(checkbox => {
             const eleveRow = checkbox.closest('tr');
-            const eleveCodeReduction = eleveRow.getAttribute('data-code-reduction'); // Assurez-vous que le code de réduction est accessible
-            if (eleveCodeReduction == 0) {
-                selectedEleves.push({
-                    nom: eleveRow.children[1].textContent.trim(),
-                    sexe: checkbox.getAttribute('data-sexe')
-                });
-            } else {
-                hasInvalidReduction = true;
-            }
+            selectedEleves.push({
+                nom: eleveRow.children[1].textContent.trim(),
+                sexe: checkbox.getAttribute('data-sexe')
+            });
         });
-
-        // Vérification si un profil de réduction est sélectionné
         if (!selectedReduction) {
             showErrorModal("Veuillez sélectionner un profil de réduction.");
             return;
@@ -170,18 +163,6 @@
         // Vérification si au moins un élève est sélectionné
         if (checkboxes.length === 0) {
             showErrorModal("Veuillez sélectionner au moins un élève.");
-            return;
-        }
-
-        // Vérification si au moins un élève avec un code de réduction valide est sélectionné
-        if (selectedEleves.length === 0) {
-            showErrorModal("Veuillez sélectionner un élève n'ayant pas de réduction.");
-            return;
-        }
-
-        // Vérification si un élève sélectionné a déjà un profil de réduction
-        if (hasInvalidReduction) {
-            showErrorModal("Un ou plusieurs élèves sélectionnés ont déjà un profil de réduction.");
             return;
         }
 
