@@ -829,15 +829,17 @@
         // Cocher ou décocher la case à cocher en fonction de la valeur
         $('#formArchive').prop('checked', archive == 1); // Supposons que 1 signifie "coché" et 0 signifie "décoché"
 
-
-         // Fermer le modal
+        // Fermer le modal
         $('#exampleModal1').modal('hide');
+
+        // Appeler la fonction pour mettre à jour la liste des élèves dans la vue des réductions
+        displayEleves(); // Ajout de cette ligne pour mettre à jour la liste des élèves
 
         // Optionnel : Faire défiler la page jusqu'au formulaire
         // $('html, body').animate({
         //     scrollTop: $("#formulaire").offset().top
         // }, 1000);
     });
-    });
+});
 </script>
 @endsection

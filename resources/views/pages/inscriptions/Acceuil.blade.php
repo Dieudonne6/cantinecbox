@@ -236,7 +236,7 @@
                                                     <li><a class="dropdown-item" href="{{ url('/profil') }}">Profil</a>
                                                     </li>
                                                     <li><a class="dropdown-item"
-                                                            href="{{ url('/echeancier') }}">Echéance</a>
+                                                            href="{{ url('/echeancier/'.$eleve->MATRICULE) }}">Echéance</a>
                                                     </li>
                                                     <li><a class="dropdown-item" href="#">Cursus</a></li>
                                                 </ul>

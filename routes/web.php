@@ -136,7 +136,7 @@ Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
 Route::get('/listedesretardsdepaiement', [PagesController::class, 'listedesretardsdepaiement']);
 
 Route::get('/parametre', [PagesController::class, 'parametre']);
-Route::get('/echeancier', [PagesController::class, 'echeancier'])->name('echeancier');
+Route::get('/echeancier/{MATRICULE}', [PagesController::class, 'echeancier'])->name('echeancier');
 Route::get('/tabledesclasses', [PagesController::class, 'tabledesclasses']);
 Route::get('/enrclasse', [GestionclasseController::class, 'enrclasse'])->name('enrclasse');
 Route::get('/certificatsolarite/{CODECLAS?}/{matricule?}', [PagesController::class, 'certificatscolarite']);
@@ -257,8 +257,9 @@ Route::get('/paramcomposantes', [ScolariteController::class, 'getparamcomposante
 Route::get('/facturesclasses', [ScolariteController::class, 'getfacturesclasses'])->name('facturesclasses');
 Route::get('/detailfacturesclasses/{CODECLAS}', [ScolariteController::class, 'detailfacturesclasses'])->name('detailfacturesclasses');
 Route::post('/detailfacclasse/{CODECLAS}', [ScolariteController::class, 'detailfacclasse']);
+Route::post('/detailfacnouvelleclasse', [GestionclasseController::class, 'detailfacnouvelleclasse']);
 Route::get('/listedesclasses', [ClassesController::class, 'listeclasses']);
-Route::post('/appliquereduc', [PagesController::class, 'applyReductions']);
+Route::post('/appliquereduc', [PagesController::class, 'applyReductions'])->name('apply.reductions');
 Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
 Route::get('/imprimer-profil-type-classe', [PagesController::class, 'imprimerProfilTypeClasse'])->name('impression.profil.type.classe');
 Route::get('/listedesreductions', [PagesController::class, 'listedesreductions']);
