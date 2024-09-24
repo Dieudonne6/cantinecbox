@@ -1,5 +1,8 @@
 @extends('layouts.master')
 @section('content')
+@php
+    use Carbon\Carbon;
+@endphp
 <style>
     /* Masquer la sidebar et la navbar pendant l'impression */
     @media print {
@@ -21,7 +24,7 @@
             border-collapse: collapse; /* Fusionner les bordures */
             margin: 0 auto; /* Centrer le tableau */
         }
-
+    
         th, td {
             font-size: 10pt; /* Ajuster la taille de la police pour impression */
             padding: 5px;
@@ -56,6 +59,22 @@
             }
         }
     }
+
+    .sidebar, .navbar, .footer, .noprint {
+            display: none !important;
+        }
+
+        /* Centrer le contenu horizontalement et occuper tout l'espace */
+        body {
+            width: 100% !important;
+            margin-left: -7rem  !important;  /*Centrer la page */
+            margin-top: -5rem  !important;
+        }
+
+        .page-body-wrapper{
+            background: white !important;
+        }
+
 </style>
 
 <body>
@@ -81,7 +100,8 @@
                             <tbody>
                                 @foreach ($fautes as $faute)
                                     <tr>
-                                        <td>{{ $faute->DATEOP }}</td>
+                                        <td>{{ Carbon::parse($faute->DATEOP)->format('d/m/Y') }}</td>
+                                        {{-- <td>{{ $faute->DATEOP }}</td> --}}
                                         <td>{{ $faute->FAUTE }}</td>
                                         <td>{{ $faute->SANCTION }}</td>
                                         <td>{{ $faute->NBHEURE }}</td>

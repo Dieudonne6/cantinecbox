@@ -8,7 +8,34 @@
             <div class="col-md-6">
                 <div class="table-container mt-2">
                     <div id="classe-eleves-container">
-                        <!-- Les classes et élèves sont insérés ici par Javascript -->
+                        @foreach ($classes as $classe)
+                            @php
+                                $elevesClasse = $eleves->where('CODECLAS', $classe->CODECLAS);
+                            @endphp
+                            @if ($elevesClasse->isNotEmpty())
+                                <div class="classe-group" data-classe="{{ $classe->CODECLAS }}" id="classe-{{ $classe->CODECLAS }}">
+                                    <h5>{{ $classe->CODECLAS }}</h5>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th><input type="checkbox" onclick="toggleAll(this, '{{ $classe->CODECLAS }}')"></th>
+                                                <th>Nom & Prénoms</th>
+                                                <th>Sexe</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($elevesClasse as $eleve)
+                                                <tr data-code-reduction="{{ $eleve->CodeReduction }}">
+                                                    <td><input type="checkbox" class="individual-checkbox" data-sexe="{{ $eleve->SEXE }}" data-classe="{{ $classe->CODECLAS }}"></td>
+                                                    <td>{{ $eleve->NOM }} <br>{{ $eleve->PRENOM }} <span class="hidden">{{ $eleve->MATRICULE }}</span></td>
+                                                    <td>{{ $eleve->SEXE == 1 ? 'Masculin' : ($eleve->SEXE == 2 ? 'Féminin' : 'Non spécifié') }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -18,7 +45,7 @@
                     @if($classes->isEmpty())
                     <p>Aucune classe trouvée.</p>
                     @else
-                    <select id="class-select" name="classes" class="form-select mb-3" aria-label="Large select example" onchange="sortClasses()">
+                    <select id="class-select" name="classes" class="form-select mb-3" aria-label="Large select example" onchange="moveClassToTop()">
                         <option value="">Sélectionnez une classe</option>
                         @foreach ($classes as $classe)
                          <option value="{{$classe->CODECLAS}}">{{$classe->CODECLAS}}</option>
@@ -38,7 +65,7 @@
                         <label for="option3">Sélectionner sans distinction</label><br>
                     </form>
 
-                    <select id="reduction-select" name="reduction" class="form-select mb-3" aria-label="Large select example" onchange="showReductionDetailsLink()">
+                    <select id="reduction-select" name="reduction" class="form-select mb-3" aria-label="Large select example">
                         <option value="">Profil de réduction</option>
                         @foreach($reductions as $reduction)
                             <option value="{{ $reduction->CodeReduction }}">{{ $reduction->LibelleReduction }}</option>
@@ -54,111 +81,21 @@
         </div>
     </div>
 </div>
-            <!-- Modal pour les détails de réduction -->
-            <div id="reduction-modal" class="modal-custom" style="display:none;">
-                <div class="modal-content">
-                    <span class="close" onclick="closeReductionModal()">&times;</span>
-                    <h4 class="modal-title" id="reduction-title" style="text-align:center;">Détails du profil de réduction</h4>
-                    <div class="modal-body">
-                        <table class="table table-borderless">
-                            <tr>
-                                <th style="text-align:center;">Code Réduction</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="code-reduction" class="form-control" readonly></td>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center;">Libellé Réduction</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="libelle-reduction" class="form-control" readonly></td>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center;">Réduction accordée sur scolarité</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="reduction-scolarite" class="form-control" readonly></td>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center;">Réduction accordée sur arriérés</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="reduction-arrieres" class="form-control" readonly></td>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center;">Réduction accordée sur frais 1</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="reduction-frais1" class="form-control" readonly></td>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center;">Réduction accordée sur frais 2</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="reduction-frais2" class="form-control" readonly></td>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center;">Réduction accordée sur frais 3</th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" id="reduction-frais3" class="form-control" readonly></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <button class="btn btn-secondary" onclick="closeReductionModal()">Fermer</button>
-                </div>
-            </div>
 
-            @endsection
+<!-- Modal pour les messages d'erreur -->
+<div id="error-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeErrorModal()">&times;</span>
+        <p id="error-message"></p>
+        <button class="btn btn-secondary" onclick="closeErrorModal()">Fermer</button>
+    </div>
+</div>
 
 <script>
-    const elevesByClasse = @json($eleves->groupBy('CODECLAS'));
-    const reductions = @json($reductions);
-
-    function displayEleves() {
-        const container = document.getElementById('classe-eleves-container');
-        container.innerHTML = ''; // Clear current content
-
-        const sortedClasses = Object.keys(elevesByClasse).sort();
-
-        sortedClasses.forEach(classe => {
-            const eleves = elevesByClasse[classe];
-            const classeElement = document.createElement('div');
-            classeElement.classList.add('classe-group');
-            classeElement.setAttribute('data-classe', classe);
-
-            // Classe name
-            const classeTitle = document.createElement('h5');
-            classeTitle.textContent = classe;
-            classeElement.appendChild(classeTitle);
-
-            // Table for the students
-            const table = document.createElement('table');
-            const thead = document.createElement('thead');
-            const trHead = document.createElement('tr');
-
-            trHead.innerHTML = `
-                <th><input type="checkbox" onclick="toggleAll(this, '${classe}')"></th>
-                <th>Nom & Prénoms</th>
-                <th>Sexe</th>
-            `;
-            thead.appendChild(trHead);
-            table.appendChild(thead);
-
-            const tbody = document.createElement('tbody');
-            eleves.forEach(eleve => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                <td><input type="checkbox" class="individual-checkbox" data-sexe="${eleve.SEXE}"></td>
-                <td>${eleve.NOM} <br>${eleve.PRENOM} <span class="hidden">${eleve.MATRICULE}</span></td>
-                <td>${eleve.SEXE == 1 ? 'Masculin' : (eleve.SEXE == 2 ? 'Féminin' : 'Non spécifié')}</td>
-            `;
-                tbody.appendChild(tr);
-            });
-
-            table.appendChild(tbody);
-            classeElement.appendChild(table);
-            container.appendChild(classeElement);
+    function toggleAll(source, classe) {
+        const checkboxes = document.querySelectorAll(`.classe-group[data-classe="${classe}"] .individual-checkbox`);
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = source.checked; // Coche ou décoche tous les élèves selon l'état de la case principale
         });
     }
 
@@ -170,92 +107,122 @@
 
         checkboxes.forEach(checkbox => {
             const gender = parseInt(checkbox.getAttribute('data-sexe'));
-            checkbox.checked = (sexe === 0) || (gender === sexe); // coche si le sexe correspond ou si c'est "sans distinction"
+            if (sexe === 0) {
+                checkbox.checked = false; // Aucune sélection
+            } else {
+                checkbox.checked = (gender === sexe); // Coche les cases selon le sexe sélectionné
+            }
         });
     }
 
-    function toggleAll(source, classe = null) {
-        const sexeSelected = parseInt(document.querySelector('input[name="choix"]:checked').value); // Récupère l'option choisie
-        const checkboxes = classe 
-            ? document.querySelectorAll(`.classe-group[data-classe="${classe}"] .individual-checkbox`)
-            : document.querySelectorAll('.individual-checkbox');
-
+    function clearGenderSelection() {
+        const checkboxes = document.querySelectorAll('.individual-checkbox');
         checkboxes.forEach(checkbox => {
-            const gender = parseInt(checkbox.getAttribute('data-sexe'));
-            checkbox.checked = (sexeSelected === 0 || gender === sexeSelected) && source.checked;
+            checkbox.checked = false; // Décocher toutes les cases
         });
     }
 
-    function sortClasses() {
+    function moveClassToTop() {
         const selectedClass = document.getElementById('class-select').value;
-        const container = document.getElementById('classe-eleves-container');
-        const classes = Array.from(container.getElementsByClassName('classe-group'));
-
-        classes.sort((a, b) => {
-            if (a.getAttribute('data-classe') === selectedClass) return -1;
-            if (b.getAttribute('data-classe') === selectedClass) return 1;
-            return a.getAttribute('data-classe').localeCompare(b.getAttribute('data-classe'));
-        });
-
-        // Re-append sorted classes
-        classes.forEach(classe => container.appendChild(classe));
-    }
-
-    function showReductionDetailsLink() {
-        const selectedValue = document.getElementById('reduction-select').value;
-        const link = document.getElementById('reduction-details-link');
-        
-        if (selectedValue) {
-            link.style.display = 'inline';
-        } else {
-            link.style.display = 'none';
-            closeReductionModal(); // Ferme le modal si aucun profil n'est sélectionné
+        const classGroup = document.getElementById(`classe-${selectedClass}`);
+        if (classGroup) {
+            const container = document.getElementById('classe-eleves-container');
+            container.prepend(classGroup); // Déplace le groupe de classe sélectionné en haut
         }
     }
 
-    function openReductionModal() {
-        const selectedValue = document.getElementById('reduction-select').value;
-        if (!selectedValue) return;
-
-        const reduction = reductions.find(r => r.CodeReduction == selectedValue);
-        if (!reduction) return;
-
-        document.getElementById('code-reduction').value = reduction.CodeReduction;
-        document.getElementById('libelle-reduction').value = reduction.LibelleReduction;
-        document.getElementById('reduction-scolarite').value = reduction.Reduction_scolarite;
-        document.getElementById('reduction-arrieres').value = reduction.Reduction_arriere;
-        document.getElementById('reduction-frais1').value = reduction.Reduction_frais1;
-        document.getElementById('reduction-frais2').value = reduction.Reduction_frais2;
-        document.getElementById('reduction-frais3').value = reduction.Reduction_frais3;
-
-        const modal = document.getElementById('reduction-modal');
-        modal.style.display = 'block';
-
-        // Centrer le modal
-/*         const modalContent = document.querySelector('.modal-content');
-        const windowHeight = window.innerHeight;
-        const modalHeight = modalContent.offsetHeight;
-        modalContent.style.marginTop = `${(windowHeight - modalHeight) / 2}px`; */
-    }
-
-    function closeReductionModal() {
-        document.getElementById('reduction-modal').style.display = 'none';
-    }
-
     function clearSelection() {
-        const checkboxes = document.querySelectorAll('.individual-checkbox');
-        checkboxes.forEach(checkbox => checkbox.checked = false);
+        clearGenderSelection(); // Décocher toutes les cases
+        document.getElementById('class-select').selectedIndex = 0; // Réinitialiser la sélection de classe
+        const radioButtons = document.querySelectorAll('input[name="choix"]');
+        radioButtons.forEach(radio => {
+            radio.checked = false; // Décocher tous les boutons radio
+        });
+        document.getElementById('option3').checked = true; // Sélectionner l'option "Sélectionner sans distinction"
     }
 
-    window.onload = function () {
-        displayEleves();
+    function applyReductions() {
+        const selectedClass = document.getElementById('class-select').value;
+        const selectedReduction = document.getElementById('reduction-select').value;
+        const selectedEleves = [];
+        let hasInvalidReduction = false;
+
+        const checkboxes = document.querySelectorAll('.individual-checkbox:checked');
+        checkboxes.forEach(checkbox => {
+            const eleveRow = checkbox.closest('tr');
+            selectedEleves.push({
+                nom: eleveRow.children[1].textContent.trim(),
+                sexe: checkbox.getAttribute('data-sexe')
+            });
+        });
+        if (!selectedReduction) {
+            showErrorModal("Veuillez sélectionner un profil de réduction.");
+            return;
+        }
+
+        // Vérification si au moins un élève est sélectionné
+        if (checkboxes.length === 0) {
+            showErrorModal("Veuillez sélectionner au moins un élève.");
+            return;
+        }
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/appliquereduc'; // Remplacez par la route de votre application
+
+        const csrfToken = '{{ csrf_token() }}'; // Ajouter CSRF token pour les applications Laravel
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+
+        const classInput = document.createElement('input');
+        classInput.type = 'hidden';
+        classInput.name = 'class';
+        classInput.value = selectedClass;
+        form.appendChild(classInput);
+
+        const reductionInput = document.createElement('input');
+        reductionInput.type = 'hidden';
+        reductionInput.name = 'reduction';
+        reductionInput.value = selectedReduction;
+        form.appendChild(reductionInput);
+
+        selectedEleves.forEach((eleve, index) => {
+            const eleveInput = document.createElement('input');
+            eleveInput.type = 'hidden';
+            eleveInput.name = `eleves[${index}]`;
+            eleveInput.value = eleve.nom;
+            form.appendChild(eleveInput);
+
+            const sexeInput = document.createElement('input');
+            sexeInput.type = 'hidden';
+            sexeInput.name = `eleves_sexe[${index}]`;
+            sexeInput.value = eleve.sexe;
+            form.appendChild(sexeInput);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function showErrorModal(message) {
+        document.getElementById('error-message').textContent = message;
+        document.getElementById('error-modal').style.display = 'block';
+    }
+
+    function closeErrorModal() {
+        document.getElementById('error-modal').style.display = 'none';
     }
 </script>
+
+@endsection
 
 <style>
     body {
     font-family: Arial, sans-serif;
-    }
+}
 
 .table-container {
     max-width: 100%;
@@ -269,10 +236,7 @@ table {
     width: 100%;
     border-collapse: collapse;
 }
-    table.table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+
 thead th {
     position: sticky;
     top: 0;
@@ -294,6 +258,7 @@ th {
     display: none;
 }
 
+
 tr:hover {
     background-color: #f1f1f1;
 }
@@ -303,7 +268,7 @@ tbody tr {
 }
 
 #reduction-modal {
-    position:absolute;
+    position: fixed;
     z-index: 9999;
     left: 600;
     top: 200;
@@ -313,54 +278,56 @@ tbody tr {
     background-color: rgb(255, 255, 255); 
 }
 
-    .modal-body {
-        padding: 15px;
-    }
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px; 
+    height: 250px; 
+    position: relative;
+}
 
-    .modal-content {
-        background-color: #fefefe;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 300px; 
-        height: 250px; 
-        position: relative;
-    }
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+}
 
-    .close {
-        color: #aaa;
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-    }
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
 
-    .close:hover,
-    .close:focus {
-        color: black;
-    }
-        .modal-custom {
-        position: fixed;
-        z-index: 9999;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 40%;
-        height: auto;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-    }
-    .modal-title {
+#error-modal {
+    position: fixed;
+    z-index: 9999;
+    left: 50%;
+    top: 20%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 200px;
+    background-color: #fff;
+    border: 1px solid #888;
+    box-shadow: 0 5px 5px rgba(0,0,0,0.3);
+    padding: 20px;
+    display: none;
+}
+
+#error-modal .modal-content {
+    position: relative;
+    padding: 20px;
+}
+
+#error-modal .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
     font-size: 20px;
-    margin-bottom: 20px;
-    text-align: center;
-    }
-        table.table th, table.table td {
-        padding: 8px 10px;
-        border-bottom: 1px solid #ddd;
-    }
-
+    cursor: pointer;
+}
 </style>

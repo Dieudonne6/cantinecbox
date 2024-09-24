@@ -24,4 +24,8 @@ class Classes extends Model
         return $this->belongsTo(Promo::class, 'CODEPROMO', 'CODEPROMO');
     }
      
+    public function eleve()
+    {
+        return $this->belongsTo(Eleve::class, 'CODECLAS', 'CODECLAS');
+    }
 }

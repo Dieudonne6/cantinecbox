@@ -27,6 +27,7 @@
                     <div class="form-group d-flex align-items-center">
                       <label for="exampleInputPassword1" class="mr-2">Prenom</label>
                       <input type="text" class="form-control" id="exampleInputPassword1" value="{{ $eleve->PRENOM }}" readonly>
+                   
                     </div>
                   </form>
                 </div>
@@ -89,12 +90,14 @@
                       <label class="mr-2">Frais 1</label>
                       <div id="the-basics">
                         <input class="form-control" type="text" id="frais1"  value="{{ $eleve->FRAIS1 }}" readonly>
+                        
                       </div>
                     </div>
                     <div class="col d-flex align-items-center">
                       <label class="mr-2">Frais 2</label>
                       <div id="bloodhound">
                         <input class="form-control" id="frais2" type="text"  value="{{ $eleve->FRAIS2}}" readonly>
+
                       </div>
                     </div>
                   </div>
@@ -127,6 +130,7 @@
                           </option>
                         @endforeach
                       </select>
+                      
                     </div>
                     <div class="col">
                       <button type="submit" class="btn btn-primary mr-2">Valider</button>

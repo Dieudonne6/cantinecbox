@@ -18,8 +18,10 @@ use App\Models\Tfautes;
 use App\Models\Matieres;
 use App\Models\Absence;
 use App\Models\Typeclasse;
+use App\Models\Params2;
 use App\Models\Typeenseigne;
 use App\Models\Eleveplus;
+use Carbon\Carbon;
 use App\Http\Requests\inscriptionEleveRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\QueryException;
@@ -178,19 +180,20 @@ public function supprimerGroupe($id)
         }
     }
 
+
 public function discipline(Request $request)
 {
     // Récupérer toutes les fautes
-    $fautes = Faute::get();
+    $fautes = Faute::all();
     
         // Récupérer toutes les matières
-        $matieres = Matieres::get();
+        $matieres = Matieres::all();
 
     // Récupérer toutes les fautes dans scoracine
-    $tfautes = Tfautes::get();
+    $tfautes = Tfautes::all();
 
     // Récupérer toutes les absences
-    $absences = Absence::get();
+    $absences = Absence::all();
 
     // Récupérer tous les groupes de la table classes_groupeclasse
     $classesGroupeclasse = Classesgroupeclass::select('LibelleGroupe', 'CODECLAS')->distinct()->get();
@@ -353,8 +356,8 @@ public function fauteupdate(Request $request, $id)
 public function fautedestroy($id)
 {
     $faute = Faute::where('IDFAUTES', $id)->firstOrFail();
-    dd($faute);
     $faute->delete();
+    
     return redirect()->route('discipline')->with('success', 'Faute supprimée avec succès.');
 }
 
@@ -388,9 +391,7 @@ public function imprimereleveFautes($MATRICULE)
     // Si tu veux afficher une page imprimable
     return view('pages.etat.impression_fautes', compact('eleve', 'fautes'));
 
-    // Ou si tu veux générer un PDF (nécessite une librairie comme domPDF ou snappy)
-    // $pdf = PDF::loadView('pages.eleves.impression_fautes', compact('eleve', 'fautes'));
-    // return $pdf->download('fautes_eleve_'.$eleve->nom.'.pdf');
+ 
 }
 
 public function imprimereleveAbsence($MATRICULE)
@@ -542,21 +543,134 @@ public function imprimereleveAbsence($MATRICULE)
     if ($enreclaslib){
         return back()->with('error', 'Le libellé de la classe existe déja')->withInput();
     }
-    
-    $enrclasse = new Classes();
-    $enrclasse->CODECLAS = $request->input('nomclasse');
-    $enrclasse->LIBELCLAS = $request->input('libclasse');
-    $enrclasse->TypeCours = $request->input('typecours');
-    $enrclasse->TYPECLASSE = $request->input('typclasse');
-    $enrclasse->CYCLE = $request->input('cycle');
-    $enrclasse->SERIE = $request->input('typeserie');
-    $enrclasse->CODEPROMO = $request->input('typepromo');
-    $enrclasse->Niveau = $request->input('numero');
-    $enrclasse->TYPEENSEIG = $request->input('typeensei');
-    $enrclasse->save();
+
+    // Récupérer les données des échéances envoyées sous forme de JSON
+    $echeancesData = $request->input('echeancesData');
+    $echeances = json_decode($echeancesData, true);
+
+    // Récupérer les données initiales de paramsgeneraux envoyées sous forme de JSON
+    $infoIinitiale = $request->input('infoIinitiale');
+    $infoIni = json_decode($infoIinitiale, true);
+
+    // dd($infoIni[0]);
+    if ($echeances === null) {
+        // PAS D'ECHEANCE DONC ON ENREGISTRE SEULEMENT LES DONNE DE LA CLASSE ET DE PARAM GENERAUX
+        // dd('null ()');
+        $enrclasse = new Classes();
+        $enrclasse->CODECLAS = $request->input('nomclasse');
+        $enrclasse->LIBELCLAS = $request->input('libclasse');
+        $enrclasse->TypeCours = $request->input('typecours');
+        $enrclasse->TYPECLASSE = $request->input('typclasse');
+        $enrclasse->CYCLE = $request->input('cycle');
+        $enrclasse->SERIE = $request->input('typeserie');
+        $enrclasse->CODEPROMO = $request->input('typepromo');
+        $enrclasse->Niveau = $request->input('numero');
+        $enrclasse->TYPEENSEIG = $request->input('typeensei');
+
+        // infos de param generaux 
+        $enrclasse->APAYER = $infoIni[0]['apayer'];
+        $enrclasse->APAYER2 = $infoIni[0]['apayer'];
+
+        $enrclasse->FRAIS1 = $infoIni[0]['frais1'];
+        $enrclasse->FRAIS1_A = $infoIni[0]['frais1'];
+
+        $enrclasse->FRAIS2 = $infoIni[0]['frais2'];
+        $enrclasse->FRAIS2_A = $infoIni[0]['frais2'];
+
+        $enrclasse->FRAIS3 = $infoIni[0]['frais3'];
+        $enrclasse->FRAIS3_A = $infoIni[0]['frais3'];
+
+        $enrclasse->FRAIS4 = $infoIni[0]['frais4'];
+        $enrclasse->FRAIS4_A = $infoIni[0]['frais4'];
+
+        $enrclasse->save();
+    } else {
+
+
+    // LES ECHEANCES EXISTENT DONC ON ENREGISTRE LES DONNE DE LA CLASSE ET CELLES DES TABLEAUX OU ECHEANCE DANS ECHEANCEC
+
+    // dd('different de null OU ');
+
+    $nouvclasse = new Classes();
+    $nouvclasse->CODECLAS = $request->input('nomclasse');
+    $nouvclasse->LIBELCLAS = $request->input('libclasse');
+    $nouvclasse->TypeCours = $request->input('typecours');
+    $nouvclasse->TYPECLASSE = $request->input('typclasse');
+    $nouvclasse->CYCLE = $request->input('cycle');
+    $nouvclasse->SERIE = $request->input('typeserie');
+    $nouvclasse->CODEPROMO = $request->input('typepromo');
+    $nouvclasse->Niveau = $request->input('numero');
+    $nouvclasse->TYPEENSEIG = $request->input('typeensei');
+
+    $nouvclasse->DUREE = $request->input('nbEcheances');
+    $nouvclasse->PERIODICITE = $request->input('periodicite');
+    $nouvclasse->DATEDEB = $request->input('dateDebut');
+    $nouvclasse->TYPEECHEANCIER = $request->input('flexRadioDefault');
+
+    $nouvclasse->APAYER = $request->input('APAYER');
+    $nouvclasse->APAYER2 = $request->input('APAYER2');
+
+    $nouvclasse->FRAIS1 = $request->input('FRAIS1');
+    $nouvclasse->FRAIS1_A = $request->input('FRAIS1_A');
+
+    $nouvclasse->FRAIS2 = $request->input('FRAIS2');
+    $nouvclasse->FRAIS2_A = $request->input('FRAIS2_A');
+
+    $nouvclasse->FRAIS3 = $request->input('FRAIS3');
+    $nouvclasse->FRAIS3_A = $request->input('FRAIS3_A');
+
+    $nouvclasse->FRAIS4 = $request->input('FRAIS4');
+    $nouvclasse->FRAIS4_A = $request->input('FRAIS4_A');
+
+    $nouvclasse->save();
+
+    // ENREGISTREMENT DANS ECHEANCEC
+
+        // Supprimer les lignes exixtantes dans echeancec pour cette classe
+        $classe = $request->input('nomclasse'); // Récupérer la classe concernée à partir de la requête
+
+        // dd($classe);
+        // Vérifier si des lignes existent déjà pour cette classe
+        $existeLignes = DB::table('echeancc')->where('CODECLAS', $classe)->exists();
+
+        if ($existeLignes) {
+            // Si des lignes existent pour cette classe, on les supprime
+            DB::table('echeancc')->where('CODECLAS', $classe)->delete();
+        }
+
+        foreach ($echeances as $echeance) {
+            $dateFormat = 'd/m/Y'; // Le format d'origine de la date
+            $dateOriginal = $echeance['date_paiement'];
+            // dd($dateOriginal);
+            // Convertir la date en format Carbon
+            $date = Carbon::createFromFormat($dateFormat, $dateOriginal);
+
+            // Reformater la date au format souhaité 'Y-m-d'
+            $dateFormater = $date->format('Y-m-d');
+
+            // Insérer chaque ligne dans la base de données ou la traiter comme vous le souhaitez
+            DB::table('echeancc')->insert([
+                'NUMERO' => $echeance['tranche'],
+                'FRACTION1' => $echeance['pourcentage_nouveau'],
+                'FRACTION2' => $echeance['pourcentage_ancien'],
+                'APAYER' => $echeance['montant_nouveau'],
+                'APAYER2' => $echeance['montant_ancien'],
+                'DATEOP' => $dateFormater,
+                'DATEOP2' => $dateFormater,
+                'CODECLAS' => $echeance['classe'],
+                // 'created_at' => now(),
+                // 'updated_at' => now()
+            ]);
+        }
+
+    }
+
+
     return back()->with('status','Enregistrer avec succes');
   } 
  
+
+
 
   public function enregistrerinfo(Request $request){
     $enreninfo = new Eleveplus();
@@ -719,7 +833,7 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
 
     $nouveauEleve->MATRICULE = $request->input('numOrdre'); // MATRICULE prend la valeur du champ numero d'ordre
     $nouveauEleve->PHOTO = $imageContent;
-    $nouveauEleve->CodeReduction = $request->input('reduction');
+    $nouveauEleve->CodeReduction = 0;
     $nouveauEleve->NOM = $request->input('nom');
     $nouveauEleve->PRENOM = $request->input('prenom');
     $nouveauEleve->DATENAIS = $request->input('dateNaissance');
@@ -820,17 +934,44 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
 
   }
   public function enrclasse(){
-    if(Session::has('account')){
+    // if(Session::has('account')){
     // $duplicatafactures = Duplicatafacture::all();
     $typecla = Typeclasse::get();
     $serie = Serie::get();
     $promo = Promo::get();
+    $infoParamGeneraux = Params2::first();
     $typeenseigne = Typeenseigne::get();
-    return view('pages.inscriptions.enregistrementclasse')->with('typecla', $typecla)->with('serie', $serie)->with('promo', $promo)->with('typeenseigne', $typeenseigne);
-    } 
-    return redirect('/');
+
+
+
+
+
+    return view('pages.inscriptions.enregistrementclasse')->with('typecla', $typecla)->with('serie', $serie)->with('promo', $promo)->with('typeenseigne', $typeenseigne)->with('infoParamGeneraux', $infoParamGeneraux);
+    // } 
+    // return redirect('/');
 
   }
+
+
+//   ---------------
+
+
+  public function detailfacnouvelleclasse(Request $request) {
+        // Récupérer les données des échéances envoyées sous forme de JSON
+        $echeancesData = $request->input('echeancesData');
+        $echeances = json_decode($echeancesData, true);
+    
+        dd($echeances);
+  }
+
+
+
+// ---------------
+
+
+
+
+
   public function modifierclasse($CODECLAS){
   $typeclah = Typeclasse::get();
   $serie = Serie::get();
@@ -861,5 +1002,21 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
 
     }
   }
+
+    public function pagedetail($MATRICULE)
+{
+      $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
+    // $eleves = Eleve::with('classe.promo')->get();
+    $allClass = Classes::all();
+    $serie = Serie::get();
+    $promotion = Promo::all();
+    $typeenseigne = Typeenseigne::get();
+    $typeclah = Typeclasse::get();
+
+        // Récupérer les élèves avec leurs notes
+        // $eleves = Eleve::with('notes')->get();
+
+    return view('pages.inscriptions.pagedetail', compact('eleve','allClass','serie','promotion','typeclah','typeenseigne'));
+}
 
 }

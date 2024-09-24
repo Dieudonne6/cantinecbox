@@ -35,5 +35,12 @@ class Eleve extends Model
     public function fautes() {
         return $this->hasMany(Faute::class, 'MATRICULE', 'MATRICULE');
     }
-
+    public function reduction() {
+        return $this->belongsTo(Reduction::class, 'CodeReduction', 'CodeReduction'); // Assurez-vous que les clés sont correctes
+    }
+    
+        // Relation avec le modèle Scolarite
+        public function scolarite() {
+            return $this->belongsTo(Scolarite::class, 'MATRICULE', 'MATRICULE');
+         }
 }
