@@ -21,7 +21,7 @@
             <a class="btn btn-primary btn-sm" href="{{ url('/inscrireeleve') }}">
               <i class="typcn typcn-plus btn-icon-prepend"></i> Nouveau
             </a>
-            <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
+            <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
               <i class="typcn typcn-printer btn-icon-prepend"></i> Filtrer pour imprimer 
             </button>
           </div>
@@ -52,7 +52,7 @@
               </table>
             </div>
           </div>
-          <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+          <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
             <div class="offcanvas-header">
               <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Filtrage</h5>
               <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -213,10 +213,10 @@
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
                     <li>
-                      <a class="dropdown-item" data-bs-toggle="modal"
-                      data-bs-target="#deleteModal{{ $eleve->MATRICULE }}">
+                      <button class="dropdown-item delete-eleve" data-matricule="{{ $eleve->MATRICULE }}" data-nom="{{ $eleve->NOM }}" data-prenom="{{ $eleve->PRENOM }}" data-bs-toggle="modal"
+                      data-bs-target="#deleteModal">
                       Supprimer
-                    </a>
+                    </button>
                   </li>
                   <li><a class="dropdown-item"
                     href="/modifiereleve/{{ $eleve->MATRICULE }}">Modifier</a></li>
@@ -224,8 +224,8 @@
                       href="{{ url('/paiementeleve') }}">Paiement</a></li>
                       <li><a class="dropdown-item" href="{{ url('/majpaiementeleve') }}">Maj
                         Paie</a></li>
-                        <li><a class="dropdown-item" href="{{ url('/profil') }}">Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ url('/echeancier') }}">Echéance</a>
+                        <li><a class="dropdown-item" href="/profil/{{ $eleve->MATRICULE }}">Profil</a></li>
+                        <li><a class="dropdown-item" href="/echeancier/{{ $eleve->MATRICULE }}">Echéance</a>
                         </li>
                         <li><a class="dropdown-item" href="#">Cursus</a></li>
                       </ul>
@@ -244,10 +244,32 @@
     </div>
   </div>
   
-  
-  @foreach ($eleves as $eleve)
+  <div class="modal fade" id="deleteModal" tabindex="-1"
+    aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Êtes-vous sûr de vouloir supprimer l'élève  ?
+          <p id="eleveName"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <form id="deleteForm" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">Supprimer</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+ {{-- @foreach ($eleves as $eleve)
   <!-- Modal de suppression -->
-  <div class="modal fade" id="deleteModal{{ $eleve->MATRICULE }}" tabindex="-1"
+   <div class="modal fade" id="deleteModal{{ $eleve->MATRICULE }}" tabindex="-1"
     aria-labelledby="deleteModalLabel{{ $eleve->MATRICULE }}" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -268,10 +290,10 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> --}}
   
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal{{ $eleve->MATRICULE }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+  {{-- <div class="modal fade" id="exampleModal{{ $eleve->MATRICULE }}" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg" style="max-width: 1100px;">
       <div class="modal-content">
@@ -698,58 +720,67 @@
                                     </div>
                                   </div>
                                 </div>
-                                @endforeach
-                                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                @endforeach --}}
+                                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
 
                                 <!-- Scripts JavaScript à placer à la fin du body pour optimiser le chargement -->
                                 <script>
                                   // JavaScript pour afficher le jour de la semaine et l'heure actuelle
-                                  function afficherDateHeure() {
-                                    // Récupérer la date et l'heure actuelles
-                                    let date = new Date();
+                                  // function afficherDateHeure() {
+                                  //   // Récupérer la date et l'heure actuelles
+                                  //   let date = new Date();
                                     
-                                    // Obtenir le jour de la semaine
-                                    let joursSemaine = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
-                                    let jour = joursSemaine[date.getDay()];
+                                  //   // Obtenir le jour de la semaine
+                                  //   let joursSemaine = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+                                  //   let jour = joursSemaine[date.getDay()];
                                     
-                                    // Formater l'heure
-                                    let heures = date.getHours();
-                                    let minutes = date.getMinutes();
-                                    let secondes = date.getSeconds();
-                                    let heureFormatee =
-                                    `${heures.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secondes.toString().padStart(2, '0')}`;
+                                  //   // Formater l'heure
+                                  //   let heures = date.getHours();
+                                  //   let minutes = date.getMinutes();
+                                  //   let secondes = date.getSeconds();
+                                  //   let heureFormatee =
+                                  //   `${heures.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secondes.toString().padStart(2, '0')}`;
                                     
-                                    // Créer une chaîne de texte avec jour et heure
-                                    let texteAffichage = `Aujourd'hui, c'est ${jour}. Il est actuellement ${heureFormatee}.`;
+                                  //   let texteAffichage = `Aujourd'hui, c'est ${jour}. Il est actuellement ${heureFormatee}.`;
                                     
-                                    // Afficher le texte dans l'élément HTML correspondant
-                                    document.getElementById("dateTime").textContent = texteAffichage;
-                                  }
+                                  //   document.getElementById("dateTime").textContent = texteAffichage;
+                                  // }
                                   
-                                  // Appeler la fonction pour l'exécuter initialement
-                                  afficherDateHeure();
+                                  // afficherDateHeure();
                                   
                                   // Actualiser l'affichage de l'heure chaque seconde
-                                  setInterval(afficherDateHeure, 1000);
+                                  // setInterval(afficherDateHeure, 1000);
                                   
-                                  document.getElementById('recalculer').addEventListener('click', function() {
-                                    let total = Math.floor(Math.random() * 1000);
-                                    let filles = Math.floor(Math.random() * 100);
-                                    let garcons = total - filles;
-                                    let totalRed = Math.floor(Math.random() * 20);
-                                    let fillesRed = Math.floor(Math.random() * 5);
-                                    let garconsRed = totalRed - fillesRed;
+                                  // document.getElementById('recalculer').addEventListener('click', function() {
+                                  //   let total = Math.floor(Math.random() * 1000);
+                                  //   let filles = Math.floor(Math.random() * 100);
+                                  //   let garcons = total - filles;
+                                  //   let totalRed = Math.floor(Math.random() * 20);
+                                  //   let fillesRed = Math.floor(Math.random() * 5);
+                                  //   let garconsRed = totalRed - fillesRed;
                                     
-                                    document.getElementById('total').textContent = total;
-                                    document.getElementById('filles').textContent = filles;
-                                    document.getElementById('garcons').textContent = garcons;
-                                    document.getElementById('total-red').textContent = totalRed;
-                                    document.getElementById('filles-red').textContent = fillesRed;
-                                    document.getElementById('garcons-red').textContent = garconsRed;
-                                  });
+                                  //   document.getElementById('total').textContent = total;
+                                  //   document.getElementById('filles').textContent = filles;
+                                  //   document.getElementById('garcons').textContent = garcons;
+                                  //   document.getElementById('total-red').textContent = totalRed;
+                                  //   document.getElementById('filles-red').textContent = fillesRed;
+                                  //   document.getElementById('garcons-red').textContent = garconsRed;
+                                  // });
                                   
                                  
-
+                                  document.addEventListener('DOMContentLoaded', function () {
+  // Gestion du modal de suppression
+  document.querySelectorAll('.delete-eleve').forEach(button => {
+    button.addEventListener('click', function () {
+      const matricule = this.getAttribute('data-matricule');
+      const nom = this.getAttribute('data-nom');
+      const prenom = this.getAttribute('data-prenom');
+      
+      document.getElementById('eleveName').textContent = `${nom} ${prenom}`;
+      document.getElementById('deleteForm').action = `/eleves/${matricule}`;
+    });
+  });
+});
 
 function imprimerPage() {
     let originalTitle = document.title;

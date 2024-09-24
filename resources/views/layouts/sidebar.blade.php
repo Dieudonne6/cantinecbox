@@ -186,7 +186,7 @@
                 <ul class="nav flex-column sub-menu">
                 
                   @php
-                  $routesAccueil = ['Acceuil', 'inscrireeleve','modifiereleve', 'paiementeleve', 'majpaiementeleve', 'echeancier']; // Liste des noms de routes associées à l'accueil
+                  $routesAccueil = ['Acceuil', 'inscrireeleve','modifiereleve', 'paiementeleve', 'majpaiementeleve', 'echeancier', 'profil']; // Liste des noms de routes associées à l'accueil
                   @endphp
                   
                   <li class="nav-item">
