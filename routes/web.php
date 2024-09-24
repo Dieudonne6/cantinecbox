@@ -250,6 +250,7 @@ Route::get('/paramcomposantes', [ScolariteController::class, 'getparamcomposante
 Route::get('/facturesclasses', [ScolariteController::class, 'getfacturesclasses'])->name('facturesclasses');
 Route::get('/detailfacturesclasses/{CODECLAS}', [ScolariteController::class, 'detailfacturesclasses'])->name('detailfacturesclasses');
 Route::post('/detailfacclasse/{CODECLAS}', [ScolariteController::class, 'detailfacclasse']);
+Route::post('/detailfacnouvelleclasse', [GestionclasseController::class, 'detailfacnouvelleclasse']);
 Route::get('/listedesclasses', [ClassesController::class, 'listeclasses']);
 Route::post('/appliquereduc', [PagesController::class, 'applyReductions']);
 Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
