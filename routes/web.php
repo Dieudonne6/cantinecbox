@@ -34,13 +34,17 @@ Route::get('/get-montant/{codeClass}', [PagesController::class, 'getMontant']);
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
 Route::get('/listedeseleves', [PagesController::class, 'listedeseleves']);
+Route::get('/listeselectiveeleve', [PagesController::class, 'listeselectiveeleve']);
 
 Route::get('/classes', [ClassesController::class, 'classe']);
 Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees']);
 Route::get('/', [PagesController::class, 'connexion']);
 
 Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
+Route::get('/listegeneraleeleve/{CODECLAS}', [ClassesController::class, 'listegeneraleeleve']);
 // Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'getElevesByClasse']);
+
+Route::get('/filterlisteselectiveeleve', [ClassesController::class, 'filterlisteselectiveeleve']);
 
 // Route::get('/eleve/{CODECLAS}', 'EleveController@getElevesByClasse');
 Route::post('/traiter', [ClassesController::class, 'traiter']);
@@ -76,9 +80,11 @@ Route::get('/Acceuil', [PagesController::class, 'Acceuil'])->name('lolo');
 Route::get('/modifiereleve/{MATRICULE}', [PagesController::class, 'modifiereleve'])->name('modifiereleve');
 Route::put('/modifieeleve/{MATRICULE}', [PagesController::class, 'modifieeleve']);
 Route::put('/modifieleve/{MATRICULE}', [PagesController::class, 'modifieleve']);
+Route::put('/modifieprofil/{MATRICULE}', [PagesController::class, 'modifieprofil']);
+Route::put('/modifieecheancier/{MATRICULE}', [PagesController::class, 'modifieecheancier']);
 
 
-Route::get('/profil', [PagesController::class, 'profil']);
+Route::get('/profil/{MATRICULE}', [PagesController::class, 'profil'])->name('profil');
 
 Route::get('/typesclasses', [PagesController::class, 'typesclasses']);
 

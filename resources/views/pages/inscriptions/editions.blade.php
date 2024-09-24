@@ -57,8 +57,10 @@
   <div class="card-body">
     <h4 class="card-title">Editions</h4>
     <div class="container">
-         
+      <button><a href="{{ url('/listedeseleves') }}"><i class="fas fa-list"></i> Liste générale des élèves</a></button>
       <button><a href="{{ url('/listedesclasses') }}"><i class="fas fa-list"></i> Liste des classes</a></button>
+      <button><a href="{{ url('/listeselectiveeleve') }}"><i class="fas fa-list"></i> Liste selective des eleves</a></button>
+
       <button><a href="{{ url('/eleveparclasse') }}"><i class="fas fa-list"></i> Liste des eleves par classes</a></button>
       <button data-bs-toggle="modal" data-bs-target="#modalregistre"><i class="fas fa-list"></i> Registre des eleves</button>
       <button><a href="{{ url('/certificatsolarite') }}"><i class="fas fa-certificate"></i> Certificats de scolarité</a></button>
