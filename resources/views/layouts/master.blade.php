@@ -392,7 +392,39 @@ align-items: center;  */
         });
         $(document).ready(function() {
             // Initialiser Select2 sur le sélecteur de classes
-            $('.js-example-basic-multiple').select2();
+        $('.js-example-basic-multiple').select2();
+      $('#submitBtn').click(function() {
+      var selectedValues = $('.js-example-basic-multiple').val(); // Récupérer les valeurs sélectionnées
+      
+      if (selectedValues.length > 0) {
+          // Utiliser une route Laravel correctement définie pour éviter la duplication
+          var url = `{{ url('listegeneraleeleve') }}/` + selectedValues.join(',');
+          
+          // Si l'utilisateur est déjà sur la page, utiliser replace() pour forcer le rechargement
+          if (window.location.href === url) {
+              window.location.replace(url); // Remplacer l'URL actuelle pour forcer le rechargement
+          } else {
+              window.location.href = url; // Sinon rediriger normalement
+          }
+      } else {
+          alert('Veuillez sélectionner au moins une classe.');
+      }
+  });
+  $('#submitBtnselective').click(function() {
+    var selectedClasses = $('.js-example-basic-multiple[name="CODECLAS[]"]').val(); // Récupérer les classes sélectionnées
+    var sexe = $('#sexeSelect').val(); // Récupérer le sexe sélectionné
+    var minAge = $('#minAge').val() || $('#minAge').attr('placeholder'); // Utiliser le placeholder si l'âge n'est pas sélectionné
+    var maxAge = $('#maxAge').val() || $('#maxAge').attr('placeholder'); 
+
+    // Vérifier si aucune classe n'est sélectionnée
+    var classesQueryParam = selectedClasses.length > 0 ? selectedClasses.join(',') : 'all';
+
+    var url = `{{ url('filterlisteselectiveeleve') }}?classes=` + classesQueryParam + `&sexe=${sexe}&minAge=${minAge}&maxAge=${maxAge}`;
+    
+    window.location.href = url; // Rediriger vers la route
+});
+
+
 
             $('#classSelect').on('change', function() {
                 var codeClass = $(this).val();
@@ -430,6 +462,8 @@ align-items: center;  */
 
     <script>
         $(document).ready(function() {
+        
+
             $('#selectClasses').change(function() {
                 var selectedValue = $(this).val();
                 if (selectedValue === 'Maternelle') {
@@ -477,6 +511,69 @@ align-items: center;  */
             });
 
         });
+    
+  $('#class-select').on('select2:select', function (e) {
+  var selectedOption = e.params.data.element;
+  var typeReduction = $(selectedOption).data('type');
+  var reductionFrais1 = parseFloat($(selectedOption).data('frais1')) || 0;
+  var reductionFrais2 = parseFloat($(selectedOption).data('frais2')) || 0;
+  var reductionFrais3 = parseFloat($(selectedOption).data('frais3')) || 0;
+  var reductionFrais4 = parseFloat($(selectedOption).data('frais4')) || 0;
+  var reductionFrais4 = parseFloat($(selectedOption).data('frais4')) || 0;
+  var sco = parseFloat($(selectedOption).data('sco')) || 0;
+  var arrie = parseFloat($(selectedOption).data('arrie')) || 0;
+
+  var reductionfixeFrais1 = parseFloat($(selectedOption).data('fixefrais1')) || 0;
+  var reductionfixeFrais2 = parseFloat($(selectedOption).data('fixefrais2')) || 0;
+  var reductionfixeFrais3 = parseFloat($(selectedOption).data('fixefrais3')) || 0;
+  var reductionfixeFrais4 = parseFloat($(selectedOption).data('fixefrais4')) || 0;
+  var fixearriere = parseFloat($(selectedOption).data('fixearriere')) || 0;
+  var fixesco = parseFloat($(selectedOption).data('fixesco')) || 0;
+
+  var frais1 = parseFloat($('#frais1').val()) || 0;
+  var frais2 = parseFloat($('#frais2').val()) || 0;
+  var frais3 = parseFloat($('#frais3').val()) || 0;
+  var frais4 = parseFloat($('#frais4').val()) || 0;
+  var apayer = parseFloat($('#apayer').val()) || 0;
+  var arriere = parseFloat($('#arriereinitial').val()) || 0;
+
+  var fraisclasse1 = parseFloat($('#fraisclasse1').val()) || 0;
+  var fraisclasse2 = parseFloat($('#fraisclasse2').val()) || 0;
+  var fraisclasse3 = parseFloat($('#fraisclasse3').val()) || 0;
+  var fraisclasse4 = parseFloat($('#fraisclasse4').val()) || 0;
+  var classesco = parseFloat($('#classesco').val()) || 0;
+
+
+    if (typeReduction === 'P') {
+    frais1 = fraisclasse1 - (fraisclasse1 * reductionFrais1);
+    frais2 = fraisclasse2 - (fraisclasse2 * reductionFrais2);
+    frais3 = fraisclasse3 - (fraisclasse3 * reductionFrais3);
+    frais4 = fraisclasse4 - (fraisclasse4 * reductionFrais4);
+    if(arriere !== 0){
+        arriere = arriere - (arriere * arrie);
+    }
+    apayer = classesco - (classesco * sco);
+  } else if (typeReduction === 'F') {
+    frais1 = fraisclasse1 - reductionfixeFrais1;
+    frais2 = fraisclasse2 - reductionfixeFrais2;
+    frais3 = fraisclasse3 - reductionfixeFrais3;
+    frais4 = fraisclasse4 - reductionfixeFrais4;
+    apayer = classesco - fixesco;
+    if(arriere !== 0){
+    arriere = arriere - fixearriere;
+    }
+  }
+
+  $('#frais1').val(frais1);
+  $('#frais2').val(frais2);
+  $('#frais3').val(frais3);
+  $('#frais4').val(frais4);
+  $('#apayer').val(apayer);
+  $('#arriere').val(arriere);
+
+});
+
+
     </script>
 
 <script>

@@ -7,24 +7,22 @@
       <h4 class="card-title">Liste générale des élèves</h4>
       <div class="form-group row">
         <div class="col-3">
-          <select class="js-example-basic-multiple w-100">
-            <option value="">Sélectionnez une classe</option>
+          <select class="js-example-basic-multiple w-100" multiple="multiple" name="CODECLAS[]"  name="CODECLAS[]" data-placeholder="Toutes les classes">         
+            <option value="">Toutes les classes</option>
+            @foreach ($allClasse as $classes)
+              <option value="{{$classes->CODECLAS}}">{{$classes->CODECLAS}}</option>
+            @endforeach
           </select>
         </div>
-        <div class="col-4">
-          <input type="text" class="form-control p-2" name="" value="" placeholder="Entrez titre de l'etat">
+        <div class="col-3">
+          <button  class="btn btn-primary" id="submitBtn">Appliquer la sélection</button>
         </div>
-        <div class="col-2">
-          <a class="btn btn-primary" href="">Creer une liste</a>
-        </div>
-        <div class="col-2">
-          <a class="btn btn-primary" href="">Imprimer liste</a>
-        </div>
+
       </div>
       <div class="row grid-margin stretch-card">
         <div class="col-lg-10 mx-auto card">
           <div class="table-responsive mb-4">
-            <table class="table">
+            <table id="myTable" class="table">
               <thead>
                 <tr>
                   <th>Matricule</th>
@@ -42,38 +40,6 @@
                   <th>Moyan</th>
                 </tr>
               </thead>
-              <tbody id="">
-                <tr>
-                  <td>900</td>
-                  <td>JODy </td>
-                  <td>Macu</td>
-                  <td>CE2</td>
-                  <td>03/09/24</td>
-                  <td>Cotonou</td>
-                  <td>M</td>
-                  <td></td>
-                  <td>Apte</td>
-                  <td>####</td>
-                  <td>####</td>
-                  <td>####</td>
-                  <td>-200</td>
-                </tr>
-                <tr>
-                  <td>900</td>
-                  <td>JODy </td>
-                  <td>Macu</td>
-                  <td>CE2</td>
-                  <td>03/09/24</td>
-                  <td>Cotonou</td>
-                  <td>M</td>
-                  <td></td>
-                  <td>Apte</td>
-                  <td>####</td>
-                  <td>####</td>
-                  <td>####</td>
-                  <td>-200</td>
-                </tr>
-              </tbody>
             </table>
           </div>
         </div>
@@ -81,4 +47,7 @@
     </div>
   </div>
 </div>
+
+
+
     @endsection
