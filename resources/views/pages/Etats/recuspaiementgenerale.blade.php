@@ -99,48 +99,29 @@
 
 <body>
     <div class="container">
-        <!-- Bouton d'impression (ne sera pas affiché sur la page imprimée) -->
-        <div class="text-center no-print">
-            <button onclick="window.print()" class="btn btn-primary btn-sm">Imprimer</button>
+        <!-- Section Original -->
+        <div class="original-receipt" style="border: 1px solid #000; padding: 20px; margin-bottom: 20px;">
+            <h5>Original</h5>
+            <div>
+                <p><strong>Nom de l'élève:</strong> {{ $eleve->NOM }} {{ $eleve->PRENOM }}</p>
+                <p><strong>Date:</strong> {{ \Carbon\Carbon::now()->format('d-m-Y') }}</p>
+                <p><strong>Montant payé:</strong> {{ $montantPaye }} F CFA</p>
+                <p><strong>Mode de paiement:</strong> {{ $modePaiement }}</p>
+                <p><strong>Signature:</strong> ______________________</p>
+            </div>
         </div>
 
-        @foreach ($eleves as $eleve)
-            <div class="certificate">
-                <div class="watermark"></div> <!-- Filigramme en forme de ligne rouge oblique inversée -->
-                <p class="text-center">{{ $nomecole->NOMETAB }}</p>
-
-                <h1>Certificat de Scolarité</h1>
-                <h3>N° {{ $eleve->MATRICULE }}/{{ date('Y') }}-{{ date('Y') + 1 }}</h3>
-
-                <div class="content">
-                    <p>Le Directeur de <strong>{{ $nomecole->NOMETAB }}</strong> certifie que l'élève
-                        {{ $eleve->NOM }}
-                        {{ $eleve->PRENOM }}, né(e) le {{ \Carbon\Carbon::parse($eleve->DATENAIS)->format('d/m/Y') }} à
-                        {{ $eleve->LIEUNAIS }}, fils de {{ $eleve->NOMPERE }} et de
-                        {{ $eleve->NOMMERE }}, est inscrit(e) dans notre établissement
-                        sous le numéro <strong>{{ $eleve->MATRICULE }}</strong> depuis le <strong>[Date]</strong> et y
-                        poursuit actuellement les études en classe de <strong>{{ $eleve->CODECLAS }}</strong>.</p>
-                    <p>Il/elle mérite les appréciations suivantes :</p>
-                    <p class="text-end"> - Assiduité :
-                        ................................................................................</p>
-                    <p class="text-end"> - Conduite :
-                        ................................................................................</p>
-                    <p class="text-end"> - Travail :
-                        ................................................................................</p>
-                    <p class="text-center">Observations particulières :</p>
-                    <p class="text-center">
-                        {{ $observation ? $observation : '...............................................................................................................................................' }}
-                    </p>
-
-                    <div class="text-end">
-                        <p><strong>{{ $nomecole->VILLE }}</strong>, le <strong>{{ date('d/m/Y') }}</strong></p>
-                        <p><strong>Le Directeur,</strong></p>
-                        <p>[Signature]</p>
-                    </div>
-                </div>
+        <!-- Section Souche -->
+        <div class="souche-receipt" style="border: 1px dashed #000; padding: 20px;">
+            <h5>Souche</h5>
+            <div>
+                <p><strong>Nom de l'élève:</strong> {{ $eleve->NOM }} {{ $eleve->PRENOM }}</p>
+                <p><strong>Date:</strong> {{ \Carbon\Carbon::now()->format('d-m-Y') }}</p>
+                <p><strong>Montant payé:</strong> {{ $montantPaye }} F CFA</p>
+                <p><strong>Mode de paiement:</strong> {{ $modePaiement }}</p>
+                <p><strong>Signature:</strong> ______________________</p>
             </div>
-            <div class="page-break"></div>
-        @endforeach
+        </div>
     </div>
 
     <script>

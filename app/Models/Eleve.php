@@ -38,5 +38,9 @@ class Eleve extends Model
     public function reduction() {
         return $this->belongsTo(Reduction::class, 'CodeReduction', 'CodeReduction'); // Assurez-vous que les clés sont correctes
     }
-
+    
+        // Relation avec le modèle Scolarite
+        public function scolarite() {
+            return $this->belongsTo(Scolarite::class, 'MATRICULE', 'MATRICULE');
+         }
 }

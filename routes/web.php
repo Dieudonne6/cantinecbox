@@ -150,7 +150,10 @@ Route::post('logout', [PagesController::class, 'logout'])->name('logout');
 
 Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);
 
-Route::get('/paiementeleve', [PagesController::class, 'paiementeleve'])->name('paiementeleve');
+Route::get('/paiementeleve/{matricule}', [PagesController::class, 'paiementeleve'])->name('paiementeleve');
+Route::post('/paiement/{matricule}', [PagesController::class, 'enregistrerPaiement'])->name('enregistrer.paiement');
+
+
 
 Route::get('/duplicatainscription/{elevyo}',[ClassesController::class,'duplicatainscription']);
 Route::get('/majpaiementeleve', [PagesController::class, 'majpaiementeleve'])->name('majpaiementeleve');

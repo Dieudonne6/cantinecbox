@@ -229,7 +229,7 @@
                                                             href="/modifiereleve/{{ $eleve->MATRICULE }}">Modifier</a>
                                                     </li>
                                                     <li><a class="dropdown-item"
-                                                            href="{{ url('/paiementeleve') }}">Paiement</a></li>
+                                                             href="{{ url('/paiementeleve/' . $eleve->MATRICULE) }}">Paiement</a></li>
                                                     <li><a class="dropdown-item"
                                                             href="{{ url('/majpaiementeleve') }}">Maj
                                                             Paie</a></li>
