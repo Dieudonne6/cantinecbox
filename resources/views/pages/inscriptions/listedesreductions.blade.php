@@ -49,7 +49,7 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h3>Etat des réductions accordées</h3>
+                <h3>Liste des réductions accordées</h3>
                 <div class="container-fluid">
                     <div id="contenu">
                         @foreach ($classes as $classe)
