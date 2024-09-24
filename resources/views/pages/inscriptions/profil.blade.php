@@ -245,7 +245,7 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" id="calculs">Afficher calculateur de pourcentage</button>
-                          <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Aide</button>
+                          {{-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Aide</button> --}}
                           
                           <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
                             <div class="offcanvas-header">
@@ -266,7 +266,7 @@
                     <button type="submit" class="btn btn-primary mb-2">Sauvegarde</button>
                   </div>
                   <div>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolli" aria-controls="offcanvasScrolli">Aide</button>
+                    {{-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolli" aria-controls="offcanvasScrolli">Aide</button> --}}
                     
                     <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolli" aria-labelledby="offcanvasScrolliLabel">
                       <div class="offcanvas-header">

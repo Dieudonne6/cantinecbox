@@ -81,6 +81,7 @@ Route::get('/modifiereleve/{MATRICULE}', [PagesController::class, 'modifiereleve
 Route::put('/modifieeleve/{MATRICULE}', [PagesController::class, 'modifieeleve']);
 Route::put('/modifieleve/{MATRICULE}', [PagesController::class, 'modifieleve']);
 Route::put('/modifieprofil/{MATRICULE}', [PagesController::class, 'modifieprofil']);
+Route::put('/modifieecheancier/{MATRICULE}', [PagesController::class, 'modifieecheancier']);
 
 
 Route::get('/profil/{MATRICULE}', [PagesController::class, 'profil'])->name('profil');
