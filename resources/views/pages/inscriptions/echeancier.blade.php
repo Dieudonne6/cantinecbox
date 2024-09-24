@@ -163,7 +163,7 @@
                     <div class="form-group row">
                       <label class="col-sm-5 col-form-label">Debut echeance</label>
                       <div class="col-sm-3">
-                        <input type="date" class="form-control"  style="width: 10rem"/>
+                        <input type="date" class="form-control" value="{{$classis->DATEDEB}}"  style="width: 10rem"/>
                       </div>
                     </div>
                   </div>
@@ -172,7 +172,7 @@
                     <div class="form-group row">
                       <label class="col-sm-4 col-form-label">Periodicite</label>
                       <div class="col-sm-3">
-                        <input type="text" class="form-control" style="width: 3.9rem !important" value="30" />
+                        <input type="text" class="form-control" style="width: 3.9rem !important" value="{{$classis->PERIODICITE}}" />
                       </div>
                       <label class="col-sm-3 col-form-label">Jours</label>
                     </div>
@@ -182,7 +182,7 @@
                     <div class="form-group row">
                       <label class="col-sm-4 col-form-label">Duree</label>
                       <div class="col-sm-3">
-                        <input type="text" class="form-control" style="width: 3.9rem !important" value="30" />
+                        <input type="text" class="form-control" style="width: 3.9rem !important" value="{{$classis->DUREE}}" />
                       </div>
                       <label class="col-sm-5 col-form-label">echeance</label>
                     </div>

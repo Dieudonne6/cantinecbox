@@ -196,9 +196,11 @@ class PagesController extends Controller
     $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
     $elev= Eleve::with('classe')->where('MATRICULE', $MATRICULE)->firstOrFail();
     $libel = Params2::first();
+    $claso = $eleve->CODECLAS;
     $reduction = Reduction::all();
+    $classis = Classes::where('CODECLAS', $claso)->first();
     $donnee = Echeance::where('MATRICULE', $MATRICULE)->get();
-    return view('pages.inscriptions.echeancier')->with('eleve', $eleve)->with('elev', $elev)->with('libel', $libel)->with('reduction', $reduction)->with('donnee',$donnee);
+    return view('pages.inscriptions.echeancier')->with('eleve', $eleve)->with('elev', $elev)->with('libel', $libel)->with('reduction', $reduction)->with('donnee',$donnee)->with('classis',$classis);
   }
   public function profil($MATRICULE){
     $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
