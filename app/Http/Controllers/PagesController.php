@@ -363,9 +363,28 @@ class PagesController extends Controller
     {
         $messages = [];
         $errors = [];
-        $eleve = Eleve::where('MATRICULE', $matricule)->first();
     
-        // Vérifiez si l'élève existe
+        // Validation de la requête avec des messages d'erreur personnalisés
+        $validatedData = $request->validate([
+            'date_operation' => 'required|date',
+            'mode_paiement' => 'required|string',
+            'arriere' => 'nullable|numeric|min:0',
+            'scolarite' => 'nullable|numeric|min:0',
+            'libelle_0' => 'nullable|numeric|min:0',
+            'libelle_1' => 'nullable|numeric|min:0',
+            'libelle_2' => 'nullable|numeric|min:0',
+            'libelle_3' => 'nullable|numeric|min:0',
+        ], [
+            'date_operation.required' => 'La date de l\'opération est requise.',
+            'date_operation.date' => 'La date de l\'opération doit être une date valide.',
+            'mode_paiement.required' => 'Le mode de paiement est requis.',
+            'mode_paiement.string' => 'Le mode de paiement doit être une chaîne de caractères valide.',
+            'arriere.numeric' => 'Le montant de l\'arriéré doit être un nombre.',
+            'scolarite.numeric' => 'Le montant de la scolarité doit être un nombre.',
+        ]);
+    
+        // Vérification de l'existence de l'élève
+        $eleve = Eleve::where('MATRICULE', $matricule)->first();
         if (!$eleve) {
             return redirect()->back()->withErrors(['L\'élève avec ce matricule n\'existe pas.'])->withInput();
         }
@@ -375,103 +394,55 @@ class PagesController extends Controller
             $existingScolarite = Scolarite::where('MATRICULE', $matricule)
                 ->where('DATEOP', $dateOp)
                 ->first();
-            
-            // Si une entrée existe, retourner son numéro
-            if ($existingScolarite) {
-                return $existingScolarite->NUMERO;
-            }
-    
-            // Sinon, générer un nouveau numéro basé sur le maximum existant
-            return Scolarite::max('NUMERO') + 1; // Ajustement pour générer un nouveau numéro
+            return $existingScolarite ? $existingScolarite->NUMERO : Scolarite::max('NUMERO') + 1;
         };
     
-        // Enregistrer le montant de l'arrière si présent et supérieur à 0
-        if ($request->filled('arriere') && $request->input('arriere') > 0) {
-            $existingScolarite = Scolarite::where('MATRICULE', $matricule)
-                ->where('DATEOP', $request->input('date_operation'))
-                ->where('MONTANT', $request->input('arriere'))
-                ->where('AUTREF', '1') // Arriéré
-                ->first();
-    
-            if ($existingScolarite) {
-                $errors[] = 'Un arriéré similaire existe déjà pour cet élève.';
-            } else {
-                $scolarite = new Scolarite();
-                $scolarite->MATRICULE = $matricule;
-                $scolarite->DATEOP = $request->input('date_operation');
-                $scolarite->MODEPAIE = $request->input('mode_paiement');
-                $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
-                $scolarite->ANSCOL = $eleve->anneeacademique;
-                $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
-                $scolarite->MONTANT = $request->input('arriere');
-                $scolarite->AUTREF = '1'; // Arriéré
-                $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
-                $scolarite->save();
-                $messages[] = 'Le montant de l\'arriéré a été enregistré avec succès.';
-            }
-        }
-    
-        // Enregistrer le montant de la scolarité si présent et supérieur à 0
-        if ($request->filled('scolarite') && $request->input('scolarite') > 0) {
-            $existingScolarite = Scolarite::where('MATRICULE', $matricule)
-                ->where('DATEOP', $request->input('date_operation'))
-                ->where('MONTANT', $request->input('scolarite'))
-                ->where('AUTREF', '2') // Scolarité
-                ->first();
-    
-            if ($existingScolarite) {
-                $errors[] = 'Un paiement de scolarité similaire existe déjà pour cet élève.';
-            } else {
-                $scolarite = new Scolarite();
-                $scolarite->MATRICULE = $matricule;
-                $scolarite->DATEOP = $request->input('date_operation');
-                $scolarite->MODEPAIE = $request->input('mode_paiement');
-                $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
-                $scolarite->ANSCOL = $eleve->anneeacademique;
-                $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
-                $scolarite->MONTANT = $request->input('scolarite');
-                $scolarite->AUTREF = '2'; // Scolarité
-                $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
-                $scolarite->save();
-                $messages[] = 'Le montant de la scolarité a été enregistré avec succès.';
-            }
-        }
-    
-        // Enregistrer les montants additionnels (libelle-0, libelle-1, etc.) supérieurs à 0
-        for ($i = 0; $i <= 3; $i++) {
-            $libelle = $request->input('libelle_' . $i);
-            if ($libelle !== null && $libelle > 0) {
+        // Fonction pour enregistrer un paiement avec gestion des erreurs
+        $enregistrerPaiement = function ($montant, $typePaiement, $matricule, $dateOp, $modePaie, $typeDescription) use ($eleve, &$errors, &$messages, $getNumero) {
+            if ($montant > 0) {
                 $existingScolarite = Scolarite::where('MATRICULE', $matricule)
-                    ->where('DATEOP', $request->input('date_operation'))
-                    ->where('MONTANT', $libelle)
-                    ->where('AUTREF', strval($i + 3)) // Type de libellé
+                    ->where('DATEOP', $dateOp)
+                    ->where('MONTANT', $montant)
+                    ->where('AUTREF', $typePaiement)
                     ->first();
     
                 if ($existingScolarite) {
-                    $errors[] = 'Un paiement additionnel similaire existe déjà pour cet élève (Libellé-' . $i . ').';
+                    $errors[] = "Un paiement similaire existe déjà pour cet élève (Type: {$typeDescription}).";
                 } else {
-                    $scolarite = new Scolarite();
-                    $scolarite->MATRICULE = $matricule;
-                    $scolarite->DATEOP = $request->input('date_operation');
-                    $scolarite->MODEPAIE = $request->input('mode_paiement');
-                    $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
-                    $scolarite->ANSCOL = $eleve->anneeacademique;
-                    $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
-                    $scolarite->MONTANT = $libelle;
-                    $scolarite->AUTREF = strval($i + 3); // Différencier les libellés
-                    $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
-                    $scolarite->save();
-                    $messages[] = 'Le montant additionnel (Libellé-' . $i . ') a été enregistré avec succès.';
+                    try {
+                        $scolarite = new Scolarite();
+                        $scolarite->MATRICULE = $matricule;
+                        $scolarite->DATEOP = $dateOp;
+                        $scolarite->MODEPAIE = $modePaie;
+                        $scolarite->DATESAISIE = now();
+                        $scolarite->ANSCOL = $eleve->anneeacademique;
+                        $scolarite->NUMERO = $getNumero($matricule, $dateOp);
+                        $scolarite->MONTANT = $montant;
+                        $scolarite->AUTREF = $typePaiement;
+                        $scolarite->SIGNATURE = session()->get('nom_user');
+                        $scolarite->save();
+                        $messages[] = "Le paiement de type {$typeDescription} a été enregistré avec succès.";
+                    } catch (\Exception $e) {
+                        $errors[] = "Erreur lors de l'enregistrement du paiement de type {$typeDescription}: " . $e->getMessage();
+                    }
                 }
             }
+        };
+    
+        // Enregistrer les différents types de paiements avec gestion des erreurs
+        $enregistrerPaiement($request->input('arriere'), '1', $matricule, $request->input('date_operation'), $request->input('mode_paiement'), 'Arriéré');
+        $enregistrerPaiement($request->input('scolarite'), '2', $matricule, $request->input('date_operation'), $request->input('mode_paiement'), 'Scolarité');
+    
+        // Enregistrer les paiements additionnels (libellés)
+        for ($i = 0; $i <= 3; $i++) {
+            $enregistrerPaiement($request->input('libelle_' . $i), strval($i + 3), $matricule, $request->input('date_operation'), $request->input('mode_paiement'), "Libellé-{$i}");
         }
     
-        // Si des erreurs existent, ajouter à la session et retourner
+        // Gestion des erreurs et messages de succès
         if (!empty($errors)) {
             return redirect()->back()->withErrors($errors)->withInput();
         }
     
-        // Si aucun doublon n'est rencontré et tout est sauvegardé, ajouter les messages de succès
         if (!empty($messages)) {
             session()->flash('messages', $messages);
         }
@@ -479,7 +450,6 @@ class PagesController extends Controller
         // Redirection avec un message global de succès
         return redirect()->back()->with('success', 'Paiement enregistré avec succès !');
     }
-    
     
     
     public function modifierclasse()

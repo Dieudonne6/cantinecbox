@@ -118,7 +118,7 @@
                         {{ $eleve->PRENOM }}, né(e) le {{ \Carbon\Carbon::parse($eleve->DATENAIS)->format('d/m/Y') }} à
                         {{ $eleve->LIEUNAIS }}, fils de {{ $eleve->NOMPERE }} et de
                         {{ $eleve->NOMMERE }}, est inscrit(e) dans notre établissement
-                        sous le numéro <strong>{{ $eleve->MATRICULE }}</strong> depuis le <strong>[Date]</strong> et y
+                        sous le numéro <strong>{{ $eleve->MATRICULE }}</strong> depuis le <strong>{{ $eleve->DATEINS }}</strong> et y
                         poursuit actuellement les études en classe de <strong>{{ $eleve->CODECLAS }}</strong>.</p>
                     <p>Il/elle mérite les appréciations suivantes :</p>
                     <p class="text-end"> - Assiduité :

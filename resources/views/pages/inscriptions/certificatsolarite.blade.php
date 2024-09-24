@@ -49,14 +49,14 @@
         <table class="table table-bordered" id="myTable">
           <thead>
             <tr>
-              <th><input type="checkbox" id="selectAll"> Tout sélectionner</th>
-              <th>Matricule</th>
-              <th>Nom</th>
-              <th>Prénom</th>
-              <th>Date de naissance</th>
-              <th>Assiduité</th>
-              <th>Conduite</th>
-              <th>Travail</th>
+              <th> Sélectionner </th>
+              <th> Matricule </th>
+              <th> Nom </th>
+              <th> Prénom </th>
+              <th> Date de naissance </th>
+              <th> Assiduité </th>
+              <th> Conduite </th>
+              <th> Travail </th>
             </tr>
           </thead>
           <tbody id="eleve-details">
