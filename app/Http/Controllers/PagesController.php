@@ -24,7 +24,7 @@ use App\Models\Elevea;
 use App\Models\Eleveplus;
 use App\Models\Echeance;
 use App\Models\Echeancc;
-
+use App\Models\Scolarite;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Duplicatafacture;
@@ -538,14 +538,14 @@ class PagesController extends Controller
     return redirect('/');
   } 
   
-  public function paiementeleve(){
-    if(Session::has('account')){
-      // $duplicatafactures = Duplicatafacture::all();
+  // public function paiementeleve(){
+  //   if(Session::has('account')){
+  //     // $duplicatafactures = Duplicatafacture::all();
       
-      return view('pages.inscriptions.Paiement');
-    } 
-    return redirect('/');
-  } 
+  //     return view('pages.inscriptions.Paiement');
+  //   } 
+  //   return redirect('/');
+  // } 
   public function modifierclasse(){
     if(Session::has('account')){
       // $duplicatafactures = Duplicatafacture::all();
@@ -612,9 +612,52 @@ class PagesController extends Controller
     // return view('pages.inscriptions.inscrireeleve')->with('archive', $archive);
   } 
   
-  public function certificatsolarite(){
-    return view('pages.inscriptions.certificatsolarite');
-  } 
+  public function certificatscolarite($CODECLAS = null, $matricule = null)
+  {
+      // Si un matricule est fourni, cela signifie que l'on veut générer le PDF pour un élève spécifique
+      if ($matricule) {
+          $eleves = Eleve::where('MATRICULE', $matricule)->first();
+          $eleveplus = Eleveplus::first();
+          $nomecole = Params2::first();
+
+          return view('pages.inscriptions.pdfcertificatscolarite', compact('eleves', 'eleveplus', 'nomecole'));
+      }
+
+      // Si aucun matricule n'est fourni, on affiche la vue normale avec les classes et les élèves
+      $classe = Classes::all();
+
+      // Si une classe est sélectionnée, récupérer les élèves de cette classe
+      if ($CODECLAS) {
+          $eleves = Eleve::where('CODECLAS', $CODECLAS)->get();
+      } else {
+          $eleves = collect(); // Aucun élève si pas de classe sélectionnée
+      }
+
+      return view('pages.inscriptions.certificatsolarite', compact('classe', 'eleves'));
+  }
+
+  public function impression(Request $request)
+  {
+      // Récupérer les matricules des élèves sélectionnés depuis la requête
+      $matricules = explode(',', $request->input('matricules', ''));
+      $classe = $request->input('classe');
+
+      // Récupérer l'observation depuis la requête
+      $observation = $request->input('observation', '');
+
+      // Récupérer les élèves sélectionnés
+      $eleves = Eleve::whereIn('MATRICULE', $matricules)->get();
+      $eleveplus = Eleveplus::first();
+      $nomecole = Params2::first();
+
+      // Vérifiez si les données ont été trouvées
+      if ($eleves->isEmpty() || !$eleveplus || !$nomecole) {
+          return redirect()->back()->with('erreur', 'Données non trouvées.');
+      }
+
+      // Générer les certificats pour les élèves sélectionnés
+      return view('pages.inscriptions.pdfcertificatscolarite', compact('eleves', 'eleveplus', 'nomecole', 'observation'));
+  }
   
   public function droitconstate(){
     if(Session::has('account')){
@@ -739,61 +782,88 @@ class PagesController extends Controller
     return floatval($percentage) / 100;
   }
   
-  public function ajouterprofreduction(Request $request) {
-    $reduction = new Reduction();
-    $reduction->Codereduction = $request->input('Codereduction');
-    $reduction->LibelleReduction = $request->input('LibelleReduction');
-    
-    // Convertir les pourcentages en valeurs décimales
-    $reduction->Reduction_scolarite = $this->convertToDecimal($request->input('Reduction_scolarite'));
-    $reduction->Reduction_arriere = $this->convertToDecimal($request->input('Reduction_arriere'));
-    $reduction->Reduction_frais1 = $this->convertToDecimal($request->input('Reduction_frais1'));
-    $reduction->Reduction_frais2 = $this->convertToDecimal($request->input('Reduction_frais2'));
-    $reduction->Reduction_frais3 = $this->convertToDecimal($request->input('Reduction_frais3'));
-    $reduction->Reduction_frais4 = $this->convertToDecimal($request->input('Reduction_frais4'));
-    
-    $reduction->mode = $request->input('mode');
-    $reduction->save();
-    
-    return back()->with('status', 'Profil de reduction creer avec succes.');
-  }
+  public function ajouterprofreduction(Request $request)
+  {
+      $reduction = new Reduction();
+      $reduction->Codereduction = $request->input('Codereduction');
+      $reduction->LibelleReduction = $request->input('LibelleReduction');
   
+      // Déterminer le type de réduction
+      if ($request->input('reductionType') == 2) { // Réduction fixe
+          // Enregistrer les valeurs dans les colonnes de réduction fixe
+          $reduction->typereduction = 'F';
+          $reduction->Reduction_fixe_sco = $request->input('Reduction_scolarite');
+          $reduction->Reduction_fixe_arriere = $request->input('Reduction_arriere');
+          $reduction->Reduction_fixe_frais1 = $request->input('Reduction_frais1');
+          $reduction->Reduction_fixe_frais2 = $request->input('Reduction_frais2');
+          $reduction->Reduction_fixe_frais3 = $request->input('Reduction_frais3');
+          $reduction->Reduction_fixe_frais4 = $request->input('Reduction_frais4');
+      } else { // Réduction par pourcentage
+          // Enregistrer les valeurs dans les colonnes de réduction par pourcentage
+          $reduction->typereduction = 'P';
+          $reduction->Reduction_scolarite = $this->convertToDecimal($request->input('Reduction_scolarite'));
+          $reduction->Reduction_arriere = $this->convertToDecimal($request->input('Reduction_arriere'));
+          $reduction->Reduction_frais1 = $this->convertToDecimal($request->input('Reduction_frais1'));
+          $reduction->Reduction_frais2 = $this->convertToDecimal($request->input('Reduction_frais2'));
+          $reduction->Reduction_frais3 = $this->convertToDecimal($request->input('Reduction_frais3'));
+          $reduction->Reduction_frais4 = $this->convertToDecimal($request->input('Reduction_frais4'));
+      }
+  
+      $reduction->mode = $request->input('mode');
+      $reduction->save();
+  
+      return back()->with('status', 'Profil de réduction créé avec succès.');
+  }
+
   public function modifreductions(Request $request)
   {
-    // Validation des données
-    // $request->validate([
-    //     'codeReduction' => 'required|string|max:255',
-    //     'libelleReduction' => 'required|string|max:255',
-    //     'reductionScolarite' => 'required|numeric',
-    //     'reductionArriere' => 'required|numeric',
-    //     'reductionFrais1' => 'required|numeric',
-    //     'reductionFrais2' => 'required|numeric',
-    //     'reductionFrais3' => 'required|numeric',
-    //     'reductionFrais4' => 'required|numeric',
-    //     'reductionApplication' => 'required|integer',
-    // ]);
-    
-    $codereduc = $request->input('CodeReduction');
-    // Récupérer la réduction à modifier
-    $reduction = Reduction::where('CodeReduction', $codereduc)->first();
-    // dd($reduction);
-    // Mettre à jour les champs de la réduction
-    // $reduction->codeReduction = $request->input('Codereduction');
-    $reduction->LibelleReduction = $this->convertToDecimal($request->input('LibelleReduction'));
-    $reduction->Reduction_scolarite = $this->convertToDecimal($request->input('Reduction_scolarite'));
-    $reduction->Reduction_arriere =$this->convertToDecimal( $request->input('Reduction_arriere'));
-    $reduction->Reduction_frais1 = $this->convertToDecimal($request->input('Reduction_frais1'));
-    $reduction->Reduction_frais2 = $this->convertToDecimal($request->input('Reduction_frais2'));
-    $reduction->Reduction_frais3 = $this->convertToDecimal($request->input('Reduction_frais3'));
-    $reduction->Reduction_frais4 = $this->convertToDecimal($request->input('Reduction_frais4'));
-    $reduction->mode = $request->input('mode');
-    
-    // Sauvegarder les modifications
-    $reduction->save();
-    
-    // Retourner une réponse JSON
-    return back()->with('status', 'Réduction modifiée avec succès.');
+      // Validation des données
+      // $request->validate([
+      //     'codeReduction' => 'required|string|max:255',
+      //     'libelleReduction' => 'required|string|max:255',
+      //     'reductionScolarite' => 'required|numeric',
+      //     'reductionArriere' => 'required|numeric',
+      //     'reductionFrais1' => 'required|numeric',
+      //     'reductionFrais2' => 'required|numeric',
+      //     'reductionFrais3' => 'required|numeric',
+      //     'reductionFrais4' => 'required|numeric',
+      //     'reductionApplication' => 'required|integer',
+      // ]);
+
+      $codereduc = $request->input('CodeReduction');
+      // Récupérer la réduction à modifier
+      $reduction = Reduction::where('CodeReduction', $codereduc)->first();
+      // dd($reduction);
+      // Mettre à jour les champs de la réduction
+      if ($request->input('reductionType') == 2) { // Réduction fixe
+          // Enregistrer les valeurs dans les colonnes de réduction fixe
+          $reduction->typereduction = 'F';
+          $reduction->Reduction_fixe_sco = $request->input('Reduction_scolarite');
+          $reduction->Reduction_fixe_arriere = $request->input('Reduction_arriere');
+          $reduction->Reduction_fixe_frais1 = $request->input('Reduction_frais1');
+          $reduction->Reduction_fixe_frais2 = $request->input('Reduction_frais2');
+          $reduction->Reduction_fixe_frais3 = $request->input('Reduction_frais3');
+          $reduction->Reduction_fixe_frais4 = $request->input('Reduction_frais4');
+      } else { // Réduction par pourcentage
+          // Enregistrer les valeurs dans les colonnes de réduction par pourcentage
+          $reduction->typereduction = 'P';
+          $reduction->Reduction_scolarite = $this->convertToDecimal($request->input('Reduction_scolarite'));
+          $reduction->Reduction_arriere = $this->convertToDecimal($request->input('Reduction_arriere'));
+          $reduction->Reduction_frais1 = $this->convertToDecimal($request->input('Reduction_frais1'));
+          $reduction->Reduction_frais2 = $this->convertToDecimal($request->input('Reduction_frais2'));
+          $reduction->Reduction_frais3 = $this->convertToDecimal($request->input('Reduction_frais3'));
+          $reduction->Reduction_frais4 = $this->convertToDecimal($request->input('Reduction_frais4'));
+      }
+  
+      $reduction->mode = $request->input('mode');
+      $reduction->save();
+
+      // Sauvegarder les modifications
+
+      // Retourner une réponse JSON
+      return back()->with('status', 'Réduction modifiée avec succès.');
   }
+
   
   public function delreductions($codeRedu) {
     // Trouver la réduction par CodeReduction
@@ -849,6 +919,167 @@ class PagesController extends Controller
   public function paiementdesnoninscrits(){
     return view ('pages.inscriptions.paiementdesnoninscrits');
   }
+  
+      public function paiementeleve($matricule)
+    {
+        if (Session::has('account')) {
+            // Retrieve the student details
+            $eleve = Eleve::where('MATRICULE', $matricule)->first();
+            $scolarite = Scolarite::where('MATRICULE', $matricule)->get();
+            $libelle = Params2::first();
+            $echeanche = Echeance::first();
+            
+            // Calculate the total amounts based on AUTREF
+            $totalArriere = Scolarite::where('MATRICULE', $matricule)
+                ->where('AUTREF', '1')
+                ->sum('MONTANT');
+    
+            $totalScolarite = Scolarite::where('MATRICULE', $matricule)
+                ->where('AUTREF', '2')
+                ->sum('MONTANT');
+    
+            $totalLibelle1 = Scolarite::where('MATRICULE', $matricule)
+                ->where('AUTREF', '3')
+                ->sum('MONTANT');
+    
+            $totalLibelle2 = Scolarite::where('MATRICULE', $matricule)
+                ->where('AUTREF', '4')
+                ->sum('MONTANT');
+    
+            $totalLibelle3 = Scolarite::where('MATRICULE', $matricule)
+                ->where('AUTREF', '5')
+                ->sum('MONTANT');
+    
+            // Pass the totals along with other data to the view
+            return view('pages.inscriptions.Paiement', compact(
+                'eleve', 'scolarite', 'libelle', 
+                'totalArriere', 'totalScolarite', 'totalLibelle1', 
+                'totalLibelle2', 'totalLibelle3'
+            ));
+        }
+        return redirect('/');
+    }
+    
+    public function enregistrerPaiement(Request $request, $matricule)
+    {
+        $messages = [];
+        $errors = [];
+        $eleve = Eleve::where('MATRICULE', $matricule)->first();
+    
+        // Vérifiez si l'élève existe
+        if (!$eleve) {
+            return redirect()->back()->withErrors(['L\'élève avec ce matricule n\'existe pas.'])->withInput();
+        }
+    
+        // Fonction pour obtenir ou générer un numéro unique
+        $getNumero = function($matricule, $dateOp) {
+            $existingScolarite = Scolarite::where('MATRICULE', $matricule)
+                ->where('DATEOP', $dateOp)
+                ->first();
+            
+            // Si une entrée existe, retourner son numéro
+            if ($existingScolarite) {
+                return $existingScolarite->NUMERO;
+            }
+    
+            // Sinon, générer un nouveau numéro basé sur le maximum existant
+            return Scolarite::max('NUMERO') + 1; // Ajustement pour générer un nouveau numéro
+        };
+    
+        // Enregistrer le montant de l'arrière si présent et supérieur à 0
+        if ($request->filled('arriere') && $request->input('arriere') > 0) {
+            $existingScolarite = Scolarite::where('MATRICULE', $matricule)
+                ->where('DATEOP', $request->input('date_operation'))
+                ->where('MONTANT', $request->input('arriere'))
+                ->where('AUTREF', '1') // Arriéré
+                ->first();
+    
+            if ($existingScolarite) {
+                $errors[] = 'Un arriéré similaire existe déjà pour cet élève.';
+            } else {
+                $scolarite = new Scolarite();
+                $scolarite->MATRICULE = $matricule;
+                $scolarite->DATEOP = $request->input('date_operation');
+                $scolarite->MODEPAIE = $request->input('mode_paiement');
+                $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
+                $scolarite->ANSCOL = $eleve->anneeacademique;
+                $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
+                $scolarite->MONTANT = $request->input('arriere');
+                $scolarite->AUTREF = '1'; // Arriéré
+                $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
+                $scolarite->save();
+                $messages[] = 'Le montant de l\'arriéré a été enregistré avec succès.';
+            }
+        }
+    
+        // Enregistrer le montant de la scolarité si présent et supérieur à 0
+        if ($request->filled('scolarite') && $request->input('scolarite') > 0) {
+            $existingScolarite = Scolarite::where('MATRICULE', $matricule)
+                ->where('DATEOP', $request->input('date_operation'))
+                ->where('MONTANT', $request->input('scolarite'))
+                ->where('AUTREF', '2') // Scolarité
+                ->first();
+    
+            if ($existingScolarite) {
+                $errors[] = 'Un paiement de scolarité similaire existe déjà pour cet élève.';
+            } else {
+                $scolarite = new Scolarite();
+                $scolarite->MATRICULE = $matricule;
+                $scolarite->DATEOP = $request->input('date_operation');
+                $scolarite->MODEPAIE = $request->input('mode_paiement');
+                $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
+                $scolarite->ANSCOL = $eleve->anneeacademique;
+                $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
+                $scolarite->MONTANT = $request->input('scolarite');
+                $scolarite->AUTREF = '2'; // Scolarité
+                $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
+                $scolarite->save();
+                $messages[] = 'Le montant de la scolarité a été enregistré avec succès.';
+            }
+        }
+    
+        // Enregistrer les montants additionnels (libelle-0, libelle-1, etc.) supérieurs à 0
+        for ($i = 0; $i <= 3; $i++) {
+            $libelle = $request->input('libelle_' . $i);
+            if ($libelle !== null && $libelle > 0) {
+                $existingScolarite = Scolarite::where('MATRICULE', $matricule)
+                    ->where('DATEOP', $request->input('date_operation'))
+                    ->where('MONTANT', $libelle)
+                    ->where('AUTREF', strval($i + 3)) // Type de libellé
+                    ->first();
+    
+                if ($existingScolarite) {
+                    $errors[] = 'Un paiement additionnel similaire existe déjà pour cet élève (Libellé-' . $i . ').';
+                } else {
+                    $scolarite = new Scolarite();
+                    $scolarite->MATRICULE = $matricule;
+                    $scolarite->DATEOP = $request->input('date_operation');
+                    $scolarite->MODEPAIE = $request->input('mode_paiement');
+                    $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
+                    $scolarite->ANSCOL = $eleve->anneeacademique;
+                    $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
+                    $scolarite->MONTANT = $libelle;
+                    $scolarite->AUTREF = strval($i + 3); // Différencier les libellés
+                    $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
+                    $scolarite->save();
+                    $messages[] = 'Le montant additionnel (Libellé-' . $i . ') a été enregistré avec succès.';
+                }
+            }
+        }
+    
+        // Si des erreurs existent, ajouter à la session et retourner
+        if (!empty($errors)) {
+            return redirect()->back()->withErrors($errors)->withInput();
+        }
+    
+        // Si aucun doublon n'est rencontré et tout est sauvegardé, ajouter les messages de succès
+        if (!empty($messages)) {
+            session()->flash('messages', $messages);
+        }
+    
+        // Redirection avec un message global de succès
+        return redirect()->back()->with('success', 'Paiement enregistré avec succès !');
+    }
   
   public function etatdesrecouvrements(){
     return view ('pages.inscriptions.etatdesrecouvrements');
