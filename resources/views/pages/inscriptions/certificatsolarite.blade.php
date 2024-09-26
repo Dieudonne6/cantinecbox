@@ -49,7 +49,7 @@
         <table class="table table-bordered" id="myTable">
           <thead>
             <tr>
-              <th> Sélectionner </th>
+              <th><input type="checkbox" id="selectAll"></th>
               <th> Matricule </th>
               <th> Nom </th>
               <th> Prénom </th>
