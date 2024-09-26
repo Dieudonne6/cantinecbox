@@ -162,7 +162,7 @@ Route::post('/paiement/{matricule}', [PagesController::class, 'enregistrerPaieme
 
 
 Route::get('/duplicatainscription/{elevyo}',[ClassesController::class,'duplicatainscription']);
-Route::get('/majpaiementeleve', [PagesController::class, 'majpaiementeleve'])->name('majpaiementeleve');
+Route::get('/majpaiementeleve/{matricule}', [PagesController::class, 'majpaiementeleve'])->name('majpaiementeleve');
 Route::get('/photos', [PagesController::class, 'photos']);
 
 Route::get('/paiementdesnoninscrits', [PagesController::class, 'paiementdesnoninscrits']);
