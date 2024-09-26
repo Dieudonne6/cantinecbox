@@ -16,34 +16,34 @@
         </div>
       @endif
 
-      <div class="form-group row">
-        <div class="col-3">
+      <div class="form-group row d-flex align-items-center">
+        <div class="col-4">
           <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
             <option value="{{ url('certificatsolarite') }}">Sélectionnez une classe</option>
             @foreach ($classe as $classes)
-                <option value="{{ url('certificatsolarite/'.$classes->CODECLAS) }}" {{ Request::segment(2) == $classes->CODECLAS ? 'selected' : '' }}>
-                    {{ $classes->CODECLAS }}
-                </option>
+              <option value="{{ url('certificatsolarite/'.$classes->CODECLAS) }}" {{ Request::segment(2) == $classes->CODECLAS ? 'selected' : '' }}>
+                {{ $classes->CODECLAS }}
+              </option>
             @endforeach
           </select>
         </div>
-        <div class="col-12 text-end">
-          <!-- Formulaire pour l'impression des certificats -->
-          <form action="{{ url('certificatsolarite/impression') }}" method="POST" id="printForm">
+      
+        <div class="col-6 d-flex align-items-center">
+          <label for="observation" class="me-4 mb-2">Observation</label>
+          <textarea id="observation" name="observation" class="form-control" rows="3" placeholder="Saisir une observation"></textarea>
+        </div>        
+      
+        <div class="col-auto">
+          <form action="{{ url('certificatsolarite/impression') }}" method="POST" id="printForm" class="d-inline-block">
             @csrf
             <input type="hidden" name="classe" value="{{ Request::segment(2) }}">
             <input type="hidden" name="matricules" id="matricules">
-
-            <!-- Champ pour saisir une observation -->
-            <div class="form-group">
-              <label for="observation">Observation :</label>
-              <textarea id="observation" name="observation" class="form-control" rows="3" placeholder="Saisir une observation"></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-sm">Imprimer les certificats sélectionnés</button>
-        </form>
+      
+            <button type="submit" class="btn btn-primary btn-sm">Imprimer</button>
+          </form>
         </div>
       </div>
+      
 
       <div class="table-responsive mb-4">
         <table class="table table-bordered" id="myTable">

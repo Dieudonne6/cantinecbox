@@ -165,7 +165,7 @@
   </div>
 </div> --}}
 
-<nav class="sidebar sidebar-offcanvas " id="sidebar" style="max-width: 240px">
+<nav class="sidebar sidebar-offcanvas" id="sidebar" style="max-width: 240px;">
     <ul class="nav">
 
         {{-- <li class="nav-item">
@@ -281,7 +281,15 @@
           </li> --}}
 
           {{-- Editions --}}
-          <li class="nav-item"> <a class="nav-link {{ request()->is('editions') ? 'active' : '' }}" href="{{url('/editions')}}">Editions</a></li>
+          @php
+              $routeseditions = ['editions', 'listedeseleves', 'listedesclasses', 'listeselectiveeleve', 'eleveparclasse', 'certificatsolarite', 'etatdelacaisse','enquetesstatistiques','situationfinanciereglobale','etatdesrecouvrements']; // Liste des noms de routes associées à l'accueil
+              @endphp
+              <li class="nav-item">
+                <a class="nav-link {{ in_array(request()->route()->getName(), $routeseditions) ? 'active' : '' }}" href="{{ route('editions') }}">Editions</a>
+
+              </li>
+
+          {{-- <li class="nav-item"> <a class="nav-link {{ request()->is('editions') ? 'active' : '' }}" href="{{url('/editions')}}">Editions</a></li> --}}
 
           {{-- Archives --}}
           <li class="nav-item"> <a class="nav-link {{ request()->is('archive') ? 'active' : '' }}" href="{{url('/archive')}}">Archives</a></li>

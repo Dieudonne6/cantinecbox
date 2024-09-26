@@ -4,15 +4,15 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Nom et prenom eleve</h4>
-                    {{-- <p class="card-description">
+                  <h4 class="card-title">
+                    Mis à jour des paiements de {{ $eleve->NOM }} {{ $eleve->PRENOM }}
+                </h4>                    {{-- <p class="card-description">
                     A simple suggestion engine
                   </p> --}}
                     <div class="row">
                         <div class="col-6">
-                            <h5 style="text-align: center; color: rgb(188, 64, 64)">Scolarite</h5>
+                            <h5 style="text-align: center; color: rgb(188, 64, 64)">Scolarité</h5>
                             <div class="table-responsive pt-3">
-
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -22,36 +22,22 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                      @foreach($scolarite as $item)
                                         <tr>
-                                            <td>21/23/2025</td>
-                                            <td>150000</td>
+                                          <td>{{ $item->DATEOP }}</td>
+                                          <td>{{ $item->MONTANT }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-primary btn-sm">Modifier</button>
                                                 <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
                                             </td>
                                             {{-- <td rowspan="6">150000</td> --}}
                                         </tr>
-
+                                        @endforeach
                                         <tr>
-                                            <td>21/23/2025</td>
-                                            <td>150000</td>
-                                            <td>
-                                                <button type="button" class="btn btn-primary btn-sm">Modifier</button>
-                                                <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <th colspan="2">
-                                                Total
-                                            </th>
-                                            <th >
-                                                300000
-                                            </th>
-                                        </tr>
-
-
+                                          <th>Total</th>
+                                          <th>{{ $totalScolarite }}</th>
+                                          <th></th>
+                                      </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -67,7 +53,7 @@
                         {{-- deuxieme tableau --}}
 
                         <div class="col-6">
-                            <h5 style="text-align: center; color: rgb(188, 64, 64)">Arriéré</h5>
+                            <h5 style="text-align: center; color: rgb(188, 64, 64)">Arriérés</h5>
                             <div class="table-responsive pt-3">
 
                                 <table class="table table-bordered">
@@ -79,35 +65,22 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                      @foreach($arrières as $item)
                                         <tr>
-                                            <td>21/23/2025</td>
-                                            <td>150000</td>
+                                          <td>{{ $item->DATEOP }}</td>
+                                          <td>{{ $item->MONTANT }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-primary btn-sm">Modifier</button>
                                                 <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
                                             </td>
                                             {{-- <td rowspan="6">150000</td> --}}
                                         </tr>
-
+                                        @endforeach
                                         <tr>
-                                            <td>21/23/2025</td>
-                                            <td>150000</td>
-                                            <td>
-                                                <button type="button" class="btn btn-primary btn-sm">Modifier</button>
-                                                <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th colspan="2">
-                                                Total
-                                            </th>
-                                            <th >
-                                                300000
-                                            </th>
-                                        </tr>
-
-
+                                          <th>Total</th>
+                                          <th>{{ $totalArrieres }}</th>
+                                          <th></th>
+                                      </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -125,53 +98,50 @@
 
                              <div class="col-8">
 
-                                <h5 style="text-align: center; color: rgb(188, 64, 64)">Recapitulatif par reçu</h5>
-                                <div class="table-responsive pt-3">
-    
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>no recu</th>
-                                                <th>Date</th>
-                                                <th>Montant</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                              <h5 style="text-align: center; color: rgb(188, 64, 64)">Récapitulatif par reçu</h5>
+                              <div class="table-responsive pt-3">
+  
+                                  <table class="table table-bordered">
+                                      <thead>
+                                          <tr>
+                                              <th>no recu</th>
+                                              <th>Date</th>
+                                              <th>Montant</th>
+                                              <th>Action</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
 
-                                            <tr>
-                                                <td>004</td>
-                                                <td>21/23/2025</td>
-                                                <td>150000</td>
-                                                <td>
-                                                    <button type="button" class="btn btn-primary btn-sm">Modifier</button>
-                                                    <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
-                                                </td>
-                                                {{-- <td rowspan="6">150000</td> --}}
-                                            </tr>
+                                          <tr>
+                                              <td>004</td>
+                                              <td>21/23/2025</td>
+                                              <td>150000</td>
+                                              <td>
+                                                  <button type="button" class="btn btn-primary btn-sm">Modifier</button>
+                                                  <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
+                                              </td>
+                                              {{-- <td rowspan="6">150000</td> --}}
+                                          </tr>
 
-                                            <tr>
-                                                <td>005</td>
-                                                <td>21/23/2025</td>
-                                                <td>150000</td>
-                                                <td>
-                                                    <button type="button" class="btn btn-primary btn-sm">Modifier</button>
-                                                <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th colspan="3">
-                                                    Total
-                                                </th>
-                                                <th >
-                                                    300000
-                                                </th>
-                                            </tr>
+                                          <tr>
+                                              <td>005</td>
+                                              <td>21/23/2025</td>
+                                              <td>150000</td>
+                                              <td>
+                                                  <button type="button" class="btn btn-primary btn-sm">Modifier</button>
+                                              <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <th colspan="2">
+                                                  Total
+                                              </th>
+                                              <th>3300</th>
+                                          </tr>
 
 
-                                        </tbody>
-                                    </table>
-                                </div>
+                                      </tbody>
+                                  </table>                                </div>
                                 <br>
                                 {{-- <div style="text-align: center">
                                     <button type="button" class="btn btn-primary btn-sm">Ajou Recap</button>

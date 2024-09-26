@@ -17,7 +17,7 @@
         <div class="row">
 
             <div class="card-body">
-                <h4 class="card-title">Dicipline</h4>
+                <h4 class="card-title">Discipline</h4>
                 <div class="row mb-3">
                     <div class="col">
                         <select class="js-example-basic-multiple w-100" id="tableSelect" onchange="displayTable()">

@@ -123,6 +123,21 @@ class PagesController extends Controller
     return view('pages.inscriptions.listedeseleves', compact('allClasse'));
   }
   
+  public function imprimerProfilTypeClasse(Request $request) {
+    $typeClasse = $request->input('typeclasse');
+    $reductions = Reduction::all();
+    $typeclasse = Typeclasse::all();
+    $eleves = Eleve::with('reduction') // Charge la relation 'reduction'
+        ->where('TYPECLASSE', $typeClasse) // Filtrer les élèves par type de classe
+        ->where('CodeReduction', '!=', null) // Filtrer les élèves ayant une réduction
+        ->paginate(10); // Paginer les résultats par 10 élèves par page
+
+    // Regrouper les élèves par CodeReduction
+    $elevesParReduction = $eleves->groupBy('CodeReduction');
+
+    return view('pages.inscriptions.profiltypeclasse', compact('typeClasse', 'reductions', 'typeclasse', 'elevesParReduction', 'eleves'));
+}
+
   public function listeselectiveeleve(){
     $currentYear = now()->year;
     
@@ -175,6 +190,13 @@ class PagesController extends Controller
     
   }
   
+  public function listedesreductions()
+  {
+      $eleves = Eleve::all();
+      $reductions = Reduction::all();
+      $classes = Classes::all();
+      return view('pages.inscriptions.listedesreductions', compact('eleves', 'reductions', 'classes'));
+  }
   
   public function statistique(){
     return view('pages.tableaudebord.statistique');
@@ -341,6 +363,11 @@ class PagesController extends Controller
     $type = $request->input('type');
     $reduc = $request->input('reduction');
     $modifiecheances = Echeance::where('MATRICULE', $MATRICULE)->orderBy('NUMERO', 'desc')->get();
+    $modifieCheances = Echeance::where('MATRICULE', $MATRICULE)
+    ->orderBy('NUMERO', 'desc')
+    ->first();
+    $typeduree = $modifieCheances ? $modifieCheances->NUMERO : null;
+
     $typemode = Reduction::where('CodeReduction', $reduc)->value('mode');
     $sco = $request->input('sco');
     $dure = $request->input('duree');
@@ -365,7 +392,6 @@ class PagesController extends Controller
     else {
       if($typeecheance == 2){
         $total = $sco + $frais1 + $frais2+ $frais3 + $frais4 + $arriere;
-        if($typemode == 2) {
           $montantecheance = $total / $typeduree;
           // Mettre à jour toutes les échéances avec ce montant
           foreach ($modifiecheances as $echeance) {
@@ -373,49 +399,15 @@ class PagesController extends Controller
             Echeance::where('NUMERO', $echeance->NUMERO)
             ->update(['APAYER' => $montantecheance]);
           }            
-        } else {
-          foreach ($modifiecheancc as $echeance) {
-              $montant_a_payer = ($type == 1) ? $echeance->APAYER : $echeance->APAYER2;
-
-              if ($montant_a_payer <= $total) {
-                  $total -= $montant_a_payer;
-                  Echeance::where('NUMERO', $echeance->NUMERO)
-                      ->update(['APAYER' => 0]);
-              } else {
-                  Echeance::where('NUMERO', $echeance->NUMERO)
-                      ->update(['APAYER' => $montant_a_payer - $total]);
-                  $total = 0; // Stopper une fois que le total est atteint
-                  break;
-              }
-          }
-        }
       } else {
-        if($typemode == 2) {
-          $montantecheance = $sco / $typeduree;
-          // Mettre à jour toutes les échéances avec ce montant
-          
-          foreach ($modifiecheances as $echeance) {
-            // Mettre à jour la colonne APAYER avec le montant calculé
-            Echeance::where('NUMERO', $echeance->NUMERO)
-            ->update(['APAYER' => $montantecheance]);
-          }            
-        } else {
-          
-            foreach ($modifiecheancc as $echeance) {
-              $montant_a_payer = ($type == 1) ? $echeance->APAYER : $echeance->APAYER2;
-
-              if ($montant_a_payer <= $sco) {
-                  $sco -= $montant_a_payer;
-                  Echeance::where('NUMERO', $echeance->NUMERO)
-                      ->update(['APAYER' => 0]);
-              } else {
-                  Echeance::where('NUMERO', $echeance->NUMERO)
-                      ->update(['APAYER' => $montant_a_payer - $sco]);
-                  $sco = 0; // Stopper une fois que le total est atteint
-                  break;
-              }
-          }
-        }
+        $montantecheance = $sco / $typeduree;
+        // Mettre à jour toutes les échéances avec ce montant
+        foreach ($modifiecheances as $echeance) {
+          // Mettre à jour la colonne APAYER avec le montant calculé
+          Echeance::where('NUMERO', $echeance->NUMERO)
+          ->update(['APAYER' => $montantecheance]);
+        }            
+        
       }
     }
     
@@ -571,15 +563,33 @@ class PagesController extends Controller
     } 
     return redirect('/');
   } 
-  public function majpaiementeleve(){
+  public function majpaiementeleve($matricule){
     if(Session::has('account')){
-      // $duplicatafactures = Duplicatafacture::all();
-      
-      return view('pages.inscriptions.MajPaiement');
+        $eleve = Eleve::where('MATRICULE', $matricule)->first();
+        
+        // Récupérer les données de scolarité pour les paiements (AUTREF = 1)
+        $scolarite = Scolarite::where('MATRICULE', $matricule)
+            ->where('AUTREF', 1) // Pour les paiements
+            ->get();
+
+        // Récupérer les arriérés (AUTREF = 2)
+        $arrières = Scolarite::where('MATRICULE', $matricule)
+            ->where('AUTREF', 2) // Pour les arriérés
+            ->get();
+
+        // Calculer les totaux
+        $totalScolarite = $scolarite->sum('MONTANT');
+        $totalArrieres = $arrières->sum('MONTANT');
+
+        // Vérifiez si l'élève existe
+        if (!$eleve) {
+            return redirect()->back()->withErrors(['L\'élève avec ce matricule n\'existe pas.']);
+        }
+
+        return view('pages.inscriptions.MajPaiement', compact('eleve', 'scolarite', 'arrières', 'totalScolarite', 'totalArrieres'));
     } 
     return redirect('/');
-    
-  }
+}
   
   public function tabledesclasses(){
     if(Session::has('account')){
@@ -1173,7 +1183,24 @@ public function eleveparclassespecifique($classeCode)
         if (!empty($messages)) {
             session()->flash('messages', $messages);
         }
-    
+        
+        // Récupération des informations pertinentes
+        $eleve = Eleve::find($request->eleve_id);
+        $montantPaye = $request->montant_paye;
+        $scolarite = $request->scolarite;
+        $arriere = $request->arriere;
+        $NUMERO = $getNumero($matricule, $request->input('date_operation'));
+        $SIGNATURE = session()->get('nom_user');
+        $MONTANT = $libelle; // Assurez-vous que c'est bien un tableau de libellés
+
+        // Enregistrement dans la session
+        Session::put('eleve', $eleve);
+        Session::put('montantPaye', $montantPaye);
+        Session::put('scolarite', $scolarite);
+        Session::put('arriéré', $arriere);
+        Session::put('libelles', $MONTANT);
+        Session::put('numeroRecu', $NUMERO);
+        Session::put('signature', $SIGNATURE);
         // Redirection avec un message global de succès
         return redirect()->back()->with('success', 'Paiement enregistré avec succès !');
     }

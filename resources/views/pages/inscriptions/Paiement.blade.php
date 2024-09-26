@@ -223,276 +223,367 @@
 
                         <button type="submit" class="btn btn-primary">Enregistrer le paiement</button>
                     </form>
-                    <!-- Reçu de paiement -->
                     @if (Session::has('success'))
                         <div id="recu" class="mt-4">
-                            <!-- Reçu Souche -->
-                            <div class="card">
-                                <div class="card-body" id="recu-souche">
-                                    <h5>Reçu de Paiement (Souche)</h5>
-                                    <p><strong>Date:</strong> {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
-                                    <p><strong>Élève:</strong> {{ $eleve->NOM }} {{ $eleve->PRENOM }}</p>
-                                    <p><strong>Montant payé:</strong> {{ Session::get('montant') }} F CFA</p>
-                                    <p><strong>Mode de paiement:</strong> {{ Session::get('mode_paiement') }}</p>
+                            <div class="row">
+                                <div class="recu-container"
+                                    style="display: flex; justify-content: space-between; gap: 20px; border: 1px solid #ccc; padding: 20px; background-color: #f9f9f9;">
+                                    @php
+                                        $libelles = ['LIBELF1', 'LIBELF2', 'LIBELF3'];
+                                    @endphp
+
+                                    @foreach (['Souche', 'Original'] as $type)
+                                        <div class="recu-section"
+                                            style="flex: 1; border: 1px solid #333; padding: 20px; background-color: #fff;">
+                                            <h5
+                                                style="text-align: center; font-size: 18px; margin-bottom: 20px; font-weight: bold;">
+                                                Reçu de Paiement ({{ $type }})
+                                            </h5>
+                                            <div style="margin-bottom: 15px;">
+                                                <p style="margin: 0; font-size: 14px;"><strong>Élève:</strong>
+                                                    {{ $eleve->NOM }} {{ $eleve->PRENOM }}</p>
+                                                <p style="margin: 0; font-size: 14px;"><strong>Classe:</strong>
+                                                    {{ $eleve->CODECLAS }}</p>
+                                                <p style="margin: 0; font-size: 14px;"><strong>Date:</strong>
+                                                    {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
+                                                    <strong>Numéro de reçu :</strong> {{ Session::get('numeroRecu') }}
+                                            </div>
+                                            <hr style="border-top: 1px dashed #333; margin: 15px 0;">
+                                            <div style="margin-bottom: 15px;">
+                                                <p style="margin: 0; font-size: 14px;"><strong>Montant payé:</strong>
+                                                    {{ Session::get('montantPaye') }} F CFA</p>
+                                                <p style="margin: 0; font-size: 14px;"><strong>Mode de paiement:</strong>
+                                                    {{ Session::get('mode_paiement') }}</p>
+                                                <p style="margin: 0; font-size: 14px;"><strong>Arriéré:</strong>
+                                                    {{ Session::get('arriéré') }}</p>
+                                                <p style="margin: 0; font-size: 14px;"><strong>Scolarité:</strong>
+                                                    {{ Session::get('scolarite') }}</p>
+                                            </div>
+                                            <hr style="border-top: 1px dashed #333; margin: 15px 0;">
+                                            @foreach ($libelles as $index => $libelleKey)
+                                                <p style="margin: 0; font-size: 14px;">
+                                                    <strong>{{ $libelle->$libelleKey }}:</strong>
+                                                    {{ Session::get('libelle_' . ($index + 1)) }}
+                                                </p>
+                                            @endforeach
+                                            <div style="font-weight: bold;">
+                                                <label for="reliquat">Reliquat restant : </label>
+                                                <span id="reliquat">0</span> F CFA
+                                            </div>
+                                            <hr style="border-top: 1px dashed #333; margin: 15px 0;">
+                                            <div class="recu-footer" style="text-align: center; margin-top: 20px;">
+                                                <p style="font-size: 14px;"><strong>CCC, le {{ \Carbon\Carbon::now()->format('d/m/Y') }}</strong> 
+                                                </p>
+                                                <p style="font-size: 14px;"><strong>Le Comptable Gestion</strong> 
+                                                </p>
+                                                {{ Session::get('signature') }}
+                                            </div>
+
+                                        </div>
+                                    @endforeach
                                 </div>
+
+                                <div class="bordered"
+                                    style="border-top: 1px dashed #333; margin-top: 20px; padding-top: 10px; text-align: center;">
+                                    <p style="font-size: 14px; color: #666;">Merci d'avoir effectué votre paiement.</p>
+                                </div>
+
+                                <!-- Bouton pour imprimer le reçu -->
+                                <button onclick="imprimerRecu()" class="btn btn-success mt-4">Imprimer le Reçu</button>
                             </div>
 
-                            <!-- Reçu Original -->
-                            <div class="card mt-4">
-                                <div class="card-body" id="recu-original">
-                                    <h5>Reçu de Paiement (Original)</h5>
-                                    <p><strong>Date:</strong> {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
-                                    <p><strong>Élève:</strong> {{ $eleve->NOM }} {{ $eleve->PRENOM }}</p>
-                                    <p><strong>Montant payé:</strong> {{ Session::get('montant') }} F CFA</p>
-                                    <p><strong>Mode de paiement:</strong> {{ Session::get('mode_paiement') }}</p>
-                                </div>
-                            </div>
+                            <script>
+                                function imprimerRecu() {
+                                    var contenu = document.getElementById('recu').innerHTML;
+                                    var fenetre = window.open('', '_blank', 'width=800,height=600');
+                                    fenetre.document.open();
+                                    fenetre.document.write(`
+                                    <html>
+                                    <head>
+                                        <title>Reçu de Paiement</title>
+                                        <style>
+                                            body {
+                                                font-family: Arial, sans-serif;
+                                                padding: 20px;
+                                            }
+                                            .recu-container {
+                                                display: flex;
+                                                justify-content: space-between;
+                                                border: 1px solid #000;
+                                                padding: 20px;
+                                                background-color: #f9f9f9;
+                                            }
+                                            .recu-section {
+                                                width: 48%;
+                                                border: 1px solid black;
+                                                padding: 15px;
+                                                box-sizing: border-box;
+                                                background-color: #fff;
+                                            }
+                                            h5 {
+                                                text-align: center;
+                                                font-size: 18px;
+                                                font-weight: bold;
+                                                margin-bottom: 20px;
+                                            }
+                                            .recu-footer {
+                                                text-align: center;
+                                                margin-top: 20px;
+                                            }
+                                            .bordered {
+                                                border-top: 1px dashed black;
+                                                margin-top: 20px;
+                                                padding-top: 10px;
+                                                text-align: center;
+                                                color: #666;
+                                            }
+                                            p {
+                                                font-size: 14px;
+                                                margin: 5px 0;
+                                            }
+                                        </style>
+                                    </head>
+                                    <body>${contenu}</body>
+                                    </html>
+                                `);
+                                    fenetre.document.close();
+                                    fenetre.onload = function() {
+                                        fenetre.focus();
+                                        fenetre.print();
+                                        fenetre.onafterprint = function() {
+                                            fenetre.close();
+                                        };
+                                    };
+                                }
+
+                                @if (Session::has('success'))
+                                    window.onload = function() {
+                                        imprimerRecu();
+                                    };
+                                @endif
+                            </script>
                         </div>
-
-                        <!-- Bouton pour imprimer le reçu -->
-                        <button onclick="imprimerRecu()" class="btn btn-success mt-4">Imprimer le Reçu</button>
                     @endif
-                    <script>
-                        // Fonction pour imprimer le reçu automatiquement après la réussite
-                        function imprimerRecu() {
-                            var contenu = document.getElementById('recu').innerHTML;
-                            var fenetre = window.open('', '_blank', 'width=800,height=600');
-                            fenetre.document.open();
-                            fenetre.document.write('<html><head><title>Reçu de Paiement</title></head><body>');
-                            fenetre.document.write(contenu);
-                            fenetre.document.write('</body></html>');
-                            fenetre.document.close();
-                            fenetre.print();
-                        }
-                
-                        // Imprimer automatiquement après le succès du paiement
-                        @if (Session::has('success'))
-                            window.onload = function() {
-                                imprimerRecu();
-                            };
-                        @endif
-                    </script>
+
+
                 </div>
-            </div>
-        </div>
-    </div>
-    <br>
-    <br>
+                <br>
+                <br>
 
-    <script>
-        let saisieManuelle = false;
+                <script>
+                    let saisieManuelle = false;
 
-        // Gestion de la répartition dynamique des montants
-        document.getElementById('montant-paye').addEventListener('input', function() {
-            if (this.value.trim() === '') {
-                resetFields();
-            } else {
-                repartirMontant();
-            }
-        });
+                    // Gestion de la répartition dynamique des montants
+                    document.getElementById('montant-paye').addEventListener('input', function() {
+                        if (this.value.trim() === '') {
+                            resetFields();
+                        } else {
+                            repartirMontant();
+                        }
+                    });
 
-        document.querySelectorAll('.composante').forEach(element => {
-            element.addEventListener('input', verifierSaisie);
-        });
+                    document.querySelectorAll('.composante').forEach(element => {
+                        element.addEventListener('input', verifierSaisie);
+                    });
 
-        function repartirMontant() {
-            const montantPaye = parseFloat(document.getElementById('montant-paye').value) || 0;
-            if (montantPaye <= 0) return;
+                    function repartirMontant() {
+                        const montantPaye = parseFloat(document.getElementById('montant-paye').value) || 0;
+                        if (montantPaye <= 0) return;
 
-            const composantes = Array.from(document.querySelectorAll('.composante'));
+                        const composantes = Array.from(document.querySelectorAll('.composante'));
 
-            // Vérification : Si un champ a un montant dû de 0, il est désactivé
-            composantes.forEach(c => {
-                if (parseFloat(c.placeholder) === 0) {
-                    c.disabled = true;
-                    c.style.backgroundColor = "#e9ecef"; // Changer la couleur de fond pour indiquer le blocage
-                    c.value = 0; // Remet à 0 pour éviter toute saisie
-                } else {
-                    c.disabled = false; // Réactiver les champs qui ont un montant dû supérieur à 0
-                    c.style.backgroundColor = ""; // Remettre la couleur de fond par défaut
-                }
-            });
+                        // Vérification : Si un champ a un montant dû de 0, il est désactivé
+                        composantes.forEach(c => {
+                            if (parseFloat(c.placeholder) === 0) {
+                                c.disabled = true;
+                                c.style.backgroundColor = "#e9ecef"; // Changer la couleur de fond pour indiquer le blocage
+                                c.value = 0; // Remet à 0 pour éviter toute saisie
+                            } else {
+                                c.disabled = false; // Réactiver les champs qui ont un montant dû supérieur à 0
+                                c.style.backgroundColor = ""; // Remettre la couleur de fond par défaut
+                            }
+                        });
 
-            // Réinitialiser la saisie manuelle
-            saisieManuelle = false;
-            composantes.forEach(c => c.dataset.saisieManuelle = 'false');
+                        // Réinitialiser la saisie manuelle
+                        saisieManuelle = false;
+                        composantes.forEach(c => c.dataset.saisieManuelle = 'false');
 
-            const priorites = composantes.map(c => ({
-                element: c,
-                priorite: parseInt(c.dataset.priorite),
-                montant: parseFloat(c.value) || 0,
-                montantDu: parseFloat(c.placeholder) || 0
-            })).sort((a, b) => a.priorite - b.priorite);
+                        const priorites = composantes.map(c => ({
+                            element: c,
+                            priorite: parseInt(c.dataset.priorite),
+                            montant: parseFloat(c.value) || 0,
+                            montantDu: parseFloat(c.placeholder) || 0
+                        })).sort((a, b) => a.priorite - b.priorite);
 
-            let montantRestant = montantPaye;
+                        let montantRestant = montantPaye;
 
-            // Répartition des montants en respectant la priorité
-            priorites.forEach(item => {
-                if (montantRestant > 0 && item.montantDu > 0 && !item.element.disabled) {
-                    const paiement = Math.min(item.montantDu, montantRestant);
-                    item.element.value = paiement;
-                    montantRestant -= paiement;
-                } else {
-                    item.element.value = 0;
-                }
-            });
+                        // Répartition des montants en respectant la priorité
+                        priorites.forEach(item => {
+                            if (montantRestant > 0 && item.montantDu > 0 && !item.element.disabled) {
+                                const paiement = Math.min(item.montantDu, montantRestant);
+                                item.element.value = paiement;
+                                montantRestant -= paiement;
+                            } else {
+                                item.element.value = 0;
+                            }
+                        });
 
-            // Met à jour l'affichage du reliquat restant
-            document.getElementById('reliquat').textContent = montantRestant.toFixed(2);
+                        // Met à jour l'affichage du reliquat restant
+                        document.getElementById('reliquat').textContent = montantRestant.toFixed(2);
 
-            if (montantRestant > 0) {
-                console.log("Le montant payé dépasse les besoins calculés par priorité.");
-            }
-        }
-
-        function verifierSaisie(event) {
-            const composante = event.target;
-            const valeur = parseFloat(composante.value) || 0;
-
-            // Empêcher toute modification si le montant dû avant répartition est 0
-            if (parseFloat(composante.placeholder) === 0) {
-                composante.value = 0;
-                composante.disabled = true;
-                composante.style.backgroundColor = "#e9ecef"; // Indique que le champ est bloqué
-                alert("Ce champ est bloqué car le montant dû est 0.");
-                return; // Empêche toute saisie supplémentaire
-            }
-
-            // Si le montant est inférieur à 0, l'annuler
-            if (valeur < 0) {
-                composante.value = 0;
-                alert("Les montants doivent être positifs.");
-            }
-
-            // Marquer le champ comme ayant une saisie manuelle
-            composante.dataset.saisieManuelle = 'true';
-            saisieManuelle = true;
-            ajusterMontants();
-        }
-
-        function ajusterMontants() {
-            const montantPaye = parseFloat(document.getElementById('montant-paye').value) || 0;
-            const composantes = Array.from(document.querySelectorAll('.composante'));
-
-            let totalSaisie = composantes.reduce((total, elem) => {
-                return total + (elem.dataset.saisieManuelle === 'true' ? parseFloat(elem.value) || 0 : 0);
-            }, 0);
-
-            let montantRestant = montantPaye - totalSaisie;
-
-            composantes.forEach(elem => {
-                if (elem.dataset.saisieManuelle !== 'true' && !elem.disabled) {
-                    elem.value = montantRestant > 0 ? montantRestant : 0;
-                    montantRestant -= parseFloat(elem.value);
-                }
-            });
-
-            // Met à jour l'affichage du reliquat restant
-            document.getElementById('reliquat').textContent = montantRestant.toFixed(2);
-        }
-
-        function resetFields() {
-            document.querySelectorAll('.composante').forEach(element => {
-                if (parseFloat(element.placeholder) === 0) {
-                    element.disabled = true; // Désactiver les champs avec un montant dû de 0
-                    element.style.backgroundColor = "#e9ecef"; // Indiquer qu'ils sont bloqués
-                    element.value = 0; // Remet à zéro
-                } else {
-                    element.disabled = false; // Réactiver les champs avec un montant dû supérieur à 0
-                    element.value = 0; // Remet à zéro
-                    element.style.backgroundColor = ""; // Réinitialiser la couleur de fond
-                }
-            });
-            // Réinitialiser le reliquat à 0
-            document.getElementById('reliquat').textContent = '0';
-        }
-    </script>
-
-    <script>
-        // Gestion des priorités dynamiques pour monter/descendre les options et les champs correspondants
-        function moveUp() {
-            var select = document.getElementById("priority-select");
-            var selectedOptions = Array.from(select.selectedOptions);
-
-            selectedOptions.forEach(function(option) {
-                var index = option.index;
-                if (index > 0) {
-                    // Déplacer les options dans le select
-                    select.insertBefore(option, select.options[index - 1]);
-
-                    // Déplacer les champs correspondants dans le formulaire
-                    var field = document.querySelector(`#form-fields [data-id="${option.value}"]`);
-                    var prevField = field.previousElementSibling;
-                    if (prevField) {
-                        field.style.transition = 'transform 0.3s ease'; // Animation
-                        prevField.style.transition = 'transform 0.3s ease';
-                        document.getElementById("form-fields").insertBefore(field, prevField);
+                        if (montantRestant > 0) {
+                            console.log("Le montant payé dépasse les besoins calculés par priorité.");
+                        }
                     }
-                }
-            });
 
-            mettreAJourPriorites(); // Mettre à jour les priorités après avoir changé l'ordre
-            mettreAJourEtatBoutons();
-        }
+                    function verifierSaisie(event) {
+                        const composante = event.target;
+                        const valeur = parseFloat(composante.value) || 0;
 
-        function moveDown() {
-            var select = document.getElementById("priority-select");
-            var selectedOptions = Array.from(select.selectedOptions);
+                        // Empêcher toute modification si le montant dû avant répartition est 0
+                        if (parseFloat(composante.placeholder) === 0) {
+                            composante.value = 0;
+                            composante.disabled = true;
+                            composante.style.backgroundColor = "#e9ecef"; // Indique que le champ est bloqué
+                            alert("Ce champ est bloqué car le montant dû est 0.");
+                            return; // Empêche toute saisie supplémentaire
+                        }
 
-            for (var i = selectedOptions.length - 1; i >= 0; i--) {
-                var option = selectedOptions[i];
-                var index = option.index;
-                if (index < select.options.length - 1) {
-                    // Déplacer les options dans le select
-                    select.insertBefore(select.options[index + 1], option);
+                        // Si le montant est inférieur à 0, l'annuler
+                        if (valeur < 0) {
+                            composante.value = 0;
+                            alert("Les montants doivent être positifs.");
+                        }
 
-                    // Déplacer les champs correspondants dans le formulaire
-                    var field = document.querySelector(`#form-fields [data-id="${option.value}"]`);
-                    var nextField = field.nextElementSibling;
-                    if (nextField) {
-                        field.style.transition = 'transform 0.3s ease'; // Animation
-                        nextField.style.transition = 'transform 0.3s ease';
-                        document.getElementById("form-fields").insertBefore(nextField, field);
+                        // Marquer le champ comme ayant une saisie manuelle
+                        composante.dataset.saisieManuelle = 'true';
+                        saisieManuelle = true;
+                        ajusterMontants();
                     }
-                }
-            }
 
-            mettreAJourPriorites(); // Mettre à jour les priorités après avoir changé l'ordre
-            mettreAJourEtatBoutons();
-        }
+                    function ajusterMontants() {
+                        const montantPaye = parseFloat(document.getElementById('montant-paye').value) || 0;
+                        const composantes = Array.from(document.querySelectorAll('.composante'));
 
-        function mettreAJourPriorites() {
-            // Met à jour l'attribut data-priorite en fonction de l'ordre dans le select
-            var select = document.getElementById("priority-select");
-            var options = Array.from(select.options);
+                        let totalSaisie = composantes.reduce((total, elem) => {
+                            return total + (elem.dataset.saisieManuelle === 'true' ? parseFloat(elem.value) || 0 : 0);
+                        }, 0);
 
-            options.forEach((option, index) => {
-                // Met à jour les priorités dans le formulaire
-                var field = document.querySelector(`#form-fields [data-id="${option.value}"]`);
-                field.querySelector('.composante').dataset.priorite = index + 1; // L'index correspond à la priorité
-            });
-        }
-        // document.getElementById("priority-select").addEventListener("change", mettreAJourEtatBoutons);
-    </script>
+                        let montantRestant = montantPaye - totalSaisie;
 
-    <style>
-        /* Animation et mise en évidence lors du changement de priorité */
-        #form-fields .col-md-2 {
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
+                        composantes.forEach(elem => {
+                            if (elem.dataset.saisieManuelle !== 'true' && !elem.disabled) {
+                                elem.value = montantRestant > 0 ? montantRestant : 0;
+                                montantRestant -= parseFloat(elem.value);
+                            }
+                        });
 
-        #priority-select option {
-            transition: background-color 0.3s ease;
-        }
+                        // Met à jour l'affichage du reliquat restant
+                        document.getElementById('reliquat').textContent = montantRestant.toFixed(2);
+                    }
 
-        #form-fields .col-md-2.moving,
-        #priority-select option.moving {
-            background-color: #f0f8ff;
-        }
+                    function resetFields() {
+                        document.querySelectorAll('.composante').forEach(element => {
+                            if (parseFloat(element.placeholder) === 0) {
+                                element.disabled = true; // Désactiver les champs avec un montant dû de 0
+                                element.style.backgroundColor = "#e9ecef"; // Indiquer qu'ils sont bloqués
+                                element.value = 0; // Remet à zéro
+                            } else {
+                                element.disabled = false; // Réactiver les champs avec un montant dû supérieur à 0
+                                element.value = 0; // Remet à zéro
+                                element.style.backgroundColor = ""; // Réinitialiser la couleur de fond
+                            }
+                        });
+                        // Réinitialiser le reliquat à 0
+                        document.getElementById('reliquat').textContent = '0';
+                    }
+                </script>
 
-        #form-fields .composante:disabled {
-            background-color: #e9ecef;
-            /* Grise les champs désactivés */
-        }
-    </style>
-@endsection
+                <script>
+                    // Gestion des priorités dynamiques pour monter/descendre les options et les champs correspondants
+                    function moveUp() {
+                        var select = document.getElementById("priority-select");
+                        var selectedOptions = Array.from(select.selectedOptions);
+
+                        selectedOptions.forEach(function(option) {
+                            var index = option.index;
+                            if (index > 0) {
+                                // Déplacer les options dans le select
+                                select.insertBefore(option, select.options[index - 1]);
+
+                                // Déplacer les champs correspondants dans le formulaire
+                                var field = document.querySelector(`#form-fields [data-id="${option.value}"]`);
+                                var prevField = field.previousElementSibling;
+                                if (prevField) {
+                                    field.style.transition = 'transform 0.3s ease'; // Animation
+                                    prevField.style.transition = 'transform 0.3s ease';
+                                    document.getElementById("form-fields").insertBefore(field, prevField);
+                                }
+                            }
+                        });
+
+                        mettreAJourPriorites(); // Mettre à jour les priorités après avoir changé l'ordre
+                        mettreAJourEtatBoutons();
+                    }
+
+                    function moveDown() {
+                        var select = document.getElementById("priority-select");
+                        var selectedOptions = Array.from(select.selectedOptions);
+
+                        for (var i = selectedOptions.length - 1; i >= 0; i--) {
+                            var option = selectedOptions[i];
+                            var index = option.index;
+                            if (index < select.options.length - 1) {
+                                // Déplacer les options dans le select
+                                select.insertBefore(select.options[index + 1], option);
+
+                                // Déplacer les champs correspondants dans le formulaire
+                                var field = document.querySelector(`#form-fields [data-id="${option.value}"]`);
+                                var nextField = field.nextElementSibling;
+                                if (nextField) {
+                                    field.style.transition = 'transform 0.3s ease'; // Animation
+                                    nextField.style.transition = 'transform 0.3s ease';
+                                    document.getElementById("form-fields").insertBefore(nextField, field);
+                                }
+                            }
+                        }
+
+                        mettreAJourPriorites(); // Mettre à jour les priorités après avoir changé l'ordre
+                        mettreAJourEtatBoutons();
+                    }
+
+                    function mettreAJourPriorites() {
+                        // Met à jour l'attribut data-priorite en fonction de l'ordre dans le select
+                        var select = document.getElementById("priority-select");
+                        var options = Array.from(select.options);
+
+                        options.forEach((option, index) => {
+                            // Met à jour les priorités dans le formulaire
+                            var field = document.querySelector(`#form-fields [data-id="${option.value}"]`);
+                            field.querySelector('.composante').dataset.priorite = index + 1; // L'index correspond à la priorité
+                        });
+                    }
+                    // document.getElementById("priority-select").addEventListener("change", mettreAJourEtatBoutons);
+                </script>
+
+                <style>
+                    /* Animation et mise en évidence lors du changement de priorité */
+                    #form-fields .col-md-2 {
+                        transition: transform 0.3s ease, background-color 0.3s ease;
+                    }
+
+                    #priority-select option {
+                        transition: background-color 0.3s ease;
+                    }
+
+                    #form-fields .col-md-2.moving,
+                    #priority-select option.moving {
+                        background-color: #f0f8ff;
+                    }
+
+                    #form-fields .composante:disabled {
+                        background-color: #e9ecef;
+                        /* Grise les champs désactivés */
+                    }
+                </style>
+            @endsection
