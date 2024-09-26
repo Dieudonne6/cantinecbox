@@ -106,6 +106,21 @@ class PagesController extends Controller
     return view('pages.inscriptions.listedeseleves', compact('allClasse'));
   }
   
+  public function imprimerProfilTypeClasse(Request $request) {
+    $typeClasse = $request->input('typeclasse');
+    $reductions = Reduction::all();
+    $typeclasse = Typeclasse::all();
+    $eleves = Eleve::with('reduction') // Charge la relation 'reduction'
+        ->where('TYPECLASSE', $typeClasse) // Filtrer les élèves par type de classe
+        ->where('CodeReduction', '!=', null) // Filtrer les élèves ayant une réduction
+        ->paginate(10); // Paginer les résultats par 10 élèves par page
+
+    // Regrouper les élèves par CodeReduction
+    $elevesParReduction = $eleves->groupBy('CodeReduction');
+
+    return view('pages.inscriptions.profiltypeclasse', compact('typeClasse', 'reductions', 'typeclasse', 'elevesParReduction', 'eleves'));
+}
+
   public function listeselectiveeleve(){
     $currentYear = now()->year;
     
