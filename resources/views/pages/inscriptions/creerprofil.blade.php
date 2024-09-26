@@ -16,7 +16,7 @@
         <div class="col-12">
           <div class="card mb-6">
             <div class="card-body">
-              <h4 class="card-title">Table réduction</h4>
+              <h4 class="card-title">Profils de réduction</h4>
               <div class="row gy-3">
                 <div class="demo-inline-spacing">
                   {{-- <a  class="btn btn-primary" href=" {{url('/nouveautypesclasses')}}">Nouveau</a> --}}
@@ -30,7 +30,7 @@
     <div class="modal-dialog">
       <div class="modal-content calcul-modal">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Fiche de reduction</h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Fiche de réduction</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body profile-content">
@@ -40,20 +40,19 @@
           </div>
           @endif --}}
 
-
           <div class="row">
             <div class="" id="calcul-one">
                 <form class="forms-sample" action="{{ url('/ajouterprofreduction') }}" method="POST">
                     @csrf
                     <!-- Autres champs ici... -->
                     <div class="form-group row">
-                      <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Numero reduction</label>
+                      <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Numéro réduction</label>
                       <div class="col-sm-4">
                         <input type="text" class="form-control" id="exampleInputUsername2" name="Codereduction" value="{{ $newCode }}" readonly>
                       </div>
                     </div>
                     <div class="form-group row">
-                      <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Libelle reduction</label>
+                      <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Libelle réduction</label>
                       <div class="col-sm-4">
                         <input type="text" class="form-control" id="exampleInputUsername2" name="LibelleReduction" placeholder="" required>
                       </div>
@@ -68,47 +67,47 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur scolarite</label>
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Réduction accordée sur scolarité</label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="ReductionScolarite" name="Reduction_scolarite" placeholder="0">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur arriere</label>
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Réduction accordée sur arrièré</label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="ReductionArriere" name="Reduction_arriere" placeholder="0">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur frais 1</label>
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Réduction accordée sur frais 1</label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="ReductionFrais1" name="Reduction_frais1" placeholder="0">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur frais 2</label>
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Réduction accordée sur frais 2</label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="ReductionFrais2" name="Reduction_frais2" placeholder="0">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur frais 3</label>
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Réduction accordée sur frais 3</label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="ReductionFrais3" name="Reduction_frais3" placeholder="0">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Reduction accordee sur frais 4</label>
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Réduction accordée sur frais 4</label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="ReductionFrais4" name="Reduction_frais4" placeholder="0">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputUsername2" class="col-sm-12 col-form-label mb-0">Mode d'application de la reduction sur les echeancier</label>
+                        <label for="exampleInputUsername2" class="col-sm-12 col-form-label mb-0">Mode d'application de la réduction sur les écheanciers</label>
                         <div class="col-sm-12 mb-2">
                             <select class="js-example-basic-multiple w-100" name="mode">
                                 <option value="1">Agir sur les dernières tranches</option>
-                                <option value="2">Repartir equitablement sur toutes les tranches</option>
+                                <option value="2">Repartir équitablement sur toutes les tranches</option>
                             </select>
                         </div>
                     </div>
@@ -119,10 +118,10 @@
             <div class="col-lg-4 d-none" id="percentage">
                 <br></br>
                 <br></br>
-                <h6 style="margin-top: 1rem">Calculateur de pourcentage de reduction</h6>
+                <h6 style="margin-top: 1rem">Calculateur de pourcentage de réduction</h6>
                 <div class="row">
                     <div class="col-lg-6">
-                        <p >Avant reduction</p>
+                        <p >Avant réduction</p>
                         <div class="mt-4">
                             <input type="text" class="form-control" id="avantScolarite" placeholder="0">
                         </div>
@@ -143,7 +142,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <p>Apres reduction</p>
+                        <p>Apres réduction</p>
                         <div class="mt-4">
                             <input type="text" class="form-control" id="apresScolarite" placeholder="0">
                         </div>
@@ -336,7 +335,7 @@
                                                     </form>
                                                 </div>
                                                 <div class="col-lg-4 d-none" id="percentages">
-                                                    <h6 style="margin-top: 1rem">Calculateur de pourcentage <br> de reduction</h6>
+                                                    <h6 style="margin-top: 1rem">Calculateur de pourcentage <br> de réduction</h6>
                                                     <div class="row">
                                                         <div class="col-lg-6">
                                                             <p >Avant reduction</p>
@@ -360,7 +359,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-6">
-                                                            <p>Apres reduction</p>
+                                                            <p>Apres réduction</p>
                                                             <div class="mt-5">
                                                                 <input type="text" class="form-control" id="apresScolaritemodif" placeholder="0">
                                                             </div>

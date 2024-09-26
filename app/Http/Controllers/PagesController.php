@@ -106,6 +106,21 @@ class PagesController extends Controller
     return view('pages.inscriptions.listedeseleves', compact('allClasse'));
   }
   
+  public function imprimerProfilTypeClasse(Request $request) {
+    $typeClasse = $request->input('typeclasse');
+    $reductions = Reduction::all();
+    $typeclasse = Typeclasse::all();
+    $eleves = Eleve::with('reduction') // Charge la relation 'reduction'
+        ->where('TYPECLASSE', $typeClasse) // Filtrer les élèves par type de classe
+        ->where('CodeReduction', '!=', null) // Filtrer les élèves ayant une réduction
+        ->paginate(10); // Paginer les résultats par 10 élèves par page
+
+    // Regrouper les élèves par CodeReduction
+    $elevesParReduction = $eleves->groupBy('CodeReduction');
+
+    return view('pages.inscriptions.profiltypeclasse', compact('typeClasse', 'reductions', 'typeclasse', 'elevesParReduction', 'eleves'));
+}
+
   public function listeselectiveeleve(){
     $currentYear = now()->year;
     
@@ -158,6 +173,13 @@ class PagesController extends Controller
     
   }
   
+  public function listedesreductions()
+  {
+      $eleves = Eleve::all();
+      $reductions = Reduction::all();
+      $classes = Classes::all();
+      return view('pages.inscriptions.listedesreductions', compact('eleves', 'reductions', 'classes'));
+  }
   
   public function statistique(){
     return view('pages.tableaudebord.statistique');
@@ -524,15 +546,33 @@ class PagesController extends Controller
     } 
     return redirect('/');
   } 
-  public function majpaiementeleve(){
+  public function majpaiementeleve($matricule){
     if(Session::has('account')){
-      // $duplicatafactures = Duplicatafacture::all();
-      
-      return view('pages.inscriptions.MajPaiement');
+        $eleve = Eleve::where('MATRICULE', $matricule)->first();
+        
+        // Récupérer les données de scolarité pour les paiements (AUTREF = 1)
+        $scolarite = Scolarite::where('MATRICULE', $matricule)
+            ->where('AUTREF', 1) // Pour les paiements
+            ->get();
+
+        // Récupérer les arriérés (AUTREF = 2)
+        $arrières = Scolarite::where('MATRICULE', $matricule)
+            ->where('AUTREF', 2) // Pour les arriérés
+            ->get();
+
+        // Calculer les totaux
+        $totalScolarite = $scolarite->sum('MONTANT');
+        $totalArrieres = $arrières->sum('MONTANT');
+
+        // Vérifiez si l'élève existe
+        if (!$eleve) {
+            return redirect()->back()->withErrors(['L\'élève avec ce matricule n\'existe pas.']);
+        }
+
+        return view('pages.inscriptions.MajPaiement', compact('eleve', 'scolarite', 'arrières', 'totalScolarite', 'totalArrieres'));
     } 
     return redirect('/');
-    
-  }
+}
   
   public function tabledesclasses(){
     if(Session::has('account')){
@@ -1046,7 +1086,24 @@ class PagesController extends Controller
         if (!empty($messages)) {
             session()->flash('messages', $messages);
         }
-    
+        
+        // Récupération des informations pertinentes
+        $eleve = Eleve::find($request->eleve_id);
+        $montantPaye = $request->montant_paye;
+        $scolarite = $request->scolarite;
+        $arriere = $request->arriere;
+        $NUMERO = $getNumero($matricule, $request->input('date_operation'));
+        $SIGNATURE = session()->get('nom_user');
+        $MONTANT = $libelle; // Assurez-vous que c'est bien un tableau de libellés
+
+        // Enregistrement dans la session
+        Session::put('eleve', $eleve);
+        Session::put('montantPaye', $montantPaye);
+        Session::put('scolarite', $scolarite);
+        Session::put('arriéré', $arriere);
+        Session::put('libelles', $MONTANT);
+        Session::put('numeroRecu', $NUMERO);
+        Session::put('signature', $SIGNATURE);
         // Redirection avec un message global de succès
         return redirect()->back()->with('success', 'Paiement enregistré avec succès !');
     }
