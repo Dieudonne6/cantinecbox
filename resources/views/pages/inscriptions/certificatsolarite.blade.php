@@ -17,7 +17,7 @@
       @endif
 
       <div class="form-group row d-flex align-items-center">
-        <div class="col-3">
+        <div class="col-4">
           <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
             <option value="{{ url('certificatsolarite') }}">Sélectionnez une classe</option>
             @foreach ($classe as $classes)
@@ -28,9 +28,9 @@
           </select>
         </div>
       
-        <div class="col-3 d-flex align-items-center">
-          <label for="observation" class="me-2 mb-0">Observation :</label>
-          <textarea id="observation" name="observation" class="form-control" rows="1" placeholder="Saisir une observation"></textarea>
+        <div class="col-6 d-flex align-items-center">
+          <label for="observation" class="me-4 mb-2">Observation</label>
+          <textarea id="observation" name="observation" class="form-control" rows="3" placeholder="Saisir une observation"></textarea>
         </div>        
       
         <div class="col-auto">
@@ -39,7 +39,7 @@
             <input type="hidden" name="classe" value="{{ Request::segment(2) }}">
             <input type="hidden" name="matricules" id="matricules">
       
-            <button type="submit" class="btn btn-primary btn-sm">Imprimer les certificats sélectionnés</button>
+            <button type="submit" class="btn btn-primary btn-sm">Imprimer</button>
           </form>
         </div>
       </div>

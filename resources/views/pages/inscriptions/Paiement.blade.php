@@ -254,10 +254,10 @@
                                                     {{ Session::get('montantPaye') }} F CFA</p>
                                                 <p style="margin: 0; font-size: 14px;"><strong>Mode de paiement:</strong>
                                                     {{ Session::get('mode_paiement') }}</p>
-                                                <p style="margin: 0; font-size: 14px;"><strong>Scolarité:</strong>
-                                                    {{ Session::get('scolarite') }}</p>
                                                 <p style="margin: 0; font-size: 14px;"><strong>Arriéré:</strong>
                                                     {{ Session::get('arriéré') }}</p>
+                                                <p style="margin: 0; font-size: 14px;"><strong>Scolarité:</strong>
+                                                    {{ Session::get('scolarite') }}</p>
                                             </div>
                                             <hr style="border-top: 1px dashed #333; margin: 15px 0;">
                                             @foreach ($libelles as $index => $libelleKey)
