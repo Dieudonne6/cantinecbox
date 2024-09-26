@@ -33,8 +33,8 @@ Route::get('/get-montant/{codeClass}', [PagesController::class, 'getMontant']);
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
-Route::get('/listedeseleves', [PagesController::class, 'listedeseleves']);
-Route::get('/listeselectiveeleve', [PagesController::class, 'listeselectiveeleve']);
+Route::get('/listedeseleves', [PagesController::class, 'listedeseleves'])->name('listedeseleves');
+Route::get('/listeselectiveeleve', [PagesController::class, 'listeselectiveeleve'])->name('listeselectiveeleve');
 
 Route::get('/classes', [ClassesController::class, 'classe']);
 Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees']);
@@ -145,7 +145,7 @@ Route::get('/parametre', [PagesController::class, 'parametre']);
 Route::get('/echeancier/{MATRICULE}', [PagesController::class, 'echeancier'])->name('echeancier');
 Route::get('/tabledesclasses', [PagesController::class, 'tabledesclasses']);
 Route::get('/enrclasse', [GestionclasseController::class, 'enrclasse'])->name('enrclasse');
-Route::get('/certificatsolarite/{CODECLAS?}/{matricule?}', [PagesController::class, 'certificatscolarite']);
+Route::get('/certificatsolarite/{CODECLAS?}/{matricule?}', [PagesController::class, 'certificatscolarite'])->name('certificatsolarite');
 
 Route::post('certificatsolarite/impression', [PagesController::class, 'impression'])->name('certificatsolarite.impression');
 
@@ -188,8 +188,8 @@ Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::c
 
 
 Route::get('/archive', [PagesController::class, 'archive']);
-Route::get('/editions', [PagesController::class, 'editions']);
-Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse']);
+Route::get('/editions', [PagesController::class, 'editions'])->name('editions');
+Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse'])->name('eleveparclasse');
 Route::get('/eleveparclassespecifique/{classeCode}', [PagesController::class, 'eleveparclassespecifique']);
 Route::get('/registreeleves', [PagesController::class, 'registreeleves']);
 Route::get('/registreelev', [PagesController::class, 'registreeleve']);
@@ -198,12 +198,12 @@ Route::get('/gestionarriere', [PagesController::class, 'gestionarriere']);
 Route::get('/exporter', [PagesController::class, 'exporter']);
 Route::get('/listeselective', [PagesController::class, 'listeselective']);
 Route::get('/pointderecouvrement', [PagesController::class, 'pointderecouvrement']);
-Route::get('/etatdesrecouvrements', [PagesController::class, 'etatdesrecouvrements']);
+Route::get('/etatdesrecouvrements', [PagesController::class, 'etatdesrecouvrements'])->name('etatdesrecouvrements');
 
-Route::get('/enquetesstatistiques', [PagesController::class, 'enquetesstatistiques']);
-Route::get('/etatdelacaisse', [PagesController::class, 'etatdelacaisse']);
-Route::get('/situationfinanciereglobale',[PagesController::class, 'situationfinanciereglobale']);
-Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite']);
+Route::get('/enquetesstatistiques', [PagesController::class, 'enquetesstatistiques'])->name('enquetesstatistiques');
+Route::get('/etatdelacaisse', [PagesController::class, 'etatdelacaisse'])->name('etatdelacaisse');
+Route::get('/situationfinanciereglobale',[PagesController::class, 'situationfinanciereglobale'])->name('situationfinanciereglobale');
+Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite'])->name('certificatsolarite');
 
 
 
@@ -264,7 +264,7 @@ Route::get('/facturesclasses', [ScolariteController::class, 'getfacturesclasses'
 Route::get('/detailfacturesclasses/{CODECLAS}', [ScolariteController::class, 'detailfacturesclasses'])->name('detailfacturesclasses');
 Route::post('/detailfacclasse/{CODECLAS}', [ScolariteController::class, 'detailfacclasse']);
 Route::post('/detailfacnouvelleclasse', [GestionclasseController::class, 'detailfacnouvelleclasse']);
-Route::get('/listedesclasses', [ClassesController::class, 'listeclasses']);
+Route::get('/listedesclasses', [ClassesController::class, 'listeclasses'])->name('listedesclasses');
 Route::post('/appliquereduc', [PagesController::class, 'applyReductions'])->name('apply.reductions');
 Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
 Route::get('/imprimer-profil-type-classe', [PagesController::class, 'imprimerProfilTypeClasse'])->name('impression.profil.type.classe');

@@ -151,13 +151,15 @@
                   <th>Nom & Prénoms</th>
                   <th>Classe</th>
                   <th>Sexe</th>
+                   <th class="d-none"></th>
                   <th class="d-none"></th>
                   <th class="d-none"></th>
                   <th class="d-none"></th>
                   <th class="d-none"></th>
                   <th class="d-none"></th>
-                  <th class="d-none">Promo</th>
-                  <th class="d-none">Cycle</th> 
+                  <th class="d-none"></th>
+                  <th class="d-none"></th> 
+
                   <th>Red.</th>
                   <th>Date nai</th>
                   <th>Lieunais</th>
@@ -179,14 +181,14 @@
                     Non spécifié
                     @endif
                   </td>
-                  {{-- <td class="" data-promi="{{ $eleve->classe->promo->CODEPROMO }}">{{ $eleve->classe->promo->LIBELPROMO }}</td> --}}
+                  <td class="d-none" data-promi="{{ $eleve->classe->promo->CODEPROMO }}">{{ $eleve->classe->promo->LIBELPROMO }}</td> 
                   <td class="d-none" data-cycle="{{ $eleve->classe->CYCLE}}">{{ $eleve->classe->CYCLE}}</td>
                   <td class="d-none" data-promo="{{ $eleve->classe->promo->CODEPROMO }}"></td>
                   <td class="d-none" data-category="{{ $eleve->STATUTG }}"></td>
                   <td class="d-none"  data-statut="{{ $eleve->STATUT }}"></td>
-                  <td class="d-none" data-serie="{{ $eleve->SERIE }}"></td>
+                  <td class="d-none" data-serie="{{ $eleve->SERIE }}"></td> 
                   <td class="d-none" data-typeenseign="{{ $eleve->TYPEENSEIGN }}"></td>
-                  <td class="d-none" data-typeclasse="{{ $eleve->TYPECLASSE }}"></td> 
+                  <td class="d-none" data-typeclasse="{{ $eleve->TYPECLASSE }}"></td>  
 
                   <td class="checkboxes-select" style="width: 24px;">
                     <input type="checkbox" class="form-check-input-center"
@@ -890,8 +892,30 @@ function imprimerPage() {
 
 $(document).ready(function() {
    var table = $('#myTab').DataTable({
+    columnDefs: [
+      { targets: [4, 5, 6, 7, 8, 9, 10, 11], visible: false, searchable: false } // Cache ces colonnes
+    ],
+                "language": {
+                    "sProcessing": "Traitement en cours...",
+                    "sSearch": "Rechercher&nbsp;:",
+                    "sLengthMenu": "Afficher _MENU_ éléments",
+                    "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                    "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrées",
+                    "sInfoFiltered": "(filtré à partir de _MAX_ entrées au total)",
+                    "sInfoPostFix": "",
+                    "sLoadingRecords": "Chargement en cours...",
+                    "sZeroRecords": "Aucun résultat trouvé",
+                    "sEmptyTable": "Aucune donnée disponible dans le tableau",
+                    "oPaginate": {
+                        "sPrevious": "Précédent",
+                        "sNext": "Suivant"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+                        "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+                    }
+                },
     paging: true,
-    searching: false,
     ordering: true
   });
   function filterTableByClass() {

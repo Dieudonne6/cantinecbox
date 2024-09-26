@@ -219,7 +219,6 @@
                         <th>No</th>
                         <th>Date paie</th>
                         <th>Scolarite</th>
-                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -230,10 +229,7 @@
                           <td>{{ \Carbon\Carbon::parse($donne->DATEOP)->format('d/m/Y') }}</td>
                           <!-- Formatage de la date -->
                           <td>{{ $donne->APAYER }}</td>
-                          <td>
-                            {{-- <button type="button" class="btn btn-primary btn-sm">Modifier</button> --}}
-                            <button type="button" class="btn btn-danger btn-sm" >Supprimer</button>
-                          </td>
+                          
                         </tr>
                       @endforeach
 
