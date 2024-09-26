@@ -1076,7 +1076,24 @@ class PagesController extends Controller
         if (!empty($messages)) {
             session()->flash('messages', $messages);
         }
-    
+        
+        // Récupération des informations pertinentes
+        $eleve = Eleve::find($request->eleve_id);
+        $montantPaye = $request->montant_paye;
+        $scolarite = $request->scolarite;
+        $arriere = $request->arriere;
+        $NUMERO = $getNumero($matricule, $request->input('date_operation'));
+        $SIGNATURE = session()->get('nom_user');
+        $MONTANT = $libelle; // Assurez-vous que c'est bien un tableau de libellés
+
+        // Enregistrement dans la session
+        Session::put('eleve', $eleve);
+        Session::put('montantPaye', $montantPaye);
+        Session::put('scolarite', $scolarite);
+        Session::put('arriéré', $arriere);
+        Session::put('libelles', $MONTANT);
+        Session::put('numeroRecu', $NUMERO);
+        Session::put('signature', $SIGNATURE);
         // Redirection avec un message global de succès
         return redirect()->back()->with('success', 'Paiement enregistré avec succès !');
     }
