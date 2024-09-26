@@ -164,35 +164,7 @@
     </div>
   </div>
 </div> --}}
-<style>
-#sidebar {
-    max-height: 400px; /* Hauteur maximale de la sidebar, par exemple, 100% de la hauteur de la fenêtre */
-    overflow-y: auto; /* Activer le défilement vertical */
-}
-/* Style de la scrollbar */
-#sidebar::-webkit-scrollbar {
-    width: 6px; /* Largeur de la scrollbar */
-}
 
-/* Style de la piste de la scrollbar */
-#sidebar::-webkit-scrollbar-track {
-    background: #844fc1; /* Couleur de la piste */
-    border-radius: 10px; /* Optionnel : arrondir les coins */
-}
-
-/* Style de la thumb (partie mobile de la scrollbar) */
-#sidebar::-webkit-scrollbar-thumb {
-    background-color: #844fc1; /* Couleur de la thumb */
-    border-radius: 10px; /* Optionnel : arrondir les coins */
-    border: 3px solid #844fc1; /* Optionnel : espace autour de la thumb */
-}
-
-/* Style de la thumb au survol */
-#sidebar::-webkit-scrollbar-thumb:hover {
-    background-color: #844fc1; /* Couleur de la thumb au survol */
-}
-
-</style>
 <nav class="sidebar sidebar-offcanvas" id="sidebar" style="max-width: 240px;">
     <ul class="nav">
 

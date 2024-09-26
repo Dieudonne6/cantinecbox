@@ -84,7 +84,7 @@ align-items: center;  */
             top: 100%;
             display: none;
             position: static;
-            width: 12.5rem;
+            width: 13.5rem;
             background-color: #fff;
             padding: 0.8rem;
             margin: 0;
@@ -114,6 +114,7 @@ align-items: center;  */
 
         .sub-menus li {
             list-style: none;
+            margin-left: -1.3rem;
             margin-bottom: 0.4rem;
         }
 
@@ -129,6 +130,29 @@ align-items: center;  */
             margin-left: 1.5rem;
         }
 
+/* Style de la scrollbar */
+#sidebar::-webkit-scrollbar {
+    width: 6px; /* Largeur de la scrollbar */
+}
+
+/* Style de la piste de la scrollbar */
+#sidebar::-webkit-scrollbar-track {
+    background: #844fc1; /* Couleur de la piste */
+    border-radius: 10px; /* Optionnel : arrondir les coins */
+}
+
+/* Style de la thumb (partie mobile de la scrollbar) */
+#sidebar::-webkit-scrollbar-thumb {
+    background-color: #844fc1; /* Couleur de la thumb */
+    border-radius: 10px; /* Optionnel : arrondir les coins */
+    border: 3px solid #844fc1; /* Optionnel : espace autour de la thumb */
+}
+
+/* Style de la thumb au survol */
+#sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: #844fc1; /* Couleur de la thumb au survol */
+}
+
         .sidebar {
             position: fixed;
             left: 0;
@@ -138,13 +162,17 @@ align-items: center;  */
             overflow-y: auto;
             z-index: 1000;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
+    max-height: 400px; /* Hauteur maximale de la sidebar, par exemple, 100% de la hauteur de la fenêtre */
+}
+        
 
         .main-panel {
             margin-left: 240px;
             width: calc(100% - 240px);
             padding: 0 20px 20px 20px 70px;
             position: relative;
+            overflow-y: auto;
+            height: 100vh;
             /* height: 100%; */
         }
 
@@ -163,7 +191,14 @@ align-items: center;  */
         .sidebar .nav.sub-menu .nav-item::before {
             content: none !important;
         }
+        /* .sidebar .nav.sub-menu .nav-item .nav-link:hover {
+            margin-left: 0.4rem;
 
+        } */
+        .sidebar .nav.sub-menu .nav-item {
+                        padding: 0;
+                        margin-left: -1.4rem;
+        }
         .nav-link:hover {
             /* margin: 0.5rem 0; */
             background-color: #2c26341d;
