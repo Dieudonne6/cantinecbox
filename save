@@ -1,28 +1,34 @@
-    public function imprimerProfilTypeClasse(Request $request) {
-        $typeClasse = $request->input('typeclasse');
-        $reductions = Reduction::all();
-        $typeclasse = Typeclasse::all();
-        $eleves = Eleve::with('reduction') // Charge la relation 'reduction'
-            ->where('CodeReduction', '!=', null) // Filtrer les élèves ayant une réduction
+Route::get('/majpaiementeleve/{matricule}', [PagesController::class, 'majpaiementeleve'])->name('majpaiementeleve');
+
+<li><a class="dropdown-item" href="{{ url('/majpaiementeleve/' . $eleve->MATRICULE) }}">Maj
+
+
+public function majpaiementeleve($matricule){
+    if(Session::has('account')){
+        $eleve = Eleve::where('MATRICULE', $matricule)->first();
+        
+        // Récupérer les données de scolarité pour les paiements (AUTREF = 1)
+        $scolarite = Scolarite::where('MATRICULE', $matricule)
+            ->where('AUTREF', 1) // Pour les paiements
             ->get();
-    
-        // Regrouper les élèves par CodeReduction
-        $elevesParReduction = $eleves->groupBy('CodeReduction');
-    
-        return view('pages.inscriptions.profiltypeclasse', compact('typeClasse', 'reductions', 'typeclasse', 'elevesParReduction'));
-    }
----------------------------------------
-@php
-                                  use App\Models\Typeclasse;
-                                  $typeclasse = Typeclasse::all();
-                                  @endphp
-                                  <select name="typeclasse" id="typeclasse">
-                                    @foreach ($typeclasse as $type)
-                                        <option value="{{ $type->TYPECLASSE }}">{{ $type->LibelleType }}</option>
-                                    @endforeach
-                                  </select>
 
-                                  <button type="button" class="btn btn-primary" id="imprimerBtn" onclick="window.location.href='{{ route('impression.profil.type.classe') }}?typeclasse=' + document.getElementById('typeclasse').value;">Imprimer</button>
+        // Récupérer les arriérés (AUTREF = 2)
+        $arrières = Scolarite::where('MATRICULE', $matricule)
+            ->where('AUTREF', 2) // Pour les arriérés
+            ->get();
 
------------------------------------------
-Route::get('/imprimer-profil-type-classe', [PagesController::class, 'imprimerProfilTypeClasse'])->name('impression.profil.type.classe');
+        // Calculer les totaux
+        $totalScolarite = $scolarite->sum('MONTANT');
+        $totalArrieres = $arrières->sum('MONTANT');
+
+        // Vérifiez si l'élève existe
+        if (!$eleve) {
+            return redirect()->back()->withErrors(['L\'élève avec ce matricule n\'existe pas.']);
+        }
+
+        return view('pages.inscriptions.MajPaiement', compact('eleve', 'scolarite', 'arrières', 'totalScolarite', 'totalArrieres'));
+    } 
+    return redirect('/');
+}
+
+

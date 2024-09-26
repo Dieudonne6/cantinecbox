@@ -158,6 +158,13 @@ class PagesController extends Controller
     
   }
   
+  public function listedesreductions()
+  {
+      $eleves = Eleve::all();
+      $reductions = Reduction::all();
+      $classes = Classes::all();
+      return view('pages.inscriptions.listedesreductions', compact('eleves', 'reductions', 'classes'));
+  }
   
   public function statistique(){
     return view('pages.tableaudebord.statistique');
@@ -524,15 +531,33 @@ class PagesController extends Controller
     } 
     return redirect('/');
   } 
-  public function majpaiementeleve(){
+  public function majpaiementeleve($matricule){
     if(Session::has('account')){
-      // $duplicatafactures = Duplicatafacture::all();
-      
-      return view('pages.inscriptions.MajPaiement');
+        $eleve = Eleve::where('MATRICULE', $matricule)->first();
+        
+        // Récupérer les données de scolarité pour les paiements (AUTREF = 1)
+        $scolarite = Scolarite::where('MATRICULE', $matricule)
+            ->where('AUTREF', 1) // Pour les paiements
+            ->get();
+
+        // Récupérer les arriérés (AUTREF = 2)
+        $arrières = Scolarite::where('MATRICULE', $matricule)
+            ->where('AUTREF', 2) // Pour les arriérés
+            ->get();
+
+        // Calculer les totaux
+        $totalScolarite = $scolarite->sum('MONTANT');
+        $totalArrieres = $arrières->sum('MONTANT');
+
+        // Vérifiez si l'élève existe
+        if (!$eleve) {
+            return redirect()->back()->withErrors(['L\'élève avec ce matricule n\'existe pas.']);
+        }
+
+        return view('pages.inscriptions.MajPaiement', compact('eleve', 'scolarite', 'arrières', 'totalScolarite', 'totalArrieres'));
     } 
     return redirect('/');
-    
-  }
+}
   
   public function tabledesclasses(){
     if(Session::has('account')){
