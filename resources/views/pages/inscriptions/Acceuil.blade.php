@@ -1,17 +1,18 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="col-lg-12 grid-margin stretch-card">
-        <div class="card">
-
-            @if (Session::has('status'))
-                <div id="statusAlert" class="alert alert-success btn-primary">
-                    {{ Session::get('status') }}
-                </div>
-            @endif
-            {{--  --}}
-
-
+ 
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    
+    @if (Session::has('status'))
+    <div id="statusAlert" class="alert alert-success btn-primary">
+      {{ Session::get('status') }}
+    </div>
+    @endif
+    {{--  --}}
+    
+    
             <div class="card-body">
                 <h4 class="card-title">Accueil</h4>
                 <div class="row gy-6">
@@ -892,19 +893,36 @@
 
                 window.print();
                 window.location.reload();
-
-                // Nettoyer après l'impression
-                document.body.removeChild(printDiv);
-                document.head.removeChild(style);
-            }, 100);
-        }
-
-        $(document).ready(function() {
-            var table = $('#myTab').DataTable({
-                paging: true,
-                searching: false,
-                ordering: true
-            });
+              }); 
+            }
+$(document).ready(function() {
+   var table = $('#myTab').DataTable({
+    columnDefs: [
+      { targets: [4, 5, 6, 7, 8, 9, 10, 11], visible: false, searchable: false } // Cache ces colonnes
+    ],
+                "language": {
+                    "sProcessing": "Traitement en cours...",
+                    "sSearch": "Rechercher&nbsp;:",
+                    "sLengthMenu": "Afficher _MENU_ éléments",
+                    "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                    "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrées",
+                    "sInfoFiltered": "(filtré à partir de _MAX_ entrées au total)",
+                    "sInfoPostFix": "",
+                    "sLoadingRecords": "Chargement en cours...",
+                    "sZeroRecords": "Aucun résultat trouvé",
+                    "sEmptyTable": "Aucune donnée disponible dans le tableau",
+                    "oPaginate": {
+                        "sPrevious": "Précédent",
+                        "sNext": "Suivant"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+                        "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+                    }
+                },
+    paging: true,
+    ordering: true
+  });
 
             function filterTableByClass() {
                 var selectedClasse = $('#filterClasse').val();

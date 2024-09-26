@@ -324,6 +324,11 @@ class PagesController extends Controller
     $type = $request->input('type');
     $reduc = $request->input('reduction');
     $modifiecheances = Echeance::where('MATRICULE', $MATRICULE)->orderBy('NUMERO', 'desc')->get();
+    $modifieCheances = Echeance::where('MATRICULE', $MATRICULE)
+    ->orderBy('NUMERO', 'desc')
+    ->first();
+    $typeduree = $modifieCheances ? $modifieCheances->NUMERO : null;
+
     $typemode = Reduction::where('CodeReduction', $reduc)->value('mode');
     $sco = $request->input('sco');
     $dure = $request->input('duree');
@@ -348,7 +353,6 @@ class PagesController extends Controller
     else {
       if($typeecheance == 2){
         $total = $sco + $frais1 + $frais2+ $frais3 + $frais4 + $arriere;
-        if($typemode == 2) {
           $montantecheance = $total / $typeduree;
           // Mettre à jour toutes les échéances avec ce montant
           foreach ($modifiecheances as $echeance) {
@@ -356,49 +360,15 @@ class PagesController extends Controller
             Echeance::where('NUMERO', $echeance->NUMERO)
             ->update(['APAYER' => $montantecheance]);
           }            
-        } else {
-          foreach ($modifiecheancc as $echeance) {
-              $montant_a_payer = ($type == 1) ? $echeance->APAYER : $echeance->APAYER2;
-
-              if ($montant_a_payer <= $total) {
-                  $total -= $montant_a_payer;
-                  Echeance::where('NUMERO', $echeance->NUMERO)
-                      ->update(['APAYER' => 0]);
-              } else {
-                  Echeance::where('NUMERO', $echeance->NUMERO)
-                      ->update(['APAYER' => $montant_a_payer - $total]);
-                  $total = 0; // Stopper une fois que le total est atteint
-                  break;
-              }
-          }
-        }
       } else {
-        if($typemode == 2) {
-          $montantecheance = $sco / $typeduree;
-          // Mettre à jour toutes les échéances avec ce montant
-          
-          foreach ($modifiecheances as $echeance) {
-            // Mettre à jour la colonne APAYER avec le montant calculé
-            Echeance::where('NUMERO', $echeance->NUMERO)
-            ->update(['APAYER' => $montantecheance]);
-          }            
-        } else {
-          
-            foreach ($modifiecheancc as $echeance) {
-              $montant_a_payer = ($type == 1) ? $echeance->APAYER : $echeance->APAYER2;
-
-              if ($montant_a_payer <= $sco) {
-                  $sco -= $montant_a_payer;
-                  Echeance::where('NUMERO', $echeance->NUMERO)
-                      ->update(['APAYER' => 0]);
-              } else {
-                  Echeance::where('NUMERO', $echeance->NUMERO)
-                      ->update(['APAYER' => $montant_a_payer - $sco]);
-                  $sco = 0; // Stopper une fois que le total est atteint
-                  break;
-              }
-          }
-        }
+        $montantecheance = $sco / $typeduree;
+        // Mettre à jour toutes les échéances avec ce montant
+        foreach ($modifiecheances as $echeance) {
+          // Mettre à jour la colonne APAYER avec le montant calculé
+          Echeance::where('NUMERO', $echeance->NUMERO)
+          ->update(['APAYER' => $montantecheance]);
+        }            
+        
       }
     }
     
