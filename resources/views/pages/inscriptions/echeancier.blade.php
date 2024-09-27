@@ -182,7 +182,7 @@
                     <div class="form-group row">
                       <label class="col-sm-4 col-form-label">Duree</label>
                       <div class="col-sm-3">
-                        <input type="text" class="form-control" style="width: 3.9rem !important" value="{{$classis->DUREE}}" />
+                        <input type="text" class="form-control"  id="duree" style="width: 3.9rem !important" value="{{$classis->DUREE}}" />
                       </div>
                       <label class="col-sm-5 col-form-label">echeance</label>
                     </div>
@@ -203,17 +203,13 @@
           </div>
           
         </div><br>
-        
         <div class="row">
-          
           <div class="col-8">
             <div class="card">
               <div class="card-body">
-                
                 {{-- <h5 style="text-align: center; color: rgb(188, 64, 64)">Scolarite</h5> --}}
                 <div class="table-responsive pt-3">
-                  
-                  <table class="table table-bordered">
+                  <table class="table table-bordered"  id="paymentTable">
                     <thead>
                       <tr>
                         <th>No</th>
@@ -222,30 +218,17 @@
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach($donnee as $donne)
-
+                      {{-- @foreach($donnee as $donne)
                         <tr>
                           <td>{{ $donne->NUMERO }}</td>
                           <td>{{ \Carbon\Carbon::parse($donne->DATEOP)->format('d/m/Y') }}</td>
-                          <!-- Formatage de la date -->
                           <td>{{ $donne->APAYER }}</td>
-                          
                         </tr>
-                      @endforeach
-
-                      {{-- <tr>
-                        <th colspan="3">
-                          Total
-                        </th>
-                        <th >
-                          300000
-                        </th>
-                      </tr> --}}
+                      @endforeach --}}
                     </tbody>
                   </table>
                 </div>
                 <br>
-                
               </div>
             </div>
           </div>
@@ -270,7 +253,54 @@
     </div>
   </div>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const inputs = [
+          document.getElementById("apayer"),
+          document.getElementById("arriere"),
+          document.getElementById("frais1"),
+          document.getElementById("frais2"),
+          document.getElementById("frais3"),
+          document.getElementById("frais4")
+      ];
 
+      const dureeInput = document.getElementById("duree");
+      const paymentTable = document.getElementById("paymentTable").querySelector("tbody");
+
+      function updateTable() {
+          let total = inputs.reduce((sum, input) => sum + parseFloat(input.value) || 0, 0);
+          let duree = parseInt(dureeInput.value) || 1;
+          let montantParEcheance = total / duree;
+
+          // Réinitialiser le tableau
+          paymentTable.innerHTML = "";
+
+          // Remplir le tableau avec les nouvelles données
+          for (let i = 0; i < duree; i++) {
+              let row = paymentTable.insertRow();
+              row.innerHTML = `
+                  <td>${i + 1}</td>
+                  <td><input type="date" class="form-control" name="date_paie_${i}" /></td>
+                  <td><input type="text" class="form-control montant" name="montant_${i}" value="${montantParEcheance.toFixed(2)}" /></td>
+              `;
+          }
+      }
+
+      // Mise à jour du tableau à chaque changement de la durée
+      dureeInput.addEventListener("input", updateTable);
+
+      // Initialiser le tableau à la première charge
+      updateTable();
+
+      // Permettre la modification manuelle des montants
+      paymentTable.addEventListener("input", function (e) {
+          if (e.target && e.target.classList.contains("montant")) {
+              // Vous pouvez ajouter ici la logique pour recalculer le total, etc.
+              console.log("Montant modifié:", e.target.value);
+          }
+      });
+  });
+</script>
 
 @endsection
 
