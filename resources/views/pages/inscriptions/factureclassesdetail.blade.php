@@ -585,7 +585,7 @@ function recalculerPourcentages(totalMontantNouveau, totalMontantAncien) {
     // Recalculer les pourcentages pour chaque tranche d'anciens élèves
     document.querySelectorAll('.montant-ancien').forEach(function(input, index) {
         const montant = parseFloat(input.value) || 0;
-        const pourcentage = totalMontantAncien > 0 ? (montant / totalMontantAncien * 100).toFixed(2) : 0;
+        const pourcentage = totalMontantAncien > 0 ? (montant / totalMontantAncien * 100).toFixed(4) : 0;
 
         // Mettre à jour le pourcentage pour chaque tranche avec le symbole %
         document.getElementById(`pourcentageTrancheAncien-${index + 1}`).innerText = pourcentage + '%';
@@ -595,8 +595,8 @@ function recalculerPourcentages(totalMontantNouveau, totalMontantAncien) {
     });
 
     // Mettre à jour le total des pourcentages avec le symbole % dans le tfoot
-    document.getElementById('totalPourcentageNouveau').innerText = totalPourcentageNouveau.toFixed(2) + '%';
-    document.getElementById('totalPourcentageAncien').innerText = totalPourcentageAncien.toFixed(2) + '%';
+    document.getElementById('totalPourcentageNouveau').innerText = totalPourcentageNouveau.toFixed(4) + '%';
+    document.getElementById('totalPourcentageAncien').innerText = totalPourcentageAncien.toFixed(4) + '%';
 }
 
 // Fonction pour générer le tableau des échéances

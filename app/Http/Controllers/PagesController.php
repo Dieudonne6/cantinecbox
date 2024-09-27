@@ -57,6 +57,23 @@ class PagesController extends Controller
     } 
     return redirect('/');
   }
+
+  public function registreeleve(Request $request){
+    $type = $request->query('type');
+    $infoparamcontrat = Paramcontrat::first();
+    $anneencours = $infoparamcontrat->anneencours_paramcontrat;
+    $annesuivante = $anneencours + 1;
+    $annescolaire = $anneencours.'-'.$annesuivante;
+    if($type == 1 ){
+        $infoelevenom = Eleve::orderby('NOM', 'asc')->get();
+        // dd($infoelevenom);
+        return view('pages.etat.registrefiche', compact('annescolaire', 'infoelevenom'));
+    }else{
+        $infoelevematricule = Eleve::orderby('MATRICULE', 'asc')->get();
+        // dd($infoelevematricule);
+        return view('pages.etat.registretableau', compact('annescolaire', 'infoelevematricule'));
+    }
+}
   
   public function getEleves($codeClass)
   {
@@ -738,8 +755,88 @@ class PagesController extends Controller
   } 
   
   public function eleveparclasse(){
-    return view('pages.inscriptions.eleveparclasse');
-  } 
+    $classes = Classes::get();    
+    return view('pages.inscriptions.eleveparclasse')->with('classes', $classes);
+}
+
+public function eleveparclassespecifique($classeCode)
+{
+    $CODECLASArray = explode(',', $classeCode);
+
+    $eleves = Eleve::orderBy('NOM', 'asc')->get();
+    $classesAExclure = ['NON', 'DELETE'];
+
+    $classes = Classes::whereNotIn('CODECLAS', $classesAExclure)->get();
+    $fraiscontrat = Paramcontrat::first(); 
+
+    $contratValideMatricules = Contrat::where('statut_contrat', 1)->pluck('eleve_contrat');
+
+    // Filtrer les élèves en fonction des classes sélectionnées
+    $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+        ->whereIn('CODECLAS', $CODECLASArray)
+        // ->select('MATRICULE', 'NOM', 'PRENOM', 'CODECLAS')
+        ->orderBy('NOM', 'asc')
+        // ->groupBy('CODECLAS')
+        ->get();
+        // Requête pour récupérer les élèves avec l'effectif total, le nombre de filles et le nombre de garçons par classe
+        $statistiquesClasses = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+        ->whereIn('CODECLAS', $CODECLASArray)
+        ->select(
+            'CODECLAS',
+            // Effectif total
+            DB::raw('COUNT(*) as total'),
+            // Nombre de garçons
+            DB::raw('SUM(CASE WHEN SEXE = 1 THEN 1 ELSE 0 END) as total_garcons'),
+            // Nombre de filles
+            DB::raw('SUM(CASE WHEN SEXE = 2 THEN 1 ELSE 0 END) as total_filles'),
+            // Nombre de redoublants
+            DB::raw('SUM(CASE WHEN STATUT = 1 THEN 1 ELSE 0 END) as total_redoublants'),
+            // Nombre de redoublants garçons
+            DB::raw('SUM(CASE WHEN STATUT = 1 AND SEXE = 1 THEN 1 ELSE 0 END) as total_garcons_redoublants'),
+            // Nombre de redoublants filles
+            DB::raw('SUM(CASE WHEN STATUT = 1 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_redoublants'),
+            // Nouveaux ou transférés (statutG = 1 pour nouveaux, statutG = 3 pour transférés)
+            DB::raw('SUM(CASE WHEN statutG = 1 THEN 1 ELSE 0 END) as total_nouveaux'),
+            DB::raw('SUM(CASE WHEN statutG = 1 AND SEXE = 1 THEN 1 ELSE 0 END) as total_garcons_nouveaux'),
+            DB::raw('SUM(CASE WHEN statutG = 1 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_nouveaux'),
+            DB::raw('SUM(CASE WHEN statutG = 3 THEN 1 ELSE 0 END) as total_transferes'),
+            DB::raw('SUM(CASE WHEN statutG = 3 AND SEXE = 1 THEN 1 ELSE 0 END) as total_garcons_transferes'),
+            DB::raw('SUM(CASE WHEN statutG = 3 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_transferes'),
+            // Anciens (statutG = 2)
+            DB::raw('SUM(CASE WHEN statutG = 2 THEN 1 ELSE 0 END) as total_anciens'),
+            DB::raw('SUM(CASE WHEN statutG = 2 AND SEXE = 1 THEN 1 ELSE 0 END) as total_garcons_anciens'),
+            DB::raw('SUM(CASE WHEN statutG = 2 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_anciens')
+        )
+        ->groupBy('CODECLAS')
+        ->get();
+        // requette pour recuperer le nombre d'eleve par codereduction
+        $reductionsParClasse = DB::table('eleve')
+        ->join('reduction', 'eleve.CodeReduction', '=', 'reduction.CodeReduction') // Liaison avec la table des réductions
+        ->whereIn('eleve.MATRICULE', $contratValideMatricules)
+        ->whereIn('eleve.CODECLAS', $CODECLASArray)
+        ->select(
+            'eleve.CODECLAS', 
+            'reduction.libelleReduction', // Nom de la réduction
+            DB::raw('COUNT(*) as total') // Nombre d'élèves ayant cette réduction
+        )
+        ->groupBy('eleve.CODECLAS', 'reduction.libelleReduction')
+        ->get();
+        // requette pour grouper les eleve par classe
+        $elevesGroupes = $filterEleves->groupBy('CODECLAS');
+
+        // dd($filterEleves);
+    Session::put('fraiscontrats', $fraiscontrat);
+    Session::put('fill', $filterEleves);
+
+    return view('pages.inscriptions.eleveparclasse1')
+        ->with("filterEleve", $filterEleves)
+        ->with('classe', $classes)
+        ->with('eleve', $eleves)
+        ->with('elevesGroupes', $elevesGroupes)
+        ->with('statistiquesClasses', $statistiquesClasses)
+        ->with('reductionsParClasse', $reductionsParClasse)
+        ->with('fraiscontrats', $fraiscontrat);
+}
   
   public function listeselective(){
     return view('pages.inscriptions.listeselective');
