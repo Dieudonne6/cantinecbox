@@ -130,14 +130,13 @@ class PagesController extends Controller
     $eleves = Eleve::with('reduction') // Charge la relation 'reduction'
         ->where('TYPECLASSE', $typeClasse) // Filtrer les élèves par type de classe
         ->where('CodeReduction', '!=', null) // Filtrer les élèves ayant une réduction
-        ->paginate(10); // Paginer les résultats par 10 élèves par page
+        ->get(); // Récupérer tous les élèves sans pagination
 
     // Regrouper les élèves par CodeReduction
     $elevesParReduction = $eleves->groupBy('CodeReduction');
 
     return view('pages.inscriptions.profiltypeclasse', compact('typeClasse', 'reductions', 'typeclasse', 'elevesParReduction', 'eleves'));
 }
-
   public function listeselectiveeleve(){
     $currentYear = now()->year;
     
