@@ -26,6 +26,7 @@ use App\Models\Echeance;
 use App\Models\Echeancc;
 use App\Models\Scolarite;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 use App\Models\Duplicatafacture;
 use Illuminate\Support\Facades\Storage;
@@ -229,17 +230,20 @@ class PagesController extends Controller
   }
   public function listedesretardsdepaiement(){
     return view('pages.inscriptions.listedesretardsdepaiement');
-    
   }
   public function echeancier($MATRICULE){
     $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
-    $elev= Eleve::with('classe')->where('MATRICULE', $MATRICULE)->firstOrFail();
+    $elev = Eleve::with('classe')->where('MATRICULE', $MATRICULE)->firstOrFail();
     $libel = Params2::first();
+    $paramcontrat = Paramcontrat::first();
+    $anneencours = $paramcontrat->anneencours_paramcontrat;
+    $annesuivante = $anneencours + 1;
+    $annescolaire = $anneencours.'-'.$annesuivante;
     $claso = $eleve->CODECLAS;
     $reduction = Reduction::all();
     $classis = Classes::where('CODECLAS', $claso)->first();
     $donnee = Echeance::where('MATRICULE', $MATRICULE)->get();
-    return view('pages.inscriptions.echeancier')->with('eleve', $eleve)->with('elev', $elev)->with('libel', $libel)->with('reduction', $reduction)->with('donnee',$donnee)->with('classis',$classis);
+    return view('pages.inscriptions.echeancier')->with('eleve', $eleve)->with('elev', $elev)->with('libel', $libel)->with('reduction', $reduction)->with('donnee',$donnee)->with('classis',$classis)->with('annescolaire', $annescolaire);
   }
   public function profil($MATRICULE){
     $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
@@ -249,6 +253,44 @@ class PagesController extends Controller
     $totalArrieres = Echeance::where('MATRICULE', $MATRICULE)->sum('ARRIERE');
     return view('pages.inscriptions.profil')->with('eleve', $eleve)->with('elev', $elev)->with('libel', $libel)->with('reduction', $reduction)->with('totalArrieres',$totalArrieres);
     
+  }
+  public function regenererecheance(Request $request, $MATRICULE) {
+    $echeancesData = $request->input('echeancesData');
+    $echeancesDat = json_decode($echeancesData, true);
+    $arie = Eleve::where('MATRICULE', $MATRICULE)->first();
+    // $ari = $arie->ARRIERE;
+  Echeance::where('MATRICULE', $MATRICULE)->delete();
+  $infoparamcontrat = Paramcontrat::first();
+  $anneencours = $infoparamcontrat->anneencours_paramcontrat;
+  $annesuivante = $anneencours + 1;
+  $annescolaire = $anneencours.'-'.$annesuivante;
+  $montantInitial = $arie->ARRIERE; // Le montant que tu veux mettre sur la première ligne
+    $isFirst = true; 
+  foreach ($echeancesDat as $echeance) {
+    $dateFormat = 'd/m/Y';
+    $dateOriginal = $echeance['datepaye'];
+    // $arriere = $echeance['arriere'];
+    $date = Carbon::createFromFormat($dateFormat, $dateOriginal);
+    $dateFormater = $date->format('Y-m-d');
+    
+    if ($isFirst) {
+      $montantAPayer = $montantInitial;
+      $isFirst = false; // Après la première ligne, changer l'état du drapeau
+  } else {
+      $montantAPayer = 0; // Mettre 0 pour les autres lignes
+  }
+    Echeance::create([
+      'NUMERO' => $echeance['tranche'],
+      'APAYER' => $echeance['montantpaye'],
+      'DATEOP' => $dateFormater,
+      'MATRICULE' => $MATRICULE,
+      'anneeacademique' => $annescolaire,
+      'ARRIERE' => $montantAPayer
+
+    ]);
+  } 
+  return back()->with('status', 'Echeance modifier avec succes');
+
   }
   
   public function modifieprofil(Request $request, $MATRICULE) {
