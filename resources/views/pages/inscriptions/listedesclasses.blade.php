@@ -25,42 +25,43 @@
                                     $totalEffectif = $classesByType->sum('EFFECTIF');
                                 @endphp
                                 @if ($type->id === 0 || $classesByType->isNotEmpty())
-                                    <h2>{{ $type->type }}</h2>
+                                    <h3>{{ $type->type }}</h3>
                                     <br>
                                     @if ($classesByType->isNotEmpty())
-                                        <table class="table table-striped" style="margin: 0 auto; width: 100%;">
+                                        <table style="margin: 0 auto; width: 100%; border-collapse: collapse;">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col">N°</th>
-                                                    <th scope="col">Classes</th>
-                                                    <th scope="col">Libellé Classe</th>
-                                                    <th scope="col">Effectif</th>
-                                                    <th scope="col">Promotion</th>
-                                                    <th scope="col">Scolarité</th>
+                                                    <th style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">N°</th>
+                                                    <th style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">Classes</th>
+                                                    <th style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">Libellé Classe</th>
+                                                    <th style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">Effectif</th>
+                                                    <th style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">Promotion</th>
+                                                    <th style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">Scolarité</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($classesByType as $classe)
                                                 <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $classe->CODECLAS }}</td>
-                                                    <td>{{ $classe->LIBELCLAS }}</td>
-                                                    <td>{{ $classe->EFFECTIF }}</td>
-                                                    <td>{{ $classe->CODEPROMO }}</td>
-                                                    <td>{{ $classe->APAYER }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">{{ $loop->iteration }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">{{ $classe->CODECLAS }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">{{ $classe->LIBELCLAS }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">{{ $classe->EFFECTIF }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">{{ $classe->CODEPROMO }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">{{ $classe->APAYER }}</td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
-                                        <p><strong>Total {{ $type->type }}: {{ $totalEffectif }}</strong></p>
+                                        <br>
+                                        <h5>Total effectif {{ $type->type }}: {{ $totalEffectif }}</h5>
                                         <br>
                                     @else
                                         <p>Aucune classe trouvée pour ce type d'enseignement.</p>
                                     @endif
                                 @endif
                             @endforeach
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <button type="button" class="btn btn-primary" onclick="imprimerliste()">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 20px; margin-bottom: 40px;"> <!-- Ajout d'un margin-bottom pour espacer le bouton du footer -->
+                                <button type="button" class="btn btn-primary btn-lg" onclick="imprimerliste()"> <!-- Ajout de la classe btn-lg pour agrandir le bouton -->
                                     Imprimer
                                 </button>
                             </div>
@@ -74,15 +75,40 @@
 @endsection
 
 <style>
+    h2, h3 {
+        text-align: left; /* Alignement du titre à gauche */
+        font-weight: bold; /* Mettre en gras les titres */
+    }
+
+    table {
+        width: 100%;
+        min-width: 12px;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+    th, td {
+        border: 2px solid black;
+        padding: 8px;
+        text-align: left;
+        white-space: nowrap;
+    }
+    .footer {
+        position: relative; /* Position relative pour éviter tout chevauchement */
+        bottom: 0;
+        width: 100%;
+        z-index: 10; /* Assurer que le footer soit visible par-dessus les autres éléments */
+    }
     @media print {
         .sidebar, .navbar, .footer, .noprint {
-            display: none !important; /* Masquer la barre de titre et autres éléments */
+            display: none !important; /* Masquer les éléments non désirés à l'impression */
         }
 
         /* Centrer le contenu horizontalement et occuper tout l'espace */
         body {
             width: 100% !important;
             margin: 0 !important; /* Enlever les marges */
+            overflow: hidden; /* Masquer la barre de défilement */
+
         }
 
         table {
@@ -95,78 +121,18 @@
             display: none !important;
         }
 
-        th, td {
-            font-size: 10pt; /* Ajuster la taille de la police pour impression */
-            padding: 5px;
-            word-wrap: break-word; /* Permet aux mots longs d'être coupés */
-            text-align: left; /* Aligner le texte à gauche pour meilleure lisibilité */
-            border: 1px solid black; /* Bordures pour impression */
-        }
-
         /* Ajuster les marges de la page pour centrer verticalement */
         @page {
             size: auto; /* Laisser le navigateur gérer la taille */
             margin: 10mm 15mm; /* Marges équilibrées pour centrage */
         }
+    }
 
-        /* Ajustement pour A4 */
-        @media print and (size: A4) {
-            table {
-                font-size: 8pt; /* Ajuster la taille de la police pour A4 */
-            }
-            th, td {
-                padding: 4px; /* Ajuster le padding pour A4 */
-            }
-        }
-
-        /* Ajustement pour A3 */
-        @media print and (size: A3) {
-            table {
-                font-size: 10pt; /* Ajuster la taille de la police pour A3 */
-            }
-            th, td {
-                padding: 5px; /* Ajuster le padding pour A3 */
-            }
+    /* Ajustement pour l'apparence sur les petits écrans */
+    @media (max-width: 768px) {
+        .table th, .table td {
+            font-size: 12px; /* Réduire la taille de la police pour les petits écrans */
+            padding: 4px; /* Réduire le padding pour les petits écrans */
         }
     }
-    .card-body {
-        padding: 2rem;
-    }
-
-    /* Assurer que le footer soit en bas de la page */
-    .footer {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        z-index: 10; /* Assurer que le footer soit au-dessus des autres éléments */
-    }
-
-    /* Assurer que le body soit en premier plan */
-    body {
-        position: relative;
-        z-index: 1; /* Assurer que le body soit en dessous du footer */
-    }
-
-    h1 {
-        margin-bottom: 20px;
-        font-size: 24px;
-    }
-
-    table {
-        width: 100%; /* Utiliser toute la largeur disponible */
-        border-collapse: collapse;   
-    }
-
-    th, td {
-        text-align: left;
-        padding: 8px;
-    }
-
-    /* Le conteneur principal doit occuper tout l'espace disponible */
-    .main-content {
-        flex: 1;
-        padding-bottom: 50px; /* Ajouter de l'espace en bas pour le footer */
-        overflow: auto; /* Permettre le défilement si le contenu dépasse la hauteur disponible */
-    }
-
 </style>

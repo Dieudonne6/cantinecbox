@@ -131,14 +131,13 @@ class PagesController extends Controller
     $eleves = Eleve::with('reduction') // Charge la relation 'reduction'
         ->where('TYPECLASSE', $typeClasse) // Filtrer les élèves par type de classe
         ->where('CodeReduction', '!=', null) // Filtrer les élèves ayant une réduction
-        ->paginate(10); // Paginer les résultats par 10 élèves par page
+        ->get(); // Récupérer tous les élèves sans pagination
 
     // Regrouper les élèves par CodeReduction
     $elevesParReduction = $eleves->groupBy('CodeReduction');
 
     return view('pages.inscriptions.profiltypeclasse', compact('typeClasse', 'reductions', 'typeclasse', 'elevesParReduction', 'eleves'));
 }
-
   public function listeselectiveeleve(){
     $currentYear = now()->year;
     
@@ -1058,9 +1057,31 @@ public function eleveparclassespecifique($classeCode)
   }
   
   public function situationfinanciereglobale(){
-    
-    return view ('pages.inscriptions.situationfinanciereglobale');
-  }
+    $eleves = Eleve::with('classe')->get(); // Récupérer tous les élèves avec leur classe
+    $scolarites = Scolarite::all()->groupBy('MATRICULE'); // Regrouper les paiements par matricule
+
+    $resultats = $eleves->map(function($eleve) use ($scolarites) {
+        $montantPaye = $scolarites->get($eleve->MATRICULE, collect())->sum('MONTANT'); // Somme des montants payés
+        $montantAPayer = $eleve->APAYER; // Montant à payer de l'élève
+        $reste = $montantAPayer - $montantPaye; // Calculer le reste à payer
+
+        return [
+            'MATRICULE' => $eleve->MATRICULE,
+            'NOM' => $eleve->NOM,
+            'PRENOM' => $eleve->PRENOM,
+            'CLASSE' => $eleve->CODECLAS,
+            'PAYE' => $montantPaye, // Ajout du montant payé
+            'RESTE' => $reste > 0 ? $reste : 0, // Assurer que le reste ne soit pas négatif
+        ];
+    });
+
+    // Calcul des totaux
+    $totalAPayer = $resultats->sum('RESTE') + $resultats->sum('PAYE');
+    $totalPaye = $resultats->sum('PAYE');
+    $totalReste = $resultats->sum('RESTE');
+
+    return view('pages.inscriptions.situationfinanciereglobale', compact('resultats', 'totalAPayer', 'totalPaye', 'totalReste'));
+}
   
   public function pointderecouvrement(){
     return view ('pages.inscriptions.pointderecouvrement');
