@@ -132,25 +132,25 @@ align-items: center;  */
 
 /* Style de la scrollbar */
 #sidebar::-webkit-scrollbar {
-    width: 6px; /* Largeur de la scrollbar */
+    width: 2px; /* Largeur de la scrollbar */
 }
 
 /* Style de la piste de la scrollbar */
 #sidebar::-webkit-scrollbar-track {
-    background: #844fc1; /* Couleur de la piste */
+    background: #eee; /* Couleur de la piste */
     border-radius: 10px; /* Optionnel : arrondir les coins */
 }
 
 /* Style de la thumb (partie mobile de la scrollbar) */
 #sidebar::-webkit-scrollbar-thumb {
-    background-color: #844fc1; /* Couleur de la thumb */
+    background-color: #eee; /* Couleur de la thumb */
     border-radius: 10px; /* Optionnel : arrondir les coins */
-    border: 3px solid #844fc1; /* Optionnel : espace autour de la thumb */
+    border: 2px solid #eee; /* Optionnel : espace autour de la thumb */
 }
 
 /* Style de la thumb au survol */
 #sidebar::-webkit-scrollbar-thumb:hover {
-    background-color: #844fc1; /* Couleur de la thumb au survol */
+    background-color: #eee; /* Couleur de la thumb au survol */
 }
 
         .sidebar {
@@ -171,8 +171,8 @@ align-items: center;  */
             width: calc(100% - 240px);
             padding: 0 20px 20px 20px 70px;
             position: relative;
-            overflow-y: auto;
-            height: 100vh;
+            /* overflow-y: auto; */
+            /* height: 100vh; */
             /* height: 100%; */
         }
 

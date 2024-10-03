@@ -1,248 +1,1357 @@
-<!DOCTYPE html>
-<html lang="fr">
+<?php
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificats de Scolarité</title>
-    <style>
-        /* Styles spécifiques à l'impression */
-        @media print {
-            .no-print {
-                display: none;
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Eleve;
+use App\Models\Moiscontrat;
+use App\Models\Paramcontrat;
+use App\Models\Contrat;
+use App\Models\Paiementcontrat;
+use App\Models\Paiementglobalcontrat;
+use App\Models\Usercontrat;
+use App\Models\Paramsfacture;
+use App\Models\User;
+use App\Models\Params2;
+use App\Models\Classes;
+use App\Models\Departement;
+use App\Models\Reduction;
+use App\Models\Promo;
+use App\Models\Serie;
+use App\Models\Typeclasse;
+use App\Models\Typeenseigne;
+use App\Models\Elevea;
+use App\Models\Eleveplus;
+use App\Models\Echeance;
+use App\Models\Echeancc;
+use App\Models\Scolarite;
+use Illuminate\Support\Facades\DB;
+
+use App\Models\Duplicatafacture;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
+
+class PagesController extends Controller
+{
+    public function inscriptioncantine()
+    {
+        if (Session::has('account')) {
+            // Liste des mots à exclure
+            $excludedWords = ['DELETE', 'NON'];
+
+            // Construire la requête initiale
+            $query = Classes::query();
+
+            // Ajouter des conditions pour exclure les mots
+            foreach ($excludedWords as $word) {
+                $query->where('CODECLAS', 'not like', '%' . $word . '%');
             }
 
-            .page-break {
-                page-break-before: always;
+            // Récupérer les résultats
+            $class = $query->get();
+
+            // Retourner la vue avec les résultats
+            return view('pages.inscriptioncantine')->with('class', $class);
+        }
+        return redirect('/');
+    }
+
+    public function getEleves($codeClass)
+    {
+        $eleves = Eleve::where('CODECLAS', $codeClass)
+            ->leftJoin('contrat', 'eleve.MATRICULE', '=', 'contrat.eleve_contrat')
+            ->where(function ($query) {
+                $query
+                    ->whereNull('contrat.eleve_contrat') // Élèves sans contrat
+                    ->orWhere('contrat.statut_contrat', 0); // Élèves avec contrat ayant statut 0
+            })
+            ->select('eleve.*')
+            ->distinct() // Assurez-vous de sélectionner uniquement les colonnes de la table eleves
+            ->get();
+
+        // $eleves = Eleve::where('CODECLAS', $codeClass)
+        // ->whereHas('contrats', function($query) {
+        //     $query->where('statut_contrat', 0);
+        // })
+        // ->get();
+        return response()->json($eleves);
+    }
+    public function getMontant($codeClass)
+    {
+        // Suppose that the params table has one row
+        $params = Paramcontrat::first();
+
+        if ($codeClass === 'MAT1' || $codeClass === 'MAT2' || $codeClass === 'MAT2II' || $codeClass === 'MAT3' || $codeClass === 'MAT3II' || $codeClass === 'PREMATER') {
+            $montant = $params->fraisinscription_mat;
+        } else {
+            $montant = $params->fraisinscription2_paramcontrat;
+        }
+
+        return response()->json(['montant' => $montant]);
+    }
+    public function paiement()
+    {
+        return view('pages.paiement');
+    }
+
+    public function nouveaucontrat()
+    {
+        return view('pages.nouveaucontrat');
+    }
+    public function exporter()
+    {
+        return view('pages.inscriptions.exporter');
+    }
+    public function listedeseleves()
+    {
+        $allClasse = Classes::all();
+        return view('pages.inscriptions.listedeseleves', compact('allClasse'));
+    }
+
+    public function listeselectiveeleve()
+    {
+        $currentYear = now()->year;
+
+        $minBirthDate = Eleve::min('DATENAIS');
+        $maxBirthDate = Eleve::max('DATENAIS');
+
+        $minAgeFromDB = $currentYear - date('Y', strtotime($maxBirthDate)); // Plus jeune élève
+        $maxAgeFromDB = $currentYear - date('Y', strtotime($minBirthDate)); // Plus vieux élève
+
+        $allClasse = Classes::all();
+        return view('pages.inscriptions.listeselectiveeleve', compact('allClasse', 'minAgeFromDB', 'maxAgeFromDB'));
+    }
+    public function frais()
+    {
+        $param = Paramcontrat::first();
+        return view('pages.frais', ['param' => $param]);
+    }
+
+    public function fraisnouveau(Request $request)
+    {
+        $param = new Paramcontrat();
+        $param->anneencours_paramcontrat = $request->input('anneencours_paramcontrat');
+        $param->fraisinscription_paramcontrat = $request->input('fraisinscription_paramcontrat');
+        $param->fraisinscription_mat = $request->input('fraisinscription_mat');
+        $param->fraisinscription2_paramcontrat = $request->input('fraisinscription2_paramcontrat');
+        $param->coutmensuel_paramcontrat = $request->input('coutmensuel_paramcontrat');
+        $param->save();
+        return back()->with('status', 'Enregistrer avec succes');
+    }
+
+    public function modifierfrais($id_paramcontrat, Request $request)
+    {
+        // $test = $request->input('id_paramcontrat');
+        // dd($test);
+        $params = Paramcontrat::find($id_paramcontrat);
+        $params->anneencours_paramcontrat = $request->input('anneencours_paramcontrat');
+        $params->fraisinscription_paramcontrat = $request->input('fraisinscription_paramcontrat');
+        $params->fraisinscription_mat = $request->input('fraisinscription_mat');
+
+        $params->fraisinscription2_paramcontrat = $request->input('fraisinscription2_paramcontrat');
+        $params->coutmensuel_paramcontrat = $request->input('coutmensuel_paramcontrat');
+        $params->update();
+        return back()->with('status', 'Modifier avec succes');
+    }
+
+    public function connexiondonnees()
+    {
+        return view('pages.connexiondonnees');
+    }
+
+    public function dashbord()
+    {
+        return view('pages.dashbord');
+    }
+
+    public function statistique()
+    {
+        return view('pages.tableaudebord.statistique');
+    }
+
+    public function recouvrementsM()
+    {
+        return view('pages.tableaudebord.recouvrementsM');
+    }
+
+    public function hsuppression()
+    {
+        return view('pages.tableaudebord.hsuppression');
+    }
+
+    public function changetrimestre()
+    {
+        return view('pages.parametre.changetrimestre');
+    }
+
+    public function confimpression()
+    {
+        return view('pages.parametre.confimpression');
+    }
+
+    public function Acceuil()
+    {
+        return view('pages.inscriptions.Acceuil');
+    }
+    public function listedesretardsdepaiement()
+    {
+        return view('pages.inscriptions.listedesretardsdepaiement');
+    }
+    public function echeancier($MATRICULE)
+    {
+        $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
+        $elev = Eleve::with('classe')->where('MATRICULE', $MATRICULE)->firstOrFail();
+        $libel = Params2::first();
+        $claso = $eleve->CODECLAS;
+        $reduction = Reduction::all();
+        $classis = Classes::where('CODECLAS', $claso)->first();
+        $donnee = Echeance::where('MATRICULE', $MATRICULE)->get();
+        return view('pages.inscriptions.echeancier')->with('eleve', $eleve)->with('elev', $elev)->with('libel', $libel)->with('reduction', $reduction)->with('donnee', $donnee)->with('classis', $classis);
+    }
+    public function profil($MATRICULE)
+    {
+        $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
+        $elev = Eleve::with('classe')->where('MATRICULE', $MATRICULE)->firstOrFail();
+        $libel = Params2::first();
+        $reduction = Reduction::all();
+        $totalArrieres = Echeance::where('MATRICULE', $MATRICULE)->sum('ARRIERE');
+        return view('pages.inscriptions.profil')->with('eleve', $eleve)->with('elev', $elev)->with('libel', $libel)->with('reduction', $reduction)->with('totalArrieres', $totalArrieres);
+    }
+
+    public function modifieprofil(Request $request, $MATRICULE)
+    {
+        $modifiprofil = Eleve::find($MATRICULE);
+        $classe = $request->input('classe');
+        $typeechean = Classes::where('CODECLAS', $classe)->first();
+        $typeecheance = $typeechean->TYPEECHEANCIER;
+        $typeduree = $typeechean->DUREE;
+
+        $type = $request->input('type');
+        $reduc = $request->input('reduction');
+        $modifiecheances = Echeance::where('MATRICULE', $MATRICULE)->orderBy('NUMERO', 'desc')->get();
+        $typemode = Reduction::where('CodeReduction', $reduc)->value('mode');
+        $sco = $request->input('sco');
+        $dure = $request->input('duree');
+        $frais1 = $request->input('frais1');
+        $frais2 = $request->input('frais2');
+        $frais3 = $request->input('frais3');
+        $frais4 = $request->input('frais4');
+        $arriere = $request->input('arriere');
+        $modifiecheancc = Echeancc::where('CODECLAS', $classe)->orderBy('NUMERO', 'desc')->get();
+
+        if ($reduc == 0) {
+            foreach ($modifiecheancc as $echeancc) {
+                if ($type == 1) {
+                    $montant = $echeancc->APAYER; // Utiliser la colonne APAYER si type est 1
+                } else {
+                    $montant = $echeancc->APAYER2; // Utiliser la colonne APAYER2 si type est 2
+                }
+                Echeance::where('NUMERO', $echeancc->NUMERO)->update(['APAYER' => $montant]);
+            }
+        } else {
+            if ($typeecheance == 2) {
+                $total = $sco + $frais1 + $frais2 + $frais3 + $frais4 + $arriere;
+                if ($typemode == 2) {
+                    $montantecheance = $total / $typeduree;
+                    // Mettre à jour toutes les échéances avec ce montant
+                    foreach ($modifiecheances as $echeance) {
+                        // Mettre à jour la colonne APAYER avec le montant calculé
+                        Echeance::where('NUMERO', $echeance->NUMERO)->update(['APAYER' => $montantecheance]);
+                    }
+                } else {
+                    foreach ($modifiecheancc as $echeance) {
+                        $montant_a_payer = $type == 1 ? $echeance->APAYER : $echeance->APAYER2;
+
+                        if ($montant_a_payer <= $total) {
+                            $total -= $montant_a_payer;
+                            Echeance::where('NUMERO', $echeance->NUMERO)->update(['APAYER' => 0]);
+                        } else {
+                            Echeance::where('NUMERO', $echeance->NUMERO)->update(['APAYER' => $montant_a_payer - $total]);
+                            $total = 0; // Stopper une fois que le total est atteint
+                            break;
+                        }
+                    }
+                }
+            } else {
+                if ($typemode == 2) {
+                    $montantecheance = $sco / $typeduree;
+                    // Mettre à jour toutes les échéances avec ce montant
+
+                    foreach ($modifiecheances as $echeance) {
+                        // Mettre à jour la colonne APAYER avec le montant calculé
+                        Echeance::where('NUMERO', $echeance->NUMERO)->update(['APAYER' => $montantecheance]);
+                    }
+                } else {
+                    foreach ($modifiecheancc as $echeance) {
+                        $montant_a_payer = $type == 1 ? $echeance->APAYER : $echeance->APAYER2;
+
+                        if ($montant_a_payer <= $sco) {
+                            $sco -= $montant_a_payer;
+                            Echeance::where('NUMERO', $echeance->NUMERO)->update(['APAYER' => 0]);
+                        } else {
+                            Echeance::where('NUMERO', $echeance->NUMERO)->update(['APAYER' => $montant_a_payer - $sco]);
+                            $sco = 0; // Stopper une fois que le total est atteint
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        $modifiprofil->CodeReduction = $request->input('reduction');
+        $modifiprofil->APAYER = $request->input('sco');
+        $modifiprofil->FRAIS1 = $request->input('frais1');
+        $modifiprofil->FRAIS2 = $request->input('frais2');
+        $modifiprofil->FRAIS3 = $request->input('frais3');
+        $modifiprofil->FRAIS4 = $request->input('frais4');
+        $modifiprofil->ARRIERE = $request->input('arriere');
+        Echeance::where('NUMERO', 1)->update(['ARRIERE' => $arriere]);
+
+        $modifiprofil->update();
+        return back()->with('status', 'Reduction modifier avec succes');
+    }
+    public function modifieecheancier(Request $request, $MATRICULE)
+    {
+        $modifiprofil = Eleve::find($MATRICULE);
+        $classe = $request->input('classe');
+        $typeechean = Classes::where('CODECLAS', $classe)->first();
+        $typeecheance = $typeechean->TYPEECHEANCIER;
+        $typeduree = $typeechean->DUREE;
+
+        $type = $request->input('type');
+        $reduc = $request->input('reduction');
+        $modifiecheances = Echeance::where('MATRICULE', $MATRICULE)->orderBy('NUMERO', 'desc')->get();
+        $typemode = Reduction::where('CodeReduction', $reduc)->value('mode');
+        $sco = $request->input('sco');
+        $dure = $request->input('duree');
+        $frais1 = $request->input('frais1');
+        $frais2 = $request->input('frais2');
+        $frais3 = $request->input('frais3');
+        $frais4 = $request->input('frais4');
+        $arriere = $request->input('arriere');
+        $modifiecheancc = Echeancc::where('CODECLAS', $classe)->orderBy('NUMERO', 'desc')->get();
+
+        if ($reduc == 0) {
+            foreach ($modifiecheancc as $echeancc) {
+                if ($type == 1) {
+                    $montant = $echeancc->APAYER; // Utiliser la colonne APAYER si type est 1
+                } else {
+                    $montant = $echeancc->APAYER2; // Utiliser la colonne APAYER2 si type est 2
+                }
+                Echeance::where('NUMERO', $echeancc->NUMERO)->update(['APAYER' => $montant]);
+            }
+        } else {
+            if ($typeecheance == 2) {
+                $total = $sco + $frais1 + $frais2 + $frais3 + $frais4 + $arriere;
+                if ($typemode == 2) {
+                    $montantecheance = $total / $typeduree;
+                    // Mettre à jour toutes les échéances avec ce montant
+                    foreach ($modifiecheances as $echeance) {
+                        // Mettre à jour la colonne APAYER avec le montant calculé
+                        Echeance::where('NUMERO', $echeance->NUMERO)->update(['APAYER' => $montantecheance]);
+                    }
+                } else {
+                    foreach ($modifiecheancc as $echeance) {
+                        $montant_a_payer = $type == 1 ? $echeance->APAYER : $echeance->APAYER2;
+
+                        if ($montant_a_payer <= $total) {
+                            $total -= $montant_a_payer;
+                            Echeance::where('NUMERO', $echeance->NUMERO)->update(['APAYER' => 0]);
+                        } else {
+                            Echeance::where('NUMERO', $echeance->NUMERO)->update(['APAYER' => $montant_a_payer - $total]);
+                            $total = 0; // Stopper une fois que le total est atteint
+                            break;
+                        }
+                    }
+                }
+            } else {
+                if ($typemode == 2) {
+                    $montantecheance = $sco / $typeduree;
+                    // Mettre à jour toutes les échéances avec ce montant
+
+                    foreach ($modifiecheances as $echeance) {
+                        // Mettre à jour la colonne APAYER avec le montant calculé
+                        Echeance::where('NUMERO', $echeance->NUMERO)->update(['APAYER' => $montantecheance]);
+                    }
+                } else {
+                    foreach ($modifiecheancc as $echeance) {
+                        $montant_a_payer = $type == 1 ? $echeance->APAYER : $echeance->APAYER2;
+
+                        if ($montant_a_payer <= $sco) {
+                            $sco -= $montant_a_payer;
+                            Echeance::where('NUMERO', $echeance->NUMERO)->update(['APAYER' => 0]);
+                        } else {
+                            Echeance::where('NUMERO', $echeance->NUMERO)->update(['APAYER' => $montant_a_payer - $sco]);
+                            $sco = 0; // Stopper une fois que le total est atteint
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        $modifiprofil->CodeReduction = $request->input('reduction');
+        $modifiprofil->APAYER = $request->input('sco');
+        $modifiprofil->FRAIS1 = $request->input('frais1');
+        $modifiprofil->FRAIS2 = $request->input('frais2');
+        $modifiprofil->FRAIS3 = $request->input('frais3');
+        $modifiprofil->FRAIS4 = $request->input('frais4');
+        $modifiprofil->ARRIERE = $request->input('arriere');
+        Echeance::where('NUMERO', 1)->update(['ARRIERE' => $arriere]);
+
+        $modifiprofil->update();
+        return back()->with('status', 'Reduction modifier avec succes');
+    }
+    public function gestionarriere()
+    {
+        return view('pages.inscriptions.gestionarriere');
+    }
+    public function connexion()
+    {
+        $login = User::get();
+        return view('pages.connexion', ['login' => $login]);
+    }
+
+    public function logins(Request $request)
+    {
+        $account = User::where('login', $request->login_usercontrat)->first();
+
+        if ($account) {
+            if (Hash::check($request->password_usercontrat, $account->motdepasse)) {
+                Session::put('account', $account);
+                $id_usercontrat = $account->id_usercontrat;
+                $image = $account->image;
+
+                $nom_user = $account->nomuser;
+                Session::put('image', $image);
+
+                $prenom_user = $account->prenomuser;
+                Session::put('id_usercontrat', $id_usercontrat);
+                Session::put('nom_user', $nom_user);
+                Session::put('prenom_user', $prenom_user);
+                return redirect('vitrine');
+            } else {
+                return back()->with('status', 'Mot de passe ou email incorrecte');
+            }
+        } else {
+            return back()->with('status', 'Mot de passe ou email incorrecte');
+        }
+    }
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
+
+    public function vitrine()
+    {
+        if (Session::has('account')) {
+            $totaleleve = Eleve::count();
+            $totalcantineinscritactif = Contrat::where('statut_contrat', 1)->count();
+            $totalcantineinscritinactif = Contrat::where('statut_contrat', 0)->count();
+
+            // dd($totalcantineinscritactif);
+            return view('pages.vitrine')->with('totalcantineinscritactif', $totalcantineinscritactif)->with('totalcantineinscritinactif', $totalcantineinscritinactif)->with('totaleleve', $totaleleve);
+        }
+        return redirect('/');
+    }
+    public function paramsfacture()
+    {
+        return view('pages.paramsfacture');
+    }
+
+    public function paramsemecef(Request $request)
+    {
+        $emcef = new Paramsfacture();
+        $emcef->ifu = $request->input('ifu');
+        $emcef->token = $request->input('token');
+        $emcef->taxe = $request->input('taxe');
+        $emcef->type = $request->input('type');
+        $request->validate([
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+        $imageName = $request->file('logo');
+        $imageContent = file_get_contents($imageName->getRealPath());
+
+        $emcef->logo = $imageContent;
+
+        $emcef->save();
+        return back()->with('status', 'Enregistrer avec succes');
+    }
+    public function inscriptions()
+    {
+        return view('pages.etat.inscriptions');
+    }
+    public function enregistreruser(Request $request)
+    {
+        $login = new User();
+        $password_crypte = Hash::make($request->password);
+        $login->nomgroupe = 1;
+        $login->login = $request->input('login');
+        $login->nomuser = $request->input('nom');
+        $login->prenomuser = $request->input('prenom');
+        $imagenam = $request->file('image');
+        $imageconten = file_get_contents($imagenam->getRealPath());
+        $login->image = $imageconten;
+        $login->motdepasse = $password_crypte;
+        $login->administrateur = 1;
+        $login->user_actif = 1;
+        $login->save();
+        // $login->motdepasse ='';
+        // $login->motdepasse ='';
+
+        // $login->motdepasse ='';
+
+        $login->save();
+        return back()->with('status', 'Enregistrer avec succes');
+    }
+
+    public function parametre()
+    {
+        if (Session::has('account')) {
+            $param = Paramcontrat::first();
+            return view('pages.parametre.parametre', ['param' => $param]);
+        }
+        return redirect('/');
+    }
+
+    public function duplicatafacture()
+    {
+        if (Session::has('account')) {
+            $duplicatafactures = Duplicatafacture::all();
+
+            return view('pages.duplicatafacture')->with('duplicatafactures', $duplicatafactures);
+        }
+        return redirect('/');
+    }
+
+    // public function paiementeleve(){
+    //   if(Session::has('account')){
+    //     // $duplicatafactures = Duplicatafacture::all();
+
+    //     return view('pages.inscriptions.Paiement');
+    //   }
+    //   return redirect('/');
+    // }
+    public function modifierclasse()
+    {
+        if (Session::has('account')) {
+            // $duplicatafactures = Duplicatafacture::all();
+
+            return view('pages.inscriptions.modifierclasse');
+        }
+        return redirect('/');
+    }
+    public function majpaiementeleve()
+    {
+        if (Session::has('account')) {
+            // $duplicatafactures = Duplicatafacture::all();
+
+            return view('pages.inscriptions.MajPaiement');
+        }
+        return redirect('/');
+    }
+
+    public function tabledesclasses()
+    {
+        if (Session::has('account')) {
+            // $duplicatafactures = Duplicatafacture::all();
+
+            return view('pages.inscriptions.tabledesclasses');
+        }
+        return redirect('/');
+    }
+
+    public function groupe()
+    {
+        if (Session::has('account')) {
+            // $duplicatafactures = Duplicatafacture::all();
+
+            return view('pages.inscriptions.groupe');
+        }
+        return redirect('/');
+    }
+
+    public function inscrireeleve()
+    {
+        // Récupérer le dernier matricule existant
+        $lastMatricule = Eleve::orderBy('MATRICULE', 'desc')->pluck('MATRICULE')->first();
+
+        // Générer le nouveau matricule
+        if ($lastMatricule) {
+            // En supposant que le matricule est de type numérique
+            $newMatricule = (int) $lastMatricule + 1;
+        } else {
+            // Si aucun matricule n'existe encore, initialiser à un numéro de départ
+            $newMatricule = 1;
+        }
+
+        $allClasse = Classes::all();
+        $allReduction = Reduction::all();
+        $allDepartement = Departement::all();
+        $archive = Elevea::get();
+
+        return view('pages.inscriptions.inscrireeleve', compact('allClasse', 'allReduction', 'allDepartement', 'newMatricule', 'archive'));
+        // return view('pages.inscriptions.inscrireeleve')->with('archive', $archive);
+    }
+
+    public function certificatscolarite($CODECLAS = null, $matricule = null)
+    {
+        // Si un matricule est fourni, cela signifie que l'on veut générer le PDF pour un élève spécifique
+        if ($matricule) {
+            $eleves = Eleve::where('MATRICULE', $matricule)->first();
+            $eleveplus = Eleveplus::first();
+            $nomecole = Params2::first();
+
+            return view('pages.inscriptions.pdfcertificatscolarite', compact('eleves', 'eleveplus', 'nomecole'));
+        }
+
+        // Si aucun matricule n'est fourni, on affiche la vue normale avec les classes et les élèves
+        $classe = Classes::all();
+
+        // Si une classe est sélectionnée, récupérer les élèves de cette classe
+        if ($CODECLAS) {
+            $eleves = Eleve::where('CODECLAS', $CODECLAS)->get();
+        } else {
+            $eleves = collect(); // Aucun élève si pas de classe sélectionnée
+        }
+
+        return view('pages.inscriptions.certificatsolarite', compact('classe', 'eleves'));
+    }
+
+    public function impression(Request $request)
+    {
+        // Récupérer les matricules des élèves sélectionnés depuis la requête
+        $matricules = explode(',', $request->input('matricules', ''));
+        $classe = $request->input('classe');
+
+        // Récupérer l'observation depuis la requête
+        $observation = $request->input('observation', '');
+
+        // Récupérer les élèves sélectionnés
+        $eleves = Eleve::whereIn('MATRICULE', $matricules)->get();
+        $eleveplus = Eleveplus::first();
+        $nomecole = Params2::first();
+
+        // Vérifiez si les données ont été trouvées
+        if ($eleves->isEmpty() || !$eleveplus || !$nomecole) {
+            return redirect()->back()->with('erreur', 'Données non trouvées.');
+        }
+
+        // Générer les certificats pour les élèves sélectionnés
+        return view('pages.inscriptions.pdfcertificatscolarite', compact('eleves', 'eleveplus', 'nomecole', 'observation'));
+    }
+
+    public function droitconstate()
+    {
+        if (Session::has('account')) {
+            // $duplicatafactures = Duplicatafacture::all();
+
+            return view('pages.inscriptions.droitconstate');
+        }
+        return redirect('/');
+    }
+
+    public function photos()
+    {
+        return view('pages.inscriptions.photos');
+    }
+
+    public function facturesclasses()
+    {
+        return view('pages.inscriptions.facturesclasses');
+    }
+
+    public function reductioncollective()
+    {
+        $reductions = DB::table('reduction')->get();
+        $eleves = Eleve::all();
+        $classes = Classes::all();
+        return view('pages.inscriptions.reductioncollective', compact('classes', 'eleves', 'reductions'));
+    }
+
+    public function recupmatricule(Request $request)
+    {
+        $string = $request->input('eleves');
+        $array = explode(' ', $string);
+    }
+
+    public function applyReductions(Request $request)
+    {
+        $reduction = Reduction::find($request->input('reduction'));
+
+        if (!$reduction) {
+            return redirect()->back()->with('error', 'La classe ou la réduction n\'existe pas');
+        }
+        foreach ($request->input('eleves') as $eleveData) {
+            $array = explode(' ', $eleveData); // Sépare la chaîne par espaces
+            $eleveId = intval(array_pop($array)); // Récupère le dernier élément et le convertit en entier
+
+            // Trouver l'élève par ID
+            $eleve = Eleve::find($eleveId);
+
+            if ($eleve) {
+                $eleve->CodeReduction = $reduction->CodeReduction;
+                $eleve->update();
+            }
+        }
+
+        return redirect()->back()->with('success', 'Réductions appliquées avec succès');
+    }
+
+    public function discipline()
+    {
+        return view('pages.inscriptions.discipline');
+    }
+
+    public function archive()
+    {
+        return view('pages.inscriptions.archive');
+    }
+
+    public function editions()
+    {
+        return view('pages.inscriptions.editions');
+    }
+
+    public function eleveparclasse()
+    {
+        return view('pages.inscriptions.eleveparclasse');
+    }
+
+    public function listeselective()
+    {
+        return view('pages.inscriptions.listeselective');
+    }
+
+    public function modifiereleve($MATRICULE)
+    {
+        // Récupérer le dernier matricule existant
+        $Matricule = Eleve::find($MATRICULE);
+        $allClasse = Classes::all();
+        $allReduction = Reduction::all();
+        $allDepartement = Departement::all();
+        $archive = Elevea::get();
+        $alleleve = Eleveplus::where('MATRICULE', $MATRICULE)->first();
+        $modifieleve = Eleve::where('MATRICULE', $MATRICULE)->first();
+        return view('pages.inscriptions.modifiereleve', compact('allClasse', 'allReduction', 'allDepartement', 'archive', 'alleleve', 'Matricule', 'modifieleve'));
+    }
+
+    public function typesclasses()
+    {
+        return view('pages.inscriptions.typesclasses');
+    }
+
+    public function promotions()
+    {
+        return view('pages.inscriptions.promotions');
+    }
+
+    public function creerprofil()
+    {
+        // Récupérer le dernier code de reduction existant
+        $lastCode = Reduction::orderBy('CodeReduction', 'desc')->pluck('CodeReduction')->first();
+
+        // Générer le nouveau matricule
+        if ($lastCode) {
+            // En supposant que le matricule est de type numérique
+            $newCode = (int) $lastCode + 1;
+        } else {
+            // Si aucun matricule n'existe encore, initialiser à un numéro de départ
+            $newCode = 1;
+        }
+        $reductions = Reduction::all();
+        return view('pages.inscriptions.creerprofil')->with('reductions', $reductions)->with('newCode', $newCode);
+    }
+
+    private function convertToDecimal($percentage)
+    {
+        // Retirer le signe % et convertir en valeur décimale
+        if (strpos($percentage, '%') !== false) {
+            $percentage = str_replace('%', '', $percentage);
+        }
+
+        return floatval($percentage) / 100;
+    }
+
+    public function ajouterprofreduction(Request $request)
+    {
+        $reduction = new Reduction();
+        $reduction->Codereduction = $request->input('Codereduction');
+        $reduction->LibelleReduction = $request->input('LibelleReduction');
+
+        // Déterminer le type de réduction
+        if ($request->input('reductionType') == 2) {
+            // Réduction fixe
+            // Enregistrer les valeurs dans les colonnes de réduction fixe
+            $reduction->typereduction = 'F';
+            $reduction->Reduction_fixe_sco = $request->input('Reduction_scolarite');
+            $reduction->Reduction_fixe_arriere = $request->input('Reduction_arriere');
+            $reduction->Reduction_fixe_frais1 = $request->input('Reduction_frais1');
+            $reduction->Reduction_fixe_frais2 = $request->input('Reduction_frais2');
+            $reduction->Reduction_fixe_frais3 = $request->input('Reduction_frais3');
+            $reduction->Reduction_fixe_frais4 = $request->input('Reduction_frais4');
+        } else {
+            // Réduction par pourcentage
+            // Enregistrer les valeurs dans les colonnes de réduction par pourcentage
+            $reduction->typereduction = 'P';
+            $reduction->Reduction_scolarite = $this->convertToDecimal($request->input('Reduction_scolarite'));
+            $reduction->Reduction_arriere = $this->convertToDecimal($request->input('Reduction_arriere'));
+            $reduction->Reduction_frais1 = $this->convertToDecimal($request->input('Reduction_frais1'));
+            $reduction->Reduction_frais2 = $this->convertToDecimal($request->input('Reduction_frais2'));
+            $reduction->Reduction_frais3 = $this->convertToDecimal($request->input('Reduction_frais3'));
+            $reduction->Reduction_frais4 = $this->convertToDecimal($request->input('Reduction_frais4'));
+        }
+
+        $reduction->mode = $request->input('mode');
+        $reduction->save();
+
+        return back()->with('status', 'Profil de réduction créé avec succès.');
+    }
+
+    public function modifreductions(Request $request)
+    {
+        // Validation des données
+        // $request->validate([
+        //     'codeReduction' => 'required|string|max:255',
+        //     'libelleReduction' => 'required|string|max:255',
+        //     'reductionScolarite' => 'required|numeric',
+        //     'reductionArriere' => 'required|numeric',
+        //     'reductionFrais1' => 'required|numeric',
+        //     'reductionFrais2' => 'required|numeric',
+        //     'reductionFrais3' => 'required|numeric',
+        //     'reductionFrais4' => 'required|numeric',
+        //     'reductionApplication' => 'required|integer',
+        // ]);
+
+        $codereduc = $request->input('CodeReduction');
+        // Récupérer la réduction à modifier
+        $reduction = Reduction::where('CodeReduction', $codereduc)->first();
+        // dd($reduction);
+        // Mettre à jour les champs de la réduction
+        if ($request->input('reductionType') == 2) {
+            // Réduction fixe
+            // Enregistrer les valeurs dans les colonnes de réduction fixe
+            $reduction->typereduction = 'F';
+            $reduction->Reduction_fixe_sco = $request->input('Reduction_scolarite');
+            $reduction->Reduction_fixe_arriere = $request->input('Reduction_arriere');
+            $reduction->Reduction_fixe_frais1 = $request->input('Reduction_frais1');
+            $reduction->Reduction_fixe_frais2 = $request->input('Reduction_frais2');
+            $reduction->Reduction_fixe_frais3 = $request->input('Reduction_frais3');
+            $reduction->Reduction_fixe_frais4 = $request->input('Reduction_frais4');
+        } else {
+            // Réduction par pourcentage
+            // Enregistrer les valeurs dans les colonnes de réduction par pourcentage
+            $reduction->typereduction = 'P';
+            $reduction->Reduction_scolarite = $this->convertToDecimal($request->input('Reduction_scolarite'));
+            $reduction->Reduction_arriere = $this->convertToDecimal($request->input('Reduction_arriere'));
+            $reduction->Reduction_frais1 = $this->convertToDecimal($request->input('Reduction_frais1'));
+            $reduction->Reduction_frais2 = $this->convertToDecimal($request->input('Reduction_frais2'));
+            $reduction->Reduction_frais3 = $this->convertToDecimal($request->input('Reduction_frais3'));
+            $reduction->Reduction_frais4 = $this->convertToDecimal($request->input('Reduction_frais4'));
+        }
+
+        $reduction->mode = $request->input('mode');
+        $reduction->save();
+
+        // Sauvegarder les modifications
+
+        // Retourner une réponse JSON
+        return back()->with('status', 'Réduction modifiée avec succès.');
+    }
+
+    public function delreductions($codeRedu)
+    {
+        // Trouver la réduction par CodeReduction
+        $reduct = Reduction::where('CodeReduction', $codeRedu)->first();
+        // dd($reduct);
+        // Supprimer la réduction
+        $reduct->delete();
+
+        // Rediriger avec un message de succès
+        return back()->with('status', 'Réduction supprimée avec succès.');
+    }
+
+    public function paramcomposantes()
+    {
+        return view('pages.inscriptions.paramcomposantes');
+    }
+
+    public function duplicatarecu()
+    {
+        return view('pages.inscriptions.duplicatarecu');
+    }
+
+    public function transfert()
+    {
+        return view('pages.inscriptions.transfert');
+    }
+
+    public function importer()
+    {
+        return view('pages.inscriptions.importer');
+    }
+
+    public function verrouillage()
+    {
+        return view('pages.inscriptions.verrouillage');
+    }
+
+    public function recaculereffectifs()
+    {
+        return view('pages.inscriptions.recaculereffectifs');
+    }
+
+    public function enquetesstatistiques()
+    {
+        return view('pages.inscriptions.enquetesstatistiques');
+    }
+
+    public function etatdelacaisse()
+    {
+        return view('pages.inscriptions.etatdelacaisse');
+    }
+
+    public function situationfinanciereglobale()
+    {
+        return view('pages.inscriptions.situationfinanciereglobale');
+    }
+
+    public function pointderecouvrement()
+    {
+        return view('pages.inscriptions.pointderecouvrement');
+    }
+    public function paiementdesnoninscrits()
+    {
+        return view('pages.inscriptions.paiementdesnoninscrits');
+    }
+
+    public function paiementeleve($matricule)
+    {
+        if (Session::has('account')) {
+            // Retrieve the student details
+            $eleve = Eleve::where('MATRICULE', $matricule)->first();
+            $scolarite = Scolarite::where('MATRICULE', $matricule)->get();
+            $libelle = Params2::first();
+            $echeanche = Echeance::first();
+
+            // Calculate the total amounts based on AUTREF
+            $totalArriere = Scolarite::where('MATRICULE', $matricule)->where('AUTREF', '1')->sum('MONTANT');
+
+            $totalScolarite = Scolarite::where('MATRICULE', $matricule)->where('AUTREF', '2')->sum('MONTANT');
+
+            $totalLibelle1 = Scolarite::where('MATRICULE', $matricule)->where('AUTREF', '3')->sum('MONTANT');
+
+            $totalLibelle2 = Scolarite::where('MATRICULE', $matricule)->where('AUTREF', '4')->sum('MONTANT');
+
+            $totalLibelle3 = Scolarite::where('MATRICULE', $matricule)->where('AUTREF', '5')->sum('MONTANT');
+
+            // Pass the totals along with other data to the view
+            return view('pages.inscriptions.Paiement', compact('eleve', 'scolarite', 'libelle', 'totalArriere', 'totalScolarite', 'totalLibelle1', 'totalLibelle2', 'totalLibelle3'));
+        }
+        return redirect('/');
+    }
+
+    // public function enregistrerPaiement(Request $request, $matricule)
+    // {
+    //     $messages = [];
+    //     $errors = [];
+    //     $eleve = Eleve::where('MATRICULE', $matricule)->first();
+
+    //     // Vérifiez si l'élève existe
+    //     if (!$eleve) {
+    //         return redirect()
+    //             ->back()
+    //             ->withErrors(['L\'élève avec ce matricule n\'existe pas.'])
+    //             ->withInput();
+    //     }
+
+    //     // Fonction pour obtenir ou générer un numéro unique
+    //         $getNumero = function ($matricule, $dateOp) {
+    //         $existingScolarite = Scolarite::where('MATRICULE', $matricule)->where('DATEOP', $dateOp)->first();
+
+    //         // Si une entrée existe, retourner son numéro
+    //         if ($existingScolarite) {
+    //             return $existingScolarite->NUMERO;
+    //         }
+
+    //         // Sinon, générer un nouveau numéro basé sur le maximum existant
+    //         return Scolarite::max('NUMERO') + 1; // Ajustement pour générer un nouveau numéro
+    //     };
+
+    //     // Enregistrer le montant de l'arrière si présent et supérieur à 0
+    //     if ($request->filled('arriere') && $request->input('arriere') > 0) {
+    //         $existingScolarite = Scolarite::where('MATRICULE', $matricule)
+    //             ->where('DATEOP', $request->input('date_operation'))
+    //             ->where('MONTANT', $request->input('arriere'))
+    //             ->where('AUTREF', '1') // Arriéré
+    //             ->first();
+
+    //         if ($existingScolarite) {
+    //             $errors[] = 'Un arriéré similaire existe déjà pour cet élève.';
+    //         } else {
+    //             $scolarite = new Scolarite();
+    //             $scolarite->MATRICULE = $matricule;
+    //             $scolarite->DATEOP = $request->input('date_operation');
+    //             $scolarite->MODEPAIE = $request->input('mode_paiement');
+    //             $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
+    //             $scolarite->ANSCOL = $eleve->anneeacademique;
+    //             $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
+    //             $scolarite->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+    //             $scolarite->MONTANT = $request->input('arriere');
+    //             $scolarite->AUTREF = '1'; // Arriéré
+    //             $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
+    //             $scolarite->save();
+    //             $messages[] = 'Le montant de l\'arriéré a été enregistré avec succès.';
+    //         }
+    //     }
+
+    //     // Enregistrer le montant de la scolarité si présent et supérieur à 0
+    //     if ($request->filled('scolarite') && $request->input('scolarite') > 0) {
+    //         $existingScolarite = Scolarite::where('MATRICULE', $matricule)
+    //             ->where('DATEOP', $request->input('date_operation'))
+    //             ->where('MONTANT', $request->input('scolarite'))
+    //             ->where('AUTREF', '2') // Scolarité
+    //             ->first();
+
+    //         if ($existingScolarite) {
+    //             $errors[] = 'Un paiement de scolarité similaire existe déjà pour cet élève.';
+    //         } else {
+    //             $scolarite = new Scolarite();
+    //             $scolarite->MATRICULE = $matricule;
+    //             $scolarite->DATEOP = $request->input('date_operation');
+    //             $scolarite->MODEPAIE = $request->input('mode_paiement');
+    //             $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
+    //             $scolarite->ANSCOL = $eleve->anneeacademique;
+    //             $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
+    //             $scolarite->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+    //             $scolarite->MONTANT = $request->input('scolarite');
+    //             $scolarite->AUTREF = '2'; // Scolarité
+    //             $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
+    //             $scolarite->save();
+    //             $messages[] = 'Le montant de la scolarité a été enregistré avec succès.';
+    //         }
+    //     }
+
+    //     // Tableau pour stocker les montants enregistrés récemment
+    //     $recentMontants = [];
+    //     $hiddenMontants = [];
+
+    //     // Enregistrer les montants additionnels (libelle-0, libelle-1, etc.) supérieurs à 0
+    //     for ($i = 0; $i <= 3; $i++) {
+    //         $libelle = $request->input('libelle_' . $i);
+    //         if ($libelle !== null && $libelle > 0) {
+    //             $existingScolarite = Scolarite::where('MATRICULE', $matricule)
+    //                 ->where('DATEOP', $request->input('date_operation'))
+    //                 ->where('MONTANT', $libelle)
+    //                 ->where('AUTREF', strval($i + 3)) // Type de libellé
+    //                 ->first();
+
+    //             if ($existingScolarite) {
+    //                 $errors[] = 'Un paiement additionnel similaire existe déjà pour cet élève (Libellé-' . $i . ').';
+    //             } else {
+    //                 $scolarite = new Scolarite();
+    //                 $scolarite->MATRICULE = $matricule;
+    //                 $scolarite->DATEOP = $request->input('date_operation');
+    //                 $scolarite->MODEPAIE = $request->input('mode_paiement');
+    //                 $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
+    //                 $scolarite->ANSCOL = $eleve->anneeacademique;
+    //                 $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
+    //                 $scolarite->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+    //                 $scolarite->MONTANT = $libelle;
+    //                 $scolarite->AUTREF = strval($i + 3); // Différencier les libellés
+    //                 $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
+    //                 $scolarite->save();
+
+    //                 // Ajouter le montant enregistré à la liste des montants récents
+    //                 $recentMontants['libelle_' . $i] = $libelle;
+
+    //                 $messages[] = 'Le montant additionnel (Libellé-' . $i . ') a été enregistré avec succès.';
+    //             }
+    //         }
+    //     }
+
+    //     // Stocker les montants récemment enregistrés dans la session
+    //     session()->put('recent_montants', $recentMontants);
+
+    //     // Si des erreurs existent, ajouter à la session et retourner
+    //     if (!empty($errors)) {
+    //         return redirect()->back()->withErrors($errors)->withInput();
+    //     }
+
+    //     // Si aucun doublon n'est rencontré et tout est sauvegardé, ajouter les messages de succès
+    //     if (!empty($messages)) {
+    //         session()->flash('messages', $messages);
+    //     }
+ 
+    //     // Stockage des informations dans la session pour future référence
+    //     Session::put([
+    //         'eleve' => $eleve,
+    //         'montantPaye' => $request->input('montant_paye'),
+    //         'scolarite' => $request->input('scolarite'),
+    //         'scolarite_hidden' => $request->input('scolarite_hidden'),
+    //         'arriere' => $request->input('arriere'),
+    //         'arriere_hidden' => $request->input('arriere_hidden'),
+    //         'reliquat' => $request->input('reliquat_hidden'),
+    //         'numeroRecu' => $getNumero($matricule, $request->input('date_operation')),
+    //         'signature' => session()->get('nom_user'),
+    //         'modePaiement' => $request->input('mode_paiement'),
+    //         'montantdu' => $request->input('montant_total'),
+    //     ]);
+        
+    //     // Redirection avec un message global de succès
+    //     return redirect()->back()->with('success', 'Paiement enregistré avec succès !');
+    // }
+
+    public function enregistrerPaiement(Request $request, $matricule)
+    {
+        $messages = [];
+        $errors = [];
+        $eleve = Eleve::where('MATRICULE', $matricule)->first();
+
+        // Vérifiez si l'élève existe
+        if (!$eleve) {
+            return redirect()
+                ->back()
+                ->withErrors(['L\'élève avec ce matricule n\'existe pas.'])
+                ->withInput();
+        }
+
+        // Fonction pour obtenir ou générer un numéro unique
+        $getNumero = function ($matricule, $dateOp) {
+            $existingScolarite = Scolarite::where('MATRICULE', $matricule)->where('DATEOP', $dateOp)->first();
+
+            // Si une entrée existe, retourner son numéro
+            if ($existingScolarite) {
+                return $existingScolarite->NUMERO;
             }
 
-            .watermark::before {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: -25%;
-                width: 150%;
-                height: 40px;
-                /* Largeur de la ligne */
-                background-color: red;
-                transform: rotate(45deg);
-                /* Inverser la direction de la ligne */
-                z-index: 0;
-                opacity: 0.8;
-                /* Transparence de la ligne */
-                pointer-events: none;
-                /* Assure que le filigramme n'interfère pas avec le contenu */
-                user-select: none;
+            // Sinon, générer un nouveau numéro basé sur le maximum existant
+            return Scolarite::max('NUMERO') + 1; // Ajustement pour générer un nouveau numéro
+        };
+
+        // Enregistrer le montant de l'arrière si présent et supérieur à 0
+        if ($request->filled('arriere') && $request->input('arriere') > 0) {
+            $existingScolarite = Scolarite::where('MATRICULE', $matricule)
+                ->where('DATEOP', $request->input('date_operation'))
+                ->where('MONTANT', $request->input('arriere'))
+                ->where('AUTREF', '1') // Arriéré
+                ->first();
+
+            if ($existingScolarite) {
+                $errors[] = 'Un arriéré similaire existe déjà pour cet élève.';
+            } else {
+                $scolarite = new Scolarite();
+                $scolarite->MATRICULE = $matricule;
+                $scolarite->DATEOP = $request->input('date_operation');
+                $scolarite->MODEPAIE = $request->input('mode_paiement');
+                $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
+                $scolarite->ANSCOL = $eleve->anneeacademique;
+                $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
+                $scolarite->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                $scolarite->MONTANT = $request->input('arriere');
+                $scolarite->AUTREF = '1'; // Arriéré
+                $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
+                $scolarite->save();
+                $messages[] = 'Le montant de l\'arriéré a été enregistré avec succès.';
             }
         }
 
-        /* Styles généraux */
-        .certificate {
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 800px;
-            position: relative;
-            overflow: hidden;
+        // Enregistrer le montant de la scolarité si présent et supérieur à 0
+        if ($request->filled('scolarite') && $request->input('scolarite') > 0) {
+            $existingScolarite = Scolarite::where('MATRICULE', $matricule)
+                ->where('DATEOP', $request->input('date_operation'))
+                ->where('MONTANT', $request->input('scolarite'))
+                ->where('AUTREF', '2') // Scolarité
+                ->first();
+
+            if ($existingScolarite) {
+                $errors[] = 'Un paiement de scolarité similaire existe déjà pour cet élève.';
+            } else {
+                $scolarite = new Scolarite();
+                $scolarite->MATRICULE = $matricule;
+                $scolarite->DATEOP = $request->input('date_operation');
+                $scolarite->MODEPAIE = $request->input('mode_paiement');
+                $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
+                $scolarite->ANSCOL = $eleve->anneeacademique;
+                $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
+                $scolarite->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                $scolarite->MONTANT = $request->input('scolarite');
+                $scolarite->AUTREF = '2'; // Scolarité
+                $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
+                $scolarite->save();
+                $messages[] = 'Le montant de la scolarité a été enregistré avec succès.';
+            }
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
+        // Tableau pour stocker les montants enregistrés récemment
+        $recentMontants = [];
+        $hiddenMontants = [];
+
+        // Enregistrer les montants additionnels (libelle-0, libelle-1, etc.) supérieurs à 0
+        for ($i = 0; $i <= 3; $i++) {
+            $libelle = $request->input('libelle_' . $i);
+            if ($libelle !== null && $libelle > 0) {
+                $existingScolarite = Scolarite::where('MATRICULE', $matricule)
+                    ->where('DATEOP', $request->input('date_operation'))
+                    ->where('MONTANT', $libelle)
+                    ->where('AUTREF', strval($i + 3)) // Type de libellé
+                    ->first();
+
+                if ($existingScolarite) {
+                    $errors[] = 'Un paiement additionnel similaire existe déjà pour cet élève (Libellé-' . $i . ').';
+                } else {
+                    $scolarite = new Scolarite();
+                    $scolarite->MATRICULE = $matricule;
+                    $scolarite->DATEOP = $request->input('date_operation');
+                    $scolarite->MODEPAIE = $request->input('mode_paiement');
+                    $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
+                    $scolarite->ANSCOL = $eleve->anneeacademique;
+                    $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
+                    $scolarite->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                    $scolarite->MONTANT = $libelle;
+                    $scolarite->AUTREF = strval($i + 3); // Différencier les libellés
+                    $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
+                    $scolarite->save();
+
+                    // Ajouter le montant enregistré à la liste des montants récents
+                    $recentMontants['libelle_' . $i] = $libelle;
+
+                    $messages[] = 'Le montant additionnel (Libellé-' . $i . ') a été enregistré avec succès.';
+                }
+            }
         }
 
-        h3 {
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 20px;
+        // Stocker les montants récemment enregistrés dans la session
+        session()->put('recent_montants', $recentMontants);
+
+        // Si des erreurs existent, ajouter à la session et retourner
+        if (!empty($errors)) {
+            return redirect()->back()->withErrors($errors)->withInput();
         }
 
-        .content {
-            margin-top: 30px;
-            line-height: 1.6;
-            position: relative;
-            z-index: 1;
-            /* Assure que le contenu est au-dessus de la ligne */
+        // Si aucun doublon n'est rencontré et tout est sauvegardé, ajouter les messages de succès
+        if (!empty($messages)) {
+            session()->flash('messages', $messages);
+        }
+ 
+        // Stockage des informations dans la session pour future référence
+        Session::put([
+            'eleve' => $eleve,
+            'montantPaye' => $request->input('montant_paye'),
+            'scolarite' => $request->input('scolarite'),
+            'scolarite_hidden' => $request->input('scolarite_hidden'),
+            'arriere' => $request->input('arriere'),
+            'arriere_hidden' => $request->input('arriere_hidden'),
+            'reliquat' => $request->input('reliquat_hidden'),
+            'numeroRecu' => $getNumero($matricule, $request->input('date_operation')),
+            'signature' => session()->get('nom_user'),
+            'modePaiement' => $request->input('mode_paiement'),
+            'montantdu' => $request->input('montant_total'),
+        ]);
+        
+        // Redirection avec un message global de succès
+        return redirect()->back()->with('success', 'Paiement enregistré avec succès !');
+    }
+
+    public function etatdesrecouvrements()
+    {
+        return view('pages.inscriptions.etatdesrecouvrements');
+    }
+    public function modifieeleve(Request $request, $MATRICULE)
+    {
+        $modifyeleve = Eleveplus::find($MATRICULE);
+        if ($modifyeleve) {
+            $modifyeleve->maladiesconnues = $request->input('maladieschroniques');
+            $modifyeleve->interditalimentaires = $request->input('interditalimentaires');
+            $modifyeleve->groupesanguin = $request->input('groupesanguin');
+            $modifyeleve->electroforez = $request->input('typehemoglobine');
+            $modifyeleve->NOMMERE = $request->input('nommere');
+            $modifyeleve->prenommere = $request->input('prenommere');
+            $modifyeleve->telmere = $request->input('telephonemere');
+            $modifyeleve->emailmere = $request->input('emailmere');
+            $modifyeleve->professionmere = $request->input('professionmere');
+            $modifyeleve->adremployeurmere = $request->input('adresseemployeurmere');
+            $modifyeleve->adrmere = $request->input('adressepersonnellemere');
+            $modifyeleve->NOMPERE = $request->input('nompere');
+            $modifyeleve->prenompere = $request->input('prenompere');
+            $modifyeleve->telpere = $request->input('telephonepere');
+            $modifyeleve->emailpere = $request->input('emailpere');
+            $modifyeleve->professionpere = $request->input('professionpere');
+            $modifyeleve->adremployeurpere = $request->input('adresseemployeurpere');
+            $modifyeleve->adrpere = $request->input('adressepersonnellepere');
+            $modifyeleve->nomtutuer = $request->input('nomtuteur');
+            $modifyeleve->prenomtuteur = $request->input('prenomtuteur');
+            $modifyeleve->teltuteur = $request->input('telephonetuteur');
+            $modifyeleve->emailtuteur = $request->input('emailtuteur');
+            $modifyeleve->adremployeurtuteur = $request->input('adresseemployeurtuteur');
+            $modifyeleve->adrtuteur = $request->input('adressepersonnelletuteur');
+            $modifyeleve->professiontuteur = $request->input('professiontuteur');
+            $modifyeleve->nomurgence = $request->input('nomurgence');
+            $modifyeleve->prenomurgence = $request->input('prenomurgence');
+            $modifyeleve->telurgence = $request->input('telephoneurgence');
+            $modifyeleve->emailpere = $request->input('emailurgence');
+            $modifyeleve->adrurgence = $request->input('adressepersonnelleurgence');
+            $modifyeleve->autorisefilm = $request->input('autorisevideo');
+            $modifyeleve->autoriseuseimage = $request->input('autoriseimage');
+            $modifyeleve->update();
+            return back()->with('status', 'Modifier avec succes');
+        } else {
+            return back()->withErrors('Erreur lors de la modification.');
+        }
+    }
+
+    public function modifieleve(Request $request, $MATRICULE)
+    {
+        $modifieleve = Eleve::find($MATRICULE);
+
+        if ($modifieleve) {
+            // Gestion des attributs de l'élève à modifier
+            $imageContent = null;
+            if ($request->hasFile('photo')) {
+                $imageName = $request->file('photo');
+                $imageContent = file_get_contents($imageName->getRealPath());
+                $modifieleve->PHOTO = $imageContent;
+            }
+
+            $redoublant = $request->has('redoublant') ? 1 : 0;
+            $formateMatricule = str_pad($request->input('numOrdre'), 8, '0', STR_PAD_LEFT);
+
+            $modifieleve->MATRICULE = $request->input('numOrdre');
+            $modifieleve->CodeReduction = $request->input('reduction');
+            $modifieleve->NOM = $request->input('nom');
+            $modifieleve->PRENOM = $request->input('prenom');
+            $modifieleve->DATENAIS = $request->input('dateNaissance');
+            $modifieleve->LIEUNAIS = $request->input('lieuNaissance');
+            $modifieleve->DATEINS = $request->input('dateInscription');
+            $modifieleve->CODEDEPT = $request->input('departement');
+            $modifieleve->SEXE = $request->input('sexe');
+            $modifieleve->STATUTG = $request->input('typeEleve');
+            $modifieleve->APTE = $request->input('aptituteSport');
+            $modifieleve->ADRPERS = $request->input('adressePersonnelle');
+            $modifieleve->ETABORIG = $request->input('etablissementOrigine');
+            $modifieleve->NATIONALITE = $request->input('nationalite');
+            $modifieleve->STATUT = $redoublant;
+            $modifieleve->NOMPERE = $request->input('nomPere');
+            $modifieleve->NOMMERE = $request->input('nomMere');
+            $modifieleve->ADRPAR = $request->input('adressesParents');
+            $modifieleve->AUTRE_RENS = $request->input('autresRenseignements');
+            $modifieleve->indicatif1 = $request->input('indicatifParent');
+            $modifieleve->TEL = $request->input('telephoneParent');
+            $modifieleve->TelEleve = $request->input('telephoneEleve');
+            $modifieleve->MATRICULEX = $formateMatricule;
+            $modifieleve->CODEWEB = $formateMatricule;
+
+            $modifieleve->update();
+
+            return back()->with('status', 'Modification effectuée avec succès');
         }
 
-        .text-end {
-            text-align: right;
-            margin-top: 50px;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .no-print {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            color: #fff;
-            background-color: #007bff;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-        }
-
-        .btn-sm {
-            font-size: 0.875rem;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        @if (Session::has('success'))
-            <div id="recu" class="mt-4">
-                <div class="row">
-                    <div class="recu-container"
-                        style="display: flex; justify-content: space-between; gap: 20px; border: 1px solid #ccc; padding: 20px; background-color: #f9f9f9;">
-                        @php
-                            $libelles = ['LIBELF1', 'LIBELF2', 'LIBELF3'];
-                        @endphp
-
-                        @foreach (['Souche', 'Original'] as $type)
-                            <div class="recu-section"
-                                style="flex: 1; border: 1px solid #333; padding: 20px; background-color: #fff;">
-                                <h5
-                                    style="text-align: center; font-size: 18px; margin-bottom: 20px; font-weight: bold;">
-                                    Reçu de Paiement ({{ $type }})
-                                </h5>
-                                <div style="margin-bottom: 15px;">
-                                    <p style="margin: 0; font-size: 14px;"><strong>Élève:</strong>
-                                        {{ $eleve->NOM }} {{ $eleve->PRENOM }}</p>
-                                    <p style="margin: 0; font-size: 14px;"><strong>Classe:</strong>
-                                        {{ $eleve->CODECLAS }}</p>
-                                    <p style="margin: 0; font-size: 14px;"><strong>Date:</strong>
-                                        {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
-                                    <strong>Numéro de reçu :</strong> {{ Session::get('numeroRecu') }}
-                                </div>
-                                <hr style="border-top: 1px dashed #333; margin: 15px 0;">
-                                <div style="margin-bottom: 15px;">
-                                    <p style="margin: 0; font-size: 14px;"><strong>Montant payé:</strong>
-                                        {{ Session::get('montantPaye') }} F CFA</p>
-                                    <p style="margin: 0; font-size: 14px;"><strong>Mode de paiement:</strong>
-                                        {{ Session::get('mode_paiement') }}</p>
-                                    <p style="margin: 0; font-size: 14px;"><strong>Arriéré:</strong>
-                                        {{ Session::get('arriéré') }} F CFA</p>
-                                    <p style="margin: 0; font-size: 14px;"><strong>Scolarité:</strong>
-                                        {{ Session::get('scolarite') }} F CFA</p>
-                                </div>
-                                <hr style="border-top: 1px dashed #333; margin: 15px 0;">
-                                @foreach ($libelles as $index => $libelleKey)
-                                    <p style="margin: 0; font-size: 14px;">
-                                        <strong>{{ $libelle->$libelleKey }}:</strong>
-                                        {{ Session::get('montant') }} F CFA
-                                    </p>
-                                @endforeach
-                                <div style="margin-bottom: 15px;>
-                                <p style="margin: 0;
-                                    font-size: 14px;"><strong>Reliquat restant :</strong>
-                                    {{ Session::get('reliquat') }} F CFA</p>
-                                </div>
-                                <hr style="border-top: 1px dashed #333; margin: 15px 0;">
-                                <div class="recu-footer" style="text-align: center; margin-top: 20px;">
-                                    <p style="font-size: 14px;"><strong>CCC, le
-                                            {{ \Carbon\Carbon::now()->format('d/m/Y') }}</strong>
-                                    </p>
-                                    <p style="font-size: 14px;"><strong>Le Comptable Gestion</strong>
-                                    </p>
-                                    {{ Session::get('signature') }}
-                                </div>
-
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <div class="bordered"
-                        style="border-top: 1px dashed #333; margin-top: 20px; padding-top: 10px; text-align: center;">
-                        <p style="font-size: 14px; color: #666;">Merci d'avoir effectué votre paiement.</p>
-                    </div>
-
-                    <!-- Bouton pour imprimer le reçu -->
-                    <button onclick="imprimerRecu()" class="btn btn-success mt-4">Imprimer le Reçu</button>
-                </div>
-            </div>
-        @endif
-    </div>
-
-    <script>
-        function imprimerRecu() {
-            var contenu = document.getElementById('recu').innerHTML;
-            var fenetre = window.open('', '_blank', 'width=800,height=600');
-            fenetre.document.open();
-            fenetre.document.write(`
-            <html>
-            <head>
-                <title>Reçu de Paiement</title>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        padding: 20px;
-                    }
-                    .recu-container {
-                        display: flex;
-                        justify-content: space-between;
-                        border: 1px solid #000;
-                        padding: 20px;
-                        background-color: #f9f9f9;
-                    }
-                    .recu-section {
-                        width: 48%;
-                        border: 1px solid black;
-                        padding: 15px;
-                        box-sizing: border-box;
-                        background-color: #fff;
-                    }
-                    h5 {
-                        text-align: center;
-                        font-size: 18px;
-                        font-weight: bold;
-                        margin-bottom: 20px;
-                    }
-                    .recu-footer {
-                        text-align: center;
-                        margin-top: 20px;
-                    }
-                    .bordered {
-                        border-top: 1px dashed black;
-                        margin-top: 20px;
-                        padding-top: 10px;
-                        text-align: center;
-                        color: #666;
-                    }
-                    p {
-                        font-size: 14px;
-                        margin: 5px 0;
-                    }
-                </style>
-            </head>
-            <body>${contenu}</body>
-            </html>
-        `);
-            fenetre.document.close();
-            fenetre.onload = function() {
-                fenetre.focus();
-                fenetre.print();
-                fenetre.onafterprint = function() {
-                    fenetre.close();
-                };
-            };
-        }
-
-        @if (Session::has('success'))
-            window.onload = function() {
-                imprimerRecu();
-            };
-        @endif
-    </script>
-</body>
-
-</html>
+        return back()->withErrors('Erreur lors de la modification.');
+    }
+}
