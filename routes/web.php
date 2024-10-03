@@ -158,7 +158,7 @@ Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);
 
 Route::get('/paiementeleve/{matricule}', [PagesController::class, 'paiementeleve'])->name('paiementeleve');
 Route::post('/paiement/{matricule}', [PagesController::class, 'enregistrerPaiement'])->name('enregistrer.paiement');
-
+Route::get('/pages\Etats\recuspaiementgenerale/{matricule}', [PagesController::class, 'recuspaiementgenerale'])->name('recuspaiementgenerale');
 
 
 Route::get('/duplicatainscription/{elevyo}',[ClassesController::class,'duplicatainscription']);

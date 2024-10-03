@@ -199,7 +199,8 @@
                         <!-- Reliquat restant -->
                         <div style="color: red; font-weight: bold;">
                             <label for="reliquat">Reliquat restant : </label>
-                            <span id="reliquat">0</span> F CFA
+                            <span id="reliquat" name="reliquat">0</span> F CFA
+                            <input type="hidden" id="reliquat-hidden" name="reliquat_hidden" value="0">
                         </div>
 
                         <br>
@@ -226,143 +227,261 @@
                     @if (Session::has('success'))
                         <div id="recu" class="mt-4">
                             <div class="row">
-                                <div class="recu-container"
-                                    style="display: flex; justify-content: space-between; gap: 20px; border: 1px solid #ccc; padding: 20px; background-color: #f9f9f9;">
-                                    @php
-                                        $libelles = ['LIBELF1', 'LIBELF2', 'LIBELF3'];
-                                    @endphp
+                                @php
+                                    $libelles = ['LIBELF1', 'LIBELF2', 'LIBELF3', 'LIBELF4'];
+                                    $recentMontants = Session::get('recent_montants', []);
+                                @endphp
 
-                                    @foreach (['Souche', 'Original'] as $type)
+                                <!-- Conteneur des reçus -->
+                                <div class="d-flex justify-content-between">
+                                    <!-- Reçu Souche -->
+                                    <div class="col-md-6">
                                         <div class="recu-section"
-                                            style="flex: 1; border: 1px solid #333; padding: 20px; background-color: #fff;">
+                                            style="border: 1px solid #007bff; border-radius: 8px; padding: 20px; background-color: #ffffff; margin: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                                            <p style="margin: 0; font-size: 20px;"><strong>CBOX</strong></p>
+
                                             <h5
-                                                style="text-align: center; font-size: 18px; margin-bottom: 20px; font-weight: bold;">
-                                                Reçu de Paiement ({{ $type }})
-                                            </h5>
+                                                style="text-align: center; font-size: 20px; font-weight: bold; color: #007bff;">
+                                                Reçu de Paiement (Souche)</h5>
+
+                                            <div style="margin-bottom: 15px; text-align: right;">
+                                                <p style="margin: 0; font-size: 16px;">{{ $eleve->CODECLAS }}</p>
+                                                <p
+                                                    style="margin: 0; font-size: 16px; display: flex; justify-content: flex-end;">
+                                                    <strong>QUITANCE N°</strong>
+                                                    {{ Session::get('numeroRecu') }}/{{ $eleve->anneeacademique }}
+                                                </p>
+                                            </div>
+
                                             <div style="margin-bottom: 15px;">
-                                                <p style="margin: 0; font-size: 14px;"><strong>Élève:</strong>
+                                                <p style="margin: 0; font-size: 16px;text-align: center;">
                                                     {{ $eleve->NOM }} {{ $eleve->PRENOM }}</p>
-                                                <p style="margin: 0; font-size: 14px;"><strong>Classe:</strong>
-                                                    {{ $eleve->CODECLAS }}</p>
-                                                <p style="margin: 0; font-size: 14px;"><strong>Date:</strong>
-                                                    {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
-                                                    <strong>Numéro de reçu :</strong> {{ Session::get('numeroRecu') }}
-                                            </div>
-                                            <hr style="border-top: 1px dashed #333; margin: 15px 0;">
-                                            <div style="margin-bottom: 15px;">
-                                                <p style="margin: 0; font-size: 14px;"><strong>Montant payé:</strong>
+                                                <p style="margin: 0; font-size: 16px;"><strong>Montant payé:</strong>
                                                     {{ Session::get('montantPaye') }} F CFA</p>
-                                                <p style="margin: 0; font-size: 14px;"><strong>Mode de paiement:</strong>
-                                                    {{ Session::get('mode_paiement') }}</p>
-                                                <p style="margin: 0; font-size: 14px;"><strong>Arriéré:</strong>
-                                                    {{ Session::get('arriéré') }}</p>
-                                                <p style="margin: 0; font-size: 14px;"><strong>Scolarité:</strong>
-                                                    {{ Session::get('scolarite') }}</p>
-                                            </div>
-                                            <hr style="border-top: 1px dashed #333; margin: 15px 0;">
-                                            @foreach ($libelles as $index => $libelleKey)
-                                                <p style="margin: 0; font-size: 14px;">
-                                                    <strong>{{ $libelle->$libelleKey }}:</strong>
-                                                    {{ Session::get('libelle_' . ($index + 1)) }}
+                                                <p style="margin: 0; font-size: 16px;"><strong>Mode de paiement:</strong>
+                                                    @if (Session::get('modePaiement') == 1)
+                                                        Espèce
+                                                    @elseif(Session::get('modePaiement') == 2)
+                                                        Chèque
+                                                    @elseif(Session::get('modePaiement') == 3)
+                                                        Opposition
+                                                    @elseif(Session::get('modePaiement') == 4)
+                                                        Autre
+                                                    @endif
                                                 </p>
-                                            @endforeach
-                                            <div style="font-weight: bold;">
-                                                <label for="reliquat">Reliquat restant : </label>
-                                                <span id="reliquat">0</span> F CFA
                                             </div>
-                                            <hr style="border-top: 1px dashed #333; margin: 15px 0;">
+
+                                            <hr style="border-top: 1px solid #007bff; margin: 15px 0;">
+
+                                            <div style="margin-bottom: 15px;">
+                                                <p
+                                                    style="margin: 0; font-size: 16px; display: flex; justify-content: space-between;">
+                                                    <strong>Arriéré:</strong>
+                                                    <span>{{ Session::get('arriere', 0) }} F CFA</span>
+                                                </p>
+
+                                                <p
+                                                    style="margin: 0; font-size: 16px; display: flex; justify-content: space-between;">
+                                                    <strong>Scolarité:</strong>
+                                                    <span>{{ Session::get('scolarite', 0) }} F CFA</span>
+                                                </p>
+
+                                                @foreach ($libelles as $index => $libelleKey)
+                                                    <p
+                                                        style="margin: 0; font-size: 16px; display: flex; justify-content: space-between;">
+                                                        <strong>{{ $libelle->$libelleKey }}:</strong>
+                                                        <span>
+                                                            @if (isset($recentMontants['libelle_' . $index]))
+                                                                {{ $recentMontants['libelle_' . $index] }} F CFA
+                                                            @else
+                                                                0 F CFA
+                                                            @endif
+                                                        </span>
+                                                    </p>
+                                                @endforeach
+                                            </div>
+
+                                            <hr style="border-top: 1px solid #007bff; margin: 15px 0;">
+                                            <div style="text-align: right;">
+                                                <p style="margin: 0; font-size: 16px;">
+                                                    <strong>Reliquat restant:</strong> {{ Session::get('reliquat') }} F CFA
+                                                </p>
+                                            </div>
+
+                                            <hr style="border-top: 1px solid #007bff; margin: 15px 0;">
                                             <div class="recu-footer" style="text-align: center; margin-top: 20px;">
-                                                <p style="font-size: 14px;"><strong>CCC, le {{ \Carbon\Carbon::now()->format('d/m/Y') }}</strong> 
+                                                <p style="font-size: 16px; color: #333;"><strong>CCC, le
+                                                        {{ \Carbon\Carbon::now()->format('d/m/Y') }}</strong></p>
+                                                <p style="font-size: 16px; color: #333;"><strong>Le Comptable
+                                                        Gestion</strong></p>
+                                                <p style="font-size: 16px; color: #333;">{{ Session::get('signature') }}
                                                 </p>
-                                                <p style="font-size: 14px;"><strong>Le Comptable Gestion</strong> 
-                                                </p>
-                                                {{ Session::get('signature') }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Reçu Original -->
+                                    <div class="col-md-6">
+                                        <div class="recu-section"
+                                            style="border: 1px solid #28a745; border-radius: 8px; padding: 20px; background-color: #ffffff; margin: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                                            <p style="margin: 0; font-size: 16px;">
+                                                <strong>{{ $libelle->NOMETAB }}</strong></p>
+                                            <h5
+                                                style="text-align: center; font-size: 20px; font-weight: bold; color: #28a745;">
+                                                Reçu de Paiement (Original)</h5>
+                                            <div style="text-align: right;">
+                                                <p style="margin: 0; font-size: 16px;">{{ $eleve->CODECLAS }}</p>
+                                                <p style="margin: 0; font-size: 16px;"><strong>QUITANCE N°</strong>
+                                                    {{ Session::get('numeroRecu') }}/{{ $eleve->anneeacademique }}</p>
                                             </div>
 
+                                            <div style="margin-bottom: 15px;">
+                                                <p style="margin: 0; font-size: 16px;"><strong>{{ $eleve->NOM }}
+                                                        {{ $eleve->PRENOM }}</strong></p>
+                                                <p style="margin: 0; font-size: 16px;"><strong>Montant payé:</strong>
+                                                    {{ Session::get('montantPaye') }} F CFA</p>
+                                                <p style="margin: 0; font-size: 16px;"><strong>Mode de paiement:</strong>
+                                                    @if (Session::get('modePaiement') == 1)
+                                                        Espèce
+                                                    @elseif(Session::get('modePaiement') == 2)
+                                                        Chèque
+                                                    @elseif(Session::get('modePaiement') == 3)
+                                                        Opposition
+                                                    @elseif(Session::get('modePaiement') == 4)
+                                                        Autre
+                                                    @endif
+                                                </p>
+                                            </div>
+
+                                            <hr style="border-top: 1px solid #28a745; margin: 15px 0;">
+
+                                            <div style="margin-bottom: 15px;">
+                                                <p style="margin: 0; font-size: 16px;">
+                                                    <strong>Arriéré:</strong>
+                                                    <span style="float: right;">{{ Session::get('arriere', 0) }} F CFA
+                                                        Payer</span>
+                                                </p>
+                                                <p>
+                                                    <strong>Reste:</strong>
+                                                    <span
+                                                        style="float: right;">{{ $eleve->ARRIERE ? $eleve->ARRIERE - $totalArriere : $eleve->ARRIERE }}
+                                                        F CFA</span>
+                                                </p>
+                                                <p style="margin: 0; font-size: 16px;">
+                                                    <strong>Scolarité:</strong>
+                                                    <span style="float: right;">{{ Session::get('scolarite', 0) }} F CFA
+                                                        Payer</span>
+                                                </p>
+                                                <p>
+                                                    <strong>Reste:</strong>
+                                                    <span style="float: right;">{{ $eleve->APAYER - $totalScolarite }} F
+                                                        CFA</span>
+                                                </p>
+
+                                                @php $sommeReste = 0; @endphp
+                                                @foreach ($libelles as $index => $libelleKey)
+                                                    @php
+                                                        $fraisField = 'FRAIS' . ($index + 1);
+                                                        $totalLibelle = ${'totalLibelle' . ($index + 1)} ?? 0;
+                                                        $fraisValue = $eleve->$fraisField ?? 0;
+                                                        $reste = $fraisValue - $totalLibelle;
+                                                        $sommeReste += $reste;
+                                                    @endphp
+                                                    <p style="margin: 0; font-size: 16px;">
+                                                        <strong>{{ $libelle->$libelleKey }}:</strong>
+                                                        <span style="float: right;">
+                                                            @if (isset($recentMontants['libelle_' . $index]))
+                                                                {{ $recentMontants['libelle_' . $index] }} F CFA
+                                                            @else
+                                                                0 F CFA
+                                                            @endif
+                                                        </span>
+                                                        <br>
+                                                        <strong>Reste:</strong>
+                                                        <span style="float: right; font-size: 13px;">{{ $reste }} F
+                                                            CFA</span>
+                                                    </p>
+                                                @endforeach
+                                            </div>
+
+
+                                            <hr style="border-top: 1px solid #28a745; margin: 15px 0;">
+                                            <div style="text-align: right;">
+                                                <p style="margin: 0; font-size: 16px;">
+                                                    <strong>Reliquat restant:</strong> {{ Session::get('reliquat') }} F CFA
+                                                </p>
+                                                <p style="margin: 0; font-size: 16px;">
+                                                    <strong>Reste a payer:</strong> {{ $sommeReste }} F CFA
+                                                </p>
+                                            </div>
+
+                                            <hr style="border-top: 1px solid #28a745; margin: 15px 0;">
+                                            <div class="recu-footer" style="text-align: center; margin-top: 20px;">
+                                                <p style="font-size: 16px; color: #333;"><strong>CCC, le
+                                                        {{ \Carbon\Carbon::now()->format('d/m/Y') }}</strong></p>
+                                                <p style="font-size: 16px; color: #333;"><strong>Le Comptable
+                                                        Gestion</strong></p>
+                                                <p style="font-size: 16px; color: #333;">{{ Session::get('signature') }}
+                                                </p>
+                                            </div>
                                         </div>
-                                    @endforeach
+                                    </div>
                                 </div>
-
-                                <div class="bordered"
-                                    style="border-top: 1px dashed #333; margin-top: 20px; padding-top: 10px; text-align: center;">
-                                    <p style="font-size: 14px; color: #666;">Merci d'avoir effectué votre paiement.</p>
-                                </div>
-
-                                <!-- Bouton pour imprimer le reçu -->
-                                <button onclick="imprimerRecu()" class="btn btn-success mt-4">Imprimer le Reçu</button>
                             </div>
+                        </div>
 
-                            <script>
-                                function imprimerRecu() {
-                                    var contenu = document.getElementById('recu').innerHTML;
-                                    var fenetre = window.open('', '_blank', 'width=800,height=600');
-                                    fenetre.document.open();
-                                    fenetre.document.write(`
-                                    <html>
+                        <!-- Bouton d'Impression -->
+                        <button onclick="imprimerRecu()" class="btn btn-success mt-4">Imprimer le Reçu</button>
+
+                        <!-- Script d'Impression -->
+                        <script>
+                            function imprimerRecu() {
+                                var contenu = document.getElementById('recu').innerHTML;
+                                var fenetre = window.open('', '_blank', 'width=800,height=600');
+                                fenetre.document.open();
+                                fenetre.document.write(`
+                                <html>
                                     <head>
                                         <title>Reçu de Paiement</title>
                                         <style>
-                                            body {
-                                                font-family: Arial, sans-serif;
-                                                padding: 20px;
-                                            }
-                                            .recu-container {
-                                                display: flex;
-                                                justify-content: space-between;
-                                                border: 1px solid #000;
-                                                padding: 20px;
-                                                background-color: #f9f9f9;
-                                            }
+                                            body { font-family: Arial, sans-serif; padding: 20px; }
                                             .recu-section {
-                                                width: 48%;
                                                 border: 1px solid black;
                                                 padding: 15px;
-                                                box-sizing: border-box;
                                                 background-color: #fff;
+                                                margin: 10px;
+                                                display: inline-block;
+                                                width: calc(50% - 20px); /* Pour un affichage côte à côte */
+                                                vertical-align: top; /* Aligner les sections */
                                             }
-                                            h5 {
-                                                text-align: center;
-                                                font-size: 18px;
-                                                font-weight: bold;
-                                                margin-bottom: 20px;
-                                            }
-                                            .recu-footer {
-                                                text-align: center;
-                                                margin-top: 20px;
-                                            }
-                                            .bordered {
-                                                border-top: 1px dashed black;
-                                                margin-top: 20px;
-                                                padding-top: 10px;
-                                                text-align: center;
-                                                color: #666;
-                                            }
-                                            p {
-                                                font-size: 14px;
-                                                margin: 5px 0;
+                                            h5 { text-align: center; font-size: 18px; font-weight: bold; }
+                                            p { font-size: 14px; margin: 5px 0; }
+                                            .recu-footer { text-align: center; margin-top: 20px; }
+                                            @media print {
+                                                .recu-section { page-break-inside: avoid; }
+                                                body { margin: 0; padding: 0; }
                                             }
                                         </style>
                                     </head>
                                     <body>${contenu}</body>
-                                    </html>
-                                `);
-                                    fenetre.document.close();
-                                    fenetre.onload = function() {
-                                        fenetre.focus();
-                                        fenetre.print();
-                                        fenetre.onafterprint = function() {
-                                            fenetre.close();
-                                        };
+                                </html>
+                            `);
+                                fenetre.document.close();
+                                fenetre.onload = function() {
+                                    fenetre.focus();
+                                    fenetre.print();
+                                    fenetre.onafterprint = function() {
+                                        fenetre.close();
                                     };
-                                }
+                                };
+                            }
 
-                                @if (Session::has('success'))
-                                    window.onload = function() {
-                                        imprimerRecu();
-                                    };
-                                @endif
-                            </script>
-                        </div>
+                            @if (Session::has('success'))
+                                window.onload = function() {
+                                    imprimerRecu();
+                                };
+                            @endif
+                        </script>
                     @endif
 
 
@@ -430,6 +549,8 @@
 
                         // Met à jour l'affichage du reliquat restant
                         document.getElementById('reliquat').textContent = montantRestant.toFixed(2);
+                        document.getElementById('reliquat-hidden').value = montantRestant.toFixed(2);
+
 
                         if (montantRestant > 0) {
                             console.log("Le montant payé dépasse les besoins calculés par priorité.");
@@ -480,6 +601,8 @@
 
                         // Met à jour l'affichage du reliquat restant
                         document.getElementById('reliquat').textContent = montantRestant.toFixed(2);
+                        document.getElementById('reliquat-hidden').value = montantRestant.toFixed(2);
+
                     }
 
                     function resetFields() {

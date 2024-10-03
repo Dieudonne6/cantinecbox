@@ -99,38 +99,149 @@
 
 <body>
     <div class="container">
-        <!-- Section Original -->
-        <div class="original-receipt" style="border: 1px solid #000; padding: 20px; margin-bottom: 20px;">
-            <h5>Original</h5>
-            <div>
-                <p><strong>Nom de l'élève:</strong> {{ $eleve->NOM }} {{ $eleve->PRENOM }}</p>
-                <p><strong>Date:</strong> {{ \Carbon\Carbon::now()->format('d-m-Y') }}</p>
-                <p><strong>Montant payé:</strong> {{ $montantPaye }} F CFA</p>
-                <p><strong>Mode de paiement:</strong> {{ $modePaiement }}</p>
-                <p><strong>Signature:</strong> ______________________</p>
-            </div>
-        </div>
+        @if (Session::has('success'))
+            <div id="recu" class="mt-4">
+                <div class="row">
+                    <div class="recu-container"
+                        style="display: flex; justify-content: space-between; gap: 20px; border: 1px solid #ccc; padding: 20px; background-color: #f9f9f9;">
+                        @php
+                            $libelles = ['LIBELF1', 'LIBELF2', 'LIBELF3'];
+                        @endphp
 
-        <!-- Section Souche -->
-        <div class="souche-receipt" style="border: 1px dashed #000; padding: 20px;">
-            <h5>Souche</h5>
-            <div>
-                <p><strong>Nom de l'élève:</strong> {{ $eleve->NOM }} {{ $eleve->PRENOM }}</p>
-                <p><strong>Date:</strong> {{ \Carbon\Carbon::now()->format('d-m-Y') }}</p>
-                <p><strong>Montant payé:</strong> {{ $montantPaye }} F CFA</p>
-                <p><strong>Mode de paiement:</strong> {{ $modePaiement }}</p>
-                <p><strong>Signature:</strong> ______________________</p>
+                        @foreach (['Souche', 'Original'] as $type)
+                            <div class="recu-section"
+                                style="flex: 1; border: 1px solid #333; padding: 20px; background-color: #fff;">
+                                <h5
+                                    style="text-align: center; font-size: 18px; margin-bottom: 20px; font-weight: bold;">
+                                    Reçu de Paiement ({{ $type }})
+                                </h5>
+                                <div style="margin-bottom: 15px;">
+                                    <p style="margin: 0; font-size: 14px;"><strong>Élève:</strong>
+                                        {{ $eleve->NOM }} {{ $eleve->PRENOM }}</p>
+                                    <p style="margin: 0; font-size: 14px;"><strong>Classe:</strong>
+                                        {{ $eleve->CODECLAS }}</p>
+                                    <p style="margin: 0; font-size: 14px;"><strong>Date:</strong>
+                                        {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
+                                    <strong>Numéro de reçu :</strong> {{ Session::get('numeroRecu') }}
+                                </div>
+                                <hr style="border-top: 1px dashed #333; margin: 15px 0;">
+                                <div style="margin-bottom: 15px;">
+                                    <p style="margin: 0; font-size: 14px;"><strong>Montant payé:</strong>
+                                        {{ Session::get('montantPaye') }} F CFA</p>
+                                    <p style="margin: 0; font-size: 14px;"><strong>Mode de paiement:</strong>
+                                        {{ Session::get('mode_paiement') }}</p>
+                                    <p style="margin: 0; font-size: 14px;"><strong>Arriéré:</strong>
+                                        {{ Session::get('arriéré') }} F CFA</p>
+                                    <p style="margin: 0; font-size: 14px;"><strong>Scolarité:</strong>
+                                        {{ Session::get('scolarite') }} F CFA</p>
+                                </div>
+                                <hr style="border-top: 1px dashed #333; margin: 15px 0;">
+                                @foreach ($libelles as $index => $libelleKey)
+                                    <p style="margin: 0; font-size: 14px;">
+                                        <strong>{{ $libelle->$libelleKey }}:</strong>
+                                        {{ Session::get('montant') }} F CFA
+                                    </p>
+                                @endforeach
+                                <div style="margin-bottom: 15px;>
+                                <p style="margin: 0;
+                                    font-size: 14px;"><strong>Reliquat restant :</strong>
+                                    {{ Session::get('reliquat') }} F CFA</p>
+                                </div>
+                                <hr style="border-top: 1px dashed #333; margin: 15px 0;">
+                                <div class="recu-footer" style="text-align: center; margin-top: 20px;">
+                                    <p style="font-size: 14px;"><strong>CCC, le
+                                            {{ \Carbon\Carbon::now()->format('d/m/Y') }}</strong>
+                                    </p>
+                                    <p style="font-size: 14px;"><strong>Le Comptable Gestion</strong>
+                                    </p>
+                                    {{ Session::get('signature') }}
+                                </div>
+
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="bordered"
+                        style="border-top: 1px dashed #333; margin-top: 20px; padding-top: 10px; text-align: center;">
+                        <p style="font-size: 14px; color: #666;">Merci d'avoir effectué votre paiement.</p>
+                    </div>
+
+                    <!-- Bouton pour imprimer le reçu -->
+                    <button onclick="imprimerRecu()" class="btn btn-success mt-4">Imprimer le Reçu</button>
+                </div>
             </div>
-        </div>
+        @endif
     </div>
 
     <script>
-        window.onload = function() {
-            window.print();
-            window.onafterprint = function() {
-                window.history.back();
+        function imprimerRecu() {
+            var contenu = document.getElementById('recu').innerHTML;
+            var fenetre = window.open('', '_blank', 'width=800,height=600');
+            fenetre.document.open();
+            fenetre.document.write(`
+            <html>
+            <head>
+                <title>Reçu de Paiement</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        padding: 20px;
+                    }
+                    .recu-container {
+                        display: flex;
+                        justify-content: space-between;
+                        border: 1px solid #000;
+                        padding: 20px;
+                        background-color: #f9f9f9;
+                    }
+                    .recu-section {
+                        width: 48%;
+                        border: 1px solid black;
+                        padding: 15px;
+                        box-sizing: border-box;
+                        background-color: #fff;
+                    }
+                    h5 {
+                        text-align: center;
+                        font-size: 18px;
+                        font-weight: bold;
+                        margin-bottom: 20px;
+                    }
+                    .recu-footer {
+                        text-align: center;
+                        margin-top: 20px;
+                    }
+                    .bordered {
+                        border-top: 1px dashed black;
+                        margin-top: 20px;
+                        padding-top: 10px;
+                        text-align: center;
+                        color: #666;
+                    }
+                    p {
+                        font-size: 14px;
+                        margin: 5px 0;
+                    }
+                </style>
+            </head>
+            <body>${contenu}</body>
+            </html>
+        `);
+            fenetre.document.close();
+            fenetre.onload = function() {
+                fenetre.focus();
+                fenetre.print();
+                fenetre.onafterprint = function() {
+                    fenetre.close();
+                };
             };
-        };
+        }
+
+        @if (Session::has('success'))
+            window.onload = function() {
+                imprimerRecu();
+            };
+        @endif
     </script>
 </body>
 
