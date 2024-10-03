@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('content')
-    <style>
+    {{-- <style>
         @media print {
 
             body * { visibility: hidden !important; }
@@ -29,8 +29,8 @@
         }
 
         /* Par défaut, le deuxième tableau est masqué */
-    </style>
-    <div class="main-panel-10">
+    </style> --}}
+    <div class="main-panel-10" onload="window.print()">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
@@ -62,6 +62,7 @@
                         <div class="col-3 mt-4">
                             {{-- <button class="btn-sm btn-primary" id="printBtn">Imprimer</button> --}}
                             <button type="button" class="btn-sm btn-primary" onclick="imprimerPage()">Imprimer</button>
+                            <a  class="btn btn-primary" href="{{ url('/essai') }}">Impr</a>
                         </div>
                     </div>
 
@@ -110,9 +111,9 @@
                     <div id="contenu">
                     <div class="table table-bordered print-table d-none">
                         @foreach ($elevesGroupes as $classeCode => $eleves)
-                            <h2>Classe : {{ $classeCode }}</h2>
+                            <h4>Classe : {{ $classeCode }}</h4>
 
-                            <div class="row effred">
+                            <div class="row">
                                 <!-- Tableau des Effectifs -->
                                 <div class="col1">
                                     @foreach ($statistiquesClasses as $stat)
@@ -221,22 +222,19 @@
                                             <td>{{ $eleve->SEXE == 1 ? 'Masculin' : 'Féminin' }}</td>
                                             <td>
                                                 <input type="checkbox" {{ $eleve->statutG == 1 ? 'checked' : '' }}
-                                                    disabled >
+                                                    disabled>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
-
-                                <!-- Ajouter une autre rupture de page avant la classe suivante -->
-                                <div class="page-break"></div>
                         @endforeach
                     </div>
                     </div>
 
                 </div>
             </div>
-    </div>
+        </div>
 
         {{-- <script>
             document.getElementById('printBtn').addEventListener('click', function() {
@@ -266,100 +264,192 @@
 
 
         <script>
-function imprimerPage() {
-    let originalTitle = document.title;
-    document.title = 'Liste des élèves';
-    
-    let titreEtat = document.getElementById('titreEtat').value;
-    
-    // Utiliser un titre par défaut si le champ est vide
-    if (!titreEtat) {
-        titreEtat = 'Liste des élèves';
-    }
-
-    // Récupérer le contenu à imprimer (le tableau dans la div avec id "contenu")
-    let contenuImpression = document.getElementById('contenu').innerHTML;
-
-    // Créer une nouvelle fenêtre pour l'impression
-    let printWindow = window.open('', '', 'height=700,width=1600');
-
-    printWindow.document.write(`
-        <html>
-        <head>
-            <title>${titreEtat}</title>
-            <style>
-                @page { size: landscape; }
-                @media print {
-                    /* Style général pour l'impression */
-                    body {
-                        font-family: Arial, sans-serif;
-                        font-size: 15px;
-                    }
-                    table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        page-break-inside: auto;
-                        border: 1px solid #000;
-                    }
-                    table th, table td {
-                        font-size: 13px;
-                        padding: 5px;
-                        border: 1px solid #000;
-                    }
-                    tr {
-                        page-break-inside: avoid;
-                        page-break-after: auto;
-                    }
-                    tbody tr:nth-child(even) {
-                        background-color: #f1f3f5;
-                    }
-                    tbody tr:nth-child(odd) {
-                        background-color: #fff;
-                    }
-                    .effred{
-                        display: flex;
-                        margin-bottom: 2rem;
-                    }
-                    .col1{
-                        width: 38%;
-                        margin-left: 2rem;
-                    }
-                    .col2{
-                        width: 38%;
-                        margin-left: 12rem;
-                    }
-
-                    .page-break {
-                        page-break-before: always;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-            <h1 style="font-size: 20px; text-align: center; text-transform: uppercase;">${titreEtat}</h1>
-            ${contenuImpression}
-        </body>
-        </html>
-    `);
-
-    // Attendre que le contenu soit chargé, puis imprimer
-    printWindow.document.close();
-    printWindow.focus();
-
-    printWindow.onload = function () {
-        printWindow.print();
-    };
-
-    // Fermer la fenêtre après l'impression
-    printWindow.addEventListener('afterprint', function () {
-        printWindow.close();
-    });
-
-    // Restaurer le titre de la page après impression
-    document.title = originalTitle;
-}
+            function imprimerPage() {
+              let originalTitle = document.title;
+              document.title = `Liste des élèves`;
+          
+              // Désactiver le DataTable et réinitialiser l'affichage
+              let table = $('#myTable').DataTable();
+              let currentPage = table.page();  
+              table.destroy();
+          
+              setTimeout(function() {
+                let titreEtat = document.getElementById('titreEtat').value;
+          
+          // Utiliser un titre par défaut si le champ est vide
+          if (!titreEtat) {
+              titreEtat =`Liste des élèves`;
+          }
+                  // Créer un élément invisible pour l'impression
+                  let printDiv = document.createElement('div');
+                  printDiv.innerHTML = `
+                      <h1 style="font-size: 20px; text-align: center; text-transform: uppercase;">
+                               ${titreEtat}
+                      </h1>
+                      ${document.getElementById('contenu').innerHTML}
+                  `;
+                  
+                  // Appliquer des styles pour l'impression
+                  let style = document.createElement('style');
+                  style.innerHTML = `
+                      @page { size: landscape; }
+                      @media print {
+                          body * { visibility: hidden; }
+                        //   .print-table, .print-table * { visibility: visible; }
+                          .print-table { position: absolute; top: 0; left: 0; width: 100%; }
+                          .col1 {width: 40%; }
+                          .col2 {width: 40%;}
+                          .row {display: flex;}
+          
+                          /* Styles pour masquer les éléments non désirés à l'impression */
+                        //   .dt-end, .dt-start, .hide-printe, .offcanvas { display: none !important; }
+          
+                          /* Afficher les éléments cachés avec la classe d-none */
+                          .print-table { display: block !important; }
+          
+                          /* Styles pour le tableau */
+                          table th {
+                              font-weight: bold !important;
+                              font-size: 12px !important;
+                          }
+                          table th, table td {
+                              font-size: 10px;
+                              margin: 0 !important;
+                              padding: 0 !important;
+                              border-collapse: collapse !important;
+                          }
+                          table {
+                              width: 100%;
+                              border-collapse: collapse;
+                              page-break-inside: auto;
+                              border: 1px solid #000;
+                          }
+                          tr {
+                              page-break-inside: avoid;
+                              page-break-after: auto;
+                          }
+                          tfoot {
+                              display: table-row-group;
+                              page-break-inside: avoid;
+                          }
+                          tbody tr:nth-child(even) {
+                              background-color: #f1f3f5;
+                          }
+                          tbody tr:nth-child(odd) {
+                              background-color: #000;
+                          }
+                      }
+                  `;
+                  
+                  // Ajouter les styles et le contenu à imprimer au document
+                  document.head.appendChild(style);
+                  document.body.appendChild(printDiv);
+                  printDiv.setAttribute("id", "printDiv");
+                  
+                  // Lancer l'impression
+                  window.print();
+                  window.location.reload();
+          
+                  // Nettoyer après l'impression
+                  document.body.removeChild(printDiv);
+                  document.head.removeChild(style);
+          
+              }, 100);
+          }
         </script>
     @endsection
 
 
 
+
+    {{-- 
+    
+
+         public function eleveparclassespecifique($classeCode)
+    {
+        $CODECLASArray = explode(',', $classeCode);
+    
+        $eleves = Eleve::orderBy('NOM', 'asc')->get();
+        $classesAExclure = ['NON', 'DELETE'];
+    
+        $classes = Classes::whereNotIn('CODECLAS', $classesAExclure)->get();
+        $fraiscontrat = Paramcontrat::first(); 
+    
+        $contratValideMatricules = Contrat::where('statut_contrat', 1)->pluck('eleve_contrat');
+    
+        // Filtrer les élèves en fonction des classes sélectionnées
+        $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+            ->whereIn('CODECLAS', $CODECLASArray)
+            // ->select('MATRICULE', 'NOM', 'PRENOM', 'CODECLAS')
+            ->orderBy('NOM', 'asc')
+            // ->groupBy('CODECLAS')
+            ->get();
+
+            // Requête pour récupérer les élèves avec l'effectif total, le nombre de filles et le nombre de garçons par classe
+            $statistiquesClasses = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+            ->whereIn('CODECLAS', $CODECLASArray)
+            ->select(
+                'CODECLAS',
+                // Effectif total
+                DB::raw('COUNT(*) as total'),
+                // Nombre de garçons
+                DB::raw('SUM(CASE WHEN SEXE = 1 THEN 1 ELSE 0 END) as total_garcons'),
+                // Nombre de filles
+                DB::raw('SUM(CASE WHEN SEXE = 2 THEN 1 ELSE 0 END) as total_filles'),
+                // Nombre de redoublants
+                DB::raw('SUM(CASE WHEN STATUT = 1 THEN 1 ELSE 0 END) as total_redoublants'),
+                // Nombre de redoublants garçons
+                DB::raw('SUM(CASE WHEN STATUT = 1 AND SEXE = 1 THEN 1 ELSE 0 END) as total_garcons_redoublants'),
+                // Nombre de redoublants filles
+                DB::raw('SUM(CASE WHEN STATUT = 1 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_redoublants'),
+                // Nouveaux ou transférés (statutG = 1 pour nouveaux, statutG = 3 pour transférés)
+                DB::raw('SUM(CASE WHEN statutG = 1 THEN 1 ELSE 0 END) as total_nouveaux'),
+                DB::raw('SUM(CASE WHEN statutG = 1 AND SEXE = 1 THEN 1 ELSE 0 END) as total_garcons_nouveaux'),
+                DB::raw('SUM(CASE WHEN statutG = 1 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_nouveaux'),
+                DB::raw('SUM(CASE WHEN statutG = 3 THEN 1 ELSE 0 END) as total_transferes'),
+                DB::raw('SUM(CASE WHEN statutG = 3 AND SEXE = 1 THEN 1 ELSE 0 END) as total_garcons_transferes'),
+                DB::raw('SUM(CASE WHEN statutG = 3 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_transferes'),
+                // Anciens (statutG = 2)
+                DB::raw('SUM(CASE WHEN statutG = 2 THEN 1 ELSE 0 END) as total_anciens'),
+                DB::raw('SUM(CASE WHEN statutG = 2 AND SEXE = 1 THEN 1 ELSE 0 END) as total_garcons_anciens'),
+                DB::raw('SUM(CASE WHEN statutG = 2 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_anciens')
+            )
+            ->groupBy('CODECLAS')
+            ->get();
+
+
+            // requette pour recuperer le nombre d'eleve par codereduction
+            $reductionsParClasse = DB::table('eleve')
+            ->join('reduction', 'eleve.CodeReduction', '=', 'reduction.CodeReduction') // Liaison avec la table des réductions
+            ->whereIn('eleve.MATRICULE', $contratValideMatricules)
+            ->whereIn('eleve.CODECLAS', $CODECLASArray)
+            ->select(
+                'eleve.CODECLAS', 
+                'reduction.libelleReduction', // Nom de la réduction
+                DB::raw('COUNT(*) as total') // Nombre d'élèves ayant cette réduction
+            )
+            ->groupBy('eleve.CODECLAS', 'reduction.libelleReduction')
+            ->get();
+
+            // requette pour grouper les eleve par classe
+            $elevesGroupes = $filterEleves->groupBy('CODECLAS');
+
+    
+            // dd($filterEleves);
+        Session::put('fraiscontrats', $fraiscontrat);
+        Session::put('fill', $filterEleves);
+    
+        return view('pages.inscriptions.eleveparclasse1')
+            ->with("filterEleve", $filterEleves)
+            ->with('classe', $classes)
+            ->with('eleve', $eleves)
+            ->with('elevesGroupes', $elevesGroupes)
+            ->with('statistiquesClasses', $statistiquesClasses)
+            ->with('reductionsParClasse', $reductionsParClasse)
+            ->with('fraiscontrats', $fraiscontrat);
+    } 
+    
+    
+    
+    
+    --}}

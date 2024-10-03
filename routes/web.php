@@ -189,8 +189,13 @@ Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::c
 
 Route::get('/archive', [PagesController::class, 'archive']);
 Route::get('/editions', [PagesController::class, 'editions'])->name('editions');
+Route::get('/etatdesarrieresinscrits', [PagesController::class, 'etatdesarrieresinscrits']);
 Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse'])->name('eleveparclasse');
 Route::get('/eleveparclassespecifique/{classeCode}', [PagesController::class, 'eleveparclassespecifique']);
+Route::get('/essai', [PagesController::class, 'eleveparclasseessai']);
+
+
+
 Route::get('/registreeleves', [PagesController::class, 'registreeleves']);
 Route::get('/registreelev', [PagesController::class, 'registreeleve']);
 Route::post('/regenererecheance/{MATRICULE}', [PagesController::class, 'regenererecheance']);
