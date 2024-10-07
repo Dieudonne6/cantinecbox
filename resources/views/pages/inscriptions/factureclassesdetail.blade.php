@@ -83,7 +83,7 @@
                         <h5 style="margin-left: 10.5rem; font-size:14.5px !important;">Nouveaux</h5>
                         <h5 style="margin-top: -1.4rem; margin-left: 20rem; font-size:14.5px !important;">Anciens</h5>
                         
-                        <label for="scolarite" style="width: 30%; font-size: 14px !important;">Scolarite</label>
+                        <label for="scolarite" style="width: 30%; font-size: 14px !important;">Scolarité</label>
                         <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="APAYER" id="scolarite"  style="width: 25%;" value="{{ $donneClasse->APAYER }}" >
                         <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="APAYER2" id="scolarite_a"  style="width: 25%;" value="{{ $donneClasse->APAYER2 }}" >
 
