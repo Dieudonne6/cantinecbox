@@ -25,6 +25,7 @@ use App\Models\Eleveplus;
 use App\Models\Echeance;
 use App\Models\Echeancc;
 use App\Models\Scolarite;
+use App\Models\Journal;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -1268,7 +1269,7 @@ public function eleveparclasseessai() {
         }
 
         // Fonction pour obtenir ou générer un numéro unique
-        $getNumero = function ($matricule, $dateOp) {
+            $getNumero = function ($matricule, $dateOp) {
             $existingScolarite = Scolarite::where('MATRICULE', $matricule)->where('DATEOP', $dateOp)->first();
 
             // Si une entrée existe, retourner son numéro
@@ -1303,6 +1304,18 @@ public function eleveparclasseessai() {
                 $scolarite->AUTREF = '1'; // Arriéré
                 $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
                 $scolarite->save();
+
+                // Enregistrement dans Journal
+                $journal = new Journal();
+                $journal->DATEOP = $request->input('date_operation');
+                $journal->MODEPAIE = $request->input('mode_paiement');
+                $journal->ANSCOL = $eleve->anneeacademique;
+                $journal->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                $journal->DEBIT = $request->input('arriere');
+                $journal->NumFRais = '1'; // Arriéré
+                $journal->SIGNATURE = session()->get('nom_user');
+                $journal->save();
+                
                 $messages[] = 'Le montant de l\'arriéré a été enregistré avec succès.';
             }
         }
@@ -1330,6 +1343,18 @@ public function eleveparclasseessai() {
                 $scolarite->AUTREF = '2'; // Scolarité
                 $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
                 $scolarite->save();
+
+                // Enregistrement dans Journal
+                $journal = new Journal();
+                $journal->DATEOP = $request->input('date_operation');
+                $journal->MODEPAIE = $request->input('mode_paiement');
+                $journal->ANSCOL = $eleve->anneeacademique;
+                $journal->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                $journal->DEBIT = $request->input('scolarite');
+                $journal->NumFRais = '1'; // Arriéré
+                $journal->SIGNATURE = session()->get('nom_user');
+                $journal->save();
+                                
                 $messages[] = 'Le montant de la scolarité a été enregistré avec succès.';
             }
         }
@@ -1364,6 +1389,17 @@ public function eleveparclasseessai() {
                     $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
                     $scolarite->save();
 
+                    // Enregistrement dans Journal
+                    $journal = new Journal();
+                    $journal->DATEOP = $request->input('date_operation');
+                    $journal->MODEPAIE = $request->input('mode_paiement');
+                    $journal->ANSCOL = $eleve->anneeacademique;
+                    $journal->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                    $journal->DEBIT = $libelle;
+                    $journal->NumFRais = strval($i + 3); // Différencier les libellés
+                    $journal->SIGNATURE = session()->get('nom_user');
+                    $journal->save();
+
                     // Ajouter le montant enregistré à la liste des montants récents
                     $recentMontants['libelle_' . $i] = $libelle;
 
@@ -1384,7 +1420,96 @@ public function eleveparclasseessai() {
         if (!empty($messages)) {
             session()->flash('messages', $messages);
         }
- 
+         
+        $parametrefacture = Params2::first();
+        $ifuentreprise = $parametrefacture->ifu;
+        $tokenentreprise = $parametrefacture->token;
+        $taxe = $parametrefacture->taxe;
+        $parametreetab = Params2::first();
+
+                            // -------------------------------
+                        //  CREATION DE LA FACTURE
+                    // -------------------------------
+    
+            // Préparez les données JSON pour l'API
+            $jsonData = json_encode([
+                "ifu" => $ifuentreprise, // ici on doit rendre la valeur de l'ifu dynamique
+                "type"=>"FV",
+                // "aib" => "A",
+                "items" => [
+                    [
+                        'name' => 'Frais cantine pour :',
+                        'price' => 2, 
+                        'quantity' => 1,
+                        'taxGroup' => $taxe,
+                    ]
+                ],
+                "client" => [  
+                                    
+                    'name' => $eleve->NOM . ' ' . $eleve->PRENOM,
+                                      
+                ],
+                "operator" => [
+                    "name" => "test"
+                ],
+                "payment" => [
+                    [
+                    "name" => "ESPECES",
+                    //   "amount": 0
+                    ]
+                  ],
+            ]);
+
+             // Définissez l'URL de l'API de facturation
+             $apiUrl = 'https://developper.impots.bj/sygmef-emcf/api/invoice';
+             
+            // Définissez le jeton d'authentification
+            $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjAyMDIzODU5MTExMzh8VFMwMTAxMTQ3MiIsInJvbGUiOiJUYXhwYXllciIsIm5iZiI6MTcyNDI1NzQyMywiZXhwIjoxNzM3NDE0MDAwLCJpYXQiOjE3MjQyNTc0MjMsImlzcyI6ImltcG90cy5iaiIsImF1ZCI6ImltcG90cy5iaiJ9.sRcSeEbIuQNSgFebRRaxW4zPLCqlF6PQXc90e2xfHCs';
+         
+            // Effectuez la requête POST à l'API
+            // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $ch = curl_init($apiUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $token
+            ));
+            curl_setopt($ch, CURLOPT_CAINFO, storage_path('certificates/cacert.pem'));
+    
+            // Exécutez la requête cURL et récupérez la réponse
+            $response = curl_exec($ch);
+
+            // Vérifiez les erreurs de cURL
+            if (curl_errno($ch)) {
+                // echo 'Erreur cURL : ' . curl_error($ch);
+                return back()->with('erreur','Erreur curl , mauvaise connexion a l\'API');
+            }
+
+            // Fermez la session cURL
+            curl_close($ch);
+
+            // Convertissez la réponse JSON en tableau associatif PHP
+            // $decodedResponseConfirmation = json_decode($response, true);
+
+            // $codemecef = $decodedResponseConfirmation['codeMECeFDGI'];
+
+            // $counters = $decodedResponseConfirmation['counters'];
+    
+            // $nim = $decodedResponseConfirmation['nim'];
+    
+            // $dateTime = $decodedResponseConfirmation['dateTime'];
+    
+            // // dd($decodedResponseConfirmation);
+    
+            // // Générer le code QR
+            // $qrCodeString = $decodedResponseConfirmation['qrCode'];
+    
+            // $reffactures = $nim.'-'.$counters;
+    
+            // $reffacture = explode('/', $reffactures)[0];
+        
         // Stockage des informations dans la session pour future référence
         Session::put([
             'eleve' => $eleve,
