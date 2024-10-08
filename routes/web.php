@@ -30,6 +30,8 @@ use App\Http\Controllers\Matieres;
 Route::get('/inscriptioncantine', [PagesController::class, 'inscriptioncantine']);
 Route::get('/get-eleves/{codeClass}', [PagesController::class, 'getEleves']);
 Route::get('/get-montant/{codeClass}', [PagesController::class, 'getMontant']);
+Route::get('/get-promo/{ensigClass}', [PagesController::class, 'getPromo']);
+Route::get('/get-serie/{serieClass}', [PagesController::class, 'getSerie']);
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);

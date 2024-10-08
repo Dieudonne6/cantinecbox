@@ -108,6 +108,16 @@ class PagesController extends Controller
     
     return response()->json(['montant' => $montant]);
   }
+  public function getPromo($ensigClass)
+  {
+    $promo = Promo::where('TYPEENSEIG', $ensigClass)->get();
+    return response()->json($promo);
+  }
+  public function getSerie($serieClass)
+  {
+    $serie = Serie::where('CYCLE', $serieClass)->get();
+    return response()->json($serie);
+  }
   public function paiement(){
     return view('pages.paiement');
   } 
@@ -258,6 +268,7 @@ class PagesController extends Controller
     $echeancesDat = json_decode($echeancesData, true);
     $arie = Eleve::where('MATRICULE', $MATRICULE)->first();
     // $ari = $arie->ARRIERE;
+    Eleve::where('MATRICULE', $MATRICULE)->update(['EcheancierPerso' => 1]);
   Echeance::where('MATRICULE', $MATRICULE)->delete();
   $infoparamcontrat = Paramcontrat::first();
   $anneencours = $infoparamcontrat->anneencours_paramcontrat;
@@ -1466,9 +1477,11 @@ public function eleveparclasseessai() {
       
       $redoublant = $request->has('redoublant') ? 1 : 0;
       $formateMatricule = str_pad($request->input('numOrdre'), 8, '0', STR_PAD_LEFT);
-      
+      $modifieleve->DATESOR = $request->input('datesortante');
+      $modifieleve->CLASSESOR = $request->input('classesortant');
+      $modifieleve->CODECLAS = $request->input('classe');
+
       $modifieleve->MATRICULE = $request->input('numOrdre');
-      $modifieleve->CodeReduction = $request->input('reduction');
       $modifieleve->NOM = $request->input('nom');
       $modifieleve->PRENOM = $request->input('prenom');
       $modifieleve->DATENAIS = $request->input('dateNaissance');

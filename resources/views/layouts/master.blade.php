@@ -460,7 +460,63 @@ align-items: center;  */
 });
 
 
+$('#Filtercycle').on('change', function() {
+                var serieClass = $(this).val();
+                console.log(serieClass);
+                $.ajax({
+                    url: '/get-serie/' + serieClass,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#filterserie').empty();
+                        console.log(data);
+                        if (data.length > 0) {
+                            $('#filterserie').append(
+                                '<option value="">Sélectionner une serie</option>');
+                            $.each(data, function(index, serie) {
+                                $('#filterserie').append('<option value="' + serie
+                                    .SERIE + '">' + serie.LIBELSERIE + '</option>');
+                            });
+                        } else {
+                            $('#filterserie').append(
+                                '<option value="">Aucune serie disponible</option>');
+                        }
+                        $('#filterserie').select2();
 
+                    }
+                });
+            });
+            $('#ensignSelect').on('change', function() {
+                var ensigClass = $(this).val();
+                console.log(ensigClass);
+                if (ensigClass == '1' || ensigClass == '2') {
+        $('#Filtercycle').prop('disabled', true); // Désactiver le sélecteur Cycle
+        $('#filterserie').prop('disabled', true); // Désactiver le sélecteur Série
+    } else {
+        $('#Filtercycle').prop('disabled', false); // Réactiver le sélecteur Cycle
+        $('#filterserie').prop('disabled', false); // Réactiver le sélecteur Série
+    }
+                $.ajax({
+                    url: '/get-promo/' + ensigClass,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#Filterpromo').empty();
+                        console.log(data);
+                        if (data.length > 0) {
+                            $('#Filterpromo').append(
+                                '<option value="">Sélectionner une promotion</option>');
+                            $.each(data, function(index, promo) {
+                                $('#Filterpromo').append('<option value="' + promo
+                                    .CODEPROMO + '">' + promo.LIBELPROMO + '</option>');
+                            });
+                        } else {
+                            $('#Filterpromo').append(
+                                '<option value="">Aucune promotion disponible</option>');
+                        }
+                        $('#Filterpromo').select2();
+
+                    }
+                });
+            });
             $('#classSelect').on('change', function() {
                 var codeClass = $(this).val();
                 $.ajax({
