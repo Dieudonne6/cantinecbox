@@ -19,7 +19,7 @@
                                 <table class="table custom-table">
                                     <thead>
                                         <tr>
-                                            <th>N reçu</th>
+                                            <th>N° reçu</th>
                                             <th>Date reçu</th>
                                             <th>Scolarité</th>
                                             <th>Arrièré</th>
