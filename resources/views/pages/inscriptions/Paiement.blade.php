@@ -53,7 +53,7 @@
                                             <th>Date</th>
                                             <th>Montant</th>
                                             <th></th>
-                                            <th>Montant Paie</th>
+                                            <th>Mode Paiement</th>
                                             <th>SIGNATURE</th>
                                         </tr>
                                     </thead>
@@ -66,11 +66,11 @@
                                                 <td>
                                                     @switch($item->AUTREF)
                                                         @case(1)
-                                                            Arriéré
+                                                            Scolarité
                                                         @break
 
                                                         @case(2)
-                                                            Scolarité
+                                                            Arriéré
                                                         @break
 
                                                         @case(3)
@@ -125,8 +125,8 @@
                                         composantes</label>
                                     <select id="priority-select" class="form-select" multiple
                                         aria-label="Sélection multiple">
-                                        <option value="1">Arriéré</option>
-                                        <option value="2">Scolarité</option>
+                                        <option value="1">Scolarité</option>
+                                        <option value="2">Arriéré</option>
                                         <option value="3">{{ $libelle->LIBELF1 }}</option>
                                         <option value="4">{{ $libelle->LIBELF2 }}</option>
                                         <option value="5">{{ $libelle->LIBELF3 }}</option>
@@ -143,6 +143,7 @@
                         </div>
                     </div><br><br>
                     <!-- Formulaire -->
+
                     <form action="{{ route('enregistrer.paiement', $eleve->MATRICULE) }}" method="POST">
                         @csrf
                         <div class="row">
@@ -151,8 +152,9 @@
                                     <!-- Champs fixes -->
                                     <div class="col">
                                         <label for="date-operation">Date Opération</label>
-                                        <input id="date-operation" name="date_operation" class="form-control" type="date"
-                                            value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" required>
+                                        <input id="date-operation" name="date_operation" class="form-control"
+                                            type="datetime-local" value="{{ \Carbon\Carbon::now()->format('Y-m-d\TH:i') }}"
+                                            required>
                                     </div>
                                     <div class="col">
                                         <label for="montant-paye">Montant payé</label>
@@ -163,18 +165,20 @@
 
                                 <div class="form-group row mt-4" id="form-fields">
                                     <div class="col-md-2" data-id="1">
-                                        <label for="arriere">Arriéré</label>
-                                        <input id="arriere" name="arriere" class="form-control composante" type="number"
-                                            placeholder="{{ $eleve->ARRIERE ? $eleve->ARRIERE - $totalArriere : $eleve->ARRIERE }}"
-                                            data-priorite="1" oninput="verifierSaisie()"
-                                            {{ $eleve->ARRIERE == 0 ? 'disabled' : '' }}>
-                                    </div>
-
-                                    <div class="col-md-2" data-id="2">
                                         <label for="scolarite">Scolarité</label>
                                         <input id="scolarite" name="scolarite" class="form-control composante"
                                             type="number" placeholder="{{ $eleve->APAYER - $totalScolarite }}"
-                                            data-priorite="2" oninput="verifierSaisie()">
+                                            value="0"
+                                            data-priorite="1" oninput="verifierSaisie()">
+                                    </div>
+
+                                    <div class="col-md-2" data-id="2">
+                                        <label for="arriere">Arriéré</label>
+                                        <input id="arriere" name="arriere" class="form-control composante" type="number"
+                                            placeholder="{{ $eleve->ARRIERE ? $eleve->ARRIERE - $totalArriere : $eleve->ARRIERE }}"
+                                            value="0"
+                                            data-priorite="2" oninput="verifierSaisie()"
+                                            {{ $eleve->ARRIERE == 0 ? 'disabled' : '' }}>
                                     </div>
 
                                     <!-- Champs générés dynamiquement -->
@@ -188,7 +192,7 @@
                                             <input id="libelle-{{ $key }}" name="libelle_{{ $key }}"
                                                 class="form-control composante" type="number"
                                                 data-priorite="{{ $key + 3 }}"
-                                                placeholder="{{ $eleve->$fraisField - $totalLibelle }}"
+                                                placeholder="{{ $eleve->$fraisField - $totalLibelle }}" value="0"
                                                 oninput="verifierSaisie()">
                                         </div>
                                     @endforeach
@@ -325,7 +329,8 @@
                                         <div class="recu-section"
                                             style="border: 1px solid #28a745; border-radius: 8px; padding: 20px; background-color: #ffffff; margin: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
                                             <p style="margin: 0; font-size: 16px;">
-                                                <strong>{{ $libelle->NOMETAB }}</strong></p>
+                                                <strong>{{ $libelle->NOMETAB }}</strong>
+                                            </p>
                                             <h5
                                                 style="text-align: center; font-size: 20px; font-weight: bold; color: #28a745;">
                                                 Reçu de Paiement (Original)</h5>
@@ -690,6 +695,13 @@
                 </script>
 
                 <style>
+                    /* Cacher le placeholder avec une opacité réduite */
+                    input[id^="libelle-"]::placeholder,
+                    input#arriere::placeholder,
+                    input#scolarite::placeholder {
+                        opacity: 0;
+                    }
+
                     /* Animation et mise en évidence lors du changement de priorité */
                     #form-fields .col-md-2 {
                         transition: transform 0.3s ease, background-color 0.3s ease;

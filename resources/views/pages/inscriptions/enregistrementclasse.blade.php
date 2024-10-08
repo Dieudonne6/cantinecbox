@@ -74,7 +74,7 @@
             </div>
           </div>
           <div class="form-group row mb-0">
-            <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Libelle</label>
+            <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Libellé</label>
             <div class="col-sm-9">
               <input type="text" class="form-control" value="{{ old('libclasse') }}" name="libclasse" id="libclasse" placeholder="Libelle">
             </div>
@@ -110,7 +110,7 @@
             </div>
           </div>         
           <div class="form-group row mb-0">
-            <label for="exampleSelectGender" class="col-sm-3 col-form-label">No d'ordre</label>
+            <label for="exampleSelectGender" class="col-sm-3 col-form-label">N° d'ordre</label>
             <div class="col-sm-9">
               <input type="text" class="form-control" id="exampleInputUsername2" minlength="1" maxlength="3" value="{{ old('numero') }}" placeholder="No d'ordre" name="numero">
             </div>
@@ -128,7 +128,7 @@
             </div> 
           </div>         
           <div class="form-group row">
-            <label for="exampleSelectGender" class="col-sm-3 col-form-label">Serie</label>
+            <label for="exampleSelectGender" class="col-sm-3 col-form-label">Série</label>
             <div class="col-sm-9">
               <select class="form-control js-example-basic-multiple w-100" name="typeserie" id="filterserie">
                 <option value="">Sélectionnez une série</option>              
@@ -153,7 +153,7 @@
               <button type="button" class="btn btn-danger">Annuler</button>
             </div>
             <div class="col-auto">
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donnefinanciere">Donne financières (Factures)</button>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donnefinanciere">Données financières (Factures)</button>
             </div>
           </div>
         <br>
@@ -227,7 +227,7 @@
                                 <h5 style="margin-left: 10.5rem; font-size:14.5px !important;">Nouveaux</h5>
                                 <h5 style="margin-top: -1.4rem; margin-left: 20rem; font-size:14.5px !important;">Anciens</h5>
                                 
-                                <label for="scolarite" style="width: 30%; font-size: 14px !important;">Scolarite</label>
+                                <label for="scolarite" style="width: 30%; font-size: 14px !important;">Scolarité</label>
                                 <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="APAYER" id="scolarite"  style="width: 25%;" value="{{ $infoParamGeneraux->MTS }}" >
                                 <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="APAYER2" id="scolarite_a"  style="width: 25%;" value="{{ $infoParamGeneraux->MTS }}" >
         
@@ -306,7 +306,7 @@
                                             <th class="text-center">% anc</th>
                                             <th class="text-center">Montant</th>
                                             <th class="text-center">Montant2</th>
-                                            <th class="text-center" style="display: none;">date paie</th>
+                                            <th class="text-center" style="display: none;">Date paie</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody">
