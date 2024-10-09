@@ -120,9 +120,9 @@
             <div class="col-auto">
               <button type="button" class="btn btn-danger">Annuler</button>
             </div>
-            <div class="col-auto">
+            {{-- <div class="col-auto">
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donnefinanciere">Donne financières (Factures)</button>
-            </div>
+            </div> --}}
           </div>
           <br>
       </form>

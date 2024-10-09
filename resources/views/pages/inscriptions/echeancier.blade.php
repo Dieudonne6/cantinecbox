@@ -181,7 +181,7 @@
                       <div class="col-sm-3">
                         <input type="text" id="periodicite" class="form-control" style="width: 3.9rem !important" value="{{$classis->PERIODICITE}}" />
                       </div>
-                      <label class="col-sm-3 col-form-label">Jours</label>
+                      <label class="col-sm-3 col-form-label">Mois</label>
                     </div>
                   </div>
                   

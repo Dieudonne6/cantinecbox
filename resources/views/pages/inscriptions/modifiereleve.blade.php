@@ -39,7 +39,8 @@
                       <div class="col-sm-3">
                         <select class="js-example-basic-multiple w-100" id="classe" name="classe">
                           @foreach ($allClasse as $classe)
-                          <option value="{{ $classe->CODECLAS }}">{{ $classe->CODECLAS }}</option>
+                          <option value="{{ $classe->CODECLAS }}"
+                            @if ($modifieleve->CODECLAS == $classe->CODECLAS)  selected @endif>{{ $classe->CODECLAS }}</option>
                           @endforeach
                         </select>
                       </div>
@@ -48,7 +49,8 @@
                         <select class="js-example-basic-multiple w-100 select2-hidden-accessible" id="classe-entree" name="classeEntre">
                           <option value="idem">idem</option>
                           @foreach ($allClasse as $classe)
-                          <option value="{{ $classe->CODECLAS }}">{{ $classe->CODECLAS }}</option>
+                          <option value="{{ $classe->CODECLAS }}"
+                            @if ($modifieleve->CODECLAS == $classe->CODECLAS)  selected @endif>{{ $classe->CODECLAS }}</option>
                           @endforeach
                         </select>
                       </div>
@@ -78,6 +80,19 @@
                           <label for="photo">Photo</label>
                           <input type="file" id="photo" name="photo" class="form-control" value="{{ $modifieleve->PHOTO }}">
                         </div>
+                        <div class="col-md-4">
+                          <label for="photo">Date sortante</label>
+                          <input type="date" class="form-control" name="datesortante"> 
+                        </div>
+                        <div class="col-md-4">
+                          <label for="photo">Classe sortante</label>
+                          <select class="js-example-basic-multiple w-100" id="classe" name="classesortant">
+                            @foreach ($allClasse as $classe)
+                          <option value="{{ $classe->CODECLAS }}"
+                            @if ($modifieleve->CODECLAS == $classe->CODECLAS)  selected @endif>{{ $classe->CODECLAS }}</option>
+                          @endforeach
+                          </select>
+                        </div>
                       </div>
                       
                       <!-- Section Identification -->
@@ -91,16 +106,7 @@
                             Vérifier archives
                           </button>
                         </div>
-                        <div class="col-md-4">
-                          <label for="profil-reduction">Profil de réduction</label>
-                          <select id="profil-reduction" name="reduction" class="js-example-basic-multiple w-100" value="{{ $modifieleve->CodeReduction }}">
-                            @foreach ($allReduction as $reduction)
-                            <option value="{{ $reduction->CodeReduction }}">{{ $reduction->LibelleReduction }}</option>
-                            @endforeach
-                            {{-- <option value="plein-tarif">Plein Tarif</option>
-                            <option value="fils-enseignant">Fils d'enseignant</option> --}}
-                          </select>
-                        </div>
+                        
                       </div>
                       
                       <!-- Section Informations Personnelles -->
@@ -146,24 +152,23 @@
                       <div class="form-group row mt-3">
                         <div class="col-md-4">
                           <label for="sexe">Sexe</label>
-                          <select id="sexe" name="sexe" class="js-example-basic-multiple w-100" value="{{ $modifieleve->SEXE }}">
-                            <option value="1">Masculin</option>
-                            <option value="2">Féminin</option>
+                          <select id="sexe" name="sexe" class="js-example-basic-multiple w-100">
+                            <option value="1" {{ $modifieleve->SEXE == 1 ? 'selected' : ''}}>Masculin</option>
+                            <option value="2" {{ $modifieleve->SEXE == 2 ? 'selected' : ''}}>Féminin</option>
                           </select>
                         </div>
                         <div class="col-md-4">
                           <label for="type-eleve">Type d'élève</label>
                           <select id="type-eleve" name="typeEleve" class="js-example-basic-multiple w-100" value="{{ $modifieleve->STATUTG }}">
-                            <option value="1">Nouveau</option>
-                            <option value="2">Ancien</option>
-                            <option value="3">Transferer</option>
+                            <option value="1" {{ $modifieleve->STATUTG == 1 ? 'selected' : ''}}>Nouveau</option>
+                            <option value="2" {{ $modifieleve->STATUTG == 2 ? 'selected' : ''}}>Ancien</option>
                           </select>
                         </div>
                         <div class="col-md-4">
                           <label for="aptitude-sport">Aptitude Sport</label>
                           <select id="aptitude-sport" name="aptituteSport" class="js-example-basic-multiple w-100" value="{{ $modifieleve->APTE }}">
-                            <option value="1">Apte</option>
-                            <option value="2">Inapte</option>
+                            <option value="1" {{ $modifieleve->APTE == 1 ? 'selected' : ''}}>Apte</option>
+                            <option value="2" {{ $modifieleve->APTE == 2 ? 'selected' : ''}}>Inapte</option>
                           </select>
                         </div>
                       </div>
