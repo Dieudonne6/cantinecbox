@@ -77,7 +77,7 @@
       <button><a href="{{ url('/listedesreductions') }}"><i class="fas fa-percentage"></i> Liste des réductions accordées</a></button>
       <button class="profil-btn" type="button" id="" class="" data-bs-toggle="modal" data-bs-target="#exampleModal2"><i class="fas fa-id-card"></i> Liste des élèves par profil</button>
 
-      <button><a href="{{ url('/listedeselèvesechéancierpersonnalisé') }}"><i class="fas fa-calendar-check"></i> Liste des élèves ayant un échéancier personnalisé</a></button>
+      <button id="printButton" onclick="printTable()"><i class="fas fa-calendar-check"></i> Liste des élèves ayant un échéancier personnalisé</button>
       <button><a href="{{ url('/etatdesarrieresinscrits') }}"><i class="fas fa-exclamation-triangle"></i> État général des arriérés (élèves inscrits)</a></button>
       <button><a href="{{ url('/etatdesarriérésmoissoldés') }}"><i class="fas fa-minus-circle"></i> État général des arriérés moins ceux qui sont soldés</a></button>
       <button><a href="{{ url('/etatdesarriérésconstatés') }}"><i class="fas fa-file-invoice"></i> État des arriérés constatés (élèves inscrits)</a></button>
@@ -192,7 +192,70 @@
     </div>
   </div>
 </div>
+<div id="printableTable" class="d-none"> 
+  <h4 class="card-title text-center">Liste des élèves dont l'échéancier a été personnalisé</h4>
 
+  <table id="elevesTable">
+    <thead>
+        <tr>
+            <th>Matricule</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Matricule</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+        </tr>
+    </thead>
+    <tbody>
+      @php
+          $currentClasse = null;
+          $count = 0; // Compteur d'élèves
+          $totalEleves = 0; // Compteur total d'élèves
+      @endphp
+      @foreach ($eleves as $eleve)
+          @if ($currentClasse !== $eleve->CODECLAS)
+              @if ($currentClasse !== null)
+                  <tr><td colspan="6"></td></tr>
+              @endif
+              <tr class="classe-row">
+                  <td colspan="6">{{ $eleve->CODECLAS }}</td>
+              </tr>
+              @php
+                  $currentClasse = $eleve->CODECLAS;
+                  $count = 0; // Réinitialiser le compteur pour la nouvelle classe
+              @endphp
+          @endif
+          
+          @if ($count % 2 == 0)
+              <tr>
+          @endif
+          
+          <td>{{ $eleve->MATRICULE }}</td>
+          <td>{{ $eleve->NOM }}</td>
+          <td>{{ $eleve->PRENOM }}</td>
+          
+          @if ($count % 2 == 1)
+              </tr>
+          @endif
+          
+          @php
+              $count++; // Incrémenter le compteur pour chaque élève
+              $totalEleves++; // Incrémenter le total d'élèves
+          @endphp
+      @endforeach
+      
+      @if ($count % 2 != 0)
+          </tr>
+      @endif
+
+      <!-- Ligne pour afficher le nombre total d'élèves -->
+      <tr class="total-row">
+          <td colspan="3">Total d'élèves :</td>
+          <td colspan="3">{{ $totalEleves }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <script>
   document.getElementById('btnImprimerregistre').addEventListener('click', function() {
@@ -206,6 +269,51 @@
     // window.location.href = url;
     window.open(url, '_blank');
   });
+  // Fonction pour injecter les styles du tableau dans la page
+  function injectTableStyles() {
+      var style = document.createElement('style');
+      style.innerHTML = `
+      @page { size: landscape; }
+          table {
+              width: 100%;
+              border-collapse: collapse;
+          }
+          thead {
+              background-color: #f2f2f2;
+          }
+          th, td {
+              padding: 8px;
+              border: 1px solid #ddd;
+              text-align: center;
+          }
+          .classe-row {
+              background-color: #f9f9f9;
+              font-weight: bold;
+          }
+      `;
+      document.head.appendChild(style);
+  }
+
+  // Fonction pour imprimer le tableau
+  function printTable() {
+      // Injecter les styles du tableau
+      injectTableStyles();
+
+      // Sauvegarder la page actuelle
+      var originalContent = document.body.innerHTML;
+      
+      // Cibler le tableau à imprimer
+      var printContent = document.getElementById('printableTable').innerHTML;
+      
+      // Remplacer le contenu de la page par celui du tableau
+      document.body.innerHTML = printContent;
+      setTimeout(function() {
+          window.print();
+          // Restaurer la page après l'impression
+          document.body.innerHTML = originalContent;
+      }, 1000); // Délai de 2000 millisecondes
+   
+  }
 </script>
 
 @endsection

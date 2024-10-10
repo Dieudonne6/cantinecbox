@@ -803,10 +803,7 @@ class PagesController extends Controller
     return view('pages.inscriptions.archive');
   } 
   
-  public function editions(){
-    return view('pages.inscriptions.editions');
-  } 
-
+  
   public function etatdesarrieresinscrits(){
     // LISTE DES ELEVES DONT ARRIERE EST != 0
     $listeElevesArr = Eleve::where('ARRIERE', '!=', 0)->get();
