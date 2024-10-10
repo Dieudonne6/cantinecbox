@@ -488,8 +488,6 @@
                             @endif
                         </script>
                     @endif
-
-
                 </div>
                 <br>
                 <br>
