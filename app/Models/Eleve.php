@@ -40,7 +40,13 @@ class Eleve extends Model
     }
     
         // Relation avec le modèle Scolarite
-        public function scolarite() {
+        public function Scolarite() {
             return $this->belongsTo(Scolarite::class, 'MATRICULE', 'MATRICULE');
+         }
+     
+         // Relation avec le modèle Echeance
+         public function Echeance()
+         {
+             return $this->hasMany(Echeance::class, 'MATRICULE', 'MATRICULE');
          }
 }
