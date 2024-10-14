@@ -14,6 +14,8 @@ use App\Http\Controllers\Tfautes;
 use App\Http\Controllers\Absence;
 use App\Http\Controllers\Matieres;
 
+use App\Http\Controllers\EditionController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,10 +40,11 @@ Route::get('/paiement', [PagesController::class, 'paiement']);
 Route::get('/listedeseleves', [PagesController::class, 'listedeseleves'])->name('listedeseleves');
 Route::get('/listeselectiveeleve', [PagesController::class, 'listeselectiveeleve'])->name('listeselectiveeleve');
 
+// Route::get('/editions', [EditionController::class, 'listeecheancierperso'])->name('listeecheancierperso');
+
 Route::get('/classes', [ClassesController::class, 'classe']);
 Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees']);
 Route::get('/', [PagesController::class, 'connexion']);
-
 Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
 Route::get('/listegeneraleeleve/{CODECLAS}', [ClassesController::class, 'listegeneraleeleve']);
 // Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'getElevesByClasse']);
@@ -190,7 +193,7 @@ Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::c
 
 
 Route::get('/archive', [PagesController::class, 'archive']);
-Route::get('/editions', [PagesController::class, 'editions'])->name('editions');
+Route::get('/editions', [EditionController::class, 'editions'])->name('editions');
 Route::get('/etatdesarrieresinscrits', [PagesController::class, 'etatdesarrieresinscrits']);
 Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse'])->name('eleveparclasse');
 Route::get('/eleveparclassespecifique/{classeCode}', [PagesController::class, 'eleveparclassespecifique']);
