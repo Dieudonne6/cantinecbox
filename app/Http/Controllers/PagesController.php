@@ -26,6 +26,7 @@ use App\Models\Echeance;
 use App\Models\Echeancc;
 use App\Models\Scolarite;
 use App\Models\Journal;
+use App\Models\Chapitre;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -1195,7 +1196,9 @@ public function eleveparclasseessai() {
   }
   
   public function etatdelacaisse(){
-    return view ('pages.inscriptions.etatdelacaisse');
+    $chapitres = Chapitre::all();
+    
+    return view ('pages.inscriptions.etatdelacaisse',compact('chapitres',));
   }
   
   public function situationfinanciereglobale(){

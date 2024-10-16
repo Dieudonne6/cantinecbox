@@ -213,6 +213,7 @@ Route::get('/etatdesrecouvrements', [PagesController::class, 'etatdesrecouvremen
 
 Route::get('/enquetesstatistiques', [PagesController::class, 'enquetesstatistiques'])->name('enquetesstatistiques');
 Route::get('/etatdelacaisse', [PagesController::class, 'etatdelacaisse'])->name('etatdelacaisse');
+
 Route::get('/situationfinanciereglobale',[PagesController::class, 'situationfinanciereglobale'])->name('situationfinanciereglobale');
 Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite'])->name('certificatsolarite');
 
