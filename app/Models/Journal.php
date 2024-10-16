@@ -44,4 +44,8 @@ class Journal extends Model
 		'GENERE', 
 		'SUPER_SEUL_DEVERROUILLE',
     ];
+
+	public function chapitre() {
+        return $this->belongsTo(Chapitre::class, 'CHAPITRE', 'CHAPITRE'); // Assurez-vous que 'chapitre' correspond à la clé étrangère dans la table Journal
+    }
 }

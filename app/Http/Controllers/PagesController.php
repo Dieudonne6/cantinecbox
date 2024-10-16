@@ -1197,9 +1197,14 @@ public function eleveparclasseessai() {
   
   public function etatdelacaisse(){
     $chapitres = Chapitre::all();
+    $journals = Journal::all();
+
     
-    return view ('pages.inscriptions.etatdelacaisse',compact('chapitres',));
-  }
+    return view ('pages.inscriptions.etatdelacaisse',compact('chapitres','journals'));
+  }   
+
+ 
+
   
   public function situationfinanciereglobale(){
     $eleves = Eleve::with('classe')->get(); // Récupérer tous les élèves avec leur classe

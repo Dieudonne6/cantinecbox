@@ -34,15 +34,13 @@
                                 </div>
                                 <label>Date d'arrêt</label>
                                 <div id="the-basics">
-                                    <input class="form-control " type="date" id="date" name="date"
-                                        value="">
+                                    <input class="form-control" type="date" id="date" name="date" value="">
                                 </div>
                             </div>
                             
                             <div class="col">
                                 <label for="chapitre-select">Chapitre</label>
-                                <select id="chapitre-select" class="js-example-basic-multiple w-100"
-                                    onchange="window.location.href=this.value">
+                                <select id="chapitre-select" class="js-example-basic-multiple w-100">
                                     <option value="">TOUTES LES CHAPITRES</option>
                                     @foreach ($chapitres as $chapitre)
                                         <option value="{{ url('/etatdelacaisse/' . $chapitre->CHAPITRE) }}">
@@ -86,9 +84,8 @@
                             </div>
                         </div>
                         <div class="text-center">
-                            <button type="button" class="btn btn-primary">Imprimer</button>
+                            <button onclick="imprimerPage()" type="button" class="btn btn-primary">Imprimer</button>
                         </div>
-            
                     </div>
                 </div>
             </div>
@@ -137,6 +134,111 @@
                 period1Input.style.display = 'block';
                 period2Input.style.display = 'block';
                 document.getElementById('periodLabel').textContent = 'Sélectionnez la période :';
+            }
+        }
+
+        // Fonction pour obtenir le nom du mois à partir d'un nombre
+        function getMonthName(month) {
+            const monthNames = [
+                "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+            ];
+            return monthNames[month - 1]; // Les mois sont indexés à partir de 0
+        }
+
+        // Fonction pour imprimer le journal
+        function imprimerPage() {
+            const releveMensuelRadio = document.getElementById('releveMensuel');
+            const dateArrêt = document.getElementById('date').value;
+            const moisSelectionne = document.getElementById('month').value;
+            const [year, month] = moisSelectionne.split('-'); // Récupérer l'année et le mois
+
+            // Formater la date d'arrêt au format j/m/a
+            const [yearArrêt, monthArrêt, dayArrêt] = dateArrêt.split('-');
+            const formattedDateArrêt = `${dayArrêt}/${monthArrêt}/${yearArrêt}`;
+
+            // Obtenir le nom du mois sélectionné
+            const monthName = getMonthName(parseInt(month)); // Convertir le mois en entier
+
+            if (releveMensuelRadio.checked) {
+                // Créer une fenêtre pour l'impression
+                var printWindow = window.open('', '', 'height=600,width=800');
+
+                // Récupérer le contenu du tableau
+                var content = '';
+
+                @foreach ($journals as $journal)
+                    content += `<tr>
+                                    <td>{{ $journal->DATEOP }}</td>
+                                    <td>{{ $journal->NUMJ }}</td>
+                                    <td>{{ $journal->CHAPITRE }}</td>
+                                    <td>{{ $journal->NCOMPTE }}</td>
+                                    <td>{{ $journal->LIBELOP }}</td>
+                                    <td>{{ $journal->DEBIT }}</td>
+                                    <td>{{ $journal->OBSER }}</td>
+                                </tr>`;
+                @endforeach
+
+                // Construire le HTML à imprimer avec style
+                printWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>Impression de Relevé mensuel des ordres de recettes</title>
+                            <style>
+                                table {
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                }
+                                h2{
+                                    text-align: center;
+                                }
+                                th, td {
+                                    border: 1px solid black;
+                                    padding: 8px;
+                                    text-align: left;
+                                }
+                                th {
+                                    background-color: #D3D3D3; /* Entête gris */
+                                }
+                                @media print {
+                                    body {
+                                        font-family: Arial, sans-serif;
+                                    }
+                                    table {
+                                        margin-top: 20px;
+                                    }
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h2>Relevé mensuel des ordres de recettes</h2>
+                            <p>Mois de ${monthName} </p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>N de l'Ordre</th>
+                                        <th>Chap.</th>
+                                        <th>Compte</th>
+                                        <th>Objet de Recette</th>
+                                        <th>Montant</th>
+                                        <th>Observation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${content}
+                                </tbody>
+                            </table>
+                            <p>Total des recettes du mois: </p>
+                            <p>Date d'arrêt: ${formattedDateArrêt}</p>
+                        </body>
+                    </html>
+                `);
+
+                printWindow.document.close(); // Fermer le document pour pouvoir l'imprimer
+                printWindow.print(); // Ouvrir la boîte de dialogue d'impression
+            } else {
+                alert("Veuillez sélectionner 'Relevé mensuel des ordres de recettes' pour imprimer.");
             }
         }
 
