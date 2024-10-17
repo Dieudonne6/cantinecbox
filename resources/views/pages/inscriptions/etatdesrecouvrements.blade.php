@@ -56,11 +56,6 @@
                                         <label for="option2" style="font-size: 14px; font-weight: bold">Recouvrement général par enseignement</label>
                                         <h6 style="font-size: 14px; margin-left: 20px">Tableau type "recouvrement général" par type d'enseignement</h6>
                                     </div>
-                                    <div class="radio-inline">
-                                        <input type="radio" id="option3" name="choixPlage" value="option3">
-                                        <label for="option3" style="font-size: 14px; font-weight: bold">Recouvrement par opérateur</label>
-                                        <h6 style="font-size: 14px; margin-left: 20px">Point des recouvrements par agent/par jour</h6>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -143,9 +138,6 @@
                 break;
             case 'option2':
                 actionUrl = "{{ route('recouvrementgeneralenseignement') }}";
-                break;
-            case 'option3':
-                actionUrl = "{{ route('recouvrementoperateur') }}";
                 break;
             case 'option4':
                 actionUrl = "{{ route('journaldetailleaveccomposante') }}";
