@@ -33,7 +33,7 @@
         {{-- <div class="row"> --}}
           <a type="button" class="btn btn-primary" href="{{ url('/enrclasse') }}">Nouveau</a>
           <a type="button" class="btn btn-primary" href="{{ url('/groupe') }}">Groupe</a>
-          <button onclick="imprimerPage()" class="btn btn-secondary">Imprimer</button><br>
+            <a href="{{ url('/listedesclasses') }}" class="btn btn-secondary">Imprimer</a>
           
           {{-- </div> --}}
           

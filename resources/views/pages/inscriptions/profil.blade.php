@@ -97,7 +97,11 @@
                 </div>
               </div>
               <div class="row my-3">
-                <div class="col-lg-8">
+                <div class="col-lg-4">
+                  <h6>Sélectionnez une réduction</h6>
+
+                </div>
+                <div class="col-lg-4">
                   <div class="dropup-center dropup">
                     <select id="class-select" name="reduction" class="js-example-basic-multiple mb-3">
                       <option value="">Sélectionnez une réduction</option>

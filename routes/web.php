@@ -14,6 +14,8 @@ use App\Http\Controllers\Tfautes;
 use App\Http\Controllers\Absence;
 use App\Http\Controllers\Matieres;
 
+use App\Http\Controllers\EditionController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,16 +32,19 @@ use App\Http\Controllers\Matieres;
 Route::get('/inscriptioncantine', [PagesController::class, 'inscriptioncantine']);
 Route::get('/get-eleves/{codeClass}', [PagesController::class, 'getEleves']);
 Route::get('/get-montant/{codeClass}', [PagesController::class, 'getMontant']);
+Route::get('/get-promo/{ensigClass}', [PagesController::class, 'getPromo']);
+Route::get('/get-serie/{serieClass}', [PagesController::class, 'getSerie']);
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
 Route::get('/listedeseleves', [PagesController::class, 'listedeseleves'])->name('listedeseleves');
 Route::get('/listeselectiveeleve', [PagesController::class, 'listeselectiveeleve'])->name('listeselectiveeleve');
 
+// Route::get('/editions', [EditionController::class, 'listeecheancierperso'])->name('listeecheancierperso');
+
 Route::get('/classes', [ClassesController::class, 'classe']);
 Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees']);
 Route::get('/', [PagesController::class, 'connexion']);
-
 Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
 Route::get('/listegeneraleeleve/{CODECLAS}', [ClassesController::class, 'listegeneraleeleve']);
 // Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'getElevesByClasse']);
@@ -188,7 +193,7 @@ Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::c
 
 
 Route::get('/archive', [PagesController::class, 'archive']);
-Route::get('/editions', [PagesController::class, 'editions'])->name('editions');
+Route::get('/editions', [EditionController::class, 'editions'])->name('editions');
 Route::get('/etatdesarrieresinscrits', [PagesController::class, 'etatdesarrieresinscrits']);
 Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse'])->name('eleveparclasse');
 Route::get('/eleveparclassespecifique/{classeCode}', [PagesController::class, 'eleveparclassespecifique']);
@@ -208,6 +213,10 @@ Route::get('/etatdesrecouvrements', [PagesController::class, 'etatdesrecouvremen
 
 Route::get('/enquetesstatistiques', [PagesController::class, 'enquetesstatistiques'])->name('enquetesstatistiques');
 Route::get('/etatdelacaisse', [PagesController::class, 'etatdelacaisse'])->name('etatdelacaisse');
+Route::get('/etatdelacaisse/{chapitre?}', [PagesController::class, 'etatdelacaisse']);
+
+
+
 Route::get('/situationfinanciereglobale',[PagesController::class, 'situationfinanciereglobale'])->name('situationfinanciereglobale');
 Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite'])->name('certificatsolarite');
 
