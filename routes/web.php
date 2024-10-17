@@ -158,6 +158,8 @@ Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);
 
 Route::get('/paiementeleve/{matricule}', [PagesController::class, 'paiementeleve'])->name('paiementeleve');
 Route::post('/paiement/{matricule}', [PagesController::class, 'enregistrerPaiement'])->name('enregistrer.paiement');
+Route::get('/recouvrementGenerale', [PagesController::class, 'recouvrementGenerale'])->name('recouvrementGenerale');
+Route::get('/recouvrementGenParPeriode', [PagesController::class, 'recouvrementGenParPeriode'])->name('recouvrementGenParPeriode');
 
 
 
@@ -192,6 +194,12 @@ Route::get('/editions', [PagesController::class, 'editions'])->name('editions');
 Route::get('/etatdesarrieresinscrits', [PagesController::class, 'etatdesarrieresinscrits']);
 Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse'])->name('eleveparclasse');
 Route::get('/eleveparclassespecifique/{classeCode}', [PagesController::class, 'eleveparclassespecifique']);
+
+Route::get('/retardpaiementclasse', [PagesController::class, 'retardpaiementclasse'])->name('retardpaiementclasse');
+Route::get('/rpaiementclassespecifique/{classeCode}', [PagesController::class, 'rpaiementclassespecifique']);
+
+Route::get('/situationfinanceclasse', [PagesController::class, 'situationfinanceclasse'])->name('situationfinanceclasse');
+Route::get('/sfinanceclassespecifique/{classeCode}', [PagesController::class, 'sfinanceclassespecifique']);
 Route::get('/essai', [PagesController::class, 'eleveparclasseessai']);
 
 
@@ -235,7 +243,7 @@ Route::delete('/promotions/{codePromo}', [GestionclasseController::class, 'destr
 
 //Acceuil
 Route::get('/Acceuil', [GestionclasseController::class, 'indexEleves'])->name('Acceuil');
-Route::delete('/eleves/{matricule}', [EleveController::class, 'destroy'])->name('eleves.destroy');
+Route::put('/eleves/{matricule}', [EleveController::class, 'destroy'])->name('eleves.destroy');
 
 //Series
 Route::get('/series', [GestionclasseController::class, 'series']);

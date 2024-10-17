@@ -60,9 +60,7 @@ class inscriptionEleveRequest extends FormRequest
         if ($this->routeIs('nouveaueleve')) {
             $rules = [
             'classe' => 'required',
-            'classeEntre' => 'required',
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'reduction' => 'required',
             'nom' => 'required',
             'prenom' => 'required',
             'aptituteSport' => 'nullable',

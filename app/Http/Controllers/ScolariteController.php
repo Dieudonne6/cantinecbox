@@ -45,6 +45,7 @@ class ScolariteController extends Controller
 
         $donneClasse = Classe::where('CODECLAS', $CODECLAS)->first();
         $donneLibelle = Params2::first();
+        
         // dd($donneClasse);
         return view('pages.inscriptions.factureclassesdetail', compact('CODECLAS', 'donneClasse', 'donneLibelle'));
     }
