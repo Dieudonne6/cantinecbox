@@ -16,7 +16,12 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h2>Liste des classes</h2>
+                    <div class="d-grid gap-2 d-md-flex justify-content-between" style="margin-top: 20px; margin-bottom: 40px;"> <!-- Ajout d'un margin-bottom pour espacer le bouton du footer -->
+                        <h2>Liste des classes</h2>
+                        <button type="button" class="btn btn-primary btn-lg btn-print" onclick="imprimerliste()"> <!-- Ajout de la classe btn-lg pour agrandir le bouton -->
+                            Imprimer
+                        </button>
+                    </div>
                     <div class="container-fluid d-flex align-items-center justify-content-center">
                         <div id="contenu">
                             @foreach ($types as $type)
@@ -60,11 +65,6 @@
                                     @endif
                                 @endif
                             @endforeach
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 20px; margin-bottom: 40px;"> <!-- Ajout d'un margin-bottom pour espacer le bouton du footer -->
-                                <button type="button" class="btn btn-primary btn-lg" onclick="imprimerliste()"> <!-- Ajout de la classe btn-lg pour agrandir le bouton -->
-                                    Imprimer
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>

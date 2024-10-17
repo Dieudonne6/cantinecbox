@@ -88,12 +88,16 @@
                             Vérifier archives
                           </button>
                         </div>
-                      </div>
-                      
-                      <!-- Section Identification -->
-                      <div class="form-group row mt-3">
-
-
+                      {{--   <div class="col-md-4">
+                          <label for="profil-reduction">Profil de réduction</label>
+                          <select id="profil-reduction" name="reduction" class="js-example-basic-multiple w-100" value="{{ old('reduction') }}">
+                            @foreach ($allReduction as $reduction)
+                            <option value="{{ $reduction->CodeReduction }}">{{ $reduction->LibelleReduction }}</option>
+                            @endforeach
+                            {{-- <option value="plein-tarif">Plein Tarif</option>
+                            <option value="fils-enseignant">Fils d'enseignant</option>
+                          </select>
+                        </div> --}}
                       </div>
                       
                       <!-- Section Informations Personnelles -->
@@ -151,6 +155,7 @@
                             {{-- <option  >Sélectionner</option> --}}
                             <option value="1" selected>Nouveau</option>
                             <option value="2">Ancien</option>
+                            {{-- <option value="3">Transferer</option> --}}
                           </select>
                         </div>
                         <div class="col-md-4">

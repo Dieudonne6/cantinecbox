@@ -4,7 +4,13 @@
 <div class="col-lg-12 grid-margin stretch-card">
   <div class="card">
     <div class="card-body">
-      <h4 class="card-title">Certificat de scolarité</h4>
+      <div class="d-flex align-items-center">
+        <button class="btn btn-arrow me-2" onclick="window.history.back();">
+            <i class="fas fa-arrow-left"></i> Retour
+        </button>
+        <h4 class="card-title mb-0 text-center">Certificat de scolarité</h4>
+    </div>
+    
       @if(Session::has('status'))
         <div id="statusAlert" class="alert alert-success">
           {{ Session::get('status') }}
@@ -62,7 +68,7 @@
           <tbody id="eleve-details">
             @foreach ($eleves as $eleve)
             <tr class="clickable-row" data-matricule="{{ $eleve->MATRICULE }}">
-              <td><input type="checkbox" name="eleves[]" value="{{ $eleve->MATRICULE }}"></td>
+              <td><input type="checkbox" name="eleves[]" value="{{ $eleve->MATRICULE }}" required></td>
               <td>{{ $eleve->MATRICULE }}</td>
               <td>{{ $eleve->NOM }}</td>
               <td>{{ $eleve->PRENOM }}</td>

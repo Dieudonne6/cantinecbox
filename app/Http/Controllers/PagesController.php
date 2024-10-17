@@ -21,11 +21,14 @@ use App\Models\Serie;
 use App\Models\Typeclasse;
 use App\Models\Typeenseigne;
 use App\Models\Elevea;
+use App\Models\Groupeclasse;
 use App\Models\Eleveplus;
 use App\Models\Echeance;
 use App\Models\Echeancc;
 use App\Models\Scolarite;
 use App\Models\Classesgroupeclass;
+use App\Models\Journal;
+use App\Models\Chapitre;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -108,6 +111,16 @@ class PagesController extends Controller
     }
     
     return response()->json(['montant' => $montant]);
+  }
+  public function getPromo($ensigClass)
+  {
+    $promo = Promo::where('TYPEENSEIG', $ensigClass)->get();
+    return response()->json($promo);
+  }
+  public function getSerie($serieClass)
+  {
+    $serie = Serie::where('CYCLE', $serieClass)->get();
+    return response()->json($serie);
   }
   public function paiement(){
     return view('pages.paiement');
@@ -259,6 +272,7 @@ class PagesController extends Controller
     $echeancesDat = json_decode($echeancesData, true);
     $arie = Eleve::where('MATRICULE', $MATRICULE)->first();
     // $ari = $arie->ARRIERE;
+    Eleve::where('MATRICULE', $MATRICULE)->update(['EcheancierPerso' => 1]);
   Echeance::where('MATRICULE', $MATRICULE)->delete();
   $infoparamcontrat = Paramcontrat::first();
   $anneencours = $infoparamcontrat->anneencours_paramcontrat;
@@ -512,6 +526,63 @@ class PagesController extends Controller
     return redirect('/');
   }
   
+  public function etatdesdroits(Request $request) {
+    $classe = Classes::all();
+    $params = Params2::first();
+    $selectedClasses = $request->input('selectedClasses', []);
+    $eleves = collect(); // Initialise la variable $eleves par défaut à une collection vide
+  
+    if ($request->ajax()) { // Vérifie si la requête est une requête AJAX
+        if (!empty($selectedClasses)) {
+            // Récupérer les élèves en fonction des classes sélectionnées
+            $eleves = Eleve::whereIn('CODECLAS', $selectedClasses)->get();
+  
+            // Vérifiez si des élèves ont été trouvés
+            if ($eleves->isEmpty()) {
+                return response()->json(['message' => 'Aucun élève trouvé pour les classes sélectionnées.'], 404);
+            }
+  
+            // Récupérer les montants pour chaque élève
+            $choixPlage = $request->input('choixPlage');
+            $eleves->transform(function ($eleve) use ($choixPlage, $params) {
+                if ($choixPlage === 'Tout') {
+                    // Récupérer tous les montants sans filtrer par AUTREF
+                    $montants = Scolarite::where('MATRICULE', $eleve->MATRICULE)->get();
+                } else {
+                    // Récupérer les montants filtrés par AUTREF
+                    $autrefMapping = [
+                        'Scolarité' => 1,
+                        'Arrièrés' => 2,
+                        $params->LIBELF1 => 3,
+                        $params->LIBELF2 => 4,
+                        $params->LIBELF3 => 5,
+                        $params->LIBELF4 => 6,
+                    ];
+                    $montants = Scolarite::where('MATRICULE', $eleve->MATRICULE)
+                        ->where('AUTREF', $autrefMapping[$choixPlage] ?? null)
+                        ->get();
+                }
+  
+                // Ajouter les montants à l'élève
+                $eleve->montants = $montants;
+  
+                return $eleve;
+            });
+        } else {
+            return response()->json(['message' => 'Aucune classe sélectionnée.'], 400);
+        }
+  
+        // Retourner les données en JSON pour les requêtes AJAX
+        return response()->json([
+            'eleves' => $eleves
+        ]);
+    }
+  
+    // Retourner la vue normalement pour les autres requêtes
+    return view('pages.inscriptions.etatdesdroits', compact('classe', 'params', 'eleves'));
+  }  
+  
+
   public function vitrine(){
     if(Session::has('account')){
       $totaleleve = Eleve::count();
@@ -710,20 +781,30 @@ class PagesController extends Controller
       // Récupérer les matricules des élèves sélectionnés depuis la requête
       $matricules = explode(',', $request->input('matricules', ''));
       $classe = $request->input('classe');
-
+  
       // Récupérer l'observation depuis la requête
       $observation = $request->input('observation', '');
-
+  
+      // Vérifiez si la classe est choisie
+      if (empty($classe)) {
+          return redirect()->back()->with('erreur', 'Veuillez choisir une classe avant l\'impression.');
+      }
+  
+      // Vérifiez si des matricules sont sélectionnés
+      if (empty($matricules) || count($matricules) === 1 && empty($matricules[0])) {
+          return redirect()->back()->with('erreur', 'Veuillez cocher au moins un élève avant l\'impression.');
+      }
+  
       // Récupérer les élèves sélectionnés
       $eleves = Eleve::whereIn('MATRICULE', $matricules)->get();
       $eleveplus = Eleveplus::first();
       $nomecole = Params2::first();
-
+  
       // Vérifiez si les données ont été trouvées
       if ($eleves->isEmpty() || !$eleveplus || !$nomecole) {
           return redirect()->back()->with('erreur', 'Données non trouvées.');
       }
-
+  
       // Générer les certificats pour les élèves sélectionnés
       return view('pages.inscriptions.pdfcertificatscolarite', compact('eleves', 'eleveplus', 'nomecole', 'observation'));
   }
@@ -792,10 +873,7 @@ class PagesController extends Controller
     return view('pages.inscriptions.archive');
   } 
   
-  public function editions(){
-    return view('pages.inscriptions.editions');
-  } 
-
+  
   public function etatdesarrieresinscrits(){
     // LISTE DES ELEVES DONT ARRIERE EST != 0
     $listeElevesArr = Eleve::where('ARRIERE', '!=', 0)->get();
@@ -1646,17 +1724,72 @@ public function eleveparclasseessai() {
     return view ('pages.inscriptions.verrouillage');
   }
   
-  public function recaculereffectifs(){
-    return view ('pages.inscriptions.recaculereffectifs');
-  }
+  public function recalculereffectifs() {
+    $eleves = Eleve::with('classe', 'serie')->get();
+    $promotions = Promo::all();
+    $series = Serie::all();
+    $effectifsParClasse = $eleves->groupBy('CODECLAS')->map(function($groupe) {
+        return [
+            'total' => $groupe->count(),
+            'garcons' => $groupe->where('SEXE', 1)->count(),
+            'filles' => $groupe->where('SEXE', 2)->count(),
+            'redoublants' => $groupe->where('STATUTG', 1)->count(),
+        ];
+    });
+    $effectifsParPromotion = $promotions->mapWithKeys(function($promo) use ($eleves) {
+        $classes = Classes::where('CODEPROMO', $promo->CODEPROMO)->pluck('CODECLAS'); 
+        $elevesPromo = $eleves->whereIn('CODECLAS', $classes);
+
+        return [
+            $promo->CODEPROMO => [ 
+                'total' => $elevesPromo->count(),
+                'totalClasses' => $classes->count(),
+                'garcons' => $elevesPromo->where('SEXE', 1)->count(),
+                'filles' => $elevesPromo->where('SEXE', 2)->count(),
+            ],
+        ];
+    });
+    
+    $effectifsParSerie = $series->mapWithKeys(function($serie) use ($eleves) {
+      $elevesSerie = $eleves->where('SERIE', $serie->SERIE);
+
+      return [
+          $serie->SERIE => [ // Assurez-vous que 'name' est le bon attribut pour le nom de la série
+              'totalClasses' => $elevesSerie->pluck('CODECLAS')->unique()->count(),
+              'total' => $elevesSerie->count(),
+              'garcons' => $elevesSerie->where('SEXE', 1)->count(),
+              'filles' => $elevesSerie->where('SEXE', 2)->count(),
+          ],
+      ];
+  });
+    
+    $effectifsAlphabetiques = [];
+    foreach ($eleves as $eleve) {
+        $premiereLettre = strtoupper(substr($eleve->NOM, 0, 1));
+        if (!isset($effectifsAlphabetiques[$premiereLettre])) {
+            $effectifsAlphabetiques[$premiereLettre] = 0;
+        }
+        $effectifsAlphabetiques[$premiereLettre]++;
+    }
+
+    return view('pages.inscriptions.recalculereffectifs', compact('effectifsParClasse', 'effectifsParPromotion', 'effectifsParSerie', 'effectifsAlphabetiques'));
+}
+
   
   public function enquetesstatistiques(){
     return view ('pages.inscriptions.enquetesstatistiques');
   }
   
   public function etatdelacaisse(){
-    return view ('pages.inscriptions.etatdelacaisse');
-  }
+    $chapitres = Chapitre::all();
+    $journals = Journal::all();
+
+    
+    return view ('pages.inscriptions.etatdelacaisse',compact('chapitres','journals'));
+  }   
+
+ 
+
   
   public function situationfinanciereglobale(){
     $eleves = Eleve::with('classe')->get(); // Récupérer tous les élèves avec leur classe
@@ -1703,11 +1836,11 @@ public function eleveparclasseessai() {
             
             // Calculate the total amounts based on AUTREF
             $totalArriere = Scolarite::where('MATRICULE', $matricule)
-                ->where('AUTREF', '1')
+                ->where('AUTREF', '2')
                 ->sum('MONTANT');
     
             $totalScolarite = Scolarite::where('MATRICULE', $matricule)
-                ->where('AUTREF', '2')
+                ->where('AUTREF', '1')
                 ->sum('MONTANT');
     
             $totalLibelle1 = Scolarite::where('MATRICULE', $matricule)
@@ -1721,6 +1854,10 @@ public function eleveparclasseessai() {
             $totalLibelle3 = Scolarite::where('MATRICULE', $matricule)
                 ->where('AUTREF', '5')
                 ->sum('MONTANT');
+            
+            $totalLibelle4 = Scolarite::where('MATRICULE', $matricule)
+              ->where('AUTREF', '6')
+              ->sum('MONTANT');
     
             // Pass the totals along with other data to the view
             return view('pages.inscriptions.Paiement', compact(
@@ -1737,35 +1874,76 @@ public function eleveparclasseessai() {
         $messages = [];
         $errors = [];
         $eleve = Eleve::where('MATRICULE', $matricule)->first();
-    
+
         // Vérifiez si l'élève existe
         if (!$eleve) {
-            return redirect()->back()->withErrors(['L\'élève avec ce matricule n\'existe pas.'])->withInput();
+            return redirect()
+                ->back()
+                ->withErrors(['L\'élève avec ce matricule n\'existe pas.'])
+                ->withInput();
         }
-    
+
         // Fonction pour obtenir ou générer un numéro unique
-        $getNumero = function($matricule, $dateOp) {
-            $existingScolarite = Scolarite::where('MATRICULE', $matricule)
-                ->where('DATEOP', $dateOp)
-                ->first();
+            $getNumero = function ($matricule, $dateOp) {
+            $existingScolarite = Scolarite::where('MATRICULE', $matricule)->where('DATEOP', $dateOp)->first();
             
             // Si une entrée existe, retourner son numéro
             if ($existingScolarite) {
-                return $existingScolarite->NUMERO;
+              return $existingScolarite->NUMERO;
             }
-    
+            
             // Sinon, générer un nouveau numéro basé sur le maximum existant
             return Scolarite::max('NUMERO') + 1; // Ajustement pour générer un nouveau numéro
-        };
-    
-        // Enregistrer le montant de l'arrière si présent et supérieur à 0
-        if ($request->filled('arriere') && $request->input('arriere') > 0) {
+          };
+          
+          // Enregistrer le montant de la scolarité si présent et supérieur à 0
+          if ($request->filled('scolarite') && $request->input('scolarite') > 0) {
+              $existingScolarite = Scolarite::where('MATRICULE', $matricule)
+                  ->where('DATEOP', $request->input('date_operation'))
+                  ->where('MONTANT', $request->input('scolarite'))
+                  ->where('AUTREF', '1') // Scolarité
+                  ->first();
+  
+              if ($existingScolarite) {
+                  $errors[] = 'Un paiement de scolarité similaire existe déjà pour cet élève.';
+              } else {
+                  $scolarite = new Scolarite();
+                  $scolarite->MATRICULE = $matricule;
+                  $scolarite->DATEOP = $request->input('date_operation');
+                  $scolarite->MODEPAIE = $request->input('mode_paiement');
+                  $scolarite->DATESAISIE = $request->input('date_operation'); // Enregistrer la date actuelle
+                  $scolarite->ANSCOL = $eleve->anneeacademique;
+                  $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
+                  $scolarite->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                  $scolarite->MONTANT = $request->input('scolarite');
+                  $scolarite->AUTREF = '1'; // Scolarité
+                  $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
+                  $scolarite->save();
+  
+                  // Enregistrement dans Journal
+                  $journal = new Journal();
+                  $journal->LIBELOP = 'Scolarité de ' . $eleve->NOM . ' ' . $eleve->MATRICULE;
+                  $journal->DATEOP = $request->input('date_operation');
+                  $journal->MODEPAIE = $request->input('mode_paiement');
+                  $journal->ANSCOL = $eleve->anneeacademique;
+                  $journal->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                  $journal->DEBIT = $request->input('scolarite');
+                  $journal->NumFRais = '1'; // Scolarité
+                  $journal->SIGNATURE = session()->get('nom_user');
+                  $journal->save();
+                                  
+                  $messages[] = 'Le montant de la scolarité a été enregistré avec succès.';
+              }
+          }
+          
+          // Enregistrer le montant de l'arrière si présent et supérieur à 0
+          if ($request->filled('arriere') && $request->input('arriere') > 0) {
             $existingScolarite = Scolarite::where('MATRICULE', $matricule)
                 ->where('DATEOP', $request->input('date_operation'))
                 ->where('MONTANT', $request->input('arriere'))
-                ->where('AUTREF', '1') // Arriéré
+                ->where('AUTREF', '2') // Arriéré
                 ->first();
-    
+
             if ($existingScolarite) {
                 $errors[] = 'Un arriéré similaire existe déjà pour cet élève.';
             } else {
@@ -1773,44 +1951,36 @@ public function eleveparclasseessai() {
                 $scolarite->MATRICULE = $matricule;
                 $scolarite->DATEOP = $request->input('date_operation');
                 $scolarite->MODEPAIE = $request->input('mode_paiement');
-                $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
+                $scolarite->DATESAISIE = $request->input('date_operation'); // Enregistrer la date actuelle
                 $scolarite->ANSCOL = $eleve->anneeacademique;
                 $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
+                $scolarite->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
                 $scolarite->MONTANT = $request->input('arriere');
-                $scolarite->AUTREF = '1'; // Arriéré
+                $scolarite->AUTREF = '2'; // Arriéré
                 $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
                 $scolarite->save();
+
+                // Enregistrement dans Journal
+                $journal = new Journal();
+                $journal->LIBELOP = 'Arriéré de ' . $eleve->NOM . ' ' . $eleve->MATRICULE;
+                $journal->DATEOP = $request->input('date_operation');
+                $journal->MODEPAIE = $request->input('mode_paiement');
+                $journal->ANSCOL = $eleve->anneeacademique;
+                $journal->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                $journal->DEBIT = $request->input('arriere');
+                $journal->NumFRais = '2'; // Arriéré
+                $journal->SIGNATURE = session()->get('nom_user');
+                $journal->save();
+                
                 $messages[] = 'Le montant de l\'arriéré a été enregistré avec succès.';
             }
-        }
-    
-        // Enregistrer le montant de la scolarité si présent et supérieur à 0
-        if ($request->filled('scolarite') && $request->input('scolarite') > 0) {
-            $existingScolarite = Scolarite::where('MATRICULE', $matricule)
-                ->where('DATEOP', $request->input('date_operation'))
-                ->where('MONTANT', $request->input('scolarite'))
-                ->where('AUTREF', '2') // Scolarité
-                ->first();
-    
-            if ($existingScolarite) {
-                $errors[] = 'Un paiement de scolarité similaire existe déjà pour cet élève.';
-            } else {
-                $scolarite = new Scolarite();
-                $scolarite->MATRICULE = $matricule;
-                $scolarite->DATEOP = $request->input('date_operation');
-                $scolarite->MODEPAIE = $request->input('mode_paiement');
-                $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
-                $scolarite->ANSCOL = $eleve->anneeacademique;
-                $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
-                $scolarite->MONTANT = $request->input('scolarite');
-                $scolarite->AUTREF = '2'; // Scolarité
-                $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
-                $scolarite->save();
-                $messages[] = 'Le montant de la scolarité a été enregistré avec succès.';
-            }
-        }
-    
-        // Enregistrer les montants additionnels (libelle-0, libelle-1, etc.) supérieurs à 0
+          }
+
+        // Tableau pour stocker les montants enregistrés récemment
+        $recentMontants = [];
+        $hiddenMontants = [];
+
+        // Enregistrer les montants additionnels (libelle-1, libelle-2, etc.) supérieurs à 0
         for ($i = 0; $i <= 3; $i++) {
             $libelle = $request->input('libelle_' . $i);
             if ($libelle !== null && $libelle > 0) {
@@ -1819,7 +1989,7 @@ public function eleveparclasseessai() {
                     ->where('MONTANT', $libelle)
                     ->where('AUTREF', strval($i + 3)) // Type de libellé
                     ->first();
-    
+
                 if ($existingScolarite) {
                     $errors[] = 'Un paiement additionnel similaire existe déjà pour cet élève (Libellé-' . $i . ').';
                 } else {
@@ -1827,52 +1997,75 @@ public function eleveparclasseessai() {
                     $scolarite->MATRICULE = $matricule;
                     $scolarite->DATEOP = $request->input('date_operation');
                     $scolarite->MODEPAIE = $request->input('mode_paiement');
-                    $scolarite->DATESAISIE = now(); // Enregistrer la date actuelle
+                    $scolarite->DATESAISIE = $request->input('date_operation'); // Enregistrer la date actuelle
                     $scolarite->ANSCOL = $eleve->anneeacademique;
                     $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
+                    $scolarite->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
                     $scolarite->MONTANT = $libelle;
                     $scolarite->AUTREF = strval($i + 3); // Différencier les libellés
                     $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
                     $scolarite->save();
+
+                    // Enregistrement dans Journal
+                    $journal = new Journal();
+                    $libelles = Params2::first();
+                    $libelleField = 'LIBELF' . $i+1;  // Concaténation de 'LIBELF' avec $i pour obtenir le champ correct
+                    $journal->LIBELOP = $libelles->$libelleField . ' de ' . $eleve->NOM . ' ' . $eleve->MATRICULE;
+                    $journal->DATEOP = $request->input('date_operation');
+                    $journal->MODEPAIE = $request->input('mode_paiement');
+                    $journal->ANSCOL = $eleve->anneeacademique;
+                    $journal->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                    $journal->DEBIT = $libelle;
+                    $journal->NumFRais = strval($i + 3); // Différencier les libellés
+                    $journal->SIGNATURE = session()->get('nom_user');
+                    $journal->save();
+
+                    // Ajouter le montant enregistré à la liste des montants récents
+                    $recentMontants['libelle_' . $i] = $libelle;
+
                     $messages[] = 'Le montant additionnel (Libellé-' . $i . ') a été enregistré avec succès.';
                 }
             }
         }
-    
+
+        // Stocker les montants récemment enregistrés dans la session
+        session()->put('recent_montants', $recentMontants);
+
         // Si des erreurs existent, ajouter à la session et retourner
         if (!empty($errors)) {
             return redirect()->back()->withErrors($errors)->withInput();
         }
-    
+
         // Si aucun doublon n'est rencontré et tout est sauvegardé, ajouter les messages de succès
         if (!empty($messages)) {
             session()->flash('messages', $messages);
         }
         
-        // Récupération des informations pertinentes
-        $eleve = Eleve::find($request->eleve_id);
-        $montantPaye = $request->montant_paye;
-        $scolarite = $request->scolarite;
-        $arriere = $request->arriere;
-        $NUMERO = $getNumero($matricule, $request->input('date_operation'));
-        $SIGNATURE = session()->get('nom_user');
-        $MONTANT = $libelle; // Assurez-vous que c'est bien un tableau de libellés
-
-        // Enregistrement dans la session
-        Session::put('eleve', $eleve);
-        Session::put('montantPaye', $montantPaye);
-        Session::put('scolarite', $scolarite);
-        Session::put('arriéré', $arriere);
-        Session::put('libelles', $MONTANT);
-        Session::put('numeroRecu', $NUMERO);
-        Session::put('signature', $SIGNATURE);
+        // Stockage des informations dans la session pour future référence
+        Session::put([
+            'eleve' => $eleve,
+            'montantPaye' => $request->input('montant_paye'),
+            'scolarite' => $request->input('scolarite'),
+            'scolarite_hidden' => $request->input('scolarite_hidden'),
+            'arriere' => $request->input('arriere'),
+            'arriere_hidden' => $request->input('arriere_hidden'),
+            'reliquat' => $request->input('reliquat_hidden'),
+            'numeroRecu' => $getNumero($matricule, $request->input('date_operation')),
+            'signature' => session()->get('nom_user'),
+            'modePaiement' => $request->input('mode_paiement'),
+            'montantdu' => $request->input('montant_total'),
+        ]);
+        
         // Redirection avec un message global de succès
         return redirect()->back()->with('success', 'Paiement enregistré avec succès !');
     }
   
-  public function etatdesrecouvrements(){
-    return view ('pages.inscriptions.etatdesrecouvrements');
-  }
+    public function etatdesrecouvrements(){
+      $typeclasse = Typeclasse::all();
+      $typeenseign = Typeenseigne::all();
+      $groupeclasse = Groupeclasse::all();
+      return view ('pages.inscriptions.etatdesrecouvrements', compact('typeclasse', 'typeenseign', 'groupeclasse'));
+    }
   public function modifieeleve(Request $request, $MATRICULE){
     $modifyeleve = Eleveplus::find($MATRICULE);
     if ($modifyeleve) {
@@ -1932,9 +2125,11 @@ public function eleveparclasseessai() {
       
       $redoublant = $request->has('redoublant') ? 1 : 0;
       $formateMatricule = str_pad($request->input('numOrdre'), 8, '0', STR_PAD_LEFT);
-      
+      $modifieleve->DATESOR = $request->input('datesortante');
+      $modifieleve->CLASSESOR = $request->input('classesortant');
+      $modifieleve->CODECLAS = $request->input('classe');
+
       $modifieleve->MATRICULE = $request->input('numOrdre');
-      $modifieleve->CodeReduction = $request->input('reduction');
       $modifieleve->NOM = $request->input('nom');
       $modifieleve->PRENOM = $request->input('prenom');
       $modifieleve->DATENAIS = $request->input('dateNaissance');
@@ -1965,5 +2160,12 @@ public function eleveparclasseessai() {
     
     return back()->withErrors('Erreur lors de la modification.');
   }
-  
+  public function etatdesarriérés() {
+    $archive = Elevea::select('MATRICULE', 'NOM', 'PRENOM')->get();
+    $delevea = Delevea::where('MONTANTARRIERE', '!=', 0)
+                      ->select('MATRICULE', 'MONTANTARRIERE', 'CODECLAS', 'MONTANTENAVANCE')
+                      ->get();
+    $eleve = Eleve::select('MATRICULE')->get();
+    return view('pages.inscriptions.etatdesarrieres', compact('archive', 'delevea', 'eleve'));
 }
+  

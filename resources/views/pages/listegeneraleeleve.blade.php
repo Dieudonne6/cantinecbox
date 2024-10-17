@@ -162,9 +162,9 @@
       let titreEtat = document.getElementById('titreEtat').value;
 
 // Utiliser un titre par défaut si le champ est vide
-if (!titreEtat) {
-    titreEtat = "Liste des élèves";
-}
+        if (!titreEtat) {
+            titreEtat = "Liste des élèves";
+        }
         // Créer un élément invisible pour l'impression
         let printDiv = document.createElement('div');
         printDiv.innerHTML = `
