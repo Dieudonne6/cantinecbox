@@ -269,7 +269,7 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                     <form id="deleteForm" method="POST">
                         @csrf
-                        @method('DELETE')
+                        @method('PUT')
                         <button type="submit" class="btn btn-danger">Supprimer</button>
                     </form>
                 </div>

@@ -12,7 +12,7 @@ class Eleve extends Model
     protected $table = 'eleve';
     protected $primaryKey = 'MATRICULE';
     public $timestamps = false;
-    protected $fillable = ['MATRICULE','NOM','PRENOM','CODECLAS','SEXE','Reduction','DATENAIS','LIEUNAIS'];
+    protected $fillable = ['MATRICULE','NOM','PRENOM','CODECLAS','SEXE','Reduction','DATENAIS','LIEUNAIS','PHOTO', 'CodeReduction', 'EXONERER', 'numordre', 'SERIE', 'ARRIERE', 'ARRIERE_INITIAL'];
     
     
 

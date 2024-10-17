@@ -70,8 +70,8 @@
       <button><a href="{{ url('/pointderecouvrement') }}"><i class="fas fa-chalkboard-teacher"></i> Point de recouvrement par enseignement</a></button>
       <button><a href="{{ url('/etatdesrecouvrements') }}"><i class="fas fa-file-invoice-dollar"></i> État des recouvrements</a></button>
       <button><a href="{{ url('/etatdesdroits') }}"><i class="fas fa-file-signature"></i> État des droits constatés par classe</a></button>
-      <button><a href="{{ url('/situationfinanciere') }}"><i class="fas fa-calendar-alt"></i> Situation financière selon l'échéancier</a></button>
-      <button><a href="{{ url('/listedesretardsdepaiement') }}"><i class="fas fa-exclamation-circle"></i> Liste des retards de paiement</a></button>
+      <button><a href="{{ url('/situationfinanceclasse') }}"><i class="fas fa-calendar-alt"></i> Situation financière selon l'échéancier</a></button>
+      <button><a href="{{ url('/retardpaiementclasse') }}"><i class="fas fa-exclamation-circle"></i> Liste des retards de paiement</a></button>
       <button><a href="{{ url('/lettresderelance') }}"><i class="fas fa-envelope"></i> Lettres de relance</a></button>
       <button><a href="{{ url('/situationfinanciereglobale') }}"><i class="fas fa-balance-scale"></i> Situation financière globale</a></button>
       <button><a href="{{ url('/listedesreductions') }}"><i class="fas fa-percentage"></i> Liste des réductions accordées</a></button>

@@ -16,15 +16,21 @@ class EleveController extends Controller
    {
        // Rechercher l'élève par son matricule
        $eleve = Eleve::where('MATRICULE', $matricule)->first();
+       $eleveClasse = $eleve->CODECLAS;
+       $eleve->CODECLAS = 'DELETE';
+       $eleve->ANCCLASSE = $eleveClasse;
+       $eleve->update();
 
-       if ($eleve) {
-           // Supprimer l'élève
-           $eleve->delete();
 
-           return redirect()->back()->with('status', 'Élève supprimé avec succès.');
-       }
+       return redirect()->back()->with('status', 'Élève supprimé avec succès.');
 
-       return redirect()->back()->with('status', 'Élève non trouvé.');
+    //    if ($eleve) {
+    //        // Supprimer l'élève
+    //        $eleve->delete();
+
+    //    }
+
+    //    return redirect()->back()->with('status', 'Élève non trouvé.');
    }
 
 }

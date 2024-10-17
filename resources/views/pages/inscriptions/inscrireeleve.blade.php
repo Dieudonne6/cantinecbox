@@ -61,11 +61,11 @@
                       <div class="col-sm-3">
                         <button type="button" class="btn btn-secondary">Classe précédente</button>
                       </div>
-                      <div class="col-sm-4 text-end">
+                      {{-- <div class="col-sm-4 text-end">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                           Données financières (Factures)
                         </button>
-                      </div>
+                      </div> --}}
                     </div>
                     {{-- </form> --}}
                     
@@ -78,10 +78,7 @@
                           <label for="photo">Photo</label>
                           <input type="file" id="photo" name="photo" class="form-control">
                         </div>
-                      </div>
-                      
-                      <!-- Section Identification -->
-                      <div class="form-group row mt-3">
+
                         <div class="col-md-4">
                           <label for="matricule">Matricule</label>
                           <input type="text" id="matricule" class="form-control" value="AUTO" readonly>
@@ -805,7 +802,7 @@
         var apte = $(this).data('apte');
 
         // Remplir le formulaire avec les informations de l'élève
-        $('#numero-ordre').val(matricule);
+       // $('#numero-ordre').val(matricule);
         $('#nom').val(nom);
         $('#prenom').val(prenom);
         $('#formSexe').val(sexe);
