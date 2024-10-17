@@ -21,6 +21,7 @@ use App\Models\Serie;
 use App\Models\Typeclasse;
 use App\Models\Typeenseigne;
 use App\Models\Elevea;
+use App\Models\Groupeclasse;
 use App\Models\Eleveplus;
 use App\Models\Echeance;
 use App\Models\Echeancc;
