@@ -2169,3 +2169,4 @@ public function eleveparclasseessai() {
     return view('pages.inscriptions.etatdesarrieres', compact('archive', 'delevea', 'eleve'));
 }
   
+}
