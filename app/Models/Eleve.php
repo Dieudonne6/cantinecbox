@@ -49,4 +49,10 @@ class Eleve extends Model
          {
              return $this->hasMany(Echeance::class, 'MATRICULE', 'MATRICULE');
          }
+         public function promotion() {
+            return $this->belongsTo(Promo::class, 'CODEPROMO');
+        }
+        public function serie() {
+            return $this->belongsTo(Serie::class, 'SERIE');
+        }
 }

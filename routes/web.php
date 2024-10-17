@@ -110,7 +110,7 @@ Route::get('/importer', [PagesController::class, 'importer']);
 
 Route::get('/verrouillage', [PagesController::class, 'verrouillage']);
 
-Route::get('/recaculereffectifs', [PagesController::class, 'recaculereffectifs']);
+Route::get('/recalculereffectifs', [PagesController::class, 'recalculereffectifs']);
 
 Route::put('/modifierfrais/{id_paramcontrat}', [PagesController::class, 'modifierfrais']);
 Route::get('/dashbord', [PagesController::class, 'dashbord']);
@@ -285,3 +285,5 @@ Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
 Route::get('/imprimer-profil-type-classe', [PagesController::class, 'imprimerProfilTypeClasse'])->name('impression.profil.type.classe');
 Route::get('/listedesreductions', [PagesController::class, 'listedesreductions']);
 Route::get('/pagedetail/{MATRICULE}', [GestionclasseController::class, 'pagedetail'])->name('pagedetail');
+Route::get('/etatdesdroits', [PagesController::class, 'etatdesdroits'])->name('etatdesdroits');
+Route::get('/etatdesarriérés', [PagesController::class, 'etatdesarriérés'])->name('etatdesarriérés');

@@ -524,6 +524,63 @@ class PagesController extends Controller
     return redirect('/');
   }
   
+  public function etatdesdroits(Request $request) {
+    $classe = Classes::all();
+    $params = Params2::first();
+    $selectedClasses = $request->input('selectedClasses', []);
+    $eleves = collect(); // Initialise la variable $eleves par défaut à une collection vide
+  
+    if ($request->ajax()) { // Vérifie si la requête est une requête AJAX
+        if (!empty($selectedClasses)) {
+            // Récupérer les élèves en fonction des classes sélectionnées
+            $eleves = Eleve::whereIn('CODECLAS', $selectedClasses)->get();
+  
+            // Vérifiez si des élèves ont été trouvés
+            if ($eleves->isEmpty()) {
+                return response()->json(['message' => 'Aucun élève trouvé pour les classes sélectionnées.'], 404);
+            }
+  
+            // Récupérer les montants pour chaque élève
+            $choixPlage = $request->input('choixPlage');
+            $eleves->transform(function ($eleve) use ($choixPlage, $params) {
+                if ($choixPlage === 'Tout') {
+                    // Récupérer tous les montants sans filtrer par AUTREF
+                    $montants = Scolarite::where('MATRICULE', $eleve->MATRICULE)->get();
+                } else {
+                    // Récupérer les montants filtrés par AUTREF
+                    $autrefMapping = [
+                        'Scolarité' => 1,
+                        'Arrièrés' => 2,
+                        $params->LIBELF1 => 3,
+                        $params->LIBELF2 => 4,
+                        $params->LIBELF3 => 5,
+                        $params->LIBELF4 => 6,
+                    ];
+                    $montants = Scolarite::where('MATRICULE', $eleve->MATRICULE)
+                        ->where('AUTREF', $autrefMapping[$choixPlage] ?? null)
+                        ->get();
+                }
+  
+                // Ajouter les montants à l'élève
+                $eleve->montants = $montants;
+  
+                return $eleve;
+            });
+        } else {
+            return response()->json(['message' => 'Aucune classe sélectionnée.'], 400);
+        }
+  
+        // Retourner les données en JSON pour les requêtes AJAX
+        return response()->json([
+            'eleves' => $eleves
+        ]);
+    }
+  
+    // Retourner la vue normalement pour les autres requêtes
+    return view('pages.inscriptions.etatdesdroits', compact('classe', 'params', 'eleves'));
+  }  
+  
+
   public function vitrine(){
     if(Session::has('account')){
       $totaleleve = Eleve::count();
@@ -1187,9 +1244,57 @@ public function eleveparclasseessai() {
     return view ('pages.inscriptions.verrouillage');
   }
   
-  public function recaculereffectifs(){
-    return view ('pages.inscriptions.recaculereffectifs');
-  }
+  public function recalculereffectifs() {
+    $eleves = Eleve::with('classe', 'serie')->get();
+    $promotions = Promo::all();
+    $series = Serie::all();
+    $effectifsParClasse = $eleves->groupBy('CODECLAS')->map(function($groupe) {
+        return [
+            'total' => $groupe->count(),
+            'garcons' => $groupe->where('SEXE', 1)->count(),
+            'filles' => $groupe->where('SEXE', 2)->count(),
+            'redoublants' => $groupe->where('STATUTG', 1)->count(),
+        ];
+    });
+    $effectifsParPromotion = $promotions->mapWithKeys(function($promo) use ($eleves) {
+        $classes = Classes::where('CODEPROMO', $promo->CODEPROMO)->pluck('CODECLAS'); 
+        $elevesPromo = $eleves->whereIn('CODECLAS', $classes);
+
+        return [
+            $promo->CODEPROMO => [ 
+                'total' => $elevesPromo->count(),
+                'totalClasses' => $classes->count(),
+                'garcons' => $elevesPromo->where('SEXE', 1)->count(),
+                'filles' => $elevesPromo->where('SEXE', 2)->count(),
+            ],
+        ];
+    });
+    
+    $effectifsParSerie = $series->mapWithKeys(function($serie) use ($eleves) {
+      $elevesSerie = $eleves->where('SERIE', $serie->SERIE);
+
+      return [
+          $serie->SERIE => [ // Assurez-vous que 'name' est le bon attribut pour le nom de la série
+              'totalClasses' => $elevesSerie->pluck('CODECLAS')->unique()->count(),
+              'total' => $elevesSerie->count(),
+              'garcons' => $elevesSerie->where('SEXE', 1)->count(),
+              'filles' => $elevesSerie->where('SEXE', 2)->count(),
+          ],
+      ];
+  });
+    
+    $effectifsAlphabetiques = [];
+    foreach ($eleves as $eleve) {
+        $premiereLettre = strtoupper(substr($eleve->NOM, 0, 1));
+        if (!isset($effectifsAlphabetiques[$premiereLettre])) {
+            $effectifsAlphabetiques[$premiereLettre] = 0;
+        }
+        $effectifsAlphabetiques[$premiereLettre]++;
+    }
+
+    return view('pages.inscriptions.recalculereffectifs', compact('effectifsParClasse', 'effectifsParPromotion', 'effectifsParSerie', 'effectifsAlphabetiques'));
+}
+
   
   public function enquetesstatistiques(){
     return view ('pages.inscriptions.enquetesstatistiques');
@@ -1475,9 +1580,12 @@ public function eleveparclasseessai() {
         return redirect()->back()->with('success', 'Paiement enregistré avec succès !');
     }
   
-  public function etatdesrecouvrements(){
-    return view ('pages.inscriptions.etatdesrecouvrements');
-  }
+    public function etatdesrecouvrements(){
+      $typeclasse = Typeclasse::all();
+      $typeenseign = Typeenseigne::all();
+      $groupeclasse = Groupeclasse::all();
+      return view ('pages.inscriptions.etatdesrecouvrements', compact('typeclasse', 'typeenseign', 'groupeclasse'));
+    }
   public function modifieeleve(Request $request, $MATRICULE){
     $modifyeleve = Eleveplus::find($MATRICULE);
     if ($modifyeleve) {
@@ -1572,5 +1680,13 @@ public function eleveparclasseessai() {
     
     return back()->withErrors('Erreur lors de la modification.');
   }
+  public function etatdesarriérés() {
+    $archive = Elevea::select('MATRICULE', 'NOM', 'PRENOM')->get();
+    $delevea = Delevea::where('MONTANTARRIERE', '!=', 0)
+                      ->select('MATRICULE', 'MONTANTARRIERE', 'CODECLAS', 'MONTANTENAVANCE')
+                      ->get();
+    $eleve = Eleve::select('MATRICULE')->get();
+    return view('pages.inscriptions.etatdesarrieres', compact('archive', 'delevea', 'eleve'));
+}
   
 }
