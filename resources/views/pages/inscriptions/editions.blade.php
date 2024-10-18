@@ -2,6 +2,10 @@
 @section('content')
 
 <style>
+
+
+
+
   .container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -80,185 +84,223 @@
       <button id="printButton" onclick="printTable()"><i class="fas fa-calendar-check"></i> Liste des élèves ayant un échéancier personnalisé</button>
       <button id="" onclick="imprimerPageTous()"><i class="fas fa-exclamation-triangle"></i> État général des arriérés (élèves inscrits)</button>
       <button id="" onclick="imprimerPageNonSolde()"><i class="fas fa-minus-circle"></i> État général des arriérés moins ceux qui sont soldés</button>
-      <button><a href="{{ url('/etatdesarriérésconstatés') }}"><i class="fas fa-file-invoice"></i> État des arriérés constatés (élèves inscrits)</a></button>
-      <button><a href="{{ url('/etatdesarriérés') }}"><i class="fas fa-exclamation"></i> État général des arriérés</a></button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-file-invoice"></i>
+        État des arriérés constatés (élèves inscrits)      </button>
+        <button><a href="{{ url('/etatdesarriérés') }}"><i class="fas fa-exclamation"></i> État général des arriérés</a></button>
+      </div>
     </div>
   </div>
-</div>
-<br><br>
-
-<!-- Button trigger modal -->
-
-
-<!-- Modal -->
-{{-- <div class="modal fade" id="modalregistrebb" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="printModalLabel">Choisir l'option d'impression</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="printOption" id="optionFiche" value="fiche">
-            <label class="form-check-label" for="optionFiche">
-              Registre par fiche
-            </label>
+  <br><br>
+  <!-- Button trigger modal -->
+  
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Etat des arrièrés constatés</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="arriereConstatForm" action="{{ url('/arriereconstate') }}" method="POST">
+          @csrf
+          <div class="modal-body d-flex justify-content-between">
+            <div class="w-50">
+              <label>Date début</label>
+              <input type="date" class="form-control" name="datedebut" required>
+            </div>
+            <div class="w-50">
+              <label>Date fin</label>
+              <input type="date" class="form-control" name="datefin" required>
+            </div>
           </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="printOption" id="optionTableau" value="tableau">
-            <label class="form-check-label" for="optionTableau">
-              Registre tableau
-            </label>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
           </div>
         </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-        <button type="button" class="btn btn-primary" id="btnImprimer">Imprimer</button>
+    </div>
+  </div>
+
+  <!-- Button trigger modal -->
+  
+  
+  <!-- Modal -->
+  {{-- <div class="modal fade" id="modalregistrebb" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="printModalLabel">Choisir l'option d'impression</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="printOption" id="optionFiche" value="fiche">
+              <label class="form-check-label" for="optionFiche">
+                Registre par fiche
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="printOption" id="optionTableau" value="tableau">
+              <label class="form-check-label" for="optionTableau">
+                Registre tableau
+              </label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          <button type="button" class="btn btn-primary" id="btnImprimer">Imprimer</button>
+        </div>
+      </div>
+    </div>
+  </div> --}}
+  
+  <!-- Modal pour registre des eleves -->
+  <div class="modal fade" id="modalregistre" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Choix du type de registre</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-check">
+            <label class="form-check-label">
+              <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="1" checked>
+              Registre par fiche
+            </label>
+            <p>Le registre est trié sur le nom</p>
+          </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="0">
+              Registre par tableau
+            </label>
+            <p>Le registre est trié sur le matricule</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <a type="button" id="btnImprimerregistre" class="btn btn-primary">Imprimer</a>
+        </div>
       </div>
     </div>
   </div>
-</div> --}}
-
-<!-- Modal pour registre des eleves -->
-<div class="modal fade" id="modalregistre" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Choix du type de registre</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-check">
-          <label class="form-check-label">
-            <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="1" checked>
-            Registre par fiche
-          </label>
-          <p>Le registre est trié sur le nom</p>
+  
+  <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Liste des élèves par profil</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="0">
-            Registre par tableau
-          </label>
-          <p>Le registre est trié sur le matricule</p>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <a type="button" id="btnImprimerregistre" class="btn btn-primary">Imprimer</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Liste des élèves par profil</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="col-12 grid-margin">
-          <div class="card">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-12">
-                  <div class="form-group row">
-                    <!-- Contenu du modal -->
-                    @php
-                    use App\Models\Typeclasse;
-                    $typeclasse = Typeclasse::all();
-                    @endphp
-                    <select name="typeclasse" id="typeclasse">
-                      @foreach ($typeclasse as $type)
-                      <option value="{{ $type->TYPECLASSE }}">{{ $type->LibelleType }}</option>
-                      @endforeach
-                    </select>
+        <div class="modal-body">
+          <div class="col-12 grid-margin">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group row">
+                      <!-- Contenu du modal -->
+                      @php
+                      use App\Models\Typeclasse;
+                      $typeclasse = Typeclasse::all();
+                      @endphp
+                      <select name="typeclasse" id="typeclasse">
+                        @foreach ($typeclasse as $type)
+                        <option value="{{ $type->TYPECLASSE }}">{{ $type->LibelleType }}</option>
+                        @endforeach
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <button type="button" class="btn btn-primary" id="imprimerBtn" onclick="window.location.href='{{ route('impression.profil.type.classe') }}?typeclasse=' + document.getElementById('typeclasse').value;">Imprimer</button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-primary" id="imprimerBtn" onclick="window.location.href='{{ route('impression.profil.type.classe') }}?typeclasse=' + document.getElementById('typeclasse').value;">Imprimer</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div id="printableTable" class="d-none"> 
-  <h4 class="card-title text-center">Liste des élèves dont l'échéancier a été personnalisé</h4>
-  
-  <table id="elevesTable">
-    <thead>
-      <tr>
-        <th>Matricule</th>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>Matricule</th>
-        <th>Nom</th>
-        <th>Prénom</th>
-      </tr>
-    </thead>
-    <tbody>
-      @php
-      $currentClasse = null;
-      $count = 0; // Compteur d'élèves
-      $totalEleves = 0; // Compteur total d'élèves
-      @endphp
-      @foreach ($eleves as $eleve)
-      @if ($currentClasse !== $eleve->CODECLAS)
-      @if ($currentClasse !== null)
-      <tr><td colspan="6"></td></tr>
-      @endif
-      <tr class="classe-row">
-        <td colspan="6">{{ $eleve->CODECLAS }}</td>
-      </tr>
-      @php
-      $currentClasse = $eleve->CODECLAS;
-      $count = 0; // Réinitialiser le compteur pour la nouvelle classe
-      @endphp
-      @endif
-      
-      @if ($count % 2 == 0)
-      <tr>
+  <div id="printableTable" class="d-none"> 
+    <h4 class="card-title text-center">Liste des élèves dont l'échéancier a été personnalisé</h4>
+    
+    <table id="elevesTable">
+      <thead>
+        <tr>
+          <th>Matricule</th>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Matricule</th>
+          <th>Nom</th>
+          <th>Prénom</th>
+        </tr>
+      </thead>
+      <tbody>
+        @php
+        $currentClasse = null;
+        $count = 0; // Compteur d'élèves
+        $totalEleves = 0; // Compteur total d'élèves
+        @endphp
+        @if(isset($eleves) && !empty($eleves))
+        @foreach ($eleves as $eleve)
+        @if ($currentClasse !== $eleve->CODECLAS)
+        @if ($currentClasse !== null)
+        <tr><td colspan="6"></td></tr>
+        @endif
+        <tr class="classe-row">
+          <td colspan="6">{{ $eleve->CODECLAS }}</td>
+        </tr>
+        @php
+        $currentClasse = $eleve->CODECLAS;
+        $count = 0; // Réinitialiser le compteur pour la nouvelle classe
+        @endphp
         @endif
         
-        <td>{{ $eleve->MATRICULE }}</td>
-        <td>{{ $eleve->NOM }}</td>
-        <td>{{ $eleve->PRENOM }}</td>
+        @if ($count % 2 == 0)
+        <tr>
+          @endif
+          
+          <td>{{ $eleve->MATRICULE }}</td>
+          <td>{{ $eleve->NOM }}</td>
+          <td>{{ $eleve->PRENOM }}</td>
+          
+          @if ($count % 2 == 1)
+        </tr>
+        @endif
         
-        @if ($count % 2 == 1)
+        @php
+        $count++; // Incrémenter le compteur pour chaque élève
+        $totalEleves++; // Incrémenter le total d'élèves
+        @endphp
+        @endforeach
+        @endif
+        @if ($count % 2 != 0)
       </tr>
       @endif
       
-      @php
-      $count++; // Incrémenter le compteur pour chaque élève
-      $totalEleves++; // Incrémenter le total d'élèves
-      @endphp
-      @endforeach
-      
-      @if ($count % 2 != 0)
-    </tr>
-    @endif
-    
-    <!-- Ligne pour afficher le nombre total d'élèves -->
-    <tr class="total-row">
-      <td colspan="3">Total d'élèves :</td>
-      <td colspan="3">{{ $totalEleves }}</td>
-    </tr>
-  </tbody>
-</table>
+      <!-- Ligne pour afficher le nombre total d'élèves -->
+      <tr class="total-row">
+        <td colspan="3">Total d'élèves :</td>
+        <td colspan="3">{{ $totalEleves }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
+
+
+
+
+
 <div id="contenu" class="d-none">
   <h4 class="card-title text-center">Etat des arrièré (Elèves inscrits)</h4>
-
+  
   <div class="print-table">
     <table style="width: 100%">
       <thead>
@@ -276,6 +318,8 @@
       $index = 0;
       @endphp
       <tbody>
+        @if(isset($resultats) && !empty($resultats))
+        
         @foreach ($resultats as $resultat)
         <tr class="eleve">
           <td>
@@ -303,51 +347,56 @@
             $index++;
             @endphp
             @endforeach
+            @endif
+            @if(isset($totalDues) && !empty($totalDues))
+            
             <tr>
               <td colspan="4" style="text-align: right;"><strong>Total :</strong></td>
               <td><strong>{{ $totalDues }}</strong></td>
               <td><strong>{{ $totalPayes }}</strong></td>
               <td><strong>{{ $totalRestes }}</strong></td>
             </tr>
+            @endif
           </tbody>
         </table>
       </div>
     </div>
+    @if(isset($resultats) && !empty($resultats))
     <div id="contenuNonSolde" class="d-none">
       <h4 class="card-title text-center">État général des arriérés moins ceux qui sont soldés</h4>
       <table style="width: 100%">
-          <thead>
-              <tr>
-                  <th>Num</th>
-                  <th>Nom </th>
-                  <th>Prénom</th>
-                  <th>Classe</th>
-                  <th>MONTANT DU</th>
-                  <th>PAYE</th>
-                  <th>RESTE</th>
-              </tr>
-          </thead>
-          <tbody>
-              @php $index = 1; @endphp
-              @foreach ($resultats as $resultat)
-                  @if ($resultat['RESTE'] > 0)
-                  <tr>
-                      <td>{{ $index++ }}</td>
-                      <td>{{ $resultat['NOM'] }}</td>
-                      <td>{{ $resultat['PRENOM'] }}</td>
-                      <td>{{ $resultat['CLASSE'] }}</td>
-                      <td>{{ $resultat['ARRIERE'] }}</td>
-                      <td>{{ $resultat['PAYE'] }}</td>
-                      <td>{{ $resultat['RESTE'] }}</td>
-                  </tr>
-                  @endif
-              @endforeach
-          </tbody>
+        <thead>
+          <tr>
+            <th>Num</th>
+            <th>Nom </th>
+            <th>Prénom</th>
+            <th>Classe</th>
+            <th>MONTANT DU</th>
+            <th>PAYE</th>
+            <th>RESTE</th>
+          </tr>
+        </thead>
+        <tbody>
+          @php $index = 1; @endphp
+          @foreach ($resultats as $resultat)
+          @if ($resultat['RESTE'] > 0)
+          <tr>
+            <td>{{ $index++ }}</td>
+            <td>{{ $resultat['NOM'] }}</td>
+            <td>{{ $resultat['PRENOM'] }}</td>
+            <td>{{ $resultat['CLASSE'] }}</td>
+            <td>{{ $resultat['ARRIERE'] }}</td>
+            <td>{{ $resultat['PAYE'] }}</td>
+            <td>{{ $resultat['RESTE'] }}</td>
+          </tr>
+          @endif
+          @endforeach
+        </tbody>
       </table>
-  </div>
-
+    </div>
+    @endif
     <script>
-     
+      
       document.getElementById('btnImprimerregistre').addEventListener('click', function() {
         // Récupérer l'option sélectionnée (1 ou 0)
         const selectedOption = document.querySelector('input[name="optionsRadios"]:checked').value;
@@ -379,8 +428,7 @@
           .classe-row {
               background-color: #f9f9f9;
               font-weight: bold;
-          }
-      `;
+          }`;
         document.head.appendChild(style);
       }
       
@@ -405,29 +453,46 @@
         
       }
       // Fonction pour imprimer tous les élèves
-function imprimerPageTous() {
-    injectTableStyles();
-    var originalContent = document.body.innerHTML;
-    var printContent = document.getElementById('contenu').innerHTML;
-    document.body.innerHTML = printContent;
+      function imprimerPageTous() {
+        injectTableStyles();
+        var originalContent = document.body.innerHTML;
+        var printContent = document.getElementById('contenu').innerHTML;
+        document.body.innerHTML = printContent;
+        setTimeout(function() {
+          window.print();
+          document.body.innerHTML = originalContent;
+        }, 1000);
+      }
+      
+
+      function imprimerArriereConstat() {
+    injectTableStyles(); // Injecter les styles pour l'impression
+    var originalContent = document.body.innerHTML; // Contenu original de la page
+    var printContent = document.getElementById('ArriereConstat').innerHTML; // Contenu spécifique à imprimer
+    document.body.innerHTML = printContent; // Remplacer le contenu de la page par le contenu à imprimer
+
     setTimeout(function() {
-        window.print();
-        document.body.innerHTML = originalContent;
+        window.print(); // Ouvrir la boîte de dialogue d'impression
+        document.body.innerHTML = originalContent; // Restaurer le contenu original
     }, 1000);
 }
 
-// Fonction pour imprimer seulement les élèves non soldés
-function imprimerPageNonSolde() {
-    injectTableStyles();
-    var originalContent = document.body.innerHTML;
-    var printContent = document.getElementById('contenuNonSolde').innerHTML;  // Cibler le tableau spécifique des non soldés
-    document.body.innerHTML = printContent;
-    setTimeout(function() {
-        window.print();
-        document.body.innerHTML = originalContent;
-    }, 1000);
-}
+      
 
+
+      
+      // Fonction pour imprimer seulement les élèves non soldés
+      function imprimerPageNonSolde() {
+        injectTableStyles();
+        var originalContent = document.body.innerHTML;
+        var printContent = document.getElementById('contenuNonSolde').innerHTML;  // Cibler le tableau spécifique des non soldés
+        document.body.innerHTML = printContent;
+        setTimeout(function() {
+          window.print();
+          document.body.innerHTML = originalContent;
+        }, 1000);
+      }
+      
     </script>
     
     @endsection

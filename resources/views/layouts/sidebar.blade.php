@@ -282,7 +282,7 @@
 
           {{-- Editions --}}
           @php
-              $routeseditions = ['editions', 'listedeseleves', 'listedesclasses', 'listeselectiveeleve', 'eleveparclasse', 'certificatsolarite', 'etatdelacaisse','enquetesstatistiques','situationfinanciereglobale','etatdesrecouvrements']; // Liste des noms de routes associées à l'accueil
+              $routeseditions = ['editions', 'listedeseleves', 'listedesclasses', 'listeselectiveeleve', 'eleveparclasse', 'certificatsolarite', 'etatdelacaisse','enquetesstatistiques','situationfinanciereglobale','etatdesrecouvrements','arriereconstate']; // Liste des noms de routes associées à l'accueil
               @endphp
               <li class="nav-item">
                 <a class="nav-link {{ in_array(request()->route()->getName(), $routeseditions) ? 'active' : '' }}" href="{{ route('editions') }}">Editions</a>

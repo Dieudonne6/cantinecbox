@@ -194,6 +194,10 @@ Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::c
 
 Route::get('/archive', [PagesController::class, 'archive']);
 Route::get('/editions', [EditionController::class, 'editions'])->name('editions');
+Route::get('/journalderecouvrement', [EditionController::class, 'journal'])->name('journal');
+
+Route::post('/arriereconstate', [EditionController::class, 'arriereconstate'])->name('arriereconstate');
+
 Route::get('/etatdesarrieresinscrits', [PagesController::class, 'etatdesarrieresinscrits']);
 Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse'])->name('eleveparclasse');
 Route::get('/eleveparclassespecifique/{classeCode}', [PagesController::class, 'eleveparclassespecifique']);
