@@ -26,10 +26,9 @@
                                 <i class="typcn typcn-printer btn-icon-prepend"></i> Filtrer pour imprimer
                             </button>
                         </div>
-                        <div>
-                            <button id="recalculer" type="button" class="btn btn-primary btn-sm">Recalculer
-                                effectifs</button>
-                        </div>
+{{--                         <div>
+                            <button id="recalculer" type="button" class="btn btn-primary btn-sm">Recalculer effectifs</button>
+                        </div> --}}
                         <div>
                             <table id="tableau-effectifs" class="table">
                                 <tbody>
@@ -91,7 +90,7 @@
                                     <option value="">Selectionnez la catégorie</option>
                                     <option value="2">Ancien</option>
                                     <option value="1">Nouveau</option>
-                                    <option value="3">Transférés</option>
+                                    {{-- <option value="3">Transférés</option> --}}
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -238,7 +237,7 @@
                                                     <li><a class="dropdown-item"
                                                             href="/echeancier/{{ $eleve->MATRICULE }}">Echéance</a>
                                                     </li>
-                                                    <li><a class="dropdown-item" href="#">Cursus</a></li>
+                                                   {{--  <li><a class="dropdown-item" href="#">Cursus</a></li> --}}
                                                 </ul>
                                             </div>
                                         </td>
@@ -270,7 +269,7 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                     <form id="deleteForm" method="POST">
                         @csrf
-                        @method('DELETE')
+                        @method('PUT')
                         <button type="submit" class="btn btn-danger">Supprimer</button>
                     </form>
                 </div>

@@ -12,6 +12,7 @@ use App\Models\Classesgroupeclass;
 use App\Models\Groupeclasse;
 use App\Models\Classes;
 use App\Models\Eleve;
+use App\Models\Elevea;
 use App\Models\Serie;
 use App\Models\Faute;
 use App\Models\Tfautes;
@@ -21,6 +22,9 @@ use App\Models\Typeclasse;
 use App\Models\Params2;
 use App\Models\Typeenseigne;
 use App\Models\Eleveplus;
+use App\Models\Echeancec;
+use App\Models\Echeance;
+use App\Models\Paramcontrat;
 use Carbon\Carbon;
 use App\Http\Requests\inscriptionEleveRequest;
 use Illuminate\Validation\Rule;
@@ -30,6 +34,8 @@ use Illuminate\Database\QueryException;
 
 use App\Models\Promo;
 use App\Models\Notes;
+use App\Models\Scolarite;
+use App\Models\Echeance;
 
 class GestionclasseController extends Controller
 {
@@ -822,8 +828,30 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
     // Récupérer la valeur du checkbox de redoublant
     $redoublant = $request->has('redoublant') ? 1 : 0;
 
+    // Recuperer la serie et le typeenseign de la classe selectionne
+
+    $classeSelectionne = Classes::where('CODECLAS', $request->input('classe'))->first(); 
+    $serieClasse = $classeSelectionne->SERIE;
+    $typeenseignClasse = $classeSelectionne->TYPEENSEIG;
+    $typeeClasse = $classeSelectionne->TYPECLASSE;
+    // dd($typeeClasse);
+
+    // Recuperation de l'arrierrer si l'eleve est un nouveau ou pas
+    $typeElev = $request->input('typeEleve');
+    // if ($typeElev == 1) {
+    //     $arriere = 0;
+    // } else {
+    //     // chercher son arrierer dans la table elevesa dans scoracine
+    //     $archiveEleve = Elevea::where('NOM', $request->input('nom'))
+    //                     ->where('PRENOM', $request->input('prenom'))
+    //                     ->first();
+    //     $arriere = $archiveEleve ? $archiveEleve->MONTANTARRIERE : 0;
+    // }
+    // dd($arriere);
+
     $nouveauEleve = new Eleve();
     $nouveauEleve->CODECLAS = $request->input('classe');
+    $nouveauEleve->PCLASSE = $request->input('classe');
 
     if(($request->input('classeEntre')) === 'idem'){
         $nouveauEleve->ANCCLASSE = $request->input('classe');
@@ -840,13 +868,33 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
     $nouveauEleve->LIEUNAIS = $request->input('lieuNaissance');
     $nouveauEleve->DATEINS = $request->input('dateInscription');
     $nouveauEleve->CODEDEPT = $request->input('departement');
+    $nouveauEleve->EXONERER = 2;
+    $nouveauEleve->numordre = 99;
     $nouveauEleve->SEXE = $request->input('sexe');
+    $nouveauEleve->SERIE = $serieClasse;
     $nouveauEleve->STATUTG = $request->input('typeEleve');
     $nouveauEleve->APTE = $request->input('aptituteSport');
     $nouveauEleve->ADRPERS = $request->input('adressePersonnelle');
     $nouveauEleve->ETABORIG = $request->input('etablissementOrigine');
     $nouveauEleve->NATIONALITE = $request->input('nationalite');
+    $nouveauEleve->TYPEENSEIG = $typeenseignClasse;
+    $nouveauEleve->TYPECLASSE = $typeeClasse;
     $nouveauEleve->STATUT = $redoublant;
+
+    if ($typeElev == 1) {
+        $arriere = 0;
+    $nouveauEleve->ARRIERE = $arriere;
+    $nouveauEleve->ARRIERE_INITIAL = $arriere;
+    } else {
+        // chercher son arrierer dans la table elevesa dans scoracine
+        $archiveEleve = Elevea::where('NOM', $request->input('nom'))
+                        ->where('PRENOM', $request->input('prenom'))
+                        ->first();
+        $arriere = $archiveEleve ? $archiveEleve->MONTANTARRIERE : 0;
+        $nouveauEleve->ARRIERE = $arriere;
+        $nouveauEleve->ARRIERE_INITIAL = $arriere;
+    }
+
     $nouveauEleve->NOMPERE = $request->input('nomPere');
     $nouveauEleve->NOMMERE = $request->input('nomMere');
     $nouveauEleve->ADRPAR = $request->input('adressesParents');
@@ -860,17 +908,25 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
     $nouveauEleve->save();
 
     $infoclasse = Classes::where('CODECLAS', ($request->input('classe')))->first();
-    $TYPEENSEIG = $infoclasse->TYPEENSEIG;
-    $TYPECLASSE = $infoclasse->TYPECLASSE;
-    $SERIE = $infoclasse->SERIE;
+    // $TYPEENSEIG = $infoclasse->TYPEENSEIG;
+    // $TYPECLASSE = $infoclasse->TYPECLASSE;
+    // $SERIE = $infoclasse->SERIE;
     // dd($SERIE);
 
     $infoeleve = Eleve::where('MATRICULE', ($request->input('numOrdre')))->first();
-    $infoeleve->TYPEENSEIG = $TYPEENSEIG;
-    $infoeleve->TYPECLASSE = $TYPECLASSE;
-    $infoeleve->SERIE = $SERIE;
-    $infoeleve->save();
+    // $infoeleve->TYPEENSEIG = $TYPEENSEIG;
+    // $infoeleve->TYPECLASSE = $TYPECLASSE;
+    // $infoeleve->SERIE = $SERIE;
+    // $infoeleve->save();
 
+    $echeanceClasse = Echeancec::where('CODECLAS', $request->input('classe'))->get();
+    $infoparamcontrat = Paramcontrat::first();
+    $anneencours = $infoparamcontrat->anneencours_paramcontrat;
+    $annesuivante = $anneencours + 1;
+    $annescolaire = $anneencours.'-'.$annesuivante;
+    Echeance::where('MATRICULE', $request->input('numOrdre'))->delete();
+
+    // dd($echeanceClasse);
     // dd($infoclasse);
     if(($request->input('typeEleve')) == 2) {
         $infoeleve->APAYER = $infoclasse->APAYER2;
@@ -879,6 +935,30 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
         $infoeleve->FRAIS3 = $infoclasse->FRAIS3_A;
         $infoeleve->FRAIS4 = $infoclasse->FRAIS4_A;
         $infoeleve->save();
+
+        // Enregistrer les donne dans echeance
+        $montantInitial = $arriere; // Le montant que tu veux mettre sur la première ligne
+        $isFirst = true;
+
+        foreach ($echeanceClasse as $index => $echeanceData) {
+            if ($isFirst) {
+                $montantAPayer = $montantInitial;
+                $isFirst = false; // Après la première ligne, changer l'état du drapeau
+              } else {
+                $montantAPayer = 0; // Mettre 0 pour les autres lignes
+              }
+            Echeance::create([
+                'MATRICULE' => $request->input('numOrdre'),
+                'NUMERO' => $echeanceData['NUMERO'], // Numérotation des échéances
+                'APAYER' => $echeanceData['APAYER2'],
+                'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
+                'DATEOP' => $echeanceData['DATEOP2'], // Date spécifique de l'échéance,
+                'anneeacademique' => $annescolaire,
+            ]);
+
+        }
+
+
     } else {
         $infoeleve->APAYER = $infoclasse->APAYER;
         $infoeleve->FRAIS1 = $infoclasse->FRAIS1;
@@ -886,6 +966,21 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
         $infoeleve->FRAIS3 = $infoclasse->FRAIS3;
         $infoeleve->FRAIS4 = $infoclasse->FRAIS4;
         $infoeleve->save();
+
+        // Enregistrer les donne dans echeance
+        foreach ($echeanceClasse as $index => $echeanceData) {
+
+            Echeance::create([
+                'MATRICULE' => $request->input('numOrdre'),
+                'NUMERO' => $echeanceData['NUMERO'], // Numérotation des échéances
+                'APAYER' => $echeanceData['APAYER'],
+                'ARRIERE' => 0, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
+                'DATEOP' => $echeanceData['DATEOP'], // Date spécifique de l'échéance,
+                'anneeacademique' => $annescolaire,
+            ]);
+
+        }
+
     }
 
 
@@ -1003,20 +1098,68 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
     }
   }
 
-    public function pagedetail($MATRICULE)
+  public function pagedetail($MATRICULE)
 {
-      $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
-    // $eleves = Eleve::with('classe.promo')->get();
+    // Récupérer les informations de l'élève
+    $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
+    
+    // Si l'élève n'est pas trouvé, rediriger ou gérer l'erreur
+    if (!$eleve) {
+        return redirect()->back()->with('error', 'Élève non trouvé');
+    }
+
+    // Récupérer les données associées
     $allClass = Classes::all();
     $serie = Serie::get();
     $promotion = Promo::all();
     $typeenseigne = Typeenseigne::get();
     $typeclah = Typeclasse::get();
+    $libelles = Params2::first();
+    $echeancee = Echeance::where('MATRICULE', $eleve->MATRICULE)->get();
+    $scolarite = Scolarite::where('MATRICULE', $eleve->MATRICULE)->get();      
 
-        // Récupérer les élèves avec leurs notes
-        // $eleves = Eleve::with('notes')->get();
+    // Calcul des sommes pour les différentes catégories de frais
+    $sums = Scolarite::where('MATRICULE', $MATRICULE)
+        ->whereIn('AUTREF', [1, 2, 3, 4, 5, 6])
+        ->get()
+        ->groupBy('AUTREF')
+        ->map(function ($group) {
+            return $group->sum('MONTANT');
+        });
 
-    return view('pages.inscriptions.pagedetail', compact('eleve','allClass','serie','promotion','typeclah','typeenseigne'));
+    // Assigner les sommes ou définir à 0 si aucun résultat
+    $sommeScolarité = $sums->get(1, 0);
+    $sommeArriéré = $sums->get(2, 0);
+    $sommeFrais1 = $sums->get(3, 0);
+    $sommeFrais2 = $sums->get(4, 0);
+    $sommeFrais3 = $sums->get(5, 0);
+    $sommeFrais4 = $sums->get(6, 0);
+
+    // Récupération de la valeur typeclasse pour l'élève
+    $typeclasse = $eleve->typeclasse;
+
+    // Calcul de la somme totale en fonction de typeclasse
+    if ($typeclasse == 1) {
+        $sommeTotale = Scolarite::where('MATRICULE', $MATRICULE)
+            ->whereIn('AUTREF', [1, 2])
+            ->sum('MONTANT');
+    } else {
+        $sommeTotale = Scolarite::where('MATRICULE', $MATRICULE)
+            ->whereIn('AUTREF', [1, 2, 3, 4, 5, 6])
+            ->sum('MONTANT');
+    }
+
+    // Retourner la vue avec les données compactées
+    return view('pages.inscriptions.pagedetail', compact(
+        'sommeScolarité', 'sommeArriéré', 'sommeFrais1', 
+        'sommeFrais2', 'sommeFrais3', 'sommeFrais4', 
+        'eleve', 'allClass', 'serie', 'promotion', 
+        'typeclah', 'typeenseigne', 'libelles', 'echeancee',
+        'sommeTotale'
+    ));
 }
+
+  
+  
 
 }

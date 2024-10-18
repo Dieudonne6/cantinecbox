@@ -1,14 +1,8 @@
-  public function imprimerProfilTypeClasse(Request $request) {
-    $typeClasse = $request->input('typeclasse');
-    $reductions = Reduction::all();
-    $typeclasse = Typeclasse::all();
-    $eleves = Eleve::with('reduction') // Charge la relation 'reduction'
-        ->where('TYPECLASSE', $typeClasse) // Filtrer les élèves par type de classe
-        ->where('CodeReduction', '!=', null) // Filtrer les élèves ayant une réduction
-        ->get(); // Récupérer tous les élèves sans pagination
+// PagesController.php
 
-    // Regrouper les élèves par CodeReduction
-    $elevesParReduction = $eleves->groupBy('CodeReduction');
+  --------------------------------------------------------
+  //Eleve.php
 
-    return view('pages.inscriptions.profiltypeclasse', compact('typeClasse', 'reductions', 'typeclasse', 'elevesParReduction', 'eleves'));
-}
+
+        ------------------------------------------------------------------------ 
+        

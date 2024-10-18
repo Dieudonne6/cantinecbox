@@ -110,7 +110,7 @@ Route::get('/importer', [PagesController::class, 'importer']);
 
 Route::get('/verrouillage', [PagesController::class, 'verrouillage']);
 
-Route::get('/recaculereffectifs', [PagesController::class, 'recaculereffectifs']);
+Route::get('/recalculereffectifs', [PagesController::class, 'recalculereffectifs']);
 
 Route::put('/modifierfrais/{id_paramcontrat}', [PagesController::class, 'modifierfrais']);
 Route::get('/dashbord', [PagesController::class, 'dashbord']);
@@ -163,7 +163,9 @@ Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);
 
 Route::get('/paiementeleve/{matricule}', [PagesController::class, 'paiementeleve'])->name('paiementeleve');
 Route::post('/paiement/{matricule}', [PagesController::class, 'enregistrerPaiement'])->name('enregistrer.paiement');
-Route::get('/pages\Etats\recuspaiementgenerale/{matricule}', [PagesController::class, 'recuspaiementgenerale'])->name('recuspaiementgenerale');
+Route::get('/recouvrementGenerale', [PagesController::class, 'recouvrementGenerale'])->name('recouvrementGenerale');
+Route::get('/recouvrementGenParPeriode', [PagesController::class, 'recouvrementGenParPeriode'])->name('recouvrementGenParPeriode');
+
 
 
 Route::get('/duplicatainscription/{elevyo}',[ClassesController::class,'duplicatainscription']);
@@ -201,6 +203,12 @@ Route::post('/arriereconstate', [EditionController::class, 'arriereconstate'])->
 Route::get('/etatdesarrieresinscrits', [PagesController::class, 'etatdesarrieresinscrits']);
 Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse'])->name('eleveparclasse');
 Route::get('/eleveparclassespecifique/{classeCode}', [PagesController::class, 'eleveparclassespecifique']);
+
+Route::get('/retardpaiementclasse', [PagesController::class, 'retardpaiementclasse'])->name('retardpaiementclasse');
+Route::get('/rpaiementclassespecifique/{classeCode}', [PagesController::class, 'rpaiementclassespecifique']);
+
+Route::get('/situationfinanceclasse', [PagesController::class, 'situationfinanceclasse'])->name('situationfinanceclasse');
+Route::get('/sfinanceclassespecifique/{classeCode}', [PagesController::class, 'sfinanceclassespecifique']);
 Route::get('/essai', [PagesController::class, 'eleveparclasseessai']);
 
 
@@ -217,6 +225,10 @@ Route::get('/etatdesrecouvrements', [PagesController::class, 'etatdesrecouvremen
 
 Route::get('/enquetesstatistiques', [PagesController::class, 'enquetesstatistiques'])->name('enquetesstatistiques');
 Route::get('/etatdelacaisse', [PagesController::class, 'etatdelacaisse'])->name('etatdelacaisse');
+Route::get('/etatdelacaisse/{chapitre?}', [PagesController::class, 'etatdelacaisse']);
+
+
+
 Route::get('/situationfinanciereglobale',[PagesController::class, 'situationfinanciereglobale'])->name('situationfinanciereglobale');
 Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite'])->name('certificatsolarite');
 
@@ -244,7 +256,7 @@ Route::delete('/promotions/{codePromo}', [GestionclasseController::class, 'destr
 
 //Acceuil
 Route::get('/Acceuil', [GestionclasseController::class, 'indexEleves'])->name('Acceuil');
-Route::delete('/eleves/{matricule}', [EleveController::class, 'destroy'])->name('eleves.destroy');
+Route::put('/eleves/{matricule}', [EleveController::class, 'destroy'])->name('eleves.destroy');
 
 //Series
 Route::get('/series', [GestionclasseController::class, 'series']);
@@ -285,3 +297,12 @@ Route::get('/generer-factures', [ClassesController::class, 'genererfacture']);
 Route::get('/imprimer-profil-type-classe', [PagesController::class, 'imprimerProfilTypeClasse'])->name('impression.profil.type.classe');
 Route::get('/listedesreductions', [PagesController::class, 'listedesreductions']);
 Route::get('/pagedetail/{MATRICULE}', [GestionclasseController::class, 'pagedetail'])->name('pagedetail');
+Route::get('/etatdesdroits', [PagesController::class, 'etatdesdroits'])->name('etatdesdroits');
+Route::get('/etatdesarriérés', [PagesController::class, 'etatdesarriérés'])->name('etatdesarriérés');
+Route::get('/recouvrementoperateur', [PagesController::class, 'recouvrementoperateur'])->name('recouvrementoperateur');
+Route::get('/journaloperateur', [PagesController::class, 'journaloperateur'])->name('journaloperateur');
+Route::get('/journaldetailleaveccomposante', [PagesController::class, 'journaldetailleaveccomposante'])->name('journaldetailleaveccomposante');
+Route::get('/journaldetaillesanscomposante', [PagesController::class, 'journaldetaillesanscomposante'])->name('journaldetaillesanscomposante');
+Route::get('/journalresumerecouvrement', [PagesController::class, 'journalresumerecouvrement'])->name('journalresumerecouvrement');
+Route::get('/recouvrementgeneralenseignement', [PagesController::class, 'recouvrementgeneralenseignement'])->name('recouvrementgeneralenseignement');
+Route::get('/recouvrementgeneral', [PagesController::class, 'recouvrementgeneral'])->name('recouvrementgeneral');

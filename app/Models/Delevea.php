@@ -11,4 +11,6 @@ class Delevea extends Model
     protected $connection = 'mysql2';
     protected $table = 'delevea';
     public $timestamps = false;
+
+
 }

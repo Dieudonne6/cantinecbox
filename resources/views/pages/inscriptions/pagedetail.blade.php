@@ -7,7 +7,7 @@
     <div class="container card">
         <nav>
             <div class="nav nav-tabs" id="nav-tab{{ $eleve->MATRICULE }}" role="tablist" style="font-size: 14px;">
-                @foreach (['Infor' => 'Informations générales', 'Detail' => 'Détail des notes', 'Deta' => 'Détails des paiements', 'finan' => 'Informations financières', 'Emploi' => 'Emploi du temps', 'Position' => 'Position Enseignants'] as $key => $label)
+                @foreach (['Infor' => 'Informations générales', 'Detail' => 'Détail des notes', 'Deta' => 'Détails des paiements', 'finan' => 'Informations financières', 'Emploi' => 'Emploi du temps', 'Position' => 'Position Enseignants', 'Situation' => 'Situation selon Echéancier', 'Autre' => 'Autre Situation'] as $key => $label)
                     <button class="nav-link{{ $loop->first ? ' active' : '' }}"
                         id="nav-{{ $key }}-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab"
                         data-bs-target="#nav-{{ $key }}{{ $eleve->MATRICULE }}" type="button" role="tab"
@@ -399,7 +399,169 @@
                     </div>
                 </div>
             </div>
+            <!-- Situation selon échéance -->
+            <div class="tab-pane fade" id="nav-Situation{{ $eleve->MATRICULE }}" role="tabpanel"
+                aria-labelledby="nav-Situation-tab{{ $eleve->MATRICULE }}" tabindex="0">
+                <div class="accordion-body">
+                    <div id="dateTime" style="text-align: justify;"></div>
+                    <div class="col-12 mt-4">
+                        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                            <table class="table table-hover">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">N°</th>
+                                        <th scope="col">Échéances</th>
+                                        <th scope="col">Montant Du</th>
+                                        <th scope="col">Déjà Payé</th>
+                                        <th scope="col">Reste</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        // Variables pour les totaux
+                                        $montantPaye = $sommeTotale; // Montant déjà payé total
+                                    @endphp
+            
+                                    @foreach ($echeancee as $echeance)
+                                        @php
+                                            // Montant restant à payer pour la ligne actuelle
+                                            $montantDu = $echeance->APAYER;
+            
+                                            // Initialiser le montant déjà payé pour la ligne actuelle
+                                            $dejaPaye = 0;
+            
+                                            // Vérifiez si le montant déjà payé est supérieur au montant dû
+                                            if ($montantPaye > 0) {
+                                                // Si le montant à payer est inférieur ou égal au montant payé
+                                                if ($montantPaye >= $montantDu) {
+                                                    $dejaPaye = $montantDu; // Tout le montant dû est payé
+                                                    $montantPaye -= $montantDu; // Réduire le montant payé
+                                                } else {
+                                                    $dejaPaye = $montantPaye; // Montant payé partiel
+                                                    $montantPaye = 0; // Épuise le montant payé
+                                                }
+                                            }
+            
+                                            // Calcul du reste
+                                            $reste = $montantDu - $dejaPaye;
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $echeance->NUMERO }}</td>
+                                            <td>{{ $echeance->DATEOP }}</td>
+                                            <td>{{ number_format($montantDu, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($dejaPaye, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($reste, 0, ',', ' ') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot class="tfoot-dark">
+                                    <tr>
+                                        <td colspan="2" class="table-active">Total</td>
+                                        <td>{{ number_format(array_sum($echeancee->pluck('APAYER')->toArray()), 0, ',', ' ') }}</td>
+                                        <td>{{ number_format($sommeTotale, 0, ',', ' ') }}</td>
+                                        <td>{{ number_format(array_sum($echeancee->pluck('APAYER')->toArray()) - $sommeTotale, 0, ',', ' ') }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+            <!-- Autres Situations -->
+            <div class="tab-pane fade" id="nav-Autre{{ $eleve->MATRICULE }}" role="tabpanel"
+                aria-labelledby="nav-Autre-tab{{ $eleve->MATRICULE }}" tabindex="0">
+                <div class="accordion-body">
+                    <div id="dateTime" style="text-align: justify;"></div>
+                    @if (isset($eleve) && $echeancee->contains('MATRICULE', $eleve->MATRICULE))
+                        <!-- Si les données de l'élève existent, afficher le tableau -->
+                        <div class="col-12 mt-4">
+                            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                <table class="table table-hover">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Désignation</th>
+                                            <th scope="col">Montant Du</th>
+                                            <th scope="col">Déjà Payé</th>
+                                            <th scope="col">Reste</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Arriéré</td>
+                                            <td>{{ number_format($eleve->ARRIERE, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($sommeArriéré, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($eleve->ARRIERE - $sommeArriéré, 0, ',', ' ') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ $libelles->LIBELF1 }}</td>
+                                            <td>{{ number_format($eleve->FRAIS1, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($sommeFrais1, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($eleve->FRAIS1 - $sommeFrais1, 0, ',', ' ') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ $libelles->LIBELF2 }}</td>
+                                            <td>{{ number_format($eleve->FRAIS2, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($sommeFrais2, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($eleve->FRAIS2 - $sommeFrais2, 0, ',', ' ') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ $libelles->LIBELF3 }}</td>
+                                            <td>{{ number_format($eleve->FRAIS3, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($sommeFrais3, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($eleve->FRAIS3 - $sommeFrais3, 0, ',', ' ') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ $libelles->LIBELF4 }}</td>
+                                            <td>{{ number_format($eleve->FRAIS4, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($sommeFrais4, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($eleve->FRAIS4 - $sommeFrais4, 0, ',', ' ') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Scolarité</td>
+                                            <td>{{ number_format($eleve->APAYER, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($sommeScolarité, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($eleve->APAYER - $sommeScolarité, 0, ',', ' ') }}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot class="tfoot-dark">
+                                        <tr>
+                                            <td colspan="1" class="table-active">Total</td>
+                                            <td>{{ number_format($eleve->ARRIERE + $eleve->FRAIS1 + $eleve->FRAIS2 + $eleve->FRAIS3 + $eleve->FRAIS4 + $eleve->APAYER, 0, ',', ' ') }}
+                                            </td>
+                                            <td>{{ number_format($sommeArriéré + $sommeFrais1 + $sommeFrais2 + $sommeFrais3 + $sommeFrais4 + $sommeScolarité, 0, ',', ' ') }}
+                                            </td>
+                                            <td>{{ number_format(
+                                                $eleve->ARRIERE -
+                                                    $sommeArriéré +
+                                                    ($eleve->FRAIS1 - $sommeFrais1) +
+                                                    ($eleve->FRAIS2 - $sommeFrais2) +
+                                                    ($eleve->FRAIS3 - $sommeFrais3) +
+                                                    ($eleve->FRAIS4 - $sommeFrais4) +
+                                                    ($eleve->APAYER - $sommeScolarité),
+                                                0,
+                                                ',',
+                                                ' ',
+                                            ) }}
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    @else
+                        <!-- Si les données ne sont pas disponibles, afficher un message d'erreur -->
+                        <div class="alert alert-danger">
+                            Aucune donnée disponible pour cet élève dans la table des échéances.
+                            Veuillez d'abord créer un échéancier.
+                        </div>
+                    @endif
 
+
+                </div>
+            </div>
         </div>
     </div>
 @endsection
