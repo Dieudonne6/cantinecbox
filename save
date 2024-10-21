@@ -1,8 +1,51 @@
-// PagesController.php
+public function recouvrementoperateur(Request $request) {
+  $params = Params2::all();
+  
+  $dateDebut = $request->input('debut');
+  $dateFin = $request->input('fin');
 
-  --------------------------------------------------------
-  //Eleve.php
+  $scolarite = DB::table('scolarit')
+                  ->select('SIGNATURE',
+                           DB::raw('SUM(CASE WHEN AUTREF = 1 THEN MONTANT ELSE 0 END) as Scolarite'),
+                           DB::raw('SUM(CASE WHEN AUTREF = 2 THEN MONTANT ELSE 0 END) as Arriere'),
+                           DB::raw('SUM(CASE WHEN AUTREF = 3 THEN MONTANT ELSE 0 END) as Insc'),
+                           DB::raw('SUM(CASE WHEN AUTREF = 4 THEN MONTANT ELSE 0 END) as Frais2'),
+                           DB::raw('SUM(CASE WHEN AUTREF = 5 THEN MONTANT ELSE 0 END) as Frais3'),
+                           DB::raw('SUM(CASE WHEN AUTREF = 6 THEN MONTANT ELSE 0 END) as Frais4'),
+                           DB::raw('SUM(MONTANT) as Total'))
+                  ->where('VALIDE', '!=', 0)
+                  ->whereBetween('DATEOP', [$dateDebut, $dateFin])
+                  ->groupBy('SIGNATURE')
+                  ->get();
 
+    return view('pages.inscriptions.recouvrementoperateur', compact('scolarite', 'params', 'dateDebut', 'dateFin'));
+  }
+  
+  public function journaloperateur(Request $request) {
+    $dateDebut = $request->input('debut');
+    $dateFin = $request->input('fin');
+    $scolarite = DB::table('scolarit')
+                  ->join('eleve', 'scolarit.MATRICULE', '=', 'eleve.MATRICULE')
+                  ->select('scolarit.NUMRECU', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'scolarit.MONTANT', 'scolarit.SIGNATURE', 'scolarit.DATEOP')
+                  ->whereBetween('scolarit.DATEOP', [$dateDebut, $dateFin])
+                  ->where('scolarit.VALIDE', '!=', 0)
+                  ->orderBy('scolarit.SIGNATURE')
+                  ->get()
+                  ->groupBy(['SIGNATURE', function($item) {
+                      return \Carbon\Carbon::parse($item->DATEOP)->format('Y-m-d');
+                  }]);
+    return view('pages.inscriptions.journaloperateur', compact('scolarite', 'dateDebut', 'dateFin'));
+  }
 
-        ------------------------------------------------------------------------ 
-        
+  public function journalresumerecouvrement(Request $request) {
+    $dateDebut = $request->input('debut');
+    $params = Params2::all();
+    $dateFin = $request->input('fin');
+    $scolarite = DB::table('scolarit')
+                  ->select('DATEOP', 'AUTREF', DB::raw('SUM(MONTANT) as Montant'))
+                  ->where('VALIDE', '!=', 0)
+                  ->whereBetween('DATEOP', [$dateDebut, $dateFin])
+                  ->groupBy('DATEOP', 'AUTREF')
+                  ->get();
+    return view('pages.inscriptions.journalresumerecouvrement', compact('scolarite', 'dateDebut', 'dateFin', 'params'));
+}
