@@ -1198,12 +1198,55 @@ public function eleveparclasseessai() {
   public function etatdelacaisse(){
     $chapitres = Chapitre::all();
     $journals = Journal::all();
-
+    
     
     return view ('pages.inscriptions.etatdelacaisse',compact('chapitres','journals'));
   }   
 
- 
+public function filterEtatDeLaCaisse(Request $request) {
+    // Récupérer les filtres
+    $journals = Journal::all();
+    $chapitre = $request->input('chapitre');
+    $type = $request->input('type');
+    $month = $request->input('month');
+    $dateArret = $request->input('date_arret');
+    $totalRecettes = $journals->sum('DEBIT'); // Calculer le total des recettes
+
+    // Vérifier si le type est "Relevé mensuel des ordres de recettes"
+    if ($type == "Relevé mensuel des ordres de recettes") {
+      // Filtrer les journaux en fonction du chapitre, du mois, et de la date d'arrêt
+      $journals = Journal::query();
+
+      if ($chapitre) {
+          $journals->where('CHAPITRE', $chapitre);
+      }
+
+      if ($month) {
+          $journals->whereMonth('DATEOP', '=', date('m', strtotime($month)))
+                   ->whereYear('DATEOP', '=', date('Y', strtotime($month)));
+      }
+
+      if ($dateArret) {
+          $journals->whereDate('DATEOP', '<=', $dateArret);
+      }
+
+      $journals = $journals->get();
+
+      // Passer les journaux filtrés et les détails au rapport
+      return view('pages.inscriptions.etatdelacaisse_print', compact('journals', 'type', 'month', 'dateArret', 'totalRecettes', 'chapitre'));
+    }
+
+    if ($type == "Bordereaux des paiements") {
+      return redirect()->back()->withErrors('Non disponible');
+    }
+
+    if ($type == "Bordereau de caisse") {
+    return redirect()->back()->withErrors('Non disponible');
+    }
+
+    return redirect()->back();
+}
+
 
   
   public function situationfinanciereglobale(){

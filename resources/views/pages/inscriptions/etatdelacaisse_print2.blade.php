@@ -1,0 +1,172 @@
+@extends('layouts.master')
+
+@section('content')
+    <div class="col" style="display: none;">
+        <h2>{{ $type }}</h2>
+
+        <script>
+            // Fonction pour imprimer le journal automatiquement et fermer la fenêtre
+            function imprimerPageAutomatiquement() {
+                const releveMensuelRadio = document.getElementById('releveMensuel');
+                const dateArret = document.getElementById('date')?.value;
+                const moisSelectionne = document.getElementById('month')?.value;
+
+                const [year, month] = moisSelectionne ? moisSelectionne.split('-') : ['', '']; // Récupérer l'année et le mois
+                const [yearArret, monthArret, dayArret] = dateArret ? dateArret.split('-') : ['', '', ''];
+                const formattedDateArret = dateArret ? `${dayArret}/${monthArret}/${yearArret}` : '';
+
+                const monthName = getMonthName(parseInt(month)); // Convertir le mois en entier
+
+                // Créer une fenêtre pour l'impression
+                const printWindow = window.open('', '', 'height=600,width=800');
+
+                let content = '';
+
+                // @foreach ($journals as $journal)
+                //     content += `<tr>
+                //             <td>{{ date('d/m/Y', strtotime($journal->DATEOP)) }}</td>
+                //             <td>{{ $journal->NUMJ }}</td>
+                //             <td>{{ $journal->CHAPITRE }}</td>
+                //             <td>{{ $journal->NCOMPTE }}</td>
+                //             <td>{{ $journal->LIBELOP }}</td>
+                //             <td>{{ number_format($journal->DEBIT, 2, ',', ' ') }}</td>
+                //             <td>{{ $journal->OBSER }}</td>
+                //         </tr>`;
+                // @endforeach
+
+                // Construire le HTML à imprimer
+                printWindow.document.write(`<html>
+    <head>
+        <title>Impression de Relevé mensuel des ordres de recettes</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                line-height: 1.6;
+            }
+            h2 {
+                text-align: center;
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+            p {
+                margin: 10px 0;
+                font-size: 14px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            th, td {
+                border: 1px solid black;
+                padding: 10px;
+                text-align: left;
+                font-size: 13px;
+            }
+            th {
+                background-color: #D3D3D3; /* Entête gris */
+            }
+            .summary {
+                margin-top: 20px;
+                font-weight: bold;
+                font-size: 14px;
+                text-align: center; /* Centrer le texte */
+            }
+            .encadre {
+                display: inline-block;
+                padding: 5px 10px;
+                border: 2px solid black; /* Encadrer les montants */
+                margin-top: 10px;
+                font-size: 16px; /* Taille du texte des montants */
+            }
+            .signature {
+                margin-top: 40px;
+                display: flex;
+                justify-content: space-between;
+            }
+            .signature p {
+                width: 45%;
+                text-align: center;
+            }
+            .flex-space-between {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+            @media print {
+                body {
+                    margin: 0;
+                    padding: 0;
+                }
+                table {
+                    margin-top: 20px;
+                }
+                .signature {
+                    page-break-inside: avoid;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Relevé mensuel des ordres de recettes</h2>
+        
+        <div class="flex-space-between">
+            @if ($month)
+                <p>Mois de {{ date('F Y', strtotime($month)) }}</p>
+            @endif
+            <p>{{ date('Y') }}/{{ date('Y', strtotime('+1 year')) }}</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>N°Compte</th>
+                    <th>Intitulé Compte</th>
+                    <th>Espèces</th>
+                    <th>Chèque</th>
+                    <th>Opposition</th>
+                    <th>Autres</th>
+                    <th>Totales</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${content}
+            </tbody>
+        </table>
+    </body>
+</html>
+                `);
+
+                // Lancer l'impression
+                printWindow.print(); // Ouvrir la boîte de dialogue d'impression
+
+                printWindow.document.close(); // Fermer le document
+
+                // Fermer la fenêtre après l'impression et revenir à la page "etatdelacaisse"
+                printWindow.onafterprint = function() {
+                    window.history.back(); // Revenir à la page précédente si la fenêtre d'impression se ferme
+                };
+
+                // Fermer la fenêtre immédiatement après son ouverture
+                printWindow.onbeforeunload = function() {
+                    window.history.back(); // Revenir à la page précédente si la fenêtre d'impression se ferme
+                };
+
+            }
+
+            // Lancer l'impression dès le chargement de la page
+            window.onload = imprimerPageAutomatiquement;
+
+            // Fonction pour obtenir le nom du mois
+            function getMonthName(month) {
+                const months = [
+                    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+                    'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+                ];
+                return months[month - 1] || '';
+            }
+        </script>
+    </div>
+@endsection
