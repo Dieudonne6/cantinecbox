@@ -397,7 +397,21 @@
                       </ul>
                   </li>
       
-                  {{-- Edition --}}
+                  
+                  {{-- Editions --}}
+                  @php
+                  $routeseditions2 = [
+                      'editions2',
+                      'fichedenotesvierge',
+                      'relevesparmatiere',
+                      'relevespareleves',
+                      'recapitulatifdenotes',
+                      'tableauanalytiqueparmatiere',
+                      'resultatsparpromotion',
+                      'listedesmeritants',
+                  ]; // Liste des noms de routes associées à l'édition gestion des notes
+              @endphp
+
                   <li class="nav-item menu-item-has-children">
                       <a href="#" class="nav-link">Edition</a>
                       <ul class="sub-menus">
@@ -411,6 +425,11 @@
                               <a class="nav-link {{ request()->is('Attestations de mérite') ? 'active' : '' }}" href="#">Attestations de mérite</a>
                           </li>
                           <li>
+                              <a class="nav-link {{ in_array(request()->route()->getName(), $routeseditions2) ? 'active' : '' }}"
+                                href="{{ route('editions2') }}">Editions</a>
+                          </li>
+                      </ul> 
+                          {{-- <li>
                               <a class="nav-link {{ request()->is('Fiches de notes vierge') ? 'active' : '' }}" href="#">Fiches de notes vierge</a>
                           </li>
                           <li>
@@ -431,7 +450,7 @@
                           <li>
                               <a class="nav-link {{ request()->is('Liste des méritants') ? 'active' : '' }}" href="#">Liste des méritants</a>
                           </li>
-                      </ul>
+                      </ul> --}}
                   </li>
       
                   {{-- Résultats --}}

@@ -59,6 +59,10 @@ class EditionController extends Controller
         return view('pages.inscriptions.editions', compact('eleves','resultats','totalDues','totalPayes','totalRestes'));
       } 
 
+      public function editions2(){
+        return view('pages.notes.editions2');
+      }
+
       public function arriereconstate(Request $request) {
           // Récupérer les dates du formulaire
           $datedebut = $request->input('datedebut');

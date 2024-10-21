@@ -196,6 +196,7 @@ Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::c
 
 Route::get('/archive', [PagesController::class, 'archive']);
 Route::get('/editions', [EditionController::class, 'editions'])->name('editions');
+Route::get('/editions2', [EditionController::class, 'editions2'])->name('editions2');
 Route::get('/journalderecouvrement', [EditionController::class, 'journal'])->name('journal');
 
 Route::post('/arriereconstate', [EditionController::class, 'arriereconstate'])->name('arriereconstate');
