@@ -184,74 +184,96 @@
             </a>
             <div class="collapse" id="ui-basic">
                 <ul class="nav flex-column sub-menu">
-                
-                  @php
-                  $routesAccueil = ['Acceuil', 'inscrireeleve','modifiereleve', 'paiementeleve', 'majpaiementeleve', 'echeancier', 'profil', 'pagedetail']; // Liste des noms de routes associées à l'accueil
-                  @endphp
-                  
-                  <li class="nav-item">
-                  <a class="nav-link {{ in_array(request()->route()->getName(), $routesAccueil) ? 'active' : '' }}" href="{{ route('Acceuil') }}">Accueil</a>
-                  </li>
-          {{-- Créations des classes --}}
-          <li class="nav-item menu-item-has-children">
-            <a href="" class="nav-link">Gestion des classes</a>
-            <ul class="sub-menus">
-              <li>
-                <a class="nav-link {{ request()->is('typesclasses') ? 'active' : '' }}" href="{{url('/typesclasses')}}">Types classes</a>
-              </li>
-              <li>
-                <a class="nav-link {{ request()->is('series') ? 'active' : '' }}" href="{{url('/series')}}">Séries</a>
-              </li>
-              <li>
-                <a class="nav-link {{ request()->is('promotions') ? 'active' : '' }}" href="{{url('/promotions')}}">Promotions</a>
-              </li>
-              @php
-              $routesClass = ['tabledesclasses', 'enrclasse','modifierclasse']; // Liste des noms de routes associées à l'accueil
-              @endphp
-              
-              <li class="nav-item">
-              <a class="nav-link {{ in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}" href="{{ route('tabledesclasses') }}">Gestions des classes</a>
-              </li>
-              
-              <li>
-                <a class="nav-link {{ request()->is('groupes') ? 'active' : '' }}" href="{{url('/groupes')}}">Grouper</a>
-              </li>
-            </ul>
-          </li>
 
-          {{-- Scolarité --}}
-          <li class="nav-item menu-item-has-children">
-            <a href="" class="nav-link">Scolarité</a>
-            <ul class="sub-menus">
-              <li>
-                <a class="nav-link {{ request()->is('creerprofil') ? 'active' : '' }}" href="{{url('/creerprofil')}}">Créer profils</a>
-              </li>
-              <li>
-                <a class="nav-link {{ request()->is('paramcomposantes') ? 'active' : '' }}" href="{{url('/paramcomposantes')}}">Parametrage composantes</a>
-              </li>
-              @php
-              $routesfacture = ['facturesclasses', 'detailfacturesclasses']; // Liste des noms de routes associées à l'accueil
-              @endphp
-              <li>
-                <a class="nav-link {{ in_array(request()->route()->getName(), $routesfacture) ? 'active' : '' }}" href="{{ route('facturesclasses') }}">Factures  classes</a>
+                    @php
+                        $routesAccueil = [
+                            'Acceuil',
+                            'inscrireeleve',
+                            'modifiereleve',
+                            'paiementeleve',
+                            'majpaiementeleve',
+                            'echeancier',
+                            'profil',
+                            'pagedetail',
+                        ]; // Liste des noms de routes associées à l'accueil
+                    @endphp
 
-              </li>
-              <li>
-{{--                 <a class="nav-link {{ request()->is('reductioncollective') ? 'active' : '' }}" href="{{url('/reductioncollective')}}">Réductions collectives</a> --}}              </li>
-              <li>
-                <a class="nav-link {{ request()->is('paiementdesnoninscrits') ? 'active' : '' }}" href="{{url('/paiementdesnoninscrits')}}">Paiement des non inscrits</a>
-              </li>
-              <li>
-                <a class="nav-link {{ request()->is('duplicatarecu') ? 'active' : '' }}" href="{{url('/duplicatarecu')}}"> Duplicata</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item"> <a class="nav-link" {{ request()->is('recalculereffectif')  ? 'active' : '' }} href="{{url('/recalculereffectifs')}}">Recalculer effectifs</a></li> 
-          {{-- Dicipline --}}
-          <li class="nav-item"> <a class="nav-link {{ request()->is('discipline') ? 'active' : '' }}" href="{{url('/discipline')}}">Discipline</a></li>
-          
-          {{-- Extraction de données --}}
-          {{-- <li class="nav-item menu-item-has-children">
+                    <li class="nav-item">
+                        <a class="nav-link {{ in_array(request()->route()->getName(), $routesAccueil) ? 'active' : '' }}"
+                            href="{{ route('Acceuil') }}">Accueil</a>
+                    </li>
+                    {{-- Créations des classes --}}
+                    <li class="nav-item menu-item-has-children">
+                        <a href="" class="nav-link">Gestion des classes</a>
+                        <ul class="sub-menus">
+                            <li>
+                                <a class="nav-link {{ request()->is('typesclasses') ? 'active' : '' }}"
+                                    href="{{ url('/typesclasses') }}">Types classes</a>
+                            </li>
+                            <li>
+                                <a class="nav-link {{ request()->is('series') ? 'active' : '' }}"
+                                    href="{{ url('/series') }}">Séries</a>
+                            </li>
+                            <li>
+                                <a class="nav-link {{ request()->is('promotions') ? 'active' : '' }}"
+                                    href="{{ url('/promotions') }}">Promotions</a>
+                            </li>
+                            @php
+                                $routesClass = ['tabledesclasses', 'enrclasse', 'modifierclasse']; // Liste des noms de routes associées à l'accueil
+                            @endphp
+
+                            <li class="nav-item">
+                                <a class="nav-link {{ in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}"
+                                    href="{{ route('tabledesclasses') }}">Gestions des classes</a>
+                            </li>
+
+                            <li>
+                                <a class="nav-link {{ request()->is('groupes') ? 'active' : '' }}"
+                                    href="{{ url('/groupes') }}">Grouper</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    {{-- Scolarité --}}
+                    <li class="nav-item menu-item-has-children">
+                        <a href="" class="nav-link">Scolarité</a>
+                        <ul class="sub-menus">
+                            <li>
+                                <a class="nav-link {{ request()->is('creerprofil') ? 'active' : '' }}"
+                                    href="{{ url('/creerprofil') }}">Créer profils</a>
+                            </li>
+                            <li>
+                                <a class="nav-link {{ request()->is('paramcomposantes') ? 'active' : '' }}"
+                                    href="{{ url('/paramcomposantes') }}">Parametrage composantes</a>
+                            </li>
+                            @php
+                                $routesfacture = ['facturesclasses', 'detailfacturesclasses']; // Liste des noms de routes associées à l'accueil
+                            @endphp
+                            <li>
+                                <a class="nav-link {{ in_array(request()->route()->getName(), $routesfacture) ? 'active' : '' }}"
+                                    href="{{ route('facturesclasses') }}">Factures classes</a>
+
+                            </li>
+                            <li>
+                                {{--                 <a class="nav-link {{ request()->is('reductioncollective') ? 'active' : '' }}" href="{{url('/reductioncollective')}}">Réductions collectives</a> --}} </li>
+                            <li>
+                                <a class="nav-link {{ request()->is('paiementdesnoninscrits') ? 'active' : '' }}"
+                                    href="{{ url('/paiementdesnoninscrits') }}">Paiement des non inscrits</a>
+                            </li>
+                            <li>
+                                <a class="nav-link {{ request()->is('duplicatarecu') ? 'active' : '' }}"
+                                    href="{{ url('/duplicatarecu') }}"> Duplicata</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"> <a class="nav-link" {{ request()->is('recalculereffectif') ? 'active' : '' }}
+                            href="{{ url('/recalculereffectifs') }}">Recalculer effectifs</a></li>
+                    {{-- Dicipline --}}
+                    <li class="nav-item"> <a class="nav-link {{ request()->is('discipline') ? 'active' : '' }}"
+                            href="{{ url('/discipline') }}">Discipline</a></li>
+
+                    {{-- Extraction de données --}}
+                    {{-- <li class="nav-item menu-item-has-children">
             <a href="" class="nav-link">Extraction de données</a>
             <ul class="sub-menus">
               <li>
@@ -265,8 +287,8 @@
               </li>
             </ul>
           </li> --}}
-          
-          {{-- Intégrité
+
+                    {{-- Intégrité
           <li class="nav-item menu-item-has-children">
             <a href="" class="nav-link">Intégrité</a>
             <ul class="sub-menus">
@@ -279,20 +301,36 @@
             </ul>
           </li> --}}
 
-          {{-- Editions --}}
-          @php
-              $routeseditions = ['editions', 'listedeseleves', 'listedesclasses', 'listeselectiveeleve', 'eleveparclasse', 'certificatsolarite', 'etatdelacaisse','enquetesstatistiques','situationfinanciereglobale','etatdesrecouvrements','arriereconstate','journaldetailleaveccomposante','journaldetaillesanscomposante']; // Liste des noms de routes associées à l'accueil
-              @endphp
-              <li class="nav-item">
-                <a class="nav-link {{ in_array(request()->route()->getName(), $routeseditions) ? 'active' : '' }}" href="{{ route('editions') }}">Editions</a>
+                    {{-- Editions --}}
+                    @php
+                        $routeseditions = [
+                            'editions',
+                            'listedeseleves',
+                            'listedesclasses',
+                            'listeselectiveeleve',
+                            'eleveparclasse',
+                            'certificatsolarite',
+                            'etatdelacaisse',
+                            'enquetesstatistiques',
+                            'situationfinanciereglobale',
+                            'etatdesrecouvrements',
+                            'arriereconstate',
+                            'journaldetailleaveccomposante',
+                            'journaldetaillesanscomposante'
+                        ]; // Liste des noms de routes associées à l'accueil
+                    @endphp
+                    <li class="nav-item">
+                        <a class="nav-link {{ in_array(request()->route()->getName(), $routeseditions) ? 'active' : '' }}"
+                            href="{{ route('editions') }}">Editions</a>
 
-              </li>
+                    </li>
 
-          {{-- <li class="nav-item"> <a class="nav-link {{ request()->is('editions') ? 'active' : '' }}" href="{{url('/editions')}}">Editions</a></li> --}}
+                    {{-- <li class="nav-item"> <a class="nav-link {{ request()->is('editions') ? 'active' : '' }}" href="{{url('/editions')}}">Editions</a></li> --}}
 
-          {{-- Archives --}}
-          <li class="nav-item"> <a class="nav-link {{ request()->is('archive') ? 'active' : '' }}" href="{{url('/archive')}}">Archives</a></li>
-          {{-- <div class="dropdown">
+                    {{-- Archives --}}
+                    <li class="nav-item"> <a class="nav-link {{ request()->is('archive') ? 'active' : '' }}"
+                            href="{{ url('/archive') }}">Archives</a></li>
+                    {{-- <div class="dropdown">
             <li class="nav-item">
             <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton90" data-toggle="dropdown" 
             aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Etats </button>
@@ -307,95 +345,151 @@
         </li>
 
 
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false"
+              aria-controls="form-elements">
+              <i class="typcn typcn-film menu-icon"></i>
+              <span class="menu-title">Gestion des notes</span>
+              <i class="menu-arrow"></i>
+          </a>
+          <div class="collapse" id="form-elements">
+              <ul class="nav flex-column sub-menu">
+                  {{-- Paramètres --}}
+                  <li class="nav-item menu-item-has-children">
+                      <a href="#" class="nav-link">Paramètres</a>
+                      <ul class="sub-menus">
+                          <li>
+                              <a class="nav-link {{ request()->is('Répartition des classes par opérateur') ? 'active' : '' }}" href="{{ url('/repartitionclassesparoperateur') }}">Répartition des classes par opérateur</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Table des matières') ? 'active' : '' }}" href="#">Table des matières</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Table des coefficients') ? 'active' : '' }}" href="#">Table des coefficients</a>
+                          </li>
+                      </ul>
+                  </li>
+      
+                  {{-- Manipulation des notes --}}
+                  <li class="nav-item menu-item-has-children">
+                      <a href="#" class="nav-link">Manipulation des notes</a>
+                      <ul class="sub-menus">
+                          <li>
+                              <a class="nav-link {{ request()->is('Saisir et mises à jour des notes') ? 'active' : '' }}" href="#">Saisir et mises à jour des notes</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Enrégistrer les résultats des examens') ? 'active' : '' }}" href="#">Enrégistrer les résultats des examens</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Vérifier les notes') ? 'active' : '' }}" href="#">Vérifier les notes</a>
+                          </li>
+                      </ul>
+                  </li>
+      
+                  {{-- Sécurité --}}
+                  <li class="nav-item menu-item-has-children">
+                      <a href="#" class="nav-link">Sécurité</a>
+                      <ul class="sub-menus">
+                          <li>
+                              <a class="nav-link {{ request()->is('Verrouillage') ? 'active' : '' }}" href="#">Verrouillage</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Déverrouillage') ? 'active' : '' }}" href="#">Déverrouillage</a>
+                          </li>
+                      </ul>
+                  </li>
+      
+                  
+                  {{-- Editions --}}
+                  @php
+                  $routeseditions2 = [
+                      'editions2',
+                      'fichedenotesvierge',
+                      'relevesparmatiere',
+                      'relevespareleves',
+                      'recapitulatifdenotes',
+                      'tableauanalytiqueparmatiere',
+                      'resultatsparpromotion',
+                      'listedesmeritants',
+                  ]; // Liste des noms de routes associées à l'édition gestion des notes
+              @endphp
 
-        {{-- <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
-        <i class="typcn typcn-film menu-icon"></i>
-        <span class="menu-title">Gestion des notes</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="form-elements">
-        
-        {{-- Paramètres 
-
-        <div class="dropdown">
-          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton1" data-toggle="dropdown" 
-          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Paramètres </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton1" style="" _mstvisible="0" >
-            <a class="dropdown-item text-center" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Répartition des classes <br> par opérateur</a>
-            <a class="dropdown-item text-center" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Table des matiètes</a>
-            <a class="dropdown-item text-center" href="#" _msttexthash="229879" _msthash="283" _mstvisible="1">Table des coefficients</a>
+                  <li class="nav-item menu-item-has-children">
+                      <a href="#" class="nav-link">Edition</a>
+                      <ul class="sub-menus">
+                          <li>
+                              <a class="nav-link {{ request()->is('Tableau de notes') ? 'active' : '' }}" href="#">Tableau de notes</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Bulletin de notes') ? 'active' : '' }}" href="#">Bulletin de notes</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Attestations de mérite') ? 'active' : '' }}" href="#">Attestations de mérite</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ in_array(request()->route()->getName(), $routeseditions2) ? 'active' : '' }}"
+                                href="{{ route('editions2') }}">Editions</a>
+                          </li>
+                      </ul> 
+                          {{-- <li>
+                              <a class="nav-link {{ request()->is('Fiches de notes vierge') ? 'active' : '' }}" href="#">Fiches de notes vierge</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Relevés par matière') ? 'active' : '' }}" href="#">Relevés par matière</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Relevés par élèves') ? 'active' : '' }}" href="#">Relevés par élèves</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Récapitulatif de notes') ? 'active' : '' }}" href="#">Récapitulatif de notes</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Tableau analytique par matière') ? 'active' : '' }}" href="#">Tableau analytique par matière</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Résultats par promotion') ? 'active' : '' }}" href="#">Résultats par promotion</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Liste des méritants') ? 'active' : '' }}" href="#">Liste des méritants</a>
+                          </li>
+                      </ul> --}}
+                  </li>
+      
+                  {{-- Résultats --}}
+                  <li class="nav-item menu-item-has-children">
+                      <a href="#" class="nav-link">Résultats</a>
+                      <ul class="sub-menus">
+                          <li>
+                              <a class="nav-link {{ request()->is('Liste par ordre de mérite') ? 'active' : '' }}" href="#">Liste par ordre de mérite</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Tableau analytique') ? 'active' : '' }}" href="#">Tableau analytique</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Rapports annuels') ? 'active' : '' }}" href="#">Rapports annuels</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Livrets scolaires') ? 'active' : '' }}" href="#">Livrets scolaires</a>
+                          </li>
+                      </ul>
+                  </li>
+      
+                  {{-- Extraction --}}
+                  <li class="nav-item menu-item-has-children">
+                      <a href="#" class="nav-link">Extraction</a>
+                      <ul class="sub-menus">
+                          <li>
+                              <a class="nav-link {{ request()->is('Exporter') ? 'active' : '' }}" href="#">Exporter</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Importer') ? 'active' : '' }}" href="#">Importer</a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
           </div>
-        </div>
-
-         {{-- Manipulation des notes --}}
-
-        {{-- <div class="dropdown">
-          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton2" data-toggle="dropdown" 
-          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Manipulation des notes </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton2" style="" _mstvisible="0" >
-            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Saisir et mises à jour <br> des notes</a>
-            <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Enrégistrer les résultats <br> des examens</a>
-            <a class="dropdown-item" href="#" _msttexthash="229879" _msthash="283" _mstvisible="1">Vérifier les notes</a>
-          </div>
-        </div> --}}
-
-        {{-- Sécurité --}}
-        {{--         
-        <div class="dropdown">
-          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-toggle="dropdown" 
-          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Sécurité </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="" _mstvisible="0" >
-            <a class="dropdown-item" href="#" _msttexthash="76466" _msthash="281" _mstvisible="1">Vérouillage</a>
-            <a class="dropdown-item" href="#" _msttexthash="261807" _msthash="282" _mstvisible="1">Dévérouillage</a>
-          </div>
-        </div> --}}
-
-        {{-- Edition --}}
-        {{-- 
-        <div class="dropdown">
-          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
-          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Edition </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4" style="" _mstvisible="0" >
-            <a class="dropdown-item" href="#" _msttexthash="04" _msthash="04" _mstvisible="1">Tableau de notes</a>
-            <a class="dropdown-item" href="#" _msttexthash="05" _msthash="05" _mstvisible="1">Buletin de notes</a>
-            <a class="dropdown-item" href="#" _msttexthash="06" _msthash="06" _mstvisible="1">Attestations de mérite</a>
-            <a class="dropdown-item" href="#" _msttexthash="07" _msthash="07" _mstvisible="1">Fiches de notes vierge</a>
-            <a class="dropdown-item" href="#" _msttexthash="08" _msthash="08" _mstvisible="1">Relevés par matière</a>
-            <a class="dropdown-item" href="#" _msttexthash="09" _msthash="09" _mstvisible="1">Relevés par élèves</a>
-            <a class="dropdown-item" href="#" _msttexthash="10" _msthash="10" _mstvisible="1">Récapitulatif de notes</a>
-            <a class="dropdown-item" href="#" _msttexthash="11" _msthash="11" _mstvisible="1">Tableau analytique <br> par matière</a>
-            <a class="dropdown-item" href="#" _msttexthash="12" _msthash="12" _mstvisible="1">Résultats par promotion</a>
-            <a class="dropdown-item" href="#" _msttexthash="13" _msthash="13" _mstvisible="1">Liste des méritant</a>
-          </div>
-        </div>
-         --}}
-        {{-- Résultats --}}
-
-        {{-- <div class="dropdown">
-          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-toggle="dropdown" 
-          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Résultats </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4" style="" _mstvisible="0" >
-            <a class="dropdown-item" href="#" _msttexthash="14" _msthash="14" _mstvisible="1">Liste par ordre <br> de mérite</a>
-            <a class="dropdown-item" href="#" _msttexthash="15" _msthash="15" _mstvisible="1">Tableau analytique</a>
-            <a class="dropdown-item" href="#" _msttexthash="16" _msthash="16" _mstvisible="1">Rapports annuels</a>
-            <a class="dropdown-item" href="#" _msttexthash="17" _msthash="17" _mstvisible="1">Livrets scolaire</a>
-          </div>
-        </div> --}}
-
-        {{-- Extraction --}}
-        {{-- 
-        <div class="dropdown">
-          <button class="btn btn-light-lg dropdown-toggle" type="button" id="dropdownMenuSizeButton5" data-toggle="dropdown" 
-          aria-haspopup="true" aria-expanded="false" _msttexthash="313989" _msthash="279"> Extraction </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton5" style="" _mstvisible="0" >
-            <a class="dropdown-item" href="#" _msttexthash="18" _msthash="18" _mstvisible="1">Exporter</a>
-            <a class="dropdown-item" href="#" _msttexthash="19" _msthash="19" _mstvisible="1">Importer</a>
-          </div>
-        </div> 
-
-      </div>
-    </li> --}}
+      </li>
+      
 
         {{-- <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
@@ -611,7 +705,7 @@
 
         {{-- Paramètres --}}
 
-   {{--
+        {{--
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#Cantine" aria-expanded="false" aria-controls="Cantine">
                 <i class="typcn typcn-document-text menu-icon"></i>
@@ -656,7 +750,7 @@
             </div>
         </li> --}}
         <li class="nav-item">
-            <a class="nav-link" href="{{url('/parametre')}}">
+            <a class="nav-link" href="{{ url('/parametre') }}">
                 <i class="typcn typcn-globe-outline menu-icon"></i>
                 <span class="menu-title" _msttexthash="234962" _msthash="98">Paramètres</span>
             </a>
@@ -697,6 +791,6 @@
     </li>  --}}
     </ul>
 
-   
+
 
 </nav>
