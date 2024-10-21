@@ -362,7 +362,7 @@
                               <a class="nav-link {{ request()->is('Répartition des classes par opérateur') ? 'active' : '' }}" href="{{ url('/repartitionclassesparoperateur') }}">Répartition des classes par opérateur</a>
                           </li>
                           <li>
-                              <a class="nav-link {{ request()->is('Table des matières') ? 'active' : '' }}" href="#">Table des matières</a>
+                              <a class="nav-link {{ request()->is('Table des matières') ? 'active' : '' }}" href="{{url('/tabledesmatieres')}}">Table des matières</a>
                           </li>
                           <li>
                               <a class="nav-link {{ request()->is('Table des coefficients') ? 'active' : '' }}" href="#">Table des coefficients</a>
