@@ -196,7 +196,6 @@ Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::c
 
 Route::get('/archive', [PagesController::class, 'archive']);
 Route::get('/editions', [EditionController::class, 'editions'])->name('editions');
-Route::get('/journalderecouvrement', [EditionController::class, 'journal'])->name('journal');
 
 Route::post('/arriereconstate', [EditionController::class, 'arriereconstate'])->name('arriereconstate');
 
@@ -301,8 +300,9 @@ Route::get('/etatdesdroits', [PagesController::class, 'etatdesdroits'])->name('e
 Route::get('/etatdesarriérés', [PagesController::class, 'etatdesarriérés'])->name('etatdesarriérés');
 Route::get('/recouvrementoperateur', [PagesController::class, 'recouvrementoperateur'])->name('recouvrementoperateur');
 Route::get('/journaloperateur', [PagesController::class, 'journaloperateur'])->name('journaloperateur');
-Route::get('/journaldetailleaveccomposante', [PagesController::class, 'journaldetailleaveccomposante'])->name('journaldetailleaveccomposante');
-Route::get('/journaldetaillesanscomposante', [PagesController::class, 'journaldetaillesanscomposante'])->name('journaldetaillesanscomposante');
+Route::get('/journaldetailleaveccomposante', [EditionController::class, 'journaldetailleaveccomposante'])->name('journaldetailleaveccomposante');
+
+Route::get('/journaldetaillesanscomposante', [EditionController::class, 'journaldetaillesanscomposante'])->name('journaldetaillesanscomposante');
 Route::get('/journalresumerecouvrement', [PagesController::class, 'journalresumerecouvrement'])->name('journalresumerecouvrement');
 Route::get('/recouvrementgeneralenseignement', [PagesController::class, 'recouvrementgeneralenseignement'])->name('recouvrementgeneralenseignement');
 Route::get('/recouvrementgeneral', [PagesController::class, 'recouvrementgeneral'])->name('recouvrementgeneral');

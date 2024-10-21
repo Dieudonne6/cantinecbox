@@ -65,10 +65,10 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="radio-inline">
-                                    <select class="form-select mb-2" aria-label="Small select example">
+                                    <select class="form-select mb-2" name="typeenseign" id="typeenseign">
                                         <option selected>Sélectionner un enseignement</option>
                                         @foreach ($typeenseign as $type)
-                                            <option value="{{ $type->id }}">{{ $type->type }}</option>
+                                            <option value="{{ $type->idenseign }}">{{ $type->type }}</option>
                                         @endforeach
                                     </select>
                                 </div>
