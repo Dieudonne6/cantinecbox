@@ -163,8 +163,7 @@ Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);
 
 Route::get('/paiementeleve/{matricule}', [PagesController::class, 'paiementeleve'])->name('paiementeleve');
 Route::post('/paiement/{matricule}', [PagesController::class, 'enregistrerPaiement'])->name('enregistrer.paiement');
-Route::get('/recouvrementGenerale', [PagesController::class, 'recouvrementGenerale'])->name('recouvrementGenerale');
-Route::get('/recouvrementGenParPeriode', [PagesController::class, 'recouvrementGenParPeriode'])->name('recouvrementGenParPeriode');
+// Route::get('/recouvrementGenerale', [PagesController::class, 'recouvrementGenerale'])->name('recouvrementGenerale');
 
 
 
@@ -306,6 +305,6 @@ Route::get('/journaloperateur', [PagesController::class, 'journaloperateur'])->n
 Route::get('/journaldetailleaveccomposante', [PagesController::class, 'journaldetailleaveccomposante'])->name('journaldetailleaveccomposante');
 Route::get('/journaldetaillesanscomposante', [PagesController::class, 'journaldetaillesanscomposante'])->name('journaldetaillesanscomposante');
 Route::get('/journalresumerecouvrement', [PagesController::class, 'journalresumerecouvrement'])->name('journalresumerecouvrement');
-Route::get('/recouvrementgeneralenseignement', [PagesController::class, 'recouvrementgeneralenseignement'])->name('recouvrementgeneralenseignement');
+Route::get('/recouvrementgeneralenseignement', [PagesController::class, 'recouvrementParType'])->name('recouvrementgeneralenseignement');
 Route::get('/recouvrementgeneral', [PagesController::class, 'recouvrementgeneral'])->name('recouvrementgeneral');
 Route::get('/repartitionclassesparoperateur', [GestionNotesController::class, 'repartitionclassesparoperateur'])->name('repartitionclassesparoperateur');

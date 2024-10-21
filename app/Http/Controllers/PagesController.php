@@ -1305,177 +1305,398 @@ public function recouvrementGenerale() {
   return view('pages.inscriptions.recouvrementGenerale');
 }
 
-public function recouvrementGenParPeriode(Request $request){
-  $groupeClasse = 'Standard';
-  $TypeClasse = 1;
-  $dateDebut = "2022-01-10";
-  $dateFin = "2024-10-16";
-
-  $classesDuGroupe = Classesgroupeclass::where('LibelleGroupe', 'Standard')->pluck('CODECLAS')->toArray();
-  $classeDuType = Classes::Where('TYPECLASSE', $TypeClasse)->pluck('CODECLAS')->toArray();
-
-  // Récupérer l'intersection des deux tableaux
-  $classesCommunes = array_intersect($classesDuGroupe, $classeDuType);
-  
-  // dd($classesCommunes);
-
-  // Initialisation du tableau avec toutes les classes et des valeurs par défaut de 0
-$sommeParClasse = array_fill_keys($classesCommunes, ['total_a_payer' => 0, 'total_arriere' => 0, 'total_frais1' => 0, 'total_frais2' => 0, 'total_frais3' => 0 , 'total_frais4' => 0 , 'totalPercu' => 0]);
-
-// Récupérer les sommes pour chaque classe avec des élèves
-$sommesParClasseAvecEleves = Eleve::whereIn('CODECLAS', $classesCommunes)
-    ->select(
-        'CODECLAS', 
-        DB::raw('SUM(APAYER) as total_a_payer'),
-        DB::raw('SUM(ARRIERE) as total_arriere'),
-        DB::raw('SUM(FRAIS1) as total_frais1'),
-        DB::raw('SUM(FRAIS2) as total_frais2'),
-        DB::raw('SUM(FRAIS3) as total_frais3'),
-        DB::raw('SUM(FRAIS4) as total_frais4'),
-    )
-    ->groupBy('CODECLAS')
-    ->get();
-
-// dd($sommeParClasse);
+public function recouvrementgeneral(Request $request){
+      $dateDebut = $request->query('debut');
+      $dateFin = $request->query('fin');
+      $TypeClasse = $request->query('typeclasse');
+      $groupeClasse = $request->query('groupe');
+      // dd($groupe);
 
 
+      $classesDuGroupe = Classesgroupeclass::where('LibelleGroupe', 'Standard')->pluck('CODECLAS')->toArray();
+      $classeDuType = Classes::Where('TYPECLASSE', $TypeClasse)->pluck('CODECLAS')->toArray();
 
-  // Initialiser le tableau pour les sommes par classe
-  $sommeParClasse = [];
+      // Récupérer l'intersection des deux tableaux
+      $classesCommunes = array_intersect($classesDuGroupe, $classeDuType);
+      
+      // dd($classesCommunes);
 
-  // Récupérer les élèves et faire la somme des montants pour chaque classe
-  foreach ($classesCommunes as $classe) {
-      // Récupérer les élèves de la classe
-      $eleves = Eleve::where('CODECLAS', $classe)->pluck('MATRICULE')->toArray();
+      // Initialisation du tableau avec toutes les classes et des valeurs par défaut de 0
+      $sommeParClasse = array_fill_keys($classesCommunes, ['total_a_payer' => 0, 'total_arriere' => 0, 'total_frais1' => 0, 'total_frais2' => 0, 'total_frais3' => 0 , 'total_frais4' => 0 , 'totalPercu' => 0]);
 
-      // Initialiser les montants à 0 pour chaque classe (au cas où il n'y a pas d'élèves ou de montants)
-      $sommeScolarite = 0;
-      $sommeArriere = 0;
-      $sommeFrais1 = 0;
-      $sommeFrais2 = 0;
-      $sommeFrais3 = 0;
-      $sommeFrais4 = 0;
+      // Récupérer les sommes pour chaque classe avec des élèves
+      $sommesParClasseAvecEleves = Eleve::whereIn('CODECLAS', $classesCommunes)
+          ->select(
+              'CODECLAS', 
+              DB::raw('SUM(APAYER) as total_a_payer'),
+              DB::raw('SUM(ARRIERE) as total_arriere'),
+              DB::raw('SUM(FRAIS1) as total_frais1'),
+              DB::raw('SUM(FRAIS2) as total_frais2'),
+              DB::raw('SUM(FRAIS3) as total_frais3'),
+              DB::raw('SUM(FRAIS4) as total_frais4'),
+          )
+          ->groupBy('CODECLAS')
+          ->get();
 
-      // Si la classe a des élèves, on calcule les sommes
-      if (!empty($eleves)) {
-          // Calculer les montants uniquement si des élèves existent pour la classe
-          $sommeScolarite = Scolarite::whereIn('MATRICULE', $eleves)
+      // dd($sommeParClasse);
+
+
+
+      // Initialiser le tableau pour les sommes par classe
+      $sommeParClasse = [];
+
+      // Récupérer les élèves et faire la somme des montants pour chaque classe
+      foreach ($classesCommunes as $classe) {
+          // Récupérer les élèves de la classe
+          $eleves = Eleve::where('CODECLAS', $classe)->pluck('MATRICULE')->toArray();
+
+          // Initialiser les montants à 0 pour chaque classe (au cas où il n'y a pas d'élèves ou de montants)
+          $sommeScolarite = 0;
+          $sommeArriere = 0;
+          $sommeFrais1 = 0;
+          $sommeFrais2 = 0;
+          $sommeFrais3 = 0;
+          $sommeFrais4 = 0;
+
+          // Si la classe a des élèves, on calcule les sommes
+          if (!empty($eleves)) {
+              // Calculer les montants uniquement si des élèves existent pour la classe
+              $sommeScolarite = Scolarite::whereIn('MATRICULE', $eleves)
+                  ->where('AUTREF', 1)
+                  ->where('VALIDE', 1)
+                  ->whereBetween('DATEOP', [$dateDebut, $dateFin])
+                  ->sum('MONTANT');
+
+              $sommeArriere = Scolarite::whereIn('MATRICULE', $eleves)
+                  ->where('AUTREF', 2)
+                  ->where('VALIDE', 1)
+                  ->whereBetween('DATEOP', [$dateDebut, $dateFin])
+                  ->sum('MONTANT');
+
+              $sommeFrais1 = Scolarite::whereIn('MATRICULE', $eleves)
+                  ->where('AUTREF', 3)
+                  ->where('VALIDE', 1)
+                  ->whereBetween('DATEOP', [$dateDebut, $dateFin])
+                  ->sum('MONTANT');
+
+              $sommeFrais2 = Scolarite::whereIn('MATRICULE', $eleves)
+                  ->where('AUTREF', 4)
+                  ->where('VALIDE', 1)
+                  ->whereBetween('DATEOP', [$dateDebut, $dateFin])
+                  ->sum('MONTANT');
+
+              $sommeFrais3 = Scolarite::whereIn('MATRICULE', $eleves)
+                  ->where('AUTREF', 5)
+                  ->where('VALIDE', 1)
+                  ->whereBetween('DATEOP', [$dateDebut, $dateFin])
+                  ->sum('MONTANT');
+
+              $sommeFrais4 = Scolarite::whereIn('MATRICULE', $eleves)
+                  ->where('AUTREF', 6)
+                  ->where('VALIDE', 1)
+                  ->whereBetween('DATEOP', [$dateDebut, $dateFin])
+                  ->sum('MONTANT');
+          }
+
+          // Ajouter les montants (ou 0 si aucune somme n'a été trouvée) pour chaque classe
+          $sommeParClasse[$classe] = [
+              'scolaritePercu' => $sommeScolarite,
+              'arrierePercu' => $sommeArriere,
+              'frais1Percu' => $sommeFrais1,
+              'frais2Percu' => $sommeFrais2,
+              'frais3Percu' => $sommeFrais3,
+              'frais4Percu' => $sommeFrais4,
+              'totalPercu' => $sommeScolarite + $sommeArriere + $sommeFrais1 + $sommeFrais2 + $sommeFrais3 + $sommeFrais4
+          ];
+      }
+
+
+      // dd($sommeParClasse);
+
+
+      // Mettre à jour le tableau avec les sommes réelles des classes qui ont des élèves
+      foreach ($sommesParClasseAvecEleves as $somme) {
+
+          $totalFrais = $somme->total_a_payer + $somme->total_arriere + $somme->total_frais1 + $somme->total_frais2 + $somme->total_frais3 + $somme->total_frais4;
+
+          $classe = $somme->CODECLAS;
+          $sommeParClasse[$classe]['total_a_payer'] = $somme->total_a_payer;
+          $sommeParClasse[$classe]['total_arriere'] = $somme->total_arriere;
+          $sommeParClasse[$classe]['total_frais1'] = $somme->total_frais1;
+          $sommeParClasse[$classe]['total_frais2'] = $somme->total_frais2;
+          $sommeParClasse[$classe]['total_frais3'] = $somme->total_frais3;
+          $sommeParClasse[$classe]['total_frais4'] = $somme->total_frais4;
+          $sommeParClasse[$classe]['totalAPercevoir'] = $totalFrais;
+          
+      }
+
+
+      // code de fudion des deux tableaux sommeParClasseAvecEleves et sommeParClasse
+
+      foreach ($sommesParClasseAvecEleves as $somme) {
+        $classe = $somme->CODECLAS;
+        
+        // Si la classe existe déjà dans le tableau $sommeParClasse, on fusionne les données
+        if (isset($sommeParClasse[$classe])) {
+            // Ajouter les données "à percevoir"
+            $sommeParClasse[$classe]['total_a_payer'] = $somme->total_a_payer;
+            $sommeParClasse[$classe]['total_arriere'] = $somme->total_arriere;
+            $sommeParClasse[$classe]['total_frais1'] = $somme->total_frais1;
+            $sommeParClasse[$classe]['total_frais2'] = $somme->total_frais2;
+            $sommeParClasse[$classe]['total_frais3'] = $somme->total_frais3;
+            $sommeParClasse[$classe]['total_frais4'] = $somme->total_frais4;
+            
+            // Calcul du total à percevoir
+            $totalFrais = $somme->total_a_payer + $somme->total_arriere + 
+                          $somme->total_frais1 + $somme->total_frais2 + 
+                          $somme->total_frais3 + $somme->total_frais4;
+
+            $sommeParClasse[$classe]['totalAPercevoir'] = $totalFrais;
+            $sommeParClasse[$classe]['Reste'] = $totalFrais - $sommeParClasse[$classe]['totalPercu'];
+        } else {
+            // Si la classe n'existe pas encore dans $sommeParClasse, on initialise avec les valeurs "à percevoir"
+            $totalFrais = $somme->total_a_payer + $somme->total_arriere + 
+                          $somme->total_frais1 + $somme->total_frais2 + 
+                          $somme->total_frais3 + $somme->total_frais4;
+
+            $sommeParClasse[$classe] = [
+                'total_a_payer' => $somme->total_a_payer,
+                'total_arriere' => $somme->total_arriere,
+                'total_frais1' => $somme->total_frais1,
+                'total_frais2' => $somme->total_frais2,
+                'total_frais3' => $somme->total_frais3,
+                'total_frais4' => $somme->total_frais4,
+                'totalAPercevoir' => $totalFrais,
+                'Reste' => $totalFrais - 0,
+            ];
+        }
+      }
+
+
+
+
+      // dd($sommeParClasse);
+
+  return view('pages.inscriptions.recougenerale')->with('sommeParClasse', $sommeParClasse)->with('dateDebut', $dateDebut)->with('dateFin', $dateFin);    
+
+}
+
+// public function recouvrementParType(Request $request) {
+//   $dateDebut = $request->query('debut');
+//   $dateFin = $request->query('fin');
+//   $TypeClasse = $request->query('typeclasse');
+//   $groupeClasse = $request->query('groupe');
+
+//   // Récupérer les classes qui répondent aux critères de typeclasse et groupe
+//   $classesFiltrees = Classes::where('TYPECLASSE', $TypeClasse)
+//       ->whereIn('CODECLAS', function($query) use ($groupeClasse) {
+//           $query->select('CODECLAS')
+//                 ->from('classes_groupeclasse')
+//                 ->where('LibelleGroupe', $groupeClasse);
+//       })
+//       ->get();
+
+//   // Débogage : vérifier les classes filtrées
+//   if ($classesFiltrees->isEmpty()) {
+//       dd("Aucune classe ne répond aux critères de filtrage", $classesFiltrees);
+//   }
+
+//   // Regrouper ces classes par type d'enseignement
+//   $classesParTypeEnseignement = $classesFiltrees->groupBy('TYPEENSEIG');
+
+//   // dd($classesParTypeEnseignement);
+//   // Initialiser le tableau pour stocker les données finales
+//   $donneesRegroupees = [];
+
+//   foreach ($classesParTypeEnseignement as $typeEnseignementId => $classesDuType) {
+//       // Récupérer les informations sur le type d'enseignement
+//       $typeEnseignement = Typeenseigne::where('idenseign', $typeEnseignementId)->first();
+
+//       // Initialiser les données pour ce type d'enseignement
+//       $sommeParClasse = [];
+
+//       foreach ($classesDuType as $classe) {
+//           // Récupérer les élèves dans la classe
+//           $eleves = Eleve::where('CODECLAS', $classe->CODECLAS)->pluck('MATRICULE')->toArray();
+
+//           // Calculer les sommes pour la classe si des élèves sont présents
+//           if (!empty($eleves)) {
+//               $sommeScolarite = Scolarite::whereIn('MATRICULE', $eleves)
+//                   ->where('AUTREF', 1)
+//                   ->where('VALIDE', 1)
+//                   ->whereBetween('DATEOP', [$dateDebut, $dateFin])
+//                   ->sum('MONTANT');
+
+//               $sommeArriere = Scolarite::whereIn('MATRICULE', $eleves)
+//                   ->where('AUTREF', 2)
+//                   ->where('VALIDE', 1)
+//                   ->whereBetween('DATEOP', [$dateDebut, $dateFin])
+//                   ->sum('MONTANT');
+
+//               // Calculer les autres sommes comme pour les frais, etc.
+//               $sommeFrais1 = Scolarite::whereIn('MATRICULE', $eleves)
+//                   ->where('AUTREF', 3)
+//                   ->where('VALIDE', 1)
+//                   ->whereBetween('DATEOP', [$dateDebut, $dateFin])
+//                   ->sum('MONTANT');
+
+//               // Ajouter ces sommes pour la classe
+//               $sommeParClasse[$classe->CODECLAS] = [
+//                   'scolaritePercu' => $sommeScolarite,
+//                   'arrierePercu' => $sommeArriere,
+//                   'frais1Percu' => $sommeFrais1,
+//                   'totalPercu' => $sommeScolarite + $sommeArriere + $sommeFrais1
+//               ];
+//           }
+//       }
+
+//       // Ajouter les données regroupées par type d'enseignement
+//       $donneesRegroupees[$typeEnseignement->type] = [
+//         'type' => $typeEnseignement->type,
+//         'classes' => $sommeParClasse
+//       ];
+//     }
+    
+//     // Débogage final : vérifier les données regroupées
+//     dd($donneesRegroupees);
+// }
+
+
+public function recouvrementParType(Request $request) {
+  $dateDebut = $request->query('debut');
+  $dateFin = $request->query('fin');
+  $TypeClasse = $request->query('typeclasse');
+  $groupeClasse = $request->query('groupe');
+
+  // Récupérer les classes qui répondent aux critères de typeclasse et groupe
+  $classesFiltrees = Classes::where('TYPECLASSE', $TypeClasse)
+      ->whereIn('CODECLAS', function($query) use ($groupeClasse) {
+          $query->select('CODECLAS')
+                ->from('classes_groupeclasse')
+                ->where('LibelleGroupe', $groupeClasse);
+      })
+      ->get();
+
+  // Débogage : vérifier les classes filtrées
+  if ($classesFiltrees->isEmpty()) {
+      echo"Aucune classe ne répond aux critères de filtrage", $classesFiltrees;
+  }
+
+  // Regrouper ces classes par type d'enseignement
+  $classesParTypeEnseignement = $classesFiltrees->groupBy('TYPEENSEIG');
+
+  // Initialiser le tableau pour stocker les données finales
+  $donneesRegroupees = [];
+
+  foreach ($classesParTypeEnseignement as $typeEnseignementId => $classesDuType) {
+      // Récupérer les informations sur le type d'enseignement
+      $typeEnseignement = Typeenseigne::where('idenseign', $typeEnseignementId)->first();
+
+      // Initialiser les données pour ce type d'enseignement
+      $sommeParClasse = [];
+
+      foreach ($classesDuType as $classe) {
+          // Récupérer les élèves dans la classe
+          $eleves = Eleve::where('CODECLAS', $classe->CODECLAS)->get();
+
+          // Initialiser les sommes pour chaque classe
+          $total_a_payer = 0;
+          $total_arriere = 0;
+          $total_frais1 = 0;
+          $total_frais2 = 0;
+          $total_frais3 = 0;
+          $total_frais4 = 0;
+
+          // Calculer les sommes pour chaque élève dans la classe
+          foreach ($eleves as $eleve) {
+              $total_a_payer += $eleve->APAYER;
+              $total_arriere += $eleve->ARREARRE;  // Si vous avez un champ "ARREARRE" pour les arriérés
+              $total_frais1 += $eleve->FRAIS1;     // Si vous avez un champ "FRAIS1"
+              $total_frais2 += $eleve->FRAIS2;     // Si vous avez un champ "FRAIS2"
+              $total_frais3 += $eleve->FRAIS3;     // Si vous avez un champ "FRAIS3"
+              $total_frais4 += $eleve->FRAIS4;     // Si vous avez un champ "FRAIS4"
+          }
+
+          // Calcul des sommes perçues pour chaque type de frais
+          $scolaritePercu = Scolarite::whereIn('MATRICULE', $eleves->pluck('MATRICULE'))
               ->where('AUTREF', 1)
               ->where('VALIDE', 1)
               ->whereBetween('DATEOP', [$dateDebut, $dateFin])
               ->sum('MONTANT');
 
-          $sommeArriere = Scolarite::whereIn('MATRICULE', $eleves)
+          $arrierePercu = Scolarite::whereIn('MATRICULE', $eleves->pluck('MATRICULE'))
               ->where('AUTREF', 2)
               ->where('VALIDE', 1)
               ->whereBetween('DATEOP', [$dateDebut, $dateFin])
               ->sum('MONTANT');
 
-          $sommeFrais1 = Scolarite::whereIn('MATRICULE', $eleves)
+          $frais1Percu = Scolarite::whereIn('MATRICULE', $eleves->pluck('MATRICULE'))
               ->where('AUTREF', 3)
               ->where('VALIDE', 1)
               ->whereBetween('DATEOP', [$dateDebut, $dateFin])
               ->sum('MONTANT');
 
-          $sommeFrais2 = Scolarite::whereIn('MATRICULE', $eleves)
+          $frais2Percu = Scolarite::whereIn('MATRICULE', $eleves->pluck('MATRICULE'))
               ->where('AUTREF', 4)
               ->where('VALIDE', 1)
               ->whereBetween('DATEOP', [$dateDebut, $dateFin])
               ->sum('MONTANT');
 
-          $sommeFrais3 = Scolarite::whereIn('MATRICULE', $eleves)
+          $frais3Percu = Scolarite::whereIn('MATRICULE', $eleves->pluck('MATRICULE'))
               ->where('AUTREF', 5)
               ->where('VALIDE', 1)
               ->whereBetween('DATEOP', [$dateDebut, $dateFin])
               ->sum('MONTANT');
 
-          $sommeFrais4 = Scolarite::whereIn('MATRICULE', $eleves)
+          $frais4Percu = Scolarite::whereIn('MATRICULE', $eleves->pluck('MATRICULE'))
               ->where('AUTREF', 6)
               ->where('VALIDE', 1)
               ->whereBetween('DATEOP', [$dateDebut, $dateFin])
               ->sum('MONTANT');
+
+          // Calculer le total à percevoir pour la classe
+          $totalAPercevoir = $total_a_payer + $total_arriere + $total_frais1 + $total_frais2 + $total_frais3 + $total_frais4;
+
+          // Reste à percevoir (différence entre total à percevoir et total perçu)
+          $reste = $totalAPercevoir - ($scolaritePercu + $arrierePercu + $frais1Percu + $frais2Percu + $frais3Percu + $frais4Percu);
+
+          // Ajouter les données pour cette classe
+          $sommeParClasse[$classe->CODECLAS] = [
+              'scolaritePercu' => $scolaritePercu,
+              'arrierePercu' => $arrierePercu,
+              'frais1Percu' => $frais1Percu,
+              'frais2Percu' => $frais2Percu,
+              'frais3Percu' => $frais3Percu,
+              'frais4Percu' => $frais4Percu,
+              'totalPercu' => $scolaritePercu + $arrierePercu + $frais1Percu + $frais2Percu + $frais3Percu + $frais4Percu,
+              'totalAPayer' => $total_a_payer,
+              'totalArriere' => $total_arriere,
+              'totalFrais1' => $total_frais1,
+              'totalFrais2' => $total_frais2,
+              'totalFrais3' => $total_frais3,
+              'totalFrais4' => $total_frais4,
+              'totalAPercevoir' => $totalAPercevoir,
+              'reste' => $reste
+          ];
       }
 
-      // Ajouter les montants (ou 0 si aucune somme n'a été trouvée) pour chaque classe
-      $sommeParClasse[$classe] = [
-          'scolaritePercu' => $sommeScolarite,
-          'arrierePercu' => $sommeArriere,
-          'frais1Percu' => $sommeFrais1,
-          'frais2Percu' => $sommeFrais2,
-          'frais3Percu' => $sommeFrais3,
-          'frais4Percu' => $sommeFrais4,
-          'totalPercu' => $sommeScolarite + $sommeArriere + $sommeFrais1 + $sommeFrais2 + $sommeFrais3 + $sommeFrais4
+      // Ajouter les données regroupées par type d'enseignement
+      $donneesRegroupees[$typeEnseignement->type] = [
+          'type' => $typeEnseignement->type,
+          'classes' => $sommeParClasse
       ];
   }
 
-
-// dd($sommeParClasse);
-
-
-// Mettre à jour le tableau avec les sommes réelles des classes qui ont des élèves
-foreach ($sommesParClasseAvecEleves as $somme) {
-
-    $totalFrais = $somme->total_a_payer + $somme->total_arriere + $somme->total_frais1 + $somme->total_frais2 + $somme->total_frais3 + $somme->total_frais4;
-
-    $classe = $somme->CODECLAS;
-    $sommeParClasse[$classe]['total_a_payer'] = $somme->total_a_payer;
-    $sommeParClasse[$classe]['total_arriere'] = $somme->total_arriere;
-    $sommeParClasse[$classe]['total_frais1'] = $somme->total_frais1;
-    $sommeParClasse[$classe]['total_frais2'] = $somme->total_frais2;
-    $sommeParClasse[$classe]['total_frais3'] = $somme->total_frais3;
-    $sommeParClasse[$classe]['total_frais4'] = $somme->total_frais4;
-    $sommeParClasse[$classe]['totalAPercevoir'] = $totalFrais;
-    
-}
-
-
-// code de fudion des deux tableaux sommeParClasseAvecEleves et sommeParClasse
-
-foreach ($sommesParClasseAvecEleves as $somme) {
-  $classe = $somme->CODECLAS;
-  
-  // Si la classe existe déjà dans le tableau $sommeParClasse, on fusionne les données
-  if (isset($sommeParClasse[$classe])) {
-      // Ajouter les données "à percevoir"
-      $sommeParClasse[$classe]['total_a_payer'] = $somme->total_a_payer;
-      $sommeParClasse[$classe]['total_arriere'] = $somme->total_arriere;
-      $sommeParClasse[$classe]['total_frais1'] = $somme->total_frais1;
-      $sommeParClasse[$classe]['total_frais2'] = $somme->total_frais2;
-      $sommeParClasse[$classe]['total_frais3'] = $somme->total_frais3;
-      $sommeParClasse[$classe]['total_frais4'] = $somme->total_frais4;
-      
-      // Calcul du total à percevoir
-      $totalFrais = $somme->total_a_payer + $somme->total_arriere + 
-                    $somme->total_frais1 + $somme->total_frais2 + 
-                    $somme->total_frais3 + $somme->total_frais4;
-
-      $sommeParClasse[$classe]['totalAPercevoir'] = $totalFrais;
-      $sommeParClasse[$classe]['Reste'] = $totalFrais - $sommeParClasse[$classe]['totalPercu'];
-  } else {
-      // Si la classe n'existe pas encore dans $sommeParClasse, on initialise avec les valeurs "à percevoir"
-      $totalFrais = $somme->total_a_payer + $somme->total_arriere + 
-                    $somme->total_frais1 + $somme->total_frais2 + 
-                    $somme->total_frais3 + $somme->total_frais4;
-
-      $sommeParClasse[$classe] = [
-          'total_a_payer' => $somme->total_a_payer,
-          'total_arriere' => $somme->total_arriere,
-          'total_frais1' => $somme->total_frais1,
-          'total_frais2' => $somme->total_frais2,
-          'total_frais3' => $somme->total_frais3,
-          'total_frais4' => $somme->total_frais4,
-          'totalAPercevoir' => $totalFrais,
-          'Reste' => $totalFrais - 0,
-      ];
-  }
+  // Débogage final : vérifier les données regroupées
+  // dd($donneesRegroupees);
+  return view('pages.inscriptions.recouParTypeenseign')->with('donneesRegroupees', $donneesRegroupees)->with('sommeParClasse', $sommeParClasse)->with('dateDebut', $dateDebut)->with('dateFin', $dateFin);
 }
 
 
 
 
-  dd($sommeParClasse);
 
-}
+
 
 
 

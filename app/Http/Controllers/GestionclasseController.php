@@ -35,6 +35,7 @@ use Illuminate\Database\QueryException;
 use App\Models\Promo;
 use App\Models\Notes;
 use App\Models\Scolarite;
+// use App\Models\Echeance;
 
 class GestionclasseController extends Controller
 {
@@ -833,6 +834,8 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
     $serieClasse = $classeSelectionne->SERIE;
     $typeenseignClasse = $classeSelectionne->TYPEENSEIG;
     $typeeClasse = $classeSelectionne->TYPECLASSE;
+    $matriculePourNouveau = $request->input('numOrdre');
+    $matricule = $matriculePourNouveau;
     // dd($typeeClasse);
 
     // Recuperation de l'arrierrer si l'eleve est un nouveau ou pas
@@ -858,7 +861,6 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
         $nouveauEleve->ANCCLASSE = $request->input('classeEntre');
     }
 
-    $nouveauEleve->MATRICULE = $request->input('numOrdre'); // MATRICULE prend la valeur du champ numero d'ordre
     $nouveauEleve->PHOTO = $imageContent;
     $nouveauEleve->CodeReduction = 0;
     $nouveauEleve->NOM = $request->input('nom');
@@ -884,14 +886,18 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
         $arriere = 0;
     $nouveauEleve->ARRIERE = $arriere;
     $nouveauEleve->ARRIERE_INITIAL = $arriere;
+    $nouveauEleve->MATRICULE = $matricule;
     } else {
         // chercher son arrierer dans la table elevesa dans scoracine
         $archiveEleve = Elevea::where('NOM', $request->input('nom'))
                         ->where('PRENOM', $request->input('prenom'))
                         ->first();
         $arriere = $archiveEleve ? $archiveEleve->MONTANTARRIERE : 0;
+        $matricule = $archiveEleve ? $archiveEleve->MATRICULE : $matriculePourNouveau;
         $nouveauEleve->ARRIERE = $arriere;
         $nouveauEleve->ARRIERE_INITIAL = $arriere;
+        $nouveauEleve->MATRICULE = $matricule;
+
     }
 
     $nouveauEleve->NOMPERE = $request->input('nomPere');
@@ -912,7 +918,8 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
     // $SERIE = $infoclasse->SERIE;
     // dd($SERIE);
 
-    $infoeleve = Eleve::where('MATRICULE', ($request->input('numOrdre')))->first();
+    // $infoeleve = Eleve::where('MATRICULE', ($request->input('numOrdre')))->first();
+    $infoeleve = Eleve::where('MATRICULE', $matricule)->first();
     // $infoeleve->TYPEENSEIG = $TYPEENSEIG;
     // $infoeleve->TYPECLASSE = $TYPECLASSE;
     // $infoeleve->SERIE = $SERIE;
@@ -923,7 +930,7 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
     $anneencours = $infoparamcontrat->anneencours_paramcontrat;
     $annesuivante = $anneencours + 1;
     $annescolaire = $anneencours.'-'.$annesuivante;
-    Echeance::where('MATRICULE', $request->input('numOrdre'))->delete();
+    Echeance::where('MATRICULE', $matricule)->delete();
 
     // dd($echeanceClasse);
     // dd($infoclasse);
@@ -947,7 +954,7 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
                 $montantAPayer = 0; // Mettre 0 pour les autres lignes
               }
             Echeance::create([
-                'MATRICULE' => $request->input('numOrdre'),
+                'MATRICULE' => $matricule,
                 'NUMERO' => $echeanceData['NUMERO'], // Numérotation des échéances
                 'APAYER' => $echeanceData['APAYER2'],
                 'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
@@ -970,7 +977,7 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
         foreach ($echeanceClasse as $index => $echeanceData) {
 
             Echeance::create([
-                'MATRICULE' => $request->input('numOrdre'),
+                'MATRICULE' => $matricule,
                 'NUMERO' => $echeanceData['NUMERO'], // Numérotation des échéances
                 'APAYER' => $echeanceData['APAYER'],
                 'ARRIERE' => 0, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
