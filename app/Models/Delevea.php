@@ -12,4 +12,5 @@ class Delevea extends Model
     protected $table = 'delevea';
     public $timestamps = false;
 
+
 }

@@ -195,6 +195,10 @@ Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::c
 
 Route::get('/archive', [PagesController::class, 'archive']);
 Route::get('/editions', [EditionController::class, 'editions'])->name('editions');
+Route::get('/journalderecouvrement', [EditionController::class, 'journal'])->name('journal');
+
+Route::post('/arriereconstate', [EditionController::class, 'arriereconstate'])->name('arriereconstate');
+
 Route::get('/etatdesarrieresinscrits', [PagesController::class, 'etatdesarrieresinscrits']);
 Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse'])->name('eleveparclasse');
 Route::get('/eleveparclassespecifique/{classeCode}', [PagesController::class, 'eleveparclassespecifique']);
@@ -220,7 +224,9 @@ Route::get('/etatdesrecouvrements', [PagesController::class, 'etatdesrecouvremen
 
 Route::get('/enquetesstatistiques', [PagesController::class, 'enquetesstatistiques'])->name('enquetesstatistiques');
 Route::get('/etatdelacaisse', [PagesController::class, 'etatdelacaisse'])->name('etatdelacaisse');
-Route::get('/etatdelacaisse/{chapitre?}', [PagesController::class, 'etatdelacaisse']);
+// Route::get('/etatdelacaisse/{chapitre?}', [PagesController::class, 'etatdelacaisse']);
+Route::get('/etatdelacaisse/filter', [PagesController::class, 'filterEtatDeLaCaisse'])->name('etatdelacaisse.filter');
+
 
 
 
