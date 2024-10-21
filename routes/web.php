@@ -13,7 +13,7 @@ use App\Http\Controllers\Faute;
 use App\Http\Controllers\Tfautes;
 use App\Http\Controllers\Absence;
 use App\Http\Controllers\Matieres;
-
+use App\Http\Controllers\GestionNotesController;
 use App\Http\Controllers\EditionController;
 
 /*
