@@ -315,6 +315,8 @@
                             'situationfinanciereglobale',
                             'etatdesrecouvrements',
                             'arriereconstate',
+                            'journaldetailleaveccomposante',
+                            'journaldetaillesanscomposante'
                         ]; // Liste des noms de routes associées à l'accueil
                     @endphp
                     <li class="nav-item">
