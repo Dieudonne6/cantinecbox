@@ -1,4 +1,3 @@
-
 @extends('layouts.master')
 
 @section('content')
@@ -102,7 +101,7 @@
                             <input type="text" class="form-control" id="ReductionFrais4" name="Reduction_frais4" placeholder="0">
                         </div>
                     </div>
-                    <div class="form-group row">
+{{--                     <div class="form-group row">
                         <label for="exampleInputUsername2" class="col-sm-12 col-form-label mb-0">Mode d'application de la réduction sur les écheanciers</label>
                         <div class="col-sm-12 mb-2">
                             <select class="js-example-basic-multiple w-100" name="mode">
@@ -110,10 +109,9 @@
                                 <option value="2">Repartir équitablement sur toutes les tranches</option>
                             </select>
                         </div>
-                    </div>
+                    </div> --}}
                     <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
-                    <button class="btn btn-secondary">Fermer</button>
-                </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>                </form>
             </div>
             <div class="col-lg-4 d-none" id="percentage">
                 <br></br>
@@ -260,19 +258,19 @@
                                                       @method('PUT')
                                                       <input type="hidden" id="modalReductionId" name="CodeReduction">
                                                         <div class="form-group row">
-                                                            <label for="modalCodeReduction" class="col-sm-8 col-form-label">Numéro réduction</label>
+                                                            <label for="modalCodeReduction" class="col-sm-8 col-form-label text-start">Numéro réduction</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" id="modalCodeReduction" name="Codereduction" readonly>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="modalLibelleReduction" class="col-sm-8 col-form-label">Libellé réduction</label>
+                                                            <label for="modalLibelleReduction" class="col-sm-8 col-form-label text-start">Libellé réduction</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" id="modalLibelleReduction" name="LibelleReduction">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="reductionType" class="col-sm-8 col-form-label">Type de réduction</label>
+                                                            <label for="reductionType" class="col-sm-8 col-form-label text-start">Type de réduction</label>
                                                             <div class="col-sm-12 mb-2">
                                                                 <select class="js-example-basic-multiple w-50" id="reductionType" name="reductionType" required>
                                                                     <option value="1" {{ $reduction->typereduction === 'P' ? 'selected' : '' }}>Réduction par pourcentage</option>
@@ -286,52 +284,52 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="modalReductionScolarite" class="col-sm-8 col-form-label">Réduction accordée sur scolarité</label>
+                                                            <label for="modalReductionScolarite" class="col-sm-8 col-form-label text-start">Réduction accordée sur scolarité</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" id="modalReductionScolarite" name="Reduction_scolarite">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="modalReductionArriere" class="col-sm-8 col-form-label">Réduction accordée sur arriérés</label>
+                                                            <label for="modalReductionArriere" class="col-sm-8 col-form-label text-start">Réduction accordée sur arriérés</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" id="modalReductionArriere" name="Reduction_arriere">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="modalReductionFrais1" class="col-sm-8 col-form-label">Réduction accordée sur frais 1</label>
+                                                            <label for="modalReductionFrais1" class="col-sm-8 col-form-label text-start">Réduction accordée sur frais 1</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" id="modalReductionFrais1" name="Reduction_frais1">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="modalReductionFrais2" class="col-sm-8 col-form-label">Réduction accordée sur frais 2</label>
+                                                            <label for="modalReductionFrais2" class="col-sm-8 col-form-label text-start">Réduction accordée sur frais 2</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" id="modalReductionFrais2" name="Reduction_frais2">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="modalReductionFrais3" class="col-sm-8 col-form-label">Réduction accordée sur frais 3</label>
+                                                            <label for="modalReductionFrais3" class="col-sm-8 col-form-label text-start">Réduction accordée sur frais 3</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" id="modalReductionFrais3" name="Reduction_frais3">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="modalReductionFrais4" class="col-sm-8 col-form-label">Réduction accordée sur frais 4</label>
+                                                            <label for="modalReductionFrais4" class="col-sm-8 col-form-label text-start">Réduction accordée sur frais 4</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" id="modalReductionFrais4" name="Reduction_frais4">
                                                             </div>
                                                         </div>
-                                                        <div class="form-group row">
-                                                            <label for="modalModeApplication" class="col-sm-12 col-form-label mb-0">Mode d'application de la réduction sur les échéanciers</label>
+                                                        {{-- <div class="form-group row">
+                                                            <label for="modalModeApplication" class="col-sm-12 col-form-label text-start mb-0">Mode d'application de la réduction sur les échéanciers</label>
                                                             <div class="col-sm-12 mb-2">
                                                                 <select class="js-example-basic-multiple w-100" id="modalModeApplication" name="mode">
                                                                     <option value="1">Agir sur les dernières tranches</option>
-                                                                    <option value="2">Repartir equitablement sur toutes les tranches</option>
+                                                                    <option value="2">Repartir équitablement sur toutes les tranches</option>
                                                                 </select>
                                                             </div>
-                                                        </div>
+                                                        </div> --}}
                                                         <button type="submit" class="btn btn-primary mr-2">Modifier</button>
-                                                        <button class="btn btn-light" data-bs-dismiss="modal">Fermer</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                                                     </form>
                                                 </div>
                                                 <div class="col-lg-4 d-none" id="percentages">
@@ -539,6 +537,10 @@
         });
     });
 
+    document.querySelector('.btn-secondary').addEventListener('click', function() {
+    var modal = bootstrap.Modal.getInstance(document.getElementById('modifModal'));
+    modal.hide();
+});
 
 
 

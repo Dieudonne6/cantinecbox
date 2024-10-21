@@ -4,6 +4,15 @@
 
 <style>
 
+    .btn-secondary {
+        box-shadow: none !important;
+        border-color: #6c757d !important;
+        --bs-btn-border-color: none !important;
+        --bs-btn-hover-border-color: none !important;
+        --bs-btn-active-border-color: none !important;
+        --bs-btn-disabled-border-color: none !important;
+        --bs-btn-focus-shadow-rgb: none !important;
+    }
     a:hover {
         text-decoration: none !important;
     }
@@ -75,6 +84,7 @@
                             </div>
                         </div>
                     </div>
+                    <input class="btn-sm btn-secondary" type="button" id="default" value="Defaut" >
                     <hr>
 
                 {{-- <form id="validationForm" action="{{ url('detailfacclasse/'.$CODECLAS) }}" method="post">
@@ -105,8 +115,14 @@
 
                     </div>
                     <input type="hidden" id="echeancesData" name="echeancesData">
+                    <input type="hidden" id="mts" name="mts" value="{{ $donneLibelle->MTS }}">
+                    <input type="hidden" id="mt1" name="mt1" value="{{ $donneLibelle->MT1 }}">
+                    <input type="hidden" id="mt2" name="mt2" value="{{ $donneLibelle->MT2 }}">
+                    <input type="hidden" id="mt3" name="mt3" value="{{ $donneLibelle->MT3 }}">
+                    <input type="hidden" id="mt4" name="mt4" value="{{ $donneLibelle->MT4 }}">
 
-                    <input class="btn-sm btn-primary" id="validerButton" type="submit" style="margin-left: 22.4rem;" value="Valider" >
+                    {{-- <input class="btn-sm btn-primary" id="validerButton" type="submit" style="margin-left: 22.4rem;" value="Valider" > --}}
+
 
 
                 </div>
@@ -185,7 +201,6 @@
 
 
 
-                </form>
 
                 </div>
 
@@ -248,6 +263,13 @@
                 </div>
             </div>
 
+            <div class="form-group mt-3 text-center pb-2">
+                <input class="btn btn-primary" id="validerButton" type="submit"  value="Valider" >
+                <input class="btn btn-danger" style="" type="reset"  value="Annuler" >
+            </div>
+    </form>
+
+
             {{-- <div class="row"> --}}
 
                 {{-- <a class="btn-sm btn-primary" href="" style="margin-bottom: 2rem; float: right">Creer</a> --}}
@@ -285,6 +307,38 @@
 {{-- script pour ajouter readonly sur les inputs si le label est vide --}}
 
 <script>
+    // Fonction pour gerer le boutton defaut
+    const defaultBtn = document.getElementById('default');
+    const mts = document.getElementById('mts').value;
+    const mt1 = document.getElementById('mt1').value;
+    const mt2 = document.getElementById('mt2').value;
+    const mt3 = document.getElementById('mt3').value;
+    const mt4 = document.getElementById('mt4').value;
+
+    // console.log(mts);
+    
+
+    defaultBtn.addEventListener('click', function() {
+        console.log(mts);
+        document.getElementById('scolarite').value = mts;
+        document.getElementById('scolarite_a').value = mts;
+
+        document.getElementById('frais1').value = mt1;
+        document.getElementById('frais1_a').value = mt1;
+
+        document.getElementById('frais2').value = mt2;
+        document.getElementById('frais2_a').value = mt2;
+
+        document.getElementById('frais3').value = mt3;
+        document.getElementById('frais3_a').value = mt3;
+
+        document.getElementById('frais4').value = mt4;
+        document.getElementById('frais4_a').value = mt4;
+
+    });
+
+
+
     // Fonction pour mettre en readonly les champs si le label est vide
     function setReadonlyIfEmpty(labelId, inputId1, inputId2) {
         const label = document.getElementById(labelId);

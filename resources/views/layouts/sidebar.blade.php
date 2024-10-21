@@ -237,8 +237,7 @@
 
               </li>
               <li>
-                <a class="nav-link {{ request()->is('reductioncollective') ? 'active' : '' }}" href="{{url('/reductioncollective')}}">Réductions collectives</a>
-              </li>
+{{--                 <a class="nav-link {{ request()->is('reductioncollective') ? 'active' : '' }}" href="{{url('/reductioncollective')}}">Réductions collectives</a> --}}              </li>
               <li>
                 <a class="nav-link {{ request()->is('paiementdesnoninscrits') ? 'active' : '' }}" href="{{url('/paiementdesnoninscrits')}}">Paiement des non inscrits</a>
               </li>
@@ -247,7 +246,7 @@
               </li>
             </ul>
           </li>
-
+          <li class="nav-item"> <a class="nav-link" {{ request()->is('recalculereffectif')  ? 'active' : '' }} href="{{url('/recalculereffectifs')}}">Recalculer effectifs</a></li> 
           {{-- Dicipline --}}
           <li class="nav-item"> <a class="nav-link {{ request()->is('discipline') ? 'active' : '' }}" href="{{url('/discipline')}}">Discipline</a></li>
           
@@ -282,7 +281,7 @@
 
           {{-- Editions --}}
           @php
-              $routeseditions = ['editions', 'listedeseleves', 'listedesclasses', 'listeselectiveeleve', 'eleveparclasse', 'certificatsolarite', 'etatdelacaisse','enquetesstatistiques','situationfinanciereglobale','etatdesrecouvrements']; // Liste des noms de routes associées à l'accueil
+              $routeseditions = ['editions', 'listedeseleves', 'listedesclasses', 'listeselectiveeleve', 'eleveparclasse', 'certificatsolarite', 'etatdelacaisse','enquetesstatistiques','situationfinanciereglobale','etatdesrecouvrements','arriereconstate']; // Liste des noms de routes associées à l'accueil
               @endphp
               <li class="nav-item">
                 <a class="nav-link {{ in_array(request()->route()->getName(), $routeseditions) ? 'active' : '' }}" href="{{ route('editions') }}">Editions</a>
