@@ -156,6 +156,9 @@ class EditionController extends Controller
         return view('pages.inscriptions.journaldetaillesanscomposante', compact('recouvrements', 'libelle','enseign'));
     }
     
-    
+    public function tabledesmatieres(Request $request) {
+
+        return view('pages.notes.tabledesmatieres');
+    }
 }
 
