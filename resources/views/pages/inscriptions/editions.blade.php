@@ -2,10 +2,6 @@
 @section('content')
 
 <style>
-
-
-
-
   .container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -66,7 +62,7 @@
       <button><a href="{{ url('/listeselectiveeleve') }}"><i class="fas fa-list"></i> Liste selective des eleves</a></button>
       
       <button><a href="{{ url('/eleveparclasse') }}"><i class="fas fa-list"></i> Liste des eleves par classes</a></button>
-      <button data-bs-toggle="modal" data-bs-target="#modalregistre"><i class="fas fa-list"></i> Registre des eleves</button>
+      <button data-bs-toggle="modal" data-bs-target="#modalregistre"><a href="#"><i class="fas fa-list"></i> Registre des eleves</a></button>
       <button><a href="{{ url('/certificatsolarite') }}"><i class="fas fa-certificate"></i> Certificats de scolarité</a></button>
       <button><a href="{{ url('/attestationsdescolarite') }}"><i class="fas fa-file-alt"></i> Attestations de scolarité</a></button>
       <button><a href="{{ url('/enquetesstatistiques') }}"><i class="fas fa-chart-bar"></i> Enquêtes statistiques</a></button>
@@ -81,11 +77,11 @@
       <button><a href="{{ url('/listedesreductions') }}"><i class="fas fa-percentage"></i> Liste des réductions accordées</a></button>
       <button class="profil-btn" type="button" id="" class="" data-bs-toggle="modal" data-bs-target="#exampleModal2"><i class="fas fa-id-card"></i> Liste des élèves par profil</button>
       
-      <button id="printButton" onclick="printTable()"><i class="fas fa-calendar-check"></i> Liste des élèves ayant un échéancier personnalisé</button>
-      <button id="" onclick="imprimerPageTous()"><i class="fas fa-exclamation-triangle"></i> État général des arriérés (élèves inscrits)</button>
-      <button id="" onclick="imprimerPageNonSolde()"><i class="fas fa-minus-circle"></i> État général des arriérés moins ceux qui sont soldés</button>
-      <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-file-invoice"></i>
-        État des arriérés constatés (élèves inscrits)      </button>
+      <button id="printButton" onclick="printTable()"><a href="#"><i class="fas fa-calendar-check"></i> Liste des élèves ayant un échéancier personnalisé</a></button>
+      <button id="" onclick="imprimerPageTous()"><a href="#"><i class="fas fa-exclamation-triangle"></i> État général des arriérés (élèves inscrits)</a></button>
+      <button id="" onclick="imprimerPageNonSolde()"><a href="#"><i class="fas fa-minus-circle"></i> État général des arriérés moins ceux qui sont soldés</a></button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"><a href="#"><i class="fas fa-file-invoice"></i>
+        État des arriérés constatés (élèves inscrits)      </a></button>
         <button><a href="{{ url('/etatdesarriérés') }}"><i class="fas fa-exclamation"></i> État général des arriérés</a></button>
       </div>
     </div>

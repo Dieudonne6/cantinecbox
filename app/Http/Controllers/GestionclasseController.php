@@ -35,7 +35,6 @@ use Illuminate\Database\QueryException;
 use App\Models\Promo;
 use App\Models\Notes;
 use App\Models\Scolarite;
-use App\Models\Echeance;
 
 class GestionclasseController extends Controller
 {
