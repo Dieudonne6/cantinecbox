@@ -1826,7 +1826,7 @@ public function filterEtatDeLaCaisse(Request $request) {
     }
 
     if ($type == "Bordereau de caisse") {
-    return redirect()->back()->withErrors('Non disponible');
+      return redirect()->back()->withErrors('Non disponible');
     }
 
     return redirect()->back();
