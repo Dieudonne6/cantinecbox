@@ -7,6 +7,8 @@ use App\Models\Eleve;
 use App\Models\Scolarite;
 use App\Models\Delevea;
 use App\Models\Params2;
+use App\Models\Matiere;
+
 use App\Models\Typeenseigne;
 
 use Illuminate\Support\Facades\DB;
@@ -156,9 +158,9 @@ class EditionController extends Controller
         return view('pages.inscriptions.journaldetaillesanscomposante', compact('recouvrements', 'libelle','enseign'));
     }
     
-    public function tabledesmatieres(Request $request) {
-
-        return view('pages.notes.tabledesmatieres');
+    public function tabledesmatieres() {
+          $matiere = Matiere::all();
+        return view('pages.notes.tabledesmatieres', compact('matiere'));
     }
 }
 
