@@ -1,6 +1,4 @@
-@extends('layouts.master')
-@section('content')
-
+repartitionclassesparoperateur
 <div class="d-flex justify-content-center align-items-center">
     <div class="card col-md-10">
         <div class="card-body">
