@@ -130,10 +130,13 @@
       var style = document.createElement('style');
       style.innerHTML = `
       @page { size: landscape; }
+      
           table {
-              min-width: 400px !important;
-              margin: auto !important;
+
+              // width: 600px !important;
+              margin: 0 auto !important;
               border-collapse: collapse;
+              
           }
               h3 {
               display: block !important;
