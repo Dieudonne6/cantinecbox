@@ -42,7 +42,9 @@
             <tr>
               <td>  {{$mat->CODEMAT}}</td>
               <td>  {{$mat->LIBELMAT}}</td>
-              <td  class="dt-hit" style="background-color: {{$mat->COULEUR}}; color: {{$mat->COULEURECRIT}};">  {{$mat->NOMCOURT}}</td>
+              <td class="dt-hit" style="background-color: {{$mat->COULEUR}}; color: {{ $mat->COULEURECRIT == 16777215 ? '#fff' : '#000' }};">
+                {{$mat->NOMCOURT}}
+              </td>
               <td class="dt-hit">  
                 <?php 
                 if($mat->CODEMAT == 1){
