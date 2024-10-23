@@ -195,6 +195,8 @@ Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::c
 
 
 Route::get('/archive', [PagesController::class, 'archive']);
+Route::get('/pagedetailarchive/{MATRICULE}', [PagesController::class, 'pagedetailarchive'])->name('pagedetailarchive');
+
 Route::get('/editions', [EditionController::class, 'editions'])->name('editions');
 Route::get('/journalderecouvrement', [EditionController::class, 'journal'])->name('journal');
 
