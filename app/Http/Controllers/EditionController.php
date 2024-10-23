@@ -7,6 +7,9 @@ use App\Models\Eleve;
 use App\Models\Scolarite;
 use App\Models\Delevea;
 use App\Models\Params2;
+use App\Models\Matiere;
+
+use App\Models\Typeenseigne;
 
 use Illuminate\Support\Facades\DB;
 
@@ -59,6 +62,10 @@ class EditionController extends Controller
         return view('pages.inscriptions.editions', compact('eleves','resultats','totalDues','totalPayes','totalRestes'));
       } 
 
+      public function editions2(){
+        return view('pages.notes.editions2');
+      }
+
       public function arriereconstate(Request $request) {
           // Récupérer les dates du formulaire
           $datedebut = $request->input('datedebut');
@@ -106,14 +113,11 @@ class EditionController extends Controller
               return back()->with('error', 'Veuillez fournir une date de début et une date de fin.');
           }
       }
-      public function journal(Request $request) {
+      public function journaldetailleaveccomposante(Request $request) {
         // Récupérer les paramètres de filtrage depuis la requête
-        // $datedebut = $request->input('datedebut');
-        // $datefin = $request->input('datefin');
-        // $typeenseign = $request->input('typeenseign');
-            $datedebut = '2022-01-09';
-        $datefin = '2024-10-09';
-        $typeenseign = 2;
+        $datedebut = $request->query('debut');
+        $datefin = $request->query('fin');
+        $typeenseign = $request->query('typeenseign');
         // Requête pour récupérer les données
         $recouvrements = DB::table('scolarit')
     ->join('eleve', 'scolarit.MATRICULE', '=', 'eleve.MATRICULE') // Joindre la table des élèves
@@ -125,12 +129,64 @@ class EditionController extends Controller
     ->groupBy('scolarit.DATEOP', 'scolarit.AUTREF', 'scolarit.EDITE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type') // Regrouper par date et autres champs
     ->orderBy('scolarit.DATEOP', 'asc') // Trier par date
     ->get();
+    $enseign = Typeenseigne::where('idenseign', $typeenseign)->first();
 
     $libelle = Params2::first();
         // Retourner la vue avec les données
-        return view('pages.inscriptions.journalderecouvrement', compact('recouvrements', 'libelle'));
+        return view('pages.inscriptions.journaldetailleaveccomposante', compact('recouvrements', 'libelle', 'enseign'));
     }
     
+    public function journaldetaillesanscomposante(Request $request) {
+        // Récupérer les paramètres de filtrage depuis la requête
+        $datedebut = $request->query('debut');
+        $datefin = $request->query('fin');
+        $typeenseign = $request->query('typeenseign');
+        // Requête pour récupérer les données
+        $recouvrements = DB::table('scolarit')
+    ->join('eleve', 'scolarit.MATRICULE', '=', 'eleve.MATRICULE') // Joindre la table des élèves
+    ->join('typeenseigne', 'eleve.TYPEENSEIG', '=', 'typeenseigne.idenseign') // Joindre la table des types d'enseignement
+    ->select('scolarit.DATEOP', 'scolarit.SIGNATURE', 'scolarit.NUMRECU', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type', DB::raw('SUM(scolarit.MONTANT) as total'))
+    ->whereBetween('scolarit.DATEOP', [$datedebut, $datefin]) // Filtrer par dates
+    ->where('eleve.TYPEENSEIG', '=', $typeenseign) // Filtrer par type d'enseignement
+    ->where('scolarit.VALIDE', '=', 1) // Filtrer les enregistrements où validate est égal à 1
+    ->groupBy('scolarit.DATEOP', 'scolarit.SIGNATURE', 'scolarit.NUMRECU', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type') // Regrouper par date et autres champs
+    ->orderBy('scolarit.DATEOP', 'asc') // Trier par date
+    ->get();
+    $enseign = Typeenseigne::where('idenseign', $typeenseign)->first();
+    $libelle = Params2::first();
+        // Retourner la vue avec les données
+        return view('pages.inscriptions.journaldetaillesanscomposante', compact('recouvrements', 'libelle','enseign'));
+    }
     
+    public function tabledesmatieres() {
+        $matiere = Matiere::all();
+        $lastMatiere = Matiere::orderBy('CODEMAT', 'desc')->first();
+        $nextCodeMat = $lastMatiere ? $lastMatiere->CODEMAT + 1 : 1; // Si aucune matière, commencer à 1
+        return view('pages.notes.tabledesmatieres', compact('matiere',  'nextCodeMat',  'lastMatiere'));
+    }
+
+    public function storetabledesmatieres(Request $request) {
+        $matiere = new Matiere();
+        $matiere->LIBELMAT = $request->libelle;
+        $matiere->NOMCOURT = $request->nomcourt;
+        $matiere->COULEUR = $request->couleur;
+        $matiere->CODEMAT_LIGNE = $request->matligne;
+        $lastMatiere = Matiere::orderBy('CODEMAT', 'desc')->first();
+        $matiere->CODEMAT = $lastMatiere ? $lastMatiere->CODEMAT + 1 : 1;
+        if ($request->input('typematiere') == 1) {
+            $matiere->TYPEMAT = 1;
+        }
+        if ($request->input('typematiere') == 2) {
+            $matiere->TYPEMAT = 2;
+        } else {
+            $matiere->TYPEMAT = 3;
+        }
+
+        // Vérification de l'écriture
+        $matiere->COULEURECRIT = $request->input('ecrit') ? 0 : 16777215;
+
+        $matiere->save();
+        return redirect()->route('tabledesmatieres')->with('success', 'Matière enregistrée avec succès');
+    }
 }
 

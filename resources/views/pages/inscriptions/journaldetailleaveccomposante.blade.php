@@ -24,7 +24,7 @@
 </div>
   <div  id="ArriereConstat" class="card">
     <div class="card-body">
-      <h4 class="text-center">Journal détaillé des recouvrements</h4>
+      <h4 class="text-center py-3">Journal détaillé des recouvrements</h4>
       
       <!-- Tableau pour afficher les recouvrements -->
       <table>
@@ -64,8 +64,10 @@
 
               <!-- Afficher la nouvelle date -->
               <tr>
-                <td colspan="5"><strong>Date : {{ \Carbon\Carbon::parse($recouvrement->DATEOP)->format('d/m/Y') }}</strong></td>
+                <td colspan="1"><strong>Date : {{ \Carbon\Carbon::parse($recouvrement->DATEOP)->format('d/m/Y') }}</strong></td>
+                <td colspan="4"><strong>Ens {{ $enseign->type }}</strong></td>
               </tr>
+              
             @endif
 
             <!-- Afficher les détails de l'élève -->

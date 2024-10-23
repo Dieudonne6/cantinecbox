@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="d-flex justify-content-between align-items-center w-100 " style="min-height: 100vh; margin-left: 0; padding: 20px;">
-    <form id="recouvrementForm" method="GET">
+    <form id="recouvrementForm" method="GET" action="">
         <div class="card col-md-12">
             <div class="card-body">
                 <h4 class="card-title">Etat des recouvrements</h4>
@@ -33,14 +33,14 @@
                                         
                                     </div>
                                     <div class="col-12">
-                                        <select aria-label="Small select example" id="typeclasse">
+                                        <select id="typeclasse" name="typeclasse" aria-label="Small select example" >
                                             @foreach ($typeclasse as $type)
-                                                <option value="{{ $type->id }}">{{ $type->LibelleType }}</option>
+                                                <option value="{{ $type->TYPECLASSE }}">{{ $type->LibelleType }}</option>
                                             @endforeach
                                         </select>
-                                        <select  aria-label="Small select example" style=" margin-left: 10rem;" id="groupe">
+                                        <select  id="groupe" name="groupe" aria-label="Small select example" style=" margin-left: 10rem;">
                                             @foreach ($groupeclasse as $groupe)
-                                                <option value="{{ $groupe->id }}">{{ $groupe->LibelleGroupe }}</option>
+                                                <option value="{{ $groupe->LibelleGroupe }}">{{ $groupe->LibelleGroupe }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -65,10 +65,10 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="radio-inline">
-                                    <select class="form-select mb-2" aria-label="Small select example">
+                                    <select class="form-select mb-2" name="typeenseign" id="typeenseign">
                                         <option selected>Sélectionner un enseignement</option>
                                         @foreach ($typeenseign as $type)
-                                            <option value="{{ $type->id }}">{{ $type->type }}</option>
+                                            <option value="{{ $type->idenseign }}">{{ $type->type }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -126,34 +126,60 @@
         const form = document.getElementById('recouvrementForm');
         const selectedOption = document.querySelector('input[name="choixPlage"]:checked');
 
+
+
+        // Récupération des valeurs des champs de date, type de classe et groupe
+        const debut = document.getElementById('debut').value;
+        const fin = document.getElementById('fin').value;
+        
+        const typeClasse = document.getElementById('typeclasse').value;
+        const groupe = document.getElementById('groupe').value;
+
+        // Vérifier que les champs requis sont remplis
+        // if (!debut || !fin || !typeClasse || !groupe) {
+        //     alert('Veuillez remplir tous les champs obligatoires.');
+        //     return;
+        // }
+        console.log(typeClasse);
+
         if (!selectedOption) {
             alert('Veuillez sélectionner une option.');
             return;
         }
+        
 
         let actionUrl = '';
+
         switch (selectedOption.value) {
+
             case 'option1':
-                actionUrl = "{{ route('recouvrementgeneral') }}";
+                actionUrl = `{{ route('recouvrementgeneral') }}?debut=${debut}&fin=${fin}&typeclasse=${typeClasse}&groupe=${groupe}`;
                 break;
+
             case 'option2':
-                actionUrl = "{{ route('recouvrementgeneralenseignement') }}";
+                actionUrl = `{{ route('recouvrementgeneralenseignement') }}?debut=${debut}&fin=${fin}&typeclasse=${typeClasse}&groupe=${groupe}`;
                 break;
+
             case 'option4':
                 actionUrl = "{{ route('journaldetailleaveccomposante') }}";
                 break;
+
             case 'option5':
                 actionUrl = "{{ route('journaldetaillesanscomposante') }}";
                 break;
+
             case 'option6':
                 actionUrl = "{{ route('recouvrementoperateur') }}";
                 break;
+
             case 'option7':
                 actionUrl = "{{ route('journaloperateur') }}";
                 break;
+
             case 'option8':
                 actionUrl = "{{ route('journalresumerecouvrement') }}";
                 break;
+
             default:
                 alert('Veuillez sélectionner une option valide.');
                 return;
@@ -162,6 +188,7 @@
         form.submit();
     }
 </script>
+
 
 
 <style>
@@ -176,4 +203,7 @@
     
     
 </style>
+
+Route::get('/recouvrementGenParPeriode/{datedebut}/{datefin}/{typeclasse}/{groupe}', [PagesController::class, 'recouvrementGenParPeriode'])->name('recouvrementgeneral');
+
 @endsection

@@ -11,4 +11,5 @@ class Matieres extends Model
     protected $table = 'matieres';
     protected $primaryKey = 'CODEMAT';
     public $timestamps = false;
+    protected $fillable = ['CODEMAT', 'LIBELMAT', 'COULEUR', 'NOMCOURT', 'TYPEMAT', 'PLAGEINTERDITE', 'COULEURECRIT', 'ANSCOL', 'guid', 'site', 'CODEMAT_LIGNE'];
 }
