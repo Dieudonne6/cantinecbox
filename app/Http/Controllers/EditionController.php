@@ -7,6 +7,8 @@ use App\Models\Eleve;
 use App\Models\Scolarite;
 use App\Models\Delevea;
 use App\Models\Params2;
+use App\Models\Matieres;
+
 use App\Models\Typeenseigne;
 
 use Illuminate\Support\Facades\DB;
@@ -152,9 +154,70 @@ class EditionController extends Controller
         return view('pages.inscriptions.journaldetaillesanscomposante', compact('recouvrements', 'libelle','enseign'));
     }
     
-    public function tabledesmatieres(Request $request) {
+    public function tabledesmatieres() {
+        $matiere = Matieres::all();
+        $lastMatiere = Matieres::orderBy('CODEMAT', 'desc')->first();
+        $nextCodeMat = $lastMatiere ? $lastMatiere->CODEMAT + 1 : 1; // Si aucune matière, commencer à 1
+        return view('pages.notes.tabledesmatieres', compact('matiere',  'nextCodeMat',  'lastMatiere'));
+    }
+    
+    public function storetabledesmatieres(Request $request) {
+        $matiere = new Matieres();
+        $matiere->LIBELMAT = $request->libelle;
+        $matiere->NOMCOURT = $request->nomcourt;
+        $matiere->COULEUR = $request->couleur;
+        $matiere->CODEMAT_LIGNE = $request->matligne;
+        $lastMatiere = Matieres::orderBy('CODEMAT', 'desc')->first();
+        $matiere->CODEMAT = $lastMatiere ? $lastMatiere->CODEMAT + 1 : 1;
+        if ($request->input('typematiere') == 1) {
+            $matiere->TYPEMAT = 1;
+        }
+        if ($request->input('typematiere') == 2) {
+            $matiere->TYPEMAT = 2;
+        } else {
+            $matiere->TYPEMAT = 3;
+        }
 
-        return view('pages.notes.tabledesmatieres');
+        // Vérification de l'écriture
+        $matiere->COULEURECRIT = $request->input('ecrit') ? 0 : 16777215;
+
+        $matiere->save();
+        return redirect()->route('tabledesmatieres')->with('status', 'Matière enregistrée avec succès');
+    }
+    public function updatetabledesmatieres(Request $request) {
+        // Validation des données
+        $request->validate([
+            'libelleModif' => 'required|string|max:255',
+            'nomcourtModif' => 'required|string|max:255',
+            'couleurModif' => 'required|string|max:7',
+            'matligneModif' => 'required|integer',
+            'typematiereModif' => 'required|integer', // Changer ici
+            'ecritModif' => 'boolean',
+            'codemat' => 'required|integer',
+        ]);
+        $code = $request->input('codemat');
+        $matiere = Matieres::where('CODEMAT', $code)->first();
+    
+        // Vérifiez si la matière existe
+        if (!$matiere) {
+            return redirect()->route('tabledesmatieres')->with('status', 'Matière non trouvée');
+        }
+    
+        // Mise à jour des champs
+        $matiere->LIBELMAT = $request->input('libelleModif');
+        $matiere->NOMCOURT = $request->input('nomcourtModif');
+        $matiere->COULEUR = $request->input('couleurModif');
+        $matiere->CODEMAT_LIGNE = $request->input('matligneModif');
+        // Mise à jour du type de matière
+        $matiere->TYPEMAT = $request->input('typematiereModif'); // Changer ici
+    
+        // Vérification de l'écriture
+        $matiere->COULEURECRIT = $request->input('ecritModif') ? 0 : 16777215;
+    
+        // Sauvegarde des modifications
+        $matiere->save();
+    
+        return redirect()->route('tabledesmatieres')->with('status', 'Matière mise à jour avec succès');
     }
 }
 
