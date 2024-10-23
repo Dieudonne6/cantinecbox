@@ -51,10 +51,10 @@
               <th>
                 Libelle matiere
               </th>
-              <th class="dt-hit">Nom court</th>
-              <th class="dt-hit">Type matière</th>
-              <th class="dt-hit">Mat_ligne</th>
-              <th class="dt-hit">Action</th>
+              <th class="dt-hit acti">Nom court</th>
+              <th class="dt-hit acti">Type matière</th>
+              <th class="dt-hit acti">Mat_ligne</th>
+              <th class="dt-hit acti">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -63,10 +63,10 @@
             <tr>
               <td>  {{$mat->CODEMAT}}</td>
               <td>  {{$mat->LIBELMAT}}</td>
-              <td class="dt-hit" style="background-color: {{$mat->COULEUR}}; color: {{ $mat->COULEURECRIT == 16777215 ? '#fff' : '#000' }};">
+              <td class="dt-hit acti" style="background-color: {{$mat->COULEUR}}; color: {{ $mat->COULEURECRIT == 16777215 ? '#fff' : '#000' }};">
                 {{$mat->NOMCOURT}}
               </td>
-              <td class="dt-hit">  
+              <td class="dt-hit acti">  
                 <?php 
                 if($mat->CODEMAT == 1){
                   echo 'Littéraires';
@@ -78,8 +78,8 @@
                 ?>
               </td>
               
-              <td class="dt-hit"> {{$mat->CODEMAT_LIGNE}} </td>
-              <td class="dt-hit">
+              <td class="dt-hit acti"> {{$mat->CODEMAT_LIGNE}} </td>
+              <td class="dt-hit acti">
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newModalmodif" onclick="populateModal({{ json_encode($mat) }})">
                     Modifier
@@ -283,55 +283,55 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
        
   <script>
-    function injectTableStyles() {
-      var style = document.createElement('style');
-      style.innerHTML = `
-      @page { size: landscape; }
-          table {
-              min-width: 400px !important;
-              margin: auto !important;
-              border-collapse: collapse;
-          }
-              h3 {
-              display: block !important;
-               }
-          .dt-end, .dt-start, .hide-printe, .offcanvas { display: none !important; }
-
-          thead {
-              background-color: #f2f2f2;
-          }
-              tr {
-                text-align: center;
-
-              }
-          th, td {
-              padding: 6px;
-              border: 1px solid #ddd;
-              text-align: center !important;
-          }
-              .dt-hit {
-              display : none;}
-          .classe-row {
-              background-color: #f9f9f9;
-              font-weight: bold;
-          }`;
-      document.head.appendChild(style);
-    }
     function imprimerArriereConstat() {
-      injectTableStyles(); // Injecter les styles pour l'impression
-      // let originalTitle = document.title;
-      // document.title = `Liste des matières`;
-      var originalContent = document.body.innerHTML; // Contenu original de la page
-      var printContent = document.getElementById('ArriereConstat').innerHTML; // Contenu spécifique à imprimer
-      document.body.innerHTML = printContent; // Remplacer le contenu de la page par le contenu à imprimer
-      
-      setTimeout(function() {
-        window.print(); // Ouvrir la boîte de dialogue d'impression
-        document.body.innerHTML = originalContent;
-        window.location.reload();
-        // Restaurer le contenu original
-      }, 1000);
-    }    
+    var originalContent = document.body.innerHTML; // Contenu original de la page
+    var printDiv = document.createElement('div');
+    let table = $('#myTable').DataTable();
+    let currentPage = table.page();  
+    table.destroy();
+
+    // Récupérer le contenu à imprimer en utilisant l'ID
+    var contenuAImprimer = document.getElementById('ArriereConstat').innerHTML; // Remplacez 'ArriereConstat' par l'ID approprié
+
+    printDiv.innerHTML = `
+        <h1 style="font-size: 20px; text-align: center; text-transform: uppercase;">
+            Liste des matières
+        </h1>
+                ${contenuAImprimer}
+        </table>
+    `;
+
+    // Appliquer des styles pour l'impression
+    let style = document.createElement('style');
+    style.innerHTML = `
+        @page { size: landscape; }
+        @media print {
+          .acti {
+            display: none;
+          }
+          th, td {
+            border: 1px solid gray !important;
+          }
+          #myTable {
+              width: 50%;
+              margin: auto; /* Centre le tableau */
+          }
+          body * { visibility: hidden; }
+          #printDiv, #printDiv * { visibility: visible; }
+          #printDiv { position: absolute; top: 0; left: 0; width: 100%; }
+        }
+    `;
+
+    // Ajouter les styles et le contenu à imprimer au document
+    document.head.appendChild(style);
+    document.body.appendChild(printDiv);
+    printDiv.setAttribute("id", "printDiv");
+
+    // Lancer l'impression
+    window.print();
+    document.body.removeChild(printDiv);
+    document.head.removeChild(style);
+}
     function populateModal(mat) {
       document.getElementById('codeMatiereModif').value = mat.CODEMAT;
       document.getElementById('matligneModif').value = mat.CODEMAT_LIGNE; // Assurez-vous que l'ID est correct
