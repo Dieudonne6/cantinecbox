@@ -186,7 +186,7 @@ class EditionController extends Controller
         $matiere->COULEURECRIT = $request->input('ecrit') ? 0 : 16777215;
 
         $matiere->save();
-        return redirect()->route('tabledesmatieres')->with('success', 'Matière enregistrée avec succès');
+        return redirect()->route('tabledesmatieres')->with('status', 'Matière enregistrée avec succès');
     }
     public function updatetabledesmatieres(Request $request) {
         // Validation des données
@@ -204,7 +204,7 @@ class EditionController extends Controller
     
         // Vérifiez si la matière existe
         if (!$matiere) {
-            return redirect()->route('tabledesmatieres')->with('error', 'Matière non trouvée');
+            return redirect()->route('tabledesmatieres')->with('status', 'Matière non trouvée');
         }
     
         // Mise à jour des champs
@@ -221,7 +221,7 @@ class EditionController extends Controller
         // Sauvegarde des modifications
         $matiere->save();
     
-        return redirect()->route('tabledesmatieres')->with('success', 'Matière mise à jour avec succès');
+        return redirect()->route('tabledesmatieres')->with('status', 'Matière mise à jour avec succès');
     }
 }
 

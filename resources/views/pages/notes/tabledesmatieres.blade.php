@@ -5,7 +5,28 @@
   <div class="card">
     <div class="card-body">
       <div class="row mb-3">
+        @if(Session::has('status'))
+        <div id="statusAlert" class="alert alert-succes btn-primary">
+        {{ Session::get('status')}}
+        </div>
+      @endif
+      @if($errors->any())
+      <div id="statusAlert" class="alert alert-danger">
+          <ul>
+            @foreach($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+      </div>
+      @endif
+  
+      @if(Session::has('error'))
+      <div id="statusAlert" class="alert alert-danger">
+        {{ Session::get('error')}}
+      </div>
+      @endif
         <div class="col-lg-9">
+
           <h4 class="card-title">Mise à jour des matières</h4>
         </div>
         <div class="col-lg-3">
