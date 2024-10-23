@@ -311,3 +311,10 @@ Route::get('/recouvrementgeneralenseignement', [PagesController::class, 'recouvr
 Route::get('/recouvrementgeneral', [PagesController::class, 'recouvrementgeneral'])->name('recouvrementgeneral');
 Route::get('/repartitionclassesparoperateur', [GestionNotesController::class, 'repartitionclassesparoperateur'])->name('repartitionclassesparoperateur');
 Route::get('/tabledesmatieres', [EditionController::class, 'tabledesmatieres'])->name('tabledesmatieres');
+
+
+
+// gestion des notes
+Route::get('/gestioncoefficient', [GestionNotesController::class, 'gestioncoefficient'])->name('gestioncoefficient');
+Route::put('/enregistrerCoefficient', [GestionNotesController::class, 'enregistrerCoefficient'])->name('enregistrerCoefficient');
+
