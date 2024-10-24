@@ -4,6 +4,26 @@
 <div class="d-flex justify-content-center align-items-start">
     <div class="card col-md-10">
         <div class="card-body">
+            @if(Session::has('status'))
+            <div id="statusAlert" class="alert alert-succes btn-primary">
+            {{ Session::get('status')}}
+            </div>
+          @endif
+          @if($errors->any())
+          <div id="statusAlert" class="alert alert-danger">
+              <ul>
+                @foreach($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+          </div>
+          @endif
+      
+          @if(Session::has('error'))
+            <div id="statusAlert" class="alert alert-danger">
+              {{ Session::get('error')}}
+            </div>
+            @endif
             <h4 class="card-title">Répartition des classes par opérateur</h4>
             
             <!-- Sélecteur d'opérateur -->

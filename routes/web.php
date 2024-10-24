@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\CdController;
 
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ConnexionDBController;
@@ -195,6 +196,8 @@ Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::c
 
 
 Route::get('/archive', [PagesController::class, 'archive']);
+Route::get('/pagedetailarchive/{MATRICULE}', [PagesController::class, 'pagedetailarchive'])->name('pagedetailarchive');
+
 Route::get('/editions', [EditionController::class, 'editions'])->name('editions');
 Route::get('/editions2', [EditionController2::class, 'editions2'])->name('editions2');
 Route::get('/editions2/fichedenotesvierge', [EditionController2::class, 'fichedenotesvierge'])->name('pages.notes.fichedenotesvierge');
@@ -329,4 +332,8 @@ Route::put('/enregistrerCoefficient', [GestionNotesController::class, 'enregistr
 Route::get('/tabledesmatieres', [EditionController::class, 'tabledesmatieres'])->name('tabledesmatieres');
 
 Route::post('/tabledesmatieres', [EditionController::class, 'storetabledesmatieres'])->name('storetabledesmatieres');
+
+
+Route::get('/verrouillage', [CdController::class, 'verrouillage'])->name('verrouillage');
+
 Route::put('/tabledesmatieres',  [EditionController::class, 'updatetabledesmatieres'])->name('updatetabledesmatieres');
