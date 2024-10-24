@@ -29,6 +29,8 @@ use App\Models\Scolarite;
 use App\Models\Classesgroupeclass;
 use App\Models\Journal;
 use App\Models\Chapitre;
+use App\Models\Deleve;
+use App\Models\Eleve_pont;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -870,8 +872,24 @@ class PagesController extends Controller
   } 
   
   public function archive(){
-    return view('pages.inscriptions.archive');
+    $elevea = Elevea::all();
+    $delevea = Deleve::all();
+    return view('pages.inscriptions.archive', compact('elevea', 'delevea'));
   } 
+
+  public function pagedetailarchive($MATRICULE)
+  {
+      // Récupérer les informations de l'élève
+      $elevea = Elevea::where('MATRICULE', $MATRICULE)->first();
+      // Rechercher les enregistrements de l'élève avec le matricule et une ANSCOL non nulle
+      $delevea = Deleve::where('MATRICULE', $MATRICULE)
+                    ->whereNotNull('ANSCOL') // S'assurer que ANSCOL est présent
+                    ->get(); // Utiliser get() pour obtenir une collection
+      $eleve_pont = Eleve_pont::where('MATRICULE', $MATRICULE)
+                    ->whereNotNull('anneeacademique') // S'assurer que ANSCOL est présent
+                    ->get(); // Utiliser get() pour obtenir une collection
+      return view('pages.inscriptions.pagedetailarchive', compact('elevea', 'delevea', 'eleve_pont'));
+  }
   
   
   public function etatdesarrieresinscrits(){
