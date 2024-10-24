@@ -190,8 +190,6 @@ class EditionController extends Controller
             'libelleModif' => 'required|string|max:255',
             'nomcourtModif' => 'required|string|max:255',
             'couleurModif' => 'required|string|max:7',
-            'matligneModif' => 'required|integer',
-            'typematiereModif' => 'required|integer', // Changer ici
             'ecritModif' => 'boolean',
             'codemat' => 'required|integer',
         ]);
@@ -209,7 +207,7 @@ class EditionController extends Controller
         $matiere->COULEUR = $request->input('couleurModif');
         $matiere->CODEMAT_LIGNE = $request->input('matligneModif');
         // Mise à jour du type de matière
-        $matiere->TYPEMAT = $request->input('typematiereModif'); // Changer ici
+        $matiere->TYPEMAT = $request->input('typematiereModif') == 1 ? 1 : ($request->input('typematiereModif') == 2 ? 2 : 3); // Changer ici
     
         // Vérification de l'écriture
         $matiere->COULEURECRIT = $request->input('ecritModif') ? 0 : 16777215;
