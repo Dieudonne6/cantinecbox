@@ -10,7 +10,7 @@
                 <button id="btnCopierValeur" type="button" class="btn-sm btn-success">Copier valeur</button>
                 <button id="btnCollerValeur" type="button" class="btn-sm btn-secondary">Coller valeur</button>
                 <button id="btnMarquerFondamentale" type="button" class="btn-sm btn-danger">Marquer Fondamentale</button>
-                <button type="button" class="btn-sm btn-secondary">Imprimer</button>
+                {{-- <button type="button" class="btn-sm btn-secondary">Imprimer</button> --}}
             </div>
         </div>
 
@@ -51,11 +51,17 @@
                             <tr>
                                 <td>{{ $classe->CODECLAS }}</td>
                                 @foreach($listeMatieres as $matiere)
+                                    @php
+                                        $key = $classe->CODECLAS . '-' . $matiere->CODEMAT;
+                                        $coefficient = $coefficients->get($key);
+                                        $value = $coefficient ? $coefficient->COEF : '';
+                                        $isFondamentale = $coefficient && $coefficient->FONDAMENTALE ? 'fondamentale' : '';
+                                    @endphp
                                     <td>
                                         <input type="number" name="coefficients[{{ $classe->CODECLAS }}][{{ $matiere->CODEMAT }}]" 
-                                               class="form-control form-control-sm coefficient-input" 
-                                               min="0" 
-                                               style="width: 90px; text-align: center;" step="0.01">
+                                            class="form-control form-control-sm coefficient-input {{ $isFondamentale }}" 
+                                            min="0" 
+                                            style="width: 90px; text-align: center;" step="1" value="{{ $value }}">
                                     </td>
                                 @endforeach
                             </tr>
@@ -141,7 +147,7 @@
                     copiedClasses.push(rowInputs[i].classList.contains('fondamentale')); // Vérifie si l'input a la classe 'fondamentale'
                 }
 
-                alert('Valeurs copiées : ' + copiedValues.join(', ')); // Affiche les valeurs copiées
+                // alert('Valeurs copiées : ' + copiedValues.join(', ')); // Affiche les valeurs copiées
             } else {
                 alert('Veuillez sélectionner une cellule avant de copier les valeurs.'); // Alerte si aucune cellule n'est sélectionnée
             }
@@ -165,7 +171,7 @@
                     }
                 }
 
-                alert('Valeurs collées : ' + copiedValues.join(', ')); // Affiche les valeurs collées
+                // alert('Valeurs collées : ' + copiedValues.join(', ')); // Affiche les valeurs collées
             } else {
                 alert('Veuillez sélectionner une cellule et copier des valeurs avant de coller.'); // Alerte si aucune cellule n'est sélectionnée ou si aucune valeur n'est copiée
             }
