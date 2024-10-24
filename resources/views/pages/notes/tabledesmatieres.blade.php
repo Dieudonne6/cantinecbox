@@ -1,5 +1,13 @@
 @extends('layouts.master')
 @section('content')
+<style>
+    .footer {
+        position:fixed !important; /* Changer de relative à absolute pour le placer en bas de la carte */
+        bottom: 0 !important; /* Assurer que le footer soit en bas */
+        width: 100% !important;
+        z-index: 10 !important; /* Assurer que le footer soit au-dessus des autres éléments */
+    }
+</style>
 
 <div class="col-lg-12 grid-margin stretch-card" style="padding-bottom: 3rem !important;">
   <div class="card">
