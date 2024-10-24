@@ -15,6 +15,7 @@ use App\Http\Controllers\Absence;
 use App\Http\Controllers\Matieres;
 use App\Http\Controllers\GestionNotesController;
 use App\Http\Controllers\EditionController;
+use App\Http\Controllers\EditionController2;
 
 /*
 |--------------------------------------------------------------------------
@@ -195,7 +196,15 @@ Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::c
 
 Route::get('/archive', [PagesController::class, 'archive']);
 Route::get('/editions', [EditionController::class, 'editions'])->name('editions');
-Route::get('/editions2', [EditionController::class, 'editions2'])->name('editions2');
+Route::get('/editions2', [EditionController2::class, 'editions2'])->name('editions2');
+Route::get('/editions2/fichedenotesvierge', [EditionController2::class, 'fichedenotesvierge'])->name('pages.notes.fichedenotesvierge');
+Route::get('/editions2/relevesparmatiere', [EditionController2::class, 'relevesparmatiere'])->name('pages.notes.relevesparmatiere');
+Route::get('/editions2/recapitulatifdenotes', [EditionController2::class, 'recapitulatifdenotes'])->name('pages.notes.recapitulatifdenotes');
+Route::get('/editions2/relevespareleves', [EditionController2::class, 'relevespareleves'])->name('pages.notes.relevespareleves');
+Route::get('/editions2/tableauanalytiqueparmatiere', [EditionController2::class, 'tableauanalytiqueparmatiere'])->name('tableauanalytiqueparmatiere');
+Route::get('/editions2/resultatsparpromotion', [EditionController2::class, 'resultatsparpromotion'])->name('pages.notes.resultatsparpromotion');
+Route::get('/editions2/listedesmeritants', [EditionController2::class, 'listedesmeritants'])->name('pages.notes.listedesmeritants');
+
 Route::get('/journalderecouvrement', [EditionController::class, 'journal'])->name('journal');
 
 Route::post('/arriereconstate', [EditionController::class, 'arriereconstate'])->name('arriereconstate');
@@ -311,12 +320,13 @@ Route::get('/recouvrementgeneralenseignement', [PagesController::class, 'recouvr
 Route::get('/recouvrementgeneral', [PagesController::class, 'recouvrementgeneral'])->name('recouvrementgeneral');
 Route::get('/repartitionclassesparoperateur', [GestionNotesController::class, 'repartitionclassesparoperateur'])->name('repartitionclassesparoperateur');
 Route::post('/repartitionclassesparoperateur', [GestionNotesController::class, 'repartitionclassesoperateur'])->name('repartitionclassesoperateur');
-Route::get('/tabledesmatieres', [EditionController::class, 'tabledesmatieres'])->name('tabledesmatieres');
 
 
 
 // gestion des notes
 Route::get('/gestioncoefficient', [GestionNotesController::class, 'gestioncoefficient'])->name('gestioncoefficient');
 Route::put('/enregistrerCoefficient', [GestionNotesController::class, 'enregistrerCoefficient'])->name('enregistrerCoefficient');
+Route::get('/tabledesmatieres', [EditionController::class, 'tabledesmatieres'])->name('tabledesmatieres');
 
 Route::post('/tabledesmatieres', [EditionController::class, 'storetabledesmatieres'])->name('storetabledesmatieres');
+Route::put('/tabledesmatieres',  [EditionController::class, 'updatetabledesmatieres'])->name('updatetabledesmatieres');
