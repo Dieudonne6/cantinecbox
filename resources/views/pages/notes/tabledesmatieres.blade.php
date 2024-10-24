@@ -21,10 +21,10 @@
       @endif
   
       @if(Session::has('error'))
-      <div id="statusAlert" class="alert alert-danger">
-        {{ Session::get('error')}}
-      </div>
-      @endif
+        <div id="statusAlert" class="alert alert-danger">
+          {{ Session::get('error')}}
+        </div>
+        @endif
         <div class="col-lg-9">
 
           <h4 class="card-title">Mise à jour des matières</h4>
