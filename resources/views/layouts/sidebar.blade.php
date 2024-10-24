@@ -391,7 +391,7 @@
                       <a href="#" class="nav-link">Sécurité</a>
                       <ul class="sub-menus">
                           <li>
-                              <a class="nav-link {{ request()->is('Verrouillage') ? 'active' : '' }}" href="#">Verrouillage</a>
+                              <a class="nav-link {{ request()->is('Verrouillage') ? 'active' : '' }}" href="{{ route('verrouillage') }}">Verrouillage</a>
                           </li>
                           <li>
                               <a class="nav-link {{ request()->is('Déverrouillage') ? 'active' : '' }}" href="#">Déverrouillage</a>
