@@ -76,14 +76,17 @@
               </td>
               <td class="dt-hit acti">  
                 <?php 
-                if($mat->CODEMAT == 1){
+                if($mat->TYPEMAT == 1){
                   echo 'Littéraires';
-                } else if($mat->CODEMAT == 2){
+                } else if($mat->TYPEMAT == 2){
                   echo 'Scientifiques';
                 } else {
                   echo 'Autres';
                 }
                 ?>
+                {{-- @php
+                dd($mat->TYPEMAT);
+                @endphp --}}
               </td>
               
               <td class="dt-hit acti"> {{$mat->CODEMAT_LIGNE}} </td>
@@ -109,19 +112,19 @@
                             <div class="d-flex">
                               <div>
                                 <label>Code matière</label>
-                                <input type="text" class="form-control" readonly style="width: 100px; height: 50px;" id="codeMatiereModif" name="codemat">
+                                <input type="text" class="form-control" readonly style="width: 100px; height: 35px;" id="codeMatiereModif" name="codemat">
                               </div>
                               <div style="margin-left:70px !important">
                                 <label>Mat_ligne</label>
-                                <input type="text" id="matligneModif" name="matligneModif" value="{{ old('matligneModif', $mat->CODEMAT_LIGNE ?? '') }}" style="width: 100px; height: 50px;" required>
+                                <input type="text" id="matligneModif" name="matligneModif" value="{{ old('matligneModif', $mat->CODEMAT_LIGNE ?? '') }}" style="width: 100px; height: 38px;">
                               </div>
                               <div class="me-3" style="margin-left:100px !important">
                                 <label>Libelle matière</label>
-                                <input type="text" id="libelleModif" name="libelleModif" value="{{ old('libelleModif', $mat->LIBELMAT ?? '') }}" style="width: 100px; height: 50px;" required>
+                                <input type="text" id="libelleModif" name="libelleModif" value="{{ old('libelleModif', $mat->LIBELMAT ?? '') }}" style="width: 100px; height: 35px;" required>
                               </div>
                               <div class="me-3 w-5" style="margin-left:90px !important">
                                 <label> Nom court</label>
-                                <input type="text" id="nomcourtModif" name="nomcourtModif" value="{{ old('nomcourtModif', $mat->NOMCOURT ?? '') }}" style="width: 100px; height: 50px;" required>
+                                <input type="text" id="nomcourtModif" name="nomcourtModif" value="{{ old('nomcourtModif', $mat->NOMCOURT ?? '') }}" style="width: 100px; height: 35px;" required>
                               </div>
                               <div>
                                 <label>Choisir la couleur</label>
@@ -132,10 +135,11 @@
                             <div class="d-flex justify-content-between">
                               <div>
                                 <label>Type matière</label>
-                                <select name="typematiereModif" id="typematiere" class="form-control js-example-basic-multiple custom-select-width" style="width: 180px; height: 50px;">
-                                  <option value="1" {{ (old('typematiereModif', $mat->TYPEMAT ?? 0) == 1) ? 'selected' : '' }}>Littéraires</option>
-                                  <option value="2" {{ (old('typematiereModif', $mat->TYPEMAT ?? 0) == 2) ? 'selected' : '' }}>Scientifiques</option>
-                                  <option value="3" {{ (old('typematiereModif', $mat->TYPEMAT ?? 0) == 3) ? 'selected' : '' }}>Autres</option>
+                                <select name="typematiereModif" id="typematiereModif" class="form-control js-example-basic-multiple custom-select-width" style="width: 180px; height: 35px;">
+                                  {{-- <option value="{{ old('typematiereModif', $mat->TYPEMAT ?? '') }}" selected>{{ old('typematiereModif', $mat->TYPEMAT ?? '') }}</option> --}}
+                                  <option value="1">Littéraires</option>
+                                  <option value="2">Scientifiques</option>
+                                  <option value="3">Autres</option>
                               </select>
                               </div>
                               <div>
@@ -207,11 +211,11 @@
                 <div class="d-flex">
                   <div>
                     <label>Code matière</label>
-                    <input type="text" value="{{ $nextCodeMat }}" class="form-control" readonly style="width: 100px; height: 50px;">
+                    <input type="text" value="{{ $nextCodeMat }}" class="form-control" readonly style="width: 100px; height: 35px;">
                   </div>
                   <div style="margin-left:70px !important">
                     <label>Mat_ligne</label>
-                    <input type="text" placeholder="0" class="form-control" name="matligne" style="width: 150px; height: 50px;">
+                    <input type="text" placeholder="0" class="form-control" name="matligne" style="width: 150px; height: 35px;">
                   </div>
                   <div class="me-3" style="margin-left:100px !important">
                     <label>Libelle matière</label>
@@ -219,7 +223,7 @@
                   </div>
                   <div class="me-3 w-5" style="margin-left:90px !important">
                     <label> Nom court</label>
-                    <input type="text" placeholder="Nom court" class="form-control" name="nomcourt" maxlength="4" required style="width: 120px; height: 50px;">
+                    <input type="text" placeholder="Nom court" class="form-control" name="nomcourt" maxlength="4" required style="width: 120px; height: 35px;">
                   </div>
                   <div style="margin-left:100px !important">
                     <label>Choisir la couleur</label>
@@ -230,7 +234,7 @@
                 <div class="d-flex justify-content-between">
                   <div>
                     <label>Type matière</label>
-                    <select name="typematiere" id="typematiere" class="form-control js-example-basic-multiple custom-select-width" style="width: 180px; height: 50px;">
+                    <select name="typematiere" id="typematiere" class="form-control js-example-basic-multiple custom-select-width" style="width: 180px; height: 35px;">
                       <option value="1">Littéraires</option>
                       <option value="2">Scientifiques</option>
                       <option value="3">Autres</option>
@@ -289,8 +293,13 @@
     
   </div>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-       
+
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var typeMat = {{ json_encode($mat->TYPEMAT) }};
+    var select = document.getElementById('typematiereModif'); // Assurez-vous que l'ID est correct
+    select.value = typeMat; // Assurez-vous que cette valeur correspond à une des options du sélecteur
+  });
     function imprimerArriereConstat() {
     var originalContent = document.body.innerHTML; // Contenu original de la page
     var printDiv = document.createElement('div');
