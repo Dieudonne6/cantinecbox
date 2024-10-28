@@ -8,6 +8,8 @@ use App\Models\Scolarite;
 use App\Models\Delevea;
 use App\Models\Params2;
 use App\Models\Matieres;
+use App\Models\Classes;
+use App\Models\Notes;
 
 use App\Models\Typeenseigne;
 
@@ -160,7 +162,23 @@ class EditionController extends Controller
         $nextCodeMat = $lastMatiere ? $lastMatiere->CODEMAT + 1 : 1; // Si aucune matière, commencer à 1
         return view('pages.notes.tabledesmatieres', compact('matiere',  'nextCodeMat',  'lastMatiere'));
     }
-    
+    public function filtrereleveparmatiere(Request $request) {
+        $classe = $request->classe;
+        $matiere = $request->matiere;
+        // dd($classe);
+        $notes = Notes::join('eleve', 'notes.MATRICULE', '=', 'eleve.MATRICULE')
+                ->select('notes.MATRICULE', 'eleve.nom', 'eleve.prenom', 'notes.INT1', 'notes.INT2', 'notes.INT3', 'notes.INT4', 'notes.MI', 'notes.DEV1', 'notes.DEV2', 'notes.DEV3')
+                ->when($classe, function ($q) use ($classe) {
+                    return $q->where('notes.CODECLAS', $classe);
+                })
+                ->when($matiere, function ($q) use ($matiere) {
+                    return $q->where('notes.CODEMAT', $matiere);
+                })
+                ->get();
+
+    return view('pages.notes.filtrereleveparmatiere', compact('notes','classe','matiere'));
+
+    }
     public function storetabledesmatieres(Request $request) {
         $matiere = new Matieres();
         $matiere->LIBELMAT = $request->libelle;
@@ -217,5 +235,11 @@ class EditionController extends Controller
     
         return redirect()->route('tabledesmatieres')->with('status', 'Matière mise à jour avec succès');
     }
+    public function relevesparmatiere(){
+        $classe = Classes::all();
+        $matieres = Matieres::all();
+        return view('pages.notes.relevesparmatiere', compact('classe', 'matieres'));
+    }
+
 }
 
