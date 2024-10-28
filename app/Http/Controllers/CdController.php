@@ -50,4 +50,11 @@ class CdController extends Controller
     // Passer les données à la vue
     return view('pages.notes.verrouillage', compact('classes'));
   }
+
+  public function saisirnote()
+  {
+    $classes = Classe::all();
+    // Passer les données à la vue
+    return view('pages.notes.saisirnote', compact('classes'));
+  }
 }

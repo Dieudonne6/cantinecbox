@@ -375,7 +375,7 @@
                       <a href="#" class="nav-link">Manipulation des notes</a>
                       <ul class="sub-menus">
                           <li>
-                              <a class="nav-link {{ request()->is('Saisir et mises à jour des notes') ? 'active' : '' }}" href="#">Saisir et mises à jour des notes</a>
+                              <a class="nav-link {{ request()->is('Saisir et mises à jour des notes') ? 'active' : '' }}" href="{{ route('saisirnote') }}">Saisir et mises à jour des notes</a>
                           </li>
                           <li>
                               <a class="nav-link {{ request()->is('Enrégistrer les résultats des examens') ? 'active' : '' }}" href="#">Enrégistrer les résultats des examens</a>

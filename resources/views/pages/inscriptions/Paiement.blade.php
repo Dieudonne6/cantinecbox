@@ -494,7 +494,7 @@
 
                 <script>
                     let saisieManuelle = false;
-
+                
                     // Gestion de la répartition dynamique des montants
                     document.getElementById('montant-paye').addEventListener('input', function() {
                         if (this.value.trim() === '') {
@@ -502,18 +502,22 @@
                         } else {
                             repartirMontant();
                         }
+                        verifierEtat();
                     });
-
+                
                     document.querySelectorAll('.composante').forEach(element => {
-                        element.addEventListener('input', verifierSaisie);
+                        element.addEventListener('input', function() {
+                            verifierSaisie(event);
+                            verifierEtat(); // Vérifie l'état après chaque saisie
+                        });
                     });
-
+                
                     function repartirMontant() {
                         const montantPaye = parseFloat(document.getElementById('montant-paye').value) || 0;
                         if (montantPaye <= 0) return;
-
+                
                         const composantes = Array.from(document.querySelectorAll('.composante'));
-
+                
                         // Vérification : Si un champ a un montant dû de 0, il est désactivé
                         composantes.forEach(c => {
                             if (parseFloat(c.placeholder) === 0) {
@@ -525,20 +529,20 @@
                                 c.style.backgroundColor = ""; // Remettre la couleur de fond par défaut
                             }
                         });
-
+                
                         // Réinitialiser la saisie manuelle
                         saisieManuelle = false;
                         composantes.forEach(c => c.dataset.saisieManuelle = 'false');
-
+                
                         const priorites = composantes.map(c => ({
                             element: c,
                             priorite: parseInt(c.dataset.priorite),
                             montant: parseFloat(c.value) || 0,
                             montantDu: parseFloat(c.placeholder) || 0
                         })).sort((a, b) => a.priorite - b.priorite);
-
+                
                         let montantRestant = montantPaye;
-
+                
                         // Répartition des montants en respectant la priorité
                         priorites.forEach(item => {
                             if (montantRestant > 0 && item.montantDu > 0 && !item.element.disabled) {
@@ -549,21 +553,20 @@
                                 item.element.value = 0;
                             }
                         });
-
+                
                         // Met à jour l'affichage du reliquat restant
                         document.getElementById('reliquat').textContent = montantRestant.toFixed(2);
                         document.getElementById('reliquat-hidden').value = montantRestant.toFixed(2);
-
-
+                
                         if (montantRestant > 0) {
                             console.log("Le montant payé dépasse les besoins calculés par priorité.");
                         }
                     }
-
+                
                     function verifierSaisie(event) {
                         const composante = event.target;
                         const valeur = parseFloat(composante.value) || 0;
-
+                
                         // Empêcher toute modification si le montant dû avant répartition est 0
                         if (parseFloat(composante.placeholder) === 0) {
                             composante.value = 0;
@@ -572,42 +575,41 @@
                             alert("Ce champ est bloqué car le montant dû est 0.");
                             return; // Empêche toute saisie supplémentaire
                         }
-
+                
                         // Si le montant est inférieur à 0, l'annuler
                         if (valeur < 0) {
                             composante.value = 0;
                             alert("Les montants doivent être positifs.");
                         }
-
+                
                         // Marquer le champ comme ayant une saisie manuelle
                         composante.dataset.saisieManuelle = 'true';
                         saisieManuelle = true;
                         ajusterMontants();
                     }
-
+                
                     function ajusterMontants() {
                         const montantPaye = parseFloat(document.getElementById('montant-paye').value) || 0;
                         const composantes = Array.from(document.querySelectorAll('.composante'));
-
+                
                         let totalSaisie = composantes.reduce((total, elem) => {
                             return total + (elem.dataset.saisieManuelle === 'true' ? parseFloat(elem.value) || 0 : 0);
                         }, 0);
-
+                
                         let montantRestant = montantPaye - totalSaisie;
-
+                
                         composantes.forEach(elem => {
                             if (elem.dataset.saisieManuelle !== 'true' && !elem.disabled) {
                                 elem.value = montantRestant > 0 ? montantRestant : 0;
                                 montantRestant -= parseFloat(elem.value);
                             }
                         });
-
+                
                         // Met à jour l'affichage du reliquat restant
                         document.getElementById('reliquat').textContent = montantRestant.toFixed(2);
                         document.getElementById('reliquat-hidden').value = montantRestant.toFixed(2);
-
                     }
-
+                
                     function resetFields() {
                         document.querySelectorAll('.composante').forEach(element => {
                             if (parseFloat(element.placeholder) === 0) {
@@ -623,7 +625,33 @@
                         // Réinitialiser le reliquat à 0
                         document.getElementById('reliquat').textContent = '0';
                     }
+                
+                    function verifierEtat() {
+                        const composantes = Array.from(document.querySelectorAll('.composante'));
+                        const montantPaye = parseFloat(document.getElementById('montant-paye').value) || 0;
+                
+                        // Vérifier si tous les champs sont à zéro
+                        const tousZeros = composantes.every(c => parseFloat(c.value) === 0);
+                        
+                        // Griser le bouton et le champ de mode de paiement si tous les champs sont à zéro
+                        const boutonEnregistrer = document.getElementById('btn-enregistrer'); // Remplacez par l'ID de votre bouton
+                        const champModePaiement = document.getElementById('mode-paiement'); // Remplacez par l'ID de votre champ de mode de paiement
+                
+                        if (tousZeros && montantPaye === 0) {
+                            boutonEnregistrer.disabled = true;
+                            boutonEnregistrer.style.backgroundColor = "#e9ecef"; // Changez la couleur pour indiquer qu'il est désactivé
+                            champModePaiement.disabled = true;
+                            champModePaiement.style.backgroundColor = "#e9ecef"; // Changez la couleur pour indiquer qu'il est désactivé
+                            alert("L'élève est à jour."); // Message à afficher
+                        } else {
+                            boutonEnregistrer.disabled = false;
+                            boutonEnregistrer.style.backgroundColor = ""; // Réinitialiser la couleur
+                            champModePaiement.disabled = false;
+                            champModePaiement.style.backgroundColor = ""; // Réinitialiser la couleur
+                        }
+                    }
                 </script>
+                
 
                 <script>
                     // Gestion des priorités dynamiques pour monter/descendre les options et les champs correspondants
