@@ -3,6 +3,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Classe;
 use App\Models\Eleve;
+use App\Models\Notes;
+use App\Models\Matieres;
+use App\Models\Groupeclasse;
 use Illuminate\Http\Request;
 
 class CdController extends Controller
@@ -49,5 +52,15 @@ class CdController extends Controller
     $classes = Classe::all();
     // Passer les données à la vue
     return view('pages.notes.verrouillage', compact('classes'));
+  }
+
+  public function saisirnote()
+  {
+    $classes = Classe::all();
+    $notes = Notes::all();
+    $gclasses = Groupeclasse::all();
+    $matieres = Matieres::all();
+    // Passer les données à la vue
+    return view('pages.notes.saisirnote', compact('classes','notes','gclasses','matieres'));
   }
 }

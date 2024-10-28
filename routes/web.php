@@ -338,3 +338,5 @@ Route::post('/tabledesmatieres', [EditionController::class, 'storetabledesmatier
 Route::get('/verrouillage', [CdController::class, 'verrouillage'])->name('verrouillage');
 
 Route::put('/tabledesmatieres',  [EditionController::class, 'updatetabledesmatieres'])->name('updatetabledesmatieres');
+
+Route::get('/saisirnote', [CdController::class, 'saisirnote'])->name('saisirnote');
