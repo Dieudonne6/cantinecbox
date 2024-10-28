@@ -175,7 +175,8 @@ class EditionController extends Controller
                     return $q->where('notes.CODEMAT', $matiere);
                 })
                 ->get();
-
+                $matiere = Matieres::where('CODEMAT', $matiere)->first();
+                $matiere = $matiere['LIBELMAT'];
     return view('pages.notes.filtrereleveparmatiere', compact('notes','classe','matiere'));
 
     }
