@@ -21,7 +21,7 @@ class GestionNotesController extends Controller
         foreach ($request->login as $codeclas => $signature) {
             Classes::where('CODECLAS', $codeclas)->update(['SIGNATURE' => $signature]);
         }
-        return redirect()->route('repartitionclassesparoperateur');
+        return redirect()->route('repartitionclassesparoperateur')->with('status', 'Répartition des classes par opérateur effectuée avec succès.');
     }
 
     public function gestioncoefficient() {
