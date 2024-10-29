@@ -57,11 +57,12 @@ class CdController extends Controller
   public function saisirnote()
   {
     $classes = Classe::all();
+    $eleves = Eleve::all();
     $notes = Notes::all();
     $gclasses = Groupeclasse::all();
     $matieres = Matieres::all();
     // Passer les données à la vue
-    return view('pages.notes.saisirnote', compact('classes','notes','gclasses','matieres'));
+    return view('pages.notes.saisirnote', compact('classes','notes','gclasses','matieres', 'eleves'));
   }
   public function savenote(){
     $notes = Notes::all();
