@@ -340,3 +340,4 @@ Route::get('/verrouillage', [CdController::class, 'verrouillage'])->name('verrou
 Route::put('/tabledesmatieres',  [EditionController::class, 'updatetabledesmatieres'])->name('updatetabledesmatieres');
 
 Route::get('/saisirnote', [CdController::class, 'saisirnote'])->name('saisirnote');
+Route::get('/filternotes', [CdController::class, 'saisirnotefilter'])->name('saisirnotefilter');
