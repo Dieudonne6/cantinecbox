@@ -63,4 +63,8 @@ class CdController extends Controller
     // Passer les données à la vue
     return view('pages.notes.saisirnote', compact('classes','notes','gclasses','matieres'));
   }
+  public function savenote(){
+    $notes = Notes::all();
+
+  }
 }
