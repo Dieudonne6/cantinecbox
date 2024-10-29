@@ -224,7 +224,6 @@
 			}
 		});
 	</script>
-	
 	<style>
 		/* Améliore l'affichage des champs de saisie */
 		.table thead th,

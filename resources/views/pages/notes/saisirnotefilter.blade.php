@@ -58,58 +58,58 @@
             <div class="col-md-8 mb-3">
               <!-- Select pour les classes -->
               <select class="form-select select2 w-100" id="tableSelect4" onchange="redirectWithSelection()">
-								<option value="">Classe</option>
-								@foreach ($classes as $classeOption)
-								<option value="{{ $classeOption->CODECLAS }}" {{ $classeOption->CODECLAS == $classe ? 'selected' : '' }}>
-									{{ $classeOption->CODECLAS }}
-								</option>
-								@endforeach
-							</select>
+                <option value="">Classe</option>
+                @foreach ($classes as $classeOption)
+                <option value="{{ $classeOption->CODECLAS }}" {{ $classeOption->CODECLAS == $classe ? 'selected' : '' }}>
+                  {{ $classeOption->CODECLAS }}
+                </option>
+                @endforeach
+              </select>
+            </div>
+            <div class="col-md-8 mb-3">
+              <!-- Select pour les matières -->
+              <select class="form-select select2 w-100 mt-2" id="tableSelect5" onchange="redirectWithSelection()">
+                <option value="">Matières</option>
+                @foreach ($matieres as $matiereOption)
+                <option value="{{ $matiereOption->CODEMAT }}" {{ $matiereOption->CODEMAT == $matiere ? 'selected' : '' }}>
+                  {{ $matiereOption->LIBELMAT }}
+                </option>
+                @endforeach
+              </select>
+            </div>
           </div>
-          <div class="col-md-8 mb-3">
-            <!-- Select pour les matières -->
-            <select class="form-select select2 w-100 mt-2" id="tableSelect5" onchange="redirectWithSelection()">
-              <option value="">Matières</option>
-              @foreach ($matieres as $matiereOption)
-              <option value="{{ $matiereOption->CODEMAT }}" {{ $matiereOption->CODEMAT == $matiere ? 'selected' : '' }}>
-                {{ $matiereOption->LIBELMAT }}
-              </option>
-              @endforeach
-            </select>
+          
+          <!-- Champ de nombre -->
+          <div class="col-md-4 mb-3">
+            <input type="number" id="champ2" name="champ2" class="form-control"
+            placeholder="Valeur" readonly>
+          </div>
+        </div>
+        
+        
+        {{-- <div class="checkbox-container">
+          <label class="checkbox-label">
+            <input type="checkbox" id="option2" name="option2" onclick="toggleINTCheckboxes()">
+            Afficher 10 Colonnes pour INT
+          </label>
+        </div> --}}
+      </div>
+    </div>
+  </div>
+  
+  
+  {{-- <div class="col-2 md-3 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div
+        class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
+        <div class="col" style="text-align: center">
+          <button class="btn btn-duplicate" onclick="handleDuplicate()">Doublon</button>
+          <button class="btn btn-help" onclick="handleHelp()">Aide</button>
         </div>
       </div>
-      
-      <!-- Champ de nombre -->
-      <div class="col-md-4 mb-3">
-        <input type="number" id="champ2" name="champ2" class="form-control"
-        placeholder="Valeur" readonly>
-      </div>
-    </div>
-    
-    
-    {{-- <div class="checkbox-container">
-      <label class="checkbox-label">
-        <input type="checkbox" id="option2" name="option2" onclick="toggleINTCheckboxes()">
-        Afficher 10 Colonnes pour INT
-      </label>
-    </div> --}}
-  </div>
-</div>
-</div>
-
-
-{{-- <div class="col-2 md-3 grid-margin stretch-card">
-  <div class="card">
-    <div class="card-body">
-      <div
-      class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
-      <div class="col" style="text-align: center">
-        <button class="btn btn-duplicate" onclick="handleDuplicate()">Doublon</button>
-        <button class="btn btn-help" onclick="handleHelp()">Aide</button>
-      </div>
     </div>
   </div>
-</div>
 </div> --}}
 </div>
 
@@ -173,28 +173,28 @@
                 <tbody>
                   @foreach ($eleves as $eleve)
                   <tr>
-                      <td>{{ $eleve->MATRICULE ?? '' }}</td>
-                      <td>{{ $eleve->NOM ?? '' }}<br>{{ $eleve->PRENOM ?? '' }}</td>
-                      
-                      @for ($i = 1; $i <= 10; $i++)
-                      <td class="interro-column" data-interro="{{ $i }}">
-                          <input type="text" name="INT{{ $i }}"
-                          value="{{ $eleve['INT' . $i] ?? '' }}" 
-                          class="form-control form-control-sm">
-                      </td>
-                      @endfor
-                      
-                      <td><input type="text" name="MI" value="{{ $eleve->MI ?? '' }}" class="form-control form-control-sm"></td>
-                      <td><input type="text" name="DEV1" value="{{ $eleve->DEV1 ?? '' }}" class="form-control form-control-sm"></td>
-                      <td><input type="text" name="DEV2" value="{{ $eleve->DEV2 ?? '' }}" class="form-control form-control-sm"></td>
-                      <td><input type="text" name="DEV3" value="{{ $eleve->DEV3 ?? '' }}" class="form-control form-control-sm"></td>
-                      <td><input type="text" name="MS" value="{{ $eleve->MS ?? '' }}" class="form-control form-control-sm"></td>
-                      <td><input type="text" name="TEST" value="{{ $eleve->TEST ?? '' }}" class="form-control form-control-sm"></td>
-                      <td><input type="text" name="MS1" value="{{ $eleve->MS1 ?? '' }}" class="form-control form-control-sm"></td>
+                    <td>{{ $eleve->MATRICULE ?? '' }}</td>
+                    <td>{{ $eleve->NOM ?? '' }}<br>{{ $eleve->PRENOM ?? '' }}</td>
+                    
+                    @for ($i = 1; $i <= 10; $i++)
+                    <td class="interro-column" data-interro="{{ $i }}">
+                      <input type="text" name="INT{{ $i }}"
+                      value="{{ $eleve['INT' . $i] ?? '' }}" 
+                      class="form-control form-control-sm">
+                    </td>
+                    @endfor
+                    
+                    <td><input type="text" name="MI" value="{{ $eleve->MI ?? '' }}" class="form-control form-control-sm"></td>
+                    <td><input type="text" name="DEV1" value="{{ $eleve->DEV1 ?? '' }}" class="form-control form-control-sm"></td>
+                    <td><input type="text" name="DEV2" value="{{ $eleve->DEV2 ?? '' }}" class="form-control form-control-sm"></td>
+                    <td><input type="text" name="DEV3" value="{{ $eleve->DEV3 ?? '' }}" class="form-control form-control-sm"></td>
+                    <td><input type="text" name="MS" value="{{ $eleve->MS ?? '' }}" class="form-control form-control-sm"></td>
+                    <td><input type="text" name="TEST" value="{{ $eleve->TEST ?? '' }}" class="form-control form-control-sm"></td>
+                    <td><input type="text" name="MS1" value="{{ $eleve->MS1 ?? '' }}" class="form-control form-control-sm"></td>
                   </tr>
                   @endforeach
-              </tbody>
-              
+                </tbody>
+                
                 
               </table>
             </div>
@@ -340,15 +340,15 @@
     if (matiere) params.push(`matiere=${matiere}`);
     
     if (params.length > 0) {
-        url += '?' + params.join('&');
+      url += '?' + params.join('&');
     }
     
     window.location.href = url;
-}
-
-// Ajoutez les écouteurs d'événements pour les deux sélecteurs
-document.getElementById("tableSelect4").addEventListener("change", redirectWithSelection);
-document.getElementById("tableSelect5").addEventListener("change", redirectWithSelection);
-
+  }
+  
+  // Ajoutez les écouteurs d'événements pour les deux sélecteurs
+  document.getElementById("tableSelect4").addEventListener("change", redirectWithSelection);
+  document.getElementById("tableSelect5").addEventListener("change", redirectWithSelection);
+  
 </script>
 @endsection
