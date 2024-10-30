@@ -169,60 +169,91 @@
                                         @foreach ($eleves as $eleve)
                                             <tr>
                                                 <td>{{ $eleve->MATRICULE ?? '' }}</td>
-                                                <td>{{ $eleve->NOM ?? '' }}<br>{{ $eleve->PRENOM ?? '' }}
-                                                </td>
-
+                                                <td>{{ $eleve->NOM ?? '' }}<br>{{ $eleve->PRENOM ?? '' }}</td>
+                            
                                                 @for ($i = 1; $i <= 10; $i++)
                                                     <td class="interro-column" data-interro="{{ $i }}">
                                                         <input type="text"
-                                                            name="notes[{{ $eleve->MATRICULE }}][INT{{ $i }}]"
-                                                            value="{{ $eleve['INT' . $i] ?? '' }}"
-                                                            class="form-control form-control-sm">
+                                                               name="notes[{{ $eleve->MATRICULE }}][INT{{ $i }}]"
+                                                               value="{{ $eleve['INT' . $i] ?? '' }}"
+                                                               class="form-control form-control-sm interro-input"
+                                                               oninput="calculateMIAndMoy(this)">
                                                     </td>
                                                 @endfor
-
+                            
                                                 <td>
                                                     <input type="text" name="notes[{{ $eleve->MATRICULE }}][MI]"
-                                                        value="{{ $eleve->MI ?? '' }}"
-                                                        class="form-control form-control-sm">
+                                                           value="{{ $eleve->MI ?? '' }}"
+                                                           class="form-control form-control-sm mi-input" readonly>
                                                 </td>
-                                                <td>
-                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
-                                                        value="{{ $eleve->DEV1 ?? '' }}"
-                                                        class="form-control form-control-sm">
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
-                                                        value="{{ $eleve->DEV2 ?? '' }}"
-                                                        class="form-control form-control-sm">
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
-                                                        value="{{ $eleve->DEV3 ?? '' }}"
-                                                        class="form-control form-control-sm">
-                                                </td>
+                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
+                                                           value="{{ $eleve->DEV1 ?? '' }}" 
+                                                           class="form-control form-control-sm dev-input" 
+                                                           oninput="calculateMIAndMoy(this)"></td>
+                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
+                                                           value="{{ $eleve->DEV2 ?? '' }}" 
+                                                           class="form-control form-control-sm dev-input" 
+                                                           oninput="calculateMIAndMoy(this)"></td>
+                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
+                                                           value="{{ $eleve->DEV3 ?? '' }}" 
+                                                           class="form-control form-control-sm dev-input" 
+                                                           oninput="calculateMIAndMoy(this)"></td>
                                                 <td>
                                                     <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
-                                                        value="{{ $eleve->MS ?? '' }}"
-                                                        class="form-control form-control-sm">
+                                                           value="{{ $eleve->MS ?? '' }}" 
+                                                           class="form-control form-control-sm ms-input" readonly>
                                                 </td>
-                                                <td>
-                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][TEST]"
-                                                        value="{{ $eleve->TEST ?? '' }}"
-                                                        class="form-control form-control-sm">
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
-                                                        value="{{ $eleve->MS1 ?? '' }}"
-                                                        class="form-control form-control-sm">
-                                                </td>
+                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][TEST]"
+                                                           value="{{ $eleve->TEST ?? '' }}" 
+                                                           class="form-control form-control-sm"></td>
+                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
+                                                           value="{{ $eleve->MS1 ?? '' }}" 
+                                                           class="form-control form-control-sm"></td>
                                             </tr>
                                         @endforeach
                                     </tbody>
-
-
                                 </table>
                             </div>
+                            
+                            <script>
+                                function calculateMIAndMoy(input) {
+                                    const row = input.closest('tr');
+                                    
+                                    // Calculate MI (average of interrogation scores)
+                                    const interroInputs = row.querySelectorAll('.interro-input');
+                                    let interroSum = 0;
+                                    let interroCount = 0;
+                                    
+                                    interroInputs.forEach(interro => {
+                                        const value = parseFloat(interro.value);
+                                        if (!isNaN(value)) {
+                                            interroSum += value;
+                                            interroCount++;
+                                        }
+                                    });
+                            
+                                    const miField = row.querySelector('.mi-input');
+                                    const mi = interroCount > 0 ? (interroSum / interroCount).toFixed(2) : '';
+                                    miField.value = mi;
+                            
+                                    // Calculate Moy (average of MI and DEV scores)
+                                    const devInputs = row.querySelectorAll('.dev-input');
+                                    let devSum = 0;
+                                    let devCount = 0;
+                            
+                                    devInputs.forEach(dev => {
+                                        const value = parseFloat(dev.value);
+                                        if (!isNaN(value)) {
+                                            devSum += value;
+                                            devCount++;
+                                        }
+                                    });
+                            
+                                    const moyField = row.querySelector('.ms-input');
+                                    const moy = devCount > 0 ? ((parseFloat(mi) + devSum) / (devCount + 1)).toFixed(2) : '';
+                                    moyField.value = moy;
+                                }
+                            </script>                              
                         </div>
                     </div>
                 </div>
