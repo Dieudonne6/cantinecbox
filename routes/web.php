@@ -36,6 +36,8 @@ Route::get('/get-eleves/{codeClass}', [PagesController::class, 'getEleves']);
 Route::get('/get-montant/{codeClass}', [PagesController::class, 'getMontant']);
 Route::get('/get-promo/{ensigClass}', [PagesController::class, 'getPromo']);
 Route::get('/get-serie/{serieClass}', [PagesController::class, 'getSerie']);
+Route::get('/get-clas/{codeClass}', [PagesController::class, 'getClas']);
+Route::get('/get-clasmat/{codeClass}', [PagesController::class, 'getClasmat']);
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
@@ -341,3 +343,4 @@ Route::put('/tabledesmatieres',  [EditionController::class, 'updatetabledesmatie
 
 Route::get('/saisirnote', [CdController::class, 'saisirnote'])->name('saisirnote');
 Route::get('/filternotes', [CdController::class, 'saisirnotefilter'])->name('saisirnotefilter');
+Route::post('/updateNote', [CdController::class, 'updateNote'])->name('update.note');
