@@ -8,6 +8,8 @@ use App\Models\Scolarite;
 use App\Models\Delevea;
 use App\Models\Params2;
 use App\Models\Matieres;
+use App\Models\Classes;
+use App\Models\Notes;
 
 use App\Models\Typeenseigne;
 
@@ -160,7 +162,24 @@ class EditionController extends Controller
         $nextCodeMat = $lastMatiere ? $lastMatiere->CODEMAT + 1 : 1; // Si aucune matière, commencer à 1
         return view('pages.notes.tabledesmatieres', compact('matiere',  'nextCodeMat',  'lastMatiere'));
     }
-    
+    public function filtrereleveparmatiere(Request $request) {
+        $classe = $request->classe;
+        $matiere = $request->matiere;
+        // dd($classe);
+        $notes = Notes::join('eleve', 'notes.MATRICULE', '=', 'eleve.MATRICULE')
+                ->select('notes.MATRICULE', 'eleve.nom', 'eleve.prenom', 'notes.INT1', 'notes.INT2', 'notes.INT3', 'notes.INT4', 'notes.MI', 'notes.DEV1', 'notes.DEV2', 'notes.DEV3')
+                ->when($classe, function ($q) use ($classe) {
+                    return $q->where('notes.CODECLAS', $classe);
+                })
+                ->when($matiere, function ($q) use ($matiere) {
+                    return $q->where('notes.CODEMAT', $matiere);
+                })
+                ->get();
+                $matiere = Matieres::where('CODEMAT', $matiere)->first();
+                $matiere = $matiere['LIBELMAT'];
+    return view('pages.notes.filtrereleveparmatiere', compact('notes','classe','matiere'));
+
+    }
     public function storetabledesmatieres(Request $request) {
         $matiere = new Matieres();
         $matiere->LIBELMAT = $request->libelle;
@@ -190,8 +209,6 @@ class EditionController extends Controller
             'libelleModif' => 'required|string|max:255',
             'nomcourtModif' => 'required|string|max:255',
             'couleurModif' => 'required|string|max:7',
-            'matligneModif' => 'required|integer',
-            'typematiereModif' => 'required|integer', // Changer ici
             'ecritModif' => 'boolean',
             'codemat' => 'required|integer',
         ]);
@@ -206,10 +223,10 @@ class EditionController extends Controller
         // Mise à jour des champs
         $matiere->LIBELMAT = $request->input('libelleModif');
         $matiere->NOMCOURT = $request->input('nomcourtModif');
-        $matiere->COULEUR = $request->input('couleurModif');
-        $matiere->CODEMAT_LIGNE = $request->input('matligneModif');
+        $matiere->COULEUR = $request->input('couleurModif') ?? '#FFFFFF';
+        $matiere->CODEMAT_LIGNE = $request->input('matligneModif') ?? 0;
         // Mise à jour du type de matière
-        $matiere->TYPEMAT = $request->input('typematiereModif'); // Changer ici
+        $matiere->TYPEMAT = $request->input('typematiereModif') == 1 ? 1 : ($request->input('typematiereModif') == 2 ? 2 : 3); // Changer ici
     
         // Vérification de l'écriture
         $matiere->COULEURECRIT = $request->input('ecritModif') ? 0 : 16777215;
@@ -245,5 +262,11 @@ class EditionController extends Controller
         })
     ]);
     }
+    public function relevesparmatiere(){
+        $classe = Classes::all();
+        $matieres = Matieres::all();
+        return view('pages.notes.relevesparmatiere', compact('classe', 'matieres'));
+    }
+
 }
 

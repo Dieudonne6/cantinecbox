@@ -206,7 +206,6 @@ Route::get('/editions2/fichedenoteviergefina/{classeCode}', [EditionController2:
 Route::get('/editions2/relevesparmatiere', [EditionController2::class, 'relevesparmatiere'])->name('pages.notes.relevesparmatiere');
 Route::get('/editions2/recapitulatifdenotes', [EditionController2::class, 'recapitulatifdenotes'])->name('pages.notes.recapitulatifdenotes');
 Route::get('/editions2/relevespareleves', [EditionController2::class, 'relevespareleves'])->name('pages.notes.relevespareleves');
-Route::get('/editions2/tableauanalytiqueparmatiere', [EditionController2::class, 'tableauanalytiqueparmatiere'])->name('tableauanalytiqueparmatiere');
 Route::get('/editions2/resultatsparpromotion', [EditionController2::class, 'resultatsparpromotion'])->name('pages.notes.resultatsparpromotion');
 Route::get('/editions2/listedesmeritants', [EditionController2::class, 'listedesmeritants'])->name('pages.notes.listedesmeritants');
 
@@ -335,9 +334,12 @@ Route::get('/tabledesmatieres', [EditionController::class, 'tabledesmatieres'])-
 
 Route::post('/tabledesmatieres', [EditionController::class, 'storetabledesmatieres'])->name('storetabledesmatieres');
 
+Route::get('/saisirnote', [CdController::class, 'saisirnote'])->name('saisirnote');
+Route::get('/filternotes', [CdController::class, 'saisirnotefilter'])->name('saisirnotefilter');
 
 Route::get('/verrouillage', [CdController::class, 'verrouillage'])->name('verrouillage');
 
 Route::put('/tabledesmatieres',  [EditionController::class, 'updatetabledesmatieres'])->name('updatetabledesmatieres');
 
 Route::get('/elevessansnote/{classCode}',  [EditionController::class, 'elevessansnote'])->name('elevessansnote');
+Route::get('/editions2/tableauanalytiqueparmatiere', [EditionController2::class, 'tableauanalytiqueparmatiere'])->name('tableauanalytiqueparmatiere');

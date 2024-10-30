@@ -2444,7 +2444,7 @@ public function filterEtatDeLaCaisse(Request $request) {
   }
   public function etatdesarriérés() {
     $archive = Elevea::select('MATRICULE', 'NOM', 'PRENOM')->get();
-    $delevea = Delevea::where('MONTANTARRIERE', '!=', 0)
+    $delevea = Deleve::where('MONTANTARRIERE', '!=', 0)
                       ->select('MATRICULE', 'MONTANTARRIERE', 'CODECLAS', 'MONTANTENAVANCE')
                       ->get();
     $eleve = Eleve::select('MATRICULE')->get();
