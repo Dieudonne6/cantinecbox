@@ -30,6 +30,8 @@ use App\Models\Classesgroupeclass;
 use App\Models\Journal;
 use App\Models\Chapitre;
 use App\Models\Deleve;
+use App\Models\Clasmat;
+
 use App\Models\Eleve_pont;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -123,6 +125,16 @@ class PagesController extends Controller
   {
     $serie = Serie::where('CYCLE', $serieClass)->get();
     return response()->json($serie);
+  }
+  // public function getClasmat($getClasmat)
+  // {
+  //   $getClasmat = Clasmat::where('CODEMAT', $getClasmat)->first();
+  //   return response()->json($getClasmat);
+  // }
+  public function getClas($Class)
+  {
+    $Class = Classesgroupeclass::where('LibelleGroupe', $Class)->get();
+    return response()->json($Class);
   }
   public function paiement(){
     return view('pages.paiement');

@@ -394,6 +394,30 @@ align-items: center;  */
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <script>
         $(document).ready(function() {
+            $('#tableSelect1').on('change', function() {
+                var codeClass = $(this).val();
+                $.ajax({
+                    url: '/get-clas/' + codeClass,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#tableSelect4').empty();
+                        if (data.length > 0) {
+                            $('#tableSelect4').append(
+                                '<option value="">Sélectionner une classe</option>');
+                            $.each(data, function(index, eleve) {
+                                $('#tableSelect4').append('<option value="' + eleve
+                                    .CODECLAS + '">' + eleve.CODECLAS + '</option>');
+                            });
+                        } else {
+                            $('#tableSelect4').append(
+                                '<option value="">Aucune classe disponible</option>');
+                        }
+                        // $('#tableSelect4').select2();
+
+                    }
+                });
+            }); 
+           
             function toggleDivs() {
                 if ($('#optionsRadios1').is(':checked')) {
                     $('#div1').removeClass('d-block').addClass('d-none');

@@ -5,6 +5,8 @@ use App\Models\Classe;
 use App\Models\Eleve;
 use App\Models\Notes;
 use App\Models\Matieres;
+use App\Models\Clasmat;
+
 use App\Models\Groupeclasse;
 use Illuminate\Http\Request;
 
@@ -86,6 +88,7 @@ class CdController extends Controller
       }
     });
     
+    $getClasmat = Clasmat::where('CODEMAT', $matiere)->first();
     // Sélectionner les colonnes des deux tables pour les afficher dans la vue
     $eleves = $elevesQuery->select('eleve.*', 
     'notes.INT1', 
@@ -105,7 +108,7 @@ class CdController extends Controller
     'notes.MS', 
     'notes.TEST', 
     'notes.MS1')->get();
-    return view('pages.notes.saisirnote', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere'));
+    return view('pages.notes.saisirnote', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere', 'getClasmat'));
   }
   public function saisirnotefilter(Request $request)
   {
@@ -129,7 +132,8 @@ class CdController extends Controller
         $join->where('notes.CODEMAT', $matiere);
       }
     });
-    
+    $getClasmat = Clasmat::where('CODEMAT', $matiere)->first();
+
     // Sélectionner les colonnes des deux tables pour les afficher dans la vue
     $eleves = $elevesQuery->select('eleve.*', 
     'notes.INT1', 
@@ -149,7 +153,7 @@ class CdController extends Controller
     'notes.MS', 
     'notes.TEST', 
     'notes.MS1')->get();
-    return view('pages.notes.saisirnotefilter', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere'));
+    return view('pages.notes.saisirnotefilter', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere', 'getClasmat'));
   }
   
   public function enregistrerNotes(Request $request)
