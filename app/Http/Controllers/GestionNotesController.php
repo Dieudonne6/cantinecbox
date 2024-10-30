@@ -45,34 +45,32 @@ class GestionNotesController extends Controller
         
         // Vérifier si les coefficients sont bien envoyés
         if (empty($coefficients)) {
-            return back()->withErrors(['message' => 'Aucun coefficient à sauvegarder.']);
+            return redirect()->back()->with('status', 'Aucun coefficient à sauvegarder.');
         }
-    
         // Boucler à travers chaque classe
         foreach ($coefficients as $classId => $matieres) {
             // Boucler à travers chaque matière de la classe
             foreach ($matieres as $matiereId => $data) {
                 // Vérifier que les valeurs existent et ne sont pas nulles
-                $value = isset($data['value']) ? $data['value'] : 0;  // Définit 0 si la valeur est vide
+                if (isset($data['value']) && $data['value'] !== '') {
+                    $value = $data['value'];
+                    // Convertir la couleur "red" en 1 et "default" en 0
+                    $isFondamentale = ($data['color'] === 'red') ? 1 : 0;
     
-                // Convertir la couleur "red" en 1 et "default" en 0
-                $isFondamentale = ($data['color'] === 'red') ? 1 : 0;
-    
-                // Assurez-vous que la valeur n'est pas vide ou incorrecte avant la sauvegarde
-                if (is_numeric($value)) {
-                    // Rechercher manuellement l'enregistrement pour la combinaison CODECLAS et CODEMAT
+                    // Vérifier si la valeur a changé par rapport à sa valeur initiale avant de sauvegarder
                     $clasmat = Clasmat::where('CODECLAS', $classId)
-                        ->where('CODEMAT', $matiereId)
-                        ->first();
-    
-                    if ($clasmat) {
-                        // Mise à jour de l'enregistrement existant
+                                       ->where('CODEMAT', $matiereId)
+                                       ->first();
+                    
+                    if ($clasmat && ($clasmat->COEF != $value || $clasmat->FONDAMENTALE != $isFondamentale)) {
+                        // Mise à jour de l'enregistrement existant si la valeur a changé
                         $clasmat->update([
                             'COEF' => $value,
                             'FONDAMENTALE' => $isFondamentale
                         ]);
-                    } else {
+                    } elseif (!$clasmat) {
                         // Création d'un nouvel enregistrement si non trouvé
+
                         Clasmat::create([
                             'CODECLAS' => $classId,
                             'CODEMAT' => $matiereId,
@@ -80,8 +78,6 @@ class GestionNotesController extends Controller
                             'FONDAMENTALE' => $isFondamentale
                         ]);
                     }
-                } else {
-                    return back()->withErrors(['message' => "Valeur non valide pour la matière ID: $matiereId de la classe ID: $classId."]);
                 }
             }
         }

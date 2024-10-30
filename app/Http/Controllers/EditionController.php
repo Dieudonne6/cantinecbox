@@ -223,8 +223,8 @@ class EditionController extends Controller
         // Mise à jour des champs
         $matiere->LIBELMAT = $request->input('libelleModif');
         $matiere->NOMCOURT = $request->input('nomcourtModif');
-        $matiere->COULEUR = $request->input('couleurModif');
-        $matiere->CODEMAT_LIGNE = $request->input('matligneModif');
+        $matiere->COULEUR = $request->input('couleurModif') ?? '#FFFFFF';
+        $matiere->CODEMAT_LIGNE = $request->input('matligneModif') ?? 0;
         // Mise à jour du type de matière
         $matiere->TYPEMAT = $request->input('typematiereModif') == 1 ? 1 : ($request->input('typematiereModif') == 2 ? 2 : 3); // Changer ici
     
@@ -235,6 +235,32 @@ class EditionController extends Controller
         $matiere->save();
     
         return redirect()->route('tabledesmatieres')->with('status', 'Matière mise à jour avec succès');
+    }
+
+    public function elevessansnote($classCode) {
+         // Récupère les élèves de la classe spécifique
+    $students = Eleve::where('CODECLAS', $classCode)->get();
+        dd($students);
+    // Formate la réponse JSON
+    return response()->json([
+        'students' => $students->map(function ($student) {
+            return [
+                'matricule' => $student->MATRICULE,
+                'sexe' => $student->SEXE === 1 ? 'M' : 'F',
+                'nom' => $student->NOM,
+                'prenom' => $student->PRENOM,
+                // 'int1' => $student->int1,
+                // 'int2' => $student->int2,
+                // 'int3' => $student->int3,
+                // 'int4' => $student->int4,
+                // 'mi' => $student->mi,
+                // 'dev1' => $student->dev1,
+                // 'dev2' => $student->dev2,
+                // 'dev3' => $student->dev3,
+                // 'compo' => $student->compo,
+            ];
+        })
+    ]);
     }
     public function relevesparmatiere(){
         $classe = Classes::all();
