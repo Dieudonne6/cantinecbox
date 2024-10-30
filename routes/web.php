@@ -347,6 +347,8 @@ Route::get('/saisirnote', [CdController::class, 'saisirnote'])->name('saisirnote
 Route::get('/filternotes', [CdController::class, 'saisirnotefilter'])->name('saisirnotefilter');
 
 Route::post('/enregistrer-notes', [CdController::class, 'enregistrerNotes'])->name('enregistrer_notes');
+Route::post('/delete-notes', [CdController::class, 'deleteNote'])->name('delete-notes');
+
 Route::get('/elevessansnote/{classCode}',  [EditionController::class, 'elevessansnote'])->name('elevessansnote');
 Route::get('/editions2/tableauanalytiqueparmatiere', [EditionController2::class, 'tableauanalytiqueparmatiere'])->name('tableauanalytiqueparmatiere');
 

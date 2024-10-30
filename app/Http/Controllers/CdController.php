@@ -202,8 +202,37 @@ class CdController extends Controller
   }
   
  
-  public function savenote(){
-    $notes = Notes::all();
-    
-  }
+  public function deleteNote(Request $request)
+{
+    // Récupérer les valeurs de 'classe' et 'matiere' depuis le formulaire
+    $classe = $request->input('classe');
+    $matiere = $request->input('matiere');
+
+    // Mettre à jour les champs de notes à NULL pour les enregistrements correspondants
+    Notes::where('CODECLAS', $classe)
+        ->where('CODEMAT', $matiere)
+        ->update([
+            'INT1' => null,
+            'INT2' => null,
+            'INT3' => null,
+            'INT4' => null,
+            'INT5' => null,
+            'INT6' => null,
+            'INT7' => null,
+            'INT8' => null,
+            'INT9' => null,
+            'INT10' => null,
+            'MI' => null,
+            'DEV1' => null,
+            'DEV2' => null,
+            'DEV3' => null,
+            'MS' => null,
+            'TEST' => null,
+            'MS1' => null
+        ]);
+
+    // Redirection ou réponse de confirmation
+    return redirect()->back()->with('success', 'Les notes ont été supprimées.');
+}
+
 }

@@ -129,6 +129,13 @@
                                     <button type="submit" class="btn btn-primary btn-rounded">
                                         <i class="typcn typcn-home-outline"></i> Enregistrer
                                     </button>
+																	
+<button type="button" class="btn btn-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal">
+	<i class="typcn typcn-home-outline"></i>
+  Supprimer
+</button>
+
+
                                 </div>
                             </div>
 
@@ -261,7 +268,30 @@
         </div>
     </div>
     <br><br><br>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Voulez vous vriament supprimer les notes?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+			<form action="{{ route('delete-notes') }}" method="POST">
+				@csrf
+      <div class="modal-body">
+					<input type="hidden" value="CE1A" id="tableSelec4" name="classe">
+					<input type="hidden" value="1" id="tableSelec5" name="matiere">
 
+			
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-primary">Supprimer</button>
+      </div>
+		</form>
+    </div>
+  </div>
+</div>
     <script>
         function updateCodeMat() {
             // Récupère la valeur sélectionnée dans le select de matières
@@ -314,6 +344,8 @@
         // Ajoute les écouteurs d'événements pour les deux sélecteurs
         document.getElementById("tableSelect4").addEventListener("change", redirectWithSelection);
         document.getElementById("tableSelect5").addEventListener("change", redirectWithSelection);
+				document.getElementById("tableSelec4").addEventListener("change", redirectWithSelection);
+        document.getElementById("tableSelec5").addEventListener("change", redirectWithSelection);
     </script>
 
     <script>
