@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\CdController;
-use App\Http\Controllers\BulletinController;
+
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ConnexionDBController;
 use App\Http\Controllers\EleveController;
@@ -332,9 +332,10 @@ Route::get('/tabledesmatieres', [EditionController::class, 'tabledesmatieres'])-
 
 Route::post('/tabledesmatieres', [EditionController::class, 'storetabledesmatieres'])->name('storetabledesmatieres');
 
+Route::get('/saisirnote', [CdController::class, 'saisirnote'])->name('saisirnote');
+Route::get('/filternotes', [CdController::class, 'saisirnotefilter'])->name('saisirnotefilter');
 
 Route::get('/verrouillage', [CdController::class, 'verrouillage'])->name('verrouillage');
 
 Route::put('/tabledesmatieres',  [EditionController::class, 'updatetabledesmatieres'])->name('updatetabledesmatieres');
 Route::get('/editions2/tableauanalytiqueparmatiere', [EditionController2::class, 'tableauanalytiqueparmatiere'])->name('tableauanalytiqueparmatiere');
-Route::get('/bulletindenotes', [BulletinController::class, 'bulletindenotes'])->name('bulletindenotes');

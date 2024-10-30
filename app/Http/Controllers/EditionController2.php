@@ -25,11 +25,6 @@ class EditionController2 extends Controller
         return view('pages.notes.fichedenotesvierge', compact('notes'));
     }
     
-    public function relevesparmatiere(){
-        $releves = Classes::all();
-        $matieres = Matieres::all();
-        return view('pages.notes.relevesparmatiere', compact('releves', 'matieres'));
-    }
 
     public function relevespareleves(){
         return view('pages.notes.relevespareleves');
