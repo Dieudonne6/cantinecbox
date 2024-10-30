@@ -201,6 +201,8 @@ Route::get('/pagedetailarchive/{MATRICULE}', [PagesController::class, 'pagedetai
 Route::get('/editions', [EditionController::class, 'editions'])->name('editions');
 Route::get('/editions2', [EditionController2::class, 'editions2'])->name('editions2');
 Route::get('/editions2/fichedenotesvierge', [EditionController2::class, 'fichedenotesvierge'])->name('pages.notes.fichedenotesvierge');
+Route::get('/editions2/fichedenoteviergefina/{classeCode}', [EditionController2::class, 'fichedenoteviergefina'])->name('fichedenoteviergefina');
+
 Route::get('/editions2/relevesparmatiere', [EditionController2::class, 'relevesparmatiere'])->name('pages.notes.relevesparmatiere');
 Route::get('/editions2/recapitulatifdenotes', [EditionController2::class, 'recapitulatifdenotes'])->name('pages.notes.recapitulatifdenotes');
 Route::get('/editions2/relevespareleves', [EditionController2::class, 'relevespareleves'])->name('pages.notes.relevespareleves');
@@ -337,3 +339,5 @@ Route::post('/tabledesmatieres', [EditionController::class, 'storetabledesmatier
 Route::get('/verrouillage', [CdController::class, 'verrouillage'])->name('verrouillage');
 
 Route::put('/tabledesmatieres',  [EditionController::class, 'updatetabledesmatieres'])->name('updatetabledesmatieres');
+
+Route::get('/elevessansnote/{classCode}',  [EditionController::class, 'elevessansnote'])->name('elevessansnote');

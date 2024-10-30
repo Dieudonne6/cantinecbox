@@ -219,5 +219,31 @@ class EditionController extends Controller
     
         return redirect()->route('tabledesmatieres')->with('status', 'Matière mise à jour avec succès');
     }
+
+    public function elevessansnote($classCode) {
+         // Récupère les élèves de la classe spécifique
+    $students = Eleve::where('CODECLAS', $classCode)->get();
+        dd($students);
+    // Formate la réponse JSON
+    return response()->json([
+        'students' => $students->map(function ($student) {
+            return [
+                'matricule' => $student->MATRICULE,
+                'sexe' => $student->SEXE === 1 ? 'M' : 'F',
+                'nom' => $student->NOM,
+                'prenom' => $student->PRENOM,
+                // 'int1' => $student->int1,
+                // 'int2' => $student->int2,
+                // 'int3' => $student->int3,
+                // 'int4' => $student->int4,
+                // 'mi' => $student->mi,
+                // 'dev1' => $student->dev1,
+                // 'dev2' => $student->dev2,
+                // 'dev3' => $student->dev3,
+                // 'compo' => $student->compo,
+            ];
+        })
+    ]);
+    }
 }
 
