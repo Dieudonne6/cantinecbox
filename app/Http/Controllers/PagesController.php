@@ -126,11 +126,11 @@ class PagesController extends Controller
     $serie = Serie::where('CYCLE', $serieClass)->get();
     return response()->json($serie);
   }
-  public function getClasmat($getClasmat)
-  {
-    $getClasmat = Clasmat::where('CODEMAT', $getClasmat)->first();
-    return response()->json($getClasmat);
-  }
+  // public function getClasmat($getClasmat)
+  // {
+  //   $getClasmat = Clasmat::where('CODEMAT', $getClasmat)->first();
+  //   return response()->json($getClasmat);
+  // }
   public function getClas($Class)
   {
     $Class = Classesgroupeclass::where('LibelleGroupe', $Class)->get();

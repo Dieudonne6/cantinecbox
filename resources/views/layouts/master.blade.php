@@ -417,22 +417,7 @@ align-items: center;  */
                     }
                 });
             }); 
-            $('#tableSelect5').on('change', function() {
-                var codeClass = $(this).val();
-                $.ajax({
-                    url: '/get-clasmat/' + codeClass,
-                    type: 'GET',
-                    success: function(data) {
-                        console.log(data);
-                        if (data) { 
-                $('#champ2').val(data.COEF); // Mise à jour de champ2 avec la valeur de coef
-            } else {
-                $('#champ2').val(''); // Vide le champ si aucune donnée n'est trouvée
-            }
-                       
-                    }
-                });
-            }); 
+           
             function toggleDivs() {
                 if ($('#optionsRadios1').is(':checked')) {
                     $('#div1').removeClass('d-block').addClass('d-none');

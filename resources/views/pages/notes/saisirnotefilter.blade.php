@@ -82,7 +82,7 @@
           <!-- Champ de nombre -->
           <div class="col-md-4 mb-3">
             <input type="number" id="champ2" name="champ2" class="form-control"
-            placeholder="Valeur" readonly>
+            placeholder="Valeur" value="{{ $getClasmat->COEF  ?? '' }}" readonly>
           </div>
         </div>
         
