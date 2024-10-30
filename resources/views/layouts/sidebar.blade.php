@@ -254,7 +254,7 @@
                               <a class="nav-link {{ request()->is('Tableau de notes') ? 'active' : '' }}" href="#">Tableau de notes</a>
                           </li>
                           <li>
-                              <a class="nav-link {{ request()->is('Bulletin de notes') ? 'active' : '' }}" href="#">Bulletin de notes</a>
+                              <a class="nav-link {{ request()->is('Bulletin de notes') ? 'active' : '' }}" href="{{url('/bulletindenotes')}}">Bulletin de notes</a>
                           </li>
                           <li>
                               <a class="nav-link {{ request()->is('Attestations de mérite') ? 'active' : '' }}" href="#">Attestations de mérite</a>
