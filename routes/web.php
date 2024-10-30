@@ -341,3 +341,4 @@ Route::put('/tabledesmatieres',  [EditionController::class, 'updatetabledesmatie
 
 Route::get('/saisirnote', [CdController::class, 'saisirnote'])->name('saisirnote');
 Route::get('/filternotes', [CdController::class, 'saisirnotefilter'])->name('saisirnotefilter');
+Route::post('/enregistrer-notes', [CdController::class, 'enregistrerNotes'])->name('enregistrer_notes');

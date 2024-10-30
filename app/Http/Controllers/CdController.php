@@ -152,8 +152,52 @@ class CdController extends Controller
     return view('pages.notes.saisirnotefilter', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere'));
   }
   
+  public function enregistrerNotes(Request $request)
+  {
+      // Valider les données entrantes
+      $validatedData = $request->validate([
+          'champ1' => 'required|integer',
+          'champ2' => 'required|integer',
+          'CODEMAT' => 'required|integer',
+          'CODECLAS' => 'required|string',
+          'notes' => 'required|array',
+          'notes.*.INT1' => 'nullable|numeric', 
+          'notes.*.INT2' => 'nullable|numeric', 
+          'notes.*.INT3' => 'nullable|numeric', 
+          'notes.*.INT4' => 'nullable|numeric', 
+          'notes.*.INT5' => 'nullable|numeric', 
+          'notes.*.INT6' => 'nullable|numeric', 
+          'notes.*.INT7' => 'nullable|numeric', 
+          'notes.*.INT8' => 'nullable|numeric', 
+          'notes.*.INT9' => 'nullable|numeric', 
+          'notes.*.INT10' => 'nullable|numeric', 
+          'notes.*.MI' => 'nullable|numeric',
+          'notes.*.DEV1' => 'nullable|numeric',
+          'notes.*.DEV2' => 'nullable|numeric',
+          'notes.*.DEV3' => 'nullable|numeric',
+          'notes.*.MS' => 'nullable|numeric',
+          'notes.*.TEST' => 'nullable|numeric',
+          'notes.*.MS1' => 'nullable|numeric',
+          // Ajoutez d'autres validations si nécessaire
+      ]);
+      // dd($validatedData['notes']);
+      // Parcourir chaque élève et enregistrer les notes
+      foreach ($validatedData['notes'] as $matricule => $noteData) {
+          Notes::updateOrCreate(
+              ['MATRICULE' => $matricule], // Critère de correspondance
+              array_merge($noteData, [
+                'SEMERTRE' => $request->champ1,
+                'COEF' => $request->champ2,
+                'CODEMAT' => $request->CODEMAT,
+                'CODECLAS' => $request->CODECLAS,
+            ])// Données à insérer ou mettre à jour
+          );
+      }
+
+      return redirect()->back()->with('success', 'Les notes ont été enregistrées avec succès.');
+  }
   
-  
+ 
   public function savenote(){
     $notes = Notes::all();
     
