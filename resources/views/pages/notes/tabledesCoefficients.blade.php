@@ -194,8 +194,8 @@
         if (classMatch && matiereMatch) {
             const classId = classMatch[1];
             const matiereId = matiereMatch[1];
-            let value = input.value.trim() !== "" ? input.value : "0"; // Valeur par défaut si vide
-
+            let value = input.value.trim() !== "" ? input.value : ""; // Valeur par défaut si vide
+            
             // Vérifiez si l'input a la classe 'fondamentale' pour récupérer la couleur
             const color = input.classList.contains('fondamentale') ? 'red' : 'default';
 

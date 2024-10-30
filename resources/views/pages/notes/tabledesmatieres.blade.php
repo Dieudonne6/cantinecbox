@@ -128,7 +128,7 @@
                               </div>
                               <div>
                                 <label>Choisir la couleur</label>
-                                <input type="color" id="colorPickerModif" name="couleurModif" value="{{ old('couleurModif', $mat->COULEUR ?? '#FFFFFF') }}" required>
+                                <input type="color" class="form-control" id="colorPickerModif" name="couleurModif" value="#FFFFFF" required>
                               </div>
                             </div>
                             <br>
@@ -141,7 +141,7 @@
                                   <option value="2">Scientifiques</option>
                                   <option value="3">Autres</option>
                               </select>
-                              </div>
+                              </div> 
                               <div>
                               <div style="background-color: rgb(255, 189, 65); padding: 10px;">
                                 <div class="form-check mb-3 d-flex align-items-center">
@@ -227,7 +227,7 @@
                   </div>
                   <div style="margin-left:100px !important">
                     <label>Choisir la couleur</label>
-                    <input type="color" id="colorPicker" class="form-control" name="couleur">
+                    <input type="color" id="colorPicker" class="form-control" name="couleur" >
                   </div>
                 </div>
                 <br>
@@ -295,11 +295,6 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    var typeMat = {{ json_encode($mat->TYPEMAT) }};
-    var select = document.getElementById('typematiereModif'); // Assurez-vous que l'ID est correct
-    select.value = typeMat; // Assurez-vous que cette valeur correspond à une des options du sélecteur
-  });
     function imprimerArriereConstat() {
     var originalContent = document.body.innerHTML; // Contenu original de la page
     var printDiv = document.createElement('div');
@@ -349,14 +344,40 @@
     document.body.removeChild(printDiv);
     document.head.removeChild(style);
 }
-    function populateModal(mat) {
-      document.getElementById('codeMatiereModif').value = mat.CODEMAT;
-      document.getElementById('matligneModif').value = mat.CODEMAT_LIGNE; // Assurez-vous que l'ID est correct
-      document.getElementById('libelleModif').value = mat.LIBELMAT; // Assurez-vous que l'ID est correct
-      document.getElementById('nomcourtModif').value = mat.NOMCOURT; // Assurez-vous que l'ID est correct
-      document.getElementById('colorPickerModif').value = mat.COULEUR; // Assurez-vous que l'ID est correct
-      document.getElementById('typematiere').value = mat.TYPEMAT === 1 ? 1 : mat.TYPEMAT === 2 ? 2 : mat.TYPEMAT === 3 ? 3 : '';
-      document.getElementById('couleurecritmodif').checked = mat.COULEURECRIT === 0; // Vérifie si la couleur de l'écrit est noir
-  }
-  </script>
+    window.populateModal = function(mat) {
+      const elements = {
+        codeMatiereModif: 'CODEMAT',
+        matligneModif: 'CODEMAT_LIGNE',
+        libelleModif: 'LIBELMAT',
+        nomcourtModif: 'NOMCOURT',
+        colorPickerModif: 'COULEUR',
+        typematiereModif: 'TYPEMAT',
+        couleurecritmodif: 'COULEURECRIT'
+      };
+
+      for (const [key, value] of Object.entries(elements)) {
+        const element = document.getElementById(key);
+        if (!element) {
+          console.error(`L'élément avec l'ID ${key} n'existe pas.`);
+          continue;
+        }
+
+        switch (key) {
+          case 'typematiereModif':
+          element.value = mat[value];
+            break;
+          case 'couleurecritmodif':
+            element.checked = mat[value] === 0;
+            break;
+          case 'colorPickerModif':
+            element.value = mat[value] ?? '#FFFFFF';
+            break;
+          default:
+            element.value = mat[value];
+            break;
+        }
+      }
+
+    }
+    </script>
   @endsection

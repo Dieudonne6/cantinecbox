@@ -204,8 +204,8 @@ class EditionController extends Controller
         // Mise à jour des champs
         $matiere->LIBELMAT = $request->input('libelleModif');
         $matiere->NOMCOURT = $request->input('nomcourtModif');
-        $matiere->COULEUR = $request->input('couleurModif');
-        $matiere->CODEMAT_LIGNE = $request->input('matligneModif');
+        $matiere->COULEUR = $request->input('couleurModif') ?? '#FFFFFF';
+        $matiere->CODEMAT_LIGNE = $request->input('matligneModif') ?? 0;
         // Mise à jour du type de matière
         $matiere->TYPEMAT = $request->input('typematiereModif') == 1 ? 1 : ($request->input('typematiereModif') == 2 ? 2 : 3); // Changer ici
     
