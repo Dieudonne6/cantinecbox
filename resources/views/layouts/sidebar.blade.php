@@ -286,111 +286,151 @@
     </li>
 
 
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
-        <i class="typcn typcn-film menu-icon"></i>
-        <span class="menu-title">Gestion des notes</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="form-elements">
-        <ul class="nav flex-column sub-menu">
-    
-          {{-- Paramètres --}}
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#notes" aria-expanded="false" aria-controls="notes">
-              Paramètres<i class="menu-arrow"></i></a>
-            
-            <div class="collapse" id="notes">
-            <ul class="nav sub-menu">
-              <li><a class="nav-link {{ request()->is('repartitionclassesparoperateur') ? 'active' : '' }}" href="{{ url('/repartitionclassesparoperateur') }}">Répartition des classes par opérateur</a></li>
-              <li><a class="nav-link {{ request()->is('tabledesmatieres') ? 'active' : '' }}" href="{{ url('/tabledesmatieres') }}">Table des matières</a></li>
-              <li><a class="nav-link {{ request()->is('tablecoefficients') ? 'active' : '' }}" href="{{ url('/tablecoefficients') }}">Table des coefficients</a></li>
-            </ul>
-            </div>
-          </li>
-    
-          {{-- Manipulation des notes --}}
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#manip" aria-expanded="false" aria-controls="manip">
-              Manipulation des notes<i class="menu-arrow"></i></a>
-            <div class="collapse" id="manip">
-            <ul class="nav sub-menu">
-              <li><a class="nav-link {{ request()->is('saisirnote') ? 'active' : '' }}" href="{{ route('saisirnote') }}">Saisir et mises à jour des notes</a></li>
-              <li><a class="nav-link {{ request()->is('enregistresresultatsexamens') ? 'active' : '' }}" href="{{ url('/enregistresresultatsexamens') }}">Enrégistrer les résultats des examens</a></li>
-              <li><a class="nav-link {{ request()->is('verifiernotes') ? 'active' : '' }}" href="{{ url('/verifiernotes') }}">Vérifier les notes</a></li>
-            </ul>
-          </li>
-    
-          {{-- Sécurité --}}
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#securite" aria-expanded="false" aria-controls="securite">
-              Sécurité<i class="menu-arrow"></i></a>
-            <div class="collapse" id="securite">
-            <ul class="nav sub-menu">
-              <li><a class="nav-link {{ request()->is('verrouillage') ? 'active' : '' }}" href="{{ route('verrouillage') }}">Verrouillage</a></li>
-              <li><a class="nav-link {{ request()->is('deverrouillage') ? 'active' : '' }}" href="{{ url('/deverrouillage') }}">Déverrouillage</a></li>
-            </ul>
-            </li>
-          </li>
-    
-          {{-- Editions --}}
-          @php
-            $routeseditions2 = [
-              'editions2',
-              'fichedenotesvierge',
-              'relevesparmatiere',
-              'relevespareleves',
-              'recapitulatifdenotes',
-              'tableauanalytiqueparmatiere',
-              'resultatsparpromotion',
-              'listedesmeritants',
-            ];
-          @endphp
-    
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#edition" aria-expanded="false" aria-controls="edition">
-              Edition<i class="menu-arrow"></i></a>
-            <div class="collapse" id="edition">
-            <ul class="nav sub-menu">
-              <li><a class="nav-link {{ request()->is('tableaudenotes') ? 'active' : '' }}" href="{{ url('/tableaudenotes') }}">Tableau de notes</a></li>
-              <li><a class="nav-link {{ request()->is('bulletindesnotes') ? 'active' : '' }}" href="{{ url('/bulletindesnotes') }}">Bulletin de notes</a></li>
-              <li><a class="nav-link {{ request()->is('attestationmerite') ? 'active' : '' }}" href="{{ url('/attestationmerite') }}">Attestations de mérite</a></li>
-              <li><a class="nav-link {{ in_array(request()->route()->getName(), $routeseditions2) ? 'active' : '' }}" href="{{ route('editions2') }}">Editions</a></li>
-            </ul>
-            </div>
-          </li>
-    
-          {{-- Résultats --}}
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#resultats" aria-expanded="false" aria-controls="resultats">
-              Résultats<i class="menu-arrow"></i></a>
-            <div class="collapse" id="resultats">
-            <ul class="nav sub-menu">
-              <li><a class="nav-link {{ request()->is('listemerite') ? 'active' : '' }}" href="{{ url('/listemerite') }}">Liste par ordre de mérite</a></li>
-              <li><a class="nav-link {{ request()->is('tableauanalytique') ? 'active' : '' }}" href="{{ url('/tableauanalytique') }}">Tableau analytique</a></li>
-              <li><a class="nav-link {{ request()->is('rapportsannuels') ? 'active' : '' }}" href="{{ url('/rapportsannuels') }}">Rapports annuels</a></li>
-              <li><a class="nav-link {{ request()->is('livretsscolaires') ? 'active' : '' }}" href="{{ url('/livretsscolaires') }}">Livrets scolaires</a></li>
-            </ul>
-            </div>
-          </li>
-    
-          {{-- Extraction --}}
-          <li class="nav-item ">
-            <a class="nav-link" data-bs-toggle="collapse" href="#extraction" aria-expanded="false" aria-controls="extraction">
-              Extraction<i class="menu-arrow"></i></a>
-            <div class="collapse" id="extraction">
-            <ul class="nav sub-menu">
-              <li><a class="nav-link {{ request()->is('exporter') ? 'active' : '' }}" href="{{ url('/exporter') }}">Exporter</a></li>
-              <li><a class="nav-link {{ request()->is('importer') ? 'active' : '' }}" href="{{ url('/importer') }}">Importer</a></li>
-            </ul>
-            </div>
-          </li>
-    
-        </ul>
-      </div>
-    </li>
-    
-  
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false"
+              aria-controls="form-elements">
+              <i class="typcn typcn-film menu-icon"></i>
+              <span class="menu-title">Gestion des notes</span>
+              <i class="menu-arrow"></i>
+          </a>
+          <div class="collapse" id="form-elements">
+              <ul class="nav flex-column sub-menu">
+                  {{-- Paramètres --}}
+                  <li class="nav-item menu-item-has-children">
+                      <a href="#" class="nav-link">Paramètres</a>
+                      <ul class="sub-menus">
+                          <li>
+                              <a class="nav-link {{ request()->is('Répartition des classes par opérateur') ? 'active' : '' }}" href="{{ url('/repartitionclassesparoperateur') }}">Répartition des classes par opérateur</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Table des matières') ? 'active' : '' }}" href="{{url('/tabledesmatieres')}}">Table des matières</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Table des coefficients') ? 'active' : '' }}" href="#">Table des coefficients</a>
+                          </li>
+                      </ul>
+                  </li>
+      
+                  {{-- Manipulation des notes --}}
+                  <li class="nav-item menu-item-has-children">
+                      <a href="#" class="nav-link">Manipulation des notes</a>
+                      <ul class="sub-menus">
+                          <li>
+                              <a class="nav-link {{ request()->is('Saisir et mises à jour des notes') ? 'active' : '' }}" href="{{ route('saisirnote') }}">Saisir et mises à jour des notes</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Enrégistrer les résultats des examens') ? 'active' : '' }}" href="#">Enrégistrer les résultats des examens</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Vérifier les notes') ? 'active' : '' }}" href="#">Vérifier les notes</a>
+                          </li>
+                      </ul>
+                  </li>
+      
+                  {{-- Sécurité --}}
+                  <li class="nav-item menu-item-has-children">
+                      <a href="#" class="nav-link">Sécurité</a>
+                      <ul class="sub-menus">
+                          <li>
+                              <a class="nav-link {{ request()->is('Verrouillage') ? 'active' : '' }}" href="{{ route('verrouillage') }}">Verrouillage</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Déverrouillage') ? 'active' : '' }}" href="#">Déverrouillage</a>
+                          </li>
+                      </ul>
+                  </li>
+      
+                  
+                  {{-- Editions --}}
+                  @php
+                  $routeseditions2 = [
+                      'editions2',
+                      'fichedenotesvierge',
+                      'relevesparmatiere',
+                      'relevespareleves',
+                      'recapitulatifdenotes',
+                      'tableauanalytiqueparmatiere',
+                      'resultatsparpromotion',
+                      'listedesmeritants',
+                  ]; // Liste des noms de routes associées à l'édition gestion des notes
+              @endphp
+
+                  <li class="nav-item menu-item-has-children">
+                      <a href="#" class="nav-link">Edition</a>
+                      <ul class="sub-menus">
+                          <li>
+                              <a class="nav-link {{ request()->is('Tableau de notes') ? 'active' : '' }}" href="#">Tableau de notes</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Bulletin de notes') ? 'active' : '' }}" href="#">Bulletin de notes</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Attestations de mérite') ? 'active' : '' }}" href="#">Attestations de mérite</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ in_array(request()->route()->getName(), $routeseditions2) ? 'active' : '' }}"
+                                href="{{ route('editions2') }}">Editions</a>
+                          </li>
+                      </ul> 
+                          {{-- <li>
+                              <a class="nav-link {{ request()->is('Fiches de notes vierge') ? 'active' : '' }}" href="#">Fiches de notes vierge</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Relevés par matière') ? 'active' : '' }}" href="#">Relevés par matière</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Relevés par élèves') ? 'active' : '' }}" href="#">Relevés par élèves</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Récapitulatif de notes') ? 'active' : '' }}" href="#">Récapitulatif de notes</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Tableau analytique par matière') ? 'active' : '' }}" href="#">Tableau analytique par matière</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Résultats par promotion') ? 'active' : '' }}" href="#">Résultats par promotion</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Liste des méritants') ? 'active' : '' }}" href="#">Liste des méritants</a>
+                          </li>
+                      </ul> --}}
+                  </li>
+      
+                  {{-- Résultats --}}
+                  <li class="nav-item menu-item-has-children">
+                      <a href="#" class="nav-link">Résultats</a>
+                      <ul class="sub-menus">
+                          <li>
+                              <a class="nav-link {{ request()->is('Liste par ordre de mérite') ? 'active' : '' }}" href="#">Liste par ordre de mérite</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Tableau analytique') ? 'active' : '' }}" href="#">Tableau analytique</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Rapports annuels') ? 'active' : '' }}" href="#">Rapports annuels</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Livrets scolaires') ? 'active' : '' }}" href="#">Livrets scolaires</a>
+                          </li>
+                      </ul>
+                  </li>
+      
+                  {{-- Extraction --}}
+                  <li class="nav-item menu-item-has-children">
+                      <a href="#" class="nav-link">Extraction</a>
+                      <ul class="sub-menus">
+                          <li>
+                              <a class="nav-link {{ request()->is('Exporter') ? 'active' : '' }}" href="#">Exporter</a>
+                          </li>
+                          <li>
+                              <a class="nav-link {{ request()->is('Importer') ? 'active' : '' }}" href="#">Importer</a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+          </div>
+      </li>
+      
 
     {{-- <li class="nav-item">
   <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">

@@ -62,7 +62,7 @@
                 <button><a href="{{ url('/editions2/relevesparmatiere') }}"><i class="fas fa-list"></i> Relevés par matières</a></button>
                 <button><a href="{{ url('/editions2/relevespareleves') }}"><i class="fas fa-list"></i> Relevés par élève</a></button>
                 <button><a href="{{ url('/editions2/recapitulatifdenotes') }}"><i class="fas fa-certificate"></i>Récapitulatifs de note</a></button>
-                <button><a href="{{ url('/editions2/tableauanalytiqueparmatiere') }}"><i class="fas fa-file-alt"></i> Tableau analytique par matière</a></button>
+                <button class="profil-btn" type="button" id="" class="" data-bs-toggle="modal" data-bs-target="#exampleModal2"><i class="fas fa-id-card"></i> Tableau analytique par matière</button>
                 <button><a href="{{ url('/editions2/resultatsparpromotion') }}"><i class="fas fa-chart-bar"></i> Résultats  par promotion</a></button>
                 <button><a href="{{ url('/editions2/listedesmeritants') }}"><i class="fas fa-cash-register"></i> Liste  des méritants</a></button>
             </div>
@@ -70,7 +70,58 @@
     </div>
     <br><br>
     <!-- Button trigger modal -->
-
+  <!-- Modal -->
+   <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="printModalLabel">Tableau analytique par matière</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>            
+            <div class="modal-body">
+                <form action="{{ url('/editions2/tableauanalytiqueparmatiere') }}" method="GET" id="analyticalTableForm" onsubmit="checkDataAndSubmit(event)">
+                    <br>
+                    <div class="d-flex justify-content-between">
+                    
+                    <select name="matiere" id="matiereSelect" class="w-50" style="height: 35px;">
+                        <option value="all">< Toutes les matières ></option>
+                        <option value="litteraires">< Matières Littéraires (Enseign. Général ) ></option>
+                        <option value="scientifiques">< Matières Scientifiques (Enseign. Général ) ></option>
+                        <option value="technique">< Matières Fondamentales (Enseign. Technique) ></option>
+                        @foreach($matieres as $matiere)
+                            <option value="{{ $matiere->CODEMAT }}">{{ $matiere->LIBELMAT }}</option>
+                        @endforeach
+                    </select>
+                    <fieldset id="typeStatFieldset">
+                        <h7>Type Stat.</h7>
+                        <div class="form-check">
+                            <input class="form-check-input ml-1" type="radio" id="general" name="typeenseig" value="general" checked>
+                            <label class="form-check-label ml-4" for="general">
+                                Enseign. Général
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input ml-1" type="radio" id="technique" name="typeenseig" value="technique">
+                            <label class="form-check-label ml-4" for="technique">
+                                Enseign. Technique
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input ml-1" type="radio" id="tous" name="typeenseig" value="tous">
+                            <label class="form-check-label ml-4" for="tous">
+                                Tous
+                            </label>
+                        </div>
+                    </fieldset>
+                    
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary" style="margin-left: 70%;">Lancer</button>
+                </form>
+            </div>
+      </div>
+    </div>
+  </div> 
 {{-- 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -475,5 +526,16 @@
             }, 1000);
         }
     </script>  --}}
-
+    <script>
+        document.getElementById('matiereSelect').addEventListener('change', function() {
+            var selectedValue = this.value;
+            var fieldset = document.getElementById('typeStatFieldset');
+            if (selectedValue === 'litteraires' || selectedValue === 'scientifiques' || selectedValue === 'technique') {
+                fieldset.disabled = true; // Griser le fieldset
+            } else {
+                fieldset.disabled = false; // Activer le fieldset
+            }
+        });
+    </script>
 @endsection
+

@@ -28,4 +28,8 @@ class Classes extends Model
     {
         return $this->belongsTo(Eleve::class, 'CODECLAS', 'CODECLAS');
     }
+    public function eleves()
+    {
+        return $this->hasMany(Eleve::class, 'CODECLAS', 'CODECLAS');
+    }
 }

@@ -1,87 +1,95 @@
 @extends('layouts.master')
-
 @section('content')
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+            <div class="container">
+                <div class="d-flex justify-content-between">
+                    <h3 class="card-title">Statistiques par Matière</h3>
+                    <button class="btn btn-primary" onclick="imprimerliste()">Imprimer</button>
+                </div>
+                <h5 class="text-center">Trimestre {{ $trimestres->first()->timestreencours }}</h5>
+                @foreach ($matieres as $matiere)
+                    @php
+                        $hasData = false;
+                        foreach ($classes as $classe) {
+                            $stat = $stats[$classe->CODECLAS][$matiere->CODEMAT] ?? null;
+                            if ($stat && $stat['notesStats']->nombre_eleves > 0) {
+                                $hasData = true;
+                                break;
+                            }
+                        }
+                    @endphp
 
-<div class="container">
-    <div class="row">
-        <!-- Colonne principale pour le select -->
-        <div class="col-lg-10 mx-auto">
-            <div class="form-group mt-5">
-                <h5>Matières</h5>
-                <select name="matiere" id="matiere" class="form-control bg-primary select-custom text-white">
-                    <!-- Quatre premières options spécifiques -->
-                    <option value="all">< Toutes les matières ></option>
-                    <option value="litteraires">< Matières Littéraires (Enseign. Général ) ></option>
-                    <option value="scientifiques">< Matières Scientifiques (Enseign. Général ) ></option>
-                    <option value="technique">< Matières Fondamentales (Enseign. Technique) ></option>
-                    <!-- Options dynamiques -->
-                    @foreach($matieres as $matiere)
-                        <option value="{{ $matiere->CODEMAT }}">{{ $matiere->LIBELMAT }}</option>
-                    @endforeach
-                </select>
+                    @if ($hasData) <!-- Vérifier si des données existent avant d'afficher quoi que ce soit pour cette matière -->
+                        <h5>Matière : {{ $matiere->LIBELMAT }}</h5>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Classe</th>
+                                    <th>Effectif</th>
+                                    <th>+ Forte moyenne</th>
+                                    <th>+ Faible moyenne</th>
+                                    <th>M < 10</th>
+                                    <th>M >= 10</th>
+                                    <th>% M >= 10</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($classes as $classe)
+                                    @php
+                                        $stat = $stats[$classe->CODECLAS][$matiere->CODEMAT] ?? null;
+                                    @endphp
+                                    @if ($stat && $stat['notesStats']->nombre_eleves > 0)
+                                        <tr>
+                                            <td>{{ $classe->CODECLAS }}</td>
+                                            <td>{{ $stat['notesStats']->nombre_eleves }}</td>
+                                            <td>{{ $stat['notesStats']->moyenne_max }}</td>
+                                            <td>{{ $stat['notesStats']->moyenne_min }}</td>
+                                            <td>{{ $stat['notesStats']->nombre_moyenne_inf_10 }}</td>
+                                            <td>{{ $stat['notesStats']->nombre_moyenne_sup_10 }}</td>
+                                            <td>{{ number_format($stat['pourcentage_moyenne_sup_10'], 2) }}%</td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <br>
+                    @endif
+                @endforeach
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <!-- Fieldset aligné en bas à gauche prenant 3 colonnes -->
-        <div class="col-lg-3 ml-5 mt-5" style="border: 2px solid #b700ff; padding: 10px;">
-            <fieldset>
-                <legend class="w-auto px-2">Type Stat.</legend>
-                <div class="form-check">
-                    <input class="form-check-input ml-1" type="checkbox" id="general" name="stat_type" value="general">
-                    <label class="form-check-label ml-4" for="general">
-                        Enseign. Général
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input ml-1" type="checkbox" id="technique" name="stat_type" value="technique">
-                    <label class="form-check-label ml-4" for="technique">
-                        Enseign. Technique
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input ml-1" type="checkbox" id="tous" name="stat_type" value="tous">
-                    <label class="form-check-label ml-4" for="tous">
-                        Tous
-                    </label>
-                </div>
-            </fieldset>
-        </div>
-    </div>
-    <button class="btn btn-primary" style="width: auto; margin-top: 20px; margin-left: 70%">Lancer</button>
 </div>
 
-<script>
-    // Fonction pour désactiver les autres checkboxes lorsqu'une est cochée
-    const checkboxes = document.querySelectorAll('input[name="stat_type"]');
-    
-    checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener('change', function() {
-            if (this.checked) {
-                checkboxes.forEach((box) => {
-                    if (box !== this) {
-                        box.checked = false;
-                    }
-                });
-            }
-        });
-    });
-</script>
-
 <style>
-    /* Pour s'assurer que la flèche de déroulement soit visible sans changer la couleur de fond */
-    .select-custom {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        background-color: transparent;
-        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3E%3Cpath fill='%23ffffff' d='M0 0l2 2 2-2z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 0.75rem center;
-        background-size: 12px 12px;
-        padding-right: 2rem; /* pour donner de l'espace à la flèche */
+    .footer {
+        position:fixed !important; /* Changer de relative à absolute pour le placer en bas de la carte */
+        bottom: 0 !important; /* Assurer que le footer soit en bas */
+        width: 100% !important;
+        z-index: 10 !important; /* Assurer que le footer soit au-dessus des autres éléments */
+    }
+    th, td {
+        border: 1px solid black !important;
+    }
+    @media print {
+        .sidebar, .navbar, .footer, .noprint, button {
+            display: none !important; /* Masquer la barre de titre et autres éléments */
+        }
+        h3 {
+            text-align: center !important;
+        }
     }
 </style>
+<script>
+function imprimerliste() {
+        var content = document.querySelector('.main-panel').innerHTML;
+        var originalContent = document.body.innerHTML;
 
+        document.body.innerHTML = content;
+        window.print();
+
+        document.body.innerHTML = originalContent;
+    }
+</script>
 @endsection

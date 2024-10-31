@@ -3,27 +3,47 @@
     <div class="main-panel-10">
 
         <div class="container">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-            <div class="row">
-                <div class="col-5 md-3 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            <div
-                                class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
-                                <div>
-                                    <div class="row">
-                                        <div class="col">
-                                            
-                                            <select class="js-example-basic-multiple w-100 select2-hidden-accessible"
-                                                id="tableSelect1" onchange="displayTable('tableSelect1')" tabindex="-1"
-                                                aria-hidden="true"> 
-                                                <option value="">Choisir un groupe</option>
-                                               @foreach($gclasses as $gclasse)
-                                                    <option value="{{ $gclasse->LibelleGroupe }}">{{ $gclasse->LibelleGroupe }}</option>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <form action="{{ route('enregistrer_notes') }}" method="POST">
+                @csrf
+                <div class="row">
+                    <div class="col-6 md-3 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap mb-4">
+                                    <div class="row w-100">
+                                        <!-- Select pour le groupe -->
+                                        <div class="col-md-8 mb-3">
+                                            <select class="form-select select2 w-100" id="tableSelect1"
+                                                aria-label="Choisir un groupe">
+                                                <option value="" selected>Choisir un groupe</option>
+                                                @foreach ($gclasses as $gclasse)
+                                                    <option value="{{ $gclasse->LibelleGroupe }}">
+                                                        {{ $gclasse->LibelleGroupe }}
+                                                    </option>
                                                 @endforeach
                                             </select>
-                                            <select class="js-example-basic-multiple w-100 select2-hidden-accessible" id="periodSelect" onchange="updateCheckbox()">
-                                                <option value="">Période</option>
+                                        </div>
+
+                                        <!-- Select pour la période -->
+                                        <div class="col-md-8 mb-3">
+                                            <select class="form-select select2 w-100 mt-2" id="periodSelect"
+                                                onchange="updateCheckbox()" aria-label="Choisir une période">
+                                                <option value="" selected>Période</option>
                                                 <option value="1">1ère Période</option>
                                                 <option value="2">2ème Période</option>
                                                 <option value="3">3ème Période</option>
@@ -35,9 +55,53 @@
                                                 <option value="9">9ème Période</option>
                                             </select>
                                         </div>
-                                        <div class="col">
-                                            <input type="number" id="champ1" name="champ1" style="width: 30%; padding: 8px; box-sizing: border-box;" placeholder="" readonly>
+
+                                        <!-- Champ de nombre -->
+                                        <div class="col-md-4">
+                                            <input type="number" id="champ1" name="champ1" class="form-control"
+                                                placeholder="Valeur" value="{{ $getClasmat->COEF  ?? '' }}" readonly>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6 md-3 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap mb-4">
+                                    <div class="col">
+                                        <div class="col-md-8 mb-3">
+                                            <select class="form-select select2 w-100" id="tableSelect4" name="CODECLAS"
+                                                onchange="redirectWithSelection()">
+                                                <option value="">Classe</option>
+                                                @foreach ($classes as $classeOption)
+                                                    <option value="{{ $classeOption->CODECLAS }}"
+                                                        {{ $classeOption->CODECLAS == $classe ? 'selected' : '' }}>
+                                                        {{ $classeOption->CODECLAS }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-8 mb-3">
+                                            <select class="form-select select2 w-100 mt-2" id="tableSelect5" name="CODEMAT"
+                                                onchange="redirectWithSelection()">
+                                                <option value="">Matières</option>
+                                                @foreach ($matieres as $matiereOption)
+                                                    <option value="{{ $matiereOption->CODEMAT }}"
+                                                        {{ $matiereOption->CODEMAT == $matiere ? 'selected' : '' }}>
+                                                        {{ $matiereOption->LIBELMAT }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Champ de nombre -->
+                                    <div class="col-md-4 mb-3">
+                                        <input type="number" id="champ2" name="champ2" class="form-control"
+                                            value="{{ $getClasmat->COEF }}" placeholder="Valeur" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -45,292 +109,213 @@
                     </div>
                 </div>
 
-                <div class="col-5 md-3 grid-margin stretch-card">
+                <div class="col-12 md-3 grid-margin">
+                    <!-- Card pour afficher les cases à cocher -->
                     <div class="card">
                         <div class="card-body">
-                            <div
-                                class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
-                                <div class="col">
-                                    <select class="js-example-basic-multiple w-100 select2-hidden-accessible"
-                                        id="tableSelect1" onchange="displayTable('tableSelect1')" tabindex="-1"
-                                        aria-hidden="true">
-                                        <option value="">Classe</option>
-                                        @foreach($classes as $classe)
-                                                    <option value="{{ $classe->CODECLAS }}">{{ $classe->CODECLAS }}</option>
-                                                @endforeach
-                                    </select>
-                                    <select class="js-example-basic-multiple w-100 select2-hidden-accessible"
-                                        id="tableSelect2" onchange="displayTable('tableSelect2')" tabindex="-1"
-                                        aria-hidden="true">
-                                        <option value="">Matières</option>
-                                        @foreach($matieres as $matiere)
-                                                    <option value="{{ $matiere->CODEMAT }}">{{ $matiere->LIBELMAT }}</option>
-                                                @endforeach
-                                    </select>
+                            <div class="row align-items-center">
+                                <div class="col-md-6 d-flex flex-wrap" id="intCheckboxes">
+                                    @for ($i = 5; $i <= 10; $i++)
+                                        <label class="checkbox-label interro-checkbox me-2"
+                                            for="optionINT{{ $i }}" data-interro="{{ $i }}">
+                                            <input type="checkbox" id="optionINT{{ $i }}" name="optionGroup1[]"
+                                                value="INT{{ $i }}"
+                                                onchange="toggleColumn({{ $i }})">
+                                            INT{{ $i }}
+                                        </label>
+                                    @endfor
                                 </div>
-                                <div class="col">
-                                    <input type="number" id="champ2" name="champ2"
-                                        style="width: 30%; padding: 8px; box-sizing: border-box;" placeholder=""  oninput="updateInterroVisibility()" default-value=10>
+                                <div class="col-md-6 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary btn-rounded">
+                                        <i class="typcn typcn-home-outline"></i> Enregistrer
+                                    </button>
+																	
+<button type="button" class="btn btn-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal">
+	<i class="typcn typcn-home-outline"></i>
+  Supprimer
+</button>
+
+
                                 </div>
                             </div>
-                            <div class="checkbox-container">
-                                <label class="checkbox-label">
-                                    <input type="checkbox" id="option1" name="option1">
-                                    Option 1
-                                </label>
-                                <button class="btn btn-modifier"></button>
-                                <button class="btn btn-enregistrer"></button>
-                                <label class="checkbox-label">
-                                    <input type="checkbox" id="option2" name="option2">
-                                    Option 2
-                                </label>
-                            </div>
+
                         </div>
                     </div>
                 </div>
 
-                <div class="col-2 md-3 grid-margin stretch-card">
+                <div class="col-12 md-3 grid-margin">
+                    <!-- Card pour afficher le tableau -->
                     <div class="card">
                         <div class="card-body">
-                            <div
-                                class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
-                                <div class="col" style="text-align: center">
-                                    <button class="btn btn-duplicate" onclick="handleDuplicate()">Doublon</button>
-                                    <button class="btn btn-help" onclick="handleHelp()">Aide</button>
-                                </div>
+                            <div class="table-responsive mb-4">
+                                <table id="myTab" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>MATRICULE</th>
+                                            <th>Nom et Prénoms</th>
+                                            <th class="interro-column" data-interro="1">Int1</th>
+                                            <th class="interro-column" data-interro="2">Int2</th>
+                                            <th class="interro-column" data-interro="3">Int3</th>
+                                            <th class="interro-column" data-interro="4">Int4</th>
+                                            <th class="interro-column" data-interro="5">Int5</th>
+                                            <th class="interro-column" data-interro="6">Int6</th>
+                                            <th class="interro-column" data-interro="7">Int7</th>
+                                            <th class="interro-column" data-interro="8">Int8</th>
+                                            <th class="interro-column" data-interro="9">Int9</th>
+                                            <th class="interro-column" data-interro="10">Int10</th>
+                                            <th>M.int</th>
+                                            <th>Dev1</th>
+                                            <th>Dev2</th>
+                                            <th>Dev3</th>
+                                            <th>Moy</th>
+                                            <th>Test</th>
+                                            <th>Ms</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($eleves as $eleve)
+                                            <tr>
+                                                <td>{{ $eleve->MATRICULE ?? '' }}</td>
+                                                <td>{{ $eleve->NOM ?? '' }}<br>{{ $eleve->PRENOM ?? '' }}</td>
+                            
+                                                @for ($i = 1; $i <= 10; $i++)
+                                                    <td class="interro-column" data-interro="{{ $i }}">
+                                                        <input type="text"
+                                                               name="notes[{{ $eleve->MATRICULE }}][INT{{ $i }}]"
+                                                               value="{{ $eleve['INT' . $i] ?? '' }}"
+                                                               class="form-control form-control-sm interro-input"
+                                                               oninput="calculateMIAndMoy(this)">
+                                                    </td>
+                                                @endfor
+                            
+                                                <td>
+                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][MI]"
+                                                           value="{{ $eleve->MI ?? '' }}"
+                                                           class="form-control form-control-sm mi-input" readonly>
+                                                </td>
+                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
+                                                           value="{{ $eleve->DEV1 ?? '' }}" 
+                                                           class="form-control form-control-sm dev-input" 
+                                                           oninput="calculateMIAndMoy(this)"></td>
+                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
+                                                           value="{{ $eleve->DEV2 ?? '' }}" 
+                                                           class="form-control form-control-sm dev-input" 
+                                                           oninput="calculateMIAndMoy(this)"></td>
+                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
+                                                           value="{{ $eleve->DEV3 ?? '' }}" 
+                                                           class="form-control form-control-sm dev-input" 
+                                                           oninput="calculateMIAndMoy(this)"></td>
+                                                <td>
+                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
+                                                           value="{{ $eleve->MS ?? '' }}" 
+                                                           class="form-control form-control-sm moy-input" readonly>
+                                                </td>
+                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][TEST]"
+                                                           value="{{ $eleve->TEST ?? '' }}" 
+                                                           class="form-control form-control-sm test-input"
+                                                           oninput="calculateMIAndMoy(this)"></td>
+                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
+                                                           value="{{ $eleve->MS1 ?? '' }}" 
+                                                           class="form-control form-control-sm moy1-input"readonly>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
+                            
+                            <script>
+                                function calculateMIAndMoy(input) {
+                                    const row = input.closest('tr');
+                                    
+                                    // Calculate MI (average of interrogation scores)
+                                    const interroInputs = row.querySelectorAll('.interro-input');
+                                    let interroSum = 0;
+                                    let interroCount = 0;
+                                    
+                                    interroInputs.forEach(interro => {
+                                        const value = parseFloat(interro.value);
+                                        if (!isNaN(value)) {
+                                            interroSum += value;
+                                            interroCount++;
+                                        }
+                                    });
+                            
+                                    const miField = row.querySelector('.mi-input');
+                                    const mi = interroCount > 0 ? (interroSum / interroCount).toFixed(2) : '';
+                                    miField.value = mi;
+                            
+                                    // Calculate Moy (average of MI and DEV scores)
+                                    const devInputs = row.querySelectorAll('.dev-input');
+                                    let devSum = 0;
+                                    let devCount = 0;
+                            
+                                    devInputs.forEach(dev => {
+                                        const value = parseFloat(dev.value);
+                                        if (!isNaN(value)) {
+                                            devSum += value;
+                                            devCount++;
+                                        }
+                                    });
+                            
+                                    const moyField = row.querySelector('.moy-input');
+                                    const moy = devCount > 0 ? ((parseFloat(mi) + devSum) / (devCount + 1)).toFixed(2) : '';
+                                    moyField.value = moy;
+                            
+                                    // Calculate MS (average of MI and DEV scores)
+                                    const msField = row.querySelector('[name*="MS"]');
+                                    const ms = parseFloat(moyField.value) || 0; // Use moy as MS for the calculation
+                                    msField.value = ms.toFixed(2);
+                            
+                                    // Calculate MS1 (average of MS and TEST)
+                                    const testInput = row.querySelector('[name*="TEST"]');
+                                    const testValue = parseFloat(testInput.value) || 0;
+                            
+                                    const ms1Field = row.querySelector('[name*="MS1"]');
+                                    const ms1 = (ms + testValue) / (testValue > 0 ? 2 : 1); // If TEST is filled, divide by 2, else by 1
+                                    ms1Field.value = ms1.toFixed(2);
+                                }
+                            </script>
+                                                         
                         </div>
                     </div>
                 </div>
-            </div>
-
-
-            <div class="col-12 md-3 grid-margin">
-
-                <div class="stretch-card">
-                    <div class="row">
-                        <div class="col-6 md-3">
-                            <div class="row">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start flex-wrap">
-                                            <div class="checkbox-container">
-                                                <label class="checkbox-label interro-checkbox" data-interro="5">
-                                                    <input type="checkbox" id="optionINT5" name="optionGroup1[]"
-                                                        value="INT5">
-                                                    INT5
-                                                </label>
-                                                <label class="checkbox-label interro-checkbox" data-interro="6">
-                                                    <input type="checkbox" id="optionINT6" name="optionGroup1[]"
-                                                        value="INT6">
-                                                    INT6
-                                                </label>
-                                                <label class="checkbox-label interro-checkbox" data-interro="7">
-                                                    <input type="checkbox" id="optionINT7" name="optionGroup1[]"
-                                                        value="INT7">
-                                                    INT7
-                                                </label>
-                                                <label class="checkbox-label interro-checkbox" data-interro="8">
-                                                    <input type="checkbox" id="optionINT8" name="optionGroup1[]"
-                                                        value="INT8">
-                                                    INT8
-                                                </label>
-                                                <label class="checkbox-label interro-checkbox" data-interro="9">
-                                                    <input type="checkbox" id="optionINT9" name="optionGroup1[]"
-                                                        value="INT9">
-                                                    INT9
-                                                </label>
-                                                <label class="checkbox-label interro-checkbox" data-interro="10">
-                                                    <input type="checkbox" id="optionINT10" name="optionGroup1[]"
-                                                        value="INT10">
-                                                    INT10
-                                                </label>
-                                            </div>
-
-                                            <div class="checkbox-container">
-                                                <label class="checkbox-label interro-checkbox" data-interro="1">
-                                                    <input type="checkbox" id="optionINT1" name="optionGroup2[]"
-                                                        value="INT1">
-                                                    INT1
-                                                </label>
-                                                <label class="checkbox-label interro-checkbox" data-interro="2">
-                                                    <input type="checkbox" id="optionINT2" name="optionGroup2[]"
-                                                        value="INT2">
-                                                    INT2
-                                                </label>
-                                                <label class="checkbox-label interro-checkbox" data-interro="3">
-                                                    <input type="checkbox" id="optionINT3" name="optionGroup2[]"
-                                                        value="INT3">
-                                                    INT3
-                                                </label>
-                                                <label class="checkbox-label interro-checkbox" data-interro="4">
-                                                    <input type="checkbox" id="optionINT4" name="optionGroup2[]"
-                                                        value="INT4">
-                                                    INT4
-                                                </label>
-                                                <label class="checkbox-label">
-                                                    <input type="checkbox" id="optionDEV1" name="optionGroup2[]"
-                                                        value="DEV1">
-                                                    DEV1
-                                                </label>
-                                                <label class="checkbox-label">
-                                                    <input type="checkbox" id="optionDEV2" name="optionGroup2[]"
-                                                        value="DEV2">
-                                                    DEV2
-                                                </label>
-                                                <label class="checkbox-label">
-                                                    <input type="checkbox" id="optionDEV3" name="optionGroup2[]"
-                                                        value="DEV3">
-                                                    DEV3
-                                                </label>
-                                                <label class="checkbox-label">
-                                                    <input type="checkbox" id="optionTESTCOMPO" name="optionGroup2[]"
-                                                        value="TEST(COMPO)">
-                                                    TEST(COMPO)
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start flex-wrap">
-                                            <div class="table-responsive mb-4">
-                                                <table id="myTab" class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Ordre</th>
-                                                            <th>Matricule</th>
-                                                            <th>MATRICULE</th>
-                                                            <th>Nom et Prenoms</th>
-                                                            <th class="interro-column" data-interro="1">Int1</th>
-                                                            <th class="interro-column" data-interro="2">Int2</th>
-                                                            <th class="interro-column" data-interro="3">Int3</th>
-                                                            <th class="interro-column" data-interro="4">Int4</th>
-                                                            <th class="interro-column" data-interro="5">Int5</th>
-                                                            <th class="interro-column" data-interro="6">Int6</th>
-                                                            <th class="interro-column" data-interro="7">Int7</th>
-                                                            <th class="interro-column" data-interro="8">Int8</th>
-                                                            <th class="interro-column" data-interro="9">Int9</th>
-                                                            <th class="interro-column" data-interro="10">Int10</th>
-                                                            <th>M.int</th>
-                                                            <th>Dev1</th>
-                                                            <th>Dev2</th>
-                                                            <th>Dev3</th>
-                                                            <th>Moy</th>
-                                                            <th>Test</th>
-                                                            <th>Ms</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <!-- Les lignes seront ajoutées dynamiquement ici -->
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="col-2 md-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div>
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col-md-6 mb-2 d-flex justify-content-center">
-                                                    <button type="button" class="btn btn-primary btn-rounded btn-icon">
-                                                        <i class="typcn typcn-home-outline"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-6 mb-2 d-flex justify-content-center">
-                                                    <button type="button" class="btn btn-dark btn-rounded btn-icon">
-                                                        <i class="typcn typcn-wi-fi"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-6 mb-2 d-flex justify-content-center">
-                                                    <button type="button" class="btn btn-danger btn-rounded btn-icon">
-                                                        <i class="typcn typcn-mail"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-6 mb-2 d-flex justify-content-center">
-                                                    <button type="button" class="btn btn-info btn-rounded btn-icon">
-                                                        <i class="typcn typcn-star"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-6 mb-2 d-flex justify-content-center">
-                                                    <button type="button" class="btn btn-success btn-rounded btn-icon">
-                                                        <i class="typcn typcn-location-outline"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-6 mb-2 d-flex justify-content-center">
-                                                    <button type="button"
-                                                        class="btn btn-outline-secondary btn-rounded btn-icon">
-                                                        <i class="typcn typcn-heart-outline text-danger"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-6 mb-2 d-flex justify-content-center">
-                                                    <button type="button"
-                                                        class="btn btn-outline-secondary btn-rounded btn-icon">
-                                                        <i class="typcn typcn-notes text-dark"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-6 mb-2 d-flex justify-content-center">
-                                                    <button type="button"
-                                                        class="btn btn-outline-secondary btn-rounded btn-icon">
-                                                        <i class="typcn typcn-star text-primary"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-6 mb-2 d-flex justify-content-center">
-                                                    <button type="button"
-                                                        class="btn btn-outline-secondary btn-rounded btn-icon">
-                                                        <i class="typcn typcn-wi-fi text-info"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-6 mb-2 d-flex justify-content-center">
-                                                    <button type="button"
-                                                        class="btn btn-outline-secondary btn-rounded btn-icon">
-                                                        <i class="typcn typcn-chart-line text-success"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start flex-wrap">
-                                        <div class="table-responsive mb-4">
-                                            <table id="myTab" class="table table-bordered">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>COMM</td>
-                                                        <td>Ma</td>
-                                                        <td>1/0</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
+            </form>
         </div>
-
-
-
-
     </div>
     <br><br><br>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Voulez vous vriament supprimer les notes?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+			<form action="{{ route('delete-notes') }}" method="POST">
+				@csrf
+      <div class="modal-body">
+					<input type="hidden" value="CE1A" id="tableSelec4" name="classe">
+					<input type="hidden" value="1" id="tableSelec5" name="matiere">
+
+			
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-primary">Supprimer</button>
+      </div>
+		</form>
+    </div>
+  </div>
+</div>
     <script>
+        function updateCodeMat() {
+            // Récupère la valeur sélectionnée dans le select de matières
+            var selectedMatiere = document.getElementById("tableSelect2").value;
+            // Met à jour le champ d'input avec le CODEMAT sélectionné
+            document.getElementById("champ2").value = selectedMatiere;
+        }
+
         function updateInterroVisibility() {
             const value = parseInt(document.getElementById('champ2').value);
             document.querySelectorAll('.interro-checkbox').forEach(checkbox => {
@@ -345,15 +330,80 @@
         }
 
         function updateCheckbox() {
-        const periodSelect = document.getElementById('periodSelect');
-        const champ1 = document.getElementById('champ1');
+            const periodSelect = document.getElementById('periodSelect');
+            const champ1 = document.getElementById('champ1');
 
-        // Met à jour la valeur de champ1 avec la valeur sélectionnée dans periodSelect
-        if (periodSelect.value) {
-            champ1.value = periodSelect.value;
-        } else {
-            champ1.value = '';
+            // Met à jour la valeur de champ1 avec la valeur sélectionnée dans periodSelect
+            if (periodSelect.value) {
+                champ1.value = periodSelect.value;
+            } else {
+                champ1.value = '';
+            }
         }
-    }
+
+        function redirectWithSelection() {
+            const classe = document.getElementById("tableSelect4").value; // Récupère la classe sélectionnée
+            const matiere = document.getElementById("tableSelect5").value; // Récupère la matière sélectionnée
+            let url = '/filternotes'; // URL de redirection
+            let params = [];
+
+            if (classe) params.push(`classe=${classe}`); // Ajoute le paramètre de classe si sélectionné
+            if (matiere) params.push(`matiere=${matiere}`); // Ajoute le paramètre de matière si sélectionné
+
+            if (params.length > 0) {
+                url += '?' + params.join('&'); // Crée la chaîne de requête
+            }
+
+            window.location.href = url; // Redirige vers l'URL construite
+        }
+
+        // Ajoute les écouteurs d'événements pour les deux sélecteurs
+        document.getElementById("tableSelect4").addEventListener("change", redirectWithSelection);
+        document.getElementById("tableSelect5").addEventListener("change", redirectWithSelection);
+				document.getElementById("tableSelec4").addEventListener("change", redirectWithSelection);
+        document.getElementById("tableSelec5").addEventListener("change", redirectWithSelection);
     </script>
+
+    <script>
+        function toggleColumn(interroNumber) {
+            // Récupère l'état de la case à cocher
+            const checkbox = document.getElementById("optionINT" + interroNumber);
+            const isChecked = checkbox.checked;
+
+            // Récupère toutes les cellules de la colonne correspondante
+            const columns = document.querySelectorAll(`.interro-column[data-interro="${interroNumber}"]`);
+
+            // Affiche ou masque la colonne selon l'état de la case à cocher
+            columns.forEach(column => {
+                column.style.display = isChecked ? '' : 'none';
+            });
+        }
+
+        // Initialisation : Masque les colonnes Int5 à Int10 au chargement de la page
+        document.addEventListener("DOMContentLoaded", () => {
+            for (let i = 5; i <= 10; i++) {
+                toggleColumn(i);
+            }
+        });
+    </script>
+    <style>
+        /* Améliore l'affichage des champs de saisie */
+        .table thead th,
+        .table tbody td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .form-control-sm {
+            width: 100%;
+            padding: 0px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        /* Ajustement des marges dans les cellules */
+        td {
+            padding: 0px;
+        }
+    </style>
 @endsection

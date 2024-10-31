@@ -394,6 +394,30 @@ align-items: center;  */
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <script>
         $(document).ready(function() {
+            $('#tableSelect1').on('change', function() {
+                var codeClass = $(this).val();
+                $.ajax({
+                    url: '/get-clas/' + codeClass,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#tableSelect4').empty();
+                        if (data.length > 0) {
+                            $('#tableSelect4').append(
+                                '<option value="">Sélectionner une classe</option>');
+                            $.each(data, function(index, eleve) {
+                                $('#tableSelect4').append('<option value="' + eleve
+                                    .CODECLAS + '">' + eleve.CODECLAS + '</option>');
+                            });
+                        } else {
+                            $('#tableSelect4').append(
+                                '<option value="">Aucune classe disponible</option>');
+                        }
+                        // $('#tableSelect4').select2();
+
+                    }
+                });
+            }); 
+           
             function toggleDivs() {
                 if ($('#optionsRadios1').is(':checked')) {
                     $('#div1').removeClass('d-block').addClass('d-none');
@@ -674,6 +698,26 @@ $('#Filtercycle').on('change', function() {
       if (selectedValues.length > 0) {
           // Utiliser une route Laravel correctement définie pour éviter la duplication
           var url = `{{ url('eleveparclassespecifique') }}/` + selectedValues.join(',');
+          
+          // Si l'utilisateur est déjà sur la page, utiliser replace() pour forcer le rechargement
+          if (window.location.href === url) {
+              window.location.replace(url); // Remplacer l'URL actuelle pour forcer le rechargement
+          } else {
+              window.location.href = url; // Sinon rediriger normalement
+          }
+      } else {
+          alert('Veuillez sélectionner au moins une classe.');
+      }
+  });
+</script>
+
+<script>
+    $('#submitBtnNoteVierge').click(function() {
+      var selectedValues = $('.js-example-basic-multiple').val(); // Récupérer les valeurs sélectionnées
+      
+      if (selectedValues.length > 0) {
+          // Utiliser une route Laravel correctement définie pour éviter la duplication
+          var url = `{{ url('/editions2/fichedenoteviergefina') }}/` + selectedValues.join(',');
           
           // Si l'utilisateur est déjà sur la page, utiliser replace() pour forcer le rechargement
           if (window.location.href === url) {
