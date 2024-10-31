@@ -76,6 +76,9 @@
         .sidebar, .navbar, .footer, .noprint, button {
             display: none !important; /* Masquer la barre de titre et autres éléments */
         }
+        h3 {
+            text-align: center !important;
+        }
     }
 </style>
 <script>

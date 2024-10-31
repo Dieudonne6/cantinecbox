@@ -7,6 +7,7 @@ use App\Http\Controllers\CdController;
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ConnexionDBController;
 use App\Http\Controllers\EleveController;
+use App\Http\Controllers\BulletinController;
 use App\Http\Controllers\EtatController;
 use App\Http\Controllers\GestionclasseController;
 use App\Http\Controllers\ScolariteController;
@@ -352,3 +353,4 @@ Route::post('/delete-notes', [CdController::class, 'deleteNote'])->name('delete-
 Route::get('/elevessansnote/{classCode}',  [EditionController::class, 'elevessansnote'])->name('elevessansnote');
 Route::get('/editions2/tableauanalytiqueparmatiere', [EditionController2::class, 'tableauanalytiqueparmatiere'])->name('tableauanalytiqueparmatiere');
 
+Route::get('/bulletindenotes', [BulletinController::class, 'bulletindenotes'])->name('bulletindenotes');

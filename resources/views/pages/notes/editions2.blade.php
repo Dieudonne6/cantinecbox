@@ -77,48 +77,48 @@
         <div class="modal-header">
           <h5 class="modal-title" id="printModalLabel">Tableau analytique par matière</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form action="{{ url('/editions2/tableauanalytiqueparmatiere') }}" method="GET">
-            <br>
-            <div class="d-flex justify-content-between">
-            
-            <select name="matiere" id="matiereSelect" class="w-50" style="height: 35px;">
-                <option value="all">< Toutes les matières ></option>
-                <option value="litteraires">< Matières Littéraires (Enseign. Général ) ></option>
-                <option value="scientifiques">< Matières Scientifiques (Enseign. Général ) ></option>
-                <option value="technique">< Matières Fondamentales (Enseign. Technique) ></option>
-                @foreach($matieres as $matiere)
-                    <option value="{{ $matiere->CODEMAT }}">{{ $matiere->LIBELMAT }}</option>
-                @endforeach
-            </select>
-            <fieldset id="typeStatFieldset">
-                <h7>Type Stat.</h7>
-                <div class="form-check">
-                    <input class="form-check-input ml-1" type="radio" id="general" name="typeenseig" value="general" checked>
-                    <label class="form-check-label ml-4" for="general">
-                        Enseign. Général
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input ml-1" type="radio" id="technique" name="typeenseig" value="technique">
-                    <label class="form-check-label ml-4" for="technique">
-                        Enseign. Technique
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input ml-1" type="radio" id="tous" name="typeenseig" value="tous">
-                    <label class="form-check-label ml-4" for="tous">
-                        Tous
-                    </label>
-                </div>
-            </fieldset>
-            
+        </div>            
+            <div class="modal-body">
+                <form action="{{ url('/editions2/tableauanalytiqueparmatiere') }}" method="GET" id="analyticalTableForm" onsubmit="checkDataAndSubmit(event)">
+                    <br>
+                    <div class="d-flex justify-content-between">
+                    
+                    <select name="matiere" id="matiereSelect" class="w-50" style="height: 35px;">
+                        <option value="all">< Toutes les matières ></option>
+                        <option value="litteraires">< Matières Littéraires (Enseign. Général ) ></option>
+                        <option value="scientifiques">< Matières Scientifiques (Enseign. Général ) ></option>
+                        <option value="technique">< Matières Fondamentales (Enseign. Technique) ></option>
+                        @foreach($matieres as $matiere)
+                            <option value="{{ $matiere->CODEMAT }}">{{ $matiere->LIBELMAT }}</option>
+                        @endforeach
+                    </select>
+                    <fieldset id="typeStatFieldset">
+                        <h7>Type Stat.</h7>
+                        <div class="form-check">
+                            <input class="form-check-input ml-1" type="radio" id="general" name="typeenseig" value="general" checked>
+                            <label class="form-check-label ml-4" for="general">
+                                Enseign. Général
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input ml-1" type="radio" id="technique" name="typeenseig" value="technique">
+                            <label class="form-check-label ml-4" for="technique">
+                                Enseign. Technique
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input ml-1" type="radio" id="tous" name="typeenseig" value="tous">
+                            <label class="form-check-label ml-4" for="tous">
+                                Tous
+                            </label>
+                        </div>
+                    </fieldset>
+                    
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary" style="margin-left: 70%;">Lancer</button>
+                </form>
             </div>
-            <br>
-            <button type="submit" class="btn btn-primary" style="margin-left: 70%;">Lancer</button>
-          </form>
-        </div>
       </div>
     </div>
   </div> 
