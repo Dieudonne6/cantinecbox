@@ -132,8 +132,8 @@ class CdController extends Controller
         $join->where('notes.CODEMAT', $matiere);
       }
     });
+    
     $getClasmat = Clasmat::where('CODEMAT', $matiere)->first();
-
     // Sélectionner les colonnes des deux tables pour les afficher dans la vue
     $eleves = $elevesQuery->select('eleve.*', 
     'notes.INT1', 
