@@ -201,14 +201,16 @@
                                                 <td>
                                                     <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
                                                            value="{{ $eleve->MS ?? '' }}" 
-                                                           class="form-control form-control-sm ms-input" readonly>
+                                                           class="form-control form-control-sm moy-input" readonly>
                                                 </td>
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][TEST]"
                                                            value="{{ $eleve->TEST ?? '' }}" 
-                                                           class="form-control form-control-sm"></td>
+                                                           class="form-control form-control-sm test-input"
+                                                           oninput="calculateMIAndMoy(this)"></td>
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
                                                            value="{{ $eleve->MS1 ?? '' }}" 
-                                                           class="form-control form-control-sm"></td>
+                                                           class="form-control form-control-sm moy1-input"readonly>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -249,11 +251,25 @@
                                         }
                                     });
                             
-                                    const moyField = row.querySelector('.ms-input');
+                                    const moyField = row.querySelector('.moy-input');
                                     const moy = devCount > 0 ? ((parseFloat(mi) + devSum) / (devCount + 1)).toFixed(2) : '';
                                     moyField.value = moy;
+                            
+                                    // Calculate MS (average of MI and DEV scores)
+                                    const msField = row.querySelector('[name*="MS"]');
+                                    const ms = parseFloat(moyField.value) || 0; // Use moy as MS for the calculation
+                                    msField.value = ms.toFixed(2);
+                            
+                                    // Calculate MS1 (average of MS and TEST)
+                                    const testInput = row.querySelector('[name*="TEST"]');
+                                    const testValue = parseFloat(testInput.value) || 0;
+                            
+                                    const ms1Field = row.querySelector('[name*="MS1"]');
+                                    const ms1 = (ms + testValue) / (testValue > 0 ? 2 : 1); // If TEST is filled, divide by 2, else by 1
+                                    ms1Field.value = ms1.toFixed(2);
                                 }
-                            </script>                              
+                            </script>
+                                                         
                         </div>
                     </div>
                 </div>

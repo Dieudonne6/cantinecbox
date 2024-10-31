@@ -184,13 +184,13 @@ class CdController extends Controller
           'notes.*.MS1' => 'nullable|numeric',
           // Ajoutez d'autres validations si nécessaire
       ]);
-      // dd($validatedData['notes']);
+        // dd($validatedData['notes']);
       // Parcourir chaque élève et enregistrer les notes
       foreach ($validatedData['notes'] as $matricule => $noteData) {
           Notes::updateOrCreate(
               ['MATRICULE' => $matricule], // Critère de correspondance
               array_merge($noteData, [
-                'SEMERTRE' => $request->champ1,
+                'SEMESTRE' => $request->champ1,
                 'COEF' => $request->champ2,
                 'CODEMAT' => $request->CODEMAT,
                 'CODECLAS' => $request->CODECLAS,
