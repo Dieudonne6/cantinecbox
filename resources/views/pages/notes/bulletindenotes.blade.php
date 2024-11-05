@@ -905,7 +905,7 @@
   </script>
   <style>
     .form-check {
-      margin: 0 45% 0 0 !important;
+      margin-left: 45px !important;
     }
     .footer {
       display: none;
