@@ -296,9 +296,13 @@
           <div class="collapse" id="form-elements">
               <ul class="nav flex-column sub-menu">
                   {{-- Paramètres --}}
-                  <li class="nav-item menu-item-has-children">
-                      <a href="#" class="nav-link">Paramètres</a>
-                      <ul class="sub-menus">
+                  <li class="nav-item">
+                      <a class="nav-link" data-bs-toggle="collapse" href="#parametre" aria-expanded="false" aria-controls="parametre">
+                        Paramètres
+                        <i class="menu-arrow"></i> <!-- Icône "+" -->
+                      </a>
+                      <div class="collapse" id="parametre">
+                      <ul class="nav sub-menu">
                           <li>
                               <a class="nav-link {{ request()->is('Répartition des classes par opérateur') ? 'active' : '' }}" href="{{ url('/repartitionclassesparoperateur') }}">Répartition des classes par opérateur</a>
                           </li>
@@ -309,12 +313,17 @@
                               <a class="nav-link {{ request()->is('Table des coefficients') ? 'active' : '' }}" href="#">Table des coefficients</a>
                           </li>
                       </ul>
+                      </div>
                   </li>
       
                   {{-- Manipulation des notes --}}
-                  <li class="nav-item menu-item-has-children">
-                      <a href="#" class="nav-link">Manipulation des notes</a>
-                      <ul class="sub-menus">
+                  <li class="nav-item">
+                      <a class="nav-link" data-bs-toggle="collapse" href="#manip" aria-expanded="false" aria-controls="manip">
+                        Manipulation des notes
+                        <i class="menu-arrow"></i> <!-- Icône "+" -->
+                      </a>
+                      <div class="collapse" id="manip">
+                      <ul class="nav sub-menu">
                           <li>
                               <a class="nav-link {{ request()->is('Saisir et mises à jour des notes') ? 'active' : '' }}" href="{{ route('saisirnote') }}">Saisir et mises à jour des notes</a>
                           </li>
@@ -325,12 +334,17 @@
                               <a class="nav-link {{ request()->is('Vérifier les notes') ? 'active' : '' }}" href="#">Vérifier les notes</a>
                           </li>
                       </ul>
+                      </div>
                   </li>
       
                   {{-- Sécurité --}}
-                  <li class="nav-item menu-item-has-children">
-                      <a href="#" class="nav-link">Sécurité</a>
-                      <ul class="sub-menus">
+                  <li class="nav-item">
+                      <a class="nav-link" data-bs-toggle="collapse" href="#securite" aria-expanded="false" aria-controls="securite">
+                        Sécurité
+                        <i class="menu-arrow"></i> <!-- Icône "+" -->
+                      </a>
+                      <div class="collapse" id="securite">
+                      <ul class="nav sub-menu">
                           <li>
                               <a class="nav-link {{ request()->is('Verrouillage') ? 'active' : '' }}" href="{{ route('verrouillage') }}">Verrouillage</a>
                           </li>
@@ -338,6 +352,7 @@
                               <a class="nav-link {{ request()->is('Déverrouillage') ? 'active' : '' }}" href="#">Déverrouillage</a>
                           </li>
                       </ul>
+                      </div>
                   </li>
       
                   
@@ -355,9 +370,13 @@
                   ]; // Liste des noms de routes associées à l'édition gestion des notes
               @endphp
 
-                  <li class="nav-item menu-item-has-children">
-                      <a href="#" class="nav-link">Edition</a>
-                      <ul class="sub-menus">
+                  <li class="nav-item">
+                      <a class="nav-link" data-bs-toggle="collapse" href="#edition" aria-expanded="false" aria-controls="edition">
+                        Edition
+                        <i class="menu-arrow"></i> <!-- Icône "+" -->
+                      </a>
+                      <div class="collapse" id="edition">
+                      <ul class="nav sub-menu">
                           <li>
                               <a class="nav-link {{ request()->is('Tableau de notes') ? 'active' : '' }}" href="#">Tableau de notes</a>
                           </li>
@@ -372,6 +391,7 @@
                                 href="{{ route('editions2') }}">Editions</a>
                           </li>
                       </ul> 
+                      </div>
                           {{-- <li>
                               <a class="nav-link {{ request()->is('Fiches de notes vierge') ? 'active' : '' }}" href="#">Fiches de notes vierge</a>
                           </li>
@@ -397,9 +417,13 @@
                   </li>
       
                   {{-- Résultats --}}
-                  <li class="nav-item menu-item-has-children">
-                      <a href="#" class="nav-link">Résultats</a>
-                      <ul class="sub-menus">
+                  <li class="nav-item">
+                      <a class="nav-link" data-bs-toggle="collapse" href="#resultats" aria-expanded="false" aria-controls="resultats">
+                        Résultats
+                        <i class="menu-arrow"></i> <!-- Icône "+" -->
+                      </a>
+                      <div class="collapse" id="resultats">
+                      <ul class="nav sub-menu">
                           <li>
                               <a class="nav-link {{ request()->is('Liste par ordre de mérite') ? 'active' : '' }}" href="#">Liste par ordre de mérite</a>
                           </li>
@@ -413,12 +437,17 @@
                               <a class="nav-link {{ request()->is('Livrets scolaires') ? 'active' : '' }}" href="#">Livrets scolaires</a>
                           </li>
                       </ul>
+                      </div>
                   </li>
       
                   {{-- Extraction --}}
-                  <li class="nav-item menu-item-has-children">
-                      <a href="#" class="nav-link">Extraction</a>
-                      <ul class="sub-menus">
+                  <li class="nav-item">
+                      <a class="nav-link" data-bs-toggle="collapse" href="#extract" aria-expanded="false" aria-controls="extract">
+                        Extraction
+                        <i class="menu-arrow"></i> <!-- Icône "+" -->
+                      </a>
+                      <div class="collapse" id="extract">
+                      <ul class="nav sub-menu">
                           <li>
                               <a class="nav-link {{ request()->is('Exporter') ? 'active' : '' }}" href="#">Exporter</a>
                           </li>
@@ -426,6 +455,7 @@
                               <a class="nav-link {{ request()->is('Importer') ? 'active' : '' }}" href="#">Importer</a>
                           </li>
                       </ul>
+                      </div>
                   </li>
               </ul>
           </div>
