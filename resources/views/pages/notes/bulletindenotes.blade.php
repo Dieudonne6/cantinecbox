@@ -11,7 +11,7 @@
       <div class="card-body">
         <h4 class="card-title">Edition des Bulletins de notes</h4>
         <div class="row">
-          <div class="col-md-3" style="border-right: 1px solid #000000 !important; width: 50% !important;">
+          <div class="col-md-4" style="border-right: 1px solid #000000 !important">
             <!-- Contenu de la première colonne -->
             <div class="row" style="background-color: #ffa600; border-radius: 8px; width: 100%;">
             <div class="form-check">
@@ -168,7 +168,7 @@
                     @endforeach
                 </select>
                 </div>
-                <div class="d-flex justify-content-center align-items-center" style="margin-right: 70px !important; gap: 20px;">
+                <div class="d-flex justify-content-center align-items-center" style="gap: 20px;">
                     <p class="mb-0" style="white-space: nowrap;">À partir de :</p>
                     <input type="text" class="form-control" id="apartirde" name="apartirde" style="width: 430px !important">
                 </div>
@@ -325,9 +325,10 @@
             <!-- Contenu de la troisième colonne -->
             <div class="row">
                 <button class="btn btn-secondary" style="margin-left: 10px !important;" data-bs-toggle="modal" data-bs-target="#optionsEdition">Afficher les options d'édition</button>
-            </div>
             <br>
-            <fieldset style="border: 2px solid #ff000067 !important; border-radius: 5px !important; background-color: #ff950059;">
+            {{-- <fieldset style="border: 2px solid #ff000067 !important; border-radius: 5px !important; background-color: #ff950059; width: 100%;"> --}}
+                <div style=" margin-left: 10px !important; background-color: #ff950059; width: 100%;">
+
                 <div class="row">
                     <div class="form-group d-flex align-items-center" style="margin-top: 10px !important;">
                         <label for="periode">Période</label>
@@ -371,15 +372,19 @@
                 </div>
                 <br>
                 <button class="btn btn-secondary" style="margin-left: 80px !important; margin-bottom: 10px !important;">Sauvegarder ces informations</button>
-            </fieldset>
+            {{-- </fieldset> --}}
+        </div>
+    </div>
+
+
             <br>
             <div class="row">
-                <button class="btn btn-secondary" style="margin-left: 20px !important;" data-bs-toggle="modal" data-bs-target="#configdecisionconseil">Configurer les bulletins</button>
+                <button class="btn btn-secondary" style="margin-left: 10px !important;" data-bs-toggle="modal" data-bs-target="#configdecisionconseil">Configurer les bulletins</button>
                 <br>
-                <button class="btn btn-secondary" style="margin-left: 20px !important;" data-bs-toggle="modal" data-bs-target="#configdecisionjury">Configurer décisions du jury (LMD)</button>
+                <button class="btn btn-secondary" style="margin-left: 10px !important;" data-bs-toggle="modal" data-bs-target="#configdecisionjury">Configurer décisions du jury (LMD)</button>
             </div>
             <br>
-            <div class="row" style="width: 120% !important; margin-left: 5px !important;">
+            <div class="row" style="width: 100% !important;  margin-left: 5px !important;">
                 <fieldset style="background-color: #ff950087; border: 3px solid #ffffff; border-radius: 10px; width: 100%;">
                     <legend style="font-weight: bold; color: #333;">Mentions du Conseil</legend>
                     <div class="d-flex justify-content-around flex-wrap">
@@ -407,23 +412,23 @@
                 </fieldset>
             </div>
                 <br>
-            <div class="row" style=" width: 120% !important; margin-left: 5px !important;">
+            <div class="row" style=" width: 100% !important; margin-left: 5px !important;">
                 <fieldset style="background-color: #ff950087; border: 3px solid #ffffff !important; border-radius: 10px !important; width: 100% !important;">
                     <legend style="font-weight: bold; color: #333;">Calcul moyenne annuelle</legend>
                     <div class="form-group d-flex align-items-center">
                         <label for="pondTrim1">Pondération Trimestre 1</label>
                         <input type="number" step="0.25" class="form-control" id="pondTrim1" name="pondTrim1" value="0" style="margin-left: 20px !important; width: 80px !important;">
-                        <input type="checkbox" class="form-check-input" name="pondTrim1" id="pondTrim1" style="margin-left: 300px !important;">
+                        <input type="checkbox" class="form-check-input" name="pondTrim1" id="pondTrim1" style="margin-left: 280px !important;">
                     </div>
                     <div class="form-group d-flex align-items-center">
                         <label for="pondTrim2">Pondération Trimestre 2</label>
                         <input type="number" step="0.25" class="form-control" id="pondTrim2" name="pondTrim2" value="0" style="margin-left: 20px !important; width: 80px !important;">
-                        <input type="checkbox" class="form-check-input" name="pondTrim2" id="pondTrim2" style="margin-left: 300px !important;">
+                        <input type="checkbox" class="form-check-input" name="pondTrim2" id="pondTrim2" style="margin-left: 280px !important;">
                     </div>
                     <div class="form-group d-flex align-items-center">
                         <label for="pondTrim3">Pondération Trimestre 3</label>
                         <input type="number" step="0.25" class="form-control" id="pondTrim3" name="pondTrim3" value="0" style="margin-left: 20px !important; width: 80px !important;">
-                        <input type="checkbox" class="form-check-input" name="pondTrim3" id="pondTrim3" style="margin-left: 300px !important;">
+                        <input type="checkbox" class="form-check-input" name="pondTrim3" id="pondTrim3" style="margin-left: 280px !important;">
                     </div>
                 </fieldset>
             </div>
