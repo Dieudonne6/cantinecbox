@@ -193,33 +193,7 @@
                     <td>{{ $classe->CODECLAS }}</td>
                     <td>{{ $classe->eleves_count }}</td>
                     @endforeach
-                </select>
-                </div>
-                <div class="d-flex justify-content-center align-items-center" style="gap: 20px;">
-                    <p class="mb-0" style="white-space: nowrap;">À partir de :</p>
-                    <input type="text" class="form-control" id="apartirde" name="apartirde" style="width: 430px !important">
-                </div>
-            <div>
-                <br>
-        <div class="table-responsive mb-4">
-            <table id="tableClasses" class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th style="width: 10% !important;">
-                                <input type="checkbox" name="selected_classes[]" value="all" style="margin-left: 9px !important; margin-top: -15px !important;" onclick="selectAllCheckboxes(this)">
-                            </th>
-                            <th>Classes</th>
-                            <th>Effectif</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($classes as $classe)
-                        <tr>
-                            <td><input type="checkbox" name="selected_classes[]" value="{{ $classe->CODECLAS }}" style="margin-left: 10px !important; margin-top: -7px !important;"></td>
-                            <td>{{ $classe->CODECLAS }}</td>
-                            <td>{{ $classe->eleves_count }}</td>
-                        @endforeach
-                    </tbody>
+                  </tbody>
                 </table>
                 <table class="table table-striped display" id="myTab" style="width: 70% !important;">
                   <thead>
