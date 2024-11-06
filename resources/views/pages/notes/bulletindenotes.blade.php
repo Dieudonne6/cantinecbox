@@ -11,46 +11,34 @@
   <div class="card">
     <div class="card-body">
       <h4 class="card-title">Edition des Bulletins de notes</h4>
+      <form action="{{ route('printbulletindenotes') }}" method="POST">
+        @csrf
       <div class="row">
-        <div class="col-md-3" style="border-right: 1px solid #000000 !important; width: 50% !important;">
-          <!-- Contenu de la première colonne -->
-          <div class="row" style="background-color: #844fc1; color: #fff; border-radius: 8px; width: 100%;">
+          <div class="col-md-3" style="border-right: 1px solid #000000 !important; width: 50% !important;">
+            <!-- Contenu de la première colonne -->
+            <div class="row" id="selectionBlock">
+            <h5>Impression vers</h5>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="paramOption" id="calculMoyennes" checked>
-              <label class="form-check-label" for="calculMoyennes" style="margin-left: 11px !important;">
-                Calcul des moyennes
+              <input class="form-check-input" type="radio" name="paramselection" id="ecran" checked>
+              <label class="form-check-label" for="ecran">
+                Ecran
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="paramOption" id="editionBulletin">
-              <label class="form-check-label" for="editionBulletin" style="margin-left: 11px !important;">
-                Édition Bulletin
+              <input class="form-check-input" type="radio" name="paramselection" id="imprimante">
+              <label class="form-check-label" for="imprimante">
+                Imprimante
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="paramOption" id="listeMerite">
-              <label class="form-check-label" for="listeMerite" style="margin-left: 11px !important;">
-                Liste par ordre de mérite
+              <input class="form-check-input" type="radio" name="paramselection" id="pdf">
+              <label class="form-check-label" for="pdf">
+                Pdf
               </label>
             </div>
+          
           </div>
           <br>
-          <div class="row" id="selectionBlock">
-            <h5>Sélection</h5>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="paramselection" id="parclasse" checked>
-              <label class="form-check-label" for="parclasse">
-                Par classe
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="paramselection" id="pareleve">
-              <label class="form-check-label" for="pareleve">
-                Par élève
-              </label>
-            </div>
-          </div>
-          
           <div class="row">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" name="archive" id="archive">
@@ -158,7 +146,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6" style="border-right: 1px solid #000000 !important;">
+        <div class="col-md-5" style="border-right: 1px solid #000000 !important;">
           <!-- Contenu de la deuxième colonne -->
           <div class="form-group">
             <label for="typeenseigne">Choisir un groupe</label>
@@ -195,36 +183,12 @@
                     @endforeach
                   </tbody>
                 </table>
-                <table class="table table-striped display" id="myTab" style="width: 70% !important;">
-                  <thead>
-                    <tr>
-                      <th style="width: 10% !important;">
-                        <input type="checkbox" name="selected_eleves[]" value="all" style="margin-left: 9px !important; margin-top: -15px !important;" onclick="selectAllCheckboxes1(this)">
-                      </th>
-                      <th>Nom</th>
-                      <th>Prénom</th>
-                      <th>Classe</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($eleves as $eleve)
-                    <tr>
-                      <td><input type="checkbox" name="selected_eleves[]" value="{{ $eleve->MATRICULE }}"></td>
-                      <td>{{ $eleve->NOM }}</td>
-                      <td>{{ $eleve->PRENOM }}</td>
-                      <td>{{ $eleve->CODECLAS }}</td>
-                    </tr>
-                    @endforeach
-                  </tbody>
-                </table>
               </div>
             </div>
             <br>
             <div class="row">
               <h5>Message affiché au bas du bulletin</h5>
-              <div id="editor" class="editor" contenteditable="true">
-                Tapez ici pour tester la barre d'outils...
-              </div>
+              <div id="editor" class="editor" contenteditable="true"></div>
               <style>
                 .toolbar {
                   display: flex;
@@ -325,7 +289,7 @@
           <div class="col-md-3">
             <!-- Contenu de la troisième colonne -->
             <div class="row">
-              <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#optionsEdition">Afficher les options d'édition</button>
+              <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#optionsEdition">Afficher les options d'édition</button>
             </div>
             <br>
             <div class="row" style="border: 1px solid #844fc1 !important; border-radius: 4px !important; background-color: #844fc1; color: #fff;">
@@ -371,32 +335,6 @@
               <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#configdecisionjury">Configurer décisions du jury (LMD)</button>
             </div>
             <br>
-              <div class="row" style="background-color: #844fc1; border: 1px solid #ffffff; border-radius: 4px; color: #fff;">
-                <legend style="font-weight: bold; color: #fff; font-size: 1rem;">Mentions du Conseil</legend>
-                <div class="">
-                  <div class="form-group d-flex justify-content-between mb-2">
-                    <label for="felicitation">Félicitations</label>
-                    <input type="number" class="form-control" id="felicitation" name="felicitation" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                  </div>
-                  <div class="form-group d-flex justify-content-between mb-2">
-                    <label for="encouragements">Encouragements</label>
-                    <input type="number"  class="form-control" id="encouragements" name="encouragements" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                  </div>
-                  <div class="form-group d-flex justify-content-between mb-2">
-                    <label for="tableaudhonneur">Tableau d'honneur</label>
-                    <input type="number" class="form-control" id="tableaudhonneur" name="tableaudhonneur" value="0" style="width: 50px !important; padding: 0; height: 2rem;">
-                    
-                  </div>
-                  <div class="form-group d-flex justify-content-between mb-2">
-                    <label for="avertissement">Avertissement/Travail</label>
-                    <input type="number"  class="form-control" id="avertissement" name="avertissement" value="0" style="width: 50px !important; padding: 0; height: 2rem;">
-                  </div>
-                  <div class="form-group d-flex justify-content-between mb-1">
-                    <label for="blame">Blâme/Travail</label>
-                    <input type="number" class="form-control" id="blame" name="blame" value="0" style="width: 50px !important; padding: 0; height: 2rem;">
-                  </div>
-                </div>
-              </div>
               <div class="row" style="background-color: #844fc1; border: 1px solid #ffffff !important; border-radius: 4px !important; color: #fff;">
                 <legend style="font-weight: bold; color: #fff; font-size: 1rem;">Calcul moyenne annuelle</legend>
                 <div class="form-group d-flex align-items-center mb-2">
@@ -416,24 +354,16 @@
                 </div>
               </div>
           </div>
-        </div>
-        <div class="card-footer d-flex justify-content-end">
-          <div class="align-items-center me-3">
-            <button class="btn btn-secondary">Annuler</button>
-          </div>
-          <div class="align-items-center me-3">
-            <button class="btn btn-secondary">Corriger Coefficients</button>
-          </div>
-          <div class="align-items-center me-3">
-            <button class="btn btn-primary" id="calculerClasses">Calculer classes</button>
-          </div>
-          <div class="align-items-center me-3">
-            <button class="btn btn-primary" id="imprimerClasses" disabled>Imprimer classes</button>
-          </div>
-          <div class="align-items-center">
-            <button class="btn btn-primary" id="listeMeriteBtn" disabled>Liste par ordre de mérite</button>
+          <div class="card-footer d-flex justify-content-end">
+            <div class="align-items-center me-3">
+              <button class="btn btn-secondary">Annuler</button>
+            </div>
+            <div class="align-items-center me-3">
+              <button class="btn btn-primary" type="submit" id="imprimerClasses">Imprimer classes</button>
+            </div>
           </div>
         </div>
+      </form>
       </div>
     </div>
   </div>
@@ -481,6 +411,8 @@
           <h1 class="modal-title fs-5" id="exampleModalLabelmodif">Liste des options d'édition</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <form action="{{ route('printbulletindenotes') }}" method="POST" id="formedition">
+          @csrf
         <div class="modal-body">
           <div class="row">
             <div class="col-md-4">
@@ -553,11 +485,35 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-          <button type="button" class="btn btn-primary">Confirmer</button>
+          <button type="button" class="btn btn-primary" id="confirmerOptions">Confirmer</button>
         </div>
+        </form>
       </div>
     </div>
   </div>
+  <script>
+    document.getElementById('confirmerOptions').addEventListener('click', function(event) {
+        event.preventDefault();
+        var formData = new FormData(document.getElementById('formedition'));
+    
+        fetch('{{ route('printbulletindenotes') }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Vous pouvez ici fermer le modal si nécessaire
+            $('#optionsEdition').modal('hide');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+    </script>
   <!-- Modale de configuration des bulletins -->
   <div class="modal fade" id="configdecisionconseil" tabindex="-1" aria-labelledby="configdecisionconseilLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -773,53 +729,8 @@
         checkboxes[i].checked = source.checked;
       }
     }
-    function selectAllCheckboxes1(source) {
-      checkboxes = document.getElementsByName('selected_eleves[]');
-      for(var i=0, n=checkboxes.length;i<n;i++) {
-        checkboxes[i].checked = source.checked;
-      }
-    }
   </script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const updateUI = () => {
-        const selectedOption = document.querySelector('input[name="paramOption"]:checked').id;
-        const selectionBlock = document.getElementById('selectionBlock');
-        const calculerClassesBtn = document.getElementById('calculerClasses');
-        const imprimerClassesBtn = document.getElementById('imprimerClasses');
-        const listeMeriteBtn = document.getElementById('listeMeriteBtn');
-        const selectionInputs = selectionBlock.querySelectorAll('input'); // Sélectionner tous les inputs dans le bloc
-        
-        // Réinitialiser tous les contrôles
-        selectionInputs.forEach(input => input.disabled = false); // Activer tous les inputs
-        calculerClassesBtn.disabled = false;
-        imprimerClassesBtn.disabled = false;
-        listeMeriteBtn.disabled = false;
-        
-        // Appliquer la logique de désactivation en fonction de l'option sélectionnée
-        if (selectedOption === 'calculMoyennes') {
-          selectionInputs.forEach(input => input.disabled = true); // Désactiver les inputs dans le bloc de sélection
-          listeMeriteBtn.disabled = true;
-          imprimerClassesBtn.disabled = true;
-        } else if (selectedOption === 'editionBulletin') {
-          selectionInputs.forEach(input => input.disabled = false);
-          listeMeriteBtn.disabled = true;
-          calculerClassesBtn.disabled = true;
-        } else if (selectedOption === 'listeMerite') {
-          selectionInputs.forEach(input => input.disabled = true);
-          calculerClassesBtn.disabled = true;
-          imprimerClassesBtn.disabled = true;
-        }
-      };
-      
-      // Écouter les changements sur les boutons radio
-      document.querySelectorAll('input[name="paramOption"]').forEach(radio => {
-        radio.addEventListener('change', updateUI);
-      });
-      
-      // Initialiser l'UI au chargement de la page
-      updateUI();
-    });
     document.addEventListener('DOMContentLoaded', function () {
       const bonificationInputs = document.querySelectorAll('.bonification-input'); // Sélectionner tous les inputs de bonification
       
@@ -838,69 +749,7 @@
       // Initialiser l'état des inputs au chargement de la page
       updateInputState();
     });
-    document.addEventListener('DOMContentLoaded', function () {
-      const tableClasses = document.getElementById('tableClasses');
-      const tableEleves = document.getElementById('tableEleves');
-      const radioParClasse = document.getElementById('parclasse');
-      const radioParEleve = document.getElementById('pareleve');
-      
-      const toggleTables = () => {
-        if (radioParClasse.checked) {
-          tableClasses.style.display = '';
-          tableEleves.style.display = 'none';
-        } else if (radioParEleve.checked) {
-          tableClasses.style.display = 'none';
-          tableEleves.style.display = '';
-        }
-      };
-      
-      // Écouter les changements sur les boutons radio
-      document.querySelectorAll('input[name="paramselection"]').forEach(radio => {
-        radio.addEventListener('change', toggleTables);
-      });
-      
-      // Initialiser l'état des tables au chargement de la page
-      toggleTables();
-    });
-    document.addEventListener('DOMContentLoaded', function () {
-      const tableClasses = document.getElementById('tableClasses');
-      const tableEleves = document.getElementById('myTab');
-      const radioParClasse = document.getElementById('parclasse');
-      const radioParEleve = document.getElementById('pareleve');
-      
-      const toggleTables = () => {
-        if (radioParClasse.checked) {
-          tableClasses.style.display = '';
-          tableEleves.style.display = 'none';
-        } else if (radioParEleve.checked) {
-          tableClasses.style.display = 'none';
-          tableEleves.style.display = '';
-        }
-      };
-      
-      // Écouter les changements sur les boutons radio
-      document.querySelectorAll('input[name="paramselection"]').forEach(radio => {
-        radio.addEventListener('change', toggleTables);
-      });
-      
-      // Initialiser l'état des tables au chargement de la page
-      toggleTables();
-    });
-    $(document).ready(function() {
-      // Supposons que vous avez un bouton ou un radio bouton pour afficher le tableau
-      $('input[name="paramselection"]').on('change', function() {
-        // Vérifiez si le tableau doit être affiché
-        if ($('#pareleve').is(':checked')) {
-          $('#myTab').show(); // Assurez-vous que le tableau est visible
-          // Initialisez DataTables
-          $('#myTab').DataTable({
-            destroy: true
-          });
-        } else {
-          $('#myTab').hide();
-        }
-      });
-    });
+
     
   </script>
   <style>

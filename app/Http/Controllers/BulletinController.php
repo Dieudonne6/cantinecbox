@@ -53,4 +53,17 @@ class BulletinController extends Controller
         $eleves = Eleve::all();
         return view('pages.notes.bulletindenotes', compact('classes', 'typeenseigne', 'promotions', 'eleves', 'matieres'));
     }
-}
+
+
+    public function storebulletindenotes(Request $request)
+    {
+
+        dd($request->all());
+        return redirect()->route('printbulletindenotes', $request->all());
+    }
+
+    public function printbulletindenotes(Request $request)
+    {
+        return view('pages.notes.printbulletindenotes', compact('request'));
+    }
+}           
