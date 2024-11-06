@@ -1,56 +1,44 @@
 @extends('layouts.master')
 @section('content')
-<!-- Inclusion du CSS de DataTables -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <!-- Inclusion du CSS de DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
-<!-- Inclusion de jQuery et du JS de DataTables -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <!-- Inclusion de jQuery et du JS de DataTables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <div class="col-lg-12 grid-margin stretch-card">
   <div class="card">
     <div class="card-body">
       <h4 class="card-title">Edition des Bulletins de notes</h4>
+      <form action="{{ route('printbulletindenotes') }}" method="POST">
+        @csrf
       <div class="row">
-        <div class="col-md-3" style="border-right: 1px solid #000000 !important; width: 50% !important;">
-          <!-- Contenu de la première colonne -->
-          <div class="row" style="background-color: #844fc1; color: #fff; border-radius: 8px; width: 100%;">
+          <div class="col-md-3" style="border-right: 1px solid #000000 !important; width: 50% !important;">
+            <!-- Contenu de la première colonne -->
+            <div class="row" id="selectionBlock">
+            <h5>Impression vers</h5>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="paramOption" id="calculMoyennes" checked>
-              <label class="form-check-label" for="calculMoyennes" style="margin-left: 11px !important;">
-                Calcul des moyennes
+              <input class="form-check-input" type="radio" name="paramselection" id="ecran" checked>
+              <label class="form-check-label" for="ecran">
+                Ecran
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="paramOption" id="editionBulletin">
-              <label class="form-check-label" for="editionBulletin" style="margin-left: 11px !important;">
-                Édition Bulletin
+              <input class="form-check-input" type="radio" name="paramselection" id="imprimante">
+              <label class="form-check-label" for="imprimante">
+                Imprimante
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="paramOption" id="listeMerite">
-              <label class="form-check-label" for="listeMerite" style="margin-left: 11px !important;">
-                Liste par ordre de mérite
+              <input class="form-check-input" type="radio" name="paramselection" id="pdf">
+              <label class="form-check-label" for="pdf">
+                Pdf
               </label>
             </div>
+          
           </div>
           <br>
-          <div class="row" id="selectionBlock">
-            <h5>Sélection</h5>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="paramselection" id="parclasse" checked>
-              <label class="form-check-label" for="parclasse">
-                Par classe
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="paramselection" id="pareleve">
-              <label class="form-check-label" for="pareleve">
-                Par élève
-              </label>
-            </div>
-          </div>
-          
           <div class="row">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" name="archive" id="archive">
@@ -158,7 +146,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6" style="border-right: 1px solid #000000 !important;">
+        <div class="col-md-5" style="border-right: 1px solid #000000 !important;">
           <!-- Contenu de la deuxième colonne -->
           <div class="form-group">
             <label for="typeenseigne">Choisir un groupe</label>
@@ -195,36 +183,12 @@
                     @endforeach
                   </tbody>
                 </table>
-                <table class="table table-striped display" id="myTab" style="width: 70% !important;">
-                  <thead>
-                    <tr>
-                      <th style="width: 10% !important;">
-                        <input type="checkbox" name="selected_eleves[]" value="all" style="margin-left: 9px !important; margin-top: -15px !important;" onclick="selectAllCheckboxes1(this)">
-                      </th>
-                      <th>Nom</th>
-                      <th>Prénom</th>
-                      <th>Classe</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($eleves as $eleve)
-                    <tr>
-                      <td><input type="checkbox" name="selected_eleves[]" value="{{ $eleve->MATRICULE }}"></td>
-                      <td>{{ $eleve->NOM }}</td>
-                      <td>{{ $eleve->PRENOM }}</td>
-                      <td>{{ $eleve->CODECLAS }}</td>
-                    </tr>
-                    @endforeach
-                  </tbody>
-                </table>
               </div>
             </div>
             <br>
             <div class="row">
               <h5>Message affiché au bas du bulletin</h5>
-              <div id="editor" class="editor" contenteditable="true">
-                Tapez ici pour tester la barre d'outils...
-              </div>
+              <div id="editor" class="editor" contenteditable="true"></div>
               <style>
                 .toolbar {
                   display: flex;
@@ -325,7 +289,7 @@
           <div class="col-md-3">
             <!-- Contenu de la troisième colonne -->
             <div class="row">
-              <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#optionsEdition">Afficher les options d'édition</button>
+              <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#optionsEdition">Afficher les options d'édition</button>
             </div>
             <br>
             <div class="row" style="border: 1px solid #844fc1 !important; border-radius: 4px !important; background-color: #844fc1; color: #fff;">
@@ -371,32 +335,6 @@
               <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#configdecisionjury">Configurer décisions du jury (LMD)</button>
             </div>
             <br>
-              <div class="row" style="background-color: #844fc1; border: 1px solid #ffffff; border-radius: 4px; color: #fff;">
-                <legend style="font-weight: bold; color: #fff; font-size: 1rem;">Mentions du Conseil</legend>
-                <div class="">
-                  <div class="form-group d-flex justify-content-between mb-2">
-                    <label for="felicitation">Félicitations</label>
-                    <input type="number" class="form-control" id="felicitation" name="felicitation" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                  </div>
-                  <div class="form-group d-flex justify-content-between mb-2">
-                    <label for="encouragements">Encouragements</label>
-                    <input type="number"  class="form-control" id="encouragements" name="encouragements" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                  </div>
-                  <div class="form-group d-flex justify-content-between mb-2">
-                    <label for="tableaudhonneur">Tableau d'honneur</label>
-                    <input type="number" class="form-control" id="tableaudhonneur" name="tableaudhonneur" value="0" style="width: 50px !important; padding: 0; height: 2rem;">
-                    
-                  </div>
-                  <div class="form-group d-flex justify-content-between mb-2">
-                    <label for="avertissement">Avertissement/Travail</label>
-                    <input type="number"  class="form-control" id="avertissement" name="avertissement" value="0" style="width: 50px !important; padding: 0; height: 2rem;">
-                  </div>
-                  <div class="form-group d-flex justify-content-between mb-1">
-                    <label for="blame">Blâme/Travail</label>
-                    <input type="number" class="form-control" id="blame" name="blame" value="0" style="width: 50px !important; padding: 0; height: 2rem;">
-                  </div>
-                </div>
-              </div>
               <div class="row" style="background-color: #844fc1; border: 1px solid #ffffff !important; border-radius: 4px !important; color: #fff;">
                 <legend style="font-weight: bold; color: #fff; font-size: 1rem;">Calcul moyenne annuelle</legend>
                 <div class="form-group d-flex align-items-center mb-2">
@@ -416,60 +354,52 @@
                 </div>
               </div>
           </div>
-        </div>
-        <div class="card-footer d-flex justify-content-end">
-          <div class="align-items-center me-3">
-            <button class="btn btn-secondary">Annuler</button>
-          </div>
-          <div class="align-items-center me-3">
-            <button class="btn btn-secondary">Corriger Coefficients</button>
-          </div>
-          <div class="align-items-center me-3">
-            <button class="btn btn-primary" id="calculerClasses">Calculer classes</button>
-          </div>
-          <div class="align-items-center me-3">
-            <button class="btn btn-primary" id="imprimerClasses" disabled>Imprimer classes</button>
-          </div>
-          <div class="align-items-center">
-            <button class="btn btn-primary" id="listeMeriteBtn" disabled>Liste par ordre de mérite</button>
+          <div class="card-footer d-flex justify-content-end">
+            <div class="align-items-center me-3">
+              <button class="btn btn-secondary">Annuler</button>
+            </div>
+            <div class="align-items-center me-3">
+              <button class="btn btn-primary" type="submit" id="imprimerClasses">Imprimer classes</button>
+            </div>
           </div>
         </div>
+      </form>
       </div>
     </div>
-  </div>
-  
-  <!-- Modal pour afficher les élèves -->
-  <div class="modal fade" id="listematiere" tabindex="-1" aria-labelledby="listematiereLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="listematiereLabel">Liste des matières</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+
+    <!-- Modal pour afficher les élèves -->
+    <div class="modal fade" id="listematiere" tabindex="-1" aria-labelledby="listematiereLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="listematiereLabel">Liste des matières</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped" style="width: 50% !important; margin-left:80px !important;">
+                        <thead>
+                            <tr>
+                                <th>Code matière</th>
+                                <th>Libellé matière</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($matieres as $matiere)
+                                <tr>
+                                    <td>{{ $matiere->CODEMAT }}</td>
+                                    <td>{{ $matiere->LIBELMAT }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <table class="table table-striped" style="width: 50% !important; margin-left:80px !important;">
-            <thead>
-              <tr>
-                <th>Code matière</th>
-                <th>Libellé matière</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach ($matieres as $matiere)
-              <tr>
-                <td>{{ $matiere->CODEMAT }}</td>
-                <td>{{ $matiere->LIBELMAT }}</td>
-              </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-        </div>
-      </div>
     </div>
   </div>
   
@@ -481,6 +411,8 @@
           <h1 class="modal-title fs-5" id="exampleModalLabelmodif">Liste des options d'édition</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <form action="{{ route('printbulletindenotes') }}" method="POST" id="formedition">
+          @csrf
         <div class="modal-body">
           <div class="row">
             <div class="col-md-4">
@@ -505,59 +437,38 @@
                 <label class="form-check-label edition-label" for="annuler_matiere">Annuler la matière si aucun devoir</label>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="rang_matiere" id="rang_matiere">
-                <label class="form-check-label edition-label" for="rang_matiere">Imprimer le rang par matière</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="rang_general" id="rang_general">
-                <label class="form-check-label edition-label" for="rang_general">Imprimer le rang général</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="masquer_devoir3" id="masquer_devoir3">
-                <label class="form-check-label edition-label" for="masquer_devoir3">Masquer la colonne Devoir 3</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="appreciation_prof" id="appreciation_prof">
-                <label class="form-check-label edition-label" for="appreciation_prof">Imprimer l'appréciation du professeur</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="photo_par_logo" id="photo_par_logo">
-                <label class="form-check-label edition-label" for="photo_par_logo">Remplacer la photo par le logo</label>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="note_test" id="note_test">
-                <label class="form-check-label edition-label" for="note_test">Gérer la note de Test (ou Compo)</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="mention_conseil" id="mention_conseil">
-                <label class="form-check-label edition-label" for="mention_conseil">Cocher les mentions du conseil</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="decision_conseil" id="decision_conseil">
-                <label class="form-check-label edition-label" for="decision_conseil">Imprimer la décision du conseil</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="recalculer" id="recalculer">
-                <label class="form-check-label edition-label" for="recalculer">Recalculer avant impression</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="appreciation_directeur" id="appreciation_directeur">
-                <label class="form-check-label edition-label" for="appreciation_directeur">Imprimer l'appréciation du directeur</label>
-              </div>
-            </div>
-          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-          <button type="button" class="btn btn-primary">Confirmer</button>
+          <button type="button" class="btn btn-primary" id="confirmerOptions">Confirmer</button>
         </div>
+        </form>
       </div>
     </div>
   </div>
+  <script>
+    document.getElementById('confirmerOptions').addEventListener('click', function(event) {
+        event.preventDefault();
+        var formData = new FormData(document.getElementById('formedition'));
+    
+        fetch('{{ route('printbulletindenotes') }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Vous pouvez ici fermer le modal si nécessaire
+            $('#optionsEdition').modal('hide');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+    </script>
   <!-- Modale de configuration des bulletins -->
   <div class="modal fade" id="configdecisionconseil" tabindex="-1" aria-labelledby="configdecisionconseilLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -566,203 +477,117 @@
           <h1 class="modal-title fs-5" id="exampleModalLabelmodif">Configuration de la décision du Conseil des Profs</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          <div class="d-flex" style="margin-left: 50px !important;">
-            <label for="config_promo" style="margin-top: 15px !important;">Promotion à configurer</label>
-            <select class="form-select w-50" id="config_promo" name="config_promo" style="margin-left: 20px !important;">
-              <option value="">Sélectionner une promotion</option>
-              @foreach ($promotions as $promotion)
-              <option value="{{ $promotion->CODEPROMO }}">{{ $promotion->LIBELPROMO }}</option>
-              @endforeach
-            </select>
-            <button class="btn btn-secondary" style="margin-left: 20px !important;">Sauver</button>
-          </div>
-          <br>
-          <div class="row">
-            <div style="background-color: #35d966; border-radius: 5px !important; width: 82% !important; margin-left: 5px !important;">
-              <h4>Statut - Non redoublant</h4>
-            </div>
-            <div class="d-flex" style="margin-top: 10px !important;">
-              <input type="number" class="form-control" id="valuenrd1" name="valuenrd1" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
-              <input type="number" class="form-control" id="valuenrd2" name="valuenrd2" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
-              <input type="text" class="form-control" id="mentionnrd1" name="mentionnrd1" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
-            </div>
-            <div class="d-flex" style="margin-top: 10px !important;">
-              <input type="number" class="form-control" id="valuenrd3" name="valuenrd3" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
-              <input type="number" class="form-control" id="valuenrd4" name="valuenrd4" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
-              <input type="text" class="form-control" id="mentionnrd2" name="mentionnrd2" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
-            </div>
-            <div class="d-flex" style="margin-top: 10px !important;">
-              <input type="number" class="form-control" id="valuenrd5" name="valuenrd5" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
-              <input type="number" class="form-control" id="valuenrd6" name="valuenrd6" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
-              <input type="text" class="form-control" id="mentionnrd3" name="mentionnrd3" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
-            </div>
-            <div class="d-flex" style="margin-top: 10px !important;">
-              <input type="number" class="form-control" id="valuenrd7" name="valuenrd7" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
-              <input type="number" class="form-control" id="valuenrd8" name="valuenrd8" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
-              <input type="text" class="form-control" id="mentionnrd4" name="mentionnrd4" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
-            </div>
-            <div class="d-flex" style="margin-top: 10px !important;">
-              <input type="number" class="form-control" id="valuenrd9" name="valuenrd9" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
-              <input type="number" class="form-control" id="valuenrd10" name="valuenrd10" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
-              <input type="text" class="form-control" id="mentionnrd5" name="mentionnrd5" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
-            </div>
-            <div class="d-flex" style="margin-top: 10px !important;">
-              <input type="number" class="form-control" id="valuenrd11" name="valuenrd11" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
-              <input type="number" class="form-control" id="valuenrd12" name="valuenrd12" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
-              <input type="text" class="form-control" id="mentionnrd6" name="mentionnrd6" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
-            </div>
-          </div>
-          <br>
-          <div class="row">
-            <div style="background-color: #35d966; border-radius: 5px !important; width: 82% !important; margin-left: 5px !important;">
-              <h4>Statut - Redoublant</h4>
-            </div>
-            <div class="d-flex" style="margin-top: 10px !important;">
-              <input type="number" class="form-control" id="valuered1" name="valuered1" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
-              <input type="number" class="form-control" id="valuered2" name="valuered2" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
-              <input type="text" class="form-control" id="mentionred1" name="mentionred1" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
-            </div>
-            <div class="d-flex" style="margin-top: 10px !important;">
-              <input type="number" class="form-control" id="valuered3" name="valuered3" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
-              <input type="number" class="form-control" id="valuered4" name="valuered4" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
-              <input type="text" class="form-control" id="mentionred2" name="mentionred2" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
-            </div>
-            <div class="d-flex" style="margin-top: 10px !important;">
-              <input type="number" class="form-control" id="valuered5" name="valuered5" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
-              <input type="number" class="form-control" id="valuered6" name="valuered6" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
-              <input type="text" class="form-control" id="mentionred3" name="mentionred3" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
-            </div>
-            <div class="d-flex" style="margin-top: 10px !important;">
-              <input type="number" class="form-control" id="valuered7" name="valuered7" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
-              <input type="number" class="form-control" id="valuered8" name="valuered8" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
-              <input type="text" class="form-control" id="mentionred4" name="mentionred4" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
-            </div>
-            <div class="d-flex" style="margin-top: 10px !important;">
-              <input type="number" class="form-control" id="valuered9" name="valuered9" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
-              <input type="number" class="form-control" id="valuered10" name="valuered10" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
-              <input type="text" class="form-control" id="mentionred5" name="mentionred5" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
-            </div>
-            <div class="d-flex" style="margin-top: 10px !important;">
-              <input type="number" class="form-control" id="valuered11" name="valuered11" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
-              <input type="number" class="form-control" id="valuered12" name="valuered12" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
-              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
-              <input type="text" class="form-control" id="mentionred6" name="mentionred6" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
-            </div>
-          </div>
-          <br>
-          <div class="modal-footer d-flex justify-content-end">
-            <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-  
-  <!-- Modal de configuration de la décision du Jury -->
-  <div class="modal fade" id="configdecisionjury" tabindex="-1" aria-labelledby="configdecisionjuryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5">Configuration de la décision du Conseil des Profs</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label>Choix d'application de la décision:</label>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="decisionType" id="decisionUE" checked>
-              <label class="form-check-label" for="decisionUE">Décision sur nombre de UE validés</label>
+
+    <!-- Modal de configuration de la décision du Jury -->
+    <div class="modal fade" id="configdecisionjury" tabindex="-1" aria-labelledby="configdecisionjuryLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Configuration de la décision du Conseil des Profs</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Choix d'application de la décision:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="decisionType" id="decisionUE" checked>
+                            <label class="form-check-label" for="decisionUE">Décision sur nombre de UE validés</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="decisionType" id="decisionCredits">
+                            <label class="form-check-label" for="decisionCredits">Décision sur nombre de crédits
+                                acquis</label>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <label for="anneeDecision" style="margin-top: 15px !important;">Quelle année:</label>
+                        <select class="form-select w-50" id="anneeDecision" style="margin-left: 20px !important;">
+                            <option value="1">1ère année</option>
+                            <option value="2">2ème année</option>
+                            <option value="3">3ème année</option>
+                            <option value="4">4ème année</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div class="d-flex">
+                        <h5 for="intervalle"
+                            style="background-color: #bdbdbd; border-radius: 5px !important; width: 25% !important; margin-left: 100px !important; text-align: center !important;">
+                            Intervalle</h5>
+                        <h5 for="decision"
+                            style="background-color: #bdbdbd; border-radius: 5px !important; width: 50% !important; margin-left: 100px !important; text-align: center !important;">
+                            Décision</h5>
+                    </div>
+                    <br>
+                    <div class="d-flex">
+                        <input type="number" class="form-control" id="percentage1" name="percentage1" value="0.00"
+                            style="margin-left: 100px !important; width: 10% !important; border-color: #000000;">
+                        <p style="margin-left: 10px !important; margin-top: 10px !important;">---</p>
+                        <input type="number" class="form-control" id="percentage2" name="percentage2" value="0.00"
+                            style="margin-left: 20px !important; width: 10% !important; border-color: #000000;">
+                        <p style="margin-left: 50px !important; margin-top: 10px !important;">---></p>
+                        <input type="text" class="form-control" id="decision1" name="decision1"
+                            style="margin-left: 100px !important; width: 40% !important; border-color: #000000;">
+                    </div>
+                    <br>
+                    <div class="d-flex">
+                        <input type="number" class="form-control" id="percentage1" name="percentage1" value="0.00"
+                            style="margin-left: 100px !important; width: 10% !important; border-color: #000000;">
+                        <p style="margin-left: 10px !important; margin-top: 10px !important;">---</p>
+                        <input type="number" class="form-control" id="percentage2" name="percentage2" value="0.00"
+                            style="margin-left: 20px !important; width: 10% !important; border-color: #000000;">
+                        <p style="margin-left: 50px !important; margin-top: 10px !important;">---></p>
+                        <input type="text" class="form-control" id="decision1" name="decision1"
+                            style="margin-left: 100px !important; width: 40% !important; border-color: #000000;">
+                    </div>
+                    <br>
+                    <div class="d-flex">
+                        <input type="number" class="form-control" id="percentage1" name="percentage1"
+                            value="0.00"
+                            style="margin-left: 100px !important; width: 10% !important; border-color: #000000;">
+                        <p style="margin-left: 10px !important; margin-top: 10px !important;">---</p>
+                        <input type="number" class="form-control" id="percentage2" name="percentage2"
+                            value="0.00"
+                            style="margin-left: 20px !important; width: 10% !important; border-color: #000000;">
+                        <p style="margin-left: 50px !important; margin-top: 10px !important;">---></p>
+                        <input type="text" class="form-control" id="decision1" name="decision1"
+                            style="margin-left: 100px !important; width: 40% !important; border-color: #000000;">
+                    </div>
+                    <br>
+                    <div class="d-flex">
+                        <input type="number" class="form-control" id="percentage1" name="percentage1"
+                            value="0.00"
+                            style="margin-left: 100px !important; width: 10% !important; border-color: #000000;">
+                        <p style="margin-left: 10px !important; margin-top: 10px !important;">---</p>
+                        <input type="number" class="form-control" id="percentage2" name="percentage2"
+                            value="0.00"
+                            style="margin-left: 20px !important; width: 10% !important; border-color: #000000;">
+                        <p style="margin-left: 50px !important; margin-top: 10px !important;">---></p>
+                        <input type="text" class="form-control" id="decision1" name="decision1"
+                            style="margin-left: 100px !important; width: 40% !important; border-color: #000000;">
+                    </div>
+                    <br>
+                    <div class="d-flex">
+                        <input type="number" class="form-control" id="percentage1" name="percentage1"
+                            value="0.00"
+                            style="margin-left: 100px !important; width: 10% !important; border-color: #000000;">
+                        <p style="margin-left: 10px !important; margin-top: 10px !important;">---</p>
+                        <input type="number" class="form-control" id="percentage2" name="percentage2"
+                            value="0.00"
+                            style="margin-left: 20px !important; width: 10% !important; border-color: #000000;">
+                        <p style="margin-left: 50px !important; margin-top: 10px !important;">---></p>
+                        <input type="text" class="form-control" id="decision1" name="decision1"
+                            style="margin-left: 100px !important; width: 40% !important; border-color: #000000;">
+                    </div>
+                    <br>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-primary">Valider</button>
+                    </div>
+                </div>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="decisionType" id="decisionCredits">
-              <label class="form-check-label" for="decisionCredits">Décision sur nombre de crédits acquis</label>
-            </div>
-          </div>
-          <div class="d-flex">
-            <label for="anneeDecision" style="margin-top: 15px !important;">Quelle année:</label>
-            <select class="form-select w-50" id="anneeDecision" style="margin-left: 20px !important;">
-              <option value="1">1ère année</option>
-              <option value="2">2ème année</option>
-              <option value="3">3ème année</option>
-              <option value="4">4ème année</option>
-            </select>
-          </div>
-          <br>
-          <div class="d-flex">
-            <h5 for="intervalle" style="background-color: #bdbdbd; border-radius: 5px !important; width: 25% !important; margin-left: 100px !important; text-align: center !important;">Intervalle</h5>
-            <h5 for="decision" style="background-color: #bdbdbd; border-radius: 5px !important; width: 50% !important; margin-left: 100px !important; text-align: center !important;">Décision</h5>
-          </div>
-          <br>
-          <div class="d-flex">
-            <input type="number" class="form-control" id="percentage1" name="percentage1" value="0.00" style="margin-left: 100px !important; width: 10% !important; border-color: #000000;">
-            <p style="margin-left: 10px !important; margin-top: 10px !important;">---</p>
-            <input type="number" class="form-control" id="percentage2" name="percentage2" value="0.00" style="margin-left: 20px !important; width: 10% !important; border-color: #000000;">
-            <p style="margin-left: 50px !important; margin-top: 10px !important;">---></p>
-            <input type="text" class="form-control" id="decision1" name="decision1" style="margin-left: 100px !important; width: 40% !important; border-color: #000000;">
-          </div>
-          <br>
-          <div class="d-flex">
-            <input type="number" class="form-control" id="percentage1" name="percentage1" value="0.00" style="margin-left: 100px !important; width: 10% !important; border-color: #000000;">
-            <p style="margin-left: 10px !important; margin-top: 10px !important;">---</p>
-            <input type="number" class="form-control" id="percentage2" name="percentage2" value="0.00" style="margin-left: 20px !important; width: 10% !important; border-color: #000000;">
-            <p style="margin-left: 50px !important; margin-top: 10px !important;">---></p>
-            <input type="text" class="form-control" id="decision1" name="decision1" style="margin-left: 100px !important; width: 40% !important; border-color: #000000;">
-          </div>
-          <br>
-          <div class="d-flex">
-            <input type="number" class="form-control" id="percentage1" name="percentage1" value="0.00" style="margin-left: 100px !important; width: 10% !important; border-color: #000000;">
-            <p style="margin-left: 10px !important; margin-top: 10px !important;">---</p>
-            <input type="number" class="form-control" id="percentage2" name="percentage2" value="0.00" style="margin-left: 20px !important; width: 10% !important; border-color: #000000;">
-            <p style="margin-left: 50px !important; margin-top: 10px !important;">---></p>
-            <input type="text" class="form-control" id="decision1" name="decision1" style="margin-left: 100px !important; width: 40% !important; border-color: #000000;">
-          </div>
-          <br>
-          <div class="d-flex">
-            <input type="number" class="form-control" id="percentage1" name="percentage1" value="0.00" style="margin-left: 100px !important; width: 10% !important; border-color: #000000;">
-            <p style="margin-left: 10px !important; margin-top: 10px !important;">---</p>
-            <input type="number" class="form-control" id="percentage2" name="percentage2" value="0.00" style="margin-left: 20px !important; width: 10% !important; border-color: #000000;">
-            <p style="margin-left: 50px !important; margin-top: 10px !important;">---></p>
-            <input type="text" class="form-control" id="decision1" name="decision1" style="margin-left: 100px !important; width: 40% !important; border-color: #000000;">
-          </div>
-          <br>
-          <div class="d-flex">
-            <input type="number" class="form-control" id="percentage1" name="percentage1" value="0.00" style="margin-left: 100px !important; width: 10% !important; border-color: #000000;">
-            <p style="margin-left: 10px !important; margin-top: 10px !important;">---</p>
-            <input type="number" class="form-control" id="percentage2" name="percentage2" value="0.00" style="margin-left: 20px !important; width: 10% !important; border-color: #000000;">
-            <p style="margin-left: 50px !important; margin-top: 10px !important;">---></p>
-            <input type="text" class="form-control" id="decision1" name="decision1" style="margin-left: 100px !important; width: 40% !important; border-color: #000000;">
-          </div>
-          <br>            
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            <button type="button" class="btn btn-primary">Valider</button>
-          </div>
         </div>
-      </div>
     </div>
   </div>
   
@@ -773,53 +598,8 @@
         checkboxes[i].checked = source.checked;
       }
     }
-    function selectAllCheckboxes1(source) {
-      checkboxes = document.getElementsByName('selected_eleves[]');
-      for(var i=0, n=checkboxes.length;i<n;i++) {
-        checkboxes[i].checked = source.checked;
-      }
-    }
   </script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const updateUI = () => {
-        const selectedOption = document.querySelector('input[name="paramOption"]:checked').id;
-        const selectionBlock = document.getElementById('selectionBlock');
-        const calculerClassesBtn = document.getElementById('calculerClasses');
-        const imprimerClassesBtn = document.getElementById('imprimerClasses');
-        const listeMeriteBtn = document.getElementById('listeMeriteBtn');
-        const selectionInputs = selectionBlock.querySelectorAll('input'); // Sélectionner tous les inputs dans le bloc
-        
-        // Réinitialiser tous les contrôles
-        selectionInputs.forEach(input => input.disabled = false); // Activer tous les inputs
-        calculerClassesBtn.disabled = false;
-        imprimerClassesBtn.disabled = false;
-        listeMeriteBtn.disabled = false;
-        
-        // Appliquer la logique de désactivation en fonction de l'option sélectionnée
-        if (selectedOption === 'calculMoyennes') {
-          selectionInputs.forEach(input => input.disabled = true); // Désactiver les inputs dans le bloc de sélection
-          listeMeriteBtn.disabled = true;
-          imprimerClassesBtn.disabled = true;
-        } else if (selectedOption === 'editionBulletin') {
-          selectionInputs.forEach(input => input.disabled = false);
-          listeMeriteBtn.disabled = true;
-          calculerClassesBtn.disabled = true;
-        } else if (selectedOption === 'listeMerite') {
-          selectionInputs.forEach(input => input.disabled = true);
-          calculerClassesBtn.disabled = true;
-          imprimerClassesBtn.disabled = true;
-        }
-      };
-      
-      // Écouter les changements sur les boutons radio
-      document.querySelectorAll('input[name="paramOption"]').forEach(radio => {
-        radio.addEventListener('change', updateUI);
-      });
-      
-      // Initialiser l'UI au chargement de la page
-      updateUI();
-    });
     document.addEventListener('DOMContentLoaded', function () {
       const bonificationInputs = document.querySelectorAll('.bonification-input'); // Sélectionner tous les inputs de bonification
       
@@ -838,69 +618,7 @@
       // Initialiser l'état des inputs au chargement de la page
       updateInputState();
     });
-    document.addEventListener('DOMContentLoaded', function () {
-      const tableClasses = document.getElementById('tableClasses');
-      const tableEleves = document.getElementById('tableEleves');
-      const radioParClasse = document.getElementById('parclasse');
-      const radioParEleve = document.getElementById('pareleve');
-      
-      const toggleTables = () => {
-        if (radioParClasse.checked) {
-          tableClasses.style.display = '';
-          tableEleves.style.display = 'none';
-        } else if (radioParEleve.checked) {
-          tableClasses.style.display = 'none';
-          tableEleves.style.display = '';
-        }
-      };
-      
-      // Écouter les changements sur les boutons radio
-      document.querySelectorAll('input[name="paramselection"]').forEach(radio => {
-        radio.addEventListener('change', toggleTables);
-      });
-      
-      // Initialiser l'état des tables au chargement de la page
-      toggleTables();
-    });
-    document.addEventListener('DOMContentLoaded', function () {
-      const tableClasses = document.getElementById('tableClasses');
-      const tableEleves = document.getElementById('myTab');
-      const radioParClasse = document.getElementById('parclasse');
-      const radioParEleve = document.getElementById('pareleve');
-      
-      const toggleTables = () => {
-        if (radioParClasse.checked) {
-          tableClasses.style.display = '';
-          tableEleves.style.display = 'none';
-        } else if (radioParEleve.checked) {
-          tableClasses.style.display = 'none';
-          tableEleves.style.display = '';
-        }
-      };
-      
-      // Écouter les changements sur les boutons radio
-      document.querySelectorAll('input[name="paramselection"]').forEach(radio => {
-        radio.addEventListener('change', toggleTables);
-      });
-      
-      // Initialiser l'état des tables au chargement de la page
-      toggleTables();
-    });
-    $(document).ready(function() {
-      // Supposons que vous avez un bouton ou un radio bouton pour afficher le tableau
-      $('input[name="paramselection"]').on('change', function() {
-        // Vérifiez si le tableau doit être affiché
-        if ($('#pareleve').is(':checked')) {
-          $('#myTab').show(); // Assurez-vous que le tableau est visible
-          // Initialisez DataTables
-          $('#myTab').DataTable({
-            destroy: true
-          });
-        } else {
-          $('#myTab').hide();
-        }
-      });
-    });
+
     
   </script>
   <style>
