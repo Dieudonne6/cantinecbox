@@ -10,4 +10,10 @@ class Matiere extends Model
     use HasFactory;
     protected $table = 'matieres';
     public $timestamps = false;
+
+    public function notes()
+    {
+        return $this->hasMany(Notes::class, 'CODEMAT', 'CODEMAT');
+    }
 }
+
