@@ -354,5 +354,4 @@ Route::get('/elevessansnote/{classCode}',  [EditionController::class, 'elevessan
 Route::get('/editions2/tableauanalytiqueparmatiere', [EditionController2::class, 'tableauanalytiqueparmatiere'])->name('tableauanalytiqueparmatiere');
 
 Route::get('/bulletindenotes', [BulletinController::class, 'bulletindenotes'])->name('bulletindenotes');
-Route::post('/bulletindenotes', [BulletinController::class, 'storebulletindenotes'])->name('storebulletindenotes');
 Route::get('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');

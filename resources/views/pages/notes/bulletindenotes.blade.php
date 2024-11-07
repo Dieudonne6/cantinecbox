@@ -11,7 +11,7 @@
   <div class="card">
     <div class="card-body">
       <h4 class="card-title">Edition des Bulletins de notes</h4>
-      <form action="{{ route('printbulletindenotes') }}" method="POST">
+      <form action="{{ route('printbulletindenotes') }}" method="GET">
         @csrf
       <div class="row">
           <div class="col-md-3" style="border-right: 1px solid #000000 !important; width: 50% !important;">
@@ -411,7 +411,7 @@
           <h1 class="modal-title fs-5" id="exampleModalLabelmodif">Liste des options d'édition</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form action="{{ route('printbulletindenotes') }}" method="POST" id="formedition">
+        <form action="{{ route('printbulletindenotes') }}" method="GET" id="formedition">
           @csrf
         <div class="modal-body">
           <div class="row">
@@ -435,6 +435,50 @@
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="annuler_matiere" id="annuler_matiere">
                 <label class="form-check-label edition-label" for="annuler_matiere">Annuler la matière si aucun devoir</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rang_matiere" id="rang_matiere">
+                <label class="form-check-label edition-label" for="rang_matiere">Imprimer le rang par matière</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rang_general" id="rang_general">
+                <label class="form-check-label edition-label" for="rang_general">Imprimer le rang général</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="masquer_devoir3" id="masquer_devoir3">
+                <label class="form-check-label edition-label" for="masquer_devoir3">Masquer la colonne Devoir 3</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="appreciation_prof" id="appreciation_prof">
+                <label class="form-check-label edition-label" for="appreciation_prof">Imprimer l'appréciation du professeur</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="photo_par_logo" id="photo_par_logo">
+                <label class="form-check-label edition-label" for="photo_par_logo">Remplacer la photo par le logo</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="note_test" id="note_test">
+                <label class="form-check-label edition-label" for="note_test">Gérer la note de Test (ou Compo)</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="mention_conseil" id="mention_conseil">
+                <label class="form-check-label edition-label" for="mention_conseil">Cocher les mentions du conseil</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="decision_conseil" id="decision_conseil">
+                <label class="form-check-label edition-label" for="decision_conseil">Imprimer la décision du conseil</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="recalculer" id="recalculer">
+                <label class="form-check-label edition-label" for="recalculer">Recalculer avant impression</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="appreciation_directeur" id="appreciation_directeur">
+                <label class="form-check-label edition-label" for="appreciation_directeur">Imprimer l'appréciation du directeur</label>
               </div>
             </div>
         </div>
