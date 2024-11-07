@@ -11,7 +11,7 @@
   <div class="card">
     <div class="card-body">
       <h4 class="card-title">Edition des Bulletins de notes</h4>
-      <form action="{{ route('printbulletindenotes') }}" method="POST">
+      <form id="formBulletin" action="{{ route('printbulletindenotes') }}" method="POST">
         @csrf
       <div class="row">
           <div class="col-md-3" style="border-right: 1px solid #000000 !important; width: 50% !important;">
@@ -19,19 +19,19 @@
             <div class="row" id="selectionBlock">
             <h5>Impression vers</h5>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="paramselection" id="ecran" checked>
+              <input class="form-check-input" type="radio" name="paramselection" id="ecran" value="ecran" >
               <label class="form-check-label" for="ecran">
                 Ecran
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="paramselection" id="imprimante">
+              <input class="form-check-input" type="radio" name="paramselection" value="imprimante" id="imprimante" checked>
               <label class="form-check-label" for="imprimante">
                 Imprimante
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="paramselection" id="pdf">
+              <input class="form-check-input" type="radio" name="paramselection" name="pdf" id="pdf">
               <label class="form-check-label" for="pdf">
                 Pdf
               </label>
@@ -51,19 +51,19 @@
           <div class="row">
             <h5>Signature</h5>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="signature" id="ccc" checked>
+              <input class="form-check-input" type="radio" name="signature" name="ccc" id="ccc" checked>
               <label class="form-check-label" for="ccc">
                 CCC
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="signature" id="directeur">
+              <input class="form-check-input" type="radio" name="signature" value="directeur" id="directeur">
               <label class="form-check-label" for="directeur">
                 Directeur 2
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="signature" id="cc">
+              <input class="form-check-input" type="radio" name="signature" name="cc" id="cc">
               <label class="form-check-label" for="cc">
                 CC
               </label>
@@ -83,19 +83,19 @@
           <div class="row">
             <h5>Système de bonification</h5>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="bonification" id="integral">
+              <input class="form-check-input" type="radio" name="bonificationType" value="integral" id="integral">
               <label class="form-check-label" for="integral">
                 Intégral
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="bonification" id="intervalle" checked>
+              <input class="form-check-input" type="radio" name="bonificationType" value="intervalle" id="intervalle" checked>
               <label class="form-check-label" for="intervalle">
                 Intervalle
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="bonification" id="none">
+              <input class="form-check-input" type="radio" name="bonificationType" value="Aucun" id="none">
               <label class="form-check-label" for="none">
                 Aucun
               </label>
@@ -104,40 +104,34 @@
           <br>
           <div class="row">
             <div class="form-group d-flex">
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="range0" name="range0" value="0" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[0][start]" value="0" step="0.25">
               <p style="margin-top: 10px;">--</p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="range1" name="range1" value="11" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[0][end]" value="11" step="0.25">
               <p style="margin-top: 10px;">--></p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="value1" name="value1" value="1" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[0][note]" value="1" step="0.25">
             </div>
             <div class="form-group d-flex">
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="range2" name="range2" value="11" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[1][start]" value="11" step="0.25">
               <p style="margin-top: 10px;">--</p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="value2" name="value2" value="12" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[1][end]" value="12" step="0.25">
               <p style="margin-top: 10px;">--></p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="value2" name="value2" value="2" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[1][note]" value="2" step="0.25">
             </div>
             <div class="form-group d-flex">
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="range3" name="range3" value="12" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[2][start]" value="12" step="0.25">
               <p style="margin-top: 10px;">--</p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="value3" name="value3" value="14" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[2][end]" value="14" step="0.25">
               <p style="margin-top: 10px;">--></p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="value3" name="value3" value="3" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[2][note]" value="3" step="0.25">
             </div>
             <div class="form-group d-flex">
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="range4" name="range4" value="14" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[3][start]" value="14" step="0.25">
               <p style="margin-top: 10px;">--</p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="value4" name="value4" value="3" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[3][end]" value="16" step="0.25">
               <p style="margin-top: 10px;">--></p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="value4" name="value4" value="4" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[3][note]" value="4" step="0.25">
             </div>
-            <div class="form-group d-flex">
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="range5" name="range5" value="16" step="0.25">
-              <p style="margin-top: 10px;">--</p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="value5" name="value5" value="4" step="0.25">
-              <p style="margin-top: 10px;">--></p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" id="value5" name="value5" value="5" step="0.25">
-            </div>
+            <!-- Ajoute les autres lignes de la même manière -->
           </div>
           <div class="row">
             <div class="form-group">
@@ -150,11 +144,11 @@
           <!-- Contenu de la deuxième colonne -->
           <div class="form-group">
             <label for="typeenseigne">Choisir un groupe</label>
-            <select class="js-example-basic-multiple custom-select-width w-auto" id="typeenseigne" name="typeenseigne">
-              <option value="">Sélectionner un type d'enseignement</option>
-              @foreach ($typeenseigne as $type)
-              <option value="{{ $type->type }}">{{ $type->type }}</option>
-              @endforeach
+            <select class="js-example-basic-multiple custom-select-width w-auto" id="typeenseigne" name="typeenseigne" onchange="fetchClasses(this.value)">
+                <option value="">Sélectionner un type d'enseignement</option>
+                @foreach ($typeenseigne as $type)
+                    <option value="{{ $type->idenseign }}">{{ $type->type }}</option>
+                @endforeach
             </select>
           </div>
           <div class="d-flex justify-content-center align-items-center" style="margin-right: 70px !important; gap: 20px;">
@@ -165,25 +159,23 @@
             <br>
             <div class="table-responsive mb-4">
               <table id="tableClasses" class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th style="width: 10% !important;">
-                      <input type="checkbox" name="selected_classes[]" value="all" style="margin-left: 9px !important; margin-top: -15px !important;" onclick="selectAllCheckboxes(this)">
-                    </th>
-                    <th>Classes</th>
-                    <th>Effectif</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($classes as $classe)
-                  <tr>
-                    <td><input type="checkbox" name="selected_classes[]" value="{{ $classe->CODECLAS }}" style="margin-left: 10px !important; margin-top: -7px !important;"></td>
-                    <td>{{ $classe->CODECLAS }}</td>
-                    <td>{{ $classe->eleves_count }}</td>
-                    @endforeach
+                  <thead>
+                      <tr>
+                          <th style="width: 10% !important;">
+                              <input type="checkbox" name="selected_classes[]" value="all" style="margin-left: 9px !important; margin-top: -15px !important;" onclick="selectAllCheckboxes(this)">
+                          </th>
+                          <th>Classes</th>
+                          <th>Effectif</th>
+                      </tr>
+                  </thead>
+                  <tbody id="classTableBody">
+                    {{-- <tr>
+                      <td colspan="3" class="text-center">Sélectionnez un type pour afficher les classes</td>
+                    </tr> --}}
+                      <!-- Les classes correspondant au groupe sélectionné seront insérées ici -->
                   </tbody>
-                </table>
-              </div>
+              </table>
+            </div>
             </div>
             <br>
             <div class="row">
@@ -297,7 +289,7 @@
                   <label for="periode">Période</label>
                   <select class="form-select" id="periode" name="periode" style="margin-left: 20px !important;">
                     <option value="">Sélectionner une période</option>
-                    <option value="1">1ère période</option>
+                    <option value="1" selected>1ère période</option>
                     <option value="2">2ème période</option>
                     <option value="3">3ème période</option>
                     <option value="4">4ème période</option>
@@ -364,6 +356,9 @@
           </div>
         </div>
       </form>
+
+      <div id="resultMessage"></div> <!-- Pour afficher le message de confirmation ou l'erreur -->
+
       </div>
     </div>
 
@@ -591,6 +586,8 @@
     </div>
   </div>
   
+  {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+
   <script>
     function selectAllCheckboxes(source) {
       checkboxes = document.getElementsByName('selected_classes[]');
@@ -621,6 +618,87 @@
 
     
   </script>
+{{-- sxript de soumission du formulaire --}}
+{{-- <script>
+  document.getElementById('formBulletin').addEventListener('submit', async function(event) {
+      event.preventDefault(); // Empêche le rafraîchissement de la page
+  
+      const form = event.target;
+      const formData = new FormData(form);
+  
+      try {
+          const response = await fetch(form.action, {
+              method: form.method,
+              headers: {
+                  'X-CSRF-TOKEN': '{{ csrf_token() }}' // Envoie le token CSRF
+              },
+              body: formData
+          });
+  
+          if (response.ok) {
+              const result = await response.json(); // Remplace par response.text() si tu attends une réponse texte
+              document.getElementById('resultMessage').innerHTML = '<div class="alert alert-success">Le bulletin a été soumis avec succès !</div>';
+          } else {
+              document.getElementById('resultMessage').innerHTML = '<div class="alert alert-danger">Une erreur est survenue lors de la soumission.</div>';
+          }
+      } catch (error) {
+          document.getElementById('resultMessage').innerHTML = '<div class="alert alert-danger">Erreur réseau : ' + error.message + '</div>';
+      }
+  });
+</script> --}}
+
+<script>
+      document.getElementById('imprimerClasses').addEventListener('click', function(event) {
+      // Empêcher la soumission du formulaire si nécessaire
+      event.preventDefault();
+      // document.getElementById('echeancesData').value = JSON.stringify(echeances);
+        
+        // Soumettre le formulaire si la validation est réussie
+        document.getElementById('formBulletin').submit();  
+      });
+    // });
+</script>
+
+
+<script>
+function fetchClasses(type) {
+    if (!type) {
+        document.getElementById('classTableBody').innerHTML = '<tr><td colspan="3" class="text-center">Sélectionnez un type pour afficher les classes</td></tr>';
+        return;
+    }
+
+    fetch(`{{ url('/classes/') }}/${type}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération des données.");
+            }
+            return response.json();
+        })
+        .then(classes => {
+            const tableBody = document.getElementById('classTableBody');
+            tableBody.innerHTML = '';
+
+            if (classes.length === 0) {
+                // Affiche le message si aucune classe n'est trouvée
+                tableBody.innerHTML = '<tr><td colspan="3" class="text-center">Aucune classe dans le type sélectionné</td></tr>';
+                return;
+            }
+
+            // Si des classes existent, les afficher
+            classes.forEach(classe => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="checkbox" name="selected_classes[]" value="${classe.CODECLAS}" style="margin-left: 10px !important; margin-top: -7px !important;"></td>
+                    <td>${classe.CODECLAS}</td>
+                    <td>${classe.eleves_count}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Erreur lors de la récupération des classes:', error));
+}
+
+</script>
   <style>
     .form-check {
       margin-left: 45px !important;

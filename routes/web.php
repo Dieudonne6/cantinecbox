@@ -355,4 +355,5 @@ Route::get('/editions2/tableauanalytiqueparmatiere', [EditionController2::class,
 
 Route::get('/bulletindenotes', [BulletinController::class, 'bulletindenotes'])->name('bulletindenotes');
 Route::post('/bulletindenotes', [BulletinController::class, 'storebulletindenotes'])->name('storebulletindenotes');
-Route::get('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');
+Route::post('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');
+Route::get('/classes/{type}', [BulletinController::class, 'getClassesByType'])->name('classes.byType');

@@ -16,12 +16,17 @@ class Notes extends Model
         'MS', 'COEF', 'SEMESTRE', 'MATRICULE', 'CODECLAS',
         'CODEMAT', 'CODEUSER', 'RANG', 'FILLER_T', 'FILLER_E', 'TEST',
         'MS1', 'MODIFIER', 'VERROUILLE', 'DATECREE', 'DATEMODIF', 'ANSCOL',
-        'INT5', 'INT6', 'INT7', 'INT8', 'INT9', 'INT10', 'SystemeNotes','IDNOTES'
+        'INT5', 'INT6', 'INT7', 'INT8', 'INT9', 'INT10', 'SystemeNotes','IDNOTES', 'SEMMATMATR'
     ];
 
     // Définir la relation inverse
     public function eleve()
     {
         return $this->belongsTo(Eleve::class, 'MATRICULE', 'MATRICULE');
+    }
+
+    public function matiere()
+    {
+        return $this->belongsTo(Matiere::class, 'CODEMAT', 'CODEMAT');
     }
 }
