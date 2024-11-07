@@ -110,6 +110,8 @@
       ];
       $routesmanip = [
         'saisirnote',
+        'enregistrer_notes',
+
     ];
       $routeSecurite = [
         'verrouillage',
@@ -120,6 +122,9 @@
     
     $result = [
       '',
+    ];
+    $routenew = [
+      'bulletindenotes', 'attestationdemerite',
     ];
       $routeseditions2 = [
         'editions2',
@@ -173,7 +178,7 @@
                 <div class="collapse {{ request()->is('Saisir et mises à jour des notes') || request()->is('Enrégistrer les résultats des examens') || request()->is('Vérifier les notes') || in_array(request()->route()->getName(), $routesmanip) ? 'show' : '' }}" data-bs-parent="#parent-notes" id="manip">
                   <ul class="nav sub-menu">
                     <li><a class="nav-link {{ request()->is('Saisir et mises à jour des notes') ? 'active' : '' }}" href="{{ route('saisirnote') }}"><span class="ab">Saisir et mises à jour des notes</span></a></li>
-                    <li><a class="nav-link {{ request()->is('Enrégistrer les résultats des examens') ? 'active' : '' }}" href="#"><span class="ab">Enrégistrer les résultats des examens</span></a></li>
+                    <li><a class="nav-link {{ request()->is('Enrégistrer les résultats des examens') ? 'active' : '' }}" href="{{ url('/enregistrer_notes') }}"><span class="ab">Enrégistrer les résultats des examens</span></a></li>
                     <li><a class="nav-link {{ request()->is('Vérifier les notes') ? 'active' : '' }}" href="#">Vérifier les notes</a></li>
                   </ul>
                 </div>
@@ -197,16 +202,16 @@
       
               {{-- Editions --}}
               <li class="nav-item">
-                <a class="nav-link {{ request()->is('Saisir et mises à jour des notes') || request()->is('Enrégistrer les résultats des examens') || request()->is('Vérifier les notes') || in_array(request()->route()->getName(), $routeseditions2) ? 'active' : '' }}"
-                   data-bs-toggle="collapse" href="#edition" aria-expanded="{{ request()->is('Saisir et mises à jour des notes') || request()->is('Enrégistrer les résultats des examens') || request()->is('Vérifier les notes') || in_array(request()->route()->getName(), $routeseditions2) ? 'true' : 'false' }}" aria-controls="edition">
+                <a class="nav-link {{ request()->is('Saisir et mises à jour des notes') || request()->is('Enrégistrer les résultats des examens') || request()->is('Vérifier les notes') || in_array(request()->route()->getName(), $routeseditions2) || in_array(request()->route()->getName(), $routenew) ? 'active' : '' }}"
+                   data-bs-toggle="collapse" href="#edition" aria-expanded="{{ request()->is('Saisir et mises à jour des notes') || request()->is('Enrégistrer les résultats des examens') || request()->is('Vérifier les notes') || in_array(request()->route()->getName(), $routeseditions2) || in_array(request()->route()->getName(), $routenew) ? 'true' : 'false' }}" aria-controls="edition">
                   Edition
                   <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse {{ request()->is('Tableau de notes') || request()->is('Bulletin de notes') || request()->is('Attestations de mérite') || in_array(request()->route()->getName(), $routeseditions2) ? 'show' : '' }}" data-bs-parent="#parent-notes" id="edition">
+                <div class="collapse {{ request()->is('Tableau de notes') || request()->is('Bulletin de notes') || request()->is('Attestations de mérite') || in_array(request()->route()->getName(), $routeseditions2) || in_array(request()->route()->getName(), $routenew) ? 'show' : '' }}" data-bs-parent="#parent-notes" id="edition">
                   <ul class="nav sub-menu">
-                    <li><a class="nav-link {{ request()->is('Tableau de notes') ? 'active' : '' }}" href="#">Tableau de notes</a></li>
-                    <li><a class="nav-link {{ request()->is('Bulletin de notes') ? 'active' : '' }}" href="#">Bulletin de notes</a></li>
-                    <li><a class="nav-link {{ request()->is('Attestations de mérite') ? 'active' : '' }}" href="#">Attestations de mérite</a></li>
+                    <li><a class="nav-link {{ request()->is('Tableau de notes') ? 'active' : '' }}" href="{{ url('/tableaudenotes') }}">Tableau de notes</a></li>
+                    <li><a class="nav-link {{ request()->is('Bulletin de notes') ? 'active' : '' }}" href="{{ url('/bulletindenotes') }}"> Bulletin de notes</a></li>
+                    <li><a class="nav-link {{ request()->is('Attestations de mérite') ? 'active' : '' }}" href="{{ url('/attestationdemerite') }}">Attestations de mérite</a></li>
                     <li><a class="nav-link {{ in_array(request()->route()->getName(), $routeseditions2) ? 'active' : '' }}" href="{{ route('editions2') }}">Editions</a></li>
                   </ul>
                 </div>
