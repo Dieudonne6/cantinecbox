@@ -280,6 +280,7 @@ class BulletinController extends Controller
 
         // Retourner les résultats, ou effectuer d'autres actions
         dd ($resultats);
+        
         return view('pages.notes.printbulletindenotes', compact('request'));
     }
 }           
