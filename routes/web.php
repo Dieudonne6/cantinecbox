@@ -354,3 +354,6 @@ Route::get('/elevessansnote/{classCode}',  [EditionController::class, 'elevessan
 Route::get('/editions2/tableauanalytiqueparmatiere', [EditionController2::class, 'tableauanalytiqueparmatiere'])->name('tableauanalytiqueparmatiere');
 
 Route::get('/bulletindenotes', [BulletinController::class, 'bulletindenotes'])->name('bulletindenotes');
+
+Route::get('/attestationdemerite', [CdController::class, 'attestationdemerite'])->name('attestationdemerite');
+Route::get('/filter-students', [CdController::class, 'filterStudents'])->name('filterattestationdemerite');
