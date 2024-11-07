@@ -358,3 +358,12 @@ Route::post('/filtertableaunotes', [EditionController::class, 'filtertableaunote
 Route::get('/tableaudenotes', [EditionController::class, 'tableaudenotes'])->name('tableaudenotes');
 
 Route::get('/filtertablenotes', [EditionController::class, 'filtertablenotes'])->name('filtertablenotes');
+
+
+Route::get('/attestationdemerite', [CdController::class, 'attestationdemerite'])->name('attestationdemerite');
+Route::get('/filter-students', [CdController::class, 'filterStudents'])->name('filterattestationdemerite');
+
+Route::post('/bulletindenotes', [BulletinController::class, 'storebulletindenotes'])->name('storebulletindenotes');
+Route::post('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');
+Route::get('/classes/{type}', [BulletinController::class, 'getClassesByType'])->name('classes.byType');
+// Route::get('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');

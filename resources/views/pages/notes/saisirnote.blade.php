@@ -59,7 +59,7 @@
                                         <!-- Champ de nombre -->
                                         <div class="col-md-4">
                                             <input type="number" id="champ1" name="champ1" class="form-control"
-                                                placeholder="Valeur" value="{{ $getClasmat->COEF  ?? '' }}" readonly>
+                                                placeholder="Valeur" value="{{ $getClasmat->COEF ?? '' }}" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -129,11 +129,12 @@
                                     <button type="submit" class="btn btn-primary btn-rounded">
                                         <i class="typcn typcn-home-outline"></i> Enregistrer
                                     </button>
-																	
-<button type="button" class="btn btn-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal">
-	<i class="typcn typcn-home-outline"></i>
-  Supprimer
-</button>
+
+                                    <button type="button" class="btn btn-danger btn-rounded" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal">
+                                        <i class="typcn typcn-delete-outline"></i>
+                                        Supprimer
+                                    </button>
 
 
                                 </div>
@@ -177,62 +178,62 @@
                                             <tr>
                                                 <td>{{ $eleve->MATRICULE ?? '' }}</td>
                                                 <td>{{ $eleve->NOM ?? '' }}<br>{{ $eleve->PRENOM ?? '' }}</td>
-                            
+
                                                 @for ($i = 1; $i <= 10; $i++)
                                                     <td class="interro-column" data-interro="{{ $i }}">
                                                         <input type="text"
-                                                               name="notes[{{ $eleve->MATRICULE }}][INT{{ $i }}]"
-                                                               value="{{ $eleve['INT' . $i] ?? '' }}"
-                                                               class="form-control form-control-sm interro-input"
-                                                               oninput="calculateMIAndMoy(this)">
+                                                            name="notes[{{ $eleve->MATRICULE }}][INT{{ $i }}]"
+                                                            value="{{ $eleve['INT' . $i] ?? '' }}"
+                                                            class="form-control form-control-sm interro-input"
+                                                            oninput="calculateMIAndMoy(this)">
                                                     </td>
                                                 @endfor
-                            
+
                                                 <td>
                                                     <input type="text" name="notes[{{ $eleve->MATRICULE }}][MI]"
-                                                           value="{{ $eleve->MI ?? '' }}"
-                                                           class="form-control form-control-sm mi-input" readonly>
+                                                        value="{{ $eleve->MI ?? '' }}"
+                                                        class="form-control form-control-sm mi-input" readonly>
                                                 </td>
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
-                                                           value="{{ $eleve->DEV1 ?? '' }}" 
-                                                           class="form-control form-control-sm dev-input" 
-                                                           oninput="calculateMIAndMoy(this)"></td>
+                                                        value="{{ $eleve->DEV1 ?? '' }}"
+                                                        class="form-control form-control-sm dev-input"
+                                                        oninput="calculateMIAndMoy(this)"></td>
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
-                                                           value="{{ $eleve->DEV2 ?? '' }}" 
-                                                           class="form-control form-control-sm dev-input" 
-                                                           oninput="calculateMIAndMoy(this)"></td>
+                                                        value="{{ $eleve->DEV2 ?? '' }}"
+                                                        class="form-control form-control-sm dev-input"
+                                                        oninput="calculateMIAndMoy(this)"></td>
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
-                                                           value="{{ $eleve->DEV3 ?? '' }}" 
-                                                           class="form-control form-control-sm dev-input" 
-                                                           oninput="calculateMIAndMoy(this)"></td>
+                                                        value="{{ $eleve->DEV3 ?? '' }}"
+                                                        class="form-control form-control-sm dev-input"
+                                                        oninput="calculateMIAndMoy(this)"></td>
                                                 <td>
-                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
-                                                           value="{{ $eleve->MS ?? '' }}" 
-                                                           class="form-control form-control-sm moy-input" readonly>
+                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
+                                                        value="{{ $eleve->MS1 ?? '' }}"
+                                                        class="form-control form-control-sm moy-input" readonly>
                                                 </td>
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][TEST]"
-                                                           value="{{ $eleve->TEST ?? '' }}" 
-                                                           class="form-control form-control-sm test-input"
-                                                           oninput="calculateMIAndMoy(this)"></td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
-                                                           value="{{ $eleve->MS1 ?? '' }}" 
-                                                           class="form-control form-control-sm moy1-input"readonly>
+                                                        value="{{ $eleve->TEST ?? '' }}"
+                                                        class="form-control form-control-sm test-input"
+                                                        oninput="calculateMIAndMoy(this)"></td>
+                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
+                                                        value="{{ $eleve->MS ?? '' }}"
+                                                        class="form-control form-control-sm moy1-input"readonly>
                                                 </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
-                            
+
                             <script>
                                 function calculateMIAndMoy(input) {
                                     const row = input.closest('tr');
-                                    
+
                                     // Calculate MI (average of interrogation scores)
                                     const interroInputs = row.querySelectorAll('.interro-input');
                                     let interroSum = 0;
                                     let interroCount = 0;
-                                    
+
                                     interroInputs.forEach(interro => {
                                         const value = parseFloat(interro.value);
                                         if (!isNaN(value)) {
@@ -240,16 +241,16 @@
                                             interroCount++;
                                         }
                                     });
-                            
+
                                     const miField = row.querySelector('.mi-input');
                                     const mi = interroCount > 0 ? (interroSum / interroCount).toFixed(2) : '';
                                     miField.value = mi;
-                            
+
                                     // Calculate Moy (average of MI and DEV scores)
                                     const devInputs = row.querySelectorAll('.dev-input');
                                     let devSum = 0;
                                     let devCount = 0;
-                            
+
                                     devInputs.forEach(dev => {
                                         const value = parseFloat(dev.value);
                                         if (!isNaN(value)) {
@@ -257,26 +258,26 @@
                                             devCount++;
                                         }
                                     });
-                            
+
                                     const moyField = row.querySelector('.moy-input');
                                     const moy = devCount > 0 ? ((parseFloat(mi) + devSum) / (devCount + 1)).toFixed(2) : '';
                                     moyField.value = moy;
-                            
+
                                     // Calculate MS (average of MI and DEV scores)
                                     const msField = row.querySelector('[name*="MS"]');
                                     const ms = parseFloat(moyField.value) || 0; // Use moy as MS for the calculation
                                     msField.value = ms.toFixed(2);
-                            
+
                                     // Calculate MS1 (average of MS and TEST)
                                     const testInput = row.querySelector('[name*="TEST"]');
                                     const testValue = parseFloat(testInput.value) || 0;
-                            
+
                                     const ms1Field = row.querySelector('[name*="MS1"]');
                                     const ms1 = (ms + testValue) / (testValue > 0 ? 2 : 1); // If TEST is filled, divide by 2, else by 1
                                     ms1Field.value = ms1.toFixed(2);
                                 }
                             </script>
-                                                         
+
                         </div>
                     </div>
                 </div>
@@ -284,30 +285,30 @@
         </div>
     </div>
     <br><br><br>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Voulez vous vriament supprimer les notes?</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-			<form action="{{ route('delete-notes') }}" method="POST">
-				@csrf
-      <div class="modal-body">
-					<input type="hidden" value="CE1A" id="tableSelec4" name="classe">
-					<input type="hidden" value="1" id="tableSelec5" name="matiere">
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Voulez vous vriament supprimer les notes?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('delete-notes') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" value="CE1A" id="tableSelec4" name="classe">
+                        <input type="hidden" value="1" id="tableSelec5" name="matiere">
 
-			
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <button type="submit" class="btn btn-primary">Supprimer</button>
-      </div>
-		</form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Supprimer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
     <script>
         function updateCodeMat() {
             // Récupère la valeur sélectionnée dans le select de matières
@@ -360,7 +361,7 @@
         // Ajoute les écouteurs d'événements pour les deux sélecteurs
         document.getElementById("tableSelect4").addEventListener("change", redirectWithSelection);
         document.getElementById("tableSelect5").addEventListener("change", redirectWithSelection);
-				document.getElementById("tableSelec4").addEventListener("change", redirectWithSelection);
+        document.getElementById("tableSelec4").addEventListener("change", redirectWithSelection);
         document.getElementById("tableSelec5").addEventListener("change", redirectWithSelection);
     </script>
 

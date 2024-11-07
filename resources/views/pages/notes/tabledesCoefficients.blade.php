@@ -27,6 +27,7 @@
         </div> 
 
         {{-- @csrf --}}
+        
         <div class="row mb-3">
             @if(Session::has('status'))
             <div id="statusAlert" class="alert alert-succes btn-primary">

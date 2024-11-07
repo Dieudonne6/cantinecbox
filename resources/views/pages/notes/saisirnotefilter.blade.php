@@ -130,8 +130,8 @@
           <i class="typcn typcn-home-outline"></i> Enregistrer
         </button>
         
-        <button type="button" class="btn btn-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          <i class="typcn typcn-home-outline"></i>
+        <button type="button" class="btn btn-danger btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <i class="typcn typcn-delete-outline"></i>
           Supprimer
         </button>
         

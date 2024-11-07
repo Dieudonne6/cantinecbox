@@ -42,7 +42,7 @@ class GestionNotesController extends Controller
     {
         // Récupération et décodage du JSON des coefficients
         $coefficients = json_decode($request->input('coefficients'), true);
-        
+        // dd($coefficients);
         // Vérifier si les coefficients sont bien envoyés
         if (empty($coefficients)) {
             return redirect()->back()->with('status', 'Aucun coefficient à sauvegarder.');
