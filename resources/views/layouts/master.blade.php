@@ -691,6 +691,8 @@ $('#Filtercycle').on('change', function() {
 
     </script>
 
+    
+
 <script>
     $('#submitBtn1').click(function() {
       var selectedValues = $('.js-example-basic-multiple').val(); // Récupérer les valeurs sélectionnées

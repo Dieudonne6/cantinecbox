@@ -181,6 +181,7 @@
             <div class="row">
               <h5>Message affiché au bas du bulletin</h5>
               <div id="editor" class="editor" contenteditable="true"></div>
+              <input type="hidden" name="msgEnBasBulletin" id="messageEd">
               <style>
                 .toolbar {
                   display: flex;
@@ -231,19 +232,19 @@
                 </select>
                 
                 <!-- Boutons de style -->
-                <button class="icon" onclick="document.execCommand('bold', false, '')">G</button> <!-- Gras -->
-                <button class="icon" onclick="document.execCommand('italic', false, '')">I</button> <!-- Italique -->
-                <button class="icon" onclick="document.execCommand('underline', false, '')">S</button> <!-- Souligné -->
+                <button type="button" class="icon" onclick="document.execCommand('bold', false, '')">G</button> <!-- Gras -->
+                <button type="button" class="icon" onclick="document.execCommand('italic', false, '')">I</button> <!-- Italique -->
+                <button type="button" class="icon" onclick="document.execCommand('underline', false, '')">S</button> <!-- Souligné -->
                 
                 <!-- Barré et couleur -->
-                <button class="icon" onclick="document.execCommand('strikethrough', false, '')">Ƀ</button> <!-- Barré -->
+                <button type="button" class="icon" onclick="document.execCommand('strikethrough', false, '')">Ƀ</button> <!-- Barré -->
                 <input type="color" onchange="changeColor(this.value)" />
                 
                 <!-- Alignement -->
-                <button class="icon" onclick="document.execCommand('justifyLeft', false, '')">L</button> <!-- Aligné à gauche -->
-                <button class="icon" onclick="document.execCommand('justifyCenter', false, '')">C</button> <!-- Centré -->
-                <button class="icon" onclick="document.execCommand('justifyRight', false, '')">R</button> <!-- Aligné à droite -->
-                <button class="icon" onclick="document.execCommand('justifyFull', false, '')">J</button> <!-- Justifié -->
+                <button type="button" class="icon" onclick="document.execCommand('justifyLeft', false, '')">L</button> <!-- Aligné à gauche -->
+                <button type="button" class="icon" onclick="document.execCommand('justifyCenter', false, '')">C</button> <!-- Centré -->
+                <button type="button" class="icon" onclick="document.execCommand('justifyRight', false, '')">R</button> <!-- Aligné à droite -->
+                <button type="button" class="icon" onclick="document.execCommand('justifyFull', false, '')">J</button> <!-- Justifié -->
                 
                 <!-- Bouton de réinitialisation -->
               </div>
@@ -251,6 +252,12 @@
               <!-- Zone d'édition -->
               
               <script>
+
+                function getMessage() {
+                  var editorContent = document.getElementById('editor').innerHTML;
+                  document.getElementById('messageEd').value = editorContent;
+                }
+
                 function changeFont(font) {
                   document.execCommand('fontName', false, font);
                 }
@@ -273,8 +280,7 @@
               </script>
               <br>
               <div class="d-flex justify-content-end align-items-center" style="margin-top: 40px !important;">
-                <button class="btn btn-primary">Sauvegarder</button>
-              </div>
+                <button type="button" class="btn btn-primary" onclick="getMessage()">Sauvegarder</button>              </div>
             </div>
             
           </div>
@@ -401,15 +407,17 @@
   <!-- Modale des options d'édition -->
   <div class="modal fade" id="optionsEdition" tabindex="-1" aria-labelledby="optionsEditionLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabelmodif">Liste des options d'édition</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form action="{{ route('printbulletindenotes') }}" method="GET" id="formedition">
-          @csrf
-        <div class="modal-body">
-          <div class="row">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabelmodif">Liste des options d'édition</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Ajouter l'action vers la nouvelle route et spécifier method="POST" -->
+            <form id="formedition"  method="POST">
+                @csrf
+                <div class="modal-body">
+                    <!-- Formulaire du modal -->
+                    <div class="row">
             <div class="col-md-4">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="entete" id="entete">
@@ -476,38 +484,48 @@
                 <label class="form-check-label edition-label" for="appreciation_directeur">Imprimer l'appréciation du directeur</label>
               </div>
             </div>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-          <button type="button" class="btn btn-primary" id="confirmerOptions">Confirmer</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            <button type="submit" class="btn btn-primary">Confirmer</button>
         </div>
-        </form>
-      </div>
-    </div>
-  </div>
+    </form>
+</div>
+</div>
+</div>
   <script>
-    document.getElementById('confirmerOptions').addEventListener('click', function(event) {
+    document.getElementById('formedition').addEventListener('submit', function(event) {
         event.preventDefault();
-        var formData = new FormData(document.getElementById('formedition'));
-    
-        fetch('{{ route('printbulletindenotes') }}', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+
+        // Créer un objet FormData à partir du formulaire
+        let formData = new FormData(this);
+
+      fetch('{{ route('optionsbulletindenotes') }}', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      }
+    })
+    .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur du serveur : ' + response.status);
             }
+            return response.text(); // On attend du texte en retour, pas du JSON
         })
-        .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
-            // Vous pouvez ici fermer le modal si nécessaire
+            // Afficher un message de succès
+            alert('Les options d\'édition ont été enregistrées avec succès');
+            // Fermer le modal
             $('#optionsEdition').modal('hide');
         })
-        .catch((error) => {
-            console.error('Error:', error);
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Une erreur est survenue lors de l\'enregistrement des options.');
         });
     });
-    </script>
+</script>
   <!-- Modale de configuration des bulletins -->
   <div class="modal fade" id="configdecisionconseil" tabindex="-1" aria-labelledby="configdecisionconseilLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
