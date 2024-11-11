@@ -6,6 +6,7 @@ use App\Models\Eleve;
 use App\Models\Notes;
 use App\Models\Matieres;
 use App\Models\Clasmat;
+use App\Models\Params2;
 
 use App\Models\Groupeclasse;
 use Illuminate\Http\Request;
@@ -201,7 +202,6 @@ class CdController extends Controller
       return redirect()->back()->with('success', 'Les notes ont été enregistrées avec succès.');
   }
   
- 
   public function deleteNote(Request $request)
 {
     // Récupérer les valeurs de 'classe' et 'matiere' depuis le formulaire
@@ -233,6 +233,15 @@ class CdController extends Controller
 
     // Redirection ou réponse de confirmation
     return redirect()->back()->with('success', 'Les notes ont été supprimées.');
+}
+
+public function attestationdemerite()
+{
+  $classes = Classe::all();
+  $eleves = Eleve::all();
+  $params = Params2::first();
+  // Passer les données à la vue
+  return view('pages.notes.attestationdemerite', compact('classes', 'eleves', 'params'));
 }
 
 }

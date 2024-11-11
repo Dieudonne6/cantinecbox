@@ -150,7 +150,7 @@ class BulletinController extends Controller
 
             // Grouper les notes par matière
             $notesParMatiere = $eleve->notes->groupBy('CODEMAT');
-
+            
             // dd($notesParMatiere);
 
             foreach ($notesParMatiere as $codeMatiere => $notes) {
@@ -171,7 +171,7 @@ class BulletinController extends Controller
                             $nbDevoir++;
                         }
                     }
-
+                    
                     $totalCoeff += $note->COEF;
                     $dev1 = $note->DEV1;
                     $dev2 = $note->DEV2;
@@ -190,7 +190,6 @@ class BulletinController extends Controller
                 } else {
                     $moyenneInterro = 0;
                 }
-
                 // Calcul de la moyenne des devoirs
                 $moyenneDevoir = $nbDevoir > 0 ? $totalDevoir / $nbDevoir : 0;
 
@@ -296,6 +295,6 @@ class BulletinController extends Controller
         // Retourner les résultats, ou effectuer d'autres actions
         // dd ($resultats);
         
-        return view('pages.notes.printbulletindenotes', compact('resultats', 'eleves', 'option'));
+        return view('pages.notes.printbulletindenotes', compact('request' , 'resultats', 'eleves', 'option'));
     }
 }           
