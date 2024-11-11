@@ -204,7 +204,7 @@
                 <div class="collapse {{ request()->is('Tableau de notes') || request()->is('Bulletin de notes') || request()->is('Attestations de mérite') || in_array(request()->route()->getName(), $routeseditions2) || in_array(request()->route()->getName(), $routenew) ? 'show' : '' }}" data-bs-parent="#parent-notes" id="edition">
                   <ul class="nav sub-menu">
                     <li><a class="nav-link {{ request()->is('Tableau de notes') ? 'active' : '' }}" href="{{ url('/tableaudenotes') }}">Tableau de notes</a></li>
-                    <li><a class="nav-link {{ request()->is('Bulletin de notes') ? 'active' : '' }}" href="{{ url('/bulletindenotes') }}"> Bulletin de notes</a></li>
+                    <li><a class="nav-link {{ request()->is('Bulletin de notes') ? 'active' : '' }}" href="{{ route('bulletindenotes') }}"> Bulletin de notes</a></li>
                     <li><a class="nav-link {{ request()->is('Attestations de mérite') ? 'active' : '' }}" href="{{ url('/attestationdemerite') }}">Attestations de mérite</a></li>
                     <li><a class="nav-link {{ in_array(request()->route()->getName(), $routeseditions2) ? 'active' : '' }}" href="{{ route('editions2') }}">Editions</a></li>
                   </ul>
