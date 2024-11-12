@@ -96,6 +96,7 @@ class BulletinController extends Controller
         $classeSelectionne = $request->input('selected_classes', []);
     
         $params2 = Params2::first();
+        $entete = Params2::first()->EnteteBull; // Récupérer la valeur de l'en-tête
 
         $infoparamcontrat = Paramcontrat::first();
         $anneencours = $infoparamcontrat->anneencours_paramcontrat;
@@ -266,8 +267,8 @@ class BulletinController extends Controller
             }
         }
     
-        dd($resultats);
-        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option'));
+        // dd($resultats);
+        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', '$entete'));
     }
     
     /**
