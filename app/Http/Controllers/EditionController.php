@@ -281,6 +281,8 @@ class EditionController extends Controller
                 ['min' => $request->input('interval7'), 'max' => $request->input('interval8')],
                 ['min' => $request->input('interval9'), 'max' => $request->input('interval10')],
             ];
+            session(['intervals' => $intervals]);
+
             $classe = Classe::all();
             // Récupérer la classe, la période et le type d'évaluation sélectionnés
             $selectedClass = $request->input('classe','CE1A');
@@ -341,17 +343,24 @@ class EditionController extends Controller
                 }
             }
             
-            return view('pages.notes.filtertableaunotes', compact('classe','matieres','eleves','notes','selectedEvaluation','moyennes','moyenneCounts', 'intervals'));
+            return view('pages.notes.filtertableaunotes', compact('selectedPeriod','selectedClass','classe','matieres','eleves','notes','selectedEvaluation','moyennes','moyenneCounts', 'intervals'));
             
         }
         public function filtertablenotes(Request $request) {
-            $intervals = [
-                ['min' => $request->input('interval1'), 'max' => $request->input('interval2')],
-                ['min' => $request->input('interval3'), 'max' => $request->input('interval4')],
-                ['min' => $request->input('interval5'), 'max' => $request->input('interval6')],
-                ['min' => $request->input('interval7'), 'max' => $request->input('interval8')],
-                ['min' => $request->input('interval9'), 'max' => $request->input('interval10')],
-            ];
+            $intervals = session('intervals', [
+                ['min' => 0, 'max' => 0],
+                ['min' => 0, 'max' => 0],
+                ['min' => 0, 'max' => 0],
+                ['min' => 0, 'max' => 0],
+                ['min' => 0, 'max' => 0],
+            ]);
+            // $intervals = [
+            //     ['min' => $request->input('interval1'), 'max' => $request->input('interval2')],
+            //     ['min' => $request->input('interval3'), 'max' => $request->input('interval4')],
+            //     ['min' => $request->input('interval5'), 'max' => $request->input('interval6')],
+            //     ['min' => $request->input('interval7'), 'max' => $request->input('interval8')],
+            //     ['min' => $request->input('interval9'), 'max' => $request->input('interval10')],
+            // ];
             $classe = Classe::all();
             // Récupérer la classe, la période et le type d'évaluation sélectionnés
             $selectedClass = $request->input('classe');
@@ -413,7 +422,7 @@ class EditionController extends Controller
             }
             
             
-            return view('pages.notes.filtertablenotes', compact('classe','matieres','eleves','notes','selectedEvaluation','moyennes','moyenneCounts', 'intervals'));
+            return view('pages.notes.filtertablenotes', compact('selectedPeriod','selectedClass','classe','matieres','eleves','notes','selectedEvaluation','moyennes','moyenneCounts', 'intervals'));
             
         }
     }

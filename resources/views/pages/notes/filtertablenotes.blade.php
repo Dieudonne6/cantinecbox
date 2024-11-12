@@ -12,9 +12,9 @@
     background-color: #f2f2f2;
   }
   .interval-section td {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
 </style>
 
 </style>
@@ -58,18 +58,38 @@
     
   </div>
   <div class="col-md-2 mb-3">
-    <button onclick="printTables()" class="btn btn-primary">Imprimer</button>
+    <button onclick="printNote()" class="btn btn-primary">Imprimer</button>
     
   </div>
   
 </div>
-<div class="table-responsive mb-4">
-  <table class="table" id="mainTable">
+<div class="table-responsive mb-4"  id="mainTable">
+  <div  class="titles mb-4 d-none">
+    <h4 class="mb-2 text-center">Tableau Récapitulatifs des notes</h4>
+    <p class="text-center">
+      <strong>
+        Classe: {{ $selectedClass }} / Semestre: {{ $selectedPeriod }} 
+        @if($selectedEvaluation == 'MS1')
+        (Moyenne semestre)
+        @elseif($selectedEvaluation == 'DEV1')
+        (Note de Devoirs 1)
+        @elseif($selectedEvaluation == 'DEV2')
+        (Note de Devoirs 2)
+        @elseif($selectedEvaluation == 'DEV3')
+        (Note de Devoirs 3)
+        @elseif($selectedEvaluation == 'TEST')
+        (Note de TEST)
+        @endif
+      </strong>
+    </p>
+    
+  </div>
+  
+  <table class="table">
     <thead>
       <tr>
         <th>Matricule</th>
-        <th>Nom</th>
-        <th>Prénom</th>
+        <th>Nom et Prénoms</th>
         @foreach ($matieres as $matiere)
         <th>{{ $matiere->NOMCOURT }} ({{ $matiere->COEF }})</th>
         @endforeach
@@ -84,8 +104,7 @@
       @foreach ($eleves as $eleve)
       <tr>
         <td>{{ $eleve->MATRICULE }}</td>
-        <td>{{ $eleve->NOM }}</td>
-        <td>{{ $eleve->PRENOM }}</td>
+        <td>{{ $eleve->NOM }} {{ $eleve->PRENOM }}</td>
         @foreach ($matieres as $matiere)
         @php
         $noteKey = $eleve->MATRICULE . '-' . $matiere->CODEMAT;
@@ -100,28 +119,28 @@
       @endforeach
       <!-- Affichage des plus faibles et plus fortes moyennes alignées avec les matières -->
       <tr class="interval-section">
-        <td colspan="3">Plus faibles moyennes</td>
+        <td colspan="2">Plus faibles moyennes</td>
         @foreach ($matieres as $matiere)
         <td>{{ $moyennes[$matiere->CODEMAT]['min'] ?? 0 }}</td>
         @endforeach
-        <td colspan="3"></td>
+        <td colspan="2"></td>
       </tr>
       <tr class="mb-3">
-        <td colspan="3">Plus fortes moyennes</td>
+        <td colspan="2">Plus fortes moyennes</td>
         @foreach ($matieres as $matiere)
         <td>{{ $moyennes[$matiere->CODEMAT]['max'] ?? 0 }}</td>
         @endforeach
-        <td colspan="3"></td>
+        <td colspan="2"></td>
       </tr>
       
       <!-- Affichage des intervalles alignés avec les matières -->
       @foreach ($intervals as $index => $interval)
       <tr>
-        <td colspan="3">Nb moyennes de {{ $interval['min'] }} à {{ $interval['max'] }}</td>
+        <td colspan="2">Nb moyennes de {{ $interval['min'] }} à {{ $interval['max'] }}</td>
         @foreach ($matieres as $matiere)
         <td>{{ $moyenneCounts[$matiere->CODEMAT][$index] ?? 0 }}</td>
         @endforeach
-        <td colspan="3"></td>
+        <td colspan="2"></td>
       </tr>
       @endforeach
     </tbody>
@@ -156,27 +175,51 @@
   document.getElementById("tableSelect5").addEventListener("change", redirectWithSelection);
   document.getElementById("tableSelect6").addEventListener("change", redirectWithSelection);
   
-  function printTables() {
-    // Créer une nouvelle fenêtre pour l'impression
-    const printWindow = window.open('', '_blank');
-    const tables = document.getElementById('table1').outerHTML +
-    document.getElementById('table2').outerHTML +
-    document.getElementById('table3').outerHTML;
+  function injectTableStyles() {
+    var style = document.createElement('style');
+    style.innerHTML = `
+      @page { size: landscape; }
+          table {
+              width: 100%;
+              border-collapse: collapse;
+          }
+              thead {
+      background-color: #f2f2f2;
+      text-transform: uppercase;
+    }
+        .table td:nth-child(n+2), .table th:nth-child(n+2) {
+          margin: 0 !important;
+          padding: 5px 0 5px 5px !important;
+          width: 100px !important;
+          word-wrap: break-word !important;
+          white-space: normal !important;
+                    }
+          th, td {
+              padding: 0 !important;
+              margin: 0 !important;
+              border: 1px solid #ddd;
+              text-align: center;
+              font-size: 10px !important;
+          }
+              .titles {
+              display: block  !important;
+              }
+          .classe-row {
+              background-color: #f9f9f9;
+              font-weight: bold;
+          }`;
+    document.head.appendChild(style);
+  }
+  function printNote() {
+    injectTableStyles(); // Injecter les styles pour l'impression
+    var originalContent = document.body.innerHTML; // Contenu original de la page
+    var printContent = document.getElementById('mainTable').innerHTML; // Contenu spécifique à imprimer
+    document.body.innerHTML = printContent; // Remplacer le contenu de la page par le contenu à imprimer
     
-    // Style pour les tableaux
-    const style = `
-        <style>
-            body { font-family: Arial, sans-serif; }
-            .table { width: 100%; border-collapse: collapse; }
-            .table th, .table td { border: 1px solid #000; padding: 8px; text-align: center; }
-        </style>
-    `;
-    
-    // Insérer le contenu HTML et le style dans la fenêtre d'impression
-    printWindow.document.write(`<html><head><title>Impression des tableaux</title>${style}</head><body>${tables}</body></html>`);
-    
-    printWindow.document.close();
-    printWindow.print();
+    setTimeout(function() {
+      window.print(); // Ouvrir la boîte de dialogue d'impression
+      document.body.innerHTML = originalContent; // Restaurer le contenu original
+    }, 1000);
   }
 </script>
 @endsection

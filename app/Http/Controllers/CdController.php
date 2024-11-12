@@ -183,24 +183,26 @@ class CdController extends Controller
           'notes.*.MS' => 'nullable|numeric',
           'notes.*.TEST' => 'nullable|numeric',
           'notes.*.MS1' => 'nullable|numeric',
-          // Ajoutez d'autres validations si nécessaire
       ]);
-        // dd($validatedData['notes']);
+  
       // Parcourir chaque élève et enregistrer les notes
       foreach ($validatedData['notes'] as $matricule => $noteData) {
           Notes::updateOrCreate(
-              ['MATRICULE' => $matricule], // Critère de correspondance
+              [
+                  'MATRICULE' => $matricule,
+                  'SEMESTRE' => $request->champ1,
+                  'CODEMAT' => $request->CODEMAT,
+                  'CODECLAS' => $request->CODECLAS
+              ], // Critère de correspondance pour mise à jour ou création
               array_merge($noteData, [
-                'SEMESTRE' => $request->champ1,
-                'COEF' => $request->champ2,
-                'CODEMAT' => $request->CODEMAT,
-                'CODECLAS' => $request->CODECLAS,
-            ])// Données à insérer ou mettre à jour
+                  'COEF' => $request->champ2,
+              ]) // Données à insérer ou mettre à jour
           );
       }
-
+  
       return redirect()->back()->with('success', 'Les notes ont été enregistrées avec succès.');
   }
+  
   
   public function deleteNote(Request $request)
 {
@@ -239,9 +241,15 @@ public function attestationdemerite()
 {
   $classes = Classe::all();
   $eleves = Eleve::all();
+  $notes = Notes::all();
   $params = Params2::first();
   // Passer les données à la vue
-  return view('pages.notes.attestationdemerite', compact('classes', 'eleves', 'params'));
+  return view('pages.notes.attestationdemerite', compact('classes', 'eleves', 'params', 'notes'));
 }
+
+
+
+
+
 
 }

@@ -206,7 +206,7 @@ Route::get('/editions2', [EditionController2::class, 'editions2'])->name('editio
 Route::get('/editions2/fichedenotesvierge', [EditionController2::class, 'fichedenotesvierge'])->name('pages.notes.fichedenotesvierge');
 Route::get('/editions2/fichedenoteviergefina/{classeCode}', [EditionController2::class, 'fichedenoteviergefina'])->name('fichedenoteviergefina');
 
-Route::get('/editions2/relevesparmatiere', [EditionController2::class, 'relevesparmatiere'])->name('pages.notes.relevesparmatiere');
+Route::get('/editions2/relevesparmatiere', [EditionController::class, 'relevesparmatiere'])->name('pages.notes.relevesparmatiere');
 Route::get('/editions2/recapitulatifdenotes', [EditionController2::class, 'recapitulatifdenotes'])->name('pages.notes.recapitulatifdenotes');
 Route::get('/editions2/relevespareleves', [EditionController2::class, 'relevespareleves'])->name('pages.notes.relevespareleves');
 Route::get('/editions2/resultatsparpromotion', [EditionController2::class, 'resultatsparpromotion'])->name('pages.notes.resultatsparpromotion');
@@ -328,6 +328,7 @@ Route::get('/recouvrementgeneral', [PagesController::class, 'recouvrementgeneral
 Route::get('/repartitionclassesparoperateur', [GestionNotesController::class, 'repartitionclassesparoperateur'])->name('repartitionclassesparoperateur');
 Route::post('/repartitionclassesparoperateur', [GestionNotesController::class, 'repartitionclassesoperateur'])->name('repartitionclassesoperateur');
 
+Route::post('/filtrereleveparmatiere', [EditionController::class, 'filtrereleveparmatiere'])->name('filtrereleveparmatiere');
 
 
 // gestion des notes
@@ -361,7 +362,8 @@ Route::get('/filtertablenotes', [EditionController::class, 'filtertablenotes'])-
 
 
 Route::get('/attestationdemerite', [CdController::class, 'attestationdemerite'])->name('attestationdemerite');
-Route::get('/filter-students', [CdController::class, 'filterStudents'])->name('filterattestationdemerite');
+Route::get('/getStudentsByClass/{classCode}', [CdController::class, 'getStudentsByClass']);
+
 
 Route::post('/bulletindenotes', [BulletinController::class, 'storebulletindenotes'])->name('storebulletindenotes');
 Route::post('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');
