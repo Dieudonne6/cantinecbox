@@ -116,13 +116,7 @@
       $routeSecurite = [
         'verrouillage',
     ];
-      $routesextract = [
-        '',
-    ];
-    
-    $result = [
-      '',
-    ];
+
     $routenew = [
       'bulletindenotes', 'attestationdemerite',
     ];
@@ -210,7 +204,7 @@
                 <div class="collapse {{ request()->is('Tableau de notes') || request()->is('Bulletin de notes') || request()->is('Attestations de mérite') || in_array(request()->route()->getName(), $routeseditions2) || in_array(request()->route()->getName(), $routenew) ? 'show' : '' }}" data-bs-parent="#parent-notes" id="edition">
                   <ul class="nav sub-menu">
                     <li><a class="nav-link {{ request()->is('Tableau de notes') ? 'active' : '' }}" href="{{ url('/tableaudenotes') }}">Tableau de notes</a></li>
-                    <li><a class="nav-link {{ request()->is('Bulletin de notes') ? 'active' : '' }}" href="{{ url('/bulletindenotes') }}"> Bulletin de notes</a></li>
+                    <li><a class="nav-link {{ request()->is('Bulletin de notes') ? 'active' : '' }}" href="{{ route('bulletindenotes') }}"> Bulletin de notes</a></li>
                     <li><a class="nav-link {{ request()->is('Attestations de mérite') ? 'active' : '' }}" href="{{ url('/attestationdemerite') }}">Attestations de mérite</a></li>
                     <li><a class="nav-link {{ in_array(request()->route()->getName(), $routeseditions2) ? 'active' : '' }}" href="{{ route('editions2') }}">Editions</a></li>
                   </ul>
@@ -219,13 +213,13 @@
       
               {{-- Résultats --}}
               <li class="nav-item">
-                <a class="nav-link {{ request()->is('Liste par ordre de mérite') || request()->is('Tableau analytique') || request()->is('Rapports annuels') || request()->is('Livrets scolaires') || in_array(request()->route()->getName(), $result) ? 'active' : '' }}"
+                <a class="nav-link"
                  data-bs-toggle="collapse" href="#resultats"
-                 aria-expanded="{{ request()->is('Liste par ordre de mérite') || request()->is('Tableau analytique') || request()->is('Rapports annuels') || request()->is('Livrets scolaires') || in_array(request()->route()->getName(), $result) ? 'true' : 'false' }}" aria-controls="resultats">
+                 aria-expanded="false" aria-controls="resultats">
                   Résultats
                   <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse {{ request()->is('Liste par ordre de mérite') || request()->is('Tableau analytique') || request()->is('Rapports annuels') || request()->is('Livrets scolaires') || in_array(request()->route()->getName(), $result) ? 'show' : '' }}" data-bs-parent="#parent-notes" id="resultats">
+                <div class="collapse" data-bs-parent="#parent-notes" id="resultats">
                   <ul class="nav sub-menu">
                     <li><a class="nav-link {{ request()->is('Liste par ordre de mérite') ? 'active' : '' }}" href="#">Liste par ordre de mérite</a></li>
                     <li><a class="nav-link {{ request()->is('Tableau analytique') ? 'active' : '' }}" href="#">Tableau analytique</a></li>
@@ -237,13 +231,13 @@
       
               {{-- Extraction --}}
               <li class="nav-item">
-                <a class="nav-link {{ request()->is('Exporter') || request()->is('Importer') || in_array(request()->route()->getName(), $routesextract) ? 'active' : '' }}"
-                   data-bs-toggle="collapse" href="#extract" aria-expanded="{{ request()->is('Exporter') || request()->is('Importer') || in_array(request()->route()->getName(), $routesextract) ? 'true' : 'false' }}"
+                <a class="nav-link"
+                   data-bs-toggle="collapse" href="#extract" aria-expanded="false"
                     aria-controls="extract">
                   Extraction
                   <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse {{ request()->is('Exporter') || request()->is('Importer') || in_array(request()->route()->getName(), $routesextract) ? 'show' : '' }}" data-bs-parent="#parent-notes" id="extract">
+                <div class="collapse" data-bs-parent="#parent-notes" id="extract">
                   <ul class="nav sub-menu">
                     <li><a class="nav-link {{ request()->is('Exporter') ? 'active' : '' }}" href="#">Exporter</a></li>
                     <li><a class="nav-link {{ request()->is('Importer') ? 'active' : '' }}" href="#">Importer</a></li>

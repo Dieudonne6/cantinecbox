@@ -72,14 +72,27 @@ class BulletinController extends Controller
         return redirect()->route('printbulletindenotes', $request->all());
     }
 
+    public function optionsbulletindenotes(Request $request) {
+        $option = $request->all();
+
+        Session::put('option', $option);
+        // dd($option);
+    }
+
     public function printbulletindenotes(Request $request) {
+        $option = Session::get('option');
         // Initialiser la variable $moyennesParClasseEtMatiere
         $moyennesParClasseEtMatiere = [];
 
         $paramselection = $request->input('paramselection');
         $bonificationType = $request->input('bonificationType');
         $bonifications = $request->input('bonification');
+        $msgEnBasBulletin = $request->input('msgEnBasBulletin');
+        // $recalculer = $request->input('recalculer');
         $periode = $request->input('periode');
+        $conduite = $request->input('conduite');
+        $eps = $request->input('eps');
+        $nbabsence = $request->input('nbabsence');
         $apartirde = $request->input('apartirde');
         $classeSelectionne = $request->input('selected_classes', []);
 
@@ -92,6 +105,8 @@ class BulletinController extends Controller
         $classeSelectionne = array_filter($classeSelectionne, function($value) {
             return $value !== 'all';
         });
+
+        // dd($option);
 
         // Parcours chaque ligne de bonification
         foreach ($bonifications as $bonification) {
@@ -278,8 +293,8 @@ class BulletinController extends Controller
         }
 
         // Retourner les résultats, ou effectuer d'autres actions
-        //dd ($resultats);
-            
-        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves'));
+        // dd ($resultats);
+        
+        return view('pages.notes.printbulletindenotes', compact('request' , 'resultats', 'eleves', 'option'));
     }
 }           
