@@ -16,7 +16,7 @@
                     <div class="card-header bg-primary text-white">
                         <div class="row">
                             <!-- Sélection du mérite à imprimer -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="meritToPrint">Mérite à Imprimer</label>
                                 <select id="meritToPrint" class="js-example-basic-multiple w-100">
                                     <option value="{{ $params->NoteTH }}">TABLEAU D'HONNEUR</option>
@@ -26,13 +26,21 @@
                                 </select>
                             </div>
                             <!-- Sélection du trimestre -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="trimestre">Trimestre</label>
                                 <select id="trimestre" class="js-example-basic-multiple w-100">
                                     <option value="1">1er Trimestre</option>
                                     <option value="2">2ème Trimestre</option>
                                     <option value="3">3ème Trimestre</option>
                                 </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="classSelect">Classe</label>
+                                <select id="classSelect" class="js-example-basic-multiple w-100 mb-3">
+                                    @foreach ($classes as $classe)
+                                        <option value="{{ $classe->CODECLAS }}">{{ $classe->CODECLAS }}</option>
+                                    @endforeach
+                                </select>  
                             </div>
                         </div>
                     </div>
@@ -66,15 +74,15 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tablemerite">
-                                    @foreach ($notes as $note)
+                                    @foreach ($eleves as $eleve)
                                         <tr>
                                             <td>
                                                 <input type="checkbox" name="selected_eleves[]"
                                                     aria-label="Sélectionner élève"
-                                                    value="{{ $note->eleve->MATRICULE ?? '' }}">
+                                                    value="{{ $eleve->MATRICULE ?? '' }}">
                                             </td>
-                                            <td>{{ $note->eleve->NOM ?? '' }}<br>{{ $note->eleve->PRENOM ?? '' }}</td>
-                                            <td>{{ $note->MS ?? '' }}</td>
+                                            <td>{{ $eleve->NOM ?? '' }}<br>{{ $eleve->PRENOM ?? '' }}</td>
+                                            <td>{{ $eleve->MS1 ?? '' }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -88,13 +96,6 @@
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-body">
-                        <label for="classSelect">Sélectionner une classe</label>
-                        <select id="classSelect" class="js-example-basic-multiple w-100 mb-3">
-                            @foreach ($classes as $classe)
-                                <option value="{{ $classe->CODECLAS }}">{{ $classe->CODECLAS }}</option>
-                            @endforeach
-                        </select>                        
-
                         <h5 class="text-primary mt-4">Paramétrage</h5>
                         <form class="p-3 border rounded">
                             <div class="form-group d-flex align-items-center mb-2">

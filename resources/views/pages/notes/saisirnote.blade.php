@@ -310,6 +310,16 @@
         </div>
     </div>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('form').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); // Empêche la soumission du formulaire par "Entrée"
+                }
+            });
+        });
+    </script>
+
+    <script>
         function updateCodeMat() {
             // Récupère la valeur sélectionnée dans le select de matières
             var selectedMatiere = document.getElementById("tableSelect2").value;

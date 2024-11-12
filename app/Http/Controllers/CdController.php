@@ -187,21 +187,33 @@ class CdController extends Controller
   
       // Parcourir chaque élève et enregistrer les notes
       foreach ($validatedData['notes'] as $matricule => $noteData) {
-          Notes::updateOrCreate(
-              [
+          // Rechercher si une note existe déjà pour cet élève, matière, classe et semestre
+          $noteExistante = Notes::where('MATRICULE', $matricule)
+              ->where('SEMESTRE', $request->champ1)
+              ->where('CODEMAT', $request->CODEMAT)
+              ->where('CODECLAS', $request->CODECLAS)
+              ->first();
+  
+          if ($noteExistante) {
+              // Si la note existe, on la met à jour
+              $noteExistante->update(array_merge($noteData, [
+                  'COEF' => $request->champ2,
+              ]));
+          } else {
+              // Sinon, on crée une nouvelle entrée
+              Notes::create(array_merge($noteData, [
                   'MATRICULE' => $matricule,
                   'SEMESTRE' => $request->champ1,
-                  'CODEMAT' => $request->CODEMAT,
-                  'CODECLAS' => $request->CODECLAS
-              ], // Critère de correspondance pour mise à jour ou création
-              array_merge($noteData, [
                   'COEF' => $request->champ2,
-              ]) // Données à insérer ou mettre à jour
-          );
+                  'CODEMAT' => $request->CODEMAT,
+                  'CODECLAS' => $request->CODECLAS,
+              ]));
+          }
       }
   
       return redirect()->back()->with('success', 'Les notes ont été enregistrées avec succès.');
   }
+  
   
   
   public function deleteNote(Request $request)
