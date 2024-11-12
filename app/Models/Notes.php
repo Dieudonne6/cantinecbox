@@ -25,6 +25,11 @@ class Notes extends Model
         return $this->belongsTo(Eleve::class, 'MATRICULE', 'MATRICULE');
     }
 
+    public function Classes()
+    {
+        return $this->belongsTo(Classes::class, 'CODECLAS', 'CODECLAS');
+    }
+
     public function matiere()
     {
         return $this->belongsTo(Matiere::class, 'CODEMAT', 'CODEMAT');
