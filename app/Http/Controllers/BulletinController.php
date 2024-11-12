@@ -79,92 +79,111 @@ class BulletinController extends Controller
         // dd($option);
     }
 
-    public function printbulletindenotes(Request $request) {
+    public function printbulletindenotes(Request $request)
+    {
         $option = Session::get('option');
-        // Initialiser la variable $moyennesParClasseEtMatiere
         $moyennesParClasseEtMatiere = [];
-
+    
         $paramselection = $request->input('paramselection');
         $bonificationType = $request->input('bonificationType');
         $bonifications = $request->input('bonification');
         $msgEnBasBulletin = $request->input('msgEnBasBulletin');
-        // $recalculer = $request->input('recalculer');
         $periode = $request->input('periode');
-        $conduite = $request->input('conduite');
+        $conduite = $request->input('conduite'); // Code de la matière pour la conduite
         $eps = $request->input('eps');
         $nbabsence = $request->input('nbabsence');
         $apartirde = $request->input('apartirde');
         $classeSelectionne = $request->input('selected_classes', []);
+    
+        $params2 = Params2::first();
 
         $infoparamcontrat = Paramcontrat::first();
         $anneencours = $infoparamcontrat->anneencours_paramcontrat;
         $annesuivante = $anneencours + 1;
-        $annescolaire = $anneencours.'-'.$annesuivante;
-
-        // filtrer le tableau en enlevant l'élément 'all'
-        $classeSelectionne = array_filter($classeSelectionne, function($value) {
+        $annescolaire = $anneencours . '-' . $annesuivante;
+    
+        // Filtrer le tableau en enlevant l'élément 'all'
+        $classeSelectionne = array_filter($classeSelectionne, function ($value) {
             return $value !== 'all';
         });
-
-        // dd($option);
-
-        // Parcours chaque ligne de bonification
+    
+        // Traite chaque intervalle de bonification
         foreach ($bonifications as $bonification) {
             $start = $bonification['start'];
             $end = $bonification['end'];
             $note = $bonification['note'];
-            
-            // Traite chaque intervalle de bonification ici
+            // Code pour traiter les bonifications si nécessaire
         }
-
+    
         // Récupérer les élèves dans les classes sélectionnées
         $eleves = Eleve::whereIn('CODECLAS', $classeSelectionne)
             ->with(['notes' => function ($query) {
                 $query->where('SEMESTRE', 1); // Récupérer uniquement les notes du semestre 1
             }])->get();
-
-            // dd($eleves);
-
+    
         // Calculer l'effectif de chaque classe sélectionnée
         $effectifsParClasse = Eleve::whereIn('CODECLAS', $classeSelectionne)
             ->select('CODECLAS')
             ->groupBy('CODECLAS')
             ->selectRaw('COUNT(*) as effectif')
             ->pluck('effectif', 'CODECLAS');
-
+    
         $resultats = [];
-
+    
         // Parcourir chaque élève pour calculer les moyennes
         foreach ($eleves as $eleve) {
             $resultatEleve = [
                 'nom' => $eleve->NOM,
                 'prenom' => $eleve->PRENOM,
-                'redoublant' => $eleve->STATUTG,
+                'redoublant' => $eleve->STATUT,
+                'aptitute_sport' => $eleve->APTE,
                 'matricule' => $eleve->MATRICULE,
                 'anneScolaire' => $annescolaire,
                 'periode' => "1er Trimestre",
                 'classe' => $eleve->CODECLAS,
-                'effectif' => $effectifsParClasse[$eleve->CODECLAS] ?? 0, // Effectif de la classe spécifique
+                'effectif' => $effectifsParClasse[$eleve->CODECLAS] ?? 0,
                 'matieres' => []
             ];
-
+    
             // Grouper les notes par matière
             $notesParMatiere = $eleve->notes->groupBy('CODEMAT');
-            
-            // dd($notesParMatiere);
-
+    
             foreach ($notesParMatiere as $codeMatiere => $notes) {
-                $totalInterro = 0;
-                $nbInterro = 0;
+                // Vérifier si la matière est la conduite
+                if ($codeMatiere == $conduite || $codeMatiere == $eps) {
+                    // Chercher la première note non nulle et différente de 21 et 0 dans les colonnes INT1, INT2, INT3, DEV1, DEV2, DEV3
+                    $noteSpeciale = null;
+                    foreach ($notes as $note) {
+                        $noteSpeciale = collect([$note->INT1, $note->INT2, $note->INT3, $note->DEV1, $note->DEV2, $note->DEV3])
+                            ->first(function ($value) {
+                                return $value !== null && $value != 21 && $value != 0;
+                            });
+                
+                        if ($noteSpeciale !== null) {
+                            break; // On a trouvé une note valide, donc on peut sortir de la boucle
+                        }
+                    }
+                
+                    // Assigner les informations de la matière avec la note récupérée
+                    $mentionMatSpecial = $this->determineMention($noteSpeciale, $params2);
+
+                    $resultatEleve['matieres'][] = [
+                        'code_matiere' => $codeMatiere,
+                        'nom_matiere' => $notes->first()->matiere->LIBELMAT ?? ($codeMatiere == $conduite ? 'Conduite' : 'EPS'),
+                        'moyenne_sur_20' => $noteSpeciale,
+                        'coefficient' => 1,
+                        'mentionProf' => $mentionMatSpecial, // Pas de mention pour la conduite ou EPS
+                    ];
+                    continue; // Passer à la matière suivante
+                }
+    
                 $totalDevoir = 0;
                 $nbDevoir = 0;
-                $totalNotes = 0;
                 $totalCoeff = 0;
-
                 $nomMatiere = $notes->first()->matiere->LIBELMAT ?? 'Nom de la matière non trouvé';
-
+    
                 foreach ($notes as $note) {
-                    // Filtrer et additionner les notes de devoir (DEV1, DEV3, DEV4)
+                    // Calculer les moyennes de devoirs et d'interrogations
                     foreach (['DEV1', 'DEV2', 'DEV3'] as $devCol) {
                         if (isset($note->$devCol) && $note->$devCol <= 20) {
                             $totalDevoir += $note->$devCol;
@@ -178,62 +197,27 @@ class BulletinController extends Controller
                     $dev3 = $note->DEV3;
                     
                     if ($note->TEST < 21) {
-                        $test = $note->TEST;  
+                        $test = $note->TEST;
                     } else {
                         $test = null;
                     }
                 }
-
-                // Calcul de la moyenne d'interrogation par matière
-                if ($note->MI < 21) {
-                    $moyenneInterro = $note->MI;  
-                } else {
-                    $moyenneInterro = 0;
-                }
-                // Calcul de la moyenne des devoirs
+    
+                // Calculer les moyennes et les mentions
+                $moyenneInterro = ($note->MI ?? 0) < 21 ? $note->MI : 0;
                 $moyenneDevoir = $nbDevoir > 0 ? $totalDevoir / $nbDevoir : 0;
-
-                // Calcul de la moyenne sur 20 (50% interro + 50% devoirs)
                 $moyenneSur20 = $nbDevoir > 0 ? ($moyenneInterro + $totalDevoir) / ($nbDevoir + 1) : $moyenneInterro;
-
-                // Calcul de la moyenne coefficientée
                 $moyenneCoeff = $totalCoeff > 0 ? $moyenneSur20 * $totalCoeff : 0;
-
+    
                 // Stocker les moyennes pour chaque élève et matière
                 $moyennesParClasseEtMatiere[$eleve->CODECLAS][$codeMatiere][] = [
                     'eleve_id' => $eleve->MATRICULE,
                     'moyenne' => $moyenneSur20
                 ];
-
-                // Mention du proffeseur
-                $params2 = Params2::first();
-                $Borne1params2 = $params2->Borne1;
-                $Borne2params2 = $params2->Borne2;
-                $Borne3params2 = $params2->Borne3;
-                $Borne4params2 = $params2->Borne4;
-                $Borne5params2 = $params2->Borne5;
-                $Borne6params2 = $params2->Borne6;
-                $Borne7params2 = $params2->Borne7;
-                $Borne8params2 = $params2->Borne8;
-
-                if ($moyenneSur20 < $Borne1params2){
-                    $mentionProf = $params2->Mention1p;
-                } elseif (($moyenneSur20 > $Borne1params2) && ($moyenneSur20 <= $Borne2params2) ) {
-                    $mentionProf = $params2->Mention2p;
-                } elseif (($moyenneSur20 > $Borne2params2) && ($moyenneSur20 <= $Borne3params2) ) {
-                    $mentionProf = $params2->Mention3p;
-                } elseif (($moyenneSur20 > $Borne3params2) && ($moyenneSur20 <= $Borne4params2) ) {
-                    $mentionProf = $params2->Mention4p;
-                } elseif (($moyenneSur20 > $Borne4params2) && ($moyenneSur20 <= $Borne5params2) ) {
-                    $mentionProf = $params2->Mention5p;
-                } elseif (($moyenneSur20 > $Borne5params2) && ($moyenneSur20 <= $Borne6params2) ) {
-                    $mentionProf = $params2->Mention6p;
-                } elseif (($moyenneSur20 > $Borne6params2) && ($moyenneSur20 <= $Borne7params2) ) {
-                    $mentionProf = $params2->Mention7p;
-                } else {
-                    $mentionProf = $params2->Mention8p;
-                }
-
+    
+                // Déterminer la mention du professeur
+                $mentionProf = $this->determineMention($moyenneSur20, $params2);
+    
                 // Stocker les informations pour la matière
                 $resultatEleve['matieres'][] = [
                     'code_matiere' => $codeMatiere,
@@ -249,41 +233,31 @@ class BulletinController extends Controller
                     'mentionProf' => $mentionProf,
                 ];
             }
-
+    
             $resultats[] = $resultatEleve;
         }
-
+    
         // Calculer le rang pour chaque matière et chaque classe
         foreach ($moyennesParClasseEtMatiere as $classe => $matieres) {
             foreach ($matieres as $matiere => $moyennes) {
-                // Trier les élèves par moyenne décroissante
-                usort($moyennes, function($a, $b) {
-                    return $b['moyenne'] <=> $a['moyenne'];
-                });
-
+                usort($moyennes, fn($a, $b) => $b['moyenne'] <=> $a['moyenne']);
+    
                 $maxMoyenne = max(array_column($moyennes, 'moyenne'));
                 $minMoyenne = min(array_column($moyennes, 'moyenne'));
-
-                // Assigner les rangs
+    
                 $rang = 1;
                 foreach ($moyennes as $index => $item) {
-                    // Vérifier si deux moyennes sont égales, si oui, attribuer le même rang
-                    if ($index > 0 && $item['moyenne'] == $moyennes[$index - 1]['moyenne']) {
-                        $rangAttribue = $rang; // Même rang pour les moyennes égales
-                    } else {
-                        $rangAttribue = $index + 1; // Nouveau rang
-                        $rang = $rangAttribue;
-                    }
-
-                    // Assigner le rang à l'élève dans les résultats finaux
+                    $rangAttribue = $index > 0 && $item['moyenne'] == $moyennes[$index - 1]['moyenne'] ? $rang : $index + 1;
+                    $rang = $rangAttribue;
+    
                     foreach ($resultats as &$resultatEleve) {
                         if ($resultatEleve['matricule'] == $item['eleve_id']) {
                             foreach ($resultatEleve['matieres'] as &$matiereResultat) {
                                 if ($matiereResultat['code_matiere'] == $matiere) {
-                                    $matiereResultat['rang'] = $rangAttribue; // Ajouter le rang à la matière
+                                    $matiereResultat['rang'] = $rangAttribue;
                                     $matiereResultat['plusForteMoyenne'] = $maxMoyenne;
                                     $matiereResultat['plusFaibleMoyenne'] = $minMoyenne;
-                                    break;                               
+                                    break;
                                 }
                             }
                         }
@@ -291,10 +265,27 @@ class BulletinController extends Controller
                 }
             }
         }
-
-        // Retourner les résultats, ou effectuer d'autres actions
-        // dd ($resultats);
-        
-        return view('pages.notes.printbulletindenotes', compact('request' , 'resultats', 'eleves', 'option'));
+    
+        dd($resultats);
+        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option'));
     }
+    
+    /**
+     * Détermine la mention du professeur en fonction de la moyenne.
+     */
+    private function determineMention($moyenne, $params2)
+    {
+        if ($moyenne < $params2->Borne1) {
+            return $params2->Mention1p;
+        } elseif ($moyenne <= $params2->Borne2) {
+            return $params2->Mention2p;
+        } elseif ($moyenne <= $params2->Borne3) {
+            return $params2->Mention3p;
+        } elseif ($moyenne <= $params2->Borne4) {
+            return $params2->Mention4p;
+        } else {
+            return $params2->Mention5p;
+        }
+    }
+    
 }           
