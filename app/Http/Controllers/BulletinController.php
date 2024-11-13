@@ -171,10 +171,135 @@ class BulletinController extends Controller
                     $resultatEleve['matieres'][] = [
                         'code_matiere' => $codeMatiere,
                         'nom_matiere' => $notes->first()->matiere->LIBELMAT ?? ($codeMatiere == $conduite ? 'Conduite' : 'EPS'),
+                        'coefficient' => $notes->first()->COEF,
                         'moyenne_sur_20' => $noteSpeciale,
-                        'coefficient' => 1,
+                        'test' => null,
+                        'moyenne_coeff' => $noteSpeciale * ($notes->first()->COEF),
                         'mentionProf' => $mentionMatSpecial, // Pas de mention pour la conduite ou EPS
+                        'Typematiere' => 'CONDUITE', // Indication que c'est une matière conduite
                     ];
+                    continue; // Passer à la matière suivante
+                }
+
+                // Vérification pour la matières EPS 
+
+                if ($codeMatiere == $eps) {
+                    // Calcul de la moyenne des interrogations valides
+                    $interrosValides = $notes->map(function ($note) {
+                        return collect([$note->INT1, $note->INT2, $note->INT3])
+                            ->filter(function ($value) {
+                                return $value !== null && $value != 21 && $value != 0;
+                            });
+                    })->flatten();
+                
+                    $moyenneInterros = $interrosValides->avg();
+                
+                    // Calcul de la moyenne des devoirs valides
+                    $devoirsValides = $notes->map(function ($note) {
+                        return collect([$note->DEV1, $note->DEV2, $note->DEV3])
+                            ->filter(function ($value) {
+                                return $value !== null && $value != 21 && $value != 0;
+                            });
+                    })->flatten();
+                
+                    $moyenneDevoirs = $devoirsValides->avg();
+                
+                    // Calcul de la moyenne de la matière
+                    if ($moyenneInterros !== null && $moyenneDevoirs !== null) {
+                        $moyenneEps = ($moyenneInterros + $moyenneDevoirs) / 2;
+                    } elseif ($moyenneInterros !== null) {
+                        $moyenneEps = $moyenneInterros;
+                    } elseif ($moyenneDevoirs !== null) {
+                        $moyenneEps = $moyenneDevoirs;
+                    } else {
+                        $moyenneEps = null; // Aucun note valide
+                    }
+                
+                    // Déterminer la mention pour la matière
+                    $mentionMaEps = $this->determineMention($moyenneEps, $params2);
+                
+                    // Extraire les notes de DEV1, DEV2, DEV3 individuellement
+                    $noteDEV1 = $notes->first()->DEV1 ?? null;
+                    $noteDEV2 = $notes->first()->DEV2 ?? null;
+                    $noteDEV3 = $notes->first()->DEV3 ?? null;
+                
+                    // Ajouter cette matière au résultat avec les informations de bonification et les notes individuelles
+                    $resultatEleve['matieres'][] = [
+                        'code_matiere' => $codeMatiere,
+                        'nom_matiere' => $notes->first()->matiere->LIBELMAT ?? 'EPS',
+                        'moyenne_interro' => $moyenneInterros,
+                        'devoir1' => $noteDEV1, // Note individuelle DEV1
+                        'devoir2' => $noteDEV2, // Note individuelle DEV2
+                        'devoir3' => $noteDEV3, // Note individuelle DEV3
+                        'test' => null,
+                        'coefficient' => $notes->first()->COEF,
+                        'moyenne_sur_20' => $moyenneEps,
+                        'moyenne_coeff' => $moyenneEps * ($notes->first()->COEF),
+                        'mentionProf' => $mentionMaEps,
+                        'Typematiere' => 'EPS', // Indication que c'est une matière eps
+                    ];
+                
+                    continue; // Passer à la matière suivante
+                }
+
+                // Vérification pour les matières bonifiées (coefficient = -1)
+                if ($notes->first()->COEF == -1) {
+                    // Calcul de la moyenne des interrogations valides
+                    $interrosValides = $notes->map(function ($note) {
+                        return collect([$note->INT1, $note->INT2, $note->INT3])
+                            ->filter(function ($value) {
+                                return $value !== null && $value != 21 && $value != 0;
+                            });
+                    })->flatten();
+                
+                    $moyenneInterros = $interrosValides->avg();
+                
+                    // Calcul de la moyenne des devoirs valides
+                    $devoirsValides = $notes->map(function ($note) {
+                        return collect([$note->DEV1, $note->DEV2, $note->DEV3])
+                            ->filter(function ($value) {
+                                return $value !== null && $value != 21 && $value != 0;
+                            });
+                    })->flatten();
+                
+                    $moyenneDevoirs = $devoirsValides->avg();
+                
+                    // Calcul de la moyenne de la matière bonifiée
+                    if ($moyenneInterros !== null && $moyenneDevoirs !== null) {
+                        $moyenneBonifiee = ($moyenneInterros + $moyenneDevoirs) / 2;
+                    } elseif ($moyenneInterros !== null) {
+                        $moyenneBonifiee = $moyenneInterros;
+                    } elseif ($moyenneDevoirs !== null) {
+                        $moyenneBonifiee = $moyenneDevoirs;
+                    } else {
+                        $moyenneBonifiee = null; // Aucun note valide
+                    }
+                
+                    // Déterminer la mention pour la matière
+                    $mentionMaBonifier = $this->determineMention($moyenneBonifiee, $params2);
+                
+                    // Extraire les notes de DEV1, DEV2, DEV3 individuellement
+                    $noteDEV1 = $notes->first()->DEV1 ?? null;
+                    $noteDEV2 = $notes->first()->DEV2 ?? null;
+                    $noteDEV3 = $notes->first()->DEV3 ?? null;
+                
+                    // Ajouter cette matière au résultat en tant que matière bonifiée avec notes individuelles
+                    $resultatEleve['matieres'][] = [
+                        'code_matiere' => $codeMatiere,
+                        'nom_matiere' => $notes->first()->matiere->LIBELMAT ?? 'Matière Bonifiée',
+                        'coefficient' => $notes->first()->COEF,
+                        'moyenne_interro' => $moyenneInterros,
+                        'devoir1' => $noteDEV1, // Note individuelle DEV1
+                        'devoir2' => $noteDEV2, // Note individuelle DEV2
+                        'devoir3' => $noteDEV3, // Note individuelle DEV3
+                        'test' => null,
+                        'moyenne_sur_20' => $moyenneBonifiee,
+                        'moyenne_coeff' => $moyenneBonifiee * ($notes->first()->COEF),
+                        'surplus' => $moyenneBonifiee - 10,
+                        'mentionProf' => $mentionMaBonifier,
+                        'Typematiere' => 'Matière_Bonifiée', // Indication que c'est une matière bonifiée
+                    ];
+                
                     continue; // Passer à la matière suivante
                 }
     
@@ -232,6 +357,8 @@ class BulletinController extends Controller
                     'moyenne_coeff' => $moyenneCoeff,
                     'coefficient' => $totalCoeff,
                     'mentionProf' => $mentionProf,
+                    'Typematiere' => 'Normal', // Indication que c'est une matière normale
+
                 ];
             }
     
