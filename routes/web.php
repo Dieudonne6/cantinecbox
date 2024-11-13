@@ -328,8 +328,9 @@ Route::get('/recouvrementgeneral', [PagesController::class, 'recouvrementgeneral
 Route::get('/repartitionclassesparoperateur', [GestionNotesController::class, 'repartitionclassesparoperateur'])->name('repartitionclassesparoperateur');
 Route::post('/repartitionclassesparoperateur', [GestionNotesController::class, 'repartitionclassesoperateur'])->name('repartitionclassesoperateur');
 
-Route::post('/filtrereleveparmatiere', [EditionController::class, 'filtrereleveparmatiere'])->name('filtrereleveparmatiere');
+Route::post('/calculermoyenne', [EditionController::class, 'calculermoyenne'])->name('calculermoyenne');
 
+Route::post('/filtrereleveparmatiere', [EditionController::class, 'filtrereleveparmatiere'])->name('filtrereleveparmatiere');
 
 // gestion des notes
 Route::get('/gestioncoefficient', [GestionNotesController::class, 'gestioncoefficient'])->name('gestioncoefficient');
