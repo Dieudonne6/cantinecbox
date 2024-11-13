@@ -79,6 +79,20 @@ class BulletinController extends Controller
         // dd($option);
     }
 
+
+    private function extractTextFromRtf($rtfString) {
+        // Supprime les balises de groupe, les symboles de contrôle, et les mots de contrôle non suivis par un espace (typiquement des commandes de formatage)
+        $text = preg_replace('/\{\*?\\[^{}]+}|[{}]|\\\[^\\s]+(\s+)?/s', '', $rtfString);
+        // Supprime les fragments restants qui pourraient être des noms de police, des versions de logiciel, etc.
+        $text = preg_replace('/[A-Za-z0-9]+;/', '', $text);
+        // Supprime les métadonnées spécifiques comme les versions de logiciel
+        $text = preg_replace('/\w+[\d.]+\w+/', '', $text);
+        // Supprime les espaces supplémentaires et les retours à la ligne
+        $text = trim(preg_replace('/\s+/', ' ', $text));
+        return $text;
+    }
+
+
     public function printbulletindenotes(Request $request)
     {
         $option = Session::get('option');
@@ -96,7 +110,8 @@ class BulletinController extends Controller
         $classeSelectionne = $request->input('selected_classes', []);
     
         $params2 = Params2::first();
-        $entete = Params2::first()->EnteteBull; // Récupérer la valeur de l'en-tête
+        $rtfContent = Params2::first()->EnteteBull;
+        $entete = $this->extractTextFromRtf($rtfContent);
 
         $infoparamcontrat = Paramcontrat::first();
         $anneencours = $infoparamcontrat->anneencours_paramcontrat;
@@ -164,6 +179,11 @@ class BulletinController extends Controller
                             break; // On a trouvé une note valide, donc on peut sortir de la boucle
                         }
                     }
+
+                    $moyennesParClasseEtMatiere[$eleve->CODECLAS][$codeMatiere][] = [
+                        'eleve_id' => $eleve->MATRICULE,
+                        'moyenne' => $noteSpeciale
+                    ];
                 
                     // Assigner les informations de la matière avec la note récupérée
                     $mentionMatSpecial = $this->determineMention($noteSpeciale, $params2);
@@ -173,7 +193,7 @@ class BulletinController extends Controller
                         'nom_matiere' => $notes->first()->matiere->LIBELMAT ?? ($codeMatiere == $conduite ? 'Conduite' : 'EPS'),
                         'coefficient' => $notes->first()->COEF,
                         'moyenne_sur_20' => $noteSpeciale,
-                        'test' => null,
+                        'test' => $notes->first()->TEST,
                         'moyenne_coeff' => $noteSpeciale * ($notes->first()->COEF),
                         'mentionProf' => $mentionMatSpecial, // Pas de mention pour la conduite ou EPS
                         'Typematiere' => 'CONDUITE', // Indication que c'est une matière conduite
@@ -215,6 +235,11 @@ class BulletinController extends Controller
                         $moyenneEps = null; // Aucun note valide
                     }
                 
+                    $moyennesParClasseEtMatiere[$eleve->CODECLAS][$codeMatiere][] = [
+                        'eleve_id' => $eleve->MATRICULE,
+                        'moyenne' => $moyenneEps
+                    ];
+
                     // Déterminer la mention pour la matière
                     $mentionMaEps = $this->determineMention($moyenneEps, $params2);
                 
@@ -231,7 +256,7 @@ class BulletinController extends Controller
                         'devoir1' => $noteDEV1, // Note individuelle DEV1
                         'devoir2' => $noteDEV2, // Note individuelle DEV2
                         'devoir3' => $noteDEV3, // Note individuelle DEV3
-                        'test' => null,
+                        'test' => $notes->first()->TEST,
                         'coefficient' => $notes->first()->COEF,
                         'moyenne_sur_20' => $moyenneEps,
                         'moyenne_coeff' => $moyenneEps * ($notes->first()->COEF),
@@ -274,6 +299,11 @@ class BulletinController extends Controller
                     } else {
                         $moyenneBonifiee = null; // Aucun note valide
                     }
+
+                    $moyennesParClasseEtMatiere[$eleve->CODECLAS][$codeMatiere][] = [
+                        'eleve_id' => $eleve->MATRICULE,
+                        'moyenne' => $moyenneBonifiee
+                    ];
                 
                     // Déterminer la mention pour la matière
                     $mentionMaBonifier = $this->determineMention($moyenneBonifiee, $params2);
@@ -292,7 +322,7 @@ class BulletinController extends Controller
                         'devoir1' => $noteDEV1, // Note individuelle DEV1
                         'devoir2' => $noteDEV2, // Note individuelle DEV2
                         'devoir3' => $noteDEV3, // Note individuelle DEV3
-                        'test' => null,
+                        'test' => $notes->first()->TEST,
                         'moyenne_sur_20' => $moyenneBonifiee,
                         'moyenne_coeff' => $moyenneBonifiee * ($notes->first()->COEF),
                         'surplus' => $moyenneBonifiee - 10,
@@ -395,7 +425,7 @@ class BulletinController extends Controller
         }
     
         dd($resultats);
-        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', '$entete'));
+        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete'));
     }
     
     /**
