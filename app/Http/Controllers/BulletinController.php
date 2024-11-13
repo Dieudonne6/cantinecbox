@@ -151,7 +151,7 @@ class BulletinController extends Controller
     
             foreach ($notesParMatiere as $codeMatiere => $notes) {
                 // Vérifier si la matière est la conduite
-                if ($codeMatiere == $conduite || $codeMatiere == $eps) {
+                if ($codeMatiere == $conduite ) {
                     // Chercher la première note non nulle et différente de 21 et 0 dans les colonnes INT1, INT2, INT3, DEV1, DEV2, DEV3
                     $noteSpeciale = null;
                     foreach ($notes as $note) {
@@ -267,7 +267,7 @@ class BulletinController extends Controller
             }
         }
     
-        // dd($resultats);
+        dd($resultats);
         return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', '$entete'));
     }
     
