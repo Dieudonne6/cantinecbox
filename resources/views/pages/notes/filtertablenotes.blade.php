@@ -54,9 +54,9 @@
     </select>
   </div>
   <div class="col-md-3 mb-3">
-    <form action="{{ route('calculermoyenne') }}" method="POST" class="text-center">
-      @csrf
-      <button class="btn btn-primary">Calculer moyennes</button>
+    <form action="{{url('/calculermoyenne') }}" method="POST" class="text-center">
+      {{csrf_field()}}
+            <button type="submit" class="btn btn-primary">Calculer moyennes</button>
     </form>
   </div>
   <div class="col-md-2 mb-3">

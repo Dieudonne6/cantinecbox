@@ -11,6 +11,7 @@ use App\Models\Matieres;
 use App\Models\Classes;
 use App\Models\Notes;
 use App\Models\Classe;
+use Illuminate\Support\Facades\Schema;
 
 use App\Models\Typeenseigne;
 
@@ -426,70 +427,163 @@ class EditionController extends Controller
       
     }
     
-    public function calculermoyenne()
+    public function calculermoyenne(Request $request)
     {
       // Obtenir tous les semestres distincts présents dans la table `note`
-    $semestres = DB::table('notes')->distinct()->pluck('SEMESTRE');
-
-    foreach ($semestres as $semestre) {
-        // Calculer la moyenne pondérée pour chaque élève dans le semestre actuel
-        $eleves = DB::table('eleve')->get();
-
-        foreach ($eleves as $eleve) {
-            // Récupérer les notes de l'élève pour le semestre actuel
+      $semestres = DB::table('notes')->distinct()->pluck('SEMESTRE');
+      $typesMatieres = DB::table('matieres')->distinct()->pluck('TYPEMAT');
+      foreach ($semestres as $semestre) {
+        // Obtenir toutes les classes distinctes
+        $classes = DB::table('eleve')->distinct()->pluck('CODECLAS');
+        
+        foreach ($classes as $classe) {
+          $eleves = DB::table('eleve')->where('CODECLAS', $classe)->get();
+          
+          // Calcul de la moyenne pour chaque élève de la classe dans le semestre actuel
+          foreach ($eleves as $eleve) {
             $notes = DB::table('notes')
-                ->where('MATRICULE', $eleve->MATRICULE)
-                ->where('SEMESTRE', $semestre)
-                ->get();
-
+            ->where('MATRICULE', $eleve->MATRICULE)
+            ->where('SEMESTRE', $semestre)
+            ->get();
+            
             // Initialiser les variables de calcul
             $totalCoef = 0;
             $totalMSCoef = 0;
-
-            // Parcourir les notes pour le calcul
+            
             foreach ($notes as $note) {
-                // Gestion spéciale si coef = -1
-                if ($note->COEF == -1) {
-                    // Condition MS >= 15 pour récupérer (MS - 10) si résultat >= 10
-                    if ($note->MS > 10) {
-                        $adjustedMS = $note->MS - 10;
-                        if ($adjustedMS >= 10) {
-                            $totalMSCoef += $adjustedMS;
-                            // $totalCoef += 1;
-                        }
-                    }
-                } elseif ($note->MS !== null) {
-                    // Calcul standard pour coef différent de -1
-                    $totalMSCoef += $note->MS * $note->COEF;
-                    $totalCoef += $note->COEF;
+              if ($note->COEF == -1) {
+                if ($note->MS > 10) {
+                  $adjustedMS = $note->MS - 10;
+                  $totalMSCoef += $adjustedMS;
                 }
+              } elseif ($note->MS > 0) {
+                $totalMSCoef += $note->MS * $note->COEF;
+                $totalCoef += $note->COEF;
+              }
             }
-
-            // Ajouter la note de conduite avec valeur 1 dans la somme
+            
             $conduiteColumn = 'NoteConduite' . $semestre;
-            if (Schema::hasColumn('eleve', $conduiteColumn)) {
-                DB::table('eleve')
-                    ->where('MATRICULE', $eleve->matricule)
-                    ->update([$conduiteColumn => 1]);
-                $totalCoef += 1; // Ajout de 1 pour la conduite
+            if (Schema::hasColumn('eleve', $conduiteColumn) && !is_null($eleve->$conduiteColumn)) {
+              $totalMSCoef += $eleve->$conduiteColumn;
+              $totalCoef += 1;
             }
-
-            // Calculer et mettre à jour la moyenne si le total des coefficients est positif
+            
             if ($totalCoef > 0) {
-                $moyenne = $totalMSCoef / $totalCoef;
+              $moyenne = $totalMSCoef / $totalCoef;
+              $column = 'MS' . $semestre;
+              if (Schema::hasColumn('eleve', $column)) {
+                DB::table('eleve')
+                ->where('MATRICULE', $eleve->MATRICULE)
+                ->update([$column => $moyenne]);
+              }
+              $columgene = 'TotalGene' . $semestre;
+              $columcoef = 'TotalCoef' . $semestre;
 
-                // Déterminer la colonne de moyenne à mettre à jour en fonction du semestre
-                $column = 'MS' . $semestre;
-                if (Schema::hasColumn('eleve', $column)) {
-                    DB::table('eleve')
-                        ->where('MATRICULE', $eleve->matricule)
-                        ->update([$column => $moyenne]);
-                }
+              if (Schema::hasColumn('eleve', $columgene)) {
+                DB::table('eleve')
+                ->where('MATRICULE', $eleve->MATRICULE)
+                ->update([$columgene => $totalMSCoef]);
+              }
+              if (Schema::hasColumn('eleve', $columcoef)) {
+                DB::table('eleve')
+                ->where('MATRICULE', $eleve->MATRICULE)
+                ->update([$columcoef => $totalCoef]);
+              }
             }
+          }
+          
+          // Récupérer les élèves avec leur moyenne pour le classement
+          $elevesClasse = DB::table('eleve')
+          ->where('CODECLAS', $classe)
+          ->whereNotNull('MS' . $semestre)
+          ->orderByDesc('MS' . $semestre)
+          ->get(['MATRICULE', 'MS' . $semestre]);
+          
+          $rang = 1;
+          $lastMoyenne = null;
+          $identicalRank = 0;
+          
+          foreach ($elevesClasse as $index => $eleveClasse) {
+            $moyenne = $eleveClasse->{'MS' . $semestre};
+            
+            if ($moyenne === $lastMoyenne) {
+              $identicalRank++; // Incrémenter pour les moyennes identiques
+            } else {
+              $rang += $identicalRank; // Passer au rang suivant après les égalités
+              $identicalRank = 1;
+            }
+            
+            // Mise à jour du rang dans la colonne appropriée
+            $rangColumn = 'RANG' . $semestre;
+            if (Schema::hasColumn('eleve', $rangColumn)) {
+              DB::table('eleve')
+              ->where('MATRICULE', $eleveClasse->MATRICULE)
+              ->update([$rangColumn => $rang]);
+            }
+            
+            $lastMoyenne = $moyenne;
+          }
         }
-    }
-      return response()->json(['success' => 'Moyennes et notes de conduite mises à jour automatiquement pour chaque semestre']);
-      
-    }
-    
-  } 
+        
+        
+        foreach ($typesMatieres as $type) {
+          // Récupérer les matières de ce type
+          $codesMatieres = DB::table('matieres')
+          ->where('TYPEMAT', $type)
+          ->pluck('CODEMAT');
+          
+          // Obtenir tous les élèves
+          $eleves = DB::table('eleve')->get();
+          
+          foreach ($eleves as $eleve) {
+            // Récupérer les notes de l'élève pour les matières de ce type et pour le semestre actuel
+            $notes = DB::table('notes')
+            ->whereIn('CODEMAT', $codesMatieres)
+            ->where('MATRICULE', $eleve->MATRICULE)
+            ->where('SEMESTRE', $semestre)
+            ->get();
+            
+            // Initialiser les variables de calcul
+            $totalCoef = 0;
+            $totalMSCoef = 0;
+            
+            foreach ($notes as $note) {
+              // Ajouter MS * COEF au total si la note est valide
+              if ($note->MS !== null) {
+                $totalMSCoef += $note->MS * $note->COEF;
+                $totalCoef += $note->COEF;
+              }
+            }
+            
+            if ($totalCoef > 0) {
+              $moyenne = $totalMSCoef / $totalCoef;
+              
+              $column = '';
+              switch ($type) {
+                case 1:
+                  $column = 'MBILANL' . $semestre; // Littéraire
+                  break;
+                  case 2:
+                    $column = 'MBILANS' . $semestre; // Scientifique
+                    break;
+                    case 3:
+                      $column = 'MoyMatFond' . $semestre; // Technique
+                      break;
+                    }
+                    
+                    if (Schema::hasColumn('eleve', $column)) {
+                      DB::table('eleve')
+                      ->where('MATRICULE', $eleve->MATRICULE)
+                      ->update([$column => $moyenne]);
+                    }
+                  }
+                }
+              }
+              
+            }
+            
+            return response()->json(['success' => 'Moyennes et rangs mis à jour pour chaque semestre et chaque classe.']);
+          }
+          
+          
+        } 
