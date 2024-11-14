@@ -151,10 +151,6 @@
                 @endforeach
             </select>
           </div>
-          <div class="d-flex justify-content-center align-items-center" style="margin-right: 70px !important; gap: 20px;">
-            <p class="mb-0" style="white-space: nowrap;">À partir de :</p>
-            <input type="text" class="form-control" id="apartirde" name="apartirde" style="width: 430px !important">
-          </div>
           <div>
             <br>
             <div class="table-responsive mb-4">
@@ -256,6 +252,7 @@
                 function getMessage() {
                   var editorContent = document.getElementById('editor').innerHTML;
                   document.getElementById('messageEd').value = editorContent;
+                  console.log(editorContent);
                 }
 
                 function changeFont(font) {
@@ -310,13 +307,13 @@
                 <div class="form-group d-flex align-items-center">
                   <label for="conduite">Quel est le n° de CONDUITE ?</label>
                   <input type="number" class="form-control" id="conduite" name="conduite" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                  <button class="btn btn-primary" style="margin-left: 5px !important;padding: 0.5rem;background-color: #fff; color: #000;" data-bs-toggle="modal" data-bs-target="#listematiere">Voir</button>
+                  <button class="btn btn-primary" type="button" style="margin-left: 5px !important;padding: 0.5rem;background-color: #fff; color: #000;" data-bs-toggle="modal" data-bs-target="#listematiere">Voir</button>
                 </div>
                 <br>
                 <div class="form-group d-flex align-items-center">
                   <label for="eps">Quel est le n° de EPS ?</label>
                   <input type="number" class="form-control" id="eps" name="eps" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                  <button class="btn btn-primary" style="margin-left: 5px !important;padding: 0.5rem;background-color: #fff; color: #000;" data-bs-toggle="modal" data-bs-target="#listematiere">Voir</button>
+                  <button class="btn btn-primary" type="button" style="margin-left: 5px !important;padding: 0.5rem;background-color: #fff; color: #000;" data-bs-toggle="modal" data-bs-target="#listematiere">Voir</button>
                 </div>
                 <div class="form-group d-flex align-items-center">
                   <label for="nbabsence">Nb. Absence autorisée</label>
@@ -324,7 +321,7 @@
                 </div>
                 <p style="margin-left: 10px !important;">(Mettre -1 pour débrancher cette option)</p>
               <br>
-              <button class="btn btn-secondary" style="">Sauvegarder ces informations</button>
+              <button class="btn btn-secondary" type="button" style="">Sauvegarder ces informations</button>
             </div>
             <br>
             <div class="row">
