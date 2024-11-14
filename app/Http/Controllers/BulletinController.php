@@ -130,6 +130,8 @@ class BulletinController extends Controller
             $note = $bonification['note'];
             // Code pour traiter les bonifications si nécessaire
         }
+
+        // dd($bonifications);
     
         // Récupérer les élèves dans les classes sélectionnées
         $eleves = Eleve::whereIn('CODECLAS', $classeSelectionne)
@@ -304,6 +306,15 @@ class BulletinController extends Controller
                         'eleve_id' => $eleve->MATRICULE,
                         'moyenne' => $moyenneBonifiee
                     ];
+
+                    // Déterminer la moyenne_intervalle en fonction des bonifications
+                    $moyenneIntervalle = null;
+                    foreach ($bonifications as $bonification) {
+                        if ($moyenneBonifiee >= $bonification['start'] && $moyenneBonifiee < $bonification['end']) {
+                            $moyenneIntervalle = $bonification['note'];
+                            break; // On arrête la boucle dès qu'on trouve le bon intervalle
+                        }
+                    }
                 
                     // Déterminer la mention pour la matière
                     $mentionMaBonifier = $this->determineMention($moyenneBonifiee, $params2);
@@ -312,6 +323,7 @@ class BulletinController extends Controller
                     $noteDEV1 = $notes->first()->DEV1 ?? null;
                     $noteDEV2 = $notes->first()->DEV2 ?? null;
                     $noteDEV3 = $notes->first()->DEV3 ?? null;
+
                 
                     // Ajouter cette matière au résultat en tant que matière bonifiée avec notes individuelles
                     $resultatEleve['matieres'][] = [
@@ -324,6 +336,7 @@ class BulletinController extends Controller
                         'devoir3' => $noteDEV3, // Note individuelle DEV3
                         'test' => $notes->first()->TEST,
                         'moyenne_sur_20' => $moyenneBonifiee,
+                        'moyenne_intervalle' => intval($moyenneIntervalle),
                         'moyenne_coeff' => $moyenneBonifiee * ($notes->first()->COEF),
                         'surplus' => $moyenneBonifiee - 10,
                         'mentionProf' => $mentionMaBonifier,
