@@ -638,8 +638,8 @@ class EditionController extends Controller
               }
               
             }
-            
-            return response()->json(['success' => 'Moyennes et rangs mis à jour pour chaque semestre et chaque classe.']);
+            return back()->with('success', 'Tous les calcules sont mis à jour avec succes pour chaque semestre ,chaque classe et chaque éleve.');
+
           }
           
           

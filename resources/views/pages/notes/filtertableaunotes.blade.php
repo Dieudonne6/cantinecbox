@@ -21,6 +21,12 @@
 <div class="container">
   <div class="card shadow-sm p-4">
     <div class="row">
+      @if (session('success'))
+      <div class="alert alert-success">
+        {{ session('success') }}
+      </div>
+      @endif
+      
       <div class="col-md-2 mb-3">
         <select class="js-example-basic-multiple w-100" id="tableSelect4" onchange="redirectWithSelection()">         
           @foreach ($classe as $classeOption)
