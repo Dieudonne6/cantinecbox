@@ -97,7 +97,6 @@ class BulletinController extends Controller
     {
         $option = Session::get('option');
         $moyennesParClasseEtMatiere = [];
-    
         $paramselection = $request->input('paramselection');
         $bonificationType = $request->input('bonificationType');
         $bonifications = $request->input('bonification');
@@ -337,7 +336,7 @@ class BulletinController extends Controller
                         'test' => $notes->first()->TEST,
                         'moyenne_sur_20' => $moyenneBonifiee,
                         'moyenne_intervalle' => intval($moyenneIntervalle),
-                        'moyenne_coeff' => $moyenneBonifiee * ($notes->first()->COEF),
+                        'moyenne_coeff' => $moyenneBonifiee * (-1 * $notes->first()->COEF),
                         'surplus' => $moyenneBonifiee - 10,
                         'mentionProf' => $mentionMaBonifier,
                         'Typematiere' => 'Matière_Bonifiée', // Indication que c'est une matière bonifiée
@@ -437,7 +436,6 @@ class BulletinController extends Controller
             }
         }
     
-        dd($resultats);
         return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete'));
     }
     

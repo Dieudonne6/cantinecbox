@@ -15,11 +15,14 @@
           <br>
           <br>
           <br>
-          <div class="watermark">Scodelux</div>
+          @if (isset($option['entete']) && $option['entete'])
+            <h6>{{ $entete }}</h6>
+          @endif
           <div id="carre" style="width: 125px; height: 125px; background-color: transparent; border: 1px solid black;"></div>
           <br>
           <br>
           <br>
+          <div class="watermark">Scodelux</div>
           <div class="d-flex">
             <div id="donneeleve" style="width: 600px; height: 80px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
                 <h5 style="margin-top: 5px;">NOM : {{ $resultat['nom'] }}</h5>
@@ -31,7 +34,9 @@
                       <input type="checkbox" name="redoublant" id="redoublant_non" disabled {{ $resultat['redoublant'] == 2 ? 'checked' : '' }}>
                       <label for="redoublant_non">Non</label>
                   </h5>
-                  <h5 style="margin-left: 40px;">Matricule : {{ $resultat['matricule'] }}</h5>
+                  @if (isset($option['matricule']) && $option['matricule'])
+                    <h5 style="margin-left: 40px;">Matricule : {{ $resultat['matricule'] }}</h5>
+                  @endif
                 </div>
             </div>
             <div  style="width: 300px; height: 80px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
@@ -53,36 +58,104 @@
                 <th class="text-center" style="font-weight: normal; width: 50px;">Moy.Int</th>
                 <th class="text-center" style="font-weight: normal; width: 50px;">Dev.1</th>
                 <th class="text-center" style="font-weight: normal; width: 50px;">Dev.2</th>
+                @if (!isset($option['masquer_devoir3']))
                 <th class="text-center" style="font-weight: normal; width: 50px;">Dev.3</th>
-                <th class="text-center" style="font-weight: normal; width: 50px;">Moy.20</th>
-                <th class="text-center" style="font-weight: normal; width: 50px;">Moy.coef</th>
-                <th class="text-center" style="font-weight: normal; width: 50px;">Faible moy.</th>
-                <th class="text-center" style="font-weight: normal; width: 50px;">Forte moy.</th>
-                <th class="text-center" style="font-weight: normal; width: 50px;">Rang par matière</th>
+                @endif
+                @if(!isset($option['note_test']) || !$option['note_test'])
+                  <th class="text-center" style="font-weight: normal; width: 50px;">Moy.20</th>
+                  <th class="text-center" style="font-weight: normal; width: 50px;">Moy.coef</th>
+                @endif
+                @if (isset($option['note_test']) && $option['note_test'])
+                <th class="text-center" style="font-weight: normal; width: 50px;">Moy. part</th>
+                <th class="text-center" style="font-weight: normal; width: 50px;">Compo</th>
+                  <th class="text-center" style="font-weight: normal; width: 50px;">Moy.20</th>
+                  <th class="text-center" style="font-weight: normal; width: 50px;">Moy.coef</th>
+                  @else
+                  <th class="text-center" style="font-weight: normal; width: 50px;">Faible moy.</th>
+                  <th class="text-center" style="font-weight: normal; width: 50px;">Forte moy.</th>
+                  @endif
+                  @if(isset($option['rang_matiere']) && $option['rang_matiere'])
+                  <th class="text-center" style="font-weight: normal; width: 50px;">Rang par matière</th>
+                  @endif
                 <th class="text-center" style="font-weight: normal; width: 200px;">Appréciations des professeurs</th>
               </tr>
             </thead>
             <tbody>
+              @php $i = 0; $note_conduite = null; $total_coefficients = 0; $total_moyenne_coeffs = 0; @endphp
               @foreach ($resultat['matieres'] as $matiere)
               @php
-                $moyenne_part = $matiere['moyenne_sur_20'];
-                $moyenne_sur_20 = ($moyenne_part + $matiere['test']) / 2 ;
-              @endphp
-              <tr>
+              $i++;
+              $moyenne_part = $matiere['moyenne_sur_20'];
+              if ($matiere['test'] != null && isset($option['note_test']) && $option['note_test']) {
+                $moyenne_sur_20 = ($moyenne_part + $matiere['test']) / 2;
+              } else {
+                $moyenne_sur_20 = $matiere['moyenne_sur_20'];
+              }
+              if ($matiere['coefficient'] != -1) {
+                $moyenne_coeff = $moyenne_sur_20 * $matiere['coefficient'];
+                $total_coefficients += $matiere['coefficient'];
+              } else if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'integral') {
+                $moyenne_coeff = $matiere['surplus'];
+              } else if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'Aucun') {
+                $moyenne_coeff = $matiere['moyenne_coeff'];
+              } else if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'intervalle') {
+                $moyenne_coeff = $matiere['moyenne_intervalle'];
+              }
+              if ($matiere['code_matiere'] == $request->input('conduite')) {
+                $note_conduite = $matiere['moyenne_sur_20'];
+              }
+              $total_moyenne_coeffs += $moyenne_coeff;
+              if (!isset($option['note_conduite']) && $matiere['code_matiere'] == $request->input('conduite')) {
+                $total_moyenne_coeffs = $total_moyenne_coeffs - $note_conduite;
+                $total_coefficients = $total_coefficients - $matiere['coefficient'];
+              }
+            @endphp
+            @if (!isset($option['note_conduite']) && $matiere['code_matiere'] == $request->input('conduite'))
+              @continue;
+            @endif
+                <tr>
                 <td>{{ $matiere['nom_matiere'] }}</td>
                 <td>{{ $matiere['coefficient'] }}</td>
-                <td>{{ $matiere['moyenne_interro'] }}</td>
-                <td>{{ $matiere['devoir1'] }}</td>
-                <td>{{ $matiere['devoir2'] }}</td>
-                <td>{{ $matiere['devoir3'] }}</td>
-                <td>{{ number_format($matiere['moyenne_sur_20'], 2)}}</td>
-                <td>{{ number_format($matiere['moyenne_coeff'], 2) }}</td>
-                <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) }}</td>
-                <td>{{ number_format($matiere['plusForteMoyenne'], 2) }}</td>
-                <td>{{ $matiere['rang'] }}</td>
-                <td>{{ $matiere['mentionProf'] }}</td>
+                <td>{{ $matiere['moyenne_interro'] ?? '**.**' }}</td>
+                <td>{{ $matiere['devoir1'] ?? '**.**' }}</td>
+                <td>{{ $matiere['devoir2'] ?? '**.**' }}</td>
+                @if (!isset($option['masquer_devoir3']))
+                  <td>{{ $matiere['devoir3'] ?? '**.**' }}</td>
+                @endif
+                @if(!isset($option['note_test']) || !$option['note_test'])
+                  <td>{{ number_format($moyenne_sur_20, 2) ?? '**.**' }}</td>
+                  @if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'integral')
+                    <td>+ {{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
+                  @else
+                    <td>{{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
+                  @endif
+                @endif
+                @if (isset($option['note_test']) && $option['note_test'])
+                <td>{{ number_format($moyenne_part, 2) ?? '**.**' }}</td>
+                <td>{{ $matiere['test'] ?? '**.**' }}</td>
+                <td>{{ number_format($moyenne_sur_20, 2) ?? '**.**' }}</td>
+                <td>{{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
+                @else
+                <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td>
+                <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td>
+                @endif
+                @if(isset($option['rang_matiere']) && $option['rang_matiere'])
+                  <td>{{ $matiere['rang'] }}</td>
+                @endif
+                @if (isset($option['appreciation_prof']))
+                  <td>{{ $matiere['mentionProf'] }}</td>
+                @else
+                  <td></td>
+                @endif
               </tr>
               @endforeach
+              <tr>
+                <td>Total</td>
+                <td>{{ $total_coefficients }}</td>
+                <td colspan="4"></td> <!-- Ajustez le colspan selon le nombre de colonnes à fusionner -->
+                <td>{{ number_format($total_moyenne_coeffs, 2) }}</td>
+                <td colspan="5"></td> <!-- Ajustez le colspan selon le nombre de colonnes restantes -->
+              </tr>
             </tbody>
           </table>
           <div id="ligne" style="width: 1187px; height: 1px; background-color: rgb(0, 0, 0);"></div>
@@ -91,7 +164,7 @@
               <h4 class="text-center" style="margin-top: 20px;">Bilan Trimestriel</h4>
             </div>
             <div>
-              <h5 style="margin-left: 10px;">Moyenne Trimestrielle</h5>
+              <h5 style="margin-left: 10px;">Moyenne Trimestrielle : {{$total_moyenne_coeffs != 0 ? number_format($total_moyenne_coeffs / $total_coefficients, 2) : '**.**'}}</h5>
               <table id="tableau_bilan" style="width: 500px; margin-left: 60px;">
                 <thead>
                   <tr>
@@ -149,7 +222,7 @@
                 <h8>Blâme/Discipline..........................................</h8>
                 <input style="margin-left: 5px;" type="checkbox" name="blame_discipline" id="blame_discipline" disabled>
               </div>
-            </div>
+            </div> 
             <div id="appreciation" style="width: 560px; height: 180px; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column;">
               <div style="flex: 1; display: flex;justify-content: center;">
                 <h6 style="margin-top: 5px;" class="text-center"><u>Appréciation du chef d'établissement</u></h6>
@@ -157,13 +230,14 @@
               <hr style="border: 1px solid black; margin: 0;">
               <div style="flex: 1;justify-content: center;">
                 <h6 class="text-center"><u>Appréciations du professeur principal</u></h6>
-                <h7>Conduite....................................................</h7>
+                <h7>Conduite : <span style="border-bottom: 1px dotted #000; width: 131px; display: inline-block;">{{ $note_conduite }}</span></h7>
                 <h7>Travail........................................................................................................</h7>
                 <h7>............................................................................................................................................................................................................</h7>
               </div>
             </div>
             <div id="signature" style="width: 410px; height: 180px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
               <h5 id="signature_chef" style="margin-top: 5px;" class="text-center"><u>Signature et cachet du chef d'établissement</u></h5>
+              <h7>CCC</h7>
             </div>
           </div>
           <br>
@@ -176,10 +250,15 @@
             </div>
           </div>
         </div>
+        <br>
+        <div>
+          <div id="message" style="border: none; width: 100%; height: auto; text-align: justify;">
+            {!! html_entity_decode($request->input('msgEnBasBulletin')) !!}
+          </div>
+        </div>
         @endforeach
     </div>
 </div>
-
 <style>
   th, td {
     border: 1px solid black;
@@ -202,6 +281,9 @@
     font-family: 'Cursive', sans-serif;
     user-select: none;
     pointer-events: none;
+  }
+  #tableau td {
+    text-align: center;
   }
   @media print {
     .watermark {
