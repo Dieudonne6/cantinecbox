@@ -432,6 +432,8 @@ class EditionController extends Controller
       // Obtenir tous les semestres distincts présents dans la table `note`
       $semestres = DB::table('notes')->distinct()->pluck('SEMESTRE');
       $typesMatieres = DB::table('matieres')->distinct()->pluck('TYPEMAT');
+      $classes = DB::table('eleve')->distinct()->pluck('CODECLAS');
+      
       foreach ($semestres as $semestre) {
         // Obtenir toutes les classes distinctes
         $classes = DB::table('eleve')->distinct()->pluck('CODECLAS');
@@ -478,7 +480,7 @@ class EditionController extends Controller
               }
               $columgene = 'TotalGene' . $semestre;
               $columcoef = 'TotalCoef' . $semestre;
-
+              
               if (Schema::hasColumn('eleve', $columgene)) {
                 DB::table('eleve')
                 ->where('MATRICULE', $eleve->MATRICULE)
@@ -576,6 +578,61 @@ class EditionController extends Controller
                       ->where('MATRICULE', $eleve->MATRICULE)
                       ->update([$column => $moyenne]);
                     }
+                  }
+                }
+              }
+              foreach ($classes as $classe) {
+                // Filtrer les moyennes de la classe pour le semestre actuel
+                $colonneMoyenne = 'MS' . $semestre;
+                $moyennesClasse = DB::table('eleve')
+                ->where('CODECLAS', $classe)
+                ->whereNotNull($colonneMoyenne)
+                ->pluck($colonneMoyenne);
+                
+                // Vérifier que des moyennes existent pour cette classe et ce semestre
+                if ($moyennesClasse->isNotEmpty()) {
+                  // Calculer la moyenne la plus forte et la plus faible
+                  $moyenneForte = $moyennesClasse->max();
+                  $moyenneFaible = $moyennesClasse->min();
+                  
+                  // Déterminer les colonnes de la table `classe` à mettre à jour
+                  $colonneMforte = 'MFoRTE' . $semestre;
+                  $colonneMfaible = 'MFaIBLE' . $semestre;
+                  
+                  // Mettre à jour la table `classe` avec les moyennes forte et faible
+                  DB::table('classes')
+                  ->where('CODECLAS', $classe)
+                  ->update([
+                    $colonneMforte => $moyenneForte,
+                    $colonneMfaible => $moyenneFaible,
+                  ]);
+                }
+                
+                $elevesClasse = DB::table('eleve')
+                ->where('CODECLAS', $classe)
+                ->where('MS' . $semestre, '>', 0)
+                ->get(['MS' . $semestre]);
+                
+                // Calculer la somme des moyennes et le nombre d'élèves
+                $totalMS = 0;
+                $count = 0;
+                
+                foreach ($elevesClasse as $eleve) {
+                  $totalMS += $eleve->{'MS' . $semestre};
+                  $count++;
+                }
+                
+                // Calculer la moyenne de classe si l'effectif est supérieur à 0
+                if ($count > 0) {
+                  $moyenneClasse = $totalMS / $count;
+                  
+                  // Déterminer la colonne de la table `classe` à mettre à jour
+                  $moyenneClasseColumn = 'MCLASSE' . $semestre;
+                  
+                  if (Schema::hasColumn('classes', $moyenneClasseColumn)) {
+                    DB::table('classes')
+                    ->where('CODECLAS', $classe)
+                    ->update([$moyenneClasseColumn => $moyenneClasse]);
                   }
                 }
               }
