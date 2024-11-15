@@ -131,7 +131,7 @@ class BulletinController extends Controller
             // Code pour traiter les bonifications si nécessaire
         }
 
-        // dd($bonifications);
+        // dd($msgEnBasBulletin);
     
         // Récupérer les élèves dans les classes sélectionnées
         $eleves = Eleve::whereIn('CODECLAS', $classeSelectionne)
@@ -150,15 +150,26 @@ class BulletinController extends Controller
     
         // Parcourir chaque élève pour calculer les moyennes
         foreach ($eleves as $eleve) {
+            $infoClasse = Classes::where('CODECLAS', $eleve->CODECLAS)->first();
             $resultatEleve = [
                 'nom' => $eleve->NOM,
                 'prenom' => $eleve->PRENOM,
+                'moyenne_semestrielle_1' => $eleve->MS1,
+                'rang_1' => $eleve->RANG1,
+                'moyenne_bilant_litteraire_1' => $eleve->MBILANL1,
+                'moyenne_bilant_scientifique_1' => $eleve->MBILANS1,
+                'moyenne_bilant_fondamentale_1' => $eleve->MoyMatFond1,
+                'total_notes_1' => $eleve->TotalGen1,
+                'total_coefficie_1' => $eleve->TotalCoef1,
                 'redoublant' => $eleve->STATUT,
                 'aptitute_sport' => $eleve->APTE,
                 'matricule' => $eleve->MATRICULE,
                 'anneScolaire' => $annescolaire,
                 'periode' => "1er Trimestre",
-                'classe' => $eleve->CODECLAS,
+                'classe' => $infoClasse->CODECLAS,
+                'moyenne_classe_1' => $infoClasse->MCLASSE1,
+                'moyenne_faible_1' => $infoClasse->MFaIBLE1,
+                'moyenne_forte_1' => $infoClasse->MFoRTE1,
                 'effectif' => $effectifsParClasse[$eleve->CODECLAS] ?? 0,
                 'matieres' => []
             ];
