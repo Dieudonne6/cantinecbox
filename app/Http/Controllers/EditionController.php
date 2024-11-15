@@ -433,7 +433,9 @@ class EditionController extends Controller
       $semestres = DB::table('notes')->distinct()->pluck('SEMESTRE');
       $typesMatieres = DB::table('matieres')->distinct()->pluck('TYPEMAT');
       $classes = DB::table('eleve')->distinct()->pluck('CODECLAS');
-      
+      $bonificationType = $request->input('bonificationType');
+      $bonifications = $request->input('bonification');
+      $option = Session::get('option');
       foreach ($semestres as $semestre) {
         // Obtenir toutes les classes distinctes
         $classes = DB::table('eleve')->distinct()->pluck('CODECLAS');
@@ -453,22 +455,75 @@ class EditionController extends Controller
             $totalMSCoef = 0;
             
             foreach ($notes as $note) {
-              if ($note->COEF == -1) {
-                if ($note->MS > 10) {
-                  $adjustedMS = $note->MS - 10;
-                  $totalMSCoef += $adjustedMS;
+              if (isset($option['annuler_matiere'])) {
+                if (is_null($note->DEV1) && is_null($note->DEV2) && is_null($note->DEV3)) {
+                  continue;
                 }
-              } elseif ($note->MS > 0) {
-                $totalMSCoef += $note->MS * $note->COEF;
-                $totalCoef += $note->COEF;
+              }
+              if(isset($option['note_test'])){
+                if ($note->COEF == -1) {
+                  if ($bonificationType == 'integral') {
+                    if ($note->MS > 10) {
+                      $adjustedMS = $note->MS - 10;
+                      $totalMSCoef += $adjustedMS;
+                    }
+                  } elseif ($bonificationType == 'Aucun') {
+                    continue;
+                  } elseif ($bonificationType == 'intervalle') {
+                    foreach ($bonifications as $bonification) {
+                      $start = $bonification['start'];
+                      $end = $bonification['end'];
+                      $bonusNote = $bonification['note']; // Utilisé si nécessaire pour ajustements
+                      
+                      // Vérifier si la note est dans l'intervalle
+                      if ($note->MS >= $start && $note->MS <= $end) {
+                        $totalMSCoef += $note->MS; // Ajouter la note au total
+                        break; // On sort de la boucle dès qu'une correspondance est trouvée
+                      }
+                    }
+                  }
+                } elseif ($note->MS >=0) {
+                  $totalMSCoef += $note->MS * $note->COEF;
+                  $totalCoef += $note->COEF;
+                }
+              } else {
+                if ($note->COEF == -1) {
+                  if ($bonificationType == 'integral') {
+                    if ($note->MS1 > 10) {
+                      $adjustedMS = $note->MS1 - 10;
+                      $totalMSCoef += $adjustedMS;
+                    }
+                  } elseif ($bonificationType == 'Aucun') {
+                    continue;
+                  } elseif ($bonificationType == 'intervalle') {
+                    foreach ($bonifications as $bonification) {
+                      $start = $bonification['start'];
+                      $end = $bonification['end'];
+                      $bonusNote = $bonification['note']; // Utilisé si nécessaire pour ajustements
+                      
+                      // Vérifier si la note est dans l'intervalle
+                      if ($note->MS1 >= $start && $note->MS1 <= $end) {
+                        $totalMSCoef += $note->MS1; // Ajouter la note au total
+                        break; // On sort de la boucle dès qu'une correspondance est trouvée
+                      }
+                    }
+                  }
+                } elseif ($note->MS1 >=0) {
+                  $totalMSCoef += $note->MS1 * $note->COEF;
+                  $totalCoef += $note->COEF;
+                }
               }
             }
             
-            $conduiteColumn = 'NoteConduite' . $semestre;
-            if (Schema::hasColumn('eleve', $conduiteColumn) && !is_null($eleve->$conduiteColumn)) {
-              $totalMSCoef += $eleve->$conduiteColumn;
-              $totalCoef += 1;
+            if (isset($option['note_conduite'])) {
+              $conduiteColumn = 'NoteConduite' . $semestre;
+              if (Schema::hasColumn('eleve', $conduiteColumn) && !is_null($eleve->$conduiteColumn)) {
+                $totalMSCoef += $eleve->$conduiteColumn;
+                $totalCoef += 1;
+              }
             }
+            
+            
             
             if ($totalCoef > 0) {
               $moyenne = $totalMSCoef / $totalCoef;
@@ -639,7 +694,7 @@ class EditionController extends Controller
               
             }
             return back()->with('success', 'Tous les calcules sont mis à jour avec succes pour chaque semestre ,chaque classe et chaque éleve.');
-
+            
           }
           
           

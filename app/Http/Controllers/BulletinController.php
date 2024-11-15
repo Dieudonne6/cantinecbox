@@ -96,6 +96,7 @@ class BulletinController extends Controller
     public function printbulletindenotes(Request $request)
     {
         $option = Session::get('option');
+        // dd($option);
         $moyennesParClasseEtMatiere = [];
         $paramselection = $request->input('paramselection');
         $bonificationType = $request->input('bonificationType');
