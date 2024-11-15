@@ -21,6 +21,11 @@
 <div class="container">
   <div class="card shadow-sm p-4">
     <div class="row">
+      @if (session('success'))
+      <div class="alert alert-success">
+        {{ session('success') }}
+      </div>
+      @endif
       <div class="col-md-2 mb-3">
         <select class="js-example-basic-multiple w-100" id="tableSelect4" onchange="redirectWithSelection()">         
           @foreach ($classe as $classeOption)
@@ -54,14 +59,14 @@
     </select>
   </div>
   <div class="col-md-3 mb-3">
-    <button class="btn btn-primary">Calculer moyennes</button>
-    
+    <form action="{{url('/calculermoyenne') }}" method="POST" class="text-center">
+      {{csrf_field()}}
+            <button type="submit" class="btn btn-primary">Calculer moyennes</button>
+    </form>
   </div>
   <div class="col-md-2 mb-3">
     <button onclick="printNote()" class="btn btn-primary">Imprimer</button>
-    
   </div>
-  
 </div>
 <div class="table-responsive mb-4"  id="mainTable">
   <div  class="titles mb-4 d-none">
@@ -185,6 +190,8 @@
           }
               thead {
       background-color: #f2f2f2;
+                    border: 1px solid #000;
+
       text-transform: uppercase;
     }
         .table td:nth-child(n+2), .table th:nth-child(n+2) {
@@ -197,7 +204,7 @@
           th, td {
               padding: 0 !important;
               margin: 0 !important;
-              border: 1px solid #ddd;
+              border: 1px solid #000;
               text-align: center;
               font-size: 10px !important;
           }

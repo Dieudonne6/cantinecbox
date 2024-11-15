@@ -42,7 +42,7 @@
                                         <!-- Select pour la période -->
                                         <div class="col-md-8 mb-3">
                                             <select class="form-select select2 w-100 mt-2" id="periodSelect"
-                                                onchange="updateCheckbox()" aria-label="Choisir une période">
+                                                onchange="document.getElementById('champ1').value = this.value; updateCheckbox()" aria-label="Choisir une période">
                                                 <option value="" selected>Période</option>
                                                 <option value="1">1ère Période</option>
                                                 <option value="2">2ème Période</option>
@@ -59,7 +59,7 @@
                                         <!-- Champ de nombre -->
                                         <div class="col-md-4">
                                             <input type="number" id="champ1" name="champ1" class="form-control"
-                                                placeholder="Valeur" value="{{ $getClasmat->COEF ?? '' }}" readonly>
+                                                placeholder="N° Période" readonly>
                                         </div>
                                     </div>
                                 </div>
