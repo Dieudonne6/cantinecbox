@@ -21,6 +21,12 @@
 <div class="container">
   <div class="card shadow-sm p-4">
     <div class="row">
+      @if (session('success'))
+      <div class="alert alert-success">
+        {{ session('success') }}
+      </div>
+      @endif
+      
       <div class="col-md-2 mb-3">
         <select class="js-example-basic-multiple w-100" id="tableSelect4" onchange="redirectWithSelection()">         
           @foreach ($classe as $classeOption)
@@ -186,6 +192,8 @@
               border-collapse: collapse;
           }
               thead {
+                            border: 1px solid #000;
+
       background-color: #f2f2f2;
       text-transform: uppercase;
     }
@@ -199,7 +207,7 @@
           th, td {
               padding: 0 !important;
               margin: 0 !important;
-              border: 1px solid #ddd;
+              border: 1px solid #000;
               text-align: center;
               font-size: 10px !important;
           }
