@@ -207,16 +207,16 @@
                                                         class="form-control form-control-sm dev-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
                                                 <td>
-                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
-                                                        value="{{ $eleve->MS1 ?? '' }}"
+                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
+                                                        value="{{ $eleve->MS ?? '' }}"
                                                         class="form-control form-control-sm moy-input" readonly>
                                                 </td>
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][TEST]"
                                                         value="{{ $eleve->TEST ?? '' }}"
                                                         class="form-control form-control-sm test-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
-                                                        value="{{ $eleve->MS ?? '' }}"
+                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
+                                                        value="{{ $eleve->MS1 ?? '' }}"
                                                         class="form-control form-control-sm moy1-input"readonly>
                                                 </td>
                                             </tr>
@@ -228,12 +228,12 @@
                             <script>
                                 function calculateMIAndMoy(input) {
                                     const row = input.closest('tr');
-
-                                    // Calculate MI (average of interrogation scores)
+                            
+                                    // Calcul de MI (moyenne des notes d'interrogation)
                                     const interroInputs = row.querySelectorAll('.interro-input');
                                     let interroSum = 0;
                                     let interroCount = 0;
-
+                            
                                     interroInputs.forEach(interro => {
                                         const value = parseFloat(interro.value);
                                         if (!isNaN(value)) {
@@ -241,16 +241,16 @@
                                             interroCount++;
                                         }
                                     });
-
+                            
                                     const miField = row.querySelector('.mi-input');
                                     const mi = interroCount > 0 ? (interroSum / interroCount).toFixed(2) : '';
                                     miField.value = mi;
-
-                                    // Calculate Moy (average of MI and DEV scores)
+                            
+                                    // Calcul de Moy (moyenne de MI et des scores DEV)
                                     const devInputs = row.querySelectorAll('.dev-input');
                                     let devSum = 0;
                                     let devCount = 0;
-
+                            
                                     devInputs.forEach(dev => {
                                         const value = parseFloat(dev.value);
                                         if (!isNaN(value)) {
@@ -258,25 +258,32 @@
                                             devCount++;
                                         }
                                     });
-
+                            
                                     const moyField = row.querySelector('.moy-input');
                                     const moy = devCount > 0 ? ((parseFloat(mi) + devSum) / (devCount + 1)).toFixed(2) : '';
                                     moyField.value = moy;
-
-                                    // Calculate MS (average of MI and DEV scores)
-                                    const msField = row.querySelector('[name*="MS"]');
-                                    const ms = parseFloat(moyField.value) || 0; // Use moy as MS for the calculation
-                                    msField.value = ms.toFixed(2);
-
-                                    // Calculate MS1 (average of MS and TEST)
+                            
+                                    // Calcul de MS1 (moyenne de Moy et TEST)
                                     const testInput = row.querySelector('[name*="TEST"]');
                                     const testValue = parseFloat(testInput.value) || 0;
-
+                            
                                     const ms1Field = row.querySelector('[name*="MS1"]');
-                                    const ms1 = (ms + testValue) / (testValue > 0 ? 2 : 1); // If TEST is filled, divide by 2, else by 1
-                                    ms1Field.value = ms1.toFixed(2);
+                                    if (devCount === 0) {
+                                        // Si aucun score DEV n'est présent, MS1 = MI
+                                        ms1Field.value = mi;
+                                    } else {
+                                        // Sinon, MS1 est basé sur Moy et Test
+                                        const ms1 = (parseFloat(moyField.value) + testValue) / (testValue > 0 ? 2 : 1);
+                                        ms1Field.value = ms1.toFixed(2);
+                                    }
+                            
+                                    // Calcul de MS (moyenne de MS1 et TEST)
+                                    const msField = row.querySelector('[name*="MS"]');
+                                    const ms = (parseFloat(ms1Field.value) + testValue) / (testValue > 0 ? 2 : 1);
+                                    msField.value = ms.toFixed(2);
                                 }
                             </script>
+                            
 
                         </div>
                     </div>

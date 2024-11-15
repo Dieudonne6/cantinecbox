@@ -21,7 +21,6 @@
                                     <label for="meritToPrint">Mérite à Imprimer</label>
                                     <select id="meritToPrint" name="merit" class="js-example-basic-multiple w-100"
                                         onchange="this.form.submit()">
-                                        <option selected> </option>
                                         <option value="{{ $params->NoteTH }}"
                                             @if (request('merit') == $params->NoteTH) selected @endif>TABLEAU D'HONNEUR</option>
                                         <option value="{{ $params->NoteEncourage }}"
@@ -38,7 +37,6 @@
                                     <label for="trimestre">Trimestre</label>
                                     <select id="trimestre" name="trimestre" class="js-example-basic-multiple w-100"
                                         onchange="this.form.submit()">
-                                        <option selected> </option>
                                         <option value="1" @if (request('trimestre') == '1') selected @endif>1er
                                             Trimestre</option>
                                         <option value="2" @if (request('trimestre') == '2') selected @endif>2ème
@@ -54,7 +52,6 @@
                                     <select id="classSelect" name="CODECLAS" class="js-example-basic-multiple w-100 mb-3"
                                         onchange="this.form.submit()">
                                         @foreach ($classes as $classe)
-                                            <option selected> </option>
                                             <option value="{{ $classe->CODECLAS }}"
                                                 @if (request('CODECLAS') == $classe->CODECLAS) selected @endif>{{ $classe->CODECLAS }}
                                             </option>
@@ -84,7 +81,7 @@
                     <div class="card-body">
                         <style>
                             .table-limited-height {
-                                max-height: 400px;
+                                max-height: 540px;
                                 overflow-y: auto;
                             }
 
@@ -110,16 +107,17 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tablemerite">
-                                    {{-- @foreach ($eleves as $eleve)
+                                    @foreach ($eleves as $eleve)
                                         <tr>
                                             <td>
                                                 <input type="checkbox" name="selected_eleves[]"
                                                     aria-label="Sélectionner élève" value="{{ $eleve->MATRICULE ?? '' }}">
                                             </td>
                                             <td>{{ $eleve->NOM ?? '' }}<br>{{ $eleve->PRENOM ?? '' }}</td>
-                                            <td>{{ $eleve->MS1 ?? '' }}</td>
+                                            <td>{{ $eleve->{'MS' . $trimestre} ?? '' }}</td>
+                                            <!-- Affiche la colonne dynamique selon le trimestre -->
                                         </tr>
-                                    @endforeach --}}
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -155,7 +153,6 @@
                                     style="width: 80px; font-size: 14px; text-align: center; height: 36px;" readonly>
                             </div>
                         </form>
-
 
                         <h5 class="text-primary mt-4">Choix du signataire:</h5>
                         <div class="border p-3 rounded">
@@ -225,9 +222,6 @@
                                 window.open("{{ route('attestation.template') }}", '_blank');
                             }
                         </script>
-
-
-
                     </div>
                 </div>
             </div>

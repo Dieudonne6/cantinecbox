@@ -10,6 +10,7 @@ use App\Models\Params2;
 
 use App\Models\Groupeclasse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CdController extends Controller
 {
@@ -253,14 +254,69 @@ public function attestationdemerite()
 {
   $classes = Classe::all();
   $eleves = Eleve::all();
-  $notes = Notes::all();
   $params = Params2::first();
   // Passer les données à la vue
-  return view('pages.notes.attestationdemerite', compact('classes', 'eleves', 'params', 'notes'));
+  return view('pages.notes.attestationdemerite', compact('classes', 'eleves', 'params'));
 }
 
+public function attestationfilter(Request $request) {
+    $codeClasse = $request->input('CODECLAS');
+    $trimestre = $request->input('trimestre');
+    $meritMode = $request->input('meritMode');
+    
+    $classes = Classe::all();
+    $params = Params2::first();
 
+    $elevesQuery = Eleve::where('CODECLAS', $codeClasse);
+    
+    if ($trimestre) {
+        $trimestreColumn = "MS" . $trimestre;
+        
+        // Vérifie quel filtre appliquer en fonction du mode de mérite sélectionné
+        if ($meritMode === 'allMerits') {
+            // Filtrer les élèves dont la note pour le trimestre est supérieure ou égale au mérite
+            $elevesQuery = $elevesQuery->where($trimestreColumn, '>=', $params->NoteTH);
+        } elseif ($meritMode === 'meritOnly') {
+            // Récupère l'élève ayant la note la plus élevée dans la classe pour le trimestre choisi
+            $elevesQuery = $elevesQuery->orderBy($trimestreColumn, 'desc')->limit(1);
+        }
+    }
 
+    $eleves = $elevesQuery->get();
+    
+    return view('pages.notes.attestationfiltere', compact('eleves', 'classes', 'params', 'trimestre'));
+}
+
+public function printCertificates(Request $request)
+{
+    // // Vérifiez si des élèves ont été sélectionnés
+     $selectedEleves = $request->input('eleves');
+     $selectedElevesArray = explode(',', $selectedEleves);
+    //  dd($selectedEleves);
+    if (empty($selectedEleves)) {
+        return redirect()->back()->withErrors(['message' => 'Veuillez sélectionner au moins un élève pour l\'impression.']);
+    }
+
+    // // Récupérez les informations des élèves sélectionnés
+    $eleves = Eleve::whereIn('MATRICULE', $selectedElevesArray)->get();
+    
+    // dd($eleves);
+
+    // Obtenez les paramètres supplémentaires (par exemple, trimestre, mérite, choix de signature)
+    $merit = $request->input('merit');
+    $trimestre = $request->input('trimestre');
+    $signChoice = $request->input('signChoice');
+    $params = Params2::first();
+
+    // Générez une vue pour l'impression avec les données nécessaires
+    return view('pages.notes.print_certificates', compact('eleves', 'merit', 'trimestre', 'signChoice', 'params'));
+}
+
+public function printTemplate()
+{
+    // Retourne la vue du modèle d'attestation
+    return view('pages.notes.template_certificate');
+}
 
 
 

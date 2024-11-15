@@ -362,7 +362,10 @@ Route::get('/filtertablenotes', [EditionController::class, 'filtertablenotes'])-
 
 
 Route::get('/attestationdemerite', [CdController::class, 'attestationdemerite'])->name('attestationdemerite');
-Route::get('/getStudentsByClass/{classCode}', [CdController::class, 'getStudentsByClass']);
+Route::get('/attestationfiltere', [CdController::class, 'attestationfilter'])->name('attestationfiltere');
+Route::get('/attestation/print', [CdController::class, 'printCertificates'])->name('attestation.print');
+Route::get('/attestation/template', [CdController::class, 'printTemplate'])->name('attestation.template');
+
 
 
 Route::post('/bulletindenotes', [BulletinController::class, 'storebulletindenotes'])->name('storebulletindenotes');

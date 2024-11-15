@@ -148,140 +148,143 @@
   <div class="card">
     <div class="card-body">
       <div class="table-responsive mb-4">
-        <table id="myTab" class="table table-bordered">
-          <thead>
-            <tr>
-              <th>MATRICULE</th>
-              <th>Nom et Prénoms</th>
-              <th class="interro-column" data-interro="1">Int1</th>
-              <th class="interro-column" data-interro="2">Int2</th>
-              <th class="interro-column" data-interro="3">Int3</th>
-              <th class="interro-column" data-interro="4">Int4</th>
-              <th class="interro-column" data-interro="5">Int5</th>
-              <th class="interro-column" data-interro="6">Int6</th>
-              <th class="interro-column" data-interro="7">Int7</th>
-              <th class="interro-column" data-interro="8">Int8</th>
-              <th class="interro-column" data-interro="9">Int9</th>
-              <th class="interro-column" data-interro="10">Int10</th>
-              <th>M.int</th>
-              <th>Dev1</th>
-              <th>Dev2</th>
-              <th>Dev3</th>
-              <th>Moy</th>
-              <th>Test</th>
-              <th>Ms</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach ($eleves as $eleve)
-            <tr>
-              <td>{{ $eleve->MATRICULE ?? '' }}</td>
-              <td>{{ $eleve->NOM ?? '' }}<br>{{ $eleve->PRENOM ?? '' }}</td>
-              
-              @for ($i = 1; $i <= 10; $i++)
-              <td class="interro-column" data-interro="{{ $i }}">
-                <input type="text"
-                name="notes[{{ $eleve->MATRICULE }}][INT{{ $i }}]"
-                value="{{ $eleve['INT' . $i] ?? '' }}"
-                class="form-control form-control-sm interro-input"
-                oninput="calculateMIAndMoy(this)">
-              </td>
-              @endfor
-              
-              <td>
-                <input type="text" name="notes[{{ $eleve->MATRICULE }}][MI]"
-                value="{{ $eleve->MI ?? '' }}"
-                class="form-control form-control-sm mi-input" readonly>
-              </td>
-              <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
-                value="{{ $eleve->DEV1 ?? '' }}" 
-                class="form-control form-control-sm dev-input" 
-                oninput="calculateMIAndMoy(this)"></td>
-                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
-                  value="{{ $eleve->DEV2 ?? '' }}" 
-                  class="form-control form-control-sm dev-input" 
-                  oninput="calculateMIAndMoy(this)"></td>
-                  <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
-                    value="{{ $eleve->DEV3 ?? '' }}" 
-                    class="form-control form-control-sm dev-input" 
-                    oninput="calculateMIAndMoy(this)"></td>
-                    <td>
-                      <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
-                      value="{{ $eleve->MS ?? '' }}" 
-                      class="form-control form-control-sm moy-input" readonly>
-                    </td>
-                    <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][TEST]"
-                      value="{{ $eleve->TEST ?? '' }}" 
-                      class="form-control form-control-sm test-input"
-                      oninput="calculateMIAndMoy(this)"></td>
-                      <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
-                        value="{{ $eleve->MS1 ?? '' }}" 
-                        class="form-control form-control-sm moy1-input"readonly>
-                      </td>
-                    </tr>
-                    @endforeach
-                  </tbody>
-                </table>
-              </div>
-              
-              <script>
-                function calculateMIAndMoy(input) {
-                  const row = input.closest('tr');
-                  
-                  // Calculate MI (average of interrogation scores)
-                  const interroInputs = row.querySelectorAll('.interro-input');
-                  let interroSum = 0;
-                  let interroCount = 0;
-                  
-                  interroInputs.forEach(interro => {
-                    const value = parseFloat(interro.value);
-                    if (!isNaN(value)) {
+          <table id="myTab" class="table table-bordered">
+              <thead>
+                  <tr>
+                      <th>MATRICULE</th>
+                      <th>Nom et Prénoms</th>
+                      <th class="interro-column" data-interro="1">Int1</th>
+                      <th class="interro-column" data-interro="2">Int2</th>
+                      <th class="interro-column" data-interro="3">Int3</th>
+                      <th class="interro-column" data-interro="4">Int4</th>
+                      <th class="interro-column" data-interro="5">Int5</th>
+                      <th class="interro-column" data-interro="6">Int6</th>
+                      <th class="interro-column" data-interro="7">Int7</th>
+                      <th class="interro-column" data-interro="8">Int8</th>
+                      <th class="interro-column" data-interro="9">Int9</th>
+                      <th class="interro-column" data-interro="10">Int10</th>
+                      <th>M.int</th>
+                      <th>Dev1</th>
+                      <th>Dev2</th>
+                      <th>Dev3</th>
+                      <th>Moy</th>
+                      <th>Test</th>
+                      <th>Ms</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  @foreach ($eleves as $eleve)
+                      <tr>
+                          <td>{{ $eleve->MATRICULE ?? '' }}</td>
+                          <td>{{ $eleve->NOM ?? '' }}<br>{{ $eleve->PRENOM ?? '' }}</td>
+
+                          @for ($i = 1; $i <= 10; $i++)
+                              <td class="interro-column" data-interro="{{ $i }}">
+                                  <input type="text"
+                                      name="notes[{{ $eleve->MATRICULE }}][INT{{ $i }}]"
+                                      value="{{ $eleve['INT' . $i] ?? '' }}"
+                                      class="form-control form-control-sm interro-input"
+                                      oninput="calculateMIAndMoy(this)">
+                              </td>
+                          @endfor
+
+                          <td>
+                              <input type="text" name="notes[{{ $eleve->MATRICULE }}][MI]"
+                                  value="{{ $eleve->MI ?? '' }}"
+                                  class="form-control form-control-sm mi-input" readonly>
+                          </td>
+                          <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
+                                  value="{{ $eleve->DEV1 ?? '' }}"
+                                  class="form-control form-control-sm dev-input"
+                                  oninput="calculateMIAndMoy(this)"></td>
+                          <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
+                                  value="{{ $eleve->DEV2 ?? '' }}"
+                                  class="form-control form-control-sm dev-input"
+                                  oninput="calculateMIAndMoy(this)"></td>
+                          <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
+                                  value="{{ $eleve->DEV3 ?? '' }}"
+                                  class="form-control form-control-sm dev-input"
+                                  oninput="calculateMIAndMoy(this)"></td>
+                          <td>
+                              <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
+                                  value="{{ $eleve->MS ?? '' }}"
+                                  class="form-control form-control-sm moy-input" readonly>
+                          </td>
+                          <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][TEST]"
+                                  value="{{ $eleve->TEST ?? '' }}"
+                                  class="form-control form-control-sm test-input"
+                                  oninput="calculateMIAndMoy(this)"></td>
+                          <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
+                                  value="{{ $eleve->MS1 ?? '' }}"
+                                  class="form-control form-control-sm moy1-input"readonly>
+                          </td>
+                      </tr>
+                  @endforeach
+              </tbody>
+          </table>
+      </div>
+
+      <script>
+          function calculateMIAndMoy(input) {
+              const row = input.closest('tr');
+      
+              // Calcul de MI (moyenne des notes d'interrogation)
+              const interroInputs = row.querySelectorAll('.interro-input');
+              let interroSum = 0;
+              let interroCount = 0;
+      
+              interroInputs.forEach(interro => {
+                  const value = parseFloat(interro.value);
+                  if (!isNaN(value)) {
                       interroSum += value;
                       interroCount++;
-                    }
-                  });
-                  
-                  const miField = row.querySelector('.mi-input');
-                  const mi = interroCount > 0 ? (interroSum / interroCount).toFixed(2) : '';
-                  miField.value = mi;
-                  
-                  // Calculate Moy (average of MI and DEV scores)
-                  const devInputs = row.querySelectorAll('.dev-input');
-                  let devSum = 0;
-                  let devCount = 0;
-                  
-                  devInputs.forEach(dev => {
-                    const value = parseFloat(dev.value);
-                    if (!isNaN(value)) {
+                  }
+              });
+      
+              const miField = row.querySelector('.mi-input');
+              const mi = interroCount > 0 ? (interroSum / interroCount).toFixed(2) : '';
+              miField.value = mi;
+      
+              // Calcul de Moy (moyenne de MI et des scores DEV)
+              const devInputs = row.querySelectorAll('.dev-input');
+              let devSum = 0;
+              let devCount = 0;
+      
+              devInputs.forEach(dev => {
+                  const value = parseFloat(dev.value);
+                  if (!isNaN(value)) {
                       devSum += value;
                       devCount++;
-                    }
-                  });
-                  
-                  const moyField = row.querySelector('.moy-input');
-                  const moy = devCount > 0 ? ((parseFloat(mi) + devSum) / (devCount + 1)).toFixed(2) : '';
-                  moyField.value = moy;
-                  
-                  // Calculate MS (average of MI and DEV scores)
-                  const msField = row.querySelector('[name*="MS"]');
-                  const ms = parseFloat(moyField.value) || 0; // Use moy as MS for the calculation
-                  msField.value = ms.toFixed(2);
-                  
-                  // Calculate MS1 (average of MS and TEST)
-                  const testInput = row.querySelector('[name*="TEST"]');
-                  const testValue = parseFloat(testInput.value) || 0;
-                  
-                  const ms1Field = row.querySelector('[name*="MS1"]');
-                  const ms1 = (ms + testValue) / (testValue > 0 ? 2 : 1); // If TEST is filled, divide by 2, else by 1
+                  }
+              });
+      
+              const moyField = row.querySelector('.moy-input');
+              const moy = devCount > 0 ? ((parseFloat(mi) + devSum) / (devCount + 1)).toFixed(2) : '';
+              moyField.value = moy;
+      
+              // Calcul de MS1 (moyenne de Moy et TEST)
+              const testInput = row.querySelector('[name*="TEST"]');
+              const testValue = parseFloat(testInput.value) || 0;
+      
+              const ms1Field = row.querySelector('[name*="MS1"]');
+              if (devCount === 0) {
+                  // Si aucun score DEV n'est présent, MS1 = MI
+                  ms1Field.value = mi;
+              } else {
+                  // Sinon, MS1 est basé sur Moy et Test
+                  const ms1 = (parseFloat(moyField.value) + testValue) / (testValue > 0 ? 2 : 1);
                   ms1Field.value = ms1.toFixed(2);
-                }
-              </script>
-              
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
+              }
+      
+              // Calcul de MS (moyenne de MS1 et TEST)
+              const msField = row.querySelector('[name*="MS"]');
+              const ms = (parseFloat(ms1Field.value) + testValue) / (testValue > 0 ? 2 : 1);
+              msField.value = ms.toFixed(2);
+          }
+      </script>
+      
+
+  </div>
   </div>
   <br><br><br>
   <!-- Modal -->
