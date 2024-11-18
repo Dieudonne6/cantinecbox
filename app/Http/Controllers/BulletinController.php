@@ -109,6 +109,7 @@ class BulletinController extends Controller
         $classeSelectionne = $request->input('selected_classes', []);
     
         $params2 = Params2::first();
+        $typean = $params2->TYPEAN;
         $rtfContent = Params2::first()->EnteteBull;
         $entete = $this->extractTextFromRtf($rtfContent);
 
@@ -130,12 +131,16 @@ class BulletinController extends Controller
             // Code pour traiter les bonifications si nécessaire
         }
 
-        // dd($msgEnBasBulletin);
+        // dd($option);
+        // $eleves = Eleve::whereIn('CODECLAS', $classeSelectionne)
+        //     ->with(['notes' => function ($query) use ($periode) {
+        //         $query->where('SEMESTRE', $periode); 
+        //     }])->get();
     
         // Récupérer les élèves dans les classes sélectionnées
         $eleves = Eleve::whereIn('CODECLAS', $classeSelectionne)
-            ->with(['notes' => function ($query) {
-                $query->where('SEMESTRE', 1); // Récupérer uniquement les notes du semestre 1
+            ->with(['notes' => function ($query) use ($periode) {
+                $query->where('SEMESTRE', $periode); 
             }])->get();
     
         // Calculer l'effectif de chaque classe sélectionnée
@@ -155,16 +160,16 @@ class BulletinController extends Controller
                 'prenom' => $eleve->PRENOM,
                 'moyenne_semestrielle_1' => $eleve->MS1,
                 'rang_1' => $eleve->RANG1,
-                'moyenne_bilant_litteraire_1' => $eleve->MBILANL1,
-                'moyenne_bilant_scientifique_1' => $eleve->MBILANS1,
-                'moyenne_bilant_fondamentale_1' => $eleve->MoyMatFond1,
+                'moyenne_bilan_litteraire_1' => $eleve->MBILANL1,
+                'moyenne_bilan_scientifique_1' => $eleve->MBILANS1,
+                'moyenne_bilan_fondamentale_1' => $eleve->MoyMatFond1,
                 'total_notes_1' => $eleve->TotalGen1,
                 'total_coefficie_1' => $eleve->TotalCoef1,
                 'redoublant' => $eleve->STATUT,
                 'aptitute_sport' => $eleve->APTE,
                 'matricule' => $eleve->MATRICULE,
                 'anneScolaire' => $annescolaire,
-                'periode' => "1er Trimestre",
+                'periode' => $periode,
                 'classe' => $infoClasse->CODECLAS,
                 'moyenne_classe_1' => $infoClasse->MCLASSE1,
                 'moyenne_faible_1' => $infoClasse->MFaIBLE1,
