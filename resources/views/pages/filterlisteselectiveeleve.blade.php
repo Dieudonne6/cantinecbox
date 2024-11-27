@@ -264,5 +264,5 @@
 }
 
     </script>
-    @endsection
+   
     
