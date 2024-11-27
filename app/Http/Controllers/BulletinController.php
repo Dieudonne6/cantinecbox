@@ -721,7 +721,7 @@ foreach ($semestres as $semestre) {
 
         dd($resultats);
     
-        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete'));
+        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean'));
     }
     
     /**

@@ -9,6 +9,23 @@
         <br>
         <br>
         @foreach ($resultats as $index => $resultat)
+        @php
+          $periode = NULL;
+          $texte = NULL;
+          $texte2 = NULL;
+          $periode_abr = NULL;
+          if ($typean == 1) {
+            $periode = "Semestre";
+            $texte = "Semestriel";
+            $texte2 = "Semestrielle";
+            $periode_abr = "Sem.";
+          } else {
+            $periode = "Trimestre";
+            $texte = "Trimestriel";
+            $texte2 = "Trimestrielle";
+            $periode_abr = "Trim.";
+          }
+        @endphp
         <div class="bulletin" style="{{ $index < count($resultats) - 1 ? 'page-break-after: always;' : '' }}">
           <br>
           <br>
@@ -42,7 +59,18 @@
             <div  style="width: 300px; height: 80px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
               <h5 style="margin-top: 5px;">Année scolaire : {{ $resultat['anneScolaire'] }}</h5>
               <br>
-              <h5 id="periode" class="text-center">{{$resultat['periode']}} </h5>
+              <h5 id="periode" class="text-center">
+                @switch($resultat['periode'])
+                  @case("1")
+                    1er {{$periode}}
+                    @break
+                  @case("2")
+                   2e {{$periode}} 
+                    @break
+                  @default
+                    3e {{$periode}}
+                @endswitch
+              </h5>
             </div>
             <div id="classe" style="width: 300px; height: 80px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
               <h5 style="margin-top: 5px;">Classe : {{ $resultat['classe'] }}</h5>
@@ -114,57 +142,57 @@
               @continue;
             @endif
                 <tr>
-                <td>{{ $matiere['nom_matiere'] }}</td>
-                <td>{{ $matiere['coefficient'] }}</td>
-                <td>{{ $matiere['moyenne_interro'] ?? '**.**' }}</td>
-                <td>{{ $matiere['devoir1'] ?? '**.**' }}</td>
-                <td>{{ $matiere['devoir2'] ?? '**.**' }}</td>
-                @if (!isset($option['masquer_devoir3']))
-                  <td>{{ $matiere['devoir3'] ?? '**.**' }}</td>
-                @endif
-                @if(!isset($option['note_test']) || !$option['note_test'])
-                  <td>{{ number_format($moyenne_sur_20, 2) ?? '**.**' }}</td>
-                  @if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'integral')
-                    <td>+ {{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
-                  @else
-                    <td>{{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
+                  <td>{{ $matiere['nom_matiere'] }}</td>
+                  <td>{{ $matiere['coefficient'] }}</td>
+                  <td>{{ $matiere['moyenne_interro'] ?? '**.**' }}</td>
+                  <td>{{ $matiere['devoir1'] ?? '**.**' }}</td>
+                  <td>{{ $matiere['devoir2'] ?? '**.**' }}</td>
+                  @if (!isset($option['masquer_devoir3']))
+                    <td>{{ $matiere['devoir3'] ?? '**.**' }}</td>
                   @endif
-                @endif
-                @if (isset($option['note_test']) && $option['note_test'])
-                <td>{{ number_format($moyenne_part, 2) ?? '**.**' }}</td>
-                <td>{{ $matiere['test'] ?? '**.**' }}</td>
-                <td>{{ number_format($moyenne_sur_20, 2) ?? '**.**' }}</td>
-                <td>{{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
-                @else
-                <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td>
-                <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td>
-                @endif
-                @if(isset($option['rang_matiere']) && $option['rang_matiere'])
-                  <td>{{ $matiere['rang'] }}</td>
-                @endif
-                @if (isset($option['appreciation_prof']))
-                  <td>{{ $matiere['mentionProf'] }}</td>
-                @else
-                  <td></td>
-                @endif
+                  @if(!isset($option['note_test']) || !$option['note_test'])
+                    <td>{{ number_format($moyenne_sur_20, 2) ?? '**.**' }}</td>
+                    @if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'integral')
+                      <td>+ {{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
+                    @else
+                      <td>{{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
+                    @endif
+                  @endif
+                  @if (isset($option['note_test']) && $option['note_test'])
+                    <td>{{ number_format($moyenne_part, 2) ?? '**.**' }}</td>
+                    <td>{{ $matiere['test'] ?? '**.**' }}</td>
+                    <td>{{ number_format($moyenne_sur_20, 2) ?? '**.**' }}</td>
+                    <td>{{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
+                  @else
+                    <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td>
+                    <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td>
+                  @endif
+                  @if(isset($option['rang_matiere']) && $option['rang_matiere'])
+                    <td>{{ $matiere['rang'] }}</td>
+                  @endif
+                  @if (isset($option['appreciation_prof']))
+                    <td>{{ $matiere['mentionProf'] }}</td>
+                  @else
+                    <td></td>
+                  @endif
               </tr>
               @endforeach
               <tr>
                 <td>Total</td>
                 <td>{{ $total_coefficients }}</td>
-                <td colspan="4"></td> <!-- Ajustez le colspan selon le nombre de colonnes à fusionner -->
+                <td colspan="4"></td>
                 <td>{{ number_format($total_moyenne_coeffs, 2) }}</td>
-                <td colspan="5"></td> <!-- Ajustez le colspan selon le nombre de colonnes restantes -->
+                <td colspan="5"></td>
               </tr>
             </tbody>
           </table>
           <div id="ligne" style="width: 1187px; height: 1px; background-color: rgb(0, 0, 0);"></div>
           <div class="d-flex">
             <div style="width: 280px; height: 85px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-              <h4 class="text-center" style="margin-top: 20px;">Bilan Trimestriel</h4>
+              <h4 class="text-center" style="margin-top: 20px;">Bilan {{$texte}}</h4>
             </div>
             <div>
-              <h5 style="margin-left: 10px;">Moyenne Trimestrielle : {{$total_moyenne_coeffs != 0 ? number_format($total_moyenne_coeffs / $total_coefficients, 2) : '**.**'}}</h5>
+              <h5 style="margin-left: 10px;">Moyenne {{$texte2}} : {{$total_moyenne_coeffs != 0 ? number_format($total_moyenne_coeffs / $total_coefficients, 2) : '**.**'}}</h5>
               <table id="tableau_bilan" style="width: 500px; margin-left: 60px;">
                 <thead>
                   <tr>
@@ -175,22 +203,62 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="text-center" style=""><strong>12</strong></td>
-                    <td class="text-center"><strong>15</strong></td>
-                    <td class="text-center"><strong>16</strong></td>
+                    <td class="text-center" style=""><strong>{{ number_format($resultat['moyenne_faible_1'], 2) }}</strong></td>
+                    <td class="text-center"><strong>{{ number_format($resultat['moyenne_forte_1'], 2) }}</strong></td>
+                    <td class="text-center"><strong>{{ number_format($resultat['moyenne_classe_1'], 2) }}</strong></td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <div  style="width: 350px; height: 85px; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px;">
-              <h8><strong>Bilan des matières littéraires :</strong></h8>
+              <h8><strong>Bilan des matières littéraires : {{ $resultat['moyenne_bilan_litteraire_1'] == -1 ? '**.**' : $resultat['moyenne_bilan_litteraire_1'] }}</strong></h8>
               <br>
-              <h8><strong>Bilan des matières scientifiques :</strong></h8>
-              <br>
-              <h8><strong>Bilan des matières fondamentales :</strong></h8>
+              <h8><strong>Bilan des matières scientifiques : {{ $resultat['moyenne_bilan_scientifique_1'] == -1 ? '**.**' : $resultat['moyenne_bilan_scientifique_1'] }}</strong></h8>
+                <br>
+                <h8><strong>Bilan des matières fondamentales : {{ $resultat['moyenne_bilan_fondamentale_1'] == -1 ? '**.**' : $resultat['moyenne_bilan_fondamentale_1'] }}</strong></h8>
+              </div>
             </div>
-          </div>
-          <div id="ligne" style="width: 1187px; height: 1px; background-color: rgb(0, 0, 0);"></div>
+            @if (($typean == 1 && $resultat['periode'] == 2) || ($typean == 2 && $resultat['periode'] == 3))
+            <div id="bilan_annuel" class="d-flex" style="border: 1px solid black; border-radius: 10px; width:1190px">
+              <div> 
+                <h6 style="margin-left: 70px;">BILAN ANNUEL</h6>
+                <h8>Lettres :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp**.**</h8>
+                <br>
+                <h8>Sciences :&nbsp&nbsp&nbsp&nbsp**.**</h8>
+                <br>
+                <h8>Moy. Fond :&nbsp&nbsp&nbsp**.**</h8>
+              </div>
+              <div style="margin-left: 60px;">
+                <h5>Moyenne Annuelle :&nbsp&nbsp&nbsp**.**</h5>
+                <table id="tableau_bilan_annuel" style="width: 450px; margin-left: 60px; margin-top: 20px;">
+                  <thead>
+                    <tr>
+                      <th style="font-weight: normal;">Plus forte Moy.</th>
+                      <th style="font-weight: normal;">Plus faible Moy.</th>
+                      <th style="font-weight: normal;">Moy. de la classe</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-center" style=""><strong>0</strong></td>
+                      <td class="text-center"><strong>0</strong></td>
+                      <td class="text-center"><strong>0</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div style="margin-left: 120px;">
+                <h5>RECAPITULATIF ANNUEL</h5>
+                <h8>Moy. 1er {{$periode_abr}} :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp**.**</h8>
+                <br>
+                <h8>Moy. 2ème {{$periode_abr}} :&nbsp&nbsp&nbsp**.**</h8>
+                <br>
+                @if ($typean == 2)
+                  <h8>Moy. 3ème {{$periode_abr}} :&nbsp&nbsp&nbsp**.**</h8>
+                @endif
+              </div>
+            </div>
+            @endif
           <div class="d-flex">
             <div  style="width: 230px; height: auto; background-color: transparent; border: 1px solid black; border-radius: 10px;">
               <h6 style="margin-top: 5px;" class="text-center">Mention du conseil des Prof.</h6>
@@ -286,6 +354,12 @@
     text-align: center;
   }
   @media print {
+    #bilan_annuel {
+      width: 1000px !important;
+    }
+    .card-body {
+      overflow: hidden;
+    }
     .watermark {
       position: absolute;
       top: 50%;

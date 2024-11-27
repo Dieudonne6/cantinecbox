@@ -104,34 +104,49 @@
           <br>
           <div class="row">
             <div class="form-group d-flex">
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[0][start]" value="0" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[0][start]" id="bonification[0][start]" value="0" step="0.25" readonly>
               <p style="margin-top: 10px;">--</p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[0][end]" value="11" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[0][end]" id="bonification[0][end]" value="11" step="0.25">
               <p style="margin-top: 10px;">--></p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[0][note]" value="1" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[0][note]" id="bonification[0][note]" value="1" step="0.25">
             </div>
             <div class="form-group d-flex">
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[1][start]" value="11" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[1][start]" id="bonification[1][start]" value="11" step="0.25">
               <p style="margin-top: 10px;">--</p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[1][end]" value="12" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[1][end]" id="bonification[1][end]" value="12" step="0.25">
               <p style="margin-top: 10px;">--></p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[1][note]" value="2" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[1][note]" id="bonification[1][note]" value="2" step="0.25">
             </div>
             <div class="form-group d-flex">
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[2][start]" value="12" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[2][start]" id="bonification[2][start]" value="12" step="0.25">
               <p style="margin-top: 10px;">--</p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[2][end]" value="14" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[2][end]" id="bonification[2][end]" value="14" step="0.25">
               <p style="margin-top: 10px;">--></p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[2][note]" value="3" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[2][note]" id="bonification[2][note]" value="3" step="0.25">
             </div>
             <div class="form-group d-flex">
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[3][start]" value="14" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[3][start]" id="bonification[3][start]" value="14" step="0.25">
               <p style="margin-top: 10px;">--</p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[3][end]" value="16" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[3][end]" id="bonification[3][end]" value="16" step="0.25">
               <p style="margin-top: 10px;">--></p>
-              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[3][note]" value="4" step="0.25">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[3][note]" id="bonification[3][note]" value="4" step="0.25">
             </div>
-            <!-- Ajoute les autres lignes de la même manière -->
+            <div class="form-group d-flex">
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[4][start]" id="bonification[4][start]" value="16" step="0.25">
+              <p style="margin-top: 10px;">--</p>
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[4][end]" id="bonification[4][end]" value="20" step="0.25" readonly>
+              <p style="margin-top: 10px;">--></p>
+              <input type="number" class="form-control bonification-input" style="width: 28% !important" name="bonification[4][note]" id="bonification[4][note]" value="5" step="0.25">
+            </div>
+            <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                  document.querySelectorAll('.bonification-input').forEach((input, index, array) => {
+                      if (index < array.length - 1) {
+                          document.getElementById(`bonification[${index}][end]`).value = document.getElementById(`bonification[${index + 1}][start]`).value;
+                      }
+                  });
+              });
+              </script>
           </div>
           <div class="row">
             <div class="form-group">
@@ -325,9 +340,9 @@
             </div>
             <br>
             <div class="row">
-              <button class="btn btn-primary mb-2"  data-bs-toggle="modal" data-bs-target="#configdecisionconseil">Configurer les bulletins</button>
+              <button class="btn btn-primary mb-2" type="button" data-bs-toggle="modal" data-bs-target="#configdecisionconseil">Configurer les bulletins</button>
               <br>
-              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#configdecisionjury">Configurer décisions du jury (LMD)</button>
+              <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#configdecisionjury">Configurer décisions du jury (LMD)</button>
             </div>
             <br>
               <div class="row" style="background-color: #844fc1; border: 1px solid #ffffff !important; border-radius: 4px !important; color: #fff;">
@@ -530,6 +545,121 @@
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="exampleModalLabelmodif">Configuration de la décision du Conseil des Profs</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex" style="margin-left: 50px !important;">
+            <label for="config_promo" style="margin-top: 15px !important;">Promotion à configurer</label>
+            <select class="form-select w-50" id="config_promo" name="config_promo" style="margin-left: 20px !important;">
+              <option value="">Sélectionner une promotion</option>
+              @foreach ($promotions as $promotion)
+              <option value="{{ $promotion->CODEPROMO }}">{{ $promotion->LIBELPROMO }}</option>
+              @endforeach
+            </select>
+            <button class="btn btn-secondary" style="margin-left: 20px !important;">Sauver</button>
+          </div>
+          <br>
+          <div class="row">
+            <div style="background-color: #35d966; border-radius: 5px !important; width: 82% !important; margin-left: 5px !important;">
+              <h4>Statut - Non redoublant</h4>
+            </div>
+            <div class="d-flex" style="margin-top: 10px !important;">
+              <input type="number" class="form-control" id="valuenrd1" name="valuenrd1" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
+              <input type="number" class="form-control" id="valuenrd2" name="valuenrd2" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
+              <input type="text" class="form-control" id="mentionnrd1" name="mentionnrd1" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
+            </div>
+            <div class="d-flex" style="margin-top: 10px !important;">
+              <input type="number" class="form-control" id="valuenrd3" name="valuenrd3" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
+              <input type="number" class="form-control" id="valuenrd4" name="valuenrd4" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
+              <input type="text" class="form-control" id="mentionnrd2" name="mentionnrd2" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
+            </div>
+            <div class="d-flex" style="margin-top: 10px !important;">
+              <input type="number" class="form-control" id="valuenrd5" name="valuenrd5" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
+              <input type="number" class="form-control" id="valuenrd6" name="valuenrd6" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
+              <input type="text" class="form-control" id="mentionnrd3" name="mentionnrd3" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
+            </div>
+            <div class="d-flex" style="margin-top: 10px !important;">
+              <input type="number" class="form-control" id="valuenrd7" name="valuenrd7" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
+              <input type="number" class="form-control" id="valuenrd8" name="valuenrd8" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
+              <input type="text" class="form-control" id="mentionnrd4" name="mentionnrd4" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
+            </div>
+            <div class="d-flex" style="margin-top: 10px !important;">
+              <input type="number" class="form-control" id="valuenrd9" name="valuenrd9" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
+              <input type="number" class="form-control" id="valuenrd10" name="valuenrd10" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
+              <input type="text" class="form-control" id="mentionnrd5" name="mentionnrd5" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
+            </div>
+            <div class="d-flex" style="margin-top: 10px !important;">
+              <input type="number" class="form-control" id="valuenrd11" name="valuenrd11" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
+              <input type="number" class="form-control" id="valuenrd12" name="valuenrd12" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
+              <input type="text" class="form-control" id="mentionnrd6" name="mentionnrd6" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div style="background-color: #35d966; border-radius: 5px !important; width: 82% !important; margin-left: 5px !important;">
+              <h4>Statut - Redoublant</h4>
+            </div>
+            <div class="d-flex" style="margin-top: 10px !important;">
+              <input type="number" class="form-control" id="valuered1" name="valuered1" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
+              <input type="number" class="form-control" id="valuered2" name="valuered2" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
+              <input type="text" class="form-control" id="mentionred1" name="mentionred1" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
+            </div>
+            <div class="d-flex" style="margin-top: 10px !important;">
+              <input type="number" class="form-control" id="valuered3" name="valuered3" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
+              <input type="number" class="form-control" id="valuered4" name="valuered4" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
+              <input type="text" class="form-control" id="mentionred2" name="mentionred2" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
+            </div>
+            <div class="d-flex" style="margin-top: 10px !important;">
+              <input type="number" class="form-control" id="valuered5" name="valuered5" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
+              <input type="number" class="form-control" id="valuered6" name="valuered6" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
+              <input type="text" class="form-control" id="mentionred3" name="mentionred3" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
+            </div>
+            <div class="d-flex" style="margin-top: 10px !important;">
+              <input type="number" class="form-control" id="valuered7" name="valuered7" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
+              <input type="number" class="form-control" id="valuered8" name="valuered8" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
+              <input type="text" class="form-control" id="mentionred4" name="mentionred4" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
+            </div>
+            <div class="d-flex" style="margin-top: 10px !important;">
+              <input type="number" class="form-control" id="valuered9" name="valuered9" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
+              <input type="number" class="form-control" id="valuered10" name="valuered10" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
+              <input type="text" class="form-control" id="mentionred5" name="mentionred5" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
+            </div>
+            <div class="d-flex" style="margin-top: 10px !important;">
+              <input type="number" class="form-control" id="valuered11" name="valuered11" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---</p>
+              <input type="number" class="form-control" id="valuered12" name="valuered12" value="0" style="margin-left: 20px !important; width: 10% !important; border-color: #35d966;">
+              <p style="margin-left: 20px !important; margin-top: 10px !important;">---></p>
+              <input type="text" class="form-control" id="mentionred6" name="mentionred6" style="margin-left: 20px !important; width: 50% !important; border-color: #35d966;">
+            </div>
+          </div>
+          <br>
+          <div class="modal-footer d-flex justify-content-end">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          </div>
+        </div>
+      </div>
+
         </div>
     </div>
 
