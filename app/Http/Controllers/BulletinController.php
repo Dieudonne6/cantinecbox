@@ -719,7 +719,7 @@ foreach ($semestres as $semestre) {
             }
         }
     
-        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete'));
+        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean'));
     }
     
     /**
