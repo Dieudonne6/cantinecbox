@@ -464,18 +464,123 @@ class BulletinController extends Controller
           
           // Parcourir chaque élève pour calculer les moyennes
           foreach ($eleves as $eleve) {
+
+            if ($periode === "1"){
+              $moyenneSemestrielle =  $eleve->MS1;
+              $rang = $eleve->RANG1;
+              $billanLitteraire = $eleve->MBILANL1;
+              $billanScientifique = $eleve->MBILANS1;
+              $billanFondamentale = $eleve->MoyMatFond1;
+              $totalGenerale = $eleve->TotalGen1;
+              $totalCoefficie = $eleve->TotalCoef1;
+            } elseif ($periode === "2") {
+              $moyenneSemestrielle =  $eleve->MS2;
+              $rang = $eleve->RANG2;
+              $billanLitteraire = $eleve->MBILANL2;
+              $billanScientifique = $eleve->MBILANS2;
+              $billanFondamentale = $eleve->MoyMatFond2;
+              $totalGenerale = $eleve->TotalGen2;
+              $totalCoefficie = $eleve->TotalCoef2;
+            } elseif ($periode === "3") {
+              $moyenneSemestrielle =  $eleve->MS3;
+              $rang = $eleve->RANG3;
+              $billanLitteraire = $eleve->MBILANL3;
+              $billanScientifique = $eleve->MBILANS3;
+              $billanFondamentale = $eleve->MoyMatFond3;
+              $totalGenerale = $eleve->TotalGen3;
+              $totalCoefficie = $eleve->TotalCoef3;
+            } else {
+              return back()->with('erreur', 'veuillez choisir une periode');
+            }
+
+            // CALCUL DU BILAN ANNUELLE DES MATIERES LITTERAIRES
+            $bilanLitteraireTotal = 0; // Somme des bilans littéraires valides
+            $bilanLitteraireCount = 0; // Compteur des bilans littéraires valides
+        
+            // Vérifiez et ajoutez chaque bilan littéraire
+            $bilanLitteraires = [$eleve->MBILANL1, $eleve->MBILANL2, $eleve->MBILANL3];
+            foreach ($bilanLitteraires as $bilan) {
+                if ($bilan !== -1 && $bilan !== null) {
+                    $bilanLitteraireTotal += $bilan;
+                    $bilanLitteraireCount++;
+                }
+            }
+        
+            // Calcul de la moyenne (évitez la division par zéro)
+            $moyenneBilanLitteraire = $bilanLitteraireCount > 0 ? $bilanLitteraireTotal / $bilanLitteraireCount : null;
+
+
+            // CALCUL DU BILAN ANNUELLE DES MATIERES SCIENTIFIQUES
+            $bilanScientifiqueTotal = 0; // Somme des bilans littéraires valides
+            $bilanScientifiqueCount = 0; // Compteur des bilans littéraires valides
+        
+            // Vérifiez et ajoutez chaque bilan Scientifique
+            $bilanScientifiques = [$eleve->MBILANS1, $eleve->MBILANS2, $eleve->MBILANS3];
+            foreach ($bilanScientifiques as $bilan) {
+                if ($bilan !== -1 && $bilan !== null) {
+                    $bilanScientifiqueTotal += $bilan;
+                    $bilanScientifiqueCount++;
+                }
+            }
+        
+            // Calcul de la moyenne (évitez la division par zéro)
+            $moyenneBilanScientifique = $bilanScientifiqueCount > 0 ? $bilanScientifiqueTotal / $bilanScientifiqueCount : null;
+
+
+            // CALCUL DU BILAN ANNUELLE DES MATIERES FONDAMENTALES 
+            $bilanFondamentaleTotal = 0; // Somme des bilans littéraires valides
+            $bilanFondamentaleCount = 0; // Compteur des bilans littéraires valides
+        
+            // Vérifiez et ajoutez chaque bilan Fondamentale
+            $bilanFondamentales = [$eleve->MoyMatFond1, $eleve->MoyMatFond2, $eleve->MoyMatFond3];
+            foreach ($bilanFondamentales as $bilan) {
+                if ($bilan !== -1 && $bilan !== null) {
+                    $bilanFondamentaleTotal += $bilan;
+                    $bilanFondamentaleCount++;
+                }
+            }
+        
+            // Calcul de la moyenne (évitez la division par zéro)
+            $moyenneBilanFondamentale = $bilanFondamentaleCount > 0 ? $bilanFondamentaleTotal / $bilanFondamentaleCount : null;
+
+
+            // CALCUL DES MOYENNES GENERALE EN VERIFIANT LES VALEURS
+            $moyenne1erTrimestre_Semestre = ($eleve->TotalGen1 !== -1 && $eleve->TotalGen1 !== null && $eleve->TotalCoef1 !== -1 && $eleve->TotalCoef1 !== null && $eleve->TotalCoef1 > 0) 
+            ? $eleve->TotalGen1 / $eleve->TotalCoef1 
+            : null;
+
+            $moyenne2emTrimestre_Semestre = ($eleve->TotalGen2 !== -1 && $eleve->TotalGen2 !== null && $eleve->TotalCoef2 !== -1 && $eleve->TotalCoef2 !== null && $eleve->TotalCoef2 > 0) 
+                ? $eleve->TotalGen2 / $eleve->TotalCoef2 
+                : null;
+
+            $moyenne3emTrimestre_Semestre = ($eleve->TotalGen3 !== -1 && $eleve->TotalGen3 !== null && $eleve->TotalCoef3 !== -1 && $eleve->TotalCoef3 !== null && $eleve->TotalCoef3 > 0) 
+                ? $eleve->TotalGen3 / $eleve->TotalCoef3 
+                : null;
+
+
             $infoClasse = Classes::where('CODECLAS', $eleve->CODECLAS)->first();
             $resultatEleve = [
               'nom' => $eleve->NOM,
               'prenom' => $eleve->PRENOM,
-              'moyenne_semestrielle_1' => $eleve->MS1,
-              'rang_1' => $eleve->RANG1,
-              'moyenne_bilan_litteraire_1' => $eleve->MBILANL1,
-              'moyenne_bilan_scientifique_1' => $eleve->MBILANS1,
-              'moyenne_bilan_fondamentale_1' => $eleve->MoyMatFond1,
-              'total_notes_1' => $eleve->TotalGen1,
-              'total_coefficie_1' => $eleve->TotalCoef1,
+              'moyenne_semestrielle_1' => $moyenneSemestrielle,
+              'rang_1' => $rang,
+              'moyenne_bilan_litteraire_1' => $billanLitteraire,
+              'moyenne_bilan_scientifique_1' => $billanScientifique,
+              'moyenne_bilan_fondamentale_1' => $billanFondamentale,
+              'total_notes_1' => $totalGenerale,
+              'total_coefficie_1' => $totalCoefficie,
               'redoublant' => $eleve->STATUT,
+              'moyenneBilanLitteraire' => $moyenneBilanLitteraire,
+              'moyenneBilanScientifique' => $moyenneBilanScientifique,
+              'moyenneBilanFondamentale' => $moyenneBilanFondamentale,
+              'moyenne1erTrimestre_Semestre' => $moyenne1erTrimestre_Semestre,
+              'moyenne2emTrimestre_Semestre' => $moyenne2emTrimestre_Semestre,
+              'moyenne3emTrimestre_Semestre' => $moyenne3emTrimestre_Semestre,
+              'moyenneAnnuel' => $eleve->MAN,
+              'rangAnnuel' => $eleve->RANGA,
+              'rang1' => $eleve->RANG1,
+              'rang2' => $eleve->RANG2,
+              'rang3' => $eleve->RANG3,
               'aptitute_sport' => $eleve->APTE,
               'matricule' => $eleve->MATRICULE,
               'anneScolaire' => $annescolaire,
