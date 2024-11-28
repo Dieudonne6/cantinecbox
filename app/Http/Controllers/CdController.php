@@ -90,8 +90,9 @@ class CdController extends Controller
       }
     });
     
-    $getClasmat = Clasmat::where('CODEMAT', $matiere)->first();
-    // Sélectionner les colonnes des deux tables pour les afficher dans la vue
+    $getClasmat = Clasmat::where([
+      ['CODECLAS', '=', $classe],
+      ['CODEMAT', '=', $matiere] ])->first();    // Sélectionner les colonnes des deux tables pour les afficher dans la vue
     $eleves = $elevesQuery->select('eleve.*', 
     'notes.INT1', 
     'notes.INT2', 
@@ -135,7 +136,10 @@ class CdController extends Controller
       }
     });
     
-    $getClasmat = Clasmat::where('CODEMAT', $matiere)->first();
+    // $getClasmat = Clasmat::where('CODEMAT', $matiere)->first();
+    $getClasmat = Clasmat::where([
+      ['CODECLAS', '=', $classe],
+      ['CODEMAT', '=', $matiere] ])->first();
     // Sélectionner les colonnes des deux tables pour les afficher dans la vue
     $eleves = $elevesQuery->select('eleve.*', 
     'notes.INT1', 

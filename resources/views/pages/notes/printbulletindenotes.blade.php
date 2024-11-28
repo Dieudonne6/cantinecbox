@@ -191,8 +191,12 @@
             <div style="width: 280px; height: 85px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
               <h4 class="text-center" style="margin-top: 20px;">Bilan {{$texte}}</h4>
             </div>
+            @php
+              $moyenne = 0;
+              $moyenne = $total_moyenne_coeffs / $total_coefficients;
+            @endphp
             <div>
-              <h5 style="margin-left: 10px;">Moyenne {{$texte2}} : {{$total_moyenne_coeffs != 0 ? number_format($total_moyenne_coeffs / $total_coefficients, 2) : '**.**'}}</h5>
+              <h5 style="margin-left: 10px;">Moyenne {{$texte2}} : {{$total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**'}}</h5>
               <table id="tableau_bilan" style="width: 500px; margin-left: 60px;">
                 <thead>
                   <tr>
@@ -259,41 +263,47 @@
               </div>
             </div>
             @endif
+            @php
+              $mention_conseil = isset($option['mention_conseil']);
+            @endphp
           <div class="d-flex">
             <div  style="width: 230px; height: auto; background-color: transparent; border: 1px solid black; border-radius: 10px;">
               <h6 style="margin-top: 5px;" class="text-center">Mention du conseil des Prof.</h6>
               <div class="d-flex">
                 <h8>Félicitations.........................................................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="felicitation" id="felicitation" disabled>
+                <input style="margin-left: 5px;" type="checkbox" name="felicitation" id="felicitation" disabled {{ $moyenne >= 16 && $mention_conseil ? 'checked' : '' }}>
               </div>
               <div class="d-flex">
                 <h8>Encouragements.........................................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="encouragement" id="encouragement" disabled>
+                <input style="margin-left: 5px;" type="checkbox" name="encouragement" id="encouragement" disabled {{ $moyenne >= 14 && $mention_conseil ? 'checked' : '' }}>
               </div>
               <div class="d-flex">
                 <h8>Tableau d'honneur....................................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="tableau_dhonneur" id="tableau_dhonneur" disabled>
+                <input style="margin-left: 5px;" type="checkbox" name="tableau_dhonneur" id="tableau_dhonneur" disabled {{ $moyenne >= 12 && $mention_conseil ? 'checked' : '' }}>
               </div>
               <div class="d-flex">
                 <h8>Avertissement/Travail...........................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="avertissement_travail" id="avertissement_travail" disabled>
+                <input style="margin-left: 5px;" type="checkbox" name="avertissement_travail" id="avertissement_travail" disabled {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
               </div>
               <div class="d-flex">
                 <h8>Avertissement/Discipline...................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="avertissement_discipline" id="avertissement_discipline" disabled>
+                <input style="margin-left: 5px;" type="checkbox" name="avertissement_discipline" id="avertissement_discipline" disabled {{ $note_conduite <= 10 && $mention_conseil ? 'checked' : '' }}>
               </div>
               <div class="d-flex">
                 <h8>Blâme/Travail...................................................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="blame_work" id="blame_work" disabled>
+                <input style="margin-left: 5px;" type="checkbox" name="blame_work" id="blame_work" disabled {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
               </div>
               <div class="d-flex">
                 <h8>Blâme/Discipline..........................................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="blame_discipline" id="blame_discipline" disabled>
+                <input style="margin-left: 5px;" type="checkbox" name="blame_discipline" id="blame_discipline" disabled {{ $note_conduite <= 6 && $mention_conseil ? 'checked' : '' }}>
               </div>
             </div> 
             <div id="appreciation" style="width: 560px; height: 180px; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column;">
-              <div style="flex: 1; display: flex;justify-content: center;">
+              <div style="flex: 1; display: flex;justify-content: center;" class="row">
                 <h6 style="margin-top: 5px;" class="text-center"><u>Appréciation du chef d'établissement</u></h6>
+                @if (isset($option['appreciation_directeur']) && $option['appreciation_directeur'])
+                  <h7 style="font-weight: bold;" class="text-center">{{ $resultat['mentionDir'] }}</h7>
+                @endif
               </div>
               <hr style="border: 1px solid black; margin: 0;">
               <div style="flex: 1;justify-content: center;">
@@ -314,7 +324,7 @@
               <p><u>Code web: </u></p>
             </div>
             <div class="flex-grow-1 justify-content-end" style="margin-left: 600px;">
-              <p>Edité le</p>
+              <p>Edité le {{ date('d/m/Y') }}</p>
             </div>
           </div>
         </div>
