@@ -341,9 +341,9 @@ class BulletinController extends Controller
         ->pluck('CODEMAT');
         
         // Obtenir tous les élèves
-        $eleves = DB::table('eleve')->get();
+        $elevesS = DB::table('eleve')->get();
         
-        foreach ($eleves as $eleve) {
+        foreach ($elevesS as $eleve) {
           // Récupérer les notes de l'élève pour les matières de ce type et pour le semestre actuel
           $notes = DB::table('notes')
           ->whereIn('CODEMAT', $codesMatieres)
@@ -461,11 +461,59 @@ class BulletinController extends Controller
           ->pluck('effectif', 'CODECLAS');
           
           $resultats = [];
-          
-          // Parcourir chaque élève pour calculer les moyennes
+          $resultatEleve = [];
+
+
+
+          // Initialisation d'un tableau pour les moyennes annuelles des élèves de la classe
+          $moyennesAnnuellesEleves = [];
+
+          // Parcourir les élèves de la classe pour récupérer leurs moyennes annuelles
           foreach ($eleves as $eleve) {
 
+                  $infoclasses = Classes::where('CODECLAS', $eleve->CODECLAS)->first();
+
+              if ($eleve->CODECLAS === $infoclasses->CODECLAS) {
+                  $moyennesTrimestresEleve = [
+                      $eleve->MS1,
+                      $eleve->MS2,
+                      $eleve->MS3
+                  ];
+
+                  $sommeMoyennes = 0;
+                  $nombreValides = 0;
+
+                  // Calculer la moyenne annuelle de chaque élève
+                  foreach ($moyennesTrimestresEleve as $moyenne) {
+                      if ($moyenne !== null && $moyenne !== -1) {
+                          $sommeMoyennes += $moyenne;
+                          $nombreValides++;
+                      }
+                  }
+
+                  // Ajouter la moyenne annuelle valide au tableau
+                  if ($nombreValides > 0) {
+                      $moyenneAnnuelleEleve = $sommeMoyennes / $nombreValides;
+                      $moyennesAnnuellesEleves[] = $moyenneAnnuelleEleve;
+                  }
+              }
+          }
+
+          // Trouver la plus grande et la plus faible moyenne dans le tableau
+          $plusGrandeMoyenne = !empty($moyennesAnnuellesEleves) ? max($moyennesAnnuellesEleves) : null;
+          $plusFaibleMoyenne = !empty($moyennesAnnuellesEleves) ? min($moyennesAnnuellesEleves) : null;
+
+          // Ajouter les résultats au tableau final
+        $resultatEleve['plus_grande_moyenne_classe'] = $plusGrandeMoyenne;
+        $resultatEleve['plus_faible_moyenne_classe'] = $plusFaibleMoyenne;
+
+
+          // Parcourir chaque élève pour calculer les moyennes
+          foreach ($eleves as $eleve) {
+            $infoClasse = Classes::where('CODECLAS', $eleve->CODECLAS)->first();
+
             if ($periode === "1"){
+
               $moyenneSemestrielle =  $eleve->MS1;
               $rang = $eleve->RANG1;
               $billanLitteraire = $eleve->MBILANL1;
@@ -473,7 +521,12 @@ class BulletinController extends Controller
               $billanFondamentale = $eleve->MoyMatFond1;
               $totalGenerale = $eleve->TotalGen1;
               $totalCoefficie = $eleve->TotalCoef1;
+              $moyenneClasse = $infoClasse->MCLASSE1;
+              $moyenneFaible = $infoClasse->MFaIBLE1;
+              $moyenneForte = $infoClasse->MFoRTE1;
+
             } elseif ($periode === "2") {
+
               $moyenneSemestrielle =  $eleve->MS2;
               $rang = $eleve->RANG2;
               $billanLitteraire = $eleve->MBILANL2;
@@ -481,7 +534,12 @@ class BulletinController extends Controller
               $billanFondamentale = $eleve->MoyMatFond2;
               $totalGenerale = $eleve->TotalGen2;
               $totalCoefficie = $eleve->TotalCoef2;
+              $moyenneClasse = $infoClasse->MCLASSE2;
+              $moyenneFaible = $infoClasse->MFaIBLE2;
+              $moyenneForte = $infoClasse->MFoRTE2;
+
             } elseif ($periode === "3") {
+
               $moyenneSemestrielle =  $eleve->MS3;
               $rang = $eleve->RANG3;
               $billanLitteraire = $eleve->MBILANL3;
@@ -489,8 +547,14 @@ class BulletinController extends Controller
               $billanFondamentale = $eleve->MoyMatFond3;
               $totalGenerale = $eleve->TotalGen3;
               $totalCoefficie = $eleve->TotalCoef3;
+              $moyenneClasse = $infoClasse->MCLASSE3;
+              $moyenneFaible = $infoClasse->MFaIBLE3;
+              $moyenneForte = $infoClasse->MFoRTE3;
+
             } else {
+
               return back()->with('erreur', 'veuillez choisir une periode');
+
             }
 
             // CALCUL DU BILAN ANNUELLE DES MATIERES LITTERAIRES
@@ -558,10 +622,34 @@ class BulletinController extends Controller
                 : null;
 
 
-            $infoClasse = Classes::where('CODECLAS', $eleve->CODECLAS)->first();
+            // CALCULE DE LA MOYENNE ANNUELLE DE LA CLASSE
+            $moyennesTrimestrielles = [
+              $infoClasse->MCLASSE1,
+              $infoClasse->MCLASSE2,
+              $infoClasse->MCLASSE3
+          ];
+          
+          $somme = 0;
+          $compteur = 0;
+          
+          // Parcourir les moyennes trimestrielles pour les valider
+          foreach ($moyennesTrimestrielles as $moyenne) {
+              if ($moyenne !== null && $moyenne !== -1) {
+                  $somme += $moyenne;
+                  $compteur++;
+              }
+          }
+          
+          // Calculer la moyenne annuelle si des moyennes valides existent
+          $moyenneAnnuelleClasse = $compteur > 0 ? $somme / $compteur : null;
+
+
+
+
             $resultatEleve = [
               'nom' => $eleve->NOM,
               'prenom' => $eleve->PRENOM,
+              'codeweb' => $eleve->CODEWEB,
               'moyenne_semestrielle_1' => $moyenneSemestrielle,
               'rang_1' => $rang,
               'moyenne_bilan_litteraire_1' => $billanLitteraire,
@@ -586,9 +674,10 @@ class BulletinController extends Controller
               'anneScolaire' => $annescolaire,
               'periode' => $periode,
               'classe' => $infoClasse->CODECLAS,
-              'moyenne_classe_1' => $infoClasse->MCLASSE1,
-              'moyenne_faible_1' => $infoClasse->MFaIBLE1,
-              'moyenne_forte_1' => $infoClasse->MFoRTE1,
+              'moyenne_classe_1' => $moyenneClasse,
+              'moyenne_faible_1' => $moyenneFaible,
+              'moyenne_forte_1' => $moyenneForte,
+              'moyenneAnnueleClasse' => $moyenneAnnuelleClasse,
               'effectif' => $effectifsParClasse[$eleve->CODECLAS] ?? 0,
               'matieres' => []
             ];
@@ -837,7 +926,36 @@ class BulletinController extends Controller
             
             $resultats[] = $resultatEleve;
           }
-          
+
+          dd($resultats);
+
+
+                    // RECUPERER TOUTE LES MOYENNE ANNUELLE DES ELEVES DE LA CLASSE ET TRIER POUR TROUVER LA PLUS FORTE ET LA PLUS FAIBLE
+                    // Initialisation d'un tableau pour stocker les moyennes annuelles des élèves de la classe
+          //           $moyennesAnnuellesEleves = [];
+
+          //           // Parcourir les élèves pour récupérer leurs moyennes annuelles
+          //           foreach ($eleves as $eleve) {
+          //             $infoclasses = Classes::where('CODECLAS', $eleve->CODECLAS)->first();
+
+          //               if ($eleve->CODECLAS === $infoclasses->CODECLAS) {
+          //                   // Vérifier que la moyenne annuelle (MAN) est valide (différente de null et -1)
+          //                   if ($eleve->MAN !== null && $eleve->MAN !== -1) {
+          //                       $moyennesAnnuellesEleves[] = $eleve->MAN;
+          //                   }
+          //               }
+          //           }
+
+          //           // Trouver la plus grande et la plus faible moyenne dans le tableau
+          //           $plusGrandeMoyenne = !empty($moyennesAnnuellesEleves) ? max($moyennesAnnuellesEleves) : null;
+          //           $plusFaibleMoyenne = !empty($moyennesAnnuellesEleves) ? min($moyennesAnnuellesEleves) : null;
+
+          //           // Ajouter les résultats au tableau final ou utiliser les valeurs
+          //           $resultatEleve['plus_grande_moyenne_classe'] = $plusGrandeMoyenne;
+          //           $resultatEleve['plus_faible_moyenne_classe'] = $plusFaibleMoyenne;
+
+          // dd($resultatEleve);
+
           // Calculer le rang pour chaque matière et chaque classe
           foreach ($moyennesParClasseEtMatiere as $classe => $matieres) {
             foreach ($matieres as $matiere => $moyennes) {
