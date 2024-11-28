@@ -485,8 +485,9 @@ class BulletinController extends Controller
               'moyenne_faible_1' => $infoClasse->MFaIBLE1,
               'moyenne_forte_1' => $infoClasse->MFoRTE1,
               'effectif' => $effectifsParClasse[$eleve->CODECLAS] ?? 0,
+              'mentionDir' => $this->determineMentionDir($eleve->MS1, $params2),
               'matieres' => []
-            ];
+          ];
             
             // Grouper les notes par matière
             $notesParMatiere = $eleve->notes->groupBy('CODEMAT');
@@ -770,18 +771,45 @@ class BulletinController extends Controller
         */
         private function determineMention($moyenne, $params2)
         {
-          if ($moyenne < $params2->Borne1) {
-            return $params2->Mention1p;
-          } elseif ($moyenne <= $params2->Borne2) {
-            return $params2->Mention2p;
-          } elseif ($moyenne <= $params2->Borne3) {
-            return $params2->Mention3p;
-          } elseif ($moyenne <= $params2->Borne4) {
-            return $params2->Mention4p;
-          } else {
-            return $params2->Mention5p;
-          }
+            if ($moyenne < $params2->Borne1) {
+                return $params2->Mention1p;
+            } elseif ($moyenne <= $params2->Borne2) {
+                return $params2->Mention2p;
+            } elseif ($moyenne <= $params2->Borne3) {
+                return $params2->Mention3p;
+            } elseif ($moyenne <= $params2->Borne4) {
+                return $params2->Mention4p;
+            } elseif ($moyenne <= $params2->Borne5) {
+                return $params2->Mention5p;
+            } elseif ($moyenne <= $params2->Borne6) {
+                return $params2->Mention6p;
+            } elseif ($moyenne <= $params2->Borne7) {
+                return $params2->Mention7p;
+            } else {
+                return $params2->Mention8p;
+            }
         }
+        private function determineMentionDir($moyenne, $params2)
+        {
+            if ($moyenne < $params2->Borne1) {
+                return $params2->Mention1d;
+            } elseif ($moyenne <= $params2->Borne2) {
+                return $params2->Mention2d;
+            } elseif ($moyenne <= $params2->Borne3) {
+                return $params2->Mention3d;
+            } elseif ($moyenne <= $params2->Borne4) {
+                return $params2->Mention4d;
+            } elseif ($moyenne <= $params2->Borne5) {
+                return $params2->Mention5d;
+            } elseif ($moyenne <= $params2->Borne6) {
+                return $params2->Mention6d;
+            } elseif ($moyenne <= $params2->Borne7) {
+                return $params2->Mention7d;
+            } else {
+                return $params2->Mention8d;
+            }
+        }
+    
         
       }           
       
