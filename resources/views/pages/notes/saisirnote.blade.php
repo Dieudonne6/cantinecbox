@@ -101,7 +101,7 @@
                                     <!-- Champ de nombre -->
                                     <div class="col-md-4 mb-3">
                                         <input type="number" id="champ2" name="champ2" class="form-control"
-                                            value="{{ $getClasmat->COEF }}" placeholder="Valeur" readonly>
+                                        value="{{ $getClasmat ? $getClasmat->COEF : 'Valeur non trouvée' }}" placeholder="Valeur" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -226,6 +226,20 @@
                             </div>
 
                             <script>
+                                  const selectElement = document.getElementById('tableSelect1');
+      
+      // Sauvegarder la valeur sélectionnée dans le localStorage
+      selectElement.addEventListener('change', () => {
+        localStorage.setItem('selectedGroup', selectElement.value);
+      });
+    
+      // Restaurer la valeur sauvegardée lors du chargement de la page
+      document.addEventListener('DOMContentLoaded', () => {
+        const savedValue = localStorage.getItem('selectedGroup');
+        if (savedValue) {
+          selectElement.value = savedValue;
+        }
+      });
                                 function calculateMIAndMoy(input) {
                                     const row = input.closest('tr');
                             
@@ -346,18 +360,34 @@
                 column.style.display = interroNumber <= value ? '' : 'none';
             });
         }
-
         function updateCheckbox() {
-            const periodSelect = document.getElementById('periodSelect');
-            const champ1 = document.getElementById('champ1');
+  const periodSelect = document.getElementById('periodSelect');
+  const champ1 = document.getElementById('champ1');
 
-            // Met à jour la valeur de champ1 avec la valeur sélectionnée dans periodSelect
-            if (periodSelect.value) {
-                champ1.value = periodSelect.value;
-            } else {
-                champ1.value = '';
-            }
-        }
+  // Met à jour la valeur de champ1 avec la valeur sélectionnée dans periodSelect
+  if (periodSelect.value) {
+    champ1.value = periodSelect.value;
+
+    // Sauvegarde de la sélection dans localStorage
+    localStorage.setItem('selectedPeriod', periodSelect.value);
+  } else {
+    champ1.value = '';
+    localStorage.removeItem('selectedPeriod');
+  }
+}
+
+// Restaure la sélection après le rechargement
+window.addEventListener('DOMContentLoaded', () => {
+  const periodSelect = document.getElementById('periodSelect');
+  const champ1 = document.getElementById('champ1');
+  const savedPeriod = localStorage.getItem('selectedPeriod');
+
+  if (savedPeriod) {
+    periodSelect.value = savedPeriod;
+    champ1.value = savedPeriod;
+  }
+});
+
 
         function redirectWithSelection() {
             const classe = document.getElementById("tableSelect4").value; // Récupère la classe sélectionnée
