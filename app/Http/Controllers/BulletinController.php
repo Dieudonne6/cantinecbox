@@ -421,6 +421,9 @@ foreach ($semestres as $semestre) {
     
         // Parcourir chaque élève pour calculer les moyennes
         foreach ($eleves as $eleve) {
+
+            
+
             $infoClasse = Classes::where('CODECLAS', $eleve->CODECLAS)->first();
             $resultatEleve = [
                 'nom' => $eleve->NOM,
@@ -719,7 +722,7 @@ foreach ($semestres as $semestre) {
             }
         }
 
-        dd($resultats);
+        // dd($resultats);
     
         return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean'));
     }
