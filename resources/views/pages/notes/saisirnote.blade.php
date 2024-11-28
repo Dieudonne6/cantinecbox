@@ -42,7 +42,8 @@
                                         <!-- Select pour la période -->
                                         <div class="col-md-8 mb-3">
                                             <select class="form-select select2 w-100 mt-2" id="periodSelect"
-                                                onchange="document.getElementById('champ1').value = this.value; updateCheckbox()" aria-label="Choisir une période">
+                                                onchange="document.getElementById('champ1').value = this.value; updateCheckbox()"
+                                                aria-label="Choisir une période">
                                                 <option value="" selected>Période</option>
                                                 <option value="1">1ère Période</option>
                                                 <option value="2">2ème Période</option>
@@ -101,7 +102,8 @@
                                     <!-- Champ de nombre -->
                                     <div class="col-md-4 mb-3">
                                         <input type="number" id="champ2" name="champ2" class="form-control"
-                                        value="{{ $getClasmat ? $getClasmat->COEF : 'Valeur non trouvée' }}" placeholder="Valeur" readonly>
+                                            value="{{ $getClasmat ? $getClasmat->COEF : 'Valeur non trouvée' }}"
+                                            placeholder="Valeur" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +186,7 @@
                                                         <input type="text"
                                                             name="notes[{{ $eleve->MATRICULE }}][INT{{ $i }}]"
                                                             value="{{ $eleve['INT' . $i] ?? '' }}"
-                                                            class="form-control form-control-sm interro-input"
+                                                            class="form-control form-control-sm interro-input fixed-input"
                                                             oninput="calculateMIAndMoy(this)">
                                                     </td>
                                                 @endfor
@@ -192,32 +194,33 @@
                                                 <td>
                                                     <input type="text" name="notes[{{ $eleve->MATRICULE }}][MI]"
                                                         value="{{ $eleve->MI ?? '' }}"
-                                                        class="form-control form-control-sm mi-input" readonly>
+                                                        class="form-control form-control-sm mi-input fixed-input" readonly>
                                                 </td>
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
                                                         value="{{ $eleve->DEV1 ?? '' }}"
-                                                        class="form-control form-control-sm dev-input"
+                                                        class="form-control form-control-sm dev-input fixed-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
                                                         value="{{ $eleve->DEV2 ?? '' }}"
-                                                        class="form-control form-control-sm dev-input"
+                                                        class="form-control form-control-sm dev-input fixed-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
                                                         value="{{ $eleve->DEV3 ?? '' }}"
-                                                        class="form-control form-control-sm dev-input"
+                                                        class="form-control form-control-sm dev-input fixed-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
                                                 <td>
-                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
-                                                        value="{{ $eleve->MS ?? '' }}"
-                                                        class="form-control form-control-sm moy-input" readonly>
+                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
+                                                        value="{{ $eleve->MS1 ?? '' }}"
+                                                        class="form-control form-control-sm ms1-input fixed-input"
+                                                        readonly>
                                                 </td>
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][TEST]"
                                                         value="{{ $eleve->TEST ?? '' }}"
-                                                        class="form-control form-control-sm test-input"
+                                                        class="form-control form-control-sm test-input fixed-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
-                                                        value="{{ $eleve->MS1 ?? '' }}"
-                                                        class="form-control form-control-sm moy1-input"readonly>
+                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
+                                                        value="{{ $eleve->MS ?? '' }}"
+                                                        class="form-control form-control-sm ms-input fixed-input" readonly>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -226,28 +229,33 @@
                             </div>
 
                             <script>
-                                  const selectElement = document.getElementById('tableSelect1');
-      
-      // Sauvegarder la valeur sélectionnée dans le localStorage
-      selectElement.addEventListener('change', () => {
-        localStorage.setItem('selectedGroup', selectElement.value);
-      });
-    
-      // Restaurer la valeur sauvegardée lors du chargement de la page
-      document.addEventListener('DOMContentLoaded', () => {
-        const savedValue = localStorage.getItem('selectedGroup');
-        if (savedValue) {
-          selectElement.value = savedValue;
-        }
-      });
+                                const selectElement = document.getElementById('tableSelect1');
+
+                                // Sauvegarder la valeur sélectionnée dans le localStorage
+                                selectElement.addEventListener('change', () => {
+                                    localStorage.setItem('selectedGroup', selectElement.value);
+                                });
+
+                                // Restaurer la valeur sauvegardée lors du chargement de la page
+                                document.addEventListener('DOMContentLoaded', () => {
+                                    const savedValue = localStorage.getItem('selectedGroup');
+                                    if (savedValue) {
+                                        selectElement.value = savedValue;
+                                    }
+                                });
+
                                 function calculateMIAndMoy(input) {
                                     const row = input.closest('tr');
-                            
-                                    // Calcul de MI (moyenne des notes d'interrogation)
+
+                                    // Récupérer les champs pour les notes des interrogations, des devoirs et du test
                                     const interroInputs = row.querySelectorAll('.interro-input');
+                                    const devInputs = row.querySelectorAll('.dev-input');
+                                    const testInput = row.querySelector('[name*="TEST"]');
+
                                     let interroSum = 0;
                                     let interroCount = 0;
-                            
+
+                                    // Calculer la somme et le nombre d'interrogations
                                     interroInputs.forEach(interro => {
                                         const value = parseFloat(interro.value);
                                         if (!isNaN(value)) {
@@ -255,16 +263,15 @@
                                             interroCount++;
                                         }
                                     });
-                            
+
                                     const miField = row.querySelector('.mi-input');
                                     const mi = interroCount > 0 ? (interroSum / interroCount).toFixed(2) : '';
                                     miField.value = mi;
-                            
-                                    // Calcul de Moy (moyenne de MI et des scores DEV)
-                                    const devInputs = row.querySelectorAll('.dev-input');
+
                                     let devSum = 0;
                                     let devCount = 0;
-                            
+
+                                    // Calculer la somme et le nombre de devoirs
                                     devInputs.forEach(dev => {
                                         const value = parseFloat(dev.value);
                                         if (!isNaN(value)) {
@@ -272,32 +279,40 @@
                                             devCount++;
                                         }
                                     });
-                            
-                                    const moyField = row.querySelector('.moy-input');
-                                    const moy = devCount > 0 ? ((parseFloat(mi) + devSum) / (devCount + 1)).toFixed(2) : '';
-                                    moyField.value = moy;
-                            
-                                    // Calcul de MS1 (moyenne de Moy et TEST)
-                                    const testInput = row.querySelector('[name*="TEST"]');
-                                    const testValue = parseFloat(testInput.value) || 0;
-                            
-                                    const ms1Field = row.querySelector('[name*="MS1"]');
-                                    if (devCount === 0) {
-                                        // Si aucun score DEV n'est présent, MS1 = MI
-                                        ms1Field.value = mi;
-                                    } else {
-                                        // Sinon, MS1 est basé sur Moy et Test
-                                        const ms1 = (parseFloat(moyField.value) + testValue) / (testValue > 0 ? 2 : 1);
-                                        ms1Field.value = ms1.toFixed(2);
+
+                                    const moyField = row.querySelector('.ms1-input');
+                                    let moy = '';
+
+                                    // Si les devoirs sont présents mais pas les interrogations
+                                    if (devCount > 0 && interroCount === 0) {
+                                        moy = (devSum / devCount).toFixed(2);
+                                    } else if (interroCount > 0) {
+                                        // Si les interrogations sont présentes, calculer la Moyenne
+                                        moy = devCount > 0 ? ((parseFloat(mi) + devSum) / (devCount + 1)).toFixed(2) : mi;
                                     }
-                            
-                                    // Calcul de MS (moyenne de MS1 et TEST)
-                                    const msField = row.querySelector('[name*="MS"]');
-                                    const ms = (parseFloat(ms1Field.value) + testValue) / (testValue > 0 ? 2 : 1);
-                                    msField.value = ms.toFixed(2);
+
+                                    moyField.value = moy;
+
+                                    const msField = row.querySelector('.ms-input');
+                                    const testValue = parseFloat(testInput.value) || 0;
+
+                                    // Nouvelle logique pour MS
+                                    if (devCount === 0 && interroCount === 0 && testValue === 0) {
+                                        // Si les champs dev, test sont vides, alors MI = MS1 = MS
+                                        msField.value = mi || moyField.value;
+                                    } else if (interroCount === 0 && devCount === 0) {
+                                        // Si les champs int et dev sont vides, MS = TEST
+                                        msField.value = testValue.toFixed(2);
+                                    } else if (interroCount === 0) {
+                                        // Si les champs int sont vides, MS1 est la somme des DEV entrée divisée par le nombre de DEV
+                                        msField.value = (devSum / devCount).toFixed(2);
+                                    } else {
+                                        // Sinon, MS est calculé comme la moyenne de MS1 et TEST
+                                        const ms = (parseFloat(moyField.value) + testValue) / (testValue > 0 ? 2 : 1);
+                                        msField.value = ms.toFixed(2);
+                                    }
                                 }
                             </script>
-                            
 
                         </div>
                     </div>
@@ -360,33 +375,34 @@
                 column.style.display = interroNumber <= value ? '' : 'none';
             });
         }
+
         function updateCheckbox() {
-  const periodSelect = document.getElementById('periodSelect');
-  const champ1 = document.getElementById('champ1');
+            const periodSelect = document.getElementById('periodSelect');
+            const champ1 = document.getElementById('champ1');
 
-  // Met à jour la valeur de champ1 avec la valeur sélectionnée dans periodSelect
-  if (periodSelect.value) {
-    champ1.value = periodSelect.value;
+            // Met à jour la valeur de champ1 avec la valeur sélectionnée dans periodSelect
+            if (periodSelect.value) {
+                champ1.value = periodSelect.value;
 
-    // Sauvegarde de la sélection dans localStorage
-    localStorage.setItem('selectedPeriod', periodSelect.value);
-  } else {
-    champ1.value = '';
-    localStorage.removeItem('selectedPeriod');
-  }
-}
+                // Sauvegarde de la sélection dans localStorage
+                localStorage.setItem('selectedPeriod', periodSelect.value);
+            } else {
+                champ1.value = '';
+                localStorage.removeItem('selectedPeriod');
+            }
+        }
 
-// Restaure la sélection après le rechargement
-window.addEventListener('DOMContentLoaded', () => {
-  const periodSelect = document.getElementById('periodSelect');
-  const champ1 = document.getElementById('champ1');
-  const savedPeriod = localStorage.getItem('selectedPeriod');
+        // Restaure la sélection après le rechargement
+        window.addEventListener('DOMContentLoaded', () => {
+            const periodSelect = document.getElementById('periodSelect');
+            const champ1 = document.getElementById('champ1');
+            const savedPeriod = localStorage.getItem('selectedPeriod');
 
-  if (savedPeriod) {
-    periodSelect.value = savedPeriod;
-    champ1.value = savedPeriod;
-  }
-});
+            if (savedPeriod) {
+                periodSelect.value = savedPeriod;
+                champ1.value = savedPeriod;
+            }
+        });
 
 
         function redirectWithSelection() {
@@ -453,5 +469,13 @@ window.addEventListener('DOMContentLoaded', () => {
         td {
             padding: 0px;
         }
+
+        .fixed-input {
+            width: 50px;
+            /* Fixe la largeur */
+            height: 30px;
+            /* Fixe la hauteur */
+        }
     </style>
+
 @endsection
