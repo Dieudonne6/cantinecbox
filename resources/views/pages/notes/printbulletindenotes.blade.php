@@ -4,12 +4,14 @@
     <div class="card">
       <div class="card-body">
 
+        <!-- Bouton pour imprimer la liste -->
         <button class="btn btn-primary" onclick="imprimerliste()">Imprimer</button>
         <br>
         <br>
         <br>
         @foreach ($resultats as $index => $resultat)
         @php
+          // Initialisation des variables en fonction du type d'année
           $periode = NULL;
           $texte = NULL;
           $texte2 = NULL;
@@ -125,7 +127,7 @@
               } else if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'integral') {
                 $moyenne_coeff = $matiere['surplus'];
               } else if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'Aucun') {
-                $moyenne_coeff = $matiere['moyenne_coeff'];
+                $moyenne_coeff = 0;
               } else if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'intervalle') {
                 $moyenne_coeff = $matiere['moyenne_intervalle'];
               }
@@ -192,11 +194,17 @@
               <h4 class="text-center" style="margin-top: 20px;">Bilan {{$texte}}</h4>
             </div>
             @php
+              // Calcul de la moyenne
               $moyenne = 0;
               $moyenne = $total_moyenne_coeffs / $total_coefficients;
             @endphp
             <div>
-              <h5 style="margin-left: 10px;">Moyenne {{$texte2}} : {{$total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**'}}</h5>
+              <div class="d-flex">
+                <h5 style="margin-left: 10px;">Moyenne {{$texte2}} : {{$total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**'}}</h5>
+                @if (isset($option['rang_general']) && $option['rang_general'])
+                  <h5 style="margin-left: 40px;">Rang :&nbsp&nbsp&nbsp{{$resultat['rang_1'] != -1 ? $resultat['rang_1'] : '**.**'}}</h5>
+                @endif
+              </div>
               <table id="tableau_bilan" style="width: 500px; margin-left: 60px;">
                 <thead>
                   <tr>
@@ -207,8 +215,8 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="text-center" style=""><strong>{{ number_format($resultat['moyenne_faible_1'], 2) }}</strong></td>
                     <td class="text-center"><strong>{{ number_format($resultat['moyenne_forte_1'], 2) }}</strong></td>
+                    <td class="text-center" style=""><strong>{{ number_format($resultat['moyenne_faible_1'], 2) }}</strong></td>
                     <td class="text-center"><strong>{{ number_format($resultat['moyenne_classe_1'], 2) }}</strong></td>
                   </tr>
                 </tbody>
@@ -226,14 +234,19 @@
             <div id="bilan_annuel" class="d-flex" style="border: 1px solid black; border-radius: 10px; width:1190px">
               <div> 
                 <h6 style="margin-left: 70px;">BILAN ANNUEL</h6>
-                <h8>Lettres :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp**.**</h8>
+                <h7>Lettres :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{$resultat['moyenneBilanLitteraire'] != -1 ? number_format($resultat['moyenneBilanLitteraire'], 2) : '**.**'}}</h7>
                 <br>
-                <h8>Sciences :&nbsp&nbsp&nbsp&nbsp**.**</h8>
+                <h7>Sciences :&nbsp&nbsp&nbsp&nbsp&nbsp{{$resultat['moyenneBilanScientifique'] != -1 ? number_format($resultat['moyenneBilanScientifique'], 2) : '**.**'}}</h7>
                 <br>
-                <h8>Moy. Fond :&nbsp&nbsp&nbsp**.**</h8>
+                <h7>Moy. Fond :&nbsp&nbsp&nbsp{{$resultat['moyenneBilanFondamentale'] != -1 ? number_format($resultat['moyenneBilanFondamentale'], 2) : '**.**'}}</h7>
               </div>
               <div style="margin-left: 60px;">
-                <h5>Moyenne Annuelle :&nbsp&nbsp&nbsp**.**</h5>
+                <div class="d-flex" style="margin-left: 60px;">
+                  <h5>Moyenne Annuelle :&nbsp&nbsp&nbsp{{$resultat['moyenneAnnuel'] != -1 ? number_format($resultat['moyenneAnnuel'], 2) : '**.**'}}</h5>
+                @if (isset($option['rang_general']) && $option['rang_general'])
+                  <h5 style="margin-left: 40px;">Rang :&nbsp&nbsp&nbsp{{$resultat['rangAnnuel'] != -1 ? $resultat['rangAnnuel'] : '**.**'}}</h5>
+                @endif
+                </div>
                 <table id="tableau_bilan_annuel" style="width: 450px; margin-left: 60px; margin-top: 20px;">
                   <thead>
                     <tr>
@@ -244,21 +257,34 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td class="text-center" style=""><strong>0</strong></td>
-                      <td class="text-center"><strong>0</strong></td>
-                      <td class="text-center"><strong>0</strong></td>
+                      <td class="text-center" style=""><strong>{{ number_format($resultat['plus_grande_moyenne_classe'], 2) }}</strong></td>
+                      <td class="text-center"><strong>{{ number_format($resultat['plus_faible_moyenne_classe'], 2) }}</strong></td>
+                      <td class="text-center"><strong>{{ number_format($resultat['moyenne_classe_1'], 2) }}</strong></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
               <div style="margin-left: 120px;">
                 <h5>RECAPITULATIF ANNUEL</h5>
-                <h8>Moy. 1er {{$periode_abr}} :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp**.**</h8>
-                <br>
-                <h8>Moy. 2ème {{$periode_abr}} :&nbsp&nbsp&nbsp**.**</h8>
-                <br>
+                <div class="d-flex">
+                  <h7>Moy. 1er {{$periode_abr}} :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{$resultat['moyenne1erTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne1erTrimestre_Semestre'], 2) : '**.**'}}</h7>
+                  @if (isset($option['rang_1']) && $option['rang_1'])
+                    <h7 style="margin-left: 40px;">Rang :&nbsp&nbsp&nbsp{{$resultat['rang1'] != -1 ? $resultat['rang1'] : '**.**'}}</h7>
+                  @endif
+                </div>
+                <div class="d-flex">
+                  <h7>Moy. 2ème {{$periode_abr}} :&nbsp&nbsp&nbsp{{$resultat['moyenne2emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne2emTrimestre_Semestre'], 2) : '**.**'}}</h7>
+                  @if (isset($option['rang_2']) && $option['rang_2'])
+                    <h7 style="margin-left: 40px;">Rang :&nbsp&nbsp&nbsp{{$resultat['rang2'] != -1 ? $resultat['rang2'] : '**.**'}}</h7>
+                  @endif
+                </div>
                 @if ($typean == 2)
-                  <h8>Moy. 3ème {{$periode_abr}} :&nbsp&nbsp&nbsp**.**</h8>
+                  <div class="d-flex">
+                    <h7>Moy. 3ème {{$periode_abr}} :&nbsp&nbsp&nbsp{{$resultat['moyenne3emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne3emTrimestre_Semestre'], 2) : '**.**'}}</h7>
+                    @if (isset($option['rang_3']) && $option['rang_3'])
+                      <h7 style="margin-left: 40px;">Rang :&nbsp&nbsp&nbsp{{$resultat['rang3'] != -1 ? $resultat['rang3'] : '**.**'}}</h7>
+                    @endif
+                  </div>
                 @endif
               </div>
             </div>
@@ -315,13 +341,13 @@
             </div>
             <div id="signature" style="width: 410px; height: 180px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
               <h5 id="signature_chef" style="margin-top: 5px;" class="text-center"><u>Signature et cachet du chef d'établissement</u></h5>
-              <h7>CCC</h7>
+              <h7 class="text-center" style="margin-left: 150px;">{{ $request->input('signature') }}</h7>
             </div>
           </div>
           <br>
           <div class="d-flex">
             <div class="flex-grow-1">
-              <p><u>Code web: </u></p>
+              <p>Code web: {{ $resultat['codeweb'] }}</p>
             </div>
             <div class="flex-grow-1 justify-content-end" style="margin-left: 600px;">
               <p>Edité le {{ date('d/m/Y') }}</p>
