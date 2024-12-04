@@ -51,19 +51,19 @@
           <div class="row">
             <h5>Signature</h5>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="signature" name="ccc" id="ccc" checked>
+              <input class="form-check-input" type="radio" name="signature" value="CCC" id="ccc" checked>
               <label class="form-check-label" for="ccc">
                 CCC
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="signature" value="directeur" id="directeur">
+              <input class="form-check-input" type="radio" name="signature" value="Directeur 2" id="directeur">
               <label class="form-check-label" for="directeur">
                 Directeur 2
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="signature" name="cc" id="cc">
+              <input class="form-check-input" type="radio" name="signature" value="CC" id="cc">
               <label class="form-check-label" for="cc">
                 CC
               </label>

@@ -4,12 +4,12 @@
     <div class="card">
       <div class="card-body">
 
+        <!-- Bouton pour imprimer la liste -->
         <button class="btn btn-primary" onclick="imprimerliste()">Imprimer</button>
-        <br>
-        <br>
         <br>
         @foreach ($resultats as $index => $resultat)
         @php
+          // Initialisation des variables en fonction du type d'année
           $periode = NULL;
           $texte = NULL;
           $texte2 = NULL;
@@ -29,24 +29,19 @@
         <div class="bulletin" style="{{ $index < count($resultats) - 1 ? 'page-break-after: always;' : '' }}">
           <br>
           <br>
-          <br>
-          <br>
-          <br>
           @if (isset($option['entete']) && $option['entete'])
             <h6>{{ $entete }}</h6>
           @endif
           <div id="carre" style="width: 125px; height: 125px; background-color: transparent; border: 1px solid black;"></div>
           <br>
-          <br>
-          <br>
-          <div class="watermark">Scodelux</div>
+          <div class="watermark text-center fw-bold mb-4" style="height: 90px; font-size: 1.5rem; color: gray;">Scodelux</div>
           <div class="d-flex">
-            <div id="donneeleve" style="width: 600px; height: 80px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                <h5 style="margin-top: 5px;">NOM : {{ $resultat['nom'] }}</h5>
-                <h5 >PRENOM : {{ $resultat['prenom'] }}</h5>
+            <div id="donneeleve" style="width: 40%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
+                <h5 class="ml-2" style="margin-top: 5px;">NOM : {{ $resultat['nom'] }}</h5>
+                <h5 class="ml-2">PRENOM : {{ $resultat['prenom'] }}</h5>
                 <div class="d-flex">
-                  <h5>Redoublant (e) : 
-                      <input type="checkbox" name="redoublant" id="redoublant_oui" disabled {{ $resultat['redoublant'] == 1 ? 'checked' : '' }}>
+                  <h5 class="ml-2">Redoublant (e) : 
+                      <input class="ml-2" type="checkbox" name="redoublant" id="redoublant_oui" disabled {{ $resultat['redoublant'] == 1 ? 'checked' : '' }}>
                       <label for="redoublant_oui">Oui</label>
                       <input type="checkbox" name="redoublant" id="redoublant_non" disabled {{ $resultat['redoublant'] == 2 ? 'checked' : '' }}>
                       <label for="redoublant_non">Non</label>
@@ -56,10 +51,9 @@
                   @endif
                 </div>
             </div>
-            <div  style="width: 300px; height: 80px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-              <h5 style="margin-top: 5px;">Année scolaire : {{ $resultat['anneScolaire'] }}</h5>
-              <br>
-              <h5 id="periode" class="text-center">
+            <div style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
+              <h5 class="ml-2" style="margin-top: 15px;">Année scolaire : {{ $resultat['anneScolaire'] }}</h5>
+<br>              <h5 id="periode" class="text-center">
                 @switch($resultat['periode'])
                   @case("1")
                     1er {{$periode}}
@@ -72,13 +66,13 @@
                 @endswitch
               </h5>
             </div>
-            <div id="classe" style="width: 300px; height: 80px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-              <h5 style="margin-top: 5px;">Classe : {{ $resultat['classe'] }}</h5>
+            <div id="classe" style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
+              <h5 class="ml-2" style="margin-top: 15px;">Classe : {{ $resultat['classe'] }}</h5>
               <br>
-              <h5>Effectif : {{ $resultat['effectif'] }}</h5>
+              <h5 class="ml-2">Effectif : {{ $resultat['effectif'] }}</h5>
             </div>
           </div>
-          <table style="width: 1187px;" id="tableau">
+          <table style="width: 100%;" id="tableau">
             <thead>
               <tr>
                 <th class="text-center" style="font-weight: normal; width: 150px;">Disciplines</th>
@@ -105,7 +99,7 @@
                   @if(isset($option['rang_matiere']) && $option['rang_matiere'])
                   <th class="text-center" style="font-weight: normal; width: 50px;">Rang par matière</th>
                   @endif
-                <th class="text-center" style="font-weight: normal; width: 200px;">Appréciations des professeurs</th>
+                <th class="text-center" style="font-weight: normal; width: 150px;">Appréciations des<br>professeurs</th>
               </tr>
             </thead>
             <tbody>
@@ -125,7 +119,7 @@
               } else if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'integral') {
                 $moyenne_coeff = $matiere['surplus'];
               } else if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'Aucun') {
-                $moyenne_coeff = $matiere['moyenne_coeff'];
+                $moyenne_coeff = 0;
               } else if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'intervalle') {
                 $moyenne_coeff = $matiere['moyenne_intervalle'];
               }
@@ -180,20 +174,30 @@
               <tr>
                 <td>Total</td>
                 <td>{{ $total_coefficients }}</td>
-                <td colspan="4"></td>
-                <td>{{ number_format($total_moyenne_coeffs, 2) }}</td>
                 <td colspan="5"></td>
+                <td>{{ number_format($total_moyenne_coeffs, 2) }}</td>
+                <td colspan="3"></td>
               </tr>
             </tbody>
           </table>
-          <div id="ligne" style="width: 1187px; height: 1px; background-color: rgb(0, 0, 0);"></div>
-          <div class="d-flex">
-            <div style="width: 280px; height: 85px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
+          <div id="ligne" style="width: 100%; height: 1px; background-color: rgb(0, 0, 0);"></div>
+          <div class="d-flex" style="height: 90px;">
+            <div style="width: 29.5%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
               <h4 class="text-center" style="margin-top: 20px;">Bilan {{$texte}}</h4>
             </div>
-            <div>
-              <h5 style="margin-left: 10px;">Moyenne {{$texte2}} : {{$total_moyenne_coeffs != 0 ? number_format($total_moyenne_coeffs / $total_coefficients, 2) : '**.**'}}</h5>
-              <table id="tableau_bilan" style="width: 500px; margin-left: 60px;">
+            @php
+              // Calcul de la moyenne
+              $moyenne = 0;
+              $moyenne = $total_moyenne_coeffs / $total_coefficients;
+            @endphp
+            <div style="width: 40%; margin-left: 0.5%">
+              <div class="d-flex">
+                <h5 style="text-align: center" class="mt-1">Moyenne {{$texte2}} : &nbsp&nbsp{{$total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**'}}</h5>
+                @if (isset($option['rang_general']) && $option['rang_general'])
+                  <h5 style="margin-left: 40px;">Rang :&nbsp&nbsp&nbsp{{$resultat['rang_1'] != -1 ? $resultat['rang_1'] : '**.**'}}</h5>
+                @endif
+              </div>
+              <table id="tableau_bilan" style="width: 100%;">
                 <thead>
                   <tr>
                     <th style="font-weight: normal;">Plus forte Moy.</th>
@@ -203,33 +207,38 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="text-center" style=""><strong>{{ number_format($resultat['moyenne_faible_1'], 2) }}</strong></td>
                     <td class="text-center"><strong>{{ number_format($resultat['moyenne_forte_1'], 2) }}</strong></td>
+                    <td class="text-center" style=""><strong>{{ number_format($resultat['moyenne_faible_1'], 2) }}</strong></td>
                     <td class="text-center"><strong>{{ number_format($resultat['moyenne_classe_1'], 2) }}</strong></td>
                   </tr>
                 </tbody>
               </table>
             </div>
-            <div  style="width: 350px; height: 85px; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px;">
-              <h8><strong>Bilan des matières littéraires : {{ $resultat['moyenne_bilan_litteraire_1'] == -1 ? '**.**' : $resultat['moyenne_bilan_litteraire_1'] }}</strong></h8>
+            <div class="mt-2" style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px;">
+              <h8><strong>Bilan des matières littéraires : {{ $resultat['moyenne_bilan_litteraire_1'] == -1 ? '**' : $resultat['moyenne_bilan_litteraire_1'] }}</strong></h8>
               <br>
-              <h8><strong>Bilan des matières scientifiques : {{ $resultat['moyenne_bilan_scientifique_1'] == -1 ? '**.**' : $resultat['moyenne_bilan_scientifique_1'] }}</strong></h8>
+              <h8><strong>Bilan des matières scientifiques : {{ $resultat['moyenne_bilan_scientifique_1'] == -1 ? '**' : $resultat['moyenne_bilan_scientifique_1'] }}</strong></h8>
                 <br>
-                <h8><strong>Bilan des matières fondamentales : {{ $resultat['moyenne_bilan_fondamentale_1'] == -1 ? '**.**' : $resultat['moyenne_bilan_fondamentale_1'] }}</strong></h8>
+                <h8><strong>Bilan des matières fondamentales : {{ $resultat['moyenne_bilan_fondamentale_1'] == -1 ? '**' : $resultat['moyenne_bilan_fondamentale_1'] }}</strong></h8>
               </div>
             </div>
             @if (($typean == 1 && $resultat['periode'] == 2) || ($typean == 2 && $resultat['periode'] == 3))
             <div id="bilan_annuel" class="d-flex" style="border: 1px solid black; border-radius: 10px; width:1190px">
               <div> 
                 <h6 style="margin-left: 70px;">BILAN ANNUEL</h6>
-                <h8>Lettres :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp**.**</h8>
+                <h7>Lettres :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{$resultat['moyenneBilanLitteraire'] != -1 ? number_format($resultat['moyenneBilanLitteraire'], 2) : '**.**'}}</h7>
                 <br>
-                <h8>Sciences :&nbsp&nbsp&nbsp&nbsp**.**</h8>
+                <h7>Sciences :&nbsp&nbsp&nbsp&nbsp&nbsp{{$resultat['moyenneBilanScientifique'] != -1 ? number_format($resultat['moyenneBilanScientifique'], 2) : '**.**'}}</h7>
                 <br>
-                <h8>Moy. Fond :&nbsp&nbsp&nbsp**.**</h8>
+                <h7>Moy. Fond :&nbsp&nbsp&nbsp{{$resultat['moyenneBilanFondamentale'] != -1 ? number_format($resultat['moyenneBilanFondamentale'], 2) : '**.**'}}</h7>
               </div>
               <div style="margin-left: 60px;">
-                <h5>Moyenne Annuelle :&nbsp&nbsp&nbsp**.**</h5>
+                <div class="d-flex" style="margin-left: 60px;">
+                  <h5>Moyenne Annuelle :&nbsp&nbsp&nbsp{{$resultat['moyenneAnnuel'] != -1 ? number_format($resultat['moyenneAnnuel'], 2) : '**.**'}}</h5>
+                @if (isset($option['rang_general']) && $option['rang_general'])
+                  <h5 style="margin-left: 40px;">Rang :&nbsp&nbsp&nbsp{{$resultat['rangAnnuel'] != -1 ? $resultat['rangAnnuel'] : '**.**'}}</h5>
+                @endif
+                </div>
                 <table id="tableau_bilan_annuel" style="width: 450px; margin-left: 60px; margin-top: 20px;">
                   <thead>
                     <tr>
@@ -240,81 +249,100 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td class="text-center" style=""><strong>0</strong></td>
-                      <td class="text-center"><strong>0</strong></td>
-                      <td class="text-center"><strong>0</strong></td>
+                      <td class="text-center" style=""><strong>{{ number_format($resultat['plus_grande_moyenne_classe'], 2) }}</strong></td>
+                      <td class="text-center"><strong>{{ number_format($resultat['plus_faible_moyenne_classe'], 2) }}</strong></td>
+                      <td class="text-center"><strong>{{ number_format($resultat['moyenne_classe_1'], 2) }}</strong></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
               <div style="margin-left: 120px;">
                 <h5>RECAPITULATIF ANNUEL</h5>
-                <h8>Moy. 1er {{$periode_abr}} :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp**.**</h8>
-                <br>
-                <h8>Moy. 2ème {{$periode_abr}} :&nbsp&nbsp&nbsp**.**</h8>
-                <br>
+                <div class="d-flex">
+                  <h7>Moy. 1er {{$periode_abr}} :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{$resultat['moyenne1erTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne1erTrimestre_Semestre'], 2) : '**.**'}}</h7>
+                  @if (isset($option['rang_1']) && $option['rang_1'])
+                    <h7 style="margin-left: 40px;">Rang :&nbsp&nbsp&nbsp{{$resultat['rang1'] != -1 ? $resultat['rang1'] : '**.**'}}</h7>
+                  @endif
+                </div>
+                <div class="d-flex">
+                  <h7>Moy. 2ème {{$periode_abr}} :&nbsp&nbsp&nbsp{{$resultat['moyenne2emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne2emTrimestre_Semestre'], 2) : '**.**'}}</h7>
+                  @if (isset($option['rang_2']) && $option['rang_2'])
+                    <h7 style="margin-left: 40px;">Rang :&nbsp&nbsp&nbsp{{$resultat['rang2'] != -1 ? $resultat['rang2'] : '**.**'}}</h7>
+                  @endif
+                </div>
                 @if ($typean == 2)
-                  <h8>Moy. 3ème {{$periode_abr}} :&nbsp&nbsp&nbsp**.**</h8>
+                  <div class="d-flex">
+                    <h7>Moy. 3ème {{$periode_abr}} :&nbsp&nbsp&nbsp{{$resultat['moyenne3emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne3emTrimestre_Semestre'], 2) : '**.**'}}</h7>
+                    @if (isset($option['rang_3']) && $option['rang_3'])
+                      <h7 style="margin-left: 40px;">Rang :&nbsp&nbsp&nbsp{{$resultat['rang3'] != -1 ? $resultat['rang3'] : '**.**'}}</h7>
+                    @endif
+                  </div>
                 @endif
               </div>
             </div>
             @endif
+            @php
+              $mention_conseil = isset($option['mention_conseil']);
+            @endphp
           <div class="d-flex">
-            <div  style="width: 230px; height: auto; background-color: transparent; border: 1px solid black; border-radius: 10px;">
+            <div  style="width: 30%; height: 170px background-color: transparent; border: 1px solid black; border-radius: 10px;">
               <h6 style="margin-top: 5px;" class="text-center">Mention du conseil des Prof.</h6>
               <div class="d-flex">
-                <h8>Félicitations.........................................................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="felicitation" id="felicitation" disabled>
+                <h8>Félicitations........................................................</h8>
+                <input style="margin-left: 5px;" type="checkbox" name="felicitation" id="felicitation" disabled {{ $moyenne >= 16 && $mention_conseil ? 'checked' : '' }}>
               </div>
               <div class="d-flex">
-                <h8>Encouragements.........................................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="encouragement" id="encouragement" disabled>
+                <h8>Encouragements........................................</h8>
+                <input style="margin-left: 5px;" type="checkbox" name="encouragement" id="encouragement" disabled {{ $moyenne >= 14 && $mention_conseil ? 'checked' : '' }}>
               </div>
               <div class="d-flex">
                 <h8>Tableau d'honneur....................................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="tableau_dhonneur" id="tableau_dhonneur" disabled>
+                <input style="margin-left: 5px;" type="checkbox" name="tableau_dhonneur" id="tableau_dhonneur" disabled {{ $moyenne >= 12 && $mention_conseil ? 'checked' : '' }}>
               </div>
               <div class="d-flex">
                 <h8>Avertissement/Travail...........................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="avertissement_travail" id="avertissement_travail" disabled>
+                <input style="margin-left: 5px;" type="checkbox" name="avertissement_travail" id="avertissement_travail" disabled {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
               </div>
               <div class="d-flex">
                 <h8>Avertissement/Discipline...................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="avertissement_discipline" id="avertissement_discipline" disabled>
+                <input style="margin-left: 5px;" type="checkbox" name="avertissement_discipline" id="avertissement_discipline" disabled {{ $note_conduite <= 10 && $mention_conseil ? 'checked' : '' }}>
               </div>
               <div class="d-flex">
                 <h8>Blâme/Travail...................................................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="blame_work" id="blame_work" disabled>
+                <input style="margin-left: 5px;" type="checkbox" name="blame_work" id="blame_work" disabled {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
               </div>
               <div class="d-flex">
                 <h8>Blâme/Discipline..........................................</h8>
-                <input style="margin-left: 5px;" type="checkbox" name="blame_discipline" id="blame_discipline" disabled>
+                <input style="margin-left: 5px;" type="checkbox" name="blame_discipline" id="blame_discipline" disabled {{ $note_conduite <= 6 && $mention_conseil ? 'checked' : '' }}>
               </div>
             </div> 
-            <div id="appreciation" style="width: 560px; height: 180px; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column;">
-              <div style="flex: 1; display: flex;justify-content: center;">
+            <div id="appreciation" style="width: 40%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column;">
+              <div style="flex: 1; display: flex;justify-content: center;" class="row">
                 <h6 style="margin-top: 5px;" class="text-center"><u>Appréciation du chef d'établissement</u></h6>
+                @if (isset($option['appreciation_directeur']) && $option['appreciation_directeur'])
+                  <h7 style="font-weight: bold;" class="text-center">{{ $resultat['mentionDir'] }}</h7>
+                @endif
               </div>
               <hr style="border: 1px solid black; margin: 0;">
               <div style="flex: 1;justify-content: center;">
                 <h6 class="text-center"><u>Appréciations du professeur principal</u></h6>
                 <h7>Conduite : <span style="border-bottom: 1px dotted #000; width: 131px; display: inline-block;">{{ $note_conduite }}</span></h7>
-                <h7>Travail........................................................................................................</h7>
-                <h7>............................................................................................................................................................................................................</h7>
+                <h7>Travail.............................................</h7>
+                <h7>....................................................................................................................................................</h7>
               </div>
             </div>
-            <div id="signature" style="width: 410px; height: 180px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-              <h5 id="signature_chef" style="margin-top: 5px;" class="text-center"><u>Signature et cachet du chef d'établissement</u></h5>
-              <h7>CCC</h7>
+            <div id="signature" style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
+              <h5 id="signature_chef" style="margin-top: 50px;" class="text-center"><u>Signature et cachet du chef d'établissement</u></h5>
+              <h6 class="text-center" style="margin-left: 0%;">{{ $request->input('signature') }}</h6>
             </div>
           </div>
           <br>
           <div class="d-flex">
             <div class="flex-grow-1">
-              <p><u>Code web: </u></p>
+              <p>Code web: {{ $resultat['codeweb'] }}</p>
             </div>
             <div class="flex-grow-1 justify-content-end" style="margin-left: 600px;">
-              <p>Edité le</p>
+              <p>Edité le {{ date('d/m/Y') }}</p>
             </div>
           </div>
         </div>
@@ -335,7 +363,7 @@
     display: none
   }
   h8 {
-    font-size: 12px;
+    font-size: 15px;
   }
   .watermark {
     position: absolute;
@@ -377,9 +405,9 @@
       display: none !important;
       overflow: hidden !important;
     }
-    #tableau {
+/*     #tableau {
       width: 968px !important;
-    }
+    } */
     #ligne {
       width: 965px !important;
     }
@@ -389,15 +417,15 @@
     .card-body {
       margin-top: 50px !important;
     }
-    #tableau_bilan {
+/*     #tableau_bilan {
       width: 400px !important;
-    }
+    } */
     #appreciation {
       width: 560px !important;
     }
-    #signature {
+/*     #signature {
       width: auto !important;
-    }
+    } */
     #signature_chef {
       font-size: 16px !important;
     }
