@@ -209,9 +209,22 @@ if ($typean == 1) {
                                 <tr>
                                     <td>Total</td>
                                     <td>{{ $total_coefficients }}</td>
-                                    <td colspan="4"></td>
-                                    <td>{{ number_format($total_moyenne_coeffs, 2) }}</td>
-                                    <td colspan="3"></td>
+                                    @if (!isset($option['masquer_devoir3']))
+                                    <td colspan="5"></td>
+                                    @else
+                                     <td colspan="4"></td>
+                                    @endif
+{{--                                     @if (isset($option['note_test']) && $option['note_test'])
+                                      <td colspan="7"></td>
+                                      @else
+                                      <td colspan="4"></td>              
+                                    @endif --}}
+                                      <td>{{ number_format($total_moyenne_coeffs, 2) }}</td>
+                                    @if (isset($option['rang_matiere']) && $option['rang_matiere'])
+                                      <td colspan="4"></td>
+                                    @else
+                                      <td colspan="3"></td>
+                                    @endif
                                 </tr>
                             </tbody>
                         </table>
@@ -228,13 +241,13 @@ if ($typean == 1) {
                             @endphp
                             <div style="width: 40%; margin-left: 0.5%">
                                 <div class="d-flex">
-                                    <h5 style="text-align: center" class="mt-1">Moyenne {{ $texte2 }} :
+                                    <h6 style="text-align: center" class="mt-1">Moyenne {{ $texte2 }} :
                                         &nbsp&nbsp{{ $total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**' }}
-                                    </h5>
+                                    </h6>
                                     @if (isset($option['rang_general']) && $option['rang_general'])
-                                        <h5 style="margin-left: 40px;">Rang
+                                        <h6 style="margin-left: 40px;" class="mt-1">Rang
                                             :&nbsp&nbsp&nbsp{{ $resultat['rang_1'] != -1 ? $resultat['rang_1'] : '**.**' }}
-                                        </h5>
+                                        </h6>
                                     @endif
                                 </div>
                                 <table id="tableau_bilan" style="width: 100%;">
@@ -250,7 +263,7 @@ if ($typean == 1) {
                                             <td class="text-center">
                                                 <strong>{{ number_format($resultat['moyenne_forte_1'], 2) }}</strong>
                                             </td>
-                                            <td class="text-center" style="">
+                                            <td class="text-center">
                                                 <strong>{{ number_format($resultat['moyenne_faible_1'], 2) }}</strong>
                                             </td>
                                             <td class="text-center">
@@ -279,7 +292,7 @@ if ($typean == 1) {
                             <div id="bilan_annuel" class="d-flex"
                                 style="border: 1px solid black; border-radius: 10px; width:1190px">
                                 <div>
-                                    <h6 style="margin-left: 70px;">BILAN ANNUEL</h6>
+                                    <h6 style="margin-left: 20px;">BILAN ANNUEL</h6>
                                     <h7>Lettres
                                         :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ $resultat['moyenneBilanLitteraire'] != -1 ? number_format($resultat['moyenneBilanLitteraire'], 2) : '**.**' }}
                                     </h7>
@@ -327,21 +340,21 @@ if ($typean == 1) {
                                         </tbody>
                                     </table>
                                 </div>
-                                <div style="margin-left: 120px;">
-                                    <h5>RECAPITULATIF ANNUEL</h5>
+                                <div style="margin-left: 70px;">
+                                    <h6>RECAPITULATIF ANNUEL</h6>
                                     <div class="d-flex">
                                         <h7>Moy. 1er {{ $periode_abr }}
-                                            :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ $resultat['moyenne1erTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne1erTrimestre_Semestre'], 2) : '**.**' }}
+                                            :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ $resultat['moyenne1erTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne1erTrimestre_Semestre'], 2) : '**.**' }}
                                         </h7>
                                         @if (isset($option['rang_1']) && $option['rang_1'])
                                             <h7 style="margin-left: 40px;">Rang
-                                                :&nbsp&nbsp&nbsp{{ $resultat['rang1'] != -1 ? $resultat['rang1'] : '**.**' }}
+                                                :&nbsp&nbsp{{ $resultat['rang1'] != -1 ? $resultat['rang1'] : '**.**' }}
                                             </h7>
                                         @endif
                                     </div>
                                     <div class="d-flex">
                                         <h7>Moy. 2ème {{ $periode_abr }}
-                                            :&nbsp&nbsp&nbsp{{ $resultat['moyenne2emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne2emTrimestre_Semestre'], 2) : '**.**' }}
+                                            :&nbsp&nbsp{{ $resultat['moyenne2emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne2emTrimestre_Semestre'], 2) : '**.**' }}
                                         </h7>
                                         @if (isset($option['rang_2']) && $option['rang_2'])
                                             <h7 style="margin-left: 40px;">Rang
