@@ -880,7 +880,7 @@ public function savepaiementcontrat(Request $request) {
                                     $duplicatafacture->save();
 
 
-// dd($fileName);
+       // dd($fileName);
         return view('pages.Etats.facturenormalise',  [
             'factureconfirm' => $decodedResponseConfirmation,
             'facturedetaille' => $facturedetaille, 
