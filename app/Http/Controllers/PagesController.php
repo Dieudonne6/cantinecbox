@@ -2482,6 +2482,8 @@ public function filterEtatDeLaCaisse(Request $request) {
 $response = curl_exec($ch);
 // dd($response);
 
+
+
 // Vérifiez les erreurs de cURL
 if (curl_errno($ch)) {
 // echo 'Erreur cURL : ' . curl_error($ch);
@@ -2498,7 +2500,11 @@ $decodedResponse = json_decode($response, true);
 // Vérifiez si l'UID est présent dans la réponse
 if (isset($decodedResponse['uid'])) {
 // L'UID de la demande
-$uid = $decodedResponse['uid']; }
+$uid = $decodedResponse['uid']; 
+
+$total = $decodedResponse['total']; 
+//  dd($total);
+}
 
 
 // -------------------------------
@@ -2711,7 +2717,7 @@ return view('pages.inscriptions.pdfpaiementsco', [
   'logoUrl' => $logoUrl ?? null,
 
   // Données supplémentaires si nécessaires
-  'montanttotal' => $montanttotal ?? null,
+  'montanttotal' => $total,
   'datepaiementcontrat' => $datepaiementcontrat ?? null,
 ]);
 
@@ -2727,7 +2733,6 @@ return view('pages.inscriptions.pdfpaiementsco', [
       $reffacture = Session::get('reffacture');
       $classeeleve = Session::get('classeeleve');
       $nomcompleteleve = Session::get('nomcompleteleve');
-      $toutmoiscontrat = Session::get('toutmoiscontrat');
       $qrCodeString = Session::get('qrCodeString');
       $fileNameqrcode = Session::get('fileNameqrcode');
      
