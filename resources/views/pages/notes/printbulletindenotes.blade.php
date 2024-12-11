@@ -36,31 +36,65 @@ if ($typean == 1) {
                             style="width: 125px; height: 125px; background-color: transparent; border: 1px solid black;">
                         </div>
                         <br>
-                        <div class="watermark text-center fw-bold mb-4"
-                            style="height: 90px; font-size: 1.5rem; color: gray;">Scodelux</div>
+                        <div class="watermark" style="position: absolute; top: 5%; left: 10%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                            Scodelux
+                        </div>
+                        <div class="watermark" style="position: absolute; top: 15%; left: 25%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                            Scodelux
+                        </div>
+                        <div class="watermark" style="position: absolute; top: 25%; left: 40%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                            Scodelux
+                        </div>
+                        <div class="watermark" style="position: absolute; top: 35%; left: 55%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                            Scodelux
+                        </div>
+                        <div class="watermark" style="position: absolute; top: 45%; left: 70%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                            Scodelux
+                        </div>
+                        <div class="watermark" style="position: absolute; top: 60%; left: 10%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                            Scodelux
+                        </div>
+                        <div class="watermark" style="position: absolute; top: 70%; left: 30%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                            Scodelux
+                        </div>
+                        <div class="watermark" style="position: absolute; top: 80%; left: 50%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                            Scodelux
+                        </div>
+                        <div class="watermark" style="position: absolute; top: 90%; left: 70%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                            Scodelux
+                        </div>
+                        <div class="watermark" style="position: absolute; top: 50%; left: 85%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                            Scodelux
+                        </div>
                         <div class="d-flex">
                             <div id="donneeleve"
-                                style="width: 40%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                                <h5 class="ml-2" style="margin-top: 5px;">NOM : {{ $resultat['nom'] }}</h5>
-                                <h5 class="ml-2">PRENOM : {{ $resultat['prenom'] }}</h5>
+                                style="width: 60%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
+                                <h5 class="ml-2" style="margin-top: 5px; font-weight: 400;">NOM : <span
+                                        class="font-weight-bold">{{ $resultat['nom'] }}</span></h5>
+                                <h5 class="ml-2" style="margin-top: 5px; font-weight: 400;">PRENOMS : <span
+                                        class="font-weight-bold">{{ $resultat['prenom'] }}</span></h5>
                                 <div class="d-flex">
-                                    <h5 class="ml-2">Redoublant (e) :
+                                    <h5 class="ml-2" style="margin-top: 5px; font-weight: 400;">Redoublant (e) :
                                         <input class="ml-2" type="checkbox" name="redoublant" id="redoublant_oui" disabled
                                             {{ $resultat['redoublant'] == 1 ? 'checked' : '' }}>
-                                        <label for="redoublant_oui">Oui</label>
+                                        <label for="redoublant_oui">OUI</label>
                                         <input type="checkbox" name="redoublant" id="redoublant_non" disabled
                                             {{ $resultat['redoublant'] == 2 ? 'checked' : '' }}>
-                                        <label for="redoublant_non">Non</label>
+                                        <label for="redoublant_non">NON</label>
+                                        @if (isset($option['matriculex']) && $option['matriculex'])
+                                            <label style="margin-left: 40px;">Mat. {{ $resultat['matriculex'] }}</label>
+                                        @endif
                                     </h5>
-                                    @if (isset($option['matricule']) && $option['matricule'])
-                                        <h5 style="margin-left: 40px;">Matricule : {{ $resultat['matricule'] }}</h5>
-                                    @endif
+
                                 </div>
                             </div>
                             <div
-                                style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                                <h5 class="ml-2" style="margin-top: 15px;">Année scolaire :
-                                    {{ $resultat['anneScolaire'] }}</h5>
+                                style="width: 20%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
+                                <h5 class="ml-2 d-inline-block"
+                                    style="margin-top: 0; margin-bottom: 0; font-size: 14px; font-weight: 400;">
+                                    Année scolaire : {{ $resultat['anneScolaire'] }}
+                                </h5>
+                                <br>
                                 <br>
                                 <h5 id="periode" class="text-center">
                                     @switch($resultat['periode'])
@@ -78,41 +112,43 @@ if ($typean == 1) {
                                 </h5>
                             </div>
                             <div id="classe"
-                                style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                                <h5 class="ml-2" style="margin-top: 15px;">Classe : {{ $resultat['classe'] }}</h5>
+                                style="width: 20%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
+                                <h5 class="ml-2" style="margin-top: 5px; font-weight: 400;">Classe : <span
+                                        class="font-weight-bold">{{ $resultat['classe'] }}</span></h5>
                                 <br>
-                                <h5 class="ml-2">Effectif : {{ $resultat['effectif'] }}</h5>
+                                <h5 class="ml-2" style="margin-top: 5px; font-weight: 400;">Effectif : <span
+                                        class="font-weight-bold">{{ $resultat['effectif'] }}</span></h5>
                             </div>
                         </div>
                         <table style="width: 100%;" id="tableau">
                             <thead>
                                 <tr>
-                                    <th class="text-center" style="font-weight: normal; width: 150px;">Disciplines</th>
-                                    <th class="text-center" style="font-weight: normal; width: 50px;">Cf</th>
-                                    <th class="text-center" style="font-weight: normal; width: 50px;">Moy.Int</th>
-                                    <th class="text-center" style="font-weight: normal; width: 50px;">Dev.1</th>
-                                    <th class="text-center" style="font-weight: normal; width: 50px;">Dev.2</th>
+                                    <th class="text-center" style="font-weight: bold; width: 150px;">DISCIPLINES</th>
+                                    <th class="text-center" style="font-weight: bold; width: 50px;">Cf</th>
+                                    <th class="text-center" style="font-weight: bold; width: 50px;">Moy.Int</th>
+                                    <th class="text-center" style="font-weight: bold; width: 50px;">Dev.1</th>
+                                    <th class="text-center" style="font-weight: bold; width: 50px;">Dev.2</th>
                                     @if (!isset($option['masquer_devoir3']))
-                                        <th class="text-center" style="font-weight: normal; width: 50px;">Dev.3</th>
+                                        <th class="text-center" style="font-weight: bold; width: 50px;">Dev.3</th>
                                     @endif
                                     @if (!isset($option['note_test']) || !$option['note_test'])
-                                        <th class="text-center" style="font-weight: normal; width: 50px;">Moy.20</th>
-                                        <th class="text-center" style="font-weight: normal; width: 50px;">Moy.coef</th>
+                                        <th class="text-center" style="font-weight: bold; width: 50px;">Moy.20</th>
+                                        <th class="text-center" style="font-weight: bold; width: 50px;">Moy.coef</th>
                                     @endif
                                     @if (isset($option['note_test']) && $option['note_test'])
-                                        <th class="text-center" style="font-weight: normal; width: 50px;">Moy. part</th>
-                                        <th class="text-center" style="font-weight: normal; width: 50px;">Compo</th>
-                                        <th class="text-center" style="font-weight: normal; width: 50px;">Moy.20</th>
-                                        <th class="text-center" style="font-weight: normal; width: 50px;">Moy.coef</th>
+                                        <th class="text-center" style="font-weight: bold; width: 50px;">Moy. part</th>
+                                        <th class="text-center" style="font-weight: bold; width: 50px;">Compo</th>
+                                        <th class="text-center" style="font-weight: bold; width: 50px;">Moy.20</th>
+                                        <th class="text-center" style="font-weight: bold; width: 50px;">Moy.coef</th>
                                     @else
-                                        <th class="text-center" style="font-weight: normal; width: 50px;">Faible moy.</th>
-                                        <th class="text-center" style="font-weight: normal; width: 50px;">Forte moy.</th>
+                                        <th class="text-center" style="font-weight: bold; width: 50px;">Faible moy.</th>
+                                        <th class="text-center" style="font-weight: bold; width: 50px;">Forte moy.</th>
                                     @endif
                                     @if (isset($option['rang_matiere']) && $option['rang_matiere'])
-                                        <th class="text-center" style="font-weight: normal; width: 50px;">Rang par matière
+                                        <th class="text-center" style="font-weight: bold; width: 50px;">Rang
                                         </th>
                                     @endif
-                                    <th class="text-center" style="font-weight: normal; width: 150px;">Appréciations
+                                    <th class="text-center" style="font-weight: bold; width: 150px;">Appréciations
                                         des<br>professeurs</th>
                                 </tr>
                             </thead>
@@ -171,7 +207,7 @@ if ($typean == 1) {
                                         @continue;
                                     @endif
                                     <tr>
-                                        <td>{{ $matiere['nom_matiere'] }}</td>
+                                        <td style="text-align: left;">{{ $matiere['nom_matiere'] }}</td>
                                         <td>{{ $matiere['coefficient'] }}</td>
                                         <td>{{ $matiere['moyenne_interro'] ?? '**.**' }}</td>
                                         <td>{{ $matiere['devoir1'] ?? '**.**' }}</td>
@@ -180,7 +216,7 @@ if ($typean == 1) {
                                             <td>{{ $matiere['devoir3'] ?? '**.**' }}</td>
                                         @endif
                                         @if (!isset($option['note_test']) || !$option['note_test'])
-                                            <td>{{ number_format($moyenne_sur_20, 2) ?? '**.**' }}</td>
+                                            <td class="bold-text">{{ number_format($moyenne_sur_20, 2) ?? '**.**' }}</td>
                                             @if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'integral')
                                                 <td>+ {{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
                                             @else
@@ -190,14 +226,20 @@ if ($typean == 1) {
                                         @if (isset($option['note_test']) && $option['note_test'])
                                             <td>{{ number_format($moyenne_part, 2) ?? '**.**' }}</td>
                                             <td>{{ $matiere['test'] ?? '**.**' }}</td>
-                                            <td>{{ number_format($moyenne_sur_20, 2) ?? '**.**' }}</td>
+                                            <td class="bold-text">{{ number_format($moyenne_sur_20, 2) ?? '**.**' }}</td>
                                             <td>{{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
                                         @else
                                             <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td>
                                             <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td>
                                         @endif
                                         @if (isset($option['rang_matiere']) && $option['rang_matiere'])
-                                            <td>{{ $matiere['rang'] }}</td>
+                                            <td>
+                                                {{ $matiere['rang'] }}
+                                                @php
+                                                    $suffixe = $matiere['rang'] == 1 ? 'er' : 'ème';
+                                                @endphp
+                                                {{ $suffixe }}
+                                            </td>
                                         @endif
                                         @if (isset($option['appreciation_prof']))
                                             <td>{{ $matiere['mentionProf'] }}</td>
@@ -210,20 +252,20 @@ if ($typean == 1) {
                                     <td>Total</td>
                                     <td>{{ $total_coefficients }}</td>
                                     @if (!isset($option['masquer_devoir3']))
-                                    <td colspan="5"></td>
+                                        <td colspan="5"></td>
                                     @else
-                                     <td colspan="4"></td>
+                                        <td colspan="4"></td>
                                     @endif
-{{--                                     @if (isset($option['note_test']) && $option['note_test'])
+                                    {{--                                     @if (isset($option['note_test']) && $option['note_test'])
                                       <td colspan="7"></td>
                                       @else
                                       <td colspan="4"></td>              
                                     @endif --}}
-                                      <td>{{ number_format($total_moyenne_coeffs, 2) }}</td>
+                                    <td>{{ number_format($total_moyenne_coeffs, 2) }}</td>
                                     @if (isset($option['rang_matiere']) && $option['rang_matiere'])
-                                      <td colspan="4"></td>
+                                        <td colspan="4"></td>
                                     @else
-                                      <td colspan="3"></td>
+                                        <td colspan="3"></td>
                                     @endif
                                 </tr>
                             </tbody>
@@ -231,15 +273,20 @@ if ($typean == 1) {
                         <div id="ligne" style="width: 100%; height: 1px; background-color: rgb(0, 0, 0);"></div>
                         <div class="d-flex" style="height: 90px;">
                             <div
-                                style="width: 29.5%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                                <h4 class="text-center" style="margin-top: 20px;">Bilan {{ $texte }}</h4>
+                                style="width: 25%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
+                                <h4 class="text-center" style="margin-top: 20px;">BILAN {{ strtoupper($texte) }}</h4>
+
                             </div>
                             @php
                                 // Calcul de la moyenne
                                 $moyenne = 0;
-                                $moyenne = $total_moyenne_coeffs / $total_coefficients;
+                                if ($total_coefficients != 0) {
+                                    $moyenne = $total_moyenne_coeffs / $total_coefficients;
+                                } else {
+                                    $moyenne = 0; // Ou une autre valeur par défaut
+                                }
                             @endphp
-                            <div style="width: 40%; margin-left: 0.5%">
+                            <div style="width: 45%; margin-left: 1%">
                                 <div class="d-flex">
                                     <h6 style="text-align: center" class="mt-1">Moyenne {{ $texte2 }} :
                                         &nbsp&nbsp{{ $total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**' }}
@@ -274,19 +321,23 @@ if ($typean == 1) {
                                 </table>
                             </div>
                             <div class="mt-2"
-                                style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px;">
-                                <h8><strong>Bilan des matières littéraires :
-                                        {{ $resultat['moyenne_bilan_litteraire_1'] == -1 ? '**' : $resultat['moyenne_bilan_litteraire_1'] }}</strong>
-                                </h8>
-                                <br>
-                                <h8><strong>Bilan des matières scientifiques :
-                                        {{ $resultat['moyenne_bilan_scientifique_1'] == -1 ? '**' : $resultat['moyenne_bilan_scientifique_1'] }}</strong>
-                                </h8>
-                                <br>
-                                <h8><strong>Bilan des matières fondamentales :
-                                        {{ $resultat['moyenne_bilan_fondamentale_1'] == -1 ? '**' : $resultat['moyenne_bilan_fondamentale_1'] }}</strong>
-                                </h8>
+                                style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px; padding: 10px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                                    <span><strong>Bilan des matières littéraires :</strong></span>
+                                    <span>{{ $resultat['moyenne_bilan_litteraire_1'] == -1 ? '**' : $resultat['moyenne_bilan_litteraire_1'] }}</span>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                                    <span><strong>Bilan des matières scientifiques :</strong></span>
+                                    <span>{{ $resultat['moyenne_bilan_scientifique_1'] == -1 ? '**' : $resultat['moyenne_bilan_scientifique_1'] }}</span>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                                    <span><strong>Bilan des matières fondamentales :</strong></span>
+                                    <span>{{ $resultat['moyenne_bilan_fondamentale_1'] == -1 ? '**' : $resultat['moyenne_bilan_fondamentale_1'] }}</span>
+                                </div>
                             </div>
+
                         </div>
                         @if (($typean == 1 && $resultat['periode'] == 2) || ($typean == 2 && $resultat['periode'] == 3))
                             <div id="bilan_annuel" class="d-flex"
@@ -382,77 +433,99 @@ if ($typean == 1) {
                         @endphp
                         <div class="d-flex">
                             <div
-                                style="width: 33%; height: 170px background-color: transparent; border: 1px solid black; border-radius: 10px;">
+                                style="width: 25%; height: 230px; background-color: transparent; border: 1px solid black; border-radius: 10px; padding: 10px; box-sizing: border-box;">
                                 <h6 style="margin-top: 5px;" class="text-center">Mention du conseil des Prof.</h6>
-                                <div class="d-flex">
-                                    <h8>Félicitations........................................................</h8>
-                                    <input style="margin-left: 5px;" type="checkbox" name="felicitation"
-                                        id="felicitation" disabled
+
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span style="font-size: 14px;">Félicitations</span>
+                                    <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
+                                    <input type="checkbox" name="felicitation" id="felicitation" disabled
                                         {{ $moyenne >= 16 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
-                                <div class="d-flex">
-                                    <h8>Encouragements........................................</h8>
-                                    <input style="margin-left: 5px;" type="checkbox" name="encouragement"
-                                        id="encouragement" disabled
+
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span style="font-size: 14px;">Encouragements</span>
+                                    <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
+                                    <input type="checkbox" name="encouragement" id="encouragement" disabled
                                         {{ $moyenne >= 14 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
-                                <div class="d-flex">
-                                    <h8>Tableau d'honneur....................................</h8>
-                                    <input style="margin-left: 5px;" type="checkbox" name="tableau_dhonneur"
-                                        id="tableau_dhonneur" disabled
+
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span style="font-size: 14px;">Tableau d'honneur</span>
+                                    <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
+                                    <input type="checkbox" name="tableau_dhonneur" id="tableau_dhonneur" disabled
                                         {{ $moyenne >= 12 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
-                                <div class="d-flex">
-                                    <h8>Avertissement/Travail...........................</h8>
-                                    <input style="margin-left: 5px;" type="checkbox" name="avertissement_travail"
-                                        id="avertissement_travail" disabled
-                                        {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
-                                </div>
-                                <div class="d-flex">
-                                    <h8>Avertissement/Discipline...................</h8>
-                                    <input style="margin-left: 5px;" type="checkbox" name="avertissement_discipline"
-                                        id="avertissement_discipline" disabled
-                                        {{ $note_conduite <= 10 && $mention_conseil ? 'checked' : '' }}>
-                                </div>
-                                <div class="d-flex">
-                                    <h8>Blâme/Travail...................................................</h8>
-                                    <input style="margin-left: 5px;" type="checkbox" name="blame_work" id="blame_work"
+
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span style="font-size: 14px;">Avertissement/Travail</span>
+                                    <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
+                                    <input type="checkbox" name="avertissement_travail" id="avertissement_travail"
                                         disabled {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
-                                <div class="d-flex">
-                                    <h8>Blâme/Discipline..........................................</h8>
-                                    <input style="margin-left: 5px;" type="checkbox" name="blame_discipline"
-                                        id="blame_discipline" disabled
+
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span style="font-size: 14px;">Avertissement/Discipline</span>
+                                    <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
+                                    <input type="checkbox" name="avertissement_discipline" id="avertissement_discipline"
+                                        disabled {{ $note_conduite <= 10 && $mention_conseil ? 'checked' : '' }}>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span style="font-size: 14px;">Blâme/Travail</span>
+                                    <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
+                                    <input type="checkbox" name="blame_work" id="blame_work" disabled
+                                        {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span style="font-size: 14px;">Blâme/Discipline</span>
+                                    <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
+                                    <input type="checkbox" name="blame_discipline" id="blame_discipline" disabled
                                         {{ $note_conduite <= 6 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
                             </div>
                             <div id="appreciation"
-                                style="width: 37%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column;">
-                                <div style="flex: 1; display: flex;justify-content: center;" class="row">
-                                    <h6 style="margin-top: 5px;" class="text-center"><u>Appréciation du chef
-                                            d'établissement</u></h6>
+                                style="width: 45%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column; padding: 10px;">
+                                <div style="flex: 1; display: flex; justify-content: center; margin-bottom: 10px;">
+                                    <h6 style="margin-top: 5px; text-align: center; text-decoration: underline;">
+                                        Appréciation du chef d'établissement</h6>
                                     @if (isset($option['appreciation_directeur']) && $option['appreciation_directeur'])
-                                        <h7 style="font-weight: bold;" class="text-center">{{ $resultat['mentionDir'] }}
-                                        </h7>
+                                        <p style="font-weight: bold; text-align: center; margin: 0;">
+                                            {{ $resultat['mentionDir'] }}</p>
                                     @endif
                                 </div>
                                 <hr style="border: 1px solid black; margin: 0;">
-                                <div style="flex: 1;justify-content: center;">
-                                    <h6 class="text-center"><u>Appréciations du professeur principal</u></h6>
-                                    <h7>Conduite : <span
-                                            style="border-bottom: 1px dotted #000; width: 131px; display: inline-block;">{{ $note_conduite }}</span>
-                                    </h7>
-                                    <h7>Travail.............................................</h7>
-                                    <h7>....................................................................................................................................................
-                                    </h7>
+                                <div
+                                    style="flex: 1; display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
+                                    <h6 style="text-align: center; text-decoration: underline; margin-bottom: 10px;">
+                                        Appréciations du professeur principal</h6>
+                                    <div
+                                        style="display: flex; justify-content: space-between; width: 100%; padding: 0 10px;">
+                                        <p style="margin: 0;">Conduite :
+                                            <span
+                                                style="border-bottom: 1px dotted black; width: 131px; display: inline-block;">{{ $note_conduite }}</span>
+                                        </p>
+                                        <p style="margin: 0;">Travail :
+                                            <span
+                                                style="border-bottom: 1px dotted black; width: 131px; display: inline-block;"></span>
+                                        </p>
+                                    </div>
+                                    <p style="margin: 10px 0;">
+                                        ....................................................................................................................................................
+                                    </p>
                                 </div>
                             </div>
+
                             <div id="signature"
                                 style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                                <h5 id="signature_chef" style="margin-top: 50px;" class="text-center"><u>Signature et
-                                        cachet du chef d'établissement</u></h5>
-                                <h6 class="text-center" style="margin-left: 0%;">{{ $request->input('signature') }}</h6>
+                                <h5 id="signature_chef" style="margin-top: 5px; font-weight: 400; font-size: 14px;" class="text-center">
+                                    Signature et cachet <br> du Chef d'établissement
+                                </h5>                                
+                                <h6 class="text-center" style="margin-left: 0%; font-weight: bold;">
+                                    {{ $request->input('signature') }}</h6>
                             </div>
+
                         </div>
                         <br>
                         <div class="d-flex">
@@ -484,7 +557,7 @@ if ($typean == 1) {
                 display: none
             }
 
-            h8 {
+            .h8 {
                 font-size: 12px;
             }
 
@@ -541,8 +614,8 @@ if ($typean == 1) {
                 }
 
                 /*     #tableau {
-              width: 968px !important;
-            } */
+                              width: 968px !important;
+                            } */
                 #ligne {
                     width: 965px !important;
                 }
@@ -556,15 +629,15 @@ if ($typean == 1) {
                 }
 
                 /*     #tableau_bilan {
-              width: 400px !important;
-            } */
+                              width: 400px !important;
+                            } */
                 #appreciation {
                     width: 560px !important;
                 }
 
                 /*     #signature {
-              width: auto !important;
-            } */
+                              width: auto !important;
+                            } */
                 #signature_chef {
                     font-size: 16px !important;
                 }

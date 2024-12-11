@@ -41,8 +41,8 @@
 
                                         <!-- Select pour la période -->
                                         <div class="col-md-8 mb-3">
-                                            <select class="form-select select2 w-100 mt-2" id="periodSelect"
-                                                onchange="document.getElementById('champ1').value = this.value; updateCheckbox()"
+                                            <select class="form-select select2 w-100 mt-2" id="periodSelect" onchange="handleChange()"
+                                                
                                                 aria-label="Choisir une période">
                                                 <option value="" selected>Période</option>
                                                 <option value="1">1ère Période</option>
@@ -334,6 +334,7 @@
                     <div class="modal-body">
                         <input type="hidden" value="CE1A" id="tableSelec4" name="classe">
                         <input type="hidden" value="1" id="tableSelec5" name="matiere">
+                        <input type="hidden" value="1" id="periodSelect" name="periode">
 
 
                     </div>
@@ -408,11 +409,13 @@
         function redirectWithSelection() {
             const classe = document.getElementById("tableSelect4").value; // Récupère la classe sélectionnée
             const matiere = document.getElementById("tableSelect5").value; // Récupère la matière sélectionnée
+            const periode = document.getElementById("periodSelect").value; // Récupère la periode sélectionnée
             let url = '/filternotes'; // URL de redirection
             let params = [];
 
             if (classe) params.push(`classe=${classe}`); // Ajoute le paramètre de classe si sélectionné
             if (matiere) params.push(`matiere=${matiere}`); // Ajoute le paramètre de matière si sélectionné
+            if (periode) params.push(`periode=${periode}`); // Ajoute le paramètre de matière si sélectionné
 
             if (params.length > 0) {
                 url += '?' + params.join('&'); // Crée la chaîne de requête
@@ -426,6 +429,10 @@
         document.getElementById("tableSelect5").addEventListener("change", redirectWithSelection);
         document.getElementById("tableSelec4").addEventListener("change", redirectWithSelection);
         document.getElementById("tableSelec5").addEventListener("change", redirectWithSelection);
+        function handleChange() {
+                            redirectWithSelection();
+                            updateCheckbox();
+                        }
     </script>
 
     <script>

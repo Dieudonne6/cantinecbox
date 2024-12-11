@@ -643,6 +643,7 @@ class BulletinController extends Controller
               'rang3' => $eleve->RANG3,
               'aptitute_sport' => $eleve->APTE,
               'matricule' => $eleve->MATRICULE,
+              'matriculex' => $eleve->MATRICULEX,
               'anneScolaire' => $annescolaire,
               'periode' => $periode,
               'classe' => $infoClasse->CODECLAS,
