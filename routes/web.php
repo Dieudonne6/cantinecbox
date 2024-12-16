@@ -169,6 +169,8 @@ Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);
 Route::get('/paiementeleve/{matricule}', [PagesController::class, 'paiementeleve'])->name('paiementeleve');
 Route::post('/paiement/{matricule}', [PagesController::class, 'enregistrerPaiement'])->name('enregistrer.paiement');
 // Route::get('/recouvrementGenerale', [PagesController::class, 'recouvrementGenerale'])->name('recouvrementGenerale');
+Route::get('/pdfpaiementsco/{matricule}', [PagesController::class, 'afficherFacture'])->name('facturesnormalisesco');
+Route::get('/facturenormalisesco/{nomcompleteleve}',[PagesController::class,'facturenormalisesco'])->name('pdffacturesco');
 
 
 

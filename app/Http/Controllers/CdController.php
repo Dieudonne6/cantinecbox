@@ -72,6 +72,7 @@ class CdController extends Controller
     $classes = Classe::all();
     $classe = $request->input('classe','CE1A');
     $matiere = $request->input('matiere',1);
+    $periode = $request->input('periode',1); 
     $matieres = Matieres::all();
     $gclasses = Groupeclasse::all();
     
@@ -83,10 +84,15 @@ class CdController extends Controller
       $elevesQuery->where('eleve.CODECLAS', $classe);
     }
     
-    $elevesQuery->leftJoin('notes', function ($join) use ($matiere) {
+    $elevesQuery->leftJoin('notes', function ($join) use ($matiere, $periode) {
       $join->on('eleve.MATRICULE', '=', 'notes.MATRICULE');
+      
       if ($matiere) {
-        $join->where('notes.CODEMAT', $matiere);
+          $join->where('notes.CODEMAT', $matiere);
+      }
+      
+      if ($periode) {
+          $join->where('notes.SEMESTRE', $periode);
       }
     });
     
@@ -118,6 +124,7 @@ class CdController extends Controller
     $classes = Classe::all();
     $classe = $request->input('classe');
     $matiere = $request->input('matiere');
+    $periode = $request->input('periode',1); 
     $matieres = Matieres::all();
     $gclasses = Groupeclasse::all();
     
@@ -129,10 +136,15 @@ class CdController extends Controller
       $elevesQuery->where('eleve.CODECLAS', $classe);
     }
     
-    $elevesQuery->leftJoin('notes', function ($join) use ($matiere) {
+    $elevesQuery->leftJoin('notes', function ($join) use ($matiere, $periode) {
       $join->on('eleve.MATRICULE', '=', 'notes.MATRICULE');
+      
       if ($matiere) {
-        $join->where('notes.CODEMAT', $matiere);
+          $join->where('notes.CODEMAT', $matiere);
+      }
+      
+      if ($periode) {
+          $join->where('notes.SEMESTRE', $periode);
       }
     });
     
