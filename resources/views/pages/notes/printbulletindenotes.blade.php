@@ -193,11 +193,15 @@
             <div style="width: 280px; height: 85px; background-color: transparent; border: 1px solid black; border-radius: 10px;">
               <h4 class="text-center" style="margin-top: 20px;">Bilan {{$texte}}</h4>
             </div>
-            @php
-              // Calcul de la moyenne
-              $moyenne = 0;
-              $moyenne = $total_moyenne_coeffs / $total_coefficients;
-            @endphp
+          @php
+            $moyenne = 0;
+        
+            if ($total_coefficients != 0) {
+                $moyenne = $total_moyenne_coeffs / $total_coefficients;
+            } else {
+                $moyenne = 0; // Ou une autre valeur par défaut
+            }
+          @endphp
             <div>
               <div class="d-flex">
                 <h5 style="margin-left: 10px;">Moyenne {{$texte2}} : {{$total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**'}}</h5>
@@ -456,5 +460,5 @@
   
           document.body.innerHTML = originalContent;
       }
-  </script>
+</script>
 @endsection
