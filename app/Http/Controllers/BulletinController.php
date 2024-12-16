@@ -654,6 +654,7 @@ class BulletinController extends Controller
               'plus_faible_moyenne_classe' => $plusFaibleMoyenne,
               'moyenneAnnueleClasse' => $moyenneAnnuelleClasse,
               'effectif' => $effectifsParClasse[$eleve->CODECLAS] ?? 0,
+              'mentionDir' => $this->determineMentionDir($eleve->MS1, $params2),
               'matieres' => []
             ];
             

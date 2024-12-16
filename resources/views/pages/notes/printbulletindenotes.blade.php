@@ -277,7 +277,9 @@ if ($typean == 1) {
                                 <h4 class="text-center" style="margin-top: 20px;">BILAN {{ strtoupper($texte) }}</h4>
 
                             </div>
+                           
                             @php
+<<<<<<< HEAD
                                 // Calcul de la moyenne
                                 $moyenne = 0;
                                 if ($total_coefficients != 0) {
@@ -287,6 +289,17 @@ if ($typean == 1) {
                                 }
                             @endphp
                             <div style="width: 45%; margin-left: 1%">
+=======
+                            $moyenne = 0;
+                        
+                            if ($total_coefficients != 0) {
+                                $moyenne = $total_moyenne_coeffs / $total_coefficients;
+                            } else {
+                                $moyenne = 0; // Ou une autre valeur par défaut
+                            }
+                        @endphp
+                            <div style="width: 40%; margin-left: 0.5%">
+>>>>>>> 924665f (Made somes changnes.)
                                 <div class="d-flex">
                                     <h6 style="text-align: center" class="mt-1">Moyenne {{ $texte2 }} :
                                         &nbsp&nbsp{{ $total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**' }}
