@@ -10,20 +10,20 @@
                 @foreach ($resultats as $index => $resultat)
                     @php
                         // Initialisation des variables en fonction du type d'année
-$periode = null;
-$texte = null;
-$texte2 = null;
-$periode_abr = null;
-if ($typean == 1) {
-    $periode = 'Semestre';
-    $texte = 'Semestriel';
-    $texte2 = 'Semestrielle';
-    $periode_abr = 'Sem.';
-} else {
-    $periode = 'Trimestre';
-    $texte = 'Trimestriel';
-    $texte2 = 'Trimestrielle';
-    $periode_abr = 'Trim.';
+                        $periode = null;
+                        $texte = null;
+                        $texte2 = null;
+                        $periode_abr = null;
+                        if ($typean == 1) {
+                            $periode = 'Semestre';
+                            $texte = 'Semestriel';
+                            $texte2 = 'Semestrielle';
+                            $periode_abr = 'Sem.';
+                        } else {
+                            $periode = 'Trimestre';
+                            $texte = 'Trimestriel';
+                            $texte2 = 'Trimestrielle';
+                            $periode_abr = 'Trim.';
                         }
                     @endphp
                     <div class="bulletin" style="{{ $index < count($resultats) - 1 ? 'page-break-after: always;' : '' }}">
@@ -36,34 +36,44 @@ if ($typean == 1) {
                             style="width: 125px; height: 125px; background-color: transparent; border: 1px solid black;">
                         </div>
                         <br>
-                        <div class="watermark" style="position: absolute; top: 5%; left: 10%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                        <div class="watermark"
+                            style="position: absolute; top: 5%; left: 10%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
                             Scodelux
                         </div>
-                        <div class="watermark" style="position: absolute; top: 15%; left: 25%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                        <div class="watermark"
+                            style="position: absolute; top: 15%; left: 25%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
                             Scodelux
                         </div>
-                        <div class="watermark" style="position: absolute; top: 25%; left: 40%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                        <div class="watermark"
+                            style="position: absolute; top: 25%; left: 40%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
                             Scodelux
                         </div>
-                        <div class="watermark" style="position: absolute; top: 35%; left: 55%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                        <div class="watermark"
+                            style="position: absolute; top: 35%; left: 55%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
                             Scodelux
                         </div>
-                        <div class="watermark" style="position: absolute; top: 45%; left: 70%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                        <div class="watermark"
+                            style="position: absolute; top: 45%; left: 70%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
                             Scodelux
                         </div>
-                        <div class="watermark" style="position: absolute; top: 60%; left: 10%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                        <div class="watermark"
+                            style="position: absolute; top: 60%; left: 10%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
                             Scodelux
                         </div>
-                        <div class="watermark" style="position: absolute; top: 70%; left: 30%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                        <div class="watermark"
+                            style="position: absolute; top: 70%; left: 30%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
                             Scodelux
                         </div>
-                        <div class="watermark" style="position: absolute; top: 80%; left: 50%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                        <div class="watermark"
+                            style="position: absolute; top: 80%; left: 50%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
                             Scodelux
                         </div>
-                        <div class="watermark" style="position: absolute; top: 90%; left: 70%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                        <div class="watermark"
+                            style="position: absolute; top: 90%; left: 70%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
                             Scodelux
                         </div>
-                        <div class="watermark" style="position: absolute; top: 50%; left: 85%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                        <div class="watermark"
+                            style="position: absolute; top: 50%; left: 85%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
                             Scodelux
                         </div>
                         <div class="d-flex">
@@ -532,9 +542,10 @@ if ($typean == 1) {
 
                             <div id="signature"
                                 style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                                <h5 id="signature_chef" style="margin-top: 5px; font-weight: 400; font-size: 14px;" class="text-center">
+                                <h5 id="signature_chef" style="margin-top: 5px; font-weight: 400; font-size: 14px;"
+                                    class="text-center">
                                     Signature et cachet <br> du Chef d'établissement
-                                </h5>                                
+                                </h5>
                                 <h6 class="text-center" style="margin-left: 0%; font-weight: bold;">
                                     {{ $request->input('signature') }}</h6>
                             </div>
@@ -555,7 +566,6 @@ if ($typean == 1) {
                             </div>
                         </div>
                     </div>
-
                     <br>
                     
                 @endforeach
@@ -628,8 +638,8 @@ if ($typean == 1) {
                 }
 
                 /*     #tableau {
-                              width: 968px !important;
-                            } */
+                                  width: 968px !important;
+                                } */
                 #ligne {
                     width: 965px !important;
                 }
@@ -643,15 +653,15 @@ if ($typean == 1) {
                 }
 
                 /*     #tableau_bilan {
-                              width: 400px !important;
-                            } */
+                                  width: 400px !important;
+                                } */
                 #appreciation {
                     width: 560px !important;
                 }
 
                 /*     #signature {
-                              width: auto !important;
-                            } */
+                                  width: auto !important;
+                                } */
                 #signature_chef {
                     font-size: 16px !important;
                 }
