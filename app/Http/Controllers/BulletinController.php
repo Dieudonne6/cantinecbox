@@ -450,105 +450,192 @@ class BulletinController extends Controller
   // }
 
 
-  private function getAnneeScolaire() {
-    $anneencours = Paramcontrat::first()->anneencours_paramcontrat;
-    return $anneencours . '-' . ($anneencours + 1);
+
+  private function initialiserVariables($request)
+{
+
+  $option = Session::get('option');
+
+  // dd($request);
+    $this->periode = $request['periode'];
+    $this->classesS = $request['selected_classes'];
+    $this->bonifications = $request['bonification'];
+    $this->bonificationType = $request['bonificationType'];
+    // $this->option = $request['option'];
+    // $this->annee = Parametre::getValeur('annee');
+    $infoparamcontrat = Paramcontrat::first();
+    $this->annee = $infoparamcontrat->anneencours_paramcontrat;
+    // $this->entete = Parametre::getValeur('entete');
+    $params2 = Params2::first();
+    $typean = $params2->TYPEAN;
+    $rtfContent = Params2::first()->EnteteBull;
+    $this->entete = $this->extractTextFromRtf($rtfContent);
+    // $this->totalSemestres = Parametre::getValeur('total_semestres');
+    $this->classes = DB::table('eleve')->select('CODECLAS')->distinct()->get();
+
 }
 
+private function mettreAJourRangAnnuel()
+{
+    foreach ($this->classes as $classe) {
+        $eleves = DB::table('eleve')
+            ->where('CODECLAS', $classe->CODECLAS)
+            ->orderByDesc('MAN', 'desc')
+            ->get();
 
-private function getEleves($selectedClasses) {
-  return Eleve::whereIn('CODECLAS', $selectedClasses)->get();
-}
+        $rang = 1;
+        $precedentMAN = null;
 
-
-private function calculerMoyenneEleve($eleve, $periode, $bonifications, $bonificationType, $option) {
-  $notes = DB::table('notes')
-      ->where('MATRICULE', $eleve->MATRICULE)
-      ->where('SEMESTRE', $periode)
-      ->get();
-
-  $totalCoef = 0;
-  $totalMSCoef = 0;
-
-  foreach ($notes as $note) {
-      if ($note->COEF > 0) {
-          $totalCoef += $note->COEF;
-          $totalMSCoef += $note->MS * $note->COEF;
-      }
-  }
-
-  if ($totalCoef > 0) {
-      $moyenne = $totalMSCoef / $totalCoef;
-      $this->updateMoyenneEleve($eleve->MATRICULE, $periode, $moyenne, $totalMSCoef, $totalCoef);
-  }
-}
-
-
-private function updateMoyenneEleve($matricule, $periode, $moyenne, $totalMSCoef, $totalCoef) {
-  $moyenneColumn = 'MS' . $periode;
-  $totalGeneColumn = 'TotalGene' . $periode;
-  $totalCoefColumn = 'TotalCoef' . $periode;
-
-  DB::table('eleve')
-      ->where('MATRICULE', $matricule)
-      ->update([
-          $moyenneColumn => $moyenne,
-          $totalGeneColumn => $totalMSCoef,
-          $totalCoefColumn => $totalCoef,
-      ]);
-}
-
-
-private function classerEleves($classe, $periode) {
-  $moyenneColumn = 'MS' . $periode;
-  $rangColumn = 'RANG' . $periode;
-
-  $eleves = DB::table('eleve')
-      ->where('CODECLAS', $classe)
-      ->whereNotNull($moyenneColumn)
-      ->orderByDesc($moyenneColumn)
-      ->get();
-
-  $rang = 1;
-  $previousMoyenne = null;
-
-  foreach ($eleves as $index => $eleve) {
-      if ($previousMoyenne !== $eleve->$moyenneColumn) {
-          $rang = $index + 1;
-      }
-
-      DB::table('eleve')
-          ->where('MATRICULE', $eleve->MATRICULE)
-          ->update([$rangColumn => $rang]);
-
-      $previousMoyenne = $eleve->$moyenneColumn;
-  }
-}
-
-
-
-
-  private function calculerMoyenne($request) {
-    $option = Session::get('option');
-    $bonifications = $request['bonification'];
-    $bonificationType = $request['bonificationType'];
-    $periode = $request['periode'];
-    $selectedClasses = array_filter($request['selected_classes'], fn($value) => $value !== 'all');
-
-    // Récupération des données globales
-    $anneScolaire = $this->getAnneeScolaire();
-    $eleves = $this->getEleves($selectedClasses);
-
-    // Calcul des moyennes par élève
-    foreach ($eleves as $eleve) {
-        $this->calculerMoyenneEleve($eleve, $periode, $bonifications, $bonificationType, $option);
-    }
-
-    // Classement des élèves par classe
-    foreach ($selectedClasses as $classe) {
-        $this->classerEleves($classe, $periode);
+        foreach ($eleves as $eleve) {
+            $currentMAN = $eleve->MAN;
+            if ($precedentMAN !== null && $currentMAN != $precedentMAN) {
+                $rang++;
+            }
+            DB::table('eleve')
+                ->where('MATRICULE', $eleve->MATRICULE)
+                ->update(['RANGA' => $rang]);
+            $precedentMAN = $currentMAN;
+        }
     }
 }
+
+private function calculerMoyennesAnnuelles()
+{
+    foreach ($this->classes as $classe) {
+        $eleves = DB::table('eleve')
+            // ->where('Classe', $classe)
+            ->get();
+
+        foreach ($eleves as $eleve) {
+            $moyennes = [];
+            for ($i = 1; $i <= 12; $i++) {
+                $colonne = 'MS' . $i;
+                if (Schema::hasColumn('eleve', $colonne)) {
+                    $moyenne = $eleve->$colonne;
+                    if ($moyenne !== null &&  $moyenne > 0) {
+                        $moyennes[] = $moyenne;
+                    }
+                }
+            }
+
+            if (count($moyennes) > 0) {
+                $moyenneAnnuelle = array_sum($moyennes) / count($moyennes);
+                DB::table('eleve')
+                    ->where('MATRICULE', $eleve->MATRICULE)
+                    ->update(['MAN' => $moyenneAnnuelle]);
+            }
+        }
+    }
+}
+
+// ********************************
+private function appliquerBonifications()
+{
+    foreach ($this->classes as $classe) {
+        $eleves = DB::table('eleve')
+            ->where('Classe', $classe)
+            ->get();
+
+        foreach ($eleves as $eleve) {
+            $moyenneAnnuelle = $eleve->MAN;
+
+            switch ($this->bonifications['type']) {
+                case 'aucune':
+                    break;
+
+                case 'integral':
+                    $moyenneAnnuelle += $this->bonifications['valeur'];
+                    break;
+
+                case 'intervalle':
+                    if ($moyenneAnnuelle >= $this->bonifications['min'] && $moyenneAnnuelle <= $this->bonifications['max']) {
+                        $moyenneAnnuelle += $this->bonifications['valeur'];
+                    }
+                    break;
+            }
+
+            DB::table('eleve')
+                ->where('Matricule', $eleve->Matricule)
+                ->update(['MAN' => $moyenneAnnuelle]);
+        }
+    }
+}
+
+
+private function calculerMoyennesSemestrielles($periode)
+{
+    foreach ($this->classes as $classe) {
+        $eleves = DB::table('eleve')
+            ->where('Classe', $classe)
+            ->get();
+
+        foreach ($eleves as $eleve) {
+            $notes = DB::table('notes')
+                ->where('Matricule', $eleve->Matricule)
+                ->where('Semestre', $periode)
+                ->get();
+
+            $totalNotes = 0;
+            $totalCoef = 0;
+
+            foreach ($notes as $note) {
+                $totalNotes += $note->Note * $note->Coef;
+                $totalCoef += $note->Coef;
+            }
+
+            if ($this->option['inclure_conduite']) {
+                $totalNotes += $eleve->Conduite * $this->option['coef_conduite'];
+                $totalCoef += $this->option['coef_conduite'];
+            }
+
+            if ($totalCoef > 0) {
+                $moyenneSemestrielle = $totalNotes / $totalCoef;
+                DB::table('eleve')
+                    ->where('Matricule', $eleve->Matricule)
+                    ->update(['MS' . $periode => $moyenneSemestrielle]);
+            }
+        }
+    }
+}
+
+private function attribuerRangsSemestriels()
+{
+    foreach ($this->classes as $classe) {
+        $eleves = DB::table('eleve')
+            ->where('Classe', $classe)
+            ->orderByDesc('MS' . $this->periode)
+            ->get();
+
+        $rang = 1;
+        $precedenteMoyenne = null;
+
+        foreach ($eleves as $eleve) {
+            $currentMoyenne = $eleve->{'MS' . $this->periode};
+
+            if ($precedenteMoyenne !== null && $currentMoyenne != $precedenteMoyenne) {
+                $rang++;
+            }
+
+            DB::table('eleve')
+                ->where('Matricule', $eleve->Matricule)
+                ->update(['RANG' . $this->periode => $rang]);
+
+            $precedenteMoyenne = $currentMoyenne;
+        }
+    }
+}
+
+public function calculerMoyenne($request)
+{
+    $this->initialiserVariables($request);
+    $this->mettreAJourRangAnnuel();
+    $this->calculerMoyennesAnnuelles();
+    $this->appliquerBonifications();
+    $this->calculerMoyennesSemestrielles($this->periode);
+    $this->attribuerRangsSemestriels();
+}
+
+
 
 
 
@@ -589,7 +676,7 @@ private function classerEleves($classe, $periode) {
    
     // 
 
-      $this->calculerMoyenne($request->all());
+      // $this->calculerMoyenne($request->all());
 
     // 
    

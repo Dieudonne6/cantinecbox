@@ -47,7 +47,6 @@ class BulletinController extends Controller
 
     public function printbulletindenotes(Request $request)
     {
-        $option = Session::get('option');
         
         
         $option = Session::get('option');
@@ -126,6 +125,8 @@ class BulletinController extends Controller
             ->update(['MAN' => $man]);
           }
         }
+
+        // *****************************
         // Traite chaque intervalle de bonification
         foreach ($bonifications as $bonification) {
           $start = $bonification['start'];
@@ -400,7 +401,7 @@ class BulletinController extends Controller
                   }
                 }
                 
-              }
+        }
       
           //fin calcul moy
           // dd($msgEnBasBulletin);
