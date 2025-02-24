@@ -75,11 +75,12 @@ if ($typean == 1) {
                                         class="font-weight-bold">{{ $resultat['prenom'] }}</span></h5>
                                 <div class="d-flex">
                                     <h5 class="ml-2" style="margin-top: 5px; font-weight: 400;">Redoublant (e) :
-                                        <input class="ml-2" type="checkbox" name="redoublant" id="redoublant_oui" disabled
+                                        <input class="ml-2 disable" type="checkbox" name="redoublant" id="redoublant_oui" readonly
                                             {{ $resultat['redoublant'] == 1 ? 'checked' : '' }}>
+                                            {{-- @dd($resultat['redoublant']) --}}
                                         <label for="redoublant_oui">OUI</label>
-                                        <input type="checkbox" name="redoublant" id="redoublant_non" disabled
-                                            {{ $resultat['redoublant'] == 2 ? 'checked' : '' }}>
+                                        <input class="disable" type="checkbox" name="redoublant" id="redoublant_non" readonly
+                                            {{ $resultat['redoublant'] == 0 ? 'checked' : '' }}>
                                         <label for="redoublant_non">NON</label>
                                         @if (isset($option['matriculex']) && $option['matriculex'])
                                             <label style="margin-left: 40px;">Mat. {{ $resultat['matriculex'] }}</label>
@@ -224,6 +225,8 @@ if ($typean == 1) {
                                             @endif
                                         @endif
                                         @if (isset($option['note_test']) && $option['note_test'])
+                                            {{-- <td></td>
+                                            <td></td> --}}
                                             <td>{{ number_format($moyenne_part, 2) ?? '**.**' }}</td>
                                             <td>{{ $matiere['test'] ?? '**.**' }}</td>
                                             <td class="bold-text">{{ number_format($moyenne_sur_20, 2) ?? '**.**' }}</td>
@@ -253,8 +256,10 @@ if ($typean == 1) {
                                     <td>{{ $total_coefficients }}</td>
                                     @if (!isset($option['masquer_devoir3']))
                                         <td colspan="5"></td>
+                                    @elseif (isset($option['note_test']) && $option['note_test'])
+                                        <td colspan="6"></td>
                                     @else
-                                        <td colspan="4"></td>
+                                        <td colspan="4"></td>                                        
                                     @endif
                                     {{--                                     @if (isset($option['note_test']) && $option['note_test'])
                                       <td colspan="7"></td>
@@ -265,8 +270,13 @@ if ($typean == 1) {
                                     @if (isset($option['rang_matiere']) && $option['rang_matiere'])
                                         <td colspan="4"></td>
                                     @else
-                                        <td colspan="3"></td>
+                                        <td colspan="3"></td>                                        
                                     @endif
+                                    {{-- @if (isset($option['note_test']) && $option['note_test'])
+                                        <td colspan="6"></td>                                        
+                                    @else
+                                        <td colspan="3"></td>                                        
+                                    @endif --}}
                                 </tr>
                             </tbody>
                         </table>
@@ -439,60 +449,63 @@ if ($typean == 1) {
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span style="font-size: 14px;">Félicitations</span>
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
-                                    <input type="checkbox" name="felicitation" id="felicitation" disabled
+                                    <input type="checkbox" class="disable" name="felicitation" id="felicitation" readonly
                                         {{ $moyenne >= 16 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span style="font-size: 14px;">Encouragements</span>
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
-                                    <input type="checkbox" name="encouragement" id="encouragement" disabled
+                                    <input type="checkbox" class="disable" name="encouragement" id="encouragement" readonly
                                         {{ $moyenne >= 14 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span style="font-size: 14px;">Tableau d'honneur</span>
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
-                                    <input type="checkbox" name="tableau_dhonneur" id="tableau_dhonneur" disabled
+                                    <input type="checkbox" class="disable" name="tableau_dhonneur" id="tableau_dhonneur" readonly
                                         {{ $moyenne >= 12 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span style="font-size: 14px;">Avertissement/Travail</span>
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
-                                    <input type="checkbox" name="avertissement_travail" id="avertissement_travail"
-                                        disabled {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
+                                    <input type="checkbox" class="disable" name="avertissement_travail" id="avertissement_travail"
+                                        readonly {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span style="font-size: 14px;">Avertissement/Discipline</span>
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
-                                    <input type="checkbox" name="avertissement_discipline" id="avertissement_discipline"
-                                        disabled {{ $note_conduite <= 10 && $mention_conseil ? 'checked' : '' }}>
+                                    <input type="checkbox" class="disable" name="avertissement_discipline" id="avertissement_discipline"
+                                        readonly {{ $note_conduite <= 10 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span style="font-size: 14px;">Blâme/Travail</span>
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
-                                    <input type="checkbox" name="blame_work" id="blame_work" disabled
+                                    <input type="checkbox" class="disable" name="blame_work" id="blame_work" readonly
                                         {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span style="font-size: 14px;">Blâme/Discipline</span>
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
-                                    <input type="checkbox" name="blame_discipline" id="blame_discipline" disabled
+                                    <input type="checkbox" class="disable" name="blame_discipline" id="blame_discipline" readonly
                                         {{ $note_conduite <= 6 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
                             </div>
                             <div id="appreciation"
                                 style="width: 45%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column; padding: 10px;">
-                                <div style="flex: 1; display: flex; justify-content: center; margin-bottom: 10px;">
+                                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; margin-bottom: 10px;">
                                     <h6 style="margin-top: 5px; text-align: center; text-decoration: underline;">
-                                        Appréciation du chef d'établissement</h6>
+                                        Appréciation du chef d'établissement
+                                    </h6>
+                                    
                                     @if (isset($option['appreciation_directeur']) && $option['appreciation_directeur'])
                                         <p style="font-weight: bold; text-align: center; margin: 0;">
-                                            {{ $resultat['mentionDir'] }}</p>
+                                            {{ $resultat['mentionDir'] }}
+                                        </p>
                                     @endif
                                 </div>
                                 <hr style="border: 1px solid black; margin: 0;">
@@ -544,6 +557,7 @@ if ($typean == 1) {
                     </div>
 
                     <br>
+                    
                 @endforeach
             </div>
         </div>
@@ -650,6 +664,12 @@ if ($typean == 1) {
                     margin-top: -20px !important;
                 }
 
+
+            }
+
+            .disable {
+            pointer-events: none; /* Désactive l'interaction */
+            cursor: not-allowed;  /* Affiche un curseur interdit */
             }
         </style>
         <script>
@@ -662,5 +682,13 @@ if ($typean == 1) {
 
                 document.body.innerHTML = originalContent;
             }
+
+            // document.getElementById('redoublant_oui').addEventListener('click', function(event) {
+            //     event.preventDefault(); // Empêche la modification
+            // });
+
+            // document.getElementById('redoublant_non').addEventListener('click', function(event) {
+            //     event.preventDefault(); // Empêche la modification
+            // });
         </script>
     @endsection
