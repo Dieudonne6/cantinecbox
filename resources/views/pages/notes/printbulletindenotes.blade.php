@@ -220,7 +220,7 @@
                                     <tr>
                                         <td style="text-align: left;">{{ $matiere['nom_matiere'] }}</td>
                                         <td>{{ $matiere['coefficient'] }}</td>
-                                        <td>{{ $matiere['moyenne_interro'] ?? '**.**' }}</td>
+                                        <td>{{ number_format($matiere['moyenne_interro'], 2) ?? '**.**' }}</td>
                                         <td>{{ $matiere['devoir1'] ?? '**.**' }}</td>
                                         <td>{{ $matiere['devoir2'] ?? '**.**' }}</td>
                                         @if (!isset($option['masquer_devoir3']))
@@ -344,17 +344,17 @@
                                 style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px; padding: 10px;">
                                 <div style="display: flex; justify-content: space-between; font-size: 14px;">
                                     <span><strong>Bilan des matières littéraires :</strong></span>
-                                    <span>{{ $resultat['moyenne_bilan_litteraire_1'] == -1 ? '**' : $resultat['moyenne_bilan_litteraire_1'] }}</span>
+                                    <span>{{ $resultat['moyenne_bilan_litteraire_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_litteraire_1'], 2) }}</span>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; font-size: 14px;">
                                     <span><strong>Bilan des matières scientifiques :</strong></span>
-                                    <span>{{ $resultat['moyenne_bilan_scientifique_1'] == -1 ? '**' : $resultat['moyenne_bilan_scientifique_1'] }}</span>
+                                    <span>{{ $resultat['moyenne_bilan_scientifique_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_scientifique_1'], 2) }}</span>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; font-size: 14px;">
                                     <span><strong>Bilan des matières fondamentales :</strong></span>
-                                    <span>{{ $resultat['moyenne_bilan_fondamentale_1'] == -1 ? '**' : $resultat['moyenne_bilan_fondamentale_1'] }}</span>
+                                    <span>{{ $resultat['moyenne_bilan_fondamentale_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_fondamentale_1'], 2) }}</span>
                                 </div>
                             </div>
 
@@ -405,7 +405,7 @@
                                                     <strong>{{ number_format($resultat['plus_faible_moyenne_classe'], 2) }}</strong>
                                                 </td>
                                                 <td class="text-center">
-                                                    <strong>{{ number_format($resultat['moyenne_classe_1'], 2) }}</strong>
+                                                    <strong>{{ number_format($resultat['moyenneClasseGlobale'], 2) }}</strong>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -417,32 +417,32 @@
                                         <h7>Moy. 1er {{ $periode_abr }}
                                             :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ $resultat['moyenne1erTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne1erTrimestre_Semestre'], 2) : '**.**' }}
                                         </h7>
-                                        @if (isset($option['rang_1']) && $option['rang_1'])
+                                        {{-- @if (isset($option['rang_1']) && $option['rang_1']) --}}
                                             <h7 style="margin-left: 40px;">Rang
                                                 :&nbsp&nbsp{{ $resultat['rang1'] != -1 ? $resultat['rang1'] : '**.**' }}
                                             </h7>
-                                        @endif
+                                        {{-- @endif --}}
                                     </div>
                                     <div class="d-flex">
                                         <h7>Moy. 2ème {{ $periode_abr }}
                                             :&nbsp&nbsp{{ $resultat['moyenne2emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne2emTrimestre_Semestre'], 2) : '**.**' }}
                                         </h7>
-                                        @if (isset($option['rang_2']) && $option['rang_2'])
+                                        {{-- @if (isset($option['rang_2']) && $option['rang_2']) --}}
                                             <h7 style="margin-left: 40px;">Rang
                                                 :&nbsp&nbsp&nbsp{{ $resultat['rang2'] != -1 ? $resultat['rang2'] : '**.**' }}
                                             </h7>
-                                        @endif
+                                        {{-- @endif --}}
                                     </div>
                                     @if ($typean == 2)
                                         <div class="d-flex">
                                             <h7>Moy. 3ème {{ $periode_abr }}
                                                 :&nbsp&nbsp&nbsp{{ $resultat['moyenne3emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne3emTrimestre_Semestre'], 2) : '**.**' }}
                                             </h7>
-                                            @if (isset($option['rang_3']) && $option['rang_3'])
+                                            {{-- @if (isset($option['rang_3']) && $option['rang_3']) --}}
                                                 <h7 style="margin-left: 40px;">Rang
                                                     :&nbsp&nbsp&nbsp{{ $resultat['rang3'] != -1 ? $resultat['rang3'] : '**.**' }}
                                                 </h7>
-                                            @endif
+                                            {{-- @endif --}}
                                         </div>
                                     @endif
                                 </div>

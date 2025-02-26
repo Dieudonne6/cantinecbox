@@ -676,7 +676,6 @@ public function calculerMoyenne($request)
    
     // 
 
-      // $this->calculerMoyenne($request->all());
 
     // 
    
@@ -701,19 +700,22 @@ public function calculerMoyenne($request)
 
 
 
-          // Initialisation d'un tableau pour les moyennes annuelles des élèves de la classe
+          // Initialisation d'un tableau pour les moyennes annuelles valides
           $moyennesAnnuellesEleves = [];
 
-          // Parcourir les élèves de la classe pour récupérer leurs moyennes annuelles
           foreach ($eleves as $eleve) {
-              // Vérifier que la moyenne annuelle (MAN) est valide (différente de null et -1)
-              if ($eleve->MAN !== null && $eleve->MAN !== -1) {
+              // On ajoute la moyenne annuelle (MAN) uniquement si elle n'est pas null, différente de -1 et strictement positive (> 0)
+              if ($eleve->MAN !== null && $eleve->MAN !== -1 && $eleve->MAN > 0) {
                   $moyennesAnnuellesEleves[] = $eleve->MAN;
               }
           }
-          // Trouver la plus grande et la plus faible moyenne dans le tableau
+
+          // Trouver la plus grande et la plus faible moyenne dans le tableau filtré
           $plusGrandeMoyenne = !empty($moyennesAnnuellesEleves) ? max($moyennesAnnuellesEleves) : null;
           $plusFaibleMoyenne = !empty($moyennesAnnuellesEleves) ? min($moyennesAnnuellesEleves) : null;
+
+          // Avant de parcourir les élèves, initialiser le tableau pour les moyennes de la période
+          $moyennesPeriode = [];
 
           // Parcourir chaque élève pour calculer les moyennes
           foreach ($eleves as $eleve) {
@@ -726,7 +728,7 @@ public function calculerMoyenne($request)
               $billanLitteraire = $eleve->MBILANL1;
               $billanScientifique = $eleve->MBILANS1;
               $billanFondamentale = $eleve->MoyMatFond1;
-              $totalGenerale = $eleve->TotalGen1;
+              $totalGenerale = $eleve->TotalGene1;
               $totalCoefficie = $eleve->TotalCoef1;
               $moyenneClasse = $infoClasse->MCLASSE1;
               $moyenneFaible = $infoClasse->MFaIBLE1;
@@ -739,7 +741,7 @@ public function calculerMoyenne($request)
               $billanLitteraire = $eleve->MBILANL2;
               $billanScientifique = $eleve->MBILANS2;
               $billanFondamentale = $eleve->MoyMatFond2;
-              $totalGenerale = $eleve->TotalGen2;
+              $totalGenerale = $eleve->TotalGene2;
               $totalCoefficie = $eleve->TotalCoef2;
               $moyenneClasse = $infoClasse->MCLASSE2;
               $moyenneFaible = $infoClasse->MFaIBLE2;
@@ -752,7 +754,7 @@ public function calculerMoyenne($request)
               $billanLitteraire = $eleve->MBILANL3;
               $billanScientifique = $eleve->MBILANS3;
               $billanFondamentale = $eleve->MoyMatFond3;
-              $totalGenerale = $eleve->TotalGen3;
+              $totalGenerale = $eleve->TotalGene3;
               $totalCoefficie = $eleve->TotalCoef3;
               $moyenneClasse = $infoClasse->MCLASSE3;
               $moyenneFaible = $infoClasse->MFaIBLE3;
@@ -763,6 +765,11 @@ public function calculerMoyenne($request)
               return back()->with('erreur', 'veuillez choisir une periode');
 
             }
+
+               // Ajout : stocker la moyenne de la période si elle est définie, différente de -1 et non nulle (on ignore les 0)
+              if ($moyenneSemestrielle !== null && $moyenneSemestrielle !== -1 && $moyenneSemestrielle != 0) {
+                $moyennesPeriode[] = $moyenneSemestrielle;
+              }
 
             // CALCUL DU BILAN ANNUELLE DES MATIERES LITTERAIRES
             $bilanLitteraireTotal = 0; // Somme des bilans littéraires valides
@@ -816,18 +823,25 @@ public function calculerMoyenne($request)
 
 
             // CALCUL DES MOYENNES GENERALE EN VERIFIANT LES VALEURS
-            $moyenne1erTrimestre_Semestre = ($eleve->TotalGen1 !== -1 && $eleve->TotalGen1 !== null && $eleve->TotalCoef1 !== -1 && $eleve->TotalCoef1 !== null && $eleve->TotalCoef1 > 0) 
-            ? $eleve->TotalGen1 / $eleve->TotalCoef1 
+            $moyenne1erTrimestre_Semestre = 
+            ($eleve->TotalGene1 !== -1 && $eleve->TotalGene1 !== null 
+             && $eleve->TotalCoef1 !== -1 && $eleve->TotalCoef1 !== null && $eleve->TotalCoef1 > 0)
+            ? round(((float)$eleve->TotalGene1 / (float)$eleve->TotalCoef1), 2)
+            : null;
+        
+            $moyenne2emTrimestre_Semestre = 
+            ($eleve->TotalGene2 !== -1 && $eleve->TotalGene2 !== null 
+             && $eleve->TotalCoef2 !== -1 && $eleve->TotalCoef2 !== null && $eleve->TotalCoef2 > 0)
+            ? round(((float)$eleve->TotalGene2 / (float)$eleve->TotalCoef2), 2)
+            : null;
+        
+            $moyenne3emTrimestre_Semestre = 
+            ($eleve->TotalGene3 !== -1 && $eleve->TotalGene3 !== null 
+             && $eleve->TotalCoef3 !== -1 && $eleve->TotalCoef3 !== null && $eleve->TotalCoef3 > 0)
+            ? round(((float)$eleve->TotalGene3 / (float)$eleve->TotalCoef3), 2)
             : null;
 
-            $moyenne2emTrimestre_Semestre = ($eleve->TotalGen2 !== -1 && $eleve->TotalGen2 !== null && $eleve->TotalCoef2 !== -1 && $eleve->TotalCoef2 !== null && $eleve->TotalCoef2 > 0) 
-                ? $eleve->TotalGen2 / $eleve->TotalCoef2 
-                : null;
-
-            $moyenne3emTrimestre_Semestre = ($eleve->TotalGen3 !== -1 && $eleve->TotalGen3 !== null && $eleve->TotalCoef3 !== -1 && $eleve->TotalCoef3 !== null && $eleve->TotalCoef3 > 0) 
-                ? $eleve->TotalGen3 / $eleve->TotalCoef3 
-                : null;
-
+            // dd($eleve->TotalCoef2);
 
             // CALCULE DE LA MOYENNE ANNUELLE DE LA CLASSE
             $moyennesTrimestrielles = [
@@ -1137,7 +1151,167 @@ public function calculerMoyenne($request)
             $resultats[] = $resultatEleve;
           }
 
+          // Calculer les moyennes par période pour tous les élèves (en filtrant les moyennes <= 0)
+          $moyennesP1 = [];
+          $moyennesP2 = [];
+          $moyennesP3 = [];
 
+          foreach ($eleves as $eleve) {
+              // Période 1
+              if ($eleve->MS1 !== null && $eleve->MS1 !== -1 && $eleve->MS1 > 0) {
+                  $moyennesP1[] = $eleve->MS1;
+              }
+              // Période 2
+              if ($eleve->MS2 !== null && $eleve->MS2 !== -1 && $eleve->MS2 > 0) {
+                  $moyennesP2[] = $eleve->MS2;
+              }
+              // Période 3
+              if ($eleve->MS3 !== null && $eleve->MS3 !== -1 && $eleve->MS3 > 0) {
+                  $moyennesP3[] = $eleve->MS3;
+              }
+          }
+
+          // Calculer la plus forte et la plus faible moyenne pour chaque période
+          $plusGrandeMoyenneP1 = !empty($moyennesP1) ? max($moyennesP1) : null;
+          $plusFaibleMoyenneP1 = !empty($moyennesP1) ? min($moyennesP1) : null;
+
+          $plusGrandeMoyenneP2 = !empty($moyennesP2) ? max($moyennesP2) : null;
+          $plusFaibleMoyenneP2 = !empty($moyennesP2) ? min($moyennesP2) : null;
+
+          $plusGrandeMoyenneP3 = !empty($moyennesP3) ? max($moyennesP3) : null;
+          $plusFaibleMoyenneP3 = !empty($moyennesP3) ? min($moyennesP3) : null;
+
+
+          // Calcul de la moyenne de la classe pour chaque période en parcourant tous les élèves
+          $totalP1 = 0;
+          $countP1 = 0;
+          $totalP2 = 0;
+          $countP2 = 0;
+          $totalP3 = 0;
+          $countP3 = 0;
+
+          foreach ($eleves as $eleve) {
+              // Période 1 : on prend MS1 uniquement si elle est définie, différente de -1 et supérieure à 0
+              if ($eleve->MS1 !== null && $eleve->MS1 !== -1 && $eleve->MS1 > 0) {
+                  $totalP1 += $eleve->MS1;
+                  $countP1++;
+              }
+              // Période 2
+              if ($eleve->MS2 !== null && $eleve->MS2 !== -1 && $eleve->MS2 > 0) {
+                  $totalP2 += $eleve->MS2;
+                  $countP2++;
+              }
+              // Période 3
+              if ($eleve->MS3 !== null && $eleve->MS3 !== -1 && $eleve->MS3 > 0) {
+                  $totalP3 += $eleve->MS3;
+                  $countP3++;
+              }
+          }
+
+          $moyenneClasseP1 = $countP1 > 0 ? $totalP1 / $countP1 : null;
+          $moyenneClasseP2 = $countP2 > 0 ? $totalP2 / $countP2 : null;
+          $moyenneClasseP3 = $countP3 > 0 ? $totalP3 / $countP3 : null;
+
+          // Calcul de la moyenne globale de la classe (toutes périodes confondues)
+          $totalGlobal = 0;
+          $countGlobal = 0;
+          if ($moyenneClasseP1 !== null) {
+              $totalGlobal += $moyenneClasseP1;
+              $countGlobal++;
+          }
+          if ($moyenneClasseP2 !== null) {
+              $totalGlobal += $moyenneClasseP2;
+              $countGlobal++;
+          }
+          if ($moyenneClasseP3 !== null) {
+              $totalGlobal += $moyenneClasseP3;
+              $countGlobal++;
+          }
+          $moyenneClasseGlobale = $countGlobal > 0 ? $totalGlobal / $countGlobal : null;
+
+          foreach ($resultats as &$resultat) {
+            // attachement des plus forte et faible moyenne de chaque periode aux resultats
+              $resultat['plusGrandeMoyenneP1'] = $plusGrandeMoyenneP1;
+              $resultat['plusFaibleMoyenneP1'] = $plusFaibleMoyenneP1;
+              $resultat['plusGrandeMoyenneP2'] = $plusGrandeMoyenneP2;
+              $resultat['plusFaibleMoyenneP2'] = $plusFaibleMoyenneP2;
+              $resultat['plusGrandeMoyenneP3'] = $plusGrandeMoyenneP3;
+              $resultat['plusFaibleMoyenneP3'] = $plusFaibleMoyenneP3;
+
+            // attachement des moyenne de chaque periode aux resultats
+              $resultat['moyenneClasseP1']     = $moyenneClasseP1;
+              $resultat['moyenneClasseP2']     = $moyenneClasseP2;
+              $resultat['moyenneClasseP3']     = $moyenneClasseP3;
+              $resultat['moyenneClasseGlobale'] = $moyenneClasseGlobale;
+          }
+          unset($resultat); // Bonne pratique pour libérer la référence
+
+          // ENREGISTREMENT DES DONNE DANS LA TABLE CLASSE
+          // Récupérer la liste des codes de classe uniques parmi les élèves
+          $classesUnique = $eleves->pluck('CODECLAS')->unique();
+
+          foreach ($classesUnique as $codeClasse) {
+              // Filtrer les élèves appartenant à la classe courante
+              $elevesClasse = $eleves->where('CODECLAS', $codeClasse);
+              
+              // Récupérer les moyennes par période en filtrant les valeurs null, -1 ou <= 0
+              $moyennesP1 = $elevesClasse->pluck('MS1')->filter(function($value) {
+                  return $value !== null && $value !== -1 && $value > 0;
+              })->toArray();
+
+              $moyennesP2 = $elevesClasse->pluck('MS2')->filter(function($value) {
+                  return $value !== null && $value !== -1 && $value > 0;
+              })->toArray();
+
+              $moyennesP3 = $elevesClasse->pluck('MS3')->filter(function($value) {
+                  return $value !== null && $value !== -1 && $value > 0;
+              })->toArray();
+              
+              // Calculer la plus forte et la plus faible moyenne pour chaque période
+              $plusGrandeMoyenneP1enr = !empty($moyennesP1) ? max($moyennesP1) : null;
+              $plusFaibleMoyenneP1enr = !empty($moyennesP1) ? min($moyennesP1) : null;
+              
+              $plusGrandeMoyenneP2enr = !empty($moyennesP2) ? max($moyennesP2) : null;
+              $plusFaibleMoyenneP2enr = !empty($moyennesP2) ? min($moyennesP2) : null;
+              
+              $plusGrandeMoyenneP3enr = !empty($moyennesP3) ? max($moyennesP3) : null;
+              $plusFaibleMoyenneP3enr = !empty($moyennesP3) ? min($moyennesP3) : null;
+              
+              // Calculer la moyenne de la classe pour chaque période
+              $moyenneClasseP1enr = count($moyennesP1) > 0 ? array_sum($moyennesP1) / count($moyennesP1) : null;
+              $moyenneClasseP2enr = count($moyennesP2) > 0 ? array_sum($moyennesP2) / count($moyennesP2) : null;
+              $moyenneClasseP3enr = count($moyennesP3) > 0 ? array_sum($moyennesP3) / count($moyennesP3) : null;
+              
+              // Calculer la moyenne globale de la classe (si besoin)
+              $moyenneClasseGlobale = null;
+              $totalMoyennes = 0;
+              $nbPeriodes = 0;
+              foreach ([$moyenneClasseP1enr, $moyenneClasseP2enr, $moyenneClasseP3enr] as $moy) {
+                  if ($moy !== null) {
+                      $totalMoyennes += $moy;
+                      $nbPeriodes++;
+                  }
+              }
+              if ($nbPeriodes > 0) {
+                  $moyenneClasseGlobaleenr = $totalMoyennes / $nbPeriodes;
+              }
+              
+              // Mettre à jour la classe correspondante dans la table 'classe'
+              $classe = Classes::where('CODECLAS', $codeClasse)->first();
+              if ($classe) {
+                  $classe->MFaIBLE1 = $plusFaibleMoyenneP1enr;
+                  $classe->MFORTE1  = $plusGrandeMoyenneP1enr;
+                  $classe->MFaIBLE2 = $plusFaibleMoyenneP2enr;
+                  $classe->MFORTE2  = $plusGrandeMoyenneP2enr;
+                  $classe->MFaIBLE3 = $plusFaibleMoyenneP3enr;
+                  $classe->MFORTE3  = $plusGrandeMoyenneP3enr;
+                  $classe->MCLASSE1 = $moyenneClasseP1enr;
+                  $classe->MCLASSE2 = $moyenneClasseP2enr;
+                  $classe->MCLASSE3 = $moyenneClasseP3enr;
+                  $classe->MCLASSE  = $moyenneClasseGlobaleenr;
+                  $classe->save();
+              }
+          }
 
                     // RECUPERER TOUTE LES MOYENNE ANNUELLE DES ELEVES DE LA CLASSE ET TRIER POUR TROUVER LA PLUS FORTE ET LA PLUS FAIBLE
                     // Initialisation d'un tableau pour stocker les moyennes annuelles des élèves de la classe
@@ -1163,7 +1337,7 @@ public function calculerMoyenne($request)
           //           $resultatEleve['plus_grande_moyenne_classe'] = $plusGrandeMoyenne;
           //           $resultatEleve['plus_faible_moyenne_classe'] = $plusFaibleMoyenne;
 
-          // dd($resultatEleve);
+          // dd($resultats);
 
           // Calculer le rang pour chaque matière et chaque classe
           foreach ($moyennesParClasseEtMatiere as $classe => $matieres) {
