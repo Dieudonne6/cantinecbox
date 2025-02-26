@@ -293,7 +293,7 @@
                         <div id="ligne" style="width: 100%; height: 1px; background-color: rgb(0, 0, 0);"></div>
                         <div class="d-flex" style="height: 90px;">
                             <div
-                                style="width: 25%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
+                                style="width: 23%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
                                 <h4 class="text-center" style="margin-top: 20px;">BILAN {{ strtoupper($texte) }}</h4>
 
                             </div>
@@ -313,7 +313,12 @@
                                     </h6>
                                     @if (isset($option['rang_general']) && $option['rang_general'])
                                         <h6 style="margin-left: 40px;" class="mt-1">Rang
-                                            :&nbsp&nbsp&nbsp{{ $resultat['rang_1'] != -1 ? $resultat['rang_1'] : '**.**' }}
+                                            :&nbsp&nbsp&nbsp
+                                            @if ($resultat['rang_1'] == 1)
+                                                {{ $resultat['rang_1'] != -1 }}er
+                                            @else
+                                            {{ $resultat['rang_1'] != -1 ? $resultat['rang_1'] : '**.**' }}è
+                                            @endif
                                         </h6>
                                     @endif
                                 </div>
@@ -340,8 +345,8 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="mt-2"
-                                style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px; padding: 10px;">
+                            <div class=""
+                                style="width: 32%; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px; padding: 5px;">
                                 <div style="display: flex; justify-content: space-between; font-size: 14px;">
                                     <span><strong>Bilan des matières littéraires :</strong></span>
                                     <span>{{ $resultat['moyenne_bilan_litteraire_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_litteraire_1'], 2) }}</span>
@@ -383,7 +388,12 @@
                                         </h5>
                                         @if (isset($option['rang_general']) && $option['rang_general'])
                                             <h5 style="margin-left: 40px;">Rang
-                                                :&nbsp&nbsp&nbsp{{ $resultat['rangAnnuel'] != -1 ? $resultat['rangAnnuel'] : '**.**' }}
+                                                :&nbsp&nbsp&nbsp
+                                                @if ($resultat['rangAnnuel'] == 1)
+                                                    {{ $resultat['rangAnnuel'] != -1 }}er
+                                                @else
+                                                    {{ $resultat['rangAnnuel'] != -1 ? $resultat['rangAnnuel'] : '**.**' }}è
+                                                @endif
                                             </h5>
                                         @endif
                                     </div>
