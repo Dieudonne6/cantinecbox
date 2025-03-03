@@ -10,20 +10,20 @@
                 @foreach ($resultats as $index => $resultat)
                     @php
                         // Initialisation des variables en fonction du type d'année
-                        $periode = null;
-                        $texte = null;
-                        $texte2 = null;
-                        $periode_abr = null;
-                        if ($typean == 1) {
-                            $periode = 'Semestre';
-                            $texte = 'Semestriel';
-                            $texte2 = 'Semestrielle';
-                            $periode_abr = 'Sem.';
-                        } else {
-                            $periode = 'Trimestre';
-                            $texte = 'Trimestriel';
-                            $texte2 = 'Trimestrielle';
-                            $periode_abr = 'Trim.';
+$periode = null;
+$texte = null;
+$texte2 = null;
+$periode_abr = null;
+if ($typean == 1) {
+    $periode = 'Semestre';
+    $texte = 'Semestriel';
+    $texte2 = 'Semestrielle';
+    $periode_abr = 'Sem.';
+} else {
+    $periode = 'Trimestre';
+    $texte = 'Trimestriel';
+    $texte2 = 'Trimestrielle';
+    $periode_abr = 'Trim.';
                         }
                     @endphp
                     <div class="bulletin" style="{{ $index < count($resultats) - 1 ? 'page-break-after: always;' : '' }}">
@@ -85,12 +85,12 @@
                                         class="font-weight-bold">{{ $resultat['prenom'] }}</span></h5>
                                 <div class="d-flex">
                                     <h5 class="ml-2" style="margin-top: 5px; font-weight: 400;">Redoublant (e) :
-                                        <input class="ml-2 disable" type="checkbox" name="redoublant" id="redoublant_oui" readonly
-                                            {{ $resultat['redoublant'] == 1 ? 'checked' : '' }}>
-                                            {{-- @dd($resultat['redoublant']) --}}
+                                        <input class="ml-2 disable" type="checkbox" name="redoublant" id="redoublant_oui"
+                                            readonly {{ $resultat['redoublant'] == 1 ? 'checked' : '' }}>
+                                        {{-- @dd($resultat['redoublant']) --}}
                                         <label for="redoublant_oui">OUI</label>
-                                        <input class="disable" type="checkbox" name="redoublant" id="redoublant_non" readonly
-                                            {{ $resultat['redoublant'] == 0 ? 'checked' : '' }}>
+                                        <input class="disable" type="checkbox" name="redoublant" id="redoublant_non"
+                                            readonly {{ $resultat['redoublant'] == 0 ? 'checked' : '' }}>
                                         <label for="redoublant_non">NON</label>
                                         @if (isset($option['matricule']) && $option['matricule'])
                                             <label style="margin-left: 40px;">Mat. {{ $resultat['matriculex'] }}</label>
@@ -272,7 +272,7 @@
                                     @elseif (isset($option['note_test']))
                                         <td colspan="7"></td>           
                                     @else
-                                        <td colspan="4"></td>                         
+                                        <td colspan="4"></td>
                                     @endif
                                     {{--                                     @if (isset($option['note_test']) && $option['note_test'])
                                       <td colspan="7"></td>
@@ -283,7 +283,7 @@
                                     @if (isset($option['rang_matiere']) && $option['rang_matiere'])
                                         <td colspan="4"></td>
                                     @else
-                                        <td colspan="3"></td>                                        
+                                        <td colspan="3"></td>
                                     @endif
                                     {{-- @if (isset($option['note_test']) && $option['note_test'])
                                         <td colspan="6"></td>                                        
@@ -318,9 +318,9 @@
                                         <h6 style="margin-left: 40px;" class="mt-1">Rang
                                             :&nbsp&nbsp&nbsp
                                             @if ($resultat['rang_1'] == 1)
-                                                {{ $resultat['rang_1'] != -1 }}er
+                                                {{ $resultat['rang_1'] != -1 }} er
                                             @else
-                                            {{ $resultat['rang_1'] != -1 ? $resultat['rang_1'] : '**.**' }}è
+                                                {{ $resultat['rang_1'] != -1 ? $resultat['rang_1'] : '**.**' }} è
                                             @endif
                                         </h6>
                                     @endif
@@ -368,40 +368,40 @@
 
                         </div>
                         @if (($typean == 1 && $resultat['periode'] == 2) || ($typean == 2 && $resultat['periode'] == 3))
-                            <div id="bilan_annuel" class="d-flex"
-                                style="border: 1px solid black; border-radius: 10px; width:1190px">
-                                <div>
-                                    <h6 style="margin-left: 20px;">BILAN ANNUEL</h6>
-                                    <h7>Lettres
-                                        :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ $resultat['moyenneBilanLitteraire'] != -1 ? number_format($resultat['moyenneBilanLitteraire'], 2) : '**.**' }}
-                                    </h7>
-                                    <br>
-                                    <h7>Sciences
-                                        :&nbsp&nbsp&nbsp&nbsp&nbsp{{ $resultat['moyenneBilanScientifique'] != -1 ? number_format($resultat['moyenneBilanScientifique'], 2) : '**.**' }}
-                                    </h7>
-                                    <br>
-                                    <h7>Moy. Fond
-                                        :&nbsp&nbsp&nbsp{{ $resultat['moyenneBilanFondamentale'] != -1 ? number_format($resultat['moyenneBilanFondamentale'], 2) : '**.**' }}
-                                    </h7>
+                            <div {{-- id="bilan_annuel" --}} class="d-flex" style="border: 1px solid black; border-radius: 10px;">
+                                <!-- Bloc Bilan Annuel -->
+                                <div style="margin-left: 20px; padding-top: 10px;">
+                                    <h6>BILAN ANNUEL</h6>
+                                    <p>Lettres :
+                                        {{ $resultat['moyenneBilanLitteraire'] != -1 ? number_format($resultat['moyenneBilanLitteraire'], 2) : '**.**' }}
+                                    </p>
+                                    <p>Sciences :
+                                        {{ $resultat['moyenneBilanScientifique'] != -1 ? number_format($resultat['moyenneBilanScientifique'], 2) : '**.**' }}
+                                    </p>
+                                    <p>Moy. Fond :
+                                        {{ $resultat['moyenneBilanFondamentale'] != -1 ? number_format($resultat['moyenneBilanFondamentale'], 2) : '**.**' }}
+                                    </p>
                                 </div>
-                                <div style="margin-left: 60px;">
-                                    <div class="d-flex" style="margin-left: 60px;">
-                                        <h5>Moyenne Annuelle
-                                            :&nbsp&nbsp&nbsp{{ $resultat['moyenneAnnuel'] != -1 ? number_format($resultat['moyenneAnnuel'], 2) : '**.**' }}
+
+                                <!-- Bloc Moyenne Annuelle -->
+                                <div style="margin-left: 120px;">
+                                    <div class="d-flex" style="align-items: normal; padding-top: 10px;">
+                                        <h5>Moyenne Annuelle :
+                                            {{ $resultat['moyenneAnnuel'] != -1 ? number_format($resultat['moyenneAnnuel'], 2) : '**.**' }}
                                         </h5>
                                         @if (isset($option['rang_general']) && $option['rang_general'])
-                                            <h5 style="margin-left: 40px;">Rang
-                                                :&nbsp&nbsp&nbsp
+                                            <h5 style="margin-left: 30px;">
+                                                Rang :
                                                 @if ($resultat['rangAnnuel'] == 1)
-                                                    {{ $resultat['rangAnnuel'] != -1 }}er
+                                                    {{ $resultat['rangAnnuel'] != -1 }} er
                                                 @else
-                                                    {{ $resultat['rangAnnuel'] != -1 ? $resultat['rangAnnuel'] : '**.**' }}è
+                                                    {{ $resultat['rangAnnuel'] != -1 ? $resultat['rangAnnuel'] : '**.**' }}
+                                                    è
                                                 @endif
                                             </h5>
                                         @endif
                                     </div>
-                                    <table id="tableau_bilan_annuel"
-                                        style="width: 450px; margin-left: 60px; margin-top: 20px;">
+                                    <table id="tableau_bilan_annuel" style="width: 100%; margin-top: 20px;">
                                         <thead>
                                             <tr>
                                                 <th style="font-weight: normal;">Plus forte Moy.</th>
@@ -411,7 +411,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td class="text-center" style="">
+                                                <td class="text-center">
                                                     <strong>{{ number_format($resultat['plus_grande_moyenne_classe'], 2) }}</strong>
                                                 </td>
                                                 <td class="text-center">
@@ -424,43 +424,52 @@
                                         </tbody>
                                     </table>
                                 </div>
+
+                                <!-- Bloc Récapitulatif Annuel -->
                                 <div style="margin-left: 70px;">
                                     <h6>RECAPITULATIF ANNUEL</h6>
-                                    <div class="d-flex">
-                                        <h7>Moy. 1er {{ $periode_abr }}
-                                            :&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ $resultat['moyenne1erTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne1erTrimestre_Semestre'], 2) : '**.**' }}
-                                        </h7>
-                                        {{-- @if (isset($option['rang_1']) && $option['rang_1']) --}}
-                                            <h7 style="margin-left: 40px;">Rang
-                                                :&nbsp&nbsp{{ $resultat['rang1'] != -1 ? $resultat['rang1'] : '**.**' }}
-                                            </h7>
-                                        {{-- @endif --}}
+                                    <div class="d-flex" style="align-items: center;">
+                                        <p style="margin: 0;">Moy. 1er {{ $periode_abr }} :
+                                            {{ $resultat['moyenne1erTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne1erTrimestre_Semestre'], 2) : '**.**' }}
+                                        </p>
+                                        <p style="margin-left: 25px;">Rang :
+                                            @if ($resultat['rang1'] == 1)
+                                                {{ $resultat['rang1'] != -1 }} er
+                                            @else
+                                                {{ $resultat['rang1'] != -1 ? $resultat['rang1'] : '**.**' }} è
+                                            @endif
+                                        </p>
                                     </div>
-                                    <div class="d-flex">
-                                        <h7>Moy. 2ème {{ $periode_abr }}
-                                            :&nbsp&nbsp{{ $resultat['moyenne2emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne2emTrimestre_Semestre'], 2) : '**.**' }}
-                                        </h7>
-                                        {{-- @if (isset($option['rang_2']) && $option['rang_2']) --}}
-                                            <h7 style="margin-left: 40px;">Rang
-                                                :&nbsp&nbsp&nbsp{{ $resultat['rang2'] != -1 ? $resultat['rang2'] : '**.**' }}
-                                            </h7>
-                                        {{-- @endif --}}
+                                    <div class="d-flex" style="align-items: center; margin-top: 5px;">
+                                        <p style="margin: 0;">Moy. 2ème {{ $periode_abr }} :
+                                            {{ $resultat['moyenne2emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne2emTrimestre_Semestre'], 2) : '**.**' }}
+                                        </p>
+                                        <p style="margin-left: 25px;">Rang :
+                                            @if ($resultat['rang2'] == 1)
+                                                {{ $resultat['rang2'] != -1 }} er
+                                            @else
+                                                {{ $resultat['rang2'] != -1 ? $resultat['rang2'] : '**.**' }} è
+                                            @endif
+                                        </p>
                                     </div>
                                     @if ($typean == 2)
-                                        <div class="d-flex">
-                                            <h7>Moy. 3ème {{ $periode_abr }}
-                                                :&nbsp&nbsp&nbsp{{ $resultat['moyenne3emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne3emTrimestre_Semestre'], 2) : '**.**' }}
-                                            </h7>
-                                            {{-- @if (isset($option['rang_3']) && $option['rang_3']) --}}
-                                                <h7 style="margin-left: 40px;">Rang
-                                                    :&nbsp&nbsp&nbsp{{ $resultat['rang3'] != -1 ? $resultat['rang3'] : '**.**' }}
-                                                </h7>
-                                            {{-- @endif --}}
+                                        <div class="d-flex" style="align-items: center; margin-top: 5px;">
+                                            <p style="margin: 0;">Moy. 3ème {{ $periode_abr }} :
+                                                {{ $resultat['moyenne3emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne3emTrimestre_Semestre'], 2) : '**.**' }}
+                                            </p>
+                                            <p style="margin-left: 25px;">Rang :
+                                                @if ($resultat['rang3'] == 1)
+                                                    {{ $resultat['rang3'] != -1 }} er
+                                                @else
+                                                    {{ $resultat['rang3'] != -1 ? $resultat['rang3'] : '**.**' }} è
+                                                @endif
+                                            </p>
                                         </div>
                                     @endif
                                 </div>
                             </div>
                         @endif
+
                         @php
                             $mention_conseil = isset($option['mention_conseil']);
                         @endphp
@@ -472,36 +481,38 @@
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span style="font-size: 14px;">Félicitations</span>
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
-                                    <input type="checkbox" class="disable" name="felicitation" id="felicitation" readonly
-                                        {{ $moyenne >= 16 && $mention_conseil ? 'checked' : '' }}>
+                                    <input type="checkbox" class="disable" name="felicitation" id="felicitation"
+                                        readonly {{ $moyenne >= 16 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span style="font-size: 14px;">Encouragements</span>
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
-                                    <input type="checkbox" class="disable" name="encouragement" id="encouragement" readonly
-                                        {{ $moyenne >= 14 && $mention_conseil ? 'checked' : '' }}>
+                                    <input type="checkbox" class="disable" name="encouragement" id="encouragement"
+                                        readonly {{ $moyenne >= 14 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span style="font-size: 14px;">Tableau d'honneur</span>
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
-                                    <input type="checkbox" class="disable" name="tableau_dhonneur" id="tableau_dhonneur" readonly
-                                        {{ $moyenne >= 12 && $mention_conseil ? 'checked' : '' }}>
+                                    <input type="checkbox" class="disable" name="tableau_dhonneur" id="tableau_dhonneur"
+                                        readonly {{ $moyenne >= 12 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span style="font-size: 14px;">Avertissement/Travail</span>
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
-                                    <input type="checkbox" class="disable" name="avertissement_travail" id="avertissement_travail"
-                                        readonly {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
+                                    <input type="checkbox" class="disable" name="avertissement_travail"
+                                        id="avertissement_travail" readonly
+                                        {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span style="font-size: 14px;">Avertissement/Discipline</span>
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
-                                    <input type="checkbox" class="disable" name="avertissement_discipline" id="avertissement_discipline"
-                                        readonly {{ $note_conduite <= 10 && $mention_conseil ? 'checked' : '' }}>
+                                    <input type="checkbox" class="disable" name="avertissement_discipline"
+                                        id="avertissement_discipline" readonly
+                                        {{ $note_conduite <= 10 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
@@ -514,17 +525,18 @@
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                     <span style="font-size: 14px;">Blâme/Discipline</span>
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;"></div>
-                                    <input type="checkbox" class="disable" name="blame_discipline" id="blame_discipline" readonly
-                                        {{ $note_conduite <= 6 && $mention_conseil ? 'checked' : '' }}>
+                                    <input type="checkbox" class="disable" name="blame_discipline" id="blame_discipline"
+                                        readonly {{ $note_conduite <= 6 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
                             </div>
                             <div id="appreciation"
                                 style="width: 45%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column; padding: 10px;">
-                                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; margin-bottom: 10px;">
+                                <div
+                                    style="flex: 1; display: flex; flex-direction: column; align-items: center; margin-bottom: 10px;">
                                     <h6 style="margin-top: 5px; text-align: center; text-decoration: underline;">
                                         Appréciation du chef d'établissement
                                     </h6>
-                                    
+
                                     @if (isset($option['appreciation_directeur']) && $option['appreciation_directeur'])
                                         <p style="font-weight: bold; text-align: center; margin: 0;">
                                             {{ $resultat['mentionDir'] }}
@@ -580,7 +592,6 @@
                         </div>
                     </div>
                     <br>
-                    
                 @endforeach
             </div>
         </div>
@@ -651,8 +662,8 @@
                 }
 
                 /*     #tableau {
-                                  width: 968px !important;
-                                } */
+                                      width: 968px !important;
+                                    } */
                 #ligne {
                     width: 965px !important;
                 }
@@ -666,15 +677,15 @@
                 }
 
                 /*     #tableau_bilan {
-                                  width: 400px !important;
-                                } */
+                                      width: 400px !important;
+                                    } */
                 #appreciation {
                     width: 560px !important;
                 }
 
                 /*     #signature {
-                                  width: auto !important;
-                                } */
+                                      width: auto !important;
+                                    } */
                 #signature_chef {
                     font-size: 16px !important;
                 }
@@ -691,8 +702,10 @@
             }
 
             .disable {
-            pointer-events: none; /* Désactive l'interaction */
-            cursor: not-allowed;  /* Affiche un curseur interdit */
+                pointer-events: none;
+                /* Désactive l'interaction */
+                cursor: not-allowed;
+                /* Affiche un curseur interdit */
             }
         </style>
         <script>
