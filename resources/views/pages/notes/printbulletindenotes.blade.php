@@ -92,7 +92,7 @@
                                         <input class="disable" type="checkbox" name="redoublant" id="redoublant_non" readonly
                                             {{ $resultat['redoublant'] == 0 ? 'checked' : '' }}>
                                         <label for="redoublant_non">NON</label>
-                                        @if (isset($option['matriculex']) && $option['matriculex'])
+                                        @if (isset($option['matricule']) && $option['matricule'])
                                             <label style="margin-left: 40px;">Mat. {{ $resultat['matriculex'] }}</label>
                                         @endif
                                     </h5>
@@ -263,13 +263,16 @@
                                 @endforeach
                                 <tr>
                                     <td>Total</td>
+                                    {{-- @dd($option) --}}
                                     <td>{{ $total_coefficients }}</td>
                                     @if (!isset($option['masquer_devoir3']))
                                         <td colspan="5"></td>
-                                    @elseif (isset($option['note_test']) && $option['note_test'])
+                                    @elseif (isset($option['note_test']) && isset($option['masquer_devoir3']) )
                                         <td colspan="6"></td>
+                                    @elseif (isset($option['note_test']))
+                                        <td colspan="7"></td>           
                                     @else
-                                        <td colspan="4"></td>                                        
+                                        <td colspan="4"></td>                         
                                     @endif
                                     {{--                                     @if (isset($option['note_test']) && $option['note_test'])
                                       <td colspan="7"></td>

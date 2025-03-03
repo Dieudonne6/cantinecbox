@@ -417,7 +417,7 @@
   </div>
   
   <!-- Modale des options d'édition -->
-  <div class="modal fade" id="optionsEdition" tabindex="-1" aria-labelledby="optionsEditionLabel" aria-hidden="true">
+<div class="modal fade" id="optionsEdition" tabindex="-1" aria-labelledby="optionsEditionLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -503,9 +503,10 @@
             <button type="submit" class="btn btn-primary">Confirmer</button>
         </div>
     </form>
+  </div>
+  </div>
 </div>
-</div>
-</div>
+
   <script>
     document.getElementById('formedition').addEventListener('submit', function(event) {
         event.preventDefault();
@@ -888,6 +889,31 @@ function fetchClasses(type) {
 }
 
 </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Lorsqu'on ouvre le modal, restaurer l'état sauvegardé
+    var modalElement = document.getElementById('optionsEdition');
+    modalElement.addEventListener('shown.bs.modal', function () {
+      // Sélectionner toutes les checkbox du formulaire
+      var checkboxes = modalElement.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(function(checkbox) {
+        // On utilise une clé unique pour chaque option, par exemple 'option_nomChamp'
+        var stored = localStorage.getItem('option_' + checkbox.name);
+        // Si la valeur stockée vaut "true", on coche la case, sinon on la décoche
+        checkbox.checked = (stored === 'true');
+      });
+    });
+  
+    // À chaque changement, sauvegarder l'état de la checkbox dans le localStorage
+    var form = document.getElementById('formedition');
+    form.addEventListener('change', function(e) {
+      if (e.target && e.target.type === 'checkbox') {
+        localStorage.setItem('option_' + e.target.name, e.target.checked);
+      }
+    });
+  });
+  </script>
   <style>
     .form-check {
       margin-left: 45px !important;
