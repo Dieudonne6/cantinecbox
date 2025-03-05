@@ -27,7 +27,7 @@
       </div>
       @endif
       <div class="col-md-2 mb-3">
-        <select class="js-example-basic-multiple w-100" id="tableSelect4" onchange="redirectWithSelection()">         
+        <select class="js-example-basic-multiple w-100" id="tableSelect4" onchange="redirectWithSelection()" name="classe">         
           @foreach ($classe as $classeOption)
           <option value="{{ $classeOption->CODECLAS }}" 
             {{ request()->query('classe') == $classeOption->CODECLAS ? 'selected' : '' }}>
@@ -59,8 +59,9 @@
     </select>
   </div>
   <div class="col-md-3 mb-3">
-    <form action="{{url('/calculermoyenne') }}" method="POST" class="text-center">
+    <form action="{{url('/calculermoyenne') }}" method="POST" class="text-center" id="calculMoyenneForm">
       {{csrf_field()}}
+            <input type="hidden" name="classe" id="classeHidden" value="">
             <button type="submit" class="btn btn-primary">Calculer moyennes</button>
     </form>
   </div>
@@ -228,5 +229,12 @@
       document.body.innerHTML = originalContent; // Restaurer le contenu original
     }, 1000);
   }
+
+
+  document.getElementById('calculMoyenneForm').addEventListener('submit', function(e) {
+    var classeSelect = document.getElementById("tableSelect4");
+    var selectedClasse = classeSelect.value;
+    document.getElementById("classeHidden").value = selectedClasse;
+});
 </script>
 @endsection

@@ -32,6 +32,9 @@ use App\Models\Chapitre;
 use App\Models\Deleve;
 use App\Models\Eleve_pont;
 use App\Models\Matiere;
+use App\Models\Matieres;
+use App\Models\Notes;
+use App\Models\Clasmat;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -638,6 +641,55 @@ public function calculerMoyenne($request)
 
 
 
+private function determineAppreciation($moyenne, $params2)
+{
+    if ($moyenne < $params2->Borne1) {
+        return $params2->Mention1d;
+    } elseif ($moyenne <= $params2->Borne2) {
+        return $params2->Mention2d;
+    } elseif ($moyenne <= $params2->Borne3) {
+        return $params2->Mention3d;
+    } elseif ($moyenne <= $params2->Borne4) {
+        return $params2->Mention4d;
+    } elseif ($moyenne <= $params2->Borne5) {
+        return $params2->Mention5d;
+    } elseif ($moyenne <= $params2->Borne6) {
+        return $params2->Mention6d;
+    } elseif ($moyenne <= $params2->Borne7) {
+        return $params2->Mention7d;
+    } else {
+        return $params2->Mention8d;
+    }
+}
+
+
+   /**
+    * Fonction auxiliaire pour calculer les classements à partir d'un tableau associatif
+    * (clé : identifiant de l'élève, valeur : moyenne)
+    */
+    private function computeRankings(array $averages)
+    {
+         // On filtre les valeurs nulles et celles égales à 21
+         $filtered = array_filter($averages, function ($val) {
+           return $val !== null && $val != 21;
+         });
+        // Tri décroissant : la meilleure moyenne en tête
+        arsort($filtered);
+        $rankings = [];
+        $rank = 1;
+        $prevValue = null;
+        $counter = 0;
+        foreach ($filtered as $matricule => $value) {
+            $counter++;
+            if ($prevValue !== null && $value < $prevValue) {
+                $rank = $counter;
+            }
+            $rankings[$matricule] = $rank;
+            $prevValue = $value;
+        }
+        return $rankings;
+   }
+     
 
   
   
@@ -677,10 +729,292 @@ public function calculerMoyenne($request)
     // 
 
 
+
+     // Récupérer la classe sélectionnée
+     $codeClasse = $classeSelectionne;
+     if (!$codeClasse) {
+         return redirect()->back()->with('error', 'Veuillez sélectionner une classe.');
+     }
+ 
+    //  dd($classeSelectionne);
+
+     // Récupérer le paramétrage de l'année
+     $params2 = Params2::first();
+     $typean = $params2->TYPEAN; // 1 : semestres (2 périodes), 2 : trimestres (3 périodes)
+     $periodsA = ($typean == 1) ? [1, 2] : [1, 2, 3];
+ 
+     // Récupérer tous les élèves de la classe sélectionnée
+     $elevesA = Eleve::where('CODECLAS', $codeClasse)->get();
+ 
+     $resultats = [];
+     $annualAverages = [];      // [matricule => moyenneAnnuelle]
+     $periodAverages = [];      // [periode => [matricule => moyennePourLaPeriode]]
+ 
+     // Parcourir chaque élève
+     foreach ($elevesA as $eleveA) {
+         // Tableau pour stocker les infos par période pour cet élève
+         $studentPeriods = [];
+ 
+         foreach ($periodsA as $periodeA) {
+             // Récupérer les enregistrements de notes de l'élève pour cette période
+             $notes = Notes::where('MATRICULE', $eleveA->MATRICULE)
+                 ->where('CODECLAS', $eleveA->CODECLAS)
+                 ->where('SEMESTRE', $periodeA)
+                 ->get();
+ 
+             // Accumulateurs pour le calcul de la moyenne de la période (pondérée)
+             $totalNote = 0;
+             $totalCoef = 0;
+ 
+             // Accumulateurs pour le calcul des bilans (arithmétiques)
+             $totalNoteLitteraire = 0;
+             $countNoteLitteraire = 0;
+             $totalNoteScientifique = 0;
+             $countNoteScientifique = 0;
+             $totalNoteFondamentale = 0;
+             $countNoteFondamentale = 0;
+ 
+             foreach ($notes as $note) {
+                 // Exclure les valeurs indésirables
+                 if ($note->MS !== null && $note->MS != -1 && $note->MS != 21) {
+                     $totalNote += $note->MS * $note->COEF;
+                     $totalCoef += $note->COEF;
+                 }
+ 
+                 // Récupérer la matière pour déterminer son type
+                 $matiereA = Matieres::where('CODEMAT', $note->CODEMAT)->first();
+                 if ($matiereA) {
+                     // Matière littéraire : TYPEMAT == 1
+                     if ($matiereA->TYPEMAT == 1 && $note->MS !== null && $note->MS != -1 && $note->MS != 21) {
+                         $totalNoteLitteraire += $note->MS;
+                         $countNoteLitteraire++;
+                     }
+                     // Matière scientifique : TYPEMAT == 2
+                     if ($matiereA->TYPEMAT == 2 && $note->MS !== null && $note->MS != -1 && $note->MS != 21) {
+                         $totalNoteScientifique += $note->MS;
+                         $countNoteScientifique++;
+                     }
+                 }
+ 
+                 // Pour la matière fondamentale, on vérifie dans la table Clasmat
+                 $classmat = Clasmat::where('CODECLAS', $eleveA->CODECLAS)
+                     ->where('CODEMAT', $note->CODEMAT)
+                     ->first();
+                 if ($classmat && $classmat->FONDAMENTALE == 1 && $note->MS !== null && $note->MS != -1 && $note->MS != 21) {
+                     $totalNoteFondamentale += $note->MS;
+                     $countNoteFondamentale++;
+                 }
+             } // fin foreach notes
+ 
+             // Calcul de la moyenne de la période (pondérée)
+             $moyennePeriode = ($totalCoef > 0) ? round($totalNote / $totalCoef, 2) : null;
+             // Appréciation pour la période
+             $appreciationPeriode = ($moyennePeriode !== null) ? $this->determineAppreciation($moyennePeriode, $params2) : null;
+ 
+             // Calcul des bilans arithmétiques pour la période
+             $moyenneLitteraire = ($countNoteLitteraire > 0) ? round($totalNoteLitteraire / $countNoteLitteraire, 2) : null;
+             $moyenneScientifique = ($countNoteScientifique > 0) ? round($totalNoteScientifique / $countNoteScientifique, 2) : null;
+             $moyenneFondamentale = ($countNoteFondamentale > 0) ? round($totalNoteFondamentale / $countNoteFondamentale, 2) : null;
+ 
+             // Vous pouvez également ajouter une appréciation pour chaque bilan si nécessaire, par exemple :
+             $appreciationLitteraire = ($moyenneLitteraire !== null) ? $this->determineAppreciation($moyenneLitteraire, $params2) : null;
+             $appreciationScientifique = ($moyenneScientifique !== null) ? $this->determineAppreciation($moyenneScientifique, $params2) : null;
+             $appreciationFondamentale = ($moyenneFondamentale !== null) ? $this->determineAppreciation($moyenneFondamentale, $params2) : null;
+ 
+             // Sauvegarder les infos pour cette période
+             $studentPeriods[$periodeA] = [
+                 'moyenne'             => $moyennePeriode,
+                 'appreciation'        => $appreciationPeriode,
+                 'totalNotesCoeff'     => $totalNote,
+                 'totalCoef'           => $totalCoef,
+                 'bilan_litteraire'    => $moyenneLitteraire,
+                 'appreciation_litteraire' => $appreciationLitteraire,
+                 'bilan_scientifique'  => $moyenneScientifique,
+                 'appreciation_scientifique' => $appreciationScientifique,
+                 'bilan_fondamentale'  => $moyenneFondamentale,
+                 'appreciation_fondamentale' => $appreciationFondamentale,
+             ];
+         } // fin foreach périodes
+ 
+         // Calcul de la moyenne annuelle (moyenne arithmétique des moyennes de période)
+         $sumPeriodAverages = 0;
+         $countPeriodAverages = 0;
+         foreach ($studentPeriods as $periodeA => $data) {
+             if ($data['moyenne'] !== null) {
+                 $sumPeriodAverages += $data['moyenne'];
+                 $countPeriodAverages++;
+             }
+         }
+         $moyenneAnnuelle = ($countPeriodAverages > 0) ? round($sumPeriodAverages / $countPeriodAverages, 2) : null;
+         $appreciationAnnuelle = ($moyenneAnnuelle !== null) ? $this->determineAppreciation($moyenneAnnuelle, $params2) : null;
+ 
+         // Stocker pour le calcul des classements
+         $annualAverages[$eleveA->MATRICULE] = $moyenneAnnuelle;
+         foreach ($studentPeriods as $periodeA => $data) {
+             $periodAverages[$periodeA][$eleveA->MATRICULE] = $data['moyenne'];
+         }
+ 
+         // Stocker les résultats de l'élève, y compris les bilans annuels et appréciations
+         $resultatsA[] = [
+             'eleve'                   => $eleveA,
+             'moyenneAnnuelle'         => $moyenneAnnuelle,
+             'appreciationAnnuelle'    => $appreciationAnnuelle,
+             // 'bilanLitteraireAnnuel'   => $studentPeriods, // Vous pouvez calculer un bilan annuel de façon similaire si besoin
+             'periods'                 => $studentPeriods,
+         ];
+     } // fin foreach élèves
+ 
+     // Calcul des classements (annual et par période)
+     $annualRankings = $this->computeRankings($annualAverages);
+     $periodRankings = [];
+     foreach ($periodsA as $periodeA) {
+         $periodRankings[$periodeA] = $this->computeRankings($periodAverages[$periodeA] ?? []);
+     }
+ 
+     foreach ($resultatsA as &$resA) {
+         $matricule = $resA['eleve']->MATRICULE;
+         $resA['rangAnnuel'] = $annualRankings[$matricule] ?? null;
+         foreach ($periodsA as $periodeA) {
+             $resA['periods'][$periodeA]['rang'] = $periodRankings[$periodeA][$matricule] ?? null;
+         }
+     }
+ 
+   // Après le calcul des moyennes et des classements
+   foreach ($resultatsA as $resA) {
+     $matricule = $resA['eleve']->MATRICULE;
+     $moyenneAnnuelle = $resA['moyenneAnnuelle'];
+     $rangAnnuel = $resA['rangAnnuel'];
+     $appan = $resA['appreciationAnnuelle'];
+ 
+     // Vérifier si la moyenne annuelle n'est pas null
+     if ($moyenneAnnuelle !== null) {
+         // Données à mettre à jour
+         $data = [
+             'MAN'  => $moyenneAnnuelle,
+             'RANGA' => $rangAnnuel,
+             'appan' => $appan,
+         ];
+ 
+         // Parcourir les périodes et ajouter les valeurs non nulles
+         foreach ($periodsA as $periodeA) {
+           $periodeData = $resA['periods'][$periodeA] ?? null;
+           if ($periodeData && $periodeData['moyenne'] !== null) {
+               $data['MS' . $periodeA] = $periodeData['moyenne'];
+               $data['RANG' . $periodeA] = $periodeData['rang'];
+               $data['MBILANL' . $periodeA] = $periodeData['bilan_litteraire'];
+               $data['MBILANS' . $periodeA] = $periodeData['bilan_scientifique'];
+               $data['MoyMatFond' . $periodeA] = $periodeData['bilan_fondamentale'];
+               $data['TotalGene' . $periodeA] = $periodeData['totalNotesCoeff'];
+               $data['TotalCoef' . $periodeA] = $periodeData['totalCoef'];
+               $data['app' . $periodeA] = $periodeData['appreciation'];
+           }
+         }
+ 
+         // Si TYPEAN == 1 (semestres), forcer les valeurs de la période 3
+         if ($typean == 1) {
+           $data['MS3'] = -1;
+           $data['MBILANL3'] = -1;
+           $data['MBILANS3'] = -1;
+           $data['MoyMatFond3'] = -1;
+           $data['RANG3'] = 0;
+           $data['TotalGene3'] = 0;
+           $data['TotalCoef3'] = 0;
+           $data['app3'] = "";
+           // On ne met rien pour 'app3'
+         }
+ 
+         // Mettre à jour l'élève dans la base de données
+         Eleve::where('MATRICULE', $matricule)->update($data);
+     }
+   }
+ 
+ 
+     unset($res);
+ 
+     // Calcul des indicateurs de la classe à partir des élèves de la classe sélectionnée
+     $classesUnique = $elevesA->pluck('CODECLAS')->unique();
+ 
+     foreach ($classesUnique as $codeClasse) {
+         // Filtrer les élèves appartenant à la classe courante
+         $elevesClasse = $elevesA->where('CODECLAS', $codeClasse);
+         
+         // Récupérer les moyennes par période en filtrant les valeurs null, -1 ou <= 0
+         $moyennesP1 = $elevesClasse->pluck('MS1')->filter(function($value) {
+             return $value !== null && $value !== -1 && $value > 0;
+         })->toArray();
+ 
+         $moyennesP2 = $elevesClasse->pluck('MS2')->filter(function($value) {
+             return $value !== null && $value !== -1 && $value > 0;
+         })->toArray();
+ 
+         // Pour la période 3, on calcule seulement si TYPEAN n'est pas 1 (donc pour trimestres)
+         if ($typean != 1) {
+             $moyennesP3 = $elevesClasse->pluck('MS3')->filter(function($value) {
+                 return $value !== null && $value !== -1 && $value > 0;
+             })->toArray();
+         } else {
+             $moyennesP3 = []; // pour typean == 1, on force un tableau vide
+         }
+         
+         // Calculer la plus forte et la plus faible moyenne pour chaque période
+         $plusGrandeMoyenneP1enr = !empty($moyennesP1) ? max($moyennesP1) : 0;
+         $plusFaibleMoyenneP1enr = !empty($moyennesP1) ? min($moyennesP1) : 0;
+         
+         $plusGrandeMoyenneP2enr = !empty($moyennesP2) ? max($moyennesP2) : 0;
+         $plusFaibleMoyenneP2enr = !empty($moyennesP2) ? min($moyennesP2) : 0;
+         
+         if ($typean != 1) {
+             $plusGrandeMoyenneP3enr = !empty($moyennesP3) ? max($moyennesP3) : 0;
+             $plusFaibleMoyenneP3enr = !empty($moyennesP3) ? min($moyennesP3) : 0;
+         } else {
+             // Pour semestres (TYPEAN = 1), on force la période 3 à 0
+             $plusGrandeMoyenneP3enr = 0;
+             $plusFaibleMoyenneP3enr = 0;
+         }
+         
+         // Calculer la moyenne de la classe pour chaque période
+         $moyenneClasseP1enr = count($moyennesP1) > 0 ? array_sum($moyennesP1) / count($moyennesP1) : 0;
+         $moyenneClasseP2enr = count($moyennesP2) > 0 ? array_sum($moyennesP2) / count($moyennesP2) : 0;
+         if ($typean != 1) {
+             $moyenneClasseP3enr = count($moyennesP3) > 0 ? array_sum($moyennesP3) / count($moyennesP3) : 0;
+         } else {
+             $moyenneClasseP3enr = 0;
+         }
+         
+         // Calculer la moyenne globale de la classe (moyenne arithmétique des moyennes de chaque période)
+         $totalMoyennes = 0;
+         $nbPeriodes = 0;
+         foreach ([$moyenneClasseP1enr, $moyenneClasseP2enr, $moyenneClasseP3enr] as $moy) {
+             if ($moy !== null) {
+                 $totalMoyennes += $moy;
+                 $nbPeriodes++;
+             }
+         }
+         $moyenneClasseGlobaleenr = ($nbPeriodes > 0) ? $totalMoyennes / $nbPeriodes : 0;
+         
+         // Mettre à jour la classe correspondante dans la table 'classe'
+         $classeA = Classes::where('CODECLAS', $codeClasse)->first();
+         if ($classeA) {
+             $classeA->MFaIBLE1 = $plusFaibleMoyenneP1enr;
+             $classeA->MFORTE1  = $plusGrandeMoyenneP1enr;
+             $classeA->MFaIBLE2 = $plusFaibleMoyenneP2enr;
+             $classeA->MFORTE2  = $plusGrandeMoyenneP2enr;
+             $classeA->MFaIBLE3 = $plusFaibleMoyenneP3enr;
+             $classeA->MFORTE3  = $plusGrandeMoyenneP3enr;
+             $classeA->MCLASSE1 = $moyenneClasseP1enr;
+             $classeA->MCLASSE2 = $moyenneClasseP2enr;
+             $classeA->MCLASSE3 = $moyenneClasseP3enr;
+             $classeA->MCLASSE  = $moyenneClasseGlobaleenr;
+             $classeA->save();
+         }
+     }
+
+
+
     // 
    
-          //fin calcul moy
-          // dd($msgEnBasBulletin);
+
+    // dd($classe);
           
           // Récupérer les élèves dans les classes sélectionnées
           $eleves = Eleve::whereIn('CODECLAS', $classeSelectionne)
@@ -939,6 +1273,7 @@ public function calculerMoyenne($request)
                   'nom_matiere' => $notes->first()->matiere->LIBELMAT ?? ($codeMatiere == $conduite ? 'Conduite' : 'EPS'),
                   'coefficient' => $notes->first()->COEF,
                   'moyenne_sur_20' => $noteSpeciale,
+                  'moyenne_interro' => $noteSpeciale,
                   'test' => $notes->first()->TEST,
                   'moyenne_coeff' => $noteSpeciale * ($notes->first()->COEF),
                   'mentionProf' => $mentionMatSpecial, // Pas de mention pour la conduite ou EPS
@@ -1108,7 +1443,7 @@ public function calculerMoyenne($request)
                 $dev2 = $note->DEV2;
                 $dev3 = $note->DEV3;
                 
-                if ($note->TEST < 21) {
+                if ($note->TEST < 21 && $note->TEST != null && $note->TEST != -1 && $note->TEST != 0) {
                   $test = $note->TEST;
                 } else {
                   $test = null;

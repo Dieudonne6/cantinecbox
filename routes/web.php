@@ -19,6 +19,8 @@ use App\Http\Controllers\GestionNotesController;
 use App\Http\Controllers\EditionController;
 use App\Http\Controllers\EditionController2;
 use App\Http\Controllers\ListemeriteController;
+use App\Http\Controllers\ReleveparelevesController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -211,7 +213,6 @@ Route::get('/editions2/fichedenoteviergefina/{classeCode}', [EditionController2:
 
 Route::get('/editions2/relevesparmatiere', [EditionController::class, 'relevesparmatiere'])->name('pages.notes.relevesparmatiere');
 Route::get('/editions2/recapitulatifdenotes', [EditionController2::class, 'recapitulatifdenotes'])->name('pages.notes.recapitulatifdenotes');
-Route::get('/editions2/relevespareleves', [EditionController2::class, 'relevespareleves'])->name('pages.notes.relevespareleves');
 Route::get('/editions2/resultatsparpromotion', [EditionController2::class, 'resultatsparpromotion'])->name('pages.notes.resultatsparpromotion');
 Route::get('/editions2/listedesmeritants', [EditionController2::class, 'listedesmeritants'])->name('pages.notes.listedesmeritants');
 
@@ -378,6 +379,11 @@ Route::post('/optionsbulletindenotes', [BulletinController::class, 'optionsbulle
 Route::get('/classes/{type}', [BulletinController::class, 'getClassesByType'])->name('classes.byType');
 // Route::get('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');
 
+
 Route::get('/listeparmerite',[ListemeriteController::class, 'acceuil'])->name('listeparmerite');
 Route::get('/imprimer-liste-merite', [ListemeriteController::class, 'imprimerListeMerite'])->name('imprimer.liste.merite');
 Route::get('/get-classes-by-group', [ListemeriteController::class, 'getClassesByGroup'])->name('getClassesByGroup');
+
+Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'relevespareleves'])->name('relevespareleves');
+// Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'getMatieresAndNotes'])->name('relevespareleves');
+
