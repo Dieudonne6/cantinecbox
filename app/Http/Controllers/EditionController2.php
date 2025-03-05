@@ -58,11 +58,7 @@ class EditionController2 extends Controller
 
         return view('pages.notes.fichedesnotesvierge1')->with('elevesGroupes', $elevesGroupes)->with('classes', $classes)->with('filterEleves', $filterEleves)->with('annescolaire', $annescolaire);
     }
-    
-
-    public function relevespareleves(){
-        return view('pages.notes.relevespareleves');
-    }    
+        
     public function recapitulatifdenotes(){
         return view('pages.notes.recapitulatifdenotes');
     }
