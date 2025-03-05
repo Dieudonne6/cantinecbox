@@ -18,6 +18,7 @@ use App\Http\Controllers\Matieres;
 use App\Http\Controllers\GestionNotesController;
 use App\Http\Controllers\EditionController;
 use App\Http\Controllers\EditionController2;
+use App\Http\Controllers\ListemeriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -376,3 +377,7 @@ Route::post('/printbulletindenotes', [BulletinController::class, 'printbulletind
 Route::post('/optionsbulletindenotes', [BulletinController::class, 'optionsbulletindenotes'])->name('optionsbulletindenotes');
 Route::get('/classes/{type}', [BulletinController::class, 'getClassesByType'])->name('classes.byType');
 // Route::get('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');
+
+Route::get('/listeparmerite',[ListemeriteController::class, 'acceuil'])->name('listeparmerite');
+Route::get('/imprimer-liste-merite', [ListemeriteController::class, 'imprimerListeMerite'])->name('imprimer.liste.merite');
+Route::get('/get-classes-by-group', [ListemeriteController::class, 'getClassesByGroup'])->name('getClassesByGroup');
