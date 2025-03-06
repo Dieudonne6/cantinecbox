@@ -207,7 +207,7 @@
               </a>
               <div class="collapse" id="resultats" data-bs-parent="#form-elements">
                 <ul class="nav sub-menu">
-                  <li><a class="nav-link {{ request()->is('Liste par ordre de mérite') ? 'active' : '' }}" href="#">Liste par ordre de mérite</a></li>
+                  <li><a class="nav-link {{ request()->is('Liste par ordre de mérite') ? 'active' : '' }}" href="{{ route('listeparmerite') }}">Liste par ordre de mérite</a></li>
                   <li><a class="nav-link {{ request()->is('Tableau analytique') ? 'active' : '' }}" href="#">Tableau analytique</a></li>
                   <li><a class="nav-link {{ request()->is('Rapports annuels') ? 'active' : '' }}" href="#">Rapports annuels</a></li>
                   <li><a class="nav-link {{ request()->is('Livrets scolaires') ? 'active' : '' }}" href="#">Livrets scolaires</a></li>
