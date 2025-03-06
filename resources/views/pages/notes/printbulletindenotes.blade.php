@@ -244,6 +244,8 @@ if ($typean == 1) {
                                         @else
                                             <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td>
                                             <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td>
+                                            {{-- <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td>
+                                            <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td> --}}
                                         @endif
                                         @if (isset($option['rang_matiere']) && $option['rang_matiere'])
                                             <td>
@@ -728,3 +730,7 @@ if ($typean == 1) {
             // });
         </script>
     @endsection
+
+
+
+    

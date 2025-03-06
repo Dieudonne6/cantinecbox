@@ -52,11 +52,13 @@ class BulletinController extends Controller
     $classes = Classes::withCount(['eleves' => function ($query) {
       $query->where('CODECLAS', '!=', '');
     }])->get();
-    $typeenseigne = Typeenseigne::all();
+    $typeenseigne = Groupeclasse::all();
     $promotions = Promo::all();
     $matieres = Matiere::all();
     $eleves = Eleve::all();
-    return view('pages.notes.bulletindenotes', compact('classes', 'typeenseigne', 'promotions', 'eleves', 'matieres'));
+    $params2 = Params2::first();
+    $typean = $params2->TYPEAN;
+    return view('pages.notes.bulletindenotes', compact('classes', 'typeenseigne', 'promotions', 'eleves', 'matieres', 'typean'));
   }
   
   public function getClassesByType($type)
@@ -709,6 +711,11 @@ private function determineAppreciation($moyenne, $params2)
     $nbabsence = $request->input('nbabsence');
     $apartirde = $request->input('apartirde');
     $classeSelectionne = $request->input('selected_classes', []);
+    $pondTrim1 = $request->input('pondTrim1', 1);
+    $pondTrim2 = $request->input('pondTrim2', 1);
+    $pondTrim3 = $request->input('pondTrim3', 1);
+
+    // dd($pondTrim1);
     
     $params2 = Params2::first();
     $typean = $params2->TYPEAN;
@@ -837,16 +844,35 @@ private function determineAppreciation($moyenne, $params2)
          } // fin foreach périodes
  
          // Calcul de la moyenne annuelle (moyenne arithmétique des moyennes de période)
-         $sumPeriodAverages = 0;
-         $countPeriodAverages = 0;
-         foreach ($studentPeriods as $periodeA => $data) {
-             if ($data['moyenne'] !== null) {
-                 $sumPeriodAverages += $data['moyenne'];
-                 $countPeriodAverages++;
-             }
-         }
-         $moyenneAnnuelle = ($countPeriodAverages > 0) ? round($sumPeriodAverages / $countPeriodAverages, 2) : null;
-         $appreciationAnnuelle = ($moyenneAnnuelle !== null) ? $this->determineAppreciation($moyenneAnnuelle, $params2) : null;
+        //  $sumPeriodAverages = 0;
+        //  $countPeriodAverages = 0;
+        //  foreach ($studentPeriods as $periodeA => $data) {
+        //      if ($data['moyenne'] !== null) {
+        //          $sumPeriodAverages += $data['moyenne'];
+        //          $countPeriodAverages++;
+        //      }
+        //  }
+        //  $moyenneAnnuelle = ($countPeriodAverages > 0) ? round($sumPeriodAverages / $countPeriodAverages, 2) : null;
+        //  $appreciationAnnuelle = ($moyenneAnnuelle !== null) ? $this->determineAppreciation($moyenneAnnuelle, $params2) : null;
+
+        // dd($pondTrim3);
+
+        $sumWeighted = 0;
+        $totalWeights = 0;
+        if (isset($studentPeriods[1]) && $studentPeriods[1]['moyenne'] !== null) {
+            $sumWeighted += $studentPeriods[1]['moyenne'] * $pondTrim1;
+            $totalWeights += $pondTrim1;
+        }
+        if (isset($studentPeriods[2]) && $studentPeriods[2]['moyenne'] !== null) {
+            $sumWeighted += $studentPeriods[2]['moyenne'] * $pondTrim2;
+            $totalWeights += $pondTrim2;
+        }
+        if (isset($studentPeriods[3]) && $studentPeriods[3]['moyenne'] !== null) {
+            $sumWeighted += $studentPeriods[3]['moyenne'] * $pondTrim3;
+            $totalWeights += $pondTrim3;
+        }
+        $moyenneAnnuelle = ($totalWeights > 0) ? round($sumWeighted / $totalWeights, 2) : null;
+        $appreciationAnnuelle = ($moyenneAnnuelle !== null) ? $this->determineAppreciation($moyenneAnnuelle, $params2) : null;
  
          // Stocker pour le calcul des classements
          $annualAverages[$eleveA->MATRICULE] = $moyenneAnnuelle;
@@ -1306,7 +1332,7 @@ private function determineAppreciation($moyenne, $params2)
                 $moyenneDevoirs = $devoirsValides->avg();
                 
                 // Calcul de la moyenne de la matière
-                if ($moyenneInterros !== null && $moyenneDevoirs !== null) {
+                if ($moyenneInterros !== null  && $moyenneDevoirs !== null) {
                   $moyenneEps = ($moyenneInterros + $moyenneDevoirs) / 2;
                 } elseif ($moyenneInterros !== null) {
                   $moyenneEps = $moyenneInterros;
@@ -1674,9 +1700,20 @@ private function determineAppreciation($moyenne, $params2)
 
           // dd($resultats);
 
+          // dd($moyennesParClasseEtMatiere);
+
           // Calculer le rang pour chaque matière et chaque classe
           foreach ($moyennesParClasseEtMatiere as $classe => $matieres) {
             foreach ($matieres as $matiere => $moyennes) {
+                  // Filtrer les moyennes pour exclure celles qui valent 0
+                  // $moyennes = array_filter($moyennes, function($item) {
+                  //   return $item['moyenne'] > 0;
+                  // });
+                  // // Si après filtrage il n'y a aucune moyenne, on passe à la suivante
+                  // if (empty($moyennes)) {
+                  //   continue;
+                  // }
+
               usort($moyennes, fn($a, $b) => $b['moyenne'] <=> $a['moyenne']);
               
               $maxMoyenne = max(array_column($moyennes, 'moyenne'));
@@ -1751,7 +1788,38 @@ private function determineAppreciation($moyenne, $params2)
         }
 
         // dd($resultats);
+
+
+        public function extrairenote() {
+
+          $classes = Classes::get();
+          $matieres = Matieres::get();
+
+          return view('pages.notes.extrairenote', compact('classes', 'matieres'));
+        }
     
+
+        public function extractnote(Request $request) {
+
+            $classes = Classes::get();
+            $matieres = Matieres::get();  
+
+
+            $periode = $request->input('periode');
+            $classe = $request->input('classe');
+            $matiere = $request->input('matiere');
+
+            $notes = Notes::where('CODECLAS', $classe)
+            ->where('CODEMAT', $matiere)
+            ->where('SEMESTRE', $periode)
+            ->get();
+
+            // dd($notes);
+
+            return view('pages.notes.extractnote', compact('classes', 'matieres', 'notes'));
+
+
+        }
         
       }           
       

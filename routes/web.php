@@ -376,3 +376,7 @@ Route::post('/printbulletindenotes', [BulletinController::class, 'printbulletind
 Route::post('/optionsbulletindenotes', [BulletinController::class, 'optionsbulletindenotes'])->name('optionsbulletindenotes');
 Route::get('/classes/{type}', [BulletinController::class, 'getClassesByType'])->name('classes.byType');
 // Route::get('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');
+
+
+Route::get('/extrairenote', [BulletinController::class, 'extrairenote'])->name('extrairenote');
+Route::post('/extractnote', [BulletinController::class, 'extractnote'])->name('extractnote');
