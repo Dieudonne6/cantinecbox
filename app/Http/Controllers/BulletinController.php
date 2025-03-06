@@ -52,7 +52,7 @@ class BulletinController extends Controller
     $classes = Classes::withCount(['eleves' => function ($query) {
       $query->where('CODECLAS', '!=', '');
     }])->get();
-    $typeenseigne = Groupeclasse::all();
+    $typeenseigne = Typeenseigne::all();
     $promotions = Promo::all();
     $matieres = Matiere::all();
     $eleves = Eleve::all();
