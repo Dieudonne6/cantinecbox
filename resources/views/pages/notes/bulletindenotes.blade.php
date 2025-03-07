@@ -321,18 +321,18 @@
               <br>
                 <div class="form-group d-flex align-items-center">
                   <label for="conduite">Quel est le n° de CONDUITE ?</label>
-                  <input type="number" class="form-control" id="conduite" name="conduite" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
+                  <input type="number" class="form-control" id="conduite" name="conduite" value="{{ session('conduite', 0) }}" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
                   <button class="btn btn-primary" type="button" style="margin-left: 5px !important;padding: 0.5rem;background-color: #fff; color: #000;" data-bs-toggle="modal" data-bs-target="#listematiere">Voir</button>
                 </div>
                 <br>
                 <div class="form-group d-flex align-items-center">
                   <label for="eps">Quel est le n° de EPS ?</label>
-                  <input type="number" class="form-control" id="eps" name="eps" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
+                  <input type="number" class="form-control" id="eps" name="eps" value="{{ session('eps', 0) }}" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
                   <button class="btn btn-primary" type="button" style="margin-left: 5px !important;padding: 0.5rem;background-color: #fff; color: #000;" data-bs-toggle="modal" data-bs-target="#listematiere">Voir</button>
                 </div>
                 <div class="form-group d-flex align-items-center">
                   <label for="nbabsence">Nb. Absence autorisée</label>
-                  <input type="number" class="form-control w-25" id="nbabsence" name="nbabsence" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
+                  <input type="number" class="form-control w-25" id="nbabsence" name="nbabsence" value="{{ session('nbabsence', -1) }}" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
                 </div>
                 <p style="margin-left: 10px !important;">(Mettre -1 pour débrancher cette option)</p>
               <br>

@@ -45,6 +45,12 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 
+use Roundcube\Rtf\Html; // ou la classe appropriée selon la documentation du package
+// use RtfHtmlPhp\Document;
+use RtfHtmlPhp\Document;
+use RtfHtmlPhp\Html\HtmlFormatter;
+
+
 class BulletinController extends Controller
 {
   public function bulletindenotes()
@@ -52,7 +58,7 @@ class BulletinController extends Controller
     $classes = Classes::withCount(['eleves' => function ($query) {
       $query->where('CODECLAS', '!=', '');
     }])->get();
-    $typeenseigne = Groupeclasse::all();
+    $typeenseigne = Typeenseigne::all();
     $promotions = Promo::all();
     $matieres = Matiere::all();
     $eleves = Eleve::all();
@@ -474,6 +480,13 @@ class BulletinController extends Controller
     $params2 = Params2::first();
     $typean = $params2->TYPEAN;
     $rtfContent = Params2::first()->EnteteBull;
+    // $document = new Document($rtfContent);
+    // $formatter = new HtmlFormatter();
+    // $this->entete = $formatter->Format($rtfContent);
+    // dd($this->entete);
+    // $this->entete = $document->toHtml();
+    // $this->entete = $rtfContent;    
+    // $this->entete = Html::convert($rtfContent);    
     $this->entete = $this->extractTextFromRtf($rtfContent);
     // $this->totalSemestres = Parametre::getValeur('total_semestres');
     $this->classes = DB::table('eleve')->select('CODECLAS')->distinct()->get();
@@ -715,13 +728,29 @@ private function determineAppreciation($moyenne, $params2)
     $pondTrim2 = $request->input('pondTrim2', 1);
     $pondTrim3 = $request->input('pondTrim3', 1);
 
+    session()->put('conduite', $conduite);
+    session()->put('eps', $eps);
+    session()->put('nbabsence', $nbabsence);
     // dd($pondTrim1);
     
     $params2 = Params2::first();
     $typean = $params2->TYPEAN;
     $rtfContent = Params2::first()->EnteteBull;
-    $entete = $this->extractTextFromRtf($rtfContent);
-    
+    // $entete = $this->extractTextFromRtf($rtfContent);
+    $rtfContent = Params2::first()->EnteteBull;
+    $document = new Document($rtfContent);
+    $formatter = new HtmlFormatter();
+    $entete = $formatter->Format($document);
+    // dd($entete);
+    $logo = $params2->logoimage;
+
+    // Conversion des données en Base64
+    $logoBase64 = base64_encode($logo);
+
+    // Définir le type MIME de l'image (adaptez-le en fonction de votre image)
+    $mimeType = 'image/png';
+
+
     $infoparamcontrat = Paramcontrat::first();
     $anneencours = $infoparamcontrat->anneencours_paramcontrat;
     $annesuivante = $anneencours + 1;
@@ -1740,7 +1769,7 @@ private function determineAppreciation($moyenne, $params2)
             }
           }
           
-          return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean'));
+          return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean', 'params2', 'logo', 'logoBase64', 'mimeType'));
   }
 
         /**
