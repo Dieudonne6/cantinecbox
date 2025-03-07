@@ -58,7 +58,7 @@
                   <li><a class="nav-link {{ request()->is('creerprofil') ? 'active' : '' }}" href="{{ url('/creerprofil') }}">Créer profils</a></li>
                   <li><a class="nav-link {{ request()->is('paramcomposantes') ? 'active' : '' }}" href="{{ url('/paramcomposantes') }}"><span class="ab">Paramétrage composantes</span></a></li>
                   <li><a class="nav-link {{ in_array(request()->route()->getName(), $routesFacture) ? 'active' : '' }}" href="{{ route('facturesclasses') }}">Factures classes</a></li>
-                  <li><a class="nav-link {{ request()->is('paiementdesnoninscrits') ? 'active' : '' }}" href="{{ url('/paiementdesnoninscrits') }}">Paiement des non inscrits</a></li>
+                  {{-- <li><a class="nav-link {{ request()->is('paiementdesnoninscrits') ? 'active' : '' }}" href="{{ url('/paiementdesnoninscrits') }}">Paiement des non inscrits</a></li> --}}
                   <li><a class="nav-link {{ request()->is('duplicatarecu') ? 'active' : '' }}" href="{{ url('/duplicatarecu') }}">Duplicata</a></li>
                 </ul>
               </div>
