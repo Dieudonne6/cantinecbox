@@ -803,7 +803,16 @@ public function destroy($codePromo)
     $typeclah = Typeclasse::get();
 
         // Récupérer les élèves avec leurs notes
-        $eleves = Eleve::with('notes')->get();
+        // $eleves = Eleve::with('notes')->get();
+        // Récupérer la classe sélectionnée via la requête, ou utiliser une valeur par défaut (ex: 'CL001')
+    $selectedClassId = request()->input('classe', '6E1');
+
+    $eleves = Eleve::with('notes')
+        ->whereHas('classe', function($query) use ($selectedClassId) {
+            $query->where('CODECLAS', $selectedClassId);
+        })
+        ->get();
+
 
     return view('pages.inscriptions.Acceuil', compact('eleves','allClass','serie','promotion','typeclah','typeenseigne'));
 }
