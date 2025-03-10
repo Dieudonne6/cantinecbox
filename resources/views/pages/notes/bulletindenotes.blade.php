@@ -158,11 +158,11 @@
         <div class="col-md-5" style="border-right: 1px solid #000000 !important;">
           <!-- Contenu de la deuxième colonne -->
           <div class="form-group">
-            <label for="typeenseigne">Choisir un groupe</label>
-            <select class="js-example-basic-multiple custom-select-width w-auto" id="typeenseigne" name="typeenseigne" onchange="fetchClasses(this.value)">
+            <select class="js-example-basic-multiple custom-select-width w-auto" id="groupe" onchange="fetchClasses(this.value)">
                 <option value="">Sélectionner un type d'enseignement</option>
-                @foreach ($typeenseigne as $type)
-                    <option value="{{ $type->idenseign }}">{{ $type->type }}</option>
+                @foreach ($classesg as $classeg)
+                    <option value="{{ $classeg->LibelleGroupe }}">
+                      {{ $classeg->LibelleGroupe }}</option>
                 @endforeach
             </select>
           </div>
@@ -851,41 +851,42 @@
 
 
 <script>
-function fetchClasses(type) {
-    if (!type) {
+function fetchClasses(libelleGroupe) {
+    if (!libelleGroupe) {
         document.getElementById('classTableBody').innerHTML = '<tr><td colspan="3" class="text-center">Sélectionnez un type pour afficher les classes</td></tr>';
         return;
     }
 
-    fetch(`{{ url('/classes/') }}/${type}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des données.");
+    $.ajax({
+            url: "{{ url('/get-classes-by-group') }}",
+            type: "GET",
+            data: { libelleGroupe: libelleGroupe },
+            success: function(response) {
+                let rows = "";
+                if (response.length === 0) {
+                    rows = "<tr><td colspan='3' class='text-center'>Aucune classe trouvée</td></tr>";
+                } else {
+                    response.forEach(classe => {
+                        rows += `
+                            <tr>
+                                <td class="text-center">
+                                    <input type="checkbox" 
+                                           name="selected_classes[]" 
+                                           value="${classe.CODECLAS}"
+                                           style="margin-left: 10px;">
+                                </td>
+                                <td class="text-center">${classe.CODECLAS}</td>
+                                <td class="text-center">${classe.EFFECTIF}</td>
+                            </tr>
+                        `;
+                    });
+                }
+                $("#classTableBody").html(rows);
+            },
+            error: function() {
+                $("#classTableBody").html("<tr><td colspan='3' class='text-center text-danger'>Erreur lors du chargement</td></tr>");
             }
-            return response.json();
-        })
-        .then(classes => {
-            const tableBody = document.getElementById('classTableBody');
-            tableBody.innerHTML = '';
-
-            if (classes.length === 0) {
-                // Affiche le message si aucune classe n'est trouvée
-                tableBody.innerHTML = '<tr><td colspan="3" class="text-center">Aucune classe dans le type sélectionné</td></tr>';
-                return;
-            }
-
-            // Si des classes existent, les afficher
-            classes.forEach(classe => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><input type="checkbox" name="selected_classes[]" value="${classe.CODECLAS}" style="margin-left: 10px !important; margin-top: -7px !important;"></td>
-                    <td>${classe.CODECLAS}</td>
-                    <td>${classe.eleves_count}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        })
-        .catch(error => console.error('Erreur lors de la récupération des classes:', error));
+        });
 }
 
 </script>
