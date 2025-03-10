@@ -67,7 +67,7 @@ class BulletinController extends Controller
     $eleves = Eleve::all();
     $params2 = Params2::first();
     $typean = $params2->TYPEAN;
-    return view('pages.notes.bulletindenotes', compact('classes', 'typeenseigne', 'promotions', 'eleves', 'matieres', 'typean', 'classesg'));
+    return view('pages.notes.bulletindenotes', compact('classes', 'promotions', 'eleves', 'matieres', 'typean', 'classesg'));
   }
   
   public function getClassesByType(Request $request)
