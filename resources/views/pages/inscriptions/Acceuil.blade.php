@@ -25,7 +25,7 @@
                                 <i class="typcn typcn-printer btn-icon-prepend"></i> Filtrer pour imprimer
                             </button>
                         </div>
-                        <form action="{{ route('Acceuil') }}" method="GET">
+                        {{-- <form action="{{ route('Acceuil') }}" method="GET">
                             <div class="col-12">
                                 <select name="classe" class="js-example-basic-multiple w-100"
                                     onchange="this.form.submit()">
@@ -37,7 +37,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </form>
+                        </form> --}}
 
                         <div>
                             <table id="tableau-effectifs" class="table">
