@@ -8,6 +8,7 @@
         <nav>
             <div class="nav nav-tabs" id="nav-tab{{ $eleve->MATRICULE }}" role="tablist" style="font-size: 14px;">
                 @foreach (['Infor' => 'Informations générales', 'Detail' => 'Détail des notes', 'Deta' => 'Détails des paiements', 'finan' => 'Informations financières', 'Emploi' => 'Emploi du temps', 'Position' => 'Position Enseignants', 'Situation' => 'Situation selon Echéancier', 'Autre' => 'Autre Situation'] as $key => $label)
+                {{-- @foreach (['Infor' => 'Informations générales', ] as $key => $label) --}}
                     <button class="nav-link{{ $loop->first ? ' active' : '' }}"
                         id="nav-{{ $key }}-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab"
                         data-bs-target="#nav-{{ $key }}{{ $eleve->MATRICULE }}" type="button" role="tab"
@@ -20,66 +21,68 @@
             <!-- Informations générales -->
             <div class="tab-pane fade show active" id="nav-Infor{{ $eleve->MATRICULE }}" role="tabpanel"
                 aria-labelledby="nav-Infor-tab{{ $eleve->MATRICULE }}">
-                <form class="accordion-body col-md-12 mx-auto">
-                    <!-- Date de Naissance et Lieu -->
-                    <div class="form-group row mt-2">
-                        <label for="dateN{{ $eleve->MATRICULE }}" class="col-sm-2 col-form-label">Date de
-                            Naissance</label>
-                        <div class="col-sm-4">
-                            <input type="date" class="form-control" id="dateN{{ $eleve->MATRICULE }}" name="dateN"
-                                value="{{ $eleve->DATENAIS }}" readonly>
+                <div class="card shadow-lg p-4 bg-light rounded">
+                    <form class="accordion-body col-md-12 mx-auto">
+                        <!-- Date de Naissance et Lieu -->
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label for="dateN{{ $eleve->MATRICULE }}" class="fw-bold">📅 Date de Naissance</label>
+                                <input type="date" class="form-control" id="dateN{{ $eleve->MATRICULE }}" name="dateN"
+                                    value="{{ $eleve->DATENAIS }}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="lieu{{ $eleve->MATRICULE }}" class="fw-bold">📍 Lieu de Naissance</label>
+                                <input type="text" class="form-control" id="lieu{{ $eleve->MATRICULE }}" name="lieu"
+                                    value="{{ $eleve->LIEUNAIS }}" readonly>
+                            </div>
                         </div>
-                        <label for="lieu{{ $eleve->MATRICULE }}" class="col-sm-2 col-form-label">Lieu</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="lieu{{ $eleve->MATRICULE }}" name="lieu"
-                                value="{{ $eleve->LIEUNAIS }}" readonly>
+            
+                        <!-- Sexe et Type d'élève -->
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label for="sexe{{ $eleve->MATRICULE }}" class="fw-bold">⚧ Sexe</label>
+                                <input type="text" class="form-control" id="sexe{{ $eleve->MATRICULE }}" name="sexe"
+                                    value="{{ $eleve->SEXE == 1 ? 'Masculin' : ($eleve->SEXE == 2 ? 'Féminin' : '') }}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="typeEleve{{ $eleve->MATRICULE }}" class="fw-bold">🎓 Type Élève</label>
+                                <input type="text" class="form-control" id="typeEleve{{ $eleve->MATRICULE }}" name="typeEleve"
+                                    value="{{ $eleve->STATUTG == 1 ? 'Nouveau' : ($eleve->STATUTG == 2 ? 'Ancien' : '') }}" readonly>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Sexe et Types élèves -->
-                    <div class="form-group row mt-2">
-                        <label for="sexe{{ $eleve->MATRICULE }}" class="col-sm-2 col-form-label">Sexe</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="sexe{{ $eleve->MATRICULE }}" name="sexe"
-                                value="{{ $eleve->SEXE == 1 ? 'Masculin' : ($eleve->SEXE == 2 ? 'Féminin' : '') }}"
-                                readonly>
+            
+                        <!-- Date d'inscription, Apte et Redoublant -->
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label for="dateIn{{ $eleve->MATRICULE }}" class="fw-bold">📝 Date d'inscription</label>
+                                <input type="date" class="form-control" id="dateIn{{ $eleve->MATRICULE }}" name="dateIn"
+                                    value="{{ $eleve->DATEINS }}" readonly>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="apte{{ $eleve->MATRICULE }}" class="fw-bold">✔ Apte</label>
+                                <input type="text" class="form-control" id="apte{{ $eleve->MATRICULE }}" name="apte"
+                                    value="{{ $eleve->APTE == 0 ? 'Non' : ($eleve->APTE == 1 ? 'Oui' : '') }}" readonly>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-center mt-4">
+                                <input type="checkbox" class="form-check-input me-2" id="statutRedoublant{{ $eleve->MATRICULE }}"
+                                    name="statutRedoublant" {{ $eleve->STATUT == 1 ? 'checked' : '' }} readonly>
+                                <label class="form-check-label" for="statutRedoublant{{ $eleve->MATRICULE }}">🔄 Redoublant</label>
+                            </div>
                         </div>
-                        <label for="typeEleve{{ $eleve->MATRICULE }}" class="col-sm-2 col-form-label">Type Élève</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="typeEleve{{ $eleve->MATRICULE }}"
-                                name="typeEleve"
-                                value="{{ $eleve->STATUTG == 1 ? 'Nouveau' : ($eleve->STATUTG == 2 ? 'Ancien' : '') }}"
-                                readonly>
-                        </div>
-                    </div>
-                    <!-- Date d'inscription, Apte et Statut Redoublant -->
-                    <div class="form-group row mt-2">
-                        <label for="dateIn{{ $eleve->MATRICULE }}" class="col-sm-2 col-form-label">Date
-                            d'inscription</label>
-                        <div class="col-sm-4">
-                            <input type="date" class="form-control" id="dateIn{{ $eleve->MATRICULE }}" name="dateIn"
-                                value="{{ $eleve->DATEINS }}" readonly>
-                        </div>
-                        <label for="apte{{ $eleve->MATRICULE }}" class="col-sm-2 col-form-label">Apte</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" id="apte{{ $eleve->MATRICULE }}" name="sexe"
-                                value="{{ $eleve->APTE == 0 ? 'Non' : ($eleve->APTE == 1 ? 'Oui' : '') }}" readonly>
-                        </div>
-                        <div class="col-sm-2 form-check" style="margin-left: 4rem">
-                            <input type="checkbox" class="form-check-input" id="statutRedoublant{{ $eleve->MATRICULE }}"
-                                name="statutRedoublant" {{ $eleve->STATUT == 1 ? 'checked' : '' }} readonly>
-                            <label class="form-check-label mt-1" for="statutRedoublant{{ $eleve->MATRICULE }}">Statut
-                                Redoublant</label>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
+            
+            {{-- //a faire --}}
             <!-- Détails Notes -->
             <div class="tab-pane fade" id="nav-Detail{{ $eleve->MATRICULE }}" role="tabpanel"
                 aria-labelledby="nav-Detail-tab{{ $eleve->MATRICULE }}" tabindex="0">
                 <form class="accordion-body col-md-12 mx-auto">
-                    <div class="table-responsive mt-2">
-                        <table class="table table-bordered table-striped">
-                            <thead>
+                    <!-- Table des notes -->
+                    <div class="table-responsive mt-3 p-3 shadow-lg rounded bg-light">
+                        <h5 class="text-center text-primary">Notes des Matières</h5>
+                        <table class="table table-bordered table-striped table-hover align-middle">
+                            <thead class="table-primary text-center">
                                 <tr>
                                     <th scope="col">Matière</th>
                                     <th scope="col">Mi</th>
@@ -90,24 +93,27 @@
                                     <th scope="col">Ms</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="text-center">
                                 @foreach ($eleve->notes as $note)
                                     <tr>
-                                        <td>{{ $note->CODEMAT }}</td>
-                                        <td>{{ $note->MI }}</td>
-                                        <td>{{ $note->DEV1 }}</td>
-                                        <td>{{ $note->DEV2 }}</td>
-                                        <td>{{ $note->DEV3 }}</td>
-                                        <td>{{ $note->TEST }}</td>
-                                        <td>{{ $note->MS }}</td>
+                                        <td class="fw-bold">{{ $note->CODEMAT }}</td>
+                                        <td>{{ ($note->MI == -1 || $note->MI == 21) ? '***' : $note->MI }}</td>
+                                        <td>{{ ($note->DEV1 == -1 || $note->DEV1 == 21) ? '***' : $note->DEV1 }}</td>
+                                        <td>{{ ($note->DEV2 == -1 || $note->DEV2 == 21) ? '***' : $note->DEV2 }}</td>
+                                        <td>{{ ($note->DEV3 == -1 || $note->DEV3 == 21) ? '***' : $note->DEV3 }}</td>
+                                        <td>{{ ($note->TEST == -1 || $note->TEST == 21) ? '***' : $note->TEST }}</td>
+                                        <td class="fw-bold text-danger">{{ ($note->MS1 == -1 || $note->MS1 == 21) ? '***' : $note->MS1 }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-                    <div class="table mt-2">
-                        <table class="table">
-                            <thead>
+            
+                    <!-- Table des moyennes -->
+                    <div class="table-responsive mt-3 p-3 shadow-lg rounded bg-white">
+                        <h5 class="text-center text-success">Moyennes Générales</h5>
+                        <table class="table table-bordered table-hover align-middle">
+                            <thead class="table-success text-center">
                                 <tr>
                                     <th scope="col">Moy 1</th>
                                     <th scope="col">Moy 2</th>
@@ -115,18 +121,18 @@
                                     <th scope="col">Moy Totale</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>12</td>
-                                    <td>14</td>
-                                    <td>13</td>
-                                    <td>11</td>
+                            <tbody class="text-center">
+                                <tr class="fw-bold">
+                                    <td class="text-info">{{ ($eleve->MS1 == -1 || $eleve->MS1 == 21) ? '***' : $eleve->MS1 }}</td>
+                                    <td class="text-info">{{ ($eleve->MS2 == -1 || $eleve->MS2 == 21) ? '***' : $eleve->MS2 }}</td>
+                                    <td class="text-info">{{ ($eleve->MS3 == -1 || $eleve->MS3 == 21) ? '***' : $eleve->MS3 }}</td>
+                                    <td class="text-danger fs-5">{{ ($eleve->MAN == -1 || $eleve->MAN == 21) ? '***' : $eleve->MAN }}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </form>
-            </div>
+            </div>            
             <!--  -->
             <div class="tab-pane fade" id="nav-Deta{{ $eleve->MATRICULE }}" role="tabpanel"
                 aria-labelledby="nav-Deta-tab{{ $eleve->MATRICULE }}" tabindex="0">
@@ -467,9 +473,6 @@
                     </div>
                 </div>
             </div>
-            
-            
-            
             <!-- Autres Situations -->
             <div class="tab-pane fade" id="nav-Autre{{ $eleve->MATRICULE }}" role="tabpanel"
                 aria-labelledby="nav-Autre-tab{{ $eleve->MATRICULE }}" tabindex="0">

@@ -321,18 +321,18 @@
               <br>
                 <div class="form-group d-flex align-items-center">
                   <label for="conduite">Quel est le n° de CONDUITE ?</label>
-                  <input type="number" class="form-control" id="conduite" name="conduite" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
+                  <input type="number" class="form-control" id="conduite" name="conduite" value="{{ session('conduite', 0) }}" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
                   <button class="btn btn-primary" type="button" style="margin-left: 5px !important;padding: 0.5rem;background-color: #fff; color: #000;" data-bs-toggle="modal" data-bs-target="#listematiere">Voir</button>
                 </div>
                 <br>
                 <div class="form-group d-flex align-items-center">
                   <label for="eps">Quel est le n° de EPS ?</label>
-                  <input type="number" class="form-control" id="eps" name="eps" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
+                  <input type="number" class="form-control" id="eps" name="eps" value="{{ session('eps', 0) }}" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
                   <button class="btn btn-primary" type="button" style="margin-left: 5px !important;padding: 0.5rem;background-color: #fff; color: #000;" data-bs-toggle="modal" data-bs-target="#listematiere">Voir</button>
                 </div>
                 <div class="form-group d-flex align-items-center">
                   <label for="nbabsence">Nb. Absence autorisée</label>
-                  <input type="number" class="form-control w-25" id="nbabsence" name="nbabsence" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
+                  <input type="number" class="form-control w-25" id="nbabsence" name="nbabsence" value="{{ session('nbabsence', -1) }}" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
                 </div>
                 <p style="margin-left: 10px !important;">(Mettre -1 pour débrancher cette option)</p>
               <br>
@@ -345,24 +345,42 @@
               <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#configdecisionjury">Configurer décisions du jury (LMD)</button>
             </div>
             <br>
-              <div class="row" style="background-color: #844fc1; border: 1px solid #ffffff !important; border-radius: 4px !important; color: #fff;">
-                <legend style="font-weight: bold; color: #fff; font-size: 1rem;">Calcul moyenne annuelle</legend>
-                <div class="form-group d-flex align-items-center mb-2">
-                  <label for="pondTrim1">Pondération Trimestre 1</label>
-                  <input type="number" class="form-control" id="pondTrim1" name="pondTrim1" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                  <input type="checkbox" class="form-check-input" name="pondTrim1" id="pondTrim1" style="right: 1rem !important;">
-                </div>
-                <div class="form-group d-flex align-items-center mb-2">
-                  <label for="pondTrim2">Pondération Trimestre 2</label>
-                  <input type="number" class="form-control" id="pondTrim2" name="pondTrim2" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                  <input type="checkbox" class="form-check-input" name="pondTrim2" id="pondTrim2" style="right: 1rem !important;">
-                </div>
-                <div class="form-group d-flex align-items-center mb-1">
-                  <label for="pondTrim3">Pondération Trimestre 3</label>
-                  <input type="number" class="form-control" id="pondTrim3" name="pondTrim3" value="0" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                  <input type="checkbox" class="form-check-input" name="pondTrim3" id="pondTrim3" style="right: 1rem !important;;">
-                </div>
+            @if ($typean  == 1)
+            <div class="row" style="background-color: #844fc1; border: 1px solid #ffffff !important; border-radius: 4px !important; color: #fff;">
+              <legend style="font-weight: bold; color: #fff; font-size: 1rem;">Calcul moyenne annuelle</legend>
+              <div class="form-group d-flex align-items-center mb-2">
+                <label for="pondTrim1">Pondération Semestre 1</label>
+                <input type="number" class="form-control" id="pondTrim1" name="pondTrim1" value="1" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
+                {{-- <input type="checkbox" class="form-check-input" name="pondTrim1" id="pondTrim1" style="right: 1rem !important;"> --}}
               </div>
+              <div class="form-group d-flex align-items-center mb-2">
+                <label for="pondTrim2">Pondération Semestre 2</label>
+                <input type="number" class="form-control" id="pondTrim2" name="pondTrim2" value="1" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
+                {{-- <input type="checkbox" class="form-check-input" name="pondTrim2" id="pondTrim2" style="right: 1rem !important;"> --}}
+              </div>
+
+            </div>
+            @else
+            <div class="row" style="background-color: #844fc1; border: 1px solid #ffffff !important; border-radius: 4px !important; color: #fff;">
+              <legend style="font-weight: bold; color: #fff; font-size: 1rem;">Calcul moyenne annuelle</legend>
+              <div class="form-group d-flex align-items-center mb-2">
+                <label for="pondTrim1">Pondération Trimestre 1</label>
+                <input type="number" class="form-control" id="pondTrim1" name="pondTrim1" value="1" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
+                {{-- <input type="checkbox" class="form-check-input" name="pondTrim1" id="pondTrim1" style="right: 1rem !important;"> --}}
+              </div>
+              <div class="form-group d-flex align-items-center mb-2">
+                <label for="pondTrim2">Pondération Trimestre 2</label>
+                <input type="number" class="form-control" id="pondTrim2" name="pondTrim2" value="1" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
+                {{-- <input type="checkbox" class="form-check-input" name="pondTrim2" id="pondTrim2" style="right: 1rem !important;"> --}}
+              </div>
+              <div class="form-group d-flex align-items-center mb-1">
+                <label for="pondTrim3">Pondération Trimestre 3</label>
+                <input type="number" class="form-control" id="pondTrim3" name="pondTrim3" value="1" style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
+                {{-- <input type="checkbox" class="form-check-input" name="pondTrim3" id="pondTrim3" style="right: 1rem !important;;"> --}}
+              </div>
+            </div>
+            @endif
+
           </div>
           <div class="card-footer d-flex justify-content-end">
             <div class="align-items-center me-3">

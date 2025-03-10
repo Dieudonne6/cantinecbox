@@ -9,12 +9,15 @@
         "barryvdh/laravel-dompdf": "^2.2",
         "endroid/qr-code": "^5.0",
         "guzzlehttp/guzzle": "^7.8",
+        "henck/rtf-to-html": "^1.2",
         "knplabs/knp-snappy": "^1.4",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
-        "symfony/polyfill-mbstring":  "^1.23",
-        "league/fractal": "^0.20.1"
+        "league/fractal": "^0.20.1",
+        "maatwebsite/excel": "^3.1",
+        "roundcube/rtf-html-php": "^2.2",
+        "symfony/polyfill-mbstring": "^1.23"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

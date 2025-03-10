@@ -12,6 +12,7 @@ use App\Models\Notes;
 use App\Models\Trimencours;
 use App\Models\Eleves;
 use App\Models\Typeenseigne;
+use App\Models\Promo;
 use Illuminate\Support\Facades\DB;
 
 class EditionController2 extends Controller
@@ -116,9 +117,62 @@ class EditionController2 extends Controller
         return view('pages.notes.resultatsparpromotion');
     }    
     public function listedesmeritants(){
-        
-        return view('pages.notes.listedesmeritants');
+        $classes = Classes::all();
+        $promotions = Promo::all();
+        $matieres = Matieres::all();
+        $eleves = Eleve::all();
+        return view('pages.notes.listedesmeritants', compact('classes', 'promotions', 'matieres', 'eleves'));
     }
+//     public function listedesmeritants(Request $request)
+// {
+//     // Récupération des filtres envoyés depuis le formulaire
+//     $filtre      = $request->input('filtre', 'classe');
+//     $nombre      = $request->input('nombre', 10);
+//     $moyenneMin  = $request->input('moyenne_min', 0);
+//     $sexe        = $request->input('sexe', 'Aucune');
+
+//     // Démarrage de la requête sur les élèves
+//     $elevesQuery = Eleve::query();
+
+//     // Application du filtre choisi
+//     if ($filtre === 'classe') {
+//         $classesSelectionnees = $request->input('classes', []);
+//         if (!empty($classesSelectionnees)) {
+//             $elevesQuery->whereIn('CODECLAS', $classesSelectionnees);
+//         }
+//     } elseif ($filtre === 'promotion') {
+//         $promotionsSelectionnees = $request->input('promotions', []);
+//         if (!empty($promotionsSelectionnees)) {
+//             $elevesQuery->whereIn('CODEPROMO', $promotionsSelectionnees);
+//         }
+//     } elseif ($filtre === 'cycle') {
+//         $cycle = $request->input('cycle', 1);
+//         // On suppose ici que la colonne "cycle" existe dans la table ou qu'une jointure est nécessaire
+//         $elevesQuery->where('cycle', $cycle);
+//     }
+//     // Pour "tout", aucun filtre additionnel n'est appliqué
+
+//     // Filtrer par sexe si nécessaire (en adaptant selon votre convention en BDD)
+//     if ($sexe !== "Aucune") {
+//         $elevesQuery->where('SEXE', ($sexe == 'Filles' ? 'F' : 'M'));
+//     }
+
+//     // Appliquer le filtre sur la moyenne (ici on suppose que la moyenne est un champ ou un attribut calculé)
+//     $elevesQuery->where('moyenne', '>=', $moyenneMin);
+
+//     // Trier par moyenne décroissante et limiter le nombre d'élèves récupérés
+//     $eleves = $elevesQuery->orderBy('moyenne', 'desc')
+//                           ->limit($nombre)
+//                           ->get();
+
+//     // Récupérer les données pour les listes déroulantes
+//     $classes    = Classes::all();
+//     $promotions = Promo::all();
+//     $matieres   = Matieres::all();
+
+//     return view('pages.notes.listedesmeritants', compact('eleves', 'classes', 'promotions', 'matieres'));
+// }
+
 
     
 }

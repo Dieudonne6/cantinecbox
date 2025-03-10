@@ -10,72 +10,93 @@
                 @foreach ($resultats as $index => $resultat)
                     @php
                         // Initialisation des variables en fonction du type d'année
-$periode = null;
-$texte = null;
-$texte2 = null;
-$periode_abr = null;
-if ($typean == 1) {
-    $periode = 'Semestre';
-    $texte = 'Semestriel';
-    $texte2 = 'Semestrielle';
-    $periode_abr = 'Sem.';
-} else {
-    $periode = 'Trimestre';
-    $texte = 'Trimestriel';
-    $texte2 = 'Trimestrielle';
-    $periode_abr = 'Trim.';
-                        }
+                        $periode = null;
+                        $texte = null;
+                        $texte2 = null;
+                        $periode_abr = null;
+                        if ($typean == 1) {
+                            $periode = 'Semestre';
+                            $texte = 'Semestriel';
+                            $texte2 = 'Semestrielle';
+                            $periode_abr = 'Sem.';
+                        } else {
+                            $periode = 'Trimestre';
+                            $texte = 'Trimestriel';
+                            $texte2 = 'Trimestrielle';
+                            $periode_abr = 'Trim.';
+                                                }
                     @endphp
-                    <div class="bulletin" style="{{ $index < count($resultats) - 1 ? 'page-break-after: always;' : '' }}">
+                    <div class="watermark"
+                    style="position: absolute; top: 5%; left: 10%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                    Scodelux
+                </div>
+                <div class="watermark"
+                    style="position: absolute; top: 15%; left: 25%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                    Scodelux
+                </div>
+                <div class="watermark"
+                    style="position: absolute; top: 25%; left: 40%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                    Scodelux
+                </div>
+                <div class="watermark"
+                    style="position: absolute; top: 35%; left: 55%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                    Scodelux
+                </div>
+                <div class="watermark"
+                    style="position: absolute; top: 45%; left: 70%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                    Scodelux
+                </div>
+                <div class="watermark"
+                    style="position: absolute; top: 60%; left: 10%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                    Scodelux
+                </div>
+                <div class="watermark"
+                    style="position: absolute; top: 70%; left: 30%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                    Scodelux
+                </div>
+                <div class="watermark"
+                    style="position: absolute; top: 80%; left: 50%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                    Scodelux
+                </div>
+                <div class="watermark"
+                    style="position: absolute; top: 90%; left: 70%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                    Scodelux
+                </div>
+                <div class="watermark"
+                    style="position: absolute; top: 50%; left: 85%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
+                    Scodelux
+                </div>
+                    <div class="bulletin" style=" position: relative; {{ $index < count($resultats) - 1 ? 'page-break-after: always;' : '' }}">
                         <br>
                         <br>
-                        @if (isset($option['entete']) && $option['entete'])
-                            <h6>{{ $entete }}</h6>
-                        @endif
-                        <div id="carre"
-                            style="width: 125px; height: 125px; background-color: transparent; border: 1px solid black;">
+                        <div class="row" style="display: flex; align-items: flex-end;">
+                            {{-- Logo, aligné en haut --}}
+                           <div class="col-md-3">
+                            @if(!empty($logoBase64))
+                                <div style="align-self: flex-start; margin-bottom: 5px;">
+                                    <img src="data:{{ $mimeType }};base64,{{ $logoBase64 }}" alt="Logo" style="max-height: 130px; width: auto;">
+                                </div>
+                            @endif
+                        
+                            {{-- Carré, sans marge à gauche pour être collé au logo --}}
+                            <div id="carre" style="width: 80px; height: 80px; background-color: transparent; border: 1px solid black; margin-left: 10px; margin-right: 20px;">
+                            </div>
+                            </div>
+                            <div class="col-md-6">
+                            {{-- Entête, centré et aligné par le bas --}}
+                            @if (isset($option['entete']) && $option['entete'])
+                                <div style="flex: 1; text-align: center;">
+                                    {!! $entete !!}
+                                </div>
+                            @endif
+                            </div>
+                            <div class="col-md-3">
+                                <div id="carre" style="width: 145px; height: 140px; margin-bottom: 25px; background-color: transparent; border: 1px solid black; margin-right: 10px; border-radius: 20px">
+                                </div>
+                            </div>
                         </div>
+                        
                         <br>
-                        <div class="watermark"
-                            style="position: absolute; top: 5%; left: 10%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
-                            Scodelux
-                        </div>
-                        <div class="watermark"
-                            style="position: absolute; top: 15%; left: 25%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
-                            Scodelux
-                        </div>
-                        <div class="watermark"
-                            style="position: absolute; top: 25%; left: 40%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
-                            Scodelux
-                        </div>
-                        <div class="watermark"
-                            style="position: absolute; top: 35%; left: 55%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
-                            Scodelux
-                        </div>
-                        <div class="watermark"
-                            style="position: absolute; top: 45%; left: 70%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
-                            Scodelux
-                        </div>
-                        <div class="watermark"
-                            style="position: absolute; top: 60%; left: 10%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
-                            Scodelux
-                        </div>
-                        <div class="watermark"
-                            style="position: absolute; top: 70%; left: 30%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
-                            Scodelux
-                        </div>
-                        <div class="watermark"
-                            style="position: absolute; top: 80%; left: 50%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
-                            Scodelux
-                        </div>
-                        <div class="watermark"
-                            style="position: absolute; top: 90%; left: 70%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
-                            Scodelux
-                        </div>
-                        <div class="watermark"
-                            style="position: absolute; top: 50%; left: 85%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
-                            Scodelux
-                        </div>
                         <div class="d-flex">
                             <div id="donneeleve"
                                 style="width: 60%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
@@ -244,6 +265,8 @@ if ($typean == 1) {
                                         @else
                                             <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td>
                                             <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td>
+                                            {{-- <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td>
+                                            <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td> --}}
                                         @endif
                                         @if (isset($option['rang_matiere']) && $option['rang_matiere'])
                                             <td>
@@ -551,8 +574,10 @@ if ($typean == 1) {
                                     <div
                                         style="display: flex; justify-content: space-between; width: 100%; padding: 0 10px;">
                                         <p style="margin: 0;">Conduite :
+                                            {{-- <span
+                                                style="border-bottom: 1px dotted black; width: 131px; display: inline-block;">{{ $note_conduite }}</span> --}}
                                             <span
-                                                style="border-bottom: 1px dotted black; width: 131px; display: inline-block;">{{ $note_conduite }}</span>
+                                                style="border-bottom: 1px dotted black; width: 131px; display: inline-block;"> </span>
                                         </p>
                                         <p style="margin: 0;">Travail :
                                             <span
@@ -567,12 +592,13 @@ if ($typean == 1) {
 
                             <div id="signature"
                                 style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                                <h5 id="signature_chef" style="margin-top: 5px; font-weight: 400; font-size: 14px;"
+                                <h5 id="signature_chef" style="margin-top: 5px; font-weight: 500; font-size: 15px;"
                                     class="text-center">
                                     Signature et cachet <br> du Chef d'établissement
                                 </h5>
-                                <h6 class="text-center" style="margin-left: 0%; font-weight: bold;">
-                                    {{ $request->input('signature') }}</h6>
+                                <h5 class="text-center">{{ $params2->NOMETAB }}</h5>
+                                <u><h6 class="text-center" style="margin-left: 0%; padding-top: 38%; font-weight: bold;">
+                                    {{ $params2->NOMDIRECT  }}</h6></u>
                             </div>
 
                         </div>
@@ -708,6 +734,35 @@ if ($typean == 1) {
                 /* Affiche un curseur interdit */
             }
         </style>
+
+<style>
+    @media print {
+      /* Empêcher Bootstrap de forcer les colonnes à 100% en mode impression */
+      .row {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: flex-end !important; /* si vous voulez aligner par le bas */
+      }
+      .col-md-3 {
+        width: 25% !important; /* Ajustez si besoin */
+        float: left !important;
+      }
+      .col-md-6 {
+        width: 50% !important; /* Ajustez si besoin */
+        float: left !important;
+      }
+    
+      /* Supprimez ou réduisez les marges automatiques du navigateur si nécessaire */
+      @page {
+        margin: 10mm; /* Ajustez à votre convenance */
+      }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    }
+    </style>
+    
         <script>
             function imprimerliste() {
                 var content = document.querySelector('.main-panel').innerHTML;
@@ -728,3 +783,7 @@ if ($typean == 1) {
             // });
         </script>
     @endsection
+
+
+
+    
