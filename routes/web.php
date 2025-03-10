@@ -382,6 +382,7 @@ Route::get('/classes/{type}', [BulletinController::class, 'getClassesByType'])->
 
 Route::get('/extrairenote', [BulletinController::class, 'extrairenote'])->name('extrairenote');
 Route::post('/extractnote', [BulletinController::class, 'extractnote'])->name('extractnote');
+Route::get('/export-excel', [BulletinController::class, 'exportExcel'])->name('notes.exportExcel');
 Route::get('/listeparmerite',[ListemeriteController::class, 'acceuil'])->name('listeparmerite');
 Route::get('/imprimer-liste-merite', [ListemeriteController::class, 'imprimerListeMerite'])->name('imprimer.liste.merite');
 Route::get('/get-classes-by-group', [ListemeriteController::class, 'getClassesByGroup'])->name('getClassesByGroup');

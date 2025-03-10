@@ -117,6 +117,9 @@
         'resultatsparpromotion',
         'listedesmeritants',
       ];
+
+      $activeExtractRoutes = ['extrairenote', 'extractnote'];
+
       @endphp
 
       <!-- Bloc Gestion des notes -->
@@ -214,16 +217,30 @@
                 </ul>
               </div>
             </li>
+            
             <!-- Bloc Extraction -->
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#extract" aria-expanded="false" aria-controls="extract">
+              <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutes) ? 'active' : '' }}" data-bs-toggle="collapse" href="#extract" aria-expanded="{{ in_array(request()->route()->getName(), $activeExtractRoutes) ? 'true' : 'false' }}" aria-controls="extract">
                 Extraction
                 <i class="menu-arrow"></i>
               </a>
-              <div class="collapse" id="extract" data-bs-parent="#form-elements">
+              <div class="collapse {{ in_array(request()->route()->getName(), $activeExtractRoutes) ? 'show' : '' }}" id="extract" data-bs-parent="#form-elements">
                 <ul class="nav sub-menu">
-                  <li><a class="nav-link {{ request()->is('Exporter') ? 'active' : '' }}" href="#">Exporter</a></li>
-                  <li><a class="nav-link {{ request()->is('Importer') ? 'active' : '' }}" href="#">Importer</a></li>
+                  <li>
+                    <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutes) ? 'active' : '' }}" href="{{ route('extrairenote') }}">
+                      Exporter vers EducMaster
+                    </a>
+                  </li>
+                  <li>
+                    <a class="nav-link {{ request()->is('Exporter') ? 'active' : '' }}" href="#">
+                      Exporter
+                    </a>
+                  </li>
+                  <li>
+                    <a class="nav-link {{ request()->is('Importer') ? 'active' : '' }}" href="#">
+                      Importer
+                    </a>
+                  </li>
                 </ul>
               </div>
             </li>

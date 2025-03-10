@@ -50,6 +50,9 @@ use Roundcube\Rtf\Html; // ou la classe appropriée selon la documentation du pa
 use RtfHtmlPhp\Document;
 use RtfHtmlPhp\Html\HtmlFormatter;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\NotesExport;
+
 
 class BulletinController extends Controller
 {
@@ -1849,6 +1852,27 @@ private function determineAppreciation($moyenne, $params2)
 
 
         }
+
+
+            // Méthode pour exporter en Excel
+            public function exportExcel(Request $request)
+            {
+                $periode = $request->input('periode');
+                $classe  = $request->input('classe');
+                $matiere = $request->input('matiere');
+            
+                $notes = Notes::where('CODECLAS', $classe)
+                              ->where('CODEMAT', $matiere)
+                              ->where('SEMESTRE', $periode)
+                              ->get();
+            
+                // Récupérer les options d'export (1 = coché, 0 = décoché)
+                $exportMoy = $request->input('exportMoy', 1);
+                $exportDev1 = $request->input('exportDev1', 1);
+                $exportDev2 = $request->input('exportDev2', 1);
+            
+                return Excel::download(new NotesExport($notes, $exportMoy, $exportDev1, $exportDev2), 'notes.xlsx');
+            }
         
       }           
       
