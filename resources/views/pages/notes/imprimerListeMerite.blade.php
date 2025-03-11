@@ -31,7 +31,7 @@
                     $colonneMoyen = (($typean == 1 && $periode == 2) || ($typean == 2 && $periode == 3)) ? 'MAN' : 'MOYENNE';
                 @endphp
 
-                <div style="background-color: transparent; border: 1px solid black; border-radius: 10px; padding: 10px; margin-top: 20px;">
+                <div class="statistics-container" style="background-color: transparent; border: 1px solid black; border-radius: 10px; padding: 10px; margin-top: 20px;">
                     <div class="row text-center">
                         <div class="col-3">
                             <small>Effectif: {{ $eleves->where('CODECLAS', $currentClass)->count() }}</small>
@@ -55,6 +55,8 @@
                     <h4 class="text-center mb-3">Liste par Ordre de Mérite - 
                         @if ($periode == 1) 
                             {{ $periode }}er
+                        @elseif ($periode == 4)
+                            Moyenne Annuelle
                         @else
                             {{ $periode }}ème 
                         @endif
@@ -91,8 +93,19 @@
                                 <th>Stats</th>
                                 <th>Nom</th>
                                 <th>Prénom</th>
-                                <th>Moyenne</th>
-                                @if(($typean == 1 && $periode == 2) || ($typean == 2 && $periode == 3))
+                                @if (($periode == 1) || ($periode == 2) || ($periode == 3))
+                                    <th>Moyenne</th>
+                                @endif
+                                @if ($typean == 1 && $periode == 4)
+                                    <th>Moyenne 1er</th>
+                                    <th>Moyenne 2eme</th>
+                                @endif
+                                @if ($typean == 2 && $periode == 4)
+                                    <th>Moyenne 1er</th>
+                                    <th>Moyenne 2eme</th>
+                                    <th>Moyenne 3eme</th>
+                                @endif
+                                @if(($typean == 1 && $periode == 4) || ($typean == 2 && $periode == 4))
                                     <th>Moyenne Annuelle</th>
                                 @endif
                             </tr>
@@ -103,24 +116,40 @@
                                 @endphp
                             @endif
                             <tr>
-                                <td>{{ $eleve->RANGA }}</td>
+                                @if ($typean == 1 && $periode == 4)
+                                    <td>{{ $eleve->RANGA }}</td>
+                                @else
+                                    <td>{{ $eleve->RANGB }}</td>
+                                @endif 
                                 <td></td>
                                 <td>{{ $eleve->NOM }}</td>
                                 <td>{{ $eleve->PRENOM }}</td>
-                                <td>{{ number_format($eleve->MOYENNE, 2) }}</td>
-                                @if(($typean == 1 && $periode == 2) || ($typean == 2 && $periode == 3))
-                                    <td>{{ number_format($eleve->MAN, 2) }}</td>
+                                @if ($typean == 1 && $periode == 4)
+                                    <td>{{ $eleve->MS1 <= -1 ? '**.**' : number_format($eleve->MS1, 2) }}</td>
+                                    <td>{{ $eleve->MS2 <= -1 ? '**.**' : number_format($eleve->MS2, 2) }}</td>
                                 @endif
+                                @if($typean == 2 && $periode == 4)
+                                    <td>{{ $eleve->MS1 <= -1 ? '**.**' : number_format($eleve->MS1, 2) }}</td>
+                                    <td>{{ $eleve->MS2 <= -1 ? '**.**' : number_format($eleve->MS2, 2) }}</td>
+                                    <td>{{ $eleve->MS3 <= -1 ? '**.**' : number_format($eleve->MS3, 2) }}</td>
+                                @endif
+                                <td>
+                                    @if($eleve->MOYENNE <= -1)
+                                        **.**
+                                    @else
+                                        {{ number_format($eleve->MOYENNE, 2) }}
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
                     @php
-                        $colonneMoyen = (($typean == 1 && $periode == 2) || ($typean == 2 && $periode == 3)) ? 'MAN' : 'MOYENNE';
+                        $colonneMoyen = (($typean == 1 && $periode == 4) || ($typean == 2 && $periode == 4)) ? 'MAN' : 'MOYENNE';
                     @endphp
 
                     <div style="background-color: transparent; border: 1px solid black; border-radius: 10px; padding: 10px; margin-top: 20px;">
-                        <div class="row text-center">
+                        <div class="statistics-container" class="row text-center">
                             <div class="col-3">
                                 <small>Effectif: {{ $eleves->where('CODECLAS', $currentClass)->count() }}</small>
                             </div>
@@ -166,10 +195,10 @@
                     </tbody>
                     </table>
                 @php
-                    $colonneMoyen = (($typean == 1 && $periode == 2) || ($typean == 2 && $periode == 3)) ? 'MAN' : 'MOYENNE';
+                    $colonneMoyen = (($typean == 1 && $periode == 4) || ($typean == 2 && $periode == 4)) ? 'MAN' : 'MOYENNE';
                 @endphp
 
-                <div style="background-color: transparent; border: 1px solid black; border-radius: 10px; padding: 10px; margin-top: 20px;">
+                <div class="statistics-container" style="background-color: transparent; border: 1px solid black; border-radius: 10px; padding: 10px; margin-top: 20px;">
                     <div class="row text-center">
                         <div class="col-3">
                             <small>Effectif: {{ $eleves->where('CODECLAS', $currentClass)->count() }}</small>
@@ -192,6 +221,8 @@
                     <h4 class="text-center mb-3">Liste par Ordre de Mérite - 
                         @if ($periode == 1) 
                             {{ $periode }}er
+                        @elseif ($periode == 4)
+                            Moyenne Annuelle
                         @else
                             {{ $periode }}ème 
                         @endif
@@ -226,35 +257,62 @@
                                 <th>Stats</th>
                                 <th>Nom</th>
                                 <th>Prénom</th>
-                                <th>Moyenne</th>
-                                @if(($typean == 1 && $periode == 2) || ($typean == 2 && $periode == 3))
+                                @if (($periode == 1) || ($periode == 2) || ($periode == 3))
+                                    <th>Moyenne</th>
+                                @endif
+                                @if ($typean == 1 && $periode == 4)
+                                    <th>Moyenne 1er</th>
+                                    <th>Moyenne 2eme</th>
+                                @endif
+                                @if ($typean == 2 && $periode == 4)
+                                    <th>Moyenne 1er</th>
+                                    <th>Moyenne 2eme</th>
+                                    <th>Moyenne 3eme</th>
+                                @endif
+                                @if(($typean == 1 && $periode == 4) || ($typean == 2 && $periode == 4))
                                     <th>Moyenne Annuelle</th>
                                 @endif
                             </tr>
                         </thead>
                         <tbody>
-                @php
-                    $currentClass = $eleve->CODECLAS;
-                @endphp
-            @endif
-            <tr>
-                <td>{{ $eleve->RANGA }}</td>
-                <td></td>
-                <td>{{ $eleve->NOM }}</td>
-                <td>{{ $eleve->PRENOM }}</td>
-                <td>{{ number_format($eleve->MOYENNE, 2) }}</td>
-                @if(($typean == 1 && $periode == 2) || ($typean == 2 && $periode == 3))
-                    <td>{{ number_format($eleve->MAN, 2) }}</td>
-                @endif
-            </tr>
-        @endforeach
-        </tbody>
-        </table>
+                            @php
+                                $currentClass = $eleve->CODECLAS;
+                            @endphp
+                            @endif
+                            <tr>
+                                @if ($typean == 1 && $periode == 4)
+                                    <td>{{ $eleve->RANGA }}</td>
+                                @else
+                                    <td>{{ $eleve->RANGB }}</td>
+                                @endif
+                                <td></td>
+                                <td>{{ $eleve->NOM }}</td>
+                                <td>{{ $eleve->PRENOM }}</td>
+                                @if ($typean == 1 && $periode == 4)
+                                    <td>{{ $eleve->MS1 <= -1 ? '**.**' : number_format($eleve->MS1, 2) }}</td>
+                                    <td>{{ $eleve->MS2 <= -1 ? '**.**' : number_format($eleve->MS2, 2) }}</td>
+                                @endif
+                                @if($typean == 2 && $periode == 4)
+                                    <td>{{ $eleve->MS1 <= -1 ? '**.**' : number_format($eleve->MS1, 2) }}</td>
+                                    <td>{{ $eleve->MS2 <= -1 ? '**.**' : number_format($eleve->MS2, 2) }}</td>
+                                    <td>{{ $eleve->MS3 <= -1 ? '**.**' : number_format($eleve->MS3, 2) }}</td>
+                                @endif
+                                <td>
+                                    @if($eleve->MOYENNE <= -1)
+                                        **.**
+                                    @else
+                                        {{ number_format($eleve->MOYENNE, 2) }}
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
         @php
-            $colonneMoyen = (($typean == 1 && $periode == 2) || ($typean == 2 && $periode == 3)) ? 'MAN' : 'MOYENNE';
+            $colonneMoyen = (($typean == 1 && $periode == 4) || ($typean == 2 && $periode == 4)) ? 'MAN' : 'MOYENNE';
         @endphp
         
-        <div style="background-color: transparent; border: 1px solid black; border-radius: 10px; padding: 10px; margin-top: 20px;">
+        <div class="statistics-container" style="background-color: transparent; border: 1px solid black; border-radius: 10px; padding: 10px; margin-top: 20px;">
             <div class="row text-center">
                 <div class="col-3">
                     <small>Effectif: {{ $eleves->where('CODECLAS', $currentClass)->count() }}</small>
@@ -289,6 +347,11 @@
         body {
             background: white;
             font-size: 12pt;
+        }
+
+        .statistics-container {
+            page-break-inside: avoid;
+            break-inside: avoid; /* Pour les navigateurs modernes */
         }
 
         .print-table-container {

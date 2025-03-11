@@ -36,12 +36,7 @@
                     <option value="1">1ère période</option>
                     <option value="2">2ème période</option>
                     <option value="3">3ème période</option>
-                    <option value="4">4ème période</option>
-                    <option value="5">5ème période</option>
-                    <option value="6">6ème période</option>
-                    <option value="7">7ème période</option>
-                    <option value="8">8ème période</option>
-                    <option value="9">9ème période</option>
+                    <option value="4">Annuel</option>
                   </select>
           </div>        
         
