@@ -58,12 +58,12 @@ class ListemeriteController extends Controller
 }
 
 
-    public function imprimerListeMerite(Request $request)
+ public function imprimerListeMerite(Request $request)
 {
     // Validation des paramètres
     $request->validate([
         'classes' => 'required',
-        'periode' => 'required|integer|between:1,3'
+        'periode' => 'required|integer|between:1,4'
     ]);
 
     // Vérification que classes n'est pas 'undefined'
@@ -80,7 +80,11 @@ class ListemeriteController extends Controller
     }
 
     // Déterminer les colonnes de moyenne et de rang en fonction de la période
-    $colonneMoyenne = 'MS' . $periode;
+    if ($periode == 4) {
+        $colonneMoyenne = 'MAN';  // Utilise MAN pour la période 4
+    } else {
+        $colonneMoyenne = 'MS' . $periode;
+    }
     $colonneRang = 'RANG' . $periode;
 
     $eleves = \DB::table('eleve')
@@ -89,9 +93,13 @@ class ListemeriteController extends Controller
             'NOM',
             'PRENOM',
             'CODECLAS',
+            'MS1',
+            'MS2',
+            'MS3',
             'MAN',
+            'RANGA',
             $colonneMoyenne . ' as MOYENNE',
-            $colonneRang . ' as RANGA'
+            $colonneRang . ' as RANGB'
         )
         ->orderBy('CODECLAS')
         ->orderByDesc($colonneMoyenne)

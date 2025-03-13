@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Eleve;
 use App\Models\Moiscontrat;
@@ -35,7 +36,6 @@ use App\Models\Matiere;
 use App\Models\Matieres;
 use App\Models\Notes;
 use App\Models\Clasmat;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 use App\Models\Duplicatafacture;
@@ -62,22 +62,33 @@ class BulletinController extends Controller
     $classes = Classes::withCount(['eleves' => function ($query) {
       $query->where('CODECLAS', '!=', '');
     }])->get();
-    $typeenseigne = Typeenseigne::all();
+    $classesg = Groupeclasse::select('LibelleGroupe')->distinct()->get();
     $promotions = Promo::all();
     $matieres = Matiere::all();
     $eleves = Eleve::all();
     $params2 = Params2::first();
     $typean = $params2->TYPEAN;
-    return view('pages.notes.bulletindenotes', compact('classes', 'typeenseigne', 'promotions', 'eleves', 'matieres', 'typean'));
+    return view('pages.notes.bulletindenotes', compact('classes', 'promotions', 'eleves', 'matieres', 'typean', 'classesg'));
   }
   
-  public function getClassesByType($type)
+  public function getClassesByType(Request $request)
   {
-    // dd($type);
-    // Récupère les classes associées au type d'enseignement
-    $classes = Classes::where('TYPEENSEIG', $type)->withCount('eleves')->get();
-    // $classes = Classes::where('TYPEENSEIG', $type)->get();
-    
+    $libelleGroupe = $request->input('libelleGroupe');
+    // Vérifier que le groupe est sélectionné
+    if (!$libelleGroupe) {
+        return response()->json(['error' => 'Aucun groupe sélectionné'], 400);
+    }
+
+    // Récupérer les classes avec le compte des élèves
+    $classes = DB::table('classes_groupeclasse')
+        ->join('classes', 'classes_groupeclasse.CODECLAS', '=', 'classes.CODECLAS')
+        ->leftJoin('eleve', 'classes.CODECLAS', '=', 'eleve.CODECLAS')
+        ->where('classes_groupeclasse.LibelleGroupe', $libelleGroupe)
+        ->select('classes.CODECLAS', 
+                DB::raw('COUNT(eleve.MATRICULE) as EFFECTIF'))
+        ->groupBy('classes.CODECLAS')
+        ->get();
+
     return response()->json($classes);
   }
   

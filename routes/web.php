@@ -376,7 +376,7 @@ Route::get('/attestation/template', [CdController::class, 'printTemplate'])->nam
 Route::post('/bulletindenotes', [BulletinController::class, 'storebulletindenotes'])->name('storebulletindenotes');
 Route::post('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');
 Route::post('/optionsbulletindenotes', [BulletinController::class, 'optionsbulletindenotes'])->name('optionsbulletindenotes');
-Route::get('/classes/{type}', [BulletinController::class, 'getClassesByType'])->name('classes.byType');
+Route::get('/get-classes-by-group', [BulletinController::class, 'getClassesByType'])->name('getClassesByGroup');
 // Route::get('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');
 
 

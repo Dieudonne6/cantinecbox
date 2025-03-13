@@ -4,6 +4,36 @@
     <div class="container col-11">
         <!-- Titre principal avec espacement -->
         <div class="card mb-4">
+            <div>
+                <style>
+                    .btn-arrow {
+                        position: absolute;
+                        top: 0px;
+                        /* Ajustez la position verticale */
+                        left: 0px;
+                        /* Positionnez à gauche */
+                        background-color: transparent !important;
+                        border: 1px !important;
+                        text-transform: uppercase !important;
+                        font-weight: bold !important;
+                        cursor: pointer !important;
+                        font-size: 17px !important;
+                        /* Taille de l'icône */
+                        color: #b51818 !important;
+                        /* Couleur de l'icône */
+                    }
+            
+                    .btn-arrow:hover {
+                        color: #b700ff !important;
+                        /* Couleur au survol */
+                    }
+                </style>
+                <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </button>   
+                <br>
+                <br>                                   
+            </div>
             <div class="card-body text-center">
                 <h3>Impression des attestations de mérite</h3>
             </div>

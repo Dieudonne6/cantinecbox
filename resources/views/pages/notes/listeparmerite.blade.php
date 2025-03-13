@@ -3,6 +3,36 @@
 @section('content')
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
+      <div>
+        <style>
+            .btn-arrow {
+                position: absolute;
+                top: 0px;
+                /* Ajustez la position verticale */
+                left: 0px;
+                /* Positionnez à gauche */
+                background-color: transparent !important;
+                border: 1px !important;
+                text-transform: uppercase !important;
+                font-weight: bold !important;
+                cursor: pointer !important;
+                font-size: 17px !important;
+                /* Taille de l'icône */
+                color: #b51818 !important;
+                /* Couleur de l'icône */
+            }
+    
+            .btn-arrow:hover {
+                color: #b700ff !important;
+                /* Couleur au survol */
+            }
+        </style>
+        <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
+            <i class="fas fa-arrow-left"></i> Retour
+        </button>   
+        <br>
+        <br>                                   
+    </div>
       <div class="card-body">
         <div class="d-flex align-items-center">
           <h4 class="card-title mb-0 text-center">Liste par Ordre de mérite</h4>
@@ -36,12 +66,7 @@
                     <option value="1">1ère période</option>
                     <option value="2">2ème période</option>
                     <option value="3">3ème période</option>
-                    <option value="4">4ème période</option>
-                    <option value="5">5ème période</option>
-                    <option value="6">6ème période</option>
-                    <option value="7">7ème période</option>
-                    <option value="8">8ème période</option>
-                    <option value="9">9ème période</option>
+                    <option value="4">Annuel</option>
                   </select>
           </div>        
         

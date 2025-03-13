@@ -5,6 +5,36 @@
 
 
     <div class="container card">
+        <div>
+            <style>
+                .btn-arrow {
+                    position: absolute;
+                    top: 0px;
+                    /* Ajustez la position verticale */
+                    left: 0px;
+                    /* Positionnez à gauche */
+                    background-color: transparent !important;
+                    border: 1px !important;
+                    text-transform: uppercase !important;
+                    font-weight: bold !important;
+                    cursor: pointer !important;
+                    font-size: 17px !important;
+                    /* Taille de l'icône */
+                    color: #b51818 !important;
+                    /* Couleur de l'icône */
+                }
+        
+                .btn-arrow:hover {
+                    color: #b700ff !important;
+                    /* Couleur au survol */
+                }
+            </style>
+            <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
+                <i class="fas fa-arrow-left"></i> Retour
+            </button>
+            <br>
+            <br>                                     
+        </div>
         <nav>
             <div class="nav nav-tabs" id="nav-tab{{ $eleve->MATRICULE }}" role="tablist" style="font-size: 14px;">
                 @foreach (['Infor' => 'Informations générales', 'Detail' => 'Détail des notes', 'Deta' => 'Détails des paiements', 'finan' => 'Informations financières', 'Emploi' => 'Emploi du temps', 'Position' => 'Position Enseignants', 'Situation' => 'Situation selon Echéancier', 'Autre' => 'Autre Situation'] as $key => $label)
