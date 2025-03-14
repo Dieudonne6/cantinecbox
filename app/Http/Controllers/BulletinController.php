@@ -52,6 +52,7 @@ use RtfHtmlPhp\Html\HtmlFormatter;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\NotesExport;
+use Illuminate\Support\Str;
 
 
 class BulletinController extends Controller
@@ -1882,8 +1883,10 @@ private function determineAppreciation($moyenne, $params2)
                 $exportDev1 = $request->input('exportDev1', 1);
                 $exportDev2 = $request->input('exportDev2', 1);
             
-                return Excel::download(new NotesExport($notes, $exportMoy, $exportDev1, $exportDev2), 'notes.xlsx');
-            }
+                // Création du nom de fichier incluant le nom de la classe.
+                $fileName = $classe . '.xlsx';
+
+                return Excel::download(new NotesExport($notes, $exportMoy, $exportDev1, $exportDev2), $fileName);            }
         
       }           
       

@@ -147,6 +147,7 @@
         $noteKey = $eleve->MATRICULE . '-' . $matiere->CODEMAT;
         $noteValue = $notes[$noteKey]->$selectedEvaluation ?? '-';
         @endphp
+        {{-- @dd($noteValue); --}}
         <td>{{ $noteValue }}</td>
         @endforeach
         <td>{{ $selectedEvaluation === 'MS1' ? ($eleve->MSEM != -1 && $eleve->MSEM != 0 ? $eleve->MSEM : '**') : '**' }}</td>

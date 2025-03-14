@@ -34,29 +34,7 @@
             </div>
             <div class="card-body">
 
-                <!-- Bouton pour imprimer la liste -->
-                <button class="btn btn-primary" onclick="imprimerliste()">Imprimer</button>
-                <br>
-                @foreach ($resultats as $index => $resultat)
-                    @php
-                        // Initialisation des variables en fonction du type d'année
-                        $periode = null;
-                        $texte = null;
-                        $texte2 = null;
-                        $periode_abr = null;
-                        if ($typean == 1) {
-                            $periode = 'Semestre';
-                            $texte = 'Semestriel';
-                            $texte2 = 'Semestrielle';
-                            $periode_abr = 'Sem.';
-                        } else {
-                            $periode = 'Trimestre';
-                            $texte = 'Trimestriel';
-                            $texte2 = 'Trimestrielle';
-                            $periode_abr = 'Trim.';
-                                                }
-                    @endphp
-                    <div class="watermark"
+{{-- <div class="watermark"
                     style="position: absolute; top: 5%; left: 10%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
                     Scodelux
                 </div>
@@ -95,7 +73,34 @@
                 <div class="watermark"
                     style="position: absolute; top: 50%; left: 85%; color: gray; font-size: 4rem; font-style: italic; font-weight: 500; opacity: 0.3; pointer-events: none;">
                     Scodelux
-                </div>
+                </div> --}}
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                <!-- Bouton pour imprimer la liste -->
+                <button class="btn btn-primary" onclick="imprimerliste()">Imprimer</button>
+                <br>
+                @foreach ($resultats as $index => $resultat)
+                    @php
+                        // Initialisation des variables en fonction du type d'année
+                        $periode = null;
+                        $texte = null;
+                        $texte2 = null;
+                        $periode_abr = null;
+                        if ($typean == 1) {
+                            $periode = 'Semestre';
+                            $texte = 'Semestriel';
+                            $texte2 = 'Semestrielle';
+                            $periode_abr = 'Sem.';
+                        } else {
+                            $periode = 'Trimestre';
+                            $texte = 'Trimestriel';
+                            $texte2 = 'Trimestrielle';
+                            $periode_abr = 'Trim.';
+                                                }
+                    @endphp
+                    
                     <div class="bulletin" style=" position: relative; {{ $index < count($resultats) - 1 ? 'page-break-after: always;' : '' }}">
                         <br>
                         <br>
@@ -222,6 +227,19 @@
                                     $total_moyenne_coeffs = 0;
                                 @endphp
                                 @foreach ($resultat['matieres'] as $matiere)
+                                {{-- DEBUT ignorer la matiere si l'eleve n'a pas fait aucun des deux devoirs --}}
+                                @php
+                                $dev1Valid = isset($matiere['devoir1']) && $matiere['devoir1'] != 21 && $matiere['devoir1'] != -1;
+                                $dev2Valid = isset($matiere['devoir2']) && $matiere['devoir2'] != 21 && $matiere['devoir2'] != -1;
+                                @endphp
+                                
+                                {{-- Si la matière n'est pas "conduite" et qu'aucun des deux devoirs n'est valide, on passe à la suivante --}}
+                                @if ($matiere['code_matiere'] != $request->input('conduite') && !$dev1Valid && !$dev2Valid)
+                                    @continue
+                                @endif
+                                {{-- FIN ignorer la matiere si l'eleve n'a pas fait aucun des deux devoirs --}}
+
+                                
                                     @php
                                         $i++;
                                         $moyenne_part = $matiere['moyenne_sur_20'];
@@ -272,10 +290,10 @@
                                         <td style="text-align: left;">{{ $matiere['nom_matiere'] }}</td>
                                         <td>{{ $matiere['coefficient'] }}</td>
                                         <td>{{ number_format($matiere['moyenne_interro'], 2) ?? '**.**' }}</td>
-                                        <td>{{ $matiere['devoir1'] ?? '**.**' }}</td>
-                                        <td>{{ $matiere['devoir2'] ?? '**.**' }}</td>
+                                        <td>{{ (isset($matiere['devoir1']) && $matiere['devoir1'] != 21) ? $matiere['devoir1'] : '**.**' }}</td>
+                                        <td>{{ (isset($matiere['devoir2']) && $matiere['devoir2'] != 21) ? $matiere['devoir2'] : '**.**' }}</td>
                                         @if (!isset($option['masquer_devoir3']))
-                                            <td>{{ $matiere['devoir3'] ?? '**.**' }}</td>
+                                            <td>{{ (isset($matiere['devoir3']) && $matiere['devoir3'] != 21) ? $matiere['devoir3'] : '**.**' }}</td>
                                         @endif
                                         @if (!isset($option['note_test']) || !$option['note_test'])
                                             <td class="bold-text">{{ number_format($moyenne_sur_20, 2) ?? '**.**' }}</td>

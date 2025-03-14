@@ -31,40 +31,44 @@ class NotesExport implements FromCollection, WithHeadings, WithStyles, WithColum
     {
         $grouped = $this->notes->groupBy('MATRICULE');
         $data = collect();
-
+    
         foreach ($grouped as $matricule => $studentNotes) {
             // Calcul de la moyenne d'interrogation pour cet élève
             $totalInterro = $studentNotes->sum('interro');
             $countInterro = $studentNotes->count();
             $moyenneInterro = $countInterro ? number_format($totalInterro / $countInterro, 2) : 0;
             $firstNote = $studentNotes->first();
-
+    
             // On force le matricule en texte pour éviter la notation scientifique
             $row = [
+                'Classe'          => $firstNote->eleve->CODECLAS,
                 'MATRICULE'       => '="' . $firstNote->eleve->MATRICULEX . '"',
                 'Nom et Prenom'   => $firstNote->eleve->NOM . ' ' . $firstNote->eleve->PRENOM,
             ];
-
+    
             if ($this->exportMoy) {
-                // Vous pouvez choisir d'exporter la moyenne calculée ou la valeur stockée (ici $firstNote->MI)
-                $row['Moyenne Interro'] = $firstNote->MI;
+                $mi = $firstNote->MI;
+                // Remplacer la note par une chaîne vide si elle est égale à 21 ou -1
+                $row['Moyenne Interro'] = ($mi == 21 || $mi == -1) ? '**.**' :  round($mi, 2);
             }
             if ($this->exportDev1) {
-                $row['DEV1'] = $firstNote->DEV1;
+                $dev1 = $firstNote->DEV1;
+                $row['DEV1'] = ($dev1 == 21 || $dev1 == -1) ? '**.**' : $dev1;
             }
             if ($this->exportDev2) {
-                $row['DEV2'] = $firstNote->DEV2;
+                $dev2 = $firstNote->DEV2;
+                $row['DEV2'] = ($dev2 == 21 || $dev2 == -1) ? '**.**' : $dev2;
             }
-
+    
             $data->push($row);
         }
-
+    
         return $data;
     }
 
     public function headings(): array
     {
-        $headings = ['MATRICULE', 'Nom et Prenom'];
+        $headings = ['Classe', 'MATRICULE', 'Nom et Prenom'];
         if ($this->exportMoy) {
             $headings[] = 'Moyenne Interro';
         }
