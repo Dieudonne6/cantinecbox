@@ -20,5 +20,10 @@ class Promo extends Model
         'Niveau',
         'TYPEENSEIG'
     ];
+
+    public function classes()
+{
+    return $this->hasMany(Classe::class, 'CODEPROMO', 'CODEPROMO');
+}
     
 }
