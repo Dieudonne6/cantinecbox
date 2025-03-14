@@ -215,6 +215,8 @@ Route::get('/editions2/relevesparmatiere', [EditionController::class, 'relevespa
 Route::get('/editions2/recapitulatifdenotes', [EditionController2::class, 'recapitulatifdenotes'])->name('pages.notes.recapitulatifdenotes');
 Route::get('/editions2/resultatsparpromotion', [EditionController2::class, 'resultatsparpromotion'])->name('pages.notes.resultatsparpromotion');
 Route::get('/editions2/listedesmeritants', [EditionController2::class, 'listedesmeritants'])->name('pages.notes.listedesmeritants');
+Route::post('/search-meritants', [EditionController2::class, 'searchMeritants']);
+
 
 Route::get('/journalderecouvrement', [EditionController::class, 'journal'])->name('journal');
 
@@ -389,4 +391,3 @@ Route::get('/get-classes-by-group', [ListemeriteController::class, 'getClassesBy
 
 Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'relevespareleves'])->name('relevespareleves');
 // Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'getMatieresAndNotes'])->name('relevespareleves');
-
