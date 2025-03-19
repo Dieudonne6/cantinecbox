@@ -17,7 +17,6 @@
                         font-size: 17px !important;
                         color: #b51818 !important;
                     }
-
                     .btn-arrow:hover {
                         color: #b700ff !important;
                     }
@@ -35,13 +34,11 @@
                 <div class="row justify-content-end">
                     <div class="col-md-8 p-3 border rounded bg-light d-flex align-items-center">
                         <div class="form-check form-check-inline ml-2">
-                            <input class="form-check-input" type="radio" name="filtre" id="filtreClasse" value="classe"
-                                checked>
+                            <input class="form-check-input" type="radio" name="filtre" id="filtreClasse" value="classe" checked>
                             <label class="form-check-label" for="filtreClasse">Par classe</label>
                         </div>
                         <div class="form-check form-check-inline ml-2">
-                            <input class="form-check-input" type="radio" name="filtre" id="filtrePromotion"
-                                value="promotion">
+                            <input class="form-check-input" type="radio" name="filtre" id="filtrePromotion" value="promotion">
                             <label class="form-check-label" for="filtrePromotion">Par Promotion</label>
                         </div>
                         <div class="form-check form-check-inline ml-2">
@@ -72,8 +69,7 @@
                                     <tbody>
                                         @foreach ($classes as $classe)
                                             <tr>
-                                                <td><input type="checkbox" name="classes[]" value="{{ $classe->CODECLAS }}">
-                                                </td>
+                                                <td><input type="checkbox" name="classes[]" value="{{ $classe->CODECLAS }}"></td>
                                                 <td>{{ $classe->CODECLAS }}</td>
                                             </tr>
                                         @endforeach
@@ -96,8 +92,7 @@
                                     <tbody>
                                         @foreach ($promotions as $promotion)
                                             <tr>
-                                                <td><input type="checkbox" name="promotions[]"
-                                                        value="{{ $promotion->CODEPROMO }}"></td>
+                                                <td><input type="checkbox" name="promotions[]" value="{{ $promotion->CODEPROMO }}"></td>
                                                 <td>{{ $promotion->CODEPROMO }}</td>
                                                 <td>{{ $promotion->LIBELPROMO }}</td>
                                             </tr>
@@ -125,8 +120,7 @@
                                     <button class="btn btn-primary btn-sm" id="searchButton">Rechercher</button>
                                 </div>
                                 <div class="col-md-6 mb-1">
-                                    <button class="btn btn-secondary btn-sm"
-                                        onclick="printFilteredTable()">Imprimer</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="printFilteredTable()">Imprimer</button>
                                 </div>
                             </div>
                         </div>
@@ -135,8 +129,7 @@
                         <div class="form-group mt-3">
                             <div class="d-flex align-items-center">
                                 <label for="nombre" class="me-2"><strong>Choisir les</strong></label>
-                                <input type="number" class="form-control form-control-sm" id="nombre" min="1"
-                                    step="1" value="10"> Premiers
+                                <input type="number" class="form-control form-control-sm" id="nombre" min="1" step="1" value="10"> Premiers
                             </div>
                         </div>
 
@@ -172,8 +165,7 @@
                         <!-- Filtre sur la conduite -->
                         <div class="form-group">
                             <label for="conduite_min"><strong>Exclure conduite inférieure à</strong></label>
-                            <input type="number" step="0.01" class="form-control form-control-sm" id="conduite_min"
-                                placeholder="0.00">
+                            <input type="number" step="0.01" class="form-control form-control-sm" id="conduite_min" placeholder="0.00">
                         </div>
 
                         <!-- Filtre sur la matière -->
@@ -191,15 +183,14 @@
                     <!-- Colonne de droite : Tableau des résultats -->
                     <div class="col-md-9 border p-2">
                         <div class="mb-2">
-                            <input type="text" class="form-control" style="width: 100px; display: inline-block;"
-                                id="foundCount" value="0">
+                            <input type="text" class="form-control" style="width: 100px; display: inline-block;" id="foundCount" value="0">
                             Trouvés
-                            <input type="text" class="form-control" style="width: 200px; display: inline-block;"
-                                id="additionalInfo">
+                            <input type="text" class="form-control" style="width: 200px; display: inline-block;" id="additionalInfo">
                         </div>
-                        <!-- Tableau principal existant -->
+
+                        <!-- Tableau principal : Moyennes générales -->
                         <div class="table-responsive">
-                            <table class="table table-bordered table-sm table-striped" id="elevesTable">
+                            <table class="table table-bordered table-sm table-striped" id="elevesTable" style="display: none;">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>Ordre</th>
@@ -217,9 +208,9 @@
                             </table>
                         </div>
 
-                        <!-- Tableau secondaire existant -->
+                        <!-- Tableau secondaire : Notes par matière -->
                         <div class="table-responsive">
-                            <table class="table table-bordered table-sm table-striped" id="notesTable">
+                            <table class="table table-bordered table-sm table-striped" id="notesTable" style="display: none;">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>Ordre</th>
@@ -237,10 +228,11 @@
                                     @foreach ($eleves as $eleve)
                                         @foreach ($notes->where('MATRICULE', $eleve->MATRICULE) as $note)
                                             <tr>
-                                                <td>{{ $loop->parent->iteration }}</td> {{-- Utilisation de $loop->parent pour conserver l'ordre des élèves --}}
+                                                <td>{{ $loop->parent->iteration }}</td>
                                                 <td>{{ $eleve->NOM }}</td>
                                                 <td>{{ $eleve->PRENOM }}</td>
-                                                <td>{{ $note->MS1 }}</td>
+                                                <!-- Application de la règle : 21 et -1 ne sont pas considérés -->
+                                                <td>{{ ($note->MS1 == 21 || $note->MS1 == -1) ? '-' : $note->MS1 }}</td>
                                                 <td>{{ $eleve->SEXE }}</td>
                                                 <td>{{ $note->NoteConduite }}</td>
                                                 <td>{{ $eleve->CODECLAS }}</td>
@@ -314,9 +306,7 @@
 
             // Récupération des filtres
             let filtre = document.querySelector('input[name="filtre"]:checked').value;
-            let data = {
-                filtre: filtre
-            };
+            let data = { filtre: filtre };
 
             if (filtre === 'classe') {
                 let classes = [];
@@ -353,51 +343,61 @@
                 .then(resultats => {
                     // Si une matière spécifique est sélectionnée, utiliser le tableau secondaire
                     if (data.matiere && data.matiere !== 'moyenne_generale') {
+                        // Masquer le tableau principal et afficher le secondaire
+                        document.getElementById('elevesTable').style.display = 'none';
+                        document.getElementById('notesTable').style.display = 'table';
+
                         const tableBody = document.getElementById('notesTableBody');
                         resultats.forEach((item, index) => {
-                            // Affichage de la note depuis la colonne MS1 de la table notes
-                            let noteDisplay = item.MS1 ? item.MS1 : '-';
-                            // Utiliser la relation 'eleve' pour afficher les infos de l'élève
+                            let noteValue = item.MS1;
+                            let noteDisplay = (Number(noteValue) === 21 || Number(noteValue) === -1)
+                                ? '-' 
+                                : noteValue;
                             let nom = item.eleve ? item.eleve.NOM : '-';
                             let prenom = item.eleve ? item.eleve.PRENOM : '-';
                             let sexe = (item.eleve && item.eleve.SEXE == 1) ? 'M' : 'F';
-                            let conduite = item.eleve && item.eleve.conduite ? item.eleve.conduite :
-                            '-';
+                            let conduite = item.eleve && item.eleve.conduite ? item.eleve.conduite : '-';
                             let codeClas = item.eleve ? item.eleve.CODECLAS : '-';
 
                             let tr = document.createElement('tr');
                             tr.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${nom}</td>
-                    <td>${prenom}</td>
-                    <td>${noteDisplay}</td>
-                    <td>${sexe}</td>
-                    <td>${conduite}</td>
-                    <td>${codeClas}</td>
-                    <td>${item.CODEMAT ? item.CODEMAT : '-'}</td>
-                    <td>${item.SEMESTRE ? item.SEMESTRE : '-'}</td>
-                `;
+                                <td>${index + 1}</td>
+                                <td>${nom}</td>
+                                <td>${prenom}</td>
+                                <td>${noteDisplay}</td>
+                                <td>${sexe}</td>
+                                <td>${conduite}</td>
+                                <td>${codeClas}</td>
+                                <td>${item.CODEMAT ? item.CODEMAT : '-'}</td>
+                                <td>${item.SEMESTRE ? item.SEMESTRE : '-'}</td>
+                            `;
                             tableBody.appendChild(tr);
                         });
+
                     } else {
-                        // Cas de la moyenne générale, afficher dans le tableau principal
+                        // Cas de la moyenne générale : masquer le tableau secondaire et afficher le principal
+                        document.getElementById('notesTable').style.display = 'none';
+                        document.getElementById('elevesTable').style.display = 'table';
+
                         const tableBody = document.getElementById('elevesTableBody');
-                        const periode = data.periode;
-                        const noteKey = (periode === 'AN') ? 'MAN' : 'MS' + periode;
+                        const noteKey = (data.periode === 'AN') ? 'MAN' : 'MS' + data.periode;
                         document.getElementById('headerNote').innerText = 'Moyenne';
 
                         resultats.forEach((eleve, index) => {
-                            let noteDisplay = eleve[noteKey] ? eleve[noteKey] : '-';
+                            let noteValue = eleve[noteKey];
+                            let noteDisplay = (Number(noteValue) === 21 || Number(noteValue) === -1)
+                                ? '-' 
+                                : noteValue;
                             let tr = document.createElement('tr');
                             tr.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${eleve.NOM}</td>
-                    <td>${eleve.PRENOM}</td>
-                    <td>${noteDisplay}</td>
-                    <td>${eleve.SEXE == 1 ? 'M' : 'F'}</td>
-                    <td>${eleve.conduite ? eleve.conduite : '-'}</td>
-                    <td>${eleve.CODECLAS}</td>
-                `;
+                                <td>${index + 1}</td>
+                                <td>${eleve.NOM}</td>
+                                <td>${eleve.PRENOM}</td>
+                                <td>${noteDisplay}</td>
+                                <td>${eleve.SEXE == 1 ? 'M' : 'F'}</td>
+                                <td>${eleve.conduite ? eleve.conduite : '-'}</td>
+                                <td>${eleve.CODECLAS}</td>
+                            `;
                             tableBody.appendChild(tr);
                         });
                     }
@@ -407,69 +407,85 @@
                 .catch(error => console.error('Erreur : ', error));
         });
     </script>
+
     {{-- Script pour impression --}}
     <script>
         function printFilteredTable() {
-            // Insertion sécurisée de la variable PHP dans JavaScript
-            const ecole = @json($params->NOMETAB);
-            const dateImpression = new Date().toLocaleDateString('fr-FR');
-            const titre = "Liste des Méritants";
-
-            // Récupération de la valeur de l'input "nombre", avec valeur par défaut 10 si introuvable ou vide
+            // ----------------------
+            // 1. Récupération des données
+            // ----------------------
+            const ecole          = @json($params->NOMETAB); // Exemple : "CEG SAINTE RITA"
+            const dateImpression = new Date().toLocaleDateString('fr-FR'); 
+            const titre          = "Liste des méritants";
+        
+            // Récupération du nombre de méritants (ex. "10 premiers")
             const nombreInput = document.getElementById('nombre');
-            const nombre = nombreInput ? nombreInput.value : 10;
-            const topMeritants = `${nombre} premiers`;
-
-            // Récupération de la valeur du filtre sélectionné, ou 'tout' par défaut
+            const nombre      = nombreInput ? nombreInput.value : 10;
+            const topMeritants = `${nombre} premiers`; 
+        
+            // Filtre sélectionné (classe, promotion, cycle, tout)
             const filtreInput = document.querySelector('input[name="filtre"]:checked');
             const filtreSelectionne = filtreInput ? filtreInput.value : 'tout';
             let filtreText = "";
             switch (filtreSelectionne) {
-                case 'classe':
-                    filtreText = "Par classe";
-                    break;
-                case 'promotion':
-                    filtreText = "Par promotion";
-                    break;
-                case 'cycle':
-                    filtreText = "Par cycle";
-                    break;
-                default:
-                    filtreText = "Tout l'établissement";
+                case 'classe':    filtreText = "Par classe";        break;
+                case 'promotion': filtreText = "Par promotion";     break;
+                case 'cycle':     filtreText = "Par cycle";         break;
+                default:          filtreText = "Tout l'établissement";
             }
-
-            // Récupération de la matière et de son libellé
+        
+            // Récupération de la matière sélectionnée
             const matiereSelect = document.getElementById('matiere');
             let matiereValue = matiereSelect ? matiereSelect.value : 'moyenne_generale';
-            let matiereLabel = (matiereValue === 'moyenne_generale') ? "Moyenne générale" :
-                (matiereSelect.querySelector(`option[value="${matiereValue}"]`)?.textContent || "Moyenne générale");
-
-            // Récupération de la priorité (sexe)
+            let matiereLabel = (matiereValue === 'moyenne_generale')
+                ? "Moyenne générale"
+                : (matiereSelect.querySelector(`option[value="${matiereValue}"]`)?.textContent || "Moyenne générale");
+        
+            // Sexe (priorité)
             const sexeSelect = document.getElementById('sexe');
-            const sexeValue = sexeSelect ? sexeSelect.value : "";
-            const sexeLabel = sexeValue === "1" ? "Garçons" : sexeValue === "2" ? "Filles" : "Aucune";
-
-            // Récupération de la valeur minimale de conduite
+            const sexeValue  = sexeSelect ? sexeSelect.value : "";
+            const sexeLabel  = sexeValue === "1" ? "Garçons" : sexeValue === "2" ? "Filles" : "Aucune";
+        
+            // Exclusion de conduite
             const conduiteMinInput = document.getElementById('conduite_min');
             const conduiteMin = conduiteMinInput ? conduiteMinInput.value : "";
             const exclusionText = conduiteMin ? `Exclure conduite < ${conduiteMin}` : "Aucune exclusion";
-
-            // Récupération du contenu HTML du tableau
-            const elevesTable = document.getElementById('elevesTable');
-            if (!elevesTable) {
-                console.error("Table 'elevesTable' non trouvée.");
-                return;
+        
+            // Exemple d'année scolaire fixe (vous pouvez la rendre dynamique)
+            const anneeScolaire = "2022-2023";
+        
+            // Récupération du semestre/période (pour l'affichage "Semestre : 1", etc.)
+            const periodeSelect = document.getElementById('periode');
+            const periodeValue  = periodeSelect ? periodeSelect.value : "1";
+            let semestreLabel   = (periodeValue === 'AN') ? "Annuel" : periodeValue; 
+        
+            // ----------------------
+            // 2. Déterminer quel tableau est affiché
+            // ----------------------
+            let tableHTML       = "";
+            const elevesTable   = document.getElementById('elevesTable'); // Moyennes générales
+            const notesTable    = document.getElementById('notesTable');  // Notes par matière
+        
+            // Si notesTable est visible, on imprime celui-ci, sinon on imprime elevesTable
+            if (notesTable.style.display === 'table') {
+                tableHTML = notesTable.outerHTML;
+            } else if (elevesTable.style.display === 'table') {
+                tableHTML = elevesTable.outerHTML;
+            } else {
+                // Par défaut, si aucun n'est en display:table, on prend le tableau des moyennes
+                tableHTML = elevesTable.outerHTML;
             }
-            const tableHTML = elevesTable.outerHTML;
-
-            // Ouverture d'une nouvelle fenêtre pour l'impression
+        
+            // ----------------------
+            // 3. Construire la fenêtre d'impression
+            // ----------------------
             const newWin = window.open('', '_blank');
             if (!newWin) {
                 alert("Impossible d'ouvrir une nouvelle fenêtre. Veuillez vérifier vos bloqueurs de pop-up.");
                 return;
             }
             newWin.document.open();
-
+        
             newWin.document.write(`
                 <html>
                 <head>
@@ -487,32 +503,6 @@
                                 color: #333;
                                 margin: 0;
                                 padding: 0;
-                            }
-                            .header {
-                                text-align: center;
-                                margin-bottom: 20px;
-                                padding-bottom: 10px;
-                                border-bottom: 2px solid #000;
-                            }
-                            .header h1 {
-                                font-size: 20px;
-                                font-weight: bold;
-                                margin: 0;
-                            }
-                            .header .sub-info {
-                                font-size: 14px;
-                                margin-top: 5px;
-                            }
-                            .info-section {
-                                display: flex;
-                                justify-content: space-between;
-                                margin-bottom: 10px;
-                            }
-                            .info-section div {
-                                flex: 1;
-                                font-size: 12px;
-                                padding: 5px;
-                                border-bottom: 1px dashed #ccc;
                             }
                             table {
                                 width: 100%;
@@ -545,34 +535,64 @@
                                 content: counter(page);
                             }
                         }
+        
+                        /* Mise en page personnalisée pour l'en-tête */
+                        .header-line {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        }
+                        .header-line div {
+                            flex: 1;
+                        }
+                        .header-line .center-col {
+                            text-align: center;
+                        }
+                        .bold {
+                            font-weight: bold;
+                        }
+                        hr {
+                            border: 0;
+                            border-top: 1px solid #000;
+                            margin: 5px 0 10px 0;
+                        }
                     </style>
                 </head>
                 <body onload="window.print(); window.close();">
-                    <!-- En-tête -->
-                    <div class="header">
-                        <h1>${ecole}</h1>
-                        <div class="sub-info">Date : ${dateImpression}</div>
+                    <!-- Ligne 1 : École à gauche, Date à droite -->
+                    <div class="header-line bold">
+                        <div style="text-align:left;">${ecole}</div>
+                        <div style="text-align:right;">${dateImpression}</div>
                     </div>
-    
-                    <!-- Informations générales -->
-                    <div class="info-section">
-                        <div><strong>${titre}</strong></div>
-                        <div><strong>${topMeritants}</strong></div>
+                    <hr/>
+        
+                    <!-- Ligne 2 : Titre centré, "X premiers" à droite -->
+                    <div class="header-line">
+                        <div class="center-col" style="font-size:18px; font-weight:bold;">${titre}</div>
+                        <div style="text-align:right;">${topMeritants}</div>
                     </div>
-    
-                    <div class="info-section">
-                        <div>Filtre : ${filtreText}</div>
-                        <div>Matière : ${matiereLabel}</div>
+        
+                    <!-- Ligne 3 : Classe / Année scolaire -->
+                    <div class="header-line">
+                        <div style="text-align:left;">CLASSE : <strong><!-- Insérez la classe ici si besoin --></strong></div>
+                        <div style="text-align:right;">${anneeScolaire}</div>
                     </div>
-    
-                    <div class="info-section">
-                        <div>Priorité : ${sexeLabel}</div>
-                        <div>${exclusionText}</div>
+        
+                    <!-- Ligne 4 : Matière / Semestre -->
+                    <div class="header-line">
+                        <div style="text-align:left;">Matière : <strong>${matiereLabel}</strong></div>
+                        <div style="text-align:right;">Semestre : <strong>${semestreLabel}</strong></div>
                     </div>
-    
-                    <!-- Tableau des élèves -->
+        
+                    <!-- Ligne 5 : Filtre / Exclusion -->
+                    <div class="header-line">
+                        <div style="text-align:left;">Filtre : ${filtreText}</div>
+                        <div style="text-align:right;">${exclusionText}</div>
+                    </div>
+        
+                    <!-- Tableau des résultats -->
                     ${tableHTML}
-    
+        
                     <!-- Pied de page -->
                     <div class="footer">
                         <span>Imprimé le ${dateImpression}</span> - Page <span class="page-number"></span>
@@ -580,8 +600,9 @@
                 </body>
                 </html>
             `);
-
+        
             newWin.document.close();
         }
-    </script>
+        </script>
+        
 @endsection
