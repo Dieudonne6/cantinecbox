@@ -1864,9 +1864,13 @@ $entete = '
             ->where('SEMESTRE', $periode)
             ->get();
 
+            // Récupérer la valeur de typean depuis la table params2
+            $typean = DB::table('params2')->value('typean'); // récupère la première valeur de 'typean'
+            $periodLabel = ($typean == 1) ? 'Semestre' : 'Trimestre';
+
             // dd($notes);
 
-            return view('pages.notes.extractnote', compact('classes', 'matieres', 'notes', 'nomMatiere'));
+            return view('pages.notes.extractnote', compact('classes', 'classe', 'matieres', 'periodLabel', 'periode', 'notes', 'nomMatiere'));
 
 
         }
@@ -1886,7 +1890,13 @@ $entete = '
                 ->where('CODEMAT', $matiere)
                 ->where('SEMESTRE', $periode)
                 ->get();
+
+
+                // Récupérer la valeur de typean depuis la table params2
+                $typean = DB::table('params2')->value('typean'); // récupère la première valeur de 'typean'
+                $periodLabel = ($typean == 1) ? 'Semestre' : 'Trimestre';
             
+
                 // Récupérer les options d'export (1 = coché, 0 = décoché)
                 $exportMoy = $request->input('exportMoy', 1);
                 $exportDev1 = $request->input('exportDev1', 1);
@@ -1895,7 +1905,11 @@ $entete = '
                 // Création du nom de fichier incluant le nom de la classe.
                 $fileName = $classe .'_'.$nomMat.  '.xlsx';
 
-                return Excel::download(new NotesExport($nomMatiere, $notes, $exportMoy, $exportDev1, $exportDev2), $fileName);            }
-        
-      }           
+                return Excel::download(
+                    new NotesExport($nomMatiere, $notes, $classe, $periode, $periodLabel, $exportMoy, $exportDev1, $exportDev2),
+                    $fileName
+                );    
+
+      }          
+    } 
       
