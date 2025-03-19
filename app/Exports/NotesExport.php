@@ -11,16 +11,20 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use App\Models\Matieres; // Assurez-vous d'importer le modèle Matiere
 
 class NotesExport implements FromCollection, WithHeadings, WithStyles, WithColumnFormatting
 {
+    protected $nomMatiere;
     protected $notes;
     protected $exportMoy;
     protected $exportDev1;
     protected $exportDev2;
 
-    public function __construct(Collection $notes, $exportMoy = 1, $exportDev1 = 1, $exportDev2 = 1)
+    // Ici, on type-hinte $nomMatiere avec le modèle Matiere
+    public function __construct(Matieres $nomMatiere, $notes, $exportMoy = 1, $exportDev1 = 1, $exportDev2 = 1)
     {
+        $this->nomMatiere = $nomMatiere;
         $this->notes = $notes;
         $this->exportMoy = $exportMoy == 1;
         $this->exportDev1 = $exportDev1 == 1;
@@ -31,25 +35,26 @@ class NotesExport implements FromCollection, WithHeadings, WithStyles, WithColum
     {
         $grouped = $this->notes->groupBy('MATRICULE');
         $data = collect();
-    
+
         foreach ($grouped as $matricule => $studentNotes) {
             // Calcul de la moyenne d'interrogation pour cet élève
             $totalInterro = $studentNotes->sum('interro');
             $countInterro = $studentNotes->count();
             $moyenneInterro = $countInterro ? number_format($totalInterro / $countInterro, 2) : 0;
             $firstNote = $studentNotes->first();
-    
-            // On force le matricule en texte pour éviter la notation scientifique
+
+            // Construction de la ligne de données en ajoutant une colonne pour la matière
             $row = [
-                'Classe'          => $firstNote->eleve->CODECLAS,
-                'MATRICULE'       => '="' . $firstNote->eleve->MATRICULEX . '"',
-                'Nom et Prenom'   => $firstNote->eleve->NOM . ' ' . $firstNote->eleve->PRENOM,
+                'Classe'       => $firstNote->eleve->CODECLAS,
+                // On ajoute le nom de la matière en utilisant $this->nomMatiere->LIBELMAT  
+                'Matière'      => $this->nomMatiere->LIBELMAT,
+                'MATRICULE'       => "\u{200B}" . (string)$firstNote->eleve->MATRICULEX,
+                'Nom et Prenom'=> $firstNote->eleve->NOM . ' ' . $firstNote->eleve->PRENOM,
             ];
-    
+
             if ($this->exportMoy) {
                 $mi = $firstNote->MI;
-                // Remplacer la note par une chaîne vide si elle est égale à 21 ou -1
-                $row['Moyenne Interro'] = ($mi == 21 || $mi == -1) ? '**.**' :  round($mi, 2);
+                $row['Moyenne Interro'] = ($mi == 21 || $mi == -1) ? '**.**' : round($mi, 2);
             }
             if ($this->exportDev1) {
                 $dev1 = $firstNote->DEV1;
@@ -59,16 +64,17 @@ class NotesExport implements FromCollection, WithHeadings, WithStyles, WithColum
                 $dev2 = $firstNote->DEV2;
                 $row['DEV2'] = ($dev2 == 21 || $dev2 == -1) ? '**.**' : $dev2;
             }
-    
+
             $data->push($row);
         }
-    
+
         return $data;
     }
 
     public function headings(): array
     {
-        $headings = ['Classe', 'MATRICULE', 'Nom et Prenom'];
+        // On ajoute un en-tête pour la matière
+        $headings = ['Classe', 'Matière', 'MATRICULE', 'Nom et Prenom'];
         if ($this->exportMoy) {
             $headings[] = 'Moyenne Interro';
         }
@@ -110,7 +116,8 @@ class NotesExport implements FromCollection, WithHeadings, WithStyles, WithColum
     public function columnFormats(): array
     {
         return [
-            'A' => NumberFormat::FORMAT_TEXT,
+            'B' => NumberFormat::FORMAT_TEXT, // Colonne B : Matière
+            'C' => \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT,
         ];
     }
 }

@@ -75,6 +75,7 @@
                         <thead>
                             <tr>
                                 <th>Classe</th>
+                                <th>Matiere</th>
                                 <th>MATRICULE</th>
                                 <th>Nom et Prenom</th>
                                 <th class="moy-int">Moy Inter</th>
@@ -94,6 +95,7 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $firstNote->eleve->CODECLAS }}</td>
+                                    <td>{{ $nomMatiere->LIBELMAT }}</td>
                                     <td>{{ $firstNote->eleve->MATRICULEX }}</td>
                                     <td>{{ $firstNote->eleve->NOM .' '. $firstNote->eleve->PRENOM }}</td>
                                     <td class="moy-int">
