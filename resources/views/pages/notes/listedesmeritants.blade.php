@@ -17,6 +17,7 @@
                         font-size: 17px !important;
                         color: #b51818 !important;
                     }
+
                     .btn-arrow:hover {
                         color: #b700ff !important;
                     }
@@ -34,11 +35,13 @@
                 <div class="row justify-content-end">
                     <div class="col-md-8 p-3 border rounded bg-light d-flex align-items-center">
                         <div class="form-check form-check-inline ml-2">
-                            <input class="form-check-input" type="radio" name="filtre" id="filtreClasse" value="classe" checked>
+                            <input class="form-check-input" type="radio" name="filtre" id="filtreClasse" value="classe"
+                                checked>
                             <label class="form-check-label" for="filtreClasse">Par classe</label>
                         </div>
                         <div class="form-check form-check-inline ml-2">
-                            <input class="form-check-input" type="radio" name="filtre" id="filtrePromotion" value="promotion">
+                            <input class="form-check-input" type="radio" name="filtre" id="filtrePromotion"
+                                value="promotion">
                             <label class="form-check-label" for="filtrePromotion">Par Promotion</label>
                         </div>
                         <div class="form-check form-check-inline ml-2">
@@ -69,7 +72,8 @@
                                     <tbody>
                                         @foreach ($classes as $classe)
                                             <tr>
-                                                <td><input type="checkbox" name="classes[]" value="{{ $classe->CODECLAS }}"></td>
+                                                <td><input type="checkbox" name="classes[]" value="{{ $classe->CODECLAS }}">
+                                                </td>
                                                 <td>{{ $classe->CODECLAS }}</td>
                                             </tr>
                                         @endforeach
@@ -92,7 +96,8 @@
                                     <tbody>
                                         @foreach ($promotions as $promotion)
                                             <tr>
-                                                <td><input type="checkbox" name="promotions[]" value="{{ $promotion->CODEPROMO }}"></td>
+                                                <td><input type="checkbox" name="promotions[]"
+                                                        value="{{ $promotion->CODEPROMO }}"></td>
                                                 <td>{{ $promotion->CODEPROMO }}</td>
                                                 <td>{{ $promotion->LIBELPROMO }}</td>
                                             </tr>
@@ -120,7 +125,8 @@
                                     <button class="btn btn-primary btn-sm" id="searchButton">Rechercher</button>
                                 </div>
                                 <div class="col-md-6 mb-1">
-                                    <button class="btn btn-secondary btn-sm" onclick="printFilteredTable()">Imprimer</button>
+                                    <button class="btn btn-secondary btn-sm"
+                                        onclick="printFilteredTable()">Imprimer</button>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +135,8 @@
                         <div class="form-group mt-3">
                             <div class="d-flex align-items-center">
                                 <label for="nombre" class="me-2"><strong>Choisir les</strong></label>
-                                <input type="number" class="form-control form-control-sm" id="nombre" min="1" step="1" value="10"> Premiers
+                                <input type="number" class="form-control form-control-sm" id="nombre" min="1"
+                                    step="1" value="10"> Premiers
                             </div>
                         </div>
 
@@ -165,7 +172,8 @@
                         <!-- Filtre sur la conduite -->
                         <div class="form-group">
                             <label for="conduite_min"><strong>Exclure conduite inférieure à</strong></label>
-                            <input type="number" step="0.01" class="form-control form-control-sm" id="conduite_min" placeholder="0.00">
+                            <input type="number" step="0.01" class="form-control form-control-sm" id="conduite_min"
+                                placeholder="0.00">
                         </div>
 
                         <!-- Filtre sur la matière -->
@@ -183,14 +191,17 @@
                     <!-- Colonne de droite : Tableau des résultats -->
                     <div class="col-md-9 border p-2">
                         <div class="mb-2">
-                            <input type="text" class="form-control" style="width: 100px; display: inline-block;" id="foundCount" value="0">
+                            <input type="text" class="form-control" style="width: 100px; display: inline-block;"
+                                id="foundCount" value="0">
                             Trouvés
-                            <input type="text" class="form-control" style="width: 200px; display: inline-block;" id="additionalInfo">
+                            <input type="text" class="form-control" style="width: 200px; display: inline-block;"
+                                id="additionalInfo">
                         </div>
 
                         <!-- Tableau principal : Moyennes générales -->
                         <div class="table-responsive">
-                            <table class="table table-bordered table-sm table-striped" id="elevesTable" style="display: none;">
+                            <table class="table table-bordered table-sm table-striped" id="elevesTable"
+                                style="display: none;">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>Ordre</th>
@@ -210,7 +221,8 @@
 
                         <!-- Tableau secondaire : Notes par matière -->
                         <div class="table-responsive">
-                            <table class="table table-bordered table-sm table-striped" id="notesTable" style="display: none;">
+                            <table class="table table-bordered table-sm table-striped" id="notesTable"
+                                style="display: none;">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>Ordre</th>
@@ -232,7 +244,7 @@
                                                 <td>{{ $eleve->NOM }}</td>
                                                 <td>{{ $eleve->PRENOM }}</td>
                                                 <!-- Application de la règle : 21 et -1 ne sont pas considérés -->
-                                                <td>{{ ($note->MS1 == 21 || $note->MS1 == -1) ? '-' : $note->MS1 }}</td>
+                                                <td>{{ $note->MS1 == 21 || $note->MS1 == -1 ? '-' : $note->MS1 }}</td>
                                                 <td>{{ $eleve->SEXE }}</td>
                                                 <td>{{ $note->NoteConduite }}</td>
                                                 <td>{{ $eleve->CODECLAS }}</td>
@@ -306,7 +318,9 @@
 
             // Récupération des filtres
             let filtre = document.querySelector('input[name="filtre"]:checked').value;
-            let data = { filtre: filtre };
+            let data = {
+                filtre: filtre
+            };
 
             if (filtre === 'classe') {
                 let classes = [];
@@ -347,16 +361,22 @@
                         document.getElementById('elevesTable').style.display = 'none';
                         document.getElementById('notesTable').style.display = 'table';
 
+                        // Récupérer les classes uniques
+                        let classesUniques = [...new Set(resultats.map(item => item.eleve?.CODECLAS).filter(
+                            Boolean))];
+                        document.getElementById('additionalInfo').value = classesUniques.join(', ');
+
                         const tableBody = document.getElementById('notesTableBody');
                         resultats.forEach((item, index) => {
                             let noteValue = item.MS1;
-                            let noteDisplay = (Number(noteValue) === 21 || Number(noteValue) === -1)
-                                ? '-' 
-                                : noteValue;
+                            let noteDisplay = (Number(noteValue) === 21 || Number(noteValue) === -1) ?
+                                '-' :
+                                noteValue;
                             let nom = item.eleve ? item.eleve.NOM : '-';
                             let prenom = item.eleve ? item.eleve.PRENOM : '-';
                             let sexe = (item.eleve && item.eleve.SEXE == 1) ? 'M' : 'F';
-                            let conduite = item.eleve && item.eleve.conduite ? item.eleve.conduite : '-';
+                            let conduite = item.eleve && item.eleve.conduite ? item.eleve.conduite :
+                                '-';
                             let codeClas = item.eleve ? item.eleve.CODECLAS : '-';
 
                             let tr = document.createElement('tr');
@@ -379,15 +399,20 @@
                         document.getElementById('notesTable').style.display = 'none';
                         document.getElementById('elevesTable').style.display = 'table';
 
+                        // Récupérer les classes uniques
+                        let classesUniques = [...new Set(resultats.map(eleve => eleve.CODECLAS).filter(
+                            Boolean))];
+                        document.getElementById('additionalInfo').value = classesUniques.join(', ');
+
                         const tableBody = document.getElementById('elevesTableBody');
                         const noteKey = (data.periode === 'AN') ? 'MAN' : 'MS' + data.periode;
                         document.getElementById('headerNote').innerText = 'Moyenne';
 
                         resultats.forEach((eleve, index) => {
                             let noteValue = eleve[noteKey];
-                            let noteDisplay = (Number(noteValue) === 21 || Number(noteValue) === -1)
-                                ? '-' 
-                                : noteValue;
+                            let noteDisplay = (Number(noteValue) === 21 || Number(noteValue) === -1) ?
+                                '-' :
+                                noteValue;
                             let tr = document.createElement('tr');
                             tr.innerHTML = `
                                 <td>${index + 1}</td>
@@ -414,58 +439,65 @@
             // ----------------------
             // 1. Récupération des données
             // ----------------------
-            const ecole          = @json($params->NOMETAB); // Exemple : "CEG SAINTE RITA"
-            const dateImpression = new Date().toLocaleDateString('fr-FR'); 
-            const titre          = "Liste des méritants";
-        
+            const ecole = @json($params->NOMETAB); // Exemple : "CEG SAINTE RITA"
+            const dateImpression = new Date().toLocaleDateString('fr-FR');
+            const titre = "Liste des méritants";
+
             // Récupération du nombre de méritants (ex. "10 premiers")
             const nombreInput = document.getElementById('nombre');
-            const nombre      = nombreInput ? nombreInput.value : 10;
-            const topMeritants = `${nombre} premiers`; 
-        
+            const nombre = nombreInput ? nombreInput.value : 10;
+            const topMeritants = `${nombre} premiers`;
+
             // Filtre sélectionné (classe, promotion, cycle, tout)
             const filtreInput = document.querySelector('input[name="filtre"]:checked');
             const filtreSelectionne = filtreInput ? filtreInput.value : 'tout';
             let filtreText = "";
             switch (filtreSelectionne) {
-                case 'classe':    filtreText = "Par classe";        break;
-                case 'promotion': filtreText = "Par promotion";     break;
-                case 'cycle':     filtreText = "Par cycle";         break;
-                default:          filtreText = "Tout l'établissement";
+                case 'classe':
+                    filtreText = "Par classe";
+                    break;
+                case 'promotion':
+                    filtreText = "Par promotion";
+                    break;
+                case 'cycle':
+                    filtreText = "Par cycle";
+                    break;
+                default:
+                    filtreText = "Tout l'établissement";
             }
-        
+
             // Récupération de la matière sélectionnée
             const matiereSelect = document.getElementById('matiere');
             let matiereValue = matiereSelect ? matiereSelect.value : 'moyenne_generale';
-            let matiereLabel = (matiereValue === 'moyenne_generale')
-                ? "Moyenne générale"
-                : (matiereSelect.querySelector(`option[value="${matiereValue}"]`)?.textContent || "Moyenne générale");
-        
+            let matiereLabel = (matiereValue === 'moyenne_generale') ?
+                "Moyenne générale" :
+                (matiereSelect.querySelector(`option[value="${matiereValue}"]`)?.textContent || "Moyenne générale");
+
             // Sexe (priorité)
             const sexeSelect = document.getElementById('sexe');
-            const sexeValue  = sexeSelect ? sexeSelect.value : "";
-            const sexeLabel  = sexeValue === "1" ? "Garçons" : sexeValue === "2" ? "Filles" : "Aucune";
-        
+            const sexeValue = sexeSelect ? sexeSelect.value : "";
+            const sexeLabel = sexeValue === "1" ? "Garçons" : sexeValue === "2" ? "Filles" : "Aucune";
+
             // Exclusion de conduite
             const conduiteMinInput = document.getElementById('conduite_min');
             const conduiteMin = conduiteMinInput ? conduiteMinInput.value : "";
             const exclusionText = conduiteMin ? `Exclure conduite < ${conduiteMin}` : "Aucune exclusion";
-        
+
             // Exemple d'année scolaire fixe (vous pouvez la rendre dynamique)
             const anneeScolaire = "2022-2023";
-        
+
             // Récupération du semestre/période (pour l'affichage "Semestre : 1", etc.)
             const periodeSelect = document.getElementById('periode');
-            const periodeValue  = periodeSelect ? periodeSelect.value : "1";
-            let semestreLabel   = (periodeValue === 'AN') ? "Annuel" : periodeValue; 
-        
+            const periodeValue = periodeSelect ? periodeSelect.value : "1";
+            let semestreLabel = (periodeValue === 'AN') ? "Annuel" : periodeValue;
+
             // ----------------------
             // 2. Déterminer quel tableau est affiché
             // ----------------------
-            let tableHTML       = "";
-            const elevesTable   = document.getElementById('elevesTable'); // Moyennes générales
-            const notesTable    = document.getElementById('notesTable');  // Notes par matière
-        
+            let tableHTML = "";
+            const elevesTable = document.getElementById('elevesTable'); // Moyennes générales
+            const notesTable = document.getElementById('notesTable'); // Notes par matière
+
             // Si notesTable est visible, on imprime celui-ci, sinon on imprime elevesTable
             if (notesTable.style.display === 'table') {
                 tableHTML = notesTable.outerHTML;
@@ -475,7 +507,7 @@
                 // Par défaut, si aucun n'est en display:table, on prend le tableau des moyennes
                 tableHTML = elevesTable.outerHTML;
             }
-        
+
             // ----------------------
             // 3. Construire la fenêtre d'impression
             // ----------------------
@@ -485,7 +517,7 @@
                 return;
             }
             newWin.document.open();
-        
+
             newWin.document.write(`
                 <html>
                 <head>
@@ -600,9 +632,8 @@
                 </body>
                 </html>
             `);
-        
+
             newWin.document.close();
         }
-        </script>
-        
+    </script>
 @endsection
