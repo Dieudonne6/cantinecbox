@@ -34,7 +34,7 @@
       <br>                                   
   </div>
   
-    <h3 class="text-center mb-4">Intervalles à appliquer aux staistique</h3>
+    <h3 class="text-center mb-4">Intervalles à appliquer aux statistiques</h3>
     <div class="row">
       <div class="col-lg-6 mx-auto">
        

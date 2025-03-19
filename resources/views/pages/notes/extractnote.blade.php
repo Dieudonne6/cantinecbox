@@ -33,6 +33,8 @@
                 <br>                                   
             </div>
             <div class="card-body">
+                <h5 class="mb-2">Extraction des Notes</h5></br>
+
                 <!-- Ligne pour les boutons et les checkboxes -->
                 <div class="row mb-4 align-items-center">
                     <div class="col-auto">
@@ -64,16 +66,19 @@
                             Exporter en Excel
                         </a> --}}
                     </div>
-                </div>
+                </div></br>
                 
                 <!-- Zone à imprimer -->
                 <div class="container" id="printArea">
-                    <h5 class="mb-4">Extraction des Notes</h5>
+
+                    <h5 class="mb-4">Classe : {{ $classe }} | Matiere : {{ $nomMatiere->LIBELMAT }} | {{ $periodLabel }} : {{ $periode }}</h5></br>
                     
                     <!-- Tableau des notes -->
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
+                                {{-- <th>Classe</th>
+                                <th>Matiere</th> --}}
                                 <th>MATRICULE</th>
                                 <th>Nom et Prenom</th>
                                 <th class="moy-int">Moy Inter</th>
@@ -92,11 +97,18 @@
                                     $firstNote = $studentNotes->first();
                                 @endphp
                                 <tr>
+                                    {{-- <td>{{ $firstNote->eleve->CODECLAS }}</td>
+                                    <td>{{ $nomMatiere->LIBELMAT }}</td> --}}
                                     <td>{{ $firstNote->eleve->MATRICULEX }}</td>
                                     <td>{{ $firstNote->eleve->NOM .' '. $firstNote->eleve->PRENOM }}</td>
-                                    <td class="moy-int">{{ round($firstNote->MI, 2) }}</td>
-                                    <td class="dev1">{{ $firstNote->DEV1 }}</td>
-                                    <td class="dev2">{{ $firstNote->DEV2 }}</td>
+                                    <td class="moy-int">
+                                        {{ ($firstNote->MI == 21 || $firstNote->MI == -1) ? '**.**' : round($firstNote->MI, 2) }}
+                                      </td>
+                                      <td class="dev1">
+                                        {{ ($firstNote->DEV1 == 21 || $firstNote->DEV1 == -1) ? '**.**' : $firstNote->DEV1 }}
+                                      </td>
+                                      <td class="dev2">
+                                        {{ ($firstNote->DEV2 == 21 || $firstNote->DEV2 == -1) ? '**.**' : $firstNote->DEV2 }}
                                 </tr>
                             @endforeach
                         </tbody>
@@ -120,6 +132,26 @@
     });
 </script>
 
+<script>
+    function exportExcel() {
+        // Récupérer l'état des checkboxes
+        var exportMoy = document.getElementById("toggleMoyInt").checked ? 1 : 0;
+        var exportDev1 = document.getElementById("toggleDEV1").checked ? 1 : 0;
+        var exportDev2 = document.getElementById("toggleDEV2").checked ? 1 : 0;
+
+        // Construire l'URL avec les paramètres actuels (période, classe, matiere, etc.)
+        var url = "{{ route('notes.exportExcel') }}";
+        url += "?periode={{ request('periode') }}";
+        url += "&classe={{ request('classe') }}";
+        url += "&matiere={{ request('matiere') }}";
+        url += "&exportMoy=" + exportMoy;
+        url += "&exportDev1=" + exportDev1;
+        url += "&exportDev2=" + exportDev2;
+
+        // Rediriger vers l'URL d'export
+        window.location.href = url;
+    }
+</script>
 
 <script>
     //  Script JavaScript pour la gestion des colonnes et de l'impression 

@@ -52,6 +52,7 @@ use RtfHtmlPhp\Html\HtmlFormatter;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\NotesExport;
+use Illuminate\Support\Str;
 
 
 class BulletinController extends Controller
@@ -751,10 +752,20 @@ private function determineAppreciation($moyenne, $params2)
     $typean = $params2->TYPEAN;
     $rtfContent = Params2::first()->EnteteBull;
     // $entete = $this->extractTextFromRtf($rtfContent);
-    $rtfContent = Params2::first()->EnteteBull;
-    $document = new Document($rtfContent);
-    $formatter = new HtmlFormatter();
-    $entete = $formatter->Format($document);
+    
+$rtfContent = Params2::first()->EnteteBull;
+$document = new Document($rtfContent);
+$formatter = new HtmlFormatter();
+$enteteNonStyle = $formatter->Format($document);
+$entete = '
+<div style="text-align: center; font-size: 1.2em; line-height: 1;">
+    <style>
+        p { margin: 0; padding: 0; line-height: 1; }
+        span { display: inline-block; }
+    </style>
+    ' . $enteteNonStyle . '
+</div>
+';
     // dd($entete);
     $logo = $params2->logoimage;
 
@@ -1354,41 +1365,36 @@ private function determineAppreciation($moyenne, $params2)
               // Vérification pour la matières EPS 
               
               if ($codeMatiere == $eps) {
-                // Calcul de la moyenne des interrogations valides
+                // Récupération des notes d'interrogations valides
                 $interrosValides = $notes->map(function ($note) {
-                  return collect([$note->INT1, $note->INT2, $note->INT3])
-                  ->filter(function ($value) {
-                    return $value !== null && $value != 21 && $value != 0;
-                  });
+                    return collect([$note->INT1, $note->INT2, $note->INT3])
+                        ->filter(function ($value) {
+                            return $value !== null && $value != 21 && $value != 0;
+                        });
                 })->flatten();
-                
+            
+                // Calcul de la moyenne des interrogations
                 $moyenneInterros = $interrosValides->avg();
-                
-                // Calcul de la moyenne des devoirs valides
+            
+                // Récupération des notes de devoirs valides
                 $devoirsValides = $notes->map(function ($note) {
-                  return collect([$note->DEV1, $note->DEV2, $note->DEV3])
-                  ->filter(function ($value) {
-                    return $value !== null && $value != 21 && $value != 0;
-                  });
+                    return collect([$note->DEV1, $note->DEV2, $note->DEV3])
+                        ->filter(function ($value) {
+                            return $value !== null && $value != 21 && $value != 0;
+                        });
                 })->flatten();
-                
-                $moyenneDevoirs = $devoirsValides->avg();
-                
-                // Calcul de la moyenne de la matière
-                if ($moyenneInterros !== null  && $moyenneDevoirs !== null) {
-                  $moyenneEps = ($moyenneInterros + $moyenneDevoirs) / 2;
-                } elseif ($moyenneInterros !== null) {
-                  $moyenneEps = $moyenneInterros;
-                } elseif ($moyenneDevoirs !== null) {
-                  $moyenneEps = $moyenneDevoirs;
-                } else {
-                  $moyenneEps = null; // Aucun note valide
-                }
-                
+            
+                // Combiner la moyenne des interros et les devoirs
+                $totalNotes = collect([$moyenneInterros])->merge($devoirsValides)->filter(); // Supprime les null
+                $moyenneEps = $totalNotes->avg(); // Calcul de la moyenne de la matière
+            
+                // Stockage des moyennes
                 $moyennesParClasseEtMatiere[$eleve->CODECLAS][$codeMatiere][] = [
-                  'eleve_id' => $eleve->MATRICULE,
-                  'moyenne' => $moyenneEps
+                    'eleve_id' => $eleve->MATRICULE,
+                    'moyenne'  => $moyenneEps
                 ];
+            // }
+            
                 
                 // Déterminer la mention pour la matière
                 $mentionMaEps = $this->determineMention($moyenneEps, $params2);
@@ -1851,15 +1857,20 @@ private function determineAppreciation($moyenne, $params2)
             $periode = $request->input('periode');
             $classe = $request->input('classe');
             $matiere = $request->input('matiere');
+            $nomMatiere = Matieres::where('CODEMAT', $matiere)->first();
 
             $notes = Notes::where('CODECLAS', $classe)
             ->where('CODEMAT', $matiere)
             ->where('SEMESTRE', $periode)
             ->get();
 
+            // Récupérer la valeur de typean depuis la table params2
+            $typean = DB::table('params2')->value('typean'); // récupère la première valeur de 'typean'
+            $periodLabel = ($typean == 1) ? 'Semestre' : 'Trimestre';
+
             // dd($notes);
 
-            return view('pages.notes.extractnote', compact('classes', 'matieres', 'notes'));
+            return view('pages.notes.extractnote', compact('classes', 'classe', 'matieres', 'periodLabel', 'periode', 'notes', 'nomMatiere'));
 
 
         }
@@ -1871,19 +1882,34 @@ private function determineAppreciation($moyenne, $params2)
                 $periode = $request->input('periode');
                 $classe  = $request->input('classe');
                 $matiere = $request->input('matiere');
+                $nomMatiere = Matieres::where('CODEMAT', $matiere)->first();
+                $nomMat = $nomMatiere->LIBELMAT;
+
+                $notes = Notes::with('eleve')
+                ->where('CODECLAS', $classe)
+                ->where('CODEMAT', $matiere)
+                ->where('SEMESTRE', $periode)
+                ->get();
+
+
+                // Récupérer la valeur de typean depuis la table params2
+                $typean = DB::table('params2')->value('typean'); // récupère la première valeur de 'typean'
+                $periodLabel = ($typean == 1) ? 'Semestre' : 'Trimestre';
             
-                $notes = Notes::where('CODECLAS', $classe)
-                              ->where('CODEMAT', $matiere)
-                              ->where('SEMESTRE', $periode)
-                              ->get();
-            
+
                 // Récupérer les options d'export (1 = coché, 0 = décoché)
                 $exportMoy = $request->input('exportMoy', 1);
                 $exportDev1 = $request->input('exportDev1', 1);
                 $exportDev2 = $request->input('exportDev2', 1);
             
-                return Excel::download(new NotesExport($notes, $exportMoy, $exportDev1, $exportDev2), 'notes.xlsx');
-            }
-        
-      }           
+                // Création du nom de fichier incluant le nom de la classe.
+                $fileName = $classe .'_'.$nomMat.  '.xlsx';
+
+                return Excel::download(
+                    new NotesExport($nomMatiere, $notes, $classe, $periode, $periodLabel, $exportMoy, $exportDev1, $exportDev2),
+                    $fileName
+                );    
+
+      }          
+    } 
       

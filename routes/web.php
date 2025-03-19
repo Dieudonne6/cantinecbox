@@ -216,6 +216,8 @@ Route::get('/editions2/relevesparmatiere', [EditionController::class, 'relevespa
 Route::get('/editions2/recapitulatifdenotes', [EditionController2::class, 'recapitulatifdenotes'])->name('pages.notes.recapitulatifdenotes');
 Route::get('/editions2/resultatsparpromotion', [EditionController2::class, 'resultatsparpromotion'])->name('pages.notes.resultatsparpromotion');
 Route::get('/editions2/listedesmeritants', [EditionController2::class, 'listedesmeritants'])->name('pages.notes.listedesmeritants');
+Route::post('/search-meritants', [EditionController2::class, 'searchMeritants']);
+
 
 Route::get('/journalderecouvrement', [EditionController::class, 'journal'])->name('journal');
 
@@ -361,7 +363,7 @@ Route::get('/elevessansnote/{classCode}',  [EditionController::class, 'elevessan
 Route::get('/editions2/tableauanalytiqueparmatiere', [EditionController2::class, 'tableauanalytiqueparmatiere'])->name('tableauanalytiqueparmatiere');
 
 Route::get('/bulletindenotes', [BulletinController::class, 'bulletindenotes'])->name('bulletindenotes');
-Route::post('/filtertableaunotes', [EditionController::class, 'filtertableaunotes'])->name('filtertableaunotes');
+Route::match(['get', 'post'], '/filtertableaunotes', [EditionController::class, 'filtertableaunotes'])->name('filtertableaunotes');
 Route::get('/tableaudenotes', [EditionController::class, 'tableaudenotes'])->name('tableaudenotes');
 
 Route::get('/filtertablenotes', [EditionController::class, 'filtertablenotes'])->name('filtertablenotes');
@@ -389,8 +391,12 @@ Route::get('/imprimer-liste-merite', [ListemeriteController::class, 'imprimerLis
 Route::get('/get-classes-by-group', action: [ListemeriteController::class, 'getClassesByGroup'])->name('getClassesByGroup');
 
 Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'relevespareleves'])->name('relevespareleves');
+
 // Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'getMatieresAndNotes'])->name('relevespareleves');
 
 Route::get('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique');
 
+
+
+// Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'getMatieresAndNotes'])->name('relevespareleves');
 

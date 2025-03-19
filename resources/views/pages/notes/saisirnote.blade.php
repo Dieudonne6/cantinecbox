@@ -21,7 +21,7 @@
                         color: #b51818 !important;
                         /* Couleur de l'icône */
                     }
-            
+
                     .btn-arrow:hover {
                         color: #b700ff !important;
                         /* Couleur au survol */
@@ -29,9 +29,9 @@
                 </style>
                 <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
                     <i class="fas fa-arrow-left"></i> Retour
-                </button>   
+                </button>
                 <br>
-                <br>                                   
+                <br>
             </div>
             @if (session('success'))
                 <div class="alert alert-success">
@@ -71,9 +71,8 @@
 
                                         <!-- Select pour la période -->
                                         <div class="col-md-8 mb-3">
-                                            <select class="form-select select2 w-100 mt-2" id="periodSelect" onchange="handleChange()"
-                                                
-                                                aria-label="Choisir une période">
+                                            <select class="form-select select2 w-100 mt-2" id="periodSelect"
+                                                onchange="handleChange()" aria-label="Choisir une période">
                                                 <option value="" selected>Période</option>
                                                 <option value="1">1ère Période</option>
                                                 <option value="2">2ème Période</option>
@@ -277,6 +276,10 @@
                                 function calculateMIAndMoy(input) {
                                     const row = input.closest('tr');
 
+                                    // Récupérer le nom de la matière sélectionnée pour vérifier si c'est "Conduite"
+                                    const subjectSelect = document.getElementById('tableSelect5');
+                                    const subjectText = subjectSelect.options[subjectSelect.selectedIndex].text.trim().toLowerCase();
+
                                     // Récupérer les champs pour les notes des interrogations, des devoirs et du test
                                     const interroInputs = row.querySelectorAll('.interro-input');
                                     const devInputs = row.querySelectorAll('.dev-input');
@@ -284,8 +287,6 @@
 
                                     let interroSum = 0;
                                     let interroCount = 0;
-
-                                    // Calculer la somme et le nombre d'interrogations
                                     interroInputs.forEach(interro => {
                                         const value = parseFloat(interro.value);
                                         if (!isNaN(value)) {
@@ -293,15 +294,12 @@
                                             interroCount++;
                                         }
                                     });
-
                                     const miField = row.querySelector('.mi-input');
                                     const mi = interroCount > 0 ? (interroSum / interroCount).toFixed(2) : '';
                                     miField.value = mi;
 
                                     let devSum = 0;
                                     let devCount = 0;
-
-                                    // Calculer la somme et le nombre de devoirs
                                     devInputs.forEach(dev => {
                                         const value = parseFloat(dev.value);
                                         if (!isNaN(value)) {
@@ -310,34 +308,36 @@
                                         }
                                     });
 
+                                    // Récupérer les champs de moyenne (MS1) et de note finale (MS)
                                     const moyField = row.querySelector('.ms1-input');
-                                    let moy = '';
+                                    const msField = row.querySelector('.ms-input');
 
-                                    // Si les devoirs sont présents mais pas les interrogations
+                                    // Si aucune note de devoir n'est saisie et que la matière n'est pas "Conduite",
+                                    // on ne calcule pas MS1 et MS.
+                                    if (devCount === 0 && subjectText !== 'conduite') {
+                                        moyField.value = '';
+                                        msField.value = '';
+                                        return;
+                                    }
+
+                                    // Calcul de la moyenne globale (MS1)
+                                    let moy = '';
                                     if (devCount > 0 && interroCount === 0) {
                                         moy = (devSum / devCount).toFixed(2);
                                     } else if (interroCount > 0) {
-                                        // Si les interrogations sont présentes, calculer la Moyenne
                                         moy = devCount > 0 ? ((parseFloat(mi) + devSum) / (devCount + 1)).toFixed(2) : mi;
                                     }
-
                                     moyField.value = moy;
 
-                                    const msField = row.querySelector('.ms-input');
+                                    // Calcul de la note finale (MS) en intégrant éventuellement la note du TEST
                                     const testValue = parseFloat(testInput.value) || 0;
-
-                                    // Nouvelle logique pour MS
                                     if (devCount === 0 && interroCount === 0 && testValue === 0) {
-                                        // Si les champs dev, test sont vides, alors MI = MS1 = MS
                                         msField.value = mi || moyField.value;
                                     } else if (interroCount === 0 && devCount === 0) {
-                                        // Si les champs int et dev sont vides, MS = TEST
                                         msField.value = testValue.toFixed(2);
                                     } else if (interroCount === 0) {
-                                        // Si les champs int sont vides, MS1 est la somme des DEV entrée divisée par le nombre de DEV
                                         msField.value = (devSum / devCount).toFixed(2);
                                     } else {
-                                        // Sinon, MS est calculé comme la moyenne de MS1 et TEST
                                         const ms = (parseFloat(moyField.value) + testValue) / (testValue > 0 ? 2 : 1);
                                         msField.value = ms.toFixed(2);
                                     }
@@ -459,10 +459,11 @@
         document.getElementById("tableSelect5").addEventListener("change", redirectWithSelection);
         document.getElementById("tableSelec4").addEventListener("change", redirectWithSelection);
         document.getElementById("tableSelec5").addEventListener("change", redirectWithSelection);
+
         function handleChange() {
-                            redirectWithSelection();
-                            updateCheckbox();
-                        }
+            redirectWithSelection();
+            updateCheckbox();
+        }
     </script>
 
     <script>

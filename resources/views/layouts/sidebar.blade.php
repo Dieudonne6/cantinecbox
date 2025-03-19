@@ -105,7 +105,7 @@
         'verrouillage',
       ];
       $routenew = [
-        'bulletindenotes', 'attestationdemerite',
+        'bulletindenotes', 'attestationdemerite', 'printbulletindenotes', 'tableaudenotes', 'filtertableaunotes', 
       ];
       $routeseditions2 = [
         'editions2',
@@ -119,6 +119,8 @@
       ];
 
       $activeExtractRoutes = ['extrairenote', 'extractnote'];
+
+      $activeResultatRoutes = ['listeparmerite', 'imprimer.liste.merite'];
 
       @endphp
 
@@ -188,10 +190,10 @@
               <div class="collapse {{ request()->is('Tableau de notes') || request()->is('Bulletin de notes') || request()->is('Attestations de mérite') || in_array(request()->route()->getName(), $routeseditions2) || in_array(request()->route()->getName(), $routenew) ? 'show' : '' }}" id="edition" data-bs-parent="#form-elements">
                 <ul class="nav sub-menu">
                   <li>
-                    <a class="nav-link {{ request()->is('Tableau de notes') ? 'active' : '' }}" href="{{ route('tableaudenotes') }}">Tableau de notes</a>
+                    <a class="nav-link {{ request()->is('Tableau de notes') || request()->is('filtertableaunotes') || request()->is('filtertablenotes') ? 'active' : '' }}" href="{{ route('tableaudenotes') }}">Tableau de notes</a>
                   </li>
                   <li>
-                    <a class="nav-link {{ request()->is('Bulletin de notes') ? 'active' : '' }}" href="{{ route('bulletindenotes') }}">Bulletin de notes</a>
+                    <a class="nav-link {{ request()->is('Bulletin de notes') || request()->is('printbulletindenotes') ? 'active' : '' }}" href="{{ route('bulletindenotes') }}">Bulletin de notes</a>
                   </li>
                   <li>
                     <a class="nav-link {{ request()->is('Attestations de mérite') ? 'active' : '' }}" href="{{ url('/attestationdemerite') }}">Attestations de mérite</a>
@@ -204,20 +206,20 @@
             </li>
             <!-- Bloc Résultats -->
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#resultats" aria-expanded="false" aria-controls="resultats">
+              <a  class="nav-link {{ in_array(request()->route()->getName(), $activeResultatRoutes) ? 'active' : '' }}" data-bs-toggle="collapse" href="#resultats" aria-expanded="{{ in_array(request()->route()->getName(), $activeResultatRoutes) ? 'true' : 'false' }}" aria-controls="resultats">
                 Résultats
                 <i class="menu-arrow"></i>
-              </a>
-              <div class="collapse" id="resultats" data-bs-parent="#form-elements">
+              </a>  
+              <div class="collapse {{ in_array(request()->route()->getName(), $activeResultatRoutes) ? 'show' : '' }}" id="resultats" data-bs-parent="#form-elements">
                 <ul class="nav sub-menu">
-                  <li><a class="nav-link {{ request()->is('Liste par ordre de mérite') ? 'active' : '' }}" href="{{ route('listeparmerite') }}">Liste par ordre de mérite</a></li>
+                  <li><a class="nav-link  {{ in_array(request()->route()->getName(), $activeResultatRoutes) ? 'active' : '' }}"  href="{{ route('listeparmerite') }}">Liste par ordre de mérite</a></li>
                   <li><a class="nav-link {{ request()->is('Tableau analytique') ? 'active' : '' }}" href="#">Tableau analytique</a></li>
                   <li><a class="nav-link {{ request()->is('Rapports annuels') ? 'active' : '' }}" href="#">Rapports annuels</a></li>
                   <li><a class="nav-link {{ request()->is('Livrets scolaires') ? 'active' : '' }}" href="#">Livrets scolaires</a></li>
                 </ul>
               </div>
             </li>
-            
+
             <!-- Bloc Extraction -->
             <li class="nav-item">
               <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutes) ? 'active' : '' }}" data-bs-toggle="collapse" href="#extract" aria-expanded="{{ in_array(request()->route()->getName(), $activeExtractRoutes) ? 'true' : 'false' }}" aria-controls="extract">
