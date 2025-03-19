@@ -33,6 +33,8 @@
                 <br>                                   
             </div>
             <div class="card-body">
+                <h5 class="mb-2">Extraction des Notes</h5></br>
+
                 <!-- Ligne pour les boutons et les checkboxes -->
                 <div class="row mb-4 align-items-center">
                     <div class="col-auto">
@@ -64,18 +66,19 @@
                             Exporter en Excel
                         </a> --}}
                     </div>
-                </div>
+                </div></br>
                 
                 <!-- Zone à imprimer -->
                 <div class="container" id="printArea">
-                    <h5 class="mb-4">Extraction des Notes</h5>
+
+                    <h5 class="mb-4">Classe : {{ $classe }} | Matiere : {{ $nomMatiere->LIBELMAT }} | {{ $periodLabel }} : {{ $periode }}</h5></br>
                     
                     <!-- Tableau des notes -->
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Classe</th>
-                                <th>Matiere</th>
+                                {{-- <th>Classe</th>
+                                <th>Matiere</th> --}}
                                 <th>MATRICULE</th>
                                 <th>Nom et Prenom</th>
                                 <th class="moy-int">Moy Inter</th>
@@ -94,8 +97,8 @@
                                     $firstNote = $studentNotes->first();
                                 @endphp
                                 <tr>
-                                    <td>{{ $firstNote->eleve->CODECLAS }}</td>
-                                    <td>{{ $nomMatiere->LIBELMAT }}</td>
+                                    {{-- <td>{{ $firstNote->eleve->CODECLAS }}</td>
+                                    <td>{{ $nomMatiere->LIBELMAT }}</td> --}}
                                     <td>{{ $firstNote->eleve->MATRICULEX }}</td>
                                     <td>{{ $firstNote->eleve->NOM .' '. $firstNote->eleve->PRENOM }}</td>
                                     <td class="moy-int">
