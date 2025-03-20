@@ -170,11 +170,11 @@
                         </div>
 
                         <!-- Filtre sur la conduite -->
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="conduite_min"><strong>Exclure conduite inférieure à</strong></label>
                             <input type="number" step="0.01" class="form-control form-control-sm" id="conduite_min"
                                 placeholder="0.00">
-                        </div>
+                        </div> --}}
 
                         <!-- Filtre sur la matière -->
                         <div class="form-group">
@@ -200,8 +200,7 @@
 
                         <!-- Tableau principal : Moyennes générales -->
                         <div class="table-responsive">
-                            <table class="table table-bordered table-sm table-striped" id="elevesTable"
-                                style="display: none;">
+                            <table class="table table-bordered table-sm table-striped" id="elevesTable">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>Ordre</th>
@@ -209,12 +208,18 @@
                                         <th>Prénom</th>
                                         <th id="headerNote">Moyenne</th>
                                         <th>Sexe</th>
-                                        <th>Conduite</th>
+                                        {{-- <th>Conduite</th> --}}
                                         <th>Classe</th>
                                     </tr>
                                 </thead>
                                 <tbody id="elevesTableBody">
-                                    <!-- Les résultats seront insérés ici via AJAX -->
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted py-4">
+                                            <i class="fas fa-search mb-2" style="font-size: 24px;"></i>
+                                            <p class="mb-0">Veuillez sélectionner vos critères et cliquer sur
+                                                "Rechercher" pour afficher les résultats</p>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -230,10 +235,10 @@
                                         <th>Prénom</th>
                                         <th id="Note">Moyenne</th>
                                         <th>Sexe</th>
-                                        <th>Conduite</th>
+                                        {{-- <th>Conduite</th> --}}
                                         <th>Classe</th>
-                                        <th>Matière</th>
-                                        <th>Semestre</th>
+                                        {{-- <th>Matière</th>
+                                        <th>Semestre</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody id="notesTableBody">
@@ -246,10 +251,9 @@
                                                 <!-- Application de la règle : 21 et -1 ne sont pas considérés -->
                                                 <td>{{ $note->MS1 == 21 || $note->MS1 == -1 ? '-' : $note->MS1 }}</td>
                                                 <td>{{ $eleve->SEXE }}</td>
-                                                <td>{{ $note->NoteConduite }}</td>
                                                 <td>{{ $eleve->CODECLAS }}</td>
-                                                <td>{{ $note->CODEMAT }}</td>
-                                                <td>{{ $note->SEMESTRE }}</td>
+                                                {{-- <td>{{ $note->CODEMAT }}</td>
+                                                <td>{{ $note->SEMESTRE }}</td> --}}
                                             </tr>
                                         @endforeach
                                     @endforeach
@@ -342,7 +346,7 @@
             data.nombre = document.getElementById('nombre').value;
             data.periode = document.getElementById('periode').value;
             data.sexe = document.getElementById('sexe').value;
-            data.conduite_min = document.getElementById('conduite_min').value;
+            // data.conduite_min = document.getElementById('conduite_min').value;  // Commenté ou supprimé
             data.matiere = document.getElementById('matiere').value;
 
             fetch('/search-meritants', {
@@ -386,10 +390,9 @@
                                 <td>${prenom}</td>
                                 <td>${noteDisplay}</td>
                                 <td>${sexe}</td>
-                                <td>${conduite}</td>
+                                {{-- <td>${conduite}</td> --}}
                                 <td>${codeClas}</td>
-                                <td>${item.CODEMAT ? item.CODEMAT : '-'}</td>
-                                <td>${item.SEMESTRE ? item.SEMESTRE : '-'}</td>
+                                
                             `;
                             tableBody.appendChild(tr);
                         });
@@ -420,7 +423,7 @@
                                 <td>${eleve.PRENOM}</td>
                                 <td>${noteDisplay}</td>
                                 <td>${eleve.SEXE == 1 ? 'M' : 'F'}</td>
-                                <td>${eleve.conduite ? eleve.conduite : '-'}</td>
+                                {{-- <td>${eleve.conduite ? eleve.conduite : '-'}</td> --}}
                                 <td>${eleve.CODECLAS}</td>
                             `;
                             tableBody.appendChild(tr);
@@ -527,7 +530,7 @@
                         @media print {
                             @page {
                                 size: A4 portrait;
-                                margin: 20mm;
+                                margin: 5mm;
                             }
                             body {
                                 font-family: 'Arial', sans-serif;
@@ -588,38 +591,43 @@
                             border-top: 1px solid #000;
                             margin: 5px 0 10px 0;
                         }
+                        .header-container {
+                            border: 2px solid #000;
+                            padding: 15px;
+                            margin-bottom: 20px;
+                        }
                     </style>
                 </head>
                 <body onload="window.print(); window.close();">
-                    <!-- Ligne 1 : École à gauche, Date à droite -->
-                    <div class="header-line bold">
-                        <div style="text-align:left;">${ecole}</div>
-                        <div style="text-align:right;">${dateImpression}</div>
-                    </div>
-                    <hr/>
-        
-                    <!-- Ligne 2 : Titre centré, "X premiers" à droite -->
-                    <div class="header-line">
-                        <div class="center-col" style="font-size:18px; font-weight:bold;">${titre}</div>
-                        <div style="text-align:right;">${topMeritants}</div>
-                    </div>
-        
-                    <!-- Ligne 3 : Classe / Année scolaire -->
-                    <div class="header-line">
-                        <div style="text-align:left;">CLASSE : <strong><!-- Insérez la classe ici si besoin --></strong></div>
-                        <div style="text-align:right;">${anneeScolaire}</div>
-                    </div>
-        
-                    <!-- Ligne 4 : Matière / Semestre -->
-                    <div class="header-line">
-                        <div style="text-align:left;">Matière : <strong>${matiereLabel}</strong></div>
-                        <div style="text-align:right;">Semestre : <strong>${semestreLabel}</strong></div>
-                    </div>
-        
-                    <!-- Ligne 5 : Filtre / Exclusion -->
-                    <div class="header-line">
-                        <div style="text-align:left;">Filtre : ${filtreText}</div>
-                        <div style="text-align:right;">${exclusionText}</div>
+                    <div class="header-container">
+                        <!-- Ligne 1 : École à gauche, Date à droite -->
+                        <div class="header-line bold">
+                            <div style="text-align:left;">${ecole}</div>
+                            <div style="text-align:right;">${dateImpression}</div>
+                        </div>                       
+            
+                        <!-- Ligne 2 : Titre centré, "X premiers" à droite -->
+                        <div class="header-line" style="display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 18px; font-weight: bold; border: 2px solid black; padding: 10px; border-radius: 5px; width: fit-content; margin: auto; background-color: lightgray;">
+                            <span>${titre}</span> : <span>${topMeritants}</span>
+                        </div>
+
+                        <!-- Ligne 3 : Classe / Année scolaire -->
+                        <div class="header-line">
+                            <div style="text-align:left;">CLASSE : <strong>${document.getElementById('additionalInfo').value}</strong></div>
+                            <div style="text-align:right;">${anneeScolaire}</div>
+                        </div>
+            
+                        <!-- Ligne 4 : Matière / Semestre -->
+                        <div class="header-line">
+                            <div style="text-align:left;">Matière : <strong>${matiereLabel}</strong></div>
+                            <div style="text-align:right;">Semestre : <strong>${semestreLabel}</strong></div>
+                        </div>
+            
+                        <!-- Ligne 5 : Filtre / Exclusion -->
+                        <div class="header-line">
+                            <div style="text-align:left;">Filtre : ${filtreText}</div>
+                            <div style="text-align:right;">${exclusionText}</div>
+                        </div>
                     </div>
         
                     <!-- Tableau des résultats -->
@@ -632,7 +640,6 @@
                 </body>
                 </html>
             `);
-
             newWin.document.close();
         }
     </script>
