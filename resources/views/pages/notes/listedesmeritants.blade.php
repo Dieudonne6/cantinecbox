@@ -501,15 +501,39 @@
             const elevesTable = document.getElementById('elevesTable'); // Moyennes générales
             const notesTable = document.getElementById('notesTable'); // Notes par matière
 
-            // Si notesTable est visible, on imprime celui-ci, sinon on imprime elevesTable
-            if (notesTable.style.display === 'table') {
-                tableHTML = notesTable.outerHTML;
-            } else if (elevesTable.style.display === 'table') {
-                tableHTML = elevesTable.outerHTML;
-            } else {
-                // Par défaut, si aucun n'est en display:table, on prend le tableau des moyennes
-                tableHTML = elevesTable.outerHTML;
+            // Vérifier si nous avons une seule classe
+            const additionalInfo = document.getElementById('additionalInfo').value;
+            const isOneClass = !additionalInfo.includes(',');
+
+            // Modifier le tableau avant l'impression
+            let tableToUse = notesTable.style.display === 'table' ? notesTable : elevesTable;
+            let tableCopy = tableToUse.cloneNode(true);
+
+            // Si une seule classe, supprimer la colonne "Classe"
+            if (isOneClass) {
+                const headers = tableCopy.querySelectorAll('th');
+                const rows = tableCopy.querySelectorAll('tr');
+
+                // Trouver l'index de la colonne "Classe"
+                let classeIndex = -1;
+                headers.forEach((header, index) => {
+                    if (header.textContent.trim() === 'Classe') {
+                        classeIndex = index;
+                    }
+                });
+
+                // Supprimer la colonne "Classe" de chaque ligne
+                if (classeIndex !== -1) {
+                    rows.forEach(row => {
+                        const cells = row.cells;
+                        if (cells.length > classeIndex) {
+                            cells[classeIndex].remove();
+                        }
+                    });
+                }
             }
+
+            tableHTML = tableCopy.outerHTML;
 
             // ----------------------
             // 3. Construire la fenêtre d'impression
@@ -522,124 +546,148 @@
             newWin.document.open();
 
             newWin.document.write(`
-                <html>
-                <head>
-                    <title>Impression des Méritants</title>
-                    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-                    <style>
-                        @media print {
-                            @page {
-                                size: A4 portrait;
-                                margin: 5mm;
-                            }
-                            body {
-                                font-family: 'Arial', sans-serif;
-                                font-size: 14px;
-                                color: #333;
-                                margin: 0;
-                                padding: 0;
-                            }
-                            table {
-                                width: 100%;
-                                border-collapse: collapse;
-                                margin-top: 10px;
-                            }
-                            th, td {
-                                border: 1px solid #ddd;
-                                padding: 8px;
-                                text-align: left;
-                            }
-                            th {
-                                background-color: #f8f9fa;
-                                font-weight: bold;
-                                text-transform: uppercase;
-                            }
-                            tr:nth-child(even) {
-                                background-color: #f2f2f2;
-                            }
-                            tr:hover {
-                                background-color: #ddd;
-                            }
-                            .footer {
-                                margin-top: 30px;
-                                text-align: center;
-                                font-size: 12px;
-                                color: #777;
-                            }
-                            .page-number::after {
-                                content: counter(page);
-                            }
-                        }
-        
-                        /* Mise en page personnalisée pour l'en-tête */
-                        .header-line {
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                        }
-                        .header-line div {
-                            flex: 1;
-                        }
-                        .header-line .center-col {
-                            text-align: center;
-                        }
-                        .bold {
-                            font-weight: bold;
-                        }
-                        hr {
-                            border: 0;
-                            border-top: 1px solid #000;
-                            margin: 5px 0 10px 0;
-                        }
-                        .header-container {
-                            border: 2px solid #000;
-                            padding: 15px;
-                            margin-bottom: 20px;
-                        }
-                    </style>
-                </head>
-                <body onload="window.print(); window.close();">
-                    <div class="header-container">
-                        <!-- Ligne 1 : École à gauche, Date à droite -->
-                        <div class="header-line bold">
-                            <div style="text-align:left;">${ecole}</div>
-                            <div style="text-align:right;">${dateImpression}</div>
-                        </div>                       
-            
-                        <!-- Ligne 2 : Titre centré, "X premiers" à droite -->
-                        <div class="header-line" style="display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 18px; font-weight: bold; border: 2px solid black; padding: 10px; border-radius: 5px; width: fit-content; margin: auto; background-color: lightgray;">
-                            <span>${titre}</span> : <span>${topMeritants}</span>
-                        </div>
+    <html>
+    <head>
+        <title>Impression des Méritants</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!-- Import Google Fonts pour une typographie moderne -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Roboto', sans-serif;
+                font-size: 14px;
+                color: #333;
+                margin: 0;
+                padding: 20px;
+                background: #f9f9f9;
+            }
+            @media print {
+                @page {
+                    size: A4 portrait;
+                    margin: 5mm;
+                }
+                body {
+                    padding: 10;
+                    background: #fff;
+                }
+                .no-print {
+                    display: none;
+                }
+                .page-number::after {
+                    content: counter(page);
+                }
+            }
+            .header-container {
+                border: 2px solid #343a40;
+                border-radius: 8px;
+                padding: 20px;
+                margin-bottom: 20px;
+                background-color: #e9ecef;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            .header-line {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+                font-size: 18px; /* Augmentation de la taille de texte dans l'en-tête */
+            }
+            .header-line .center-col {
+                text-align: center;
+            }
+            .header-line span,
+            .header-line div {
+                flex: 1;
+            }
+            .title-box {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                font-size: 22px; /* Augmentation pour le titre */
+                font-weight: 500;
+                border: 2px solid #343a40;
+                padding: 15px;
+                border-radius: 5px;
+                width: fit-content;
+                margin: 15px auto;
+                background-color: #ced4da;
+            }
+            /* Style du tableau */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+                background-color: #fff;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            th, td {
+                border: 1px solid #dee2e6;
+                padding: 12px 15px;
+                text-align: left;
+            }
+            th {
+                background-color: #adb5bd;
+                font-weight: 700;
+                text-transform: uppercase;
+                font-size: 16px;
+            }
+            td {
+                font-size: 15px;
+            }
+            tr:nth-child(even) {
+                background-color: #f1f3f5;
+            }
+            tr:hover {
+                background-color: #e9ecef;
+            }
+            .footer {
+                margin-top: 30px;
+                text-align: center;
+                font-size: 12px;
+                color: #6c757d;
+            }
+        </style>
+    </head>
+    <body onload="window.print(); window.close();">
+        <div class="header-container">
+            <!-- Ligne 1 : École à gauche, Date à droite -->
+            <div class="header-line" style="font-weight: 700;">
+                <div style="text-align:left;">${ecole}</div>
+                <div style="text-align:right;">${dateImpression}</div>
+            </div>
+            <!-- Ligne 2 : Titre centré, "X premiers" à droite -->
+            <div class="title-box">
+                <span>${titre}</span> : <span>${topMeritants}</span>
+            </div>
+            <!-- Ligne 3 : Classe / Année scolaire -->
+            <div class="header-line">
+                <div style="text-align:left;">CLASSE : <strong>${document.getElementById('additionalInfo').value}</strong></div>
+                <div style="text-align:right;">${anneeScolaire}</div>
+            </div>
+            <!-- Ligne 4 : Matière / Semestre -->
+            <div class="header-line">
+                <div style="text-align:left;">Matière : <strong>${matiereLabel}</strong></div>
+                <div style="text-align:right;">Semestre : <strong>${semestreLabel}</strong></div>
+            </div>
+            <!-- Ligne 5 : Filtre / Exclusion -->
+            <div class="header-line">
+                <div style="text-align:left;">Filtre : ${filtreText}</div>
+                <div style="text-align:right;">${exclusionText}</div>
+            </div>
+        </div>
 
-                        <!-- Ligne 3 : Classe / Année scolaire -->
-                        <div class="header-line">
-                            <div style="text-align:left;">CLASSE : <strong>${document.getElementById('additionalInfo').value}</strong></div>
-                            <div style="text-align:right;">${anneeScolaire}</div>
-                        </div>
-            
-                        <!-- Ligne 4 : Matière / Semestre -->
-                        <div class="header-line">
-                            <div style="text-align:left;">Matière : <strong>${matiereLabel}</strong></div>
-                            <div style="text-align:right;">Semestre : <strong>${semestreLabel}</strong></div>
-                        </div>
-            
-                        <!-- Ligne 5 : Filtre / Exclusion -->
-                        <div class="header-line">
-                            <div style="text-align:left;">Filtre : ${filtreText}</div>
-                            <div style="text-align:right;">${exclusionText}</div>
-                        </div>
-                    </div>
-        
-                    <!-- Tableau des résultats -->
-                    ${tableHTML}
-        
-                    <!-- Pied de page -->
-                    <div class="footer">
-                        <span>Imprimé le ${dateImpression}</span> - Page <span class="page-number"></span>
-                    </div>
-                </body>
-                </html>
-            `);
+        <!-- Tableau des résultats -->
+        ${tableHTML}
+
+        <!-- Pied de page -->
+        <div class="footer">
+            <span>Imprimé le ${dateImpression}</span>
+        </div>
+    </body>
+    </html>
+`);
+
             newWin.document.close();
         }
     </script>
