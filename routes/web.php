@@ -396,7 +396,7 @@ Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 're
 
 Route::get('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique');
 
-
+Route::post('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique.post');
 
 // Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'getMatieresAndNotes'])->name('relevespareleves');
 
