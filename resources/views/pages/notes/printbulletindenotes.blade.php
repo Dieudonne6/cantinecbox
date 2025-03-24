@@ -72,9 +72,9 @@
                                     @endif
 
                                     {{-- Carré, sans marge à gauche pour être collé au logo --}}
-                                    <div id="carre" class="ml-5"
+                                    {{-- <div id="carre" class="ml-5"
                                         style="width: 80px; height: 80px; background-color: transparent; border: 1px solid black; margin-left: 10px; margin-right: 20px;">
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <div class="col-md-6 p-0">
                                     {{-- Entête, centré et aligné par le bas --}}
@@ -397,18 +397,18 @@
 
                                 <div class=""
                                     style="width: 32%; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px; padding: 5px;">
-                                    <div style="display: flex; justify-content: space-between; font-size: 14px;" class="mt-3">
-                                        <span><strong>Bilan des matières littéraires :</strong></span>
+                                    <div style="display: flex; justify-content: space-between; font-size: 16px;" class="mt-3">
+                                        <span><strong>Bilan littéraires :</strong></span>
                                         <span>{{ $resultat['moyenne_bilan_litteraire_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_litteraire_1'], 2) }}</span>
                                     </div>
 
-                                    <div style="display: flex; justify-content: space-between; font-size: 14px;" class="mt-1">
-                                        <span><strong>Bilan des matières scientifiques :</strong></span>
+                                    <div style="display: flex; justify-content: space-between; font-size: 16px;" class="mt-1">
+                                        <span><strong>Bilan scientifiques :</strong></span>
                                         <span>{{ $resultat['moyenne_bilan_scientifique_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_scientifique_1'], 2) }}</span>
                                     </div>
 
-                                    <div style="display: flex; justify-content: space-between; font-size: 14px;" class="mt-1">
-                                        <span><strong>Bilan des matières fondamentales :</strong></span>
+                                    <div style="display: flex; justify-content: space-between; font-size: 16px;" class="mt-1">
+                                        <span><strong>Bilan fondamentales :</strong></span>
                                         <span>{{ $resultat['moyenne_bilan_fondamentale_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_fondamentale_1'], 2) }}</span>
                                     </div>
                                 </div>
@@ -633,9 +633,9 @@
                                     </h5>
                                     <h5 class="text-center">{{ $params2->NOMETAB }}</h5>
                                     <u>
-                                        <h6 class="text-center"
-                                            style="margin-left: 0%; padding-top: 38%; font-weight: bold;">
-                                            {{ $params2->NOMDIRECT }}</h6>
+                                        <h6 class="text-center" style="margin-left: 0%; padding-top: 38%; font-weight: bold; white-space: normal; word-wrap: break-word;">
+                                          {{ $params2->NOMDIRECT }}
+                                        </h6>
                                     </u>
                                 </div>
 
@@ -643,7 +643,7 @@
                             <br>
                             <div class="d-flex">
                                 <div class="flex-grow-1">
-                                    <p>Code web: {{ $resultat['codeweb'] }}</p>
+                                    {{-- <p>Code web: {{ $resultat['codeweb'] }}</p> --}}
                                 </div>
                                 <div class="flex-grow-1 justify-content-end" style="margin-left: 600px;">
                                     <p>Edité le {{ date('d/m/Y') }}</p>
