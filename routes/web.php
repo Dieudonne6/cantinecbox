@@ -20,6 +20,7 @@ use App\Http\Controllers\EditionController;
 use App\Http\Controllers\EditionController2;
 use App\Http\Controllers\ListemeriteController;
 use App\Http\Controllers\ReleveparelevesController;
+use App\Http\Controllers\TableauController;
 
 
 /*
@@ -76,7 +77,7 @@ Route::post('/savepaiementcontrat', [ClassesController::class, 'savepaiementcont
 Route::get('/telechargerfacture', [ClassesController::class, 'telechargerfacture']);
 
 
-Route::get('/pdffacture',[ClassesController::class,'pdffacture'])->name('pdffacture');
+Route::get('/pdffacture',action: [ClassesController::class,'pdffacture'])->name('pdffacture');
 Route::get('/facturenormalise/{nomcompleteleve}',[ClassesController::class,'facturenormalise'])->name('pdffactures');
 Route::get('/create',[ClassesController::class,'create'])->name('qrcode.create');
 
@@ -387,7 +388,15 @@ Route::post('/extractnote', [BulletinController::class, 'extractnote'])->name('e
 Route::get('/export-excel', [BulletinController::class, 'exportExcel'])->name('notes.exportExcel');
 Route::get('/listeparmerite',[ListemeriteController::class, 'acceuil'])->name('listeparmerite');
 Route::get('/imprimer-liste-merite', [ListemeriteController::class, 'imprimerListeMerite'])->name('imprimer.liste.merite');
-Route::get('/get-classes-by-group', [ListemeriteController::class, 'getClassesByGroup'])->name('getClassesByGroup');
+Route::get('/get-classes-by-group', action: [ListemeriteController::class, 'getClassesByGroup'])->name('getClassesByGroup');
 
 Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'relevespareleves'])->name('relevespareleves');
+
 // Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'getMatieresAndNotes'])->name('relevespareleves');
+
+Route::get('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique');
+
+Route::post('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique.post');
+
+// Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'getMatieresAndNotes'])->name('relevespareleves');
+
