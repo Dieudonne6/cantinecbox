@@ -4,12 +4,47 @@ namespace App\Services;
 
 use App\Models\Classes;
 
+
+
 class StatistiquesService
 {
+
+protected function getGroupLabel($classe)
+{
+    // On peut prévoir des correspondances (mapping) pour que "6EME" s'affiche "6è", etc.
+    $mapPromosCycle1 = [
+        '6EME' => '6è',
+        '5EME' => '5è',
+        '4EME' => '4è',
+        '3EME' => '3è',
+    ];
+
+    // Mapping pour transformer "2ND" en "2nd", "1ERE" en "1ère", etc.
+    $mapPromosCycle2 = [
+        '2ND'  => '2nd',
+        '1ERE' => '1ère',
+        'TLE'  => 'Tle',
+    ];
+
+    // On détermine si on est en cycle 1 ou cycle 2
+    // (ou plus finement, si vous avez cycle=2,3,4, etc. pour seconde, première, terminale)
+    if ($classe->CYCLE == '1') {
+        // Cycle I => 6è, 5è, 4è, 3è
+        // On remplace avec le mapping si possible
+        return $mapPromosCycle1[$classe->CODEPROMO] ?? $classe->CODEPROMO;
+    } else {
+        // Cycle II => On combine CODEPROMO + SERIE (ex : 2ndA1, 1èreA2, TleB, etc.)
+        // Attention à la casse et à la correspondance
+        $promo = $mapPromosCycle2[$classe->CODEPROMO] ?? $classe->CODEPROMO;
+        $serie = $classe->SERIE; 
+        // Concaténation, ex : "2ndA1"
+        return $promo . $serie;
+    }
+}
+
     public function calculerStatistiques($data)
     {
         // Déterminer la colonne de moyenne selon la période
-        // Pour Annuel (4), vous pouvez décider de calculer une moyenne globale ou choisir une colonne existante
         if ($data['periode'] == '1') {
             $colonne = 'MS1';
         } elseif ($data['periode'] == '2') {
@@ -17,38 +52,42 @@ class StatistiquesService
         } elseif ($data['periode'] == '3') {
             $colonne = 'MS3';
         } else {
-            // Exemple de calcul pour l'annuel : moyenne de MS1, MS2 et MS3
             $colonne = null;
         }
         
-        // Récupérer toutes les classes avec leurs élèves, en incluant CODEPROMO
+        // Récupérer toutes les classes avec leurs élèves
         $classes = Classes::with('eleves', 'promo')->get();
         $resultats = [];
-
-        // Regrouper les élèves par CODEPROMO
-        $groupesParPromo = $classes->groupBy('CODEPROMO');
-
-        foreach ($groupesParPromo as $codePromo => $classesPromo) {
-            $elevesPromo = collect();
-
-            foreach ($classesPromo as $classe) {
+    
+        // Groupement conditionnel :
+        // - Pour le premier cycle (ex. CYCLE == '1') on regroupe par CODEPROMO (6è, 5è, 4è, 3è)
+        // - Pour le second cycle (et pour première, terminale) on regroupe par SERIE (ex. 2ndA1, 2ndA2, etc.)
+        $groupes = $classes->groupBy(function($classe) {
+            return $this->getGroupLabel($classe);
+        });
+    
+        foreach ($groupes as $groupeKey => $classesGroupe) {
+            $elevesGroupe = collect();
+    
+            foreach ($classesGroupe as $classe) {
                 // Filtrer les élèves qui ont une moyenne renseignée pour la période sélectionnée
-                $elevesFiltrés = $classe->eleves->filter(function ($eleve) use ($colonne, $data) {
-                    // Pour une moyenne annuelle, on s'assure que MS1, MS2 et MS3 sont renseignés
+                $elevesFiltrés = $classe->eleves->filter(function ($eleve) use ($colonne) {
                     if (is_null($colonne)) {
-                        return !is_null($eleve->MS1) && !is_null($eleve->MS2) && !is_null($eleve->MS3);
+                        return !is_null($eleve->MS1) && floatval($eleve->MS1) != -1 && floatval($eleve->MS1) != 21
+                            && !is_null($eleve->MS2) && floatval($eleve->MS2) != -1 && floatval($eleve->MS2) != 21
+                            && !is_null($eleve->MS3) && floatval($eleve->MS3) != -1 && floatval($eleve->MS3) != 21;
                     }
-                    return !is_null($eleve->{$colonne});
+                    $note = $eleve->{$colonne};
+                    return !is_null($note) && floatval($note) != -1 && floatval($note) != 21;
                 });
-                
-                // Ajouter les élèves filtrés à la collection de la promo
-                $elevesPromo = $elevesPromo->merge($elevesFiltrés);
+    
+                // Fusionner les élèves filtrés
+                $elevesGroupe = $elevesGroupe->merge($elevesFiltrés);
             }
-
-            // Attribuer à chaque élève sa moyenne en fonction de la période
-            $elevesAvecMoyennes = $elevesPromo->map(function ($eleve) use ($colonne) {
+    
+            // Calculer la moyenne pour chaque élève
+            $elevesAvecMoyennes = $elevesGroupe->map(function ($eleve) use ($colonne) {
                 if (is_null($colonne)) {
-                    // Calcul de la moyenne annuelle
                     $moyenne = ($eleve->MS1 + $eleve->MS2 + $eleve->MS3) / 3;
                 } else {
                     $moyenne = $eleve->{$colonne};
@@ -56,22 +95,22 @@ class StatistiquesService
                 $eleve->moyenne = $moyenne;
                 return $eleve;
             });
-
-            // Séparer par sexe
+    
+            // Séparation par sexe
             $garcons = $elevesAvecMoyennes->where('SEXE', '1');
             $filles  = $elevesAvecMoyennes->where('SEXE', '2');
-
-            // Comparer pour obtenir la moyenne la plus forte et la plus faible
+    
+            // Calcul des moyennes maximales et minimales par sexe
             $maxMoyenneGarcons = $garcons->max('moyenne');
             $minMoyenneGarcons = $garcons->min('moyenne');
             $maxMoyenneFilles  = $filles->max('moyenne');
             $minMoyenneFilles  = $filles->min('moyenne');
-
-            // Calculer le nombre d'élèves dans chaque intervalle
+    
+            // Calcul des intervalles
             $intervalesResultats = $this->calculerIntervales($elevesAvecMoyennes, $data['intervales']);
-
-            // Stocker les résultats pour cette promotion
-            $resultats[$codePromo] = [
+    
+            // Stockage des résultats pour ce groupe (promotion ou série)
+            $resultats[$groupeKey] = [
                 'max_moyenne_garcons' => $maxMoyenneGarcons,
                 'min_moyenne_garcons' => $minMoyenneGarcons,
                 'max_moyenne_filles'  => $maxMoyenneFilles,
@@ -79,9 +118,10 @@ class StatistiquesService
                 'intervales'          => $intervalesResultats,
             ];
         }
-
+    
         return $resultats;
     }
+    
 
     protected function calculerIntervales($eleves, $intervales)
     {

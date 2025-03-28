@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('content')
-<div class="col-lg-12 grid-margin stretch-card">
+<div class="col-lg-12 grid-margin stretch-card" id="original">
     <div class="card">
         <div>
             <style>
@@ -23,9 +23,9 @@
             <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
                 <i class="fas fa-arrow-left"></i> Retour
             </button>
-            <br>
-            <br>
+            <br><br>
         </div>
+
         <div class="card-body">
             <!-- Formulaire pour le filtrage et le calcul -->
             <form action="{{ route('tableauanalytique') }}" method="POST">
@@ -89,20 +89,21 @@
                         </tbody>
                     </table>
                 </div>
+
                 <div class="text-right mt-4">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-calculator"></i> Calculer
                     </button>
-                    <button type="button" class="btn btn-secondary" onclick="window.print();">
+                    <button type="button" class="btn btn-secondary" onclick="printNote()">
                         <i class="fas fa-print"></i> Imprimer
                     </button>
                 </div>
             </form>
 
-            <!-- Affichage du tableau des résultats si disponibles -->
+            <!-- TABLEAU QUI S'AFFICHE À L'ÉCRAN (ACTUEL) -->
             @if(isset($resultats))
             <div class="table-responsive mt-5">
-                <table class="table table-bordered">
+                <table class="table table-bordered table-screen">
                     <thead>
                         <tr>
                             <th style="text-align: center; width: 25px;">GPE</th>
@@ -118,9 +119,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($resultats as $codePromo => $stats)
+                        @foreach($resultats as $groupeKey => $stats)
                         <tr>
-                            <td>{{ $codePromo }}</td>
+                            <td>{{ $groupeKey }}</td> 
                             <td>{{ number_format($stats['max_moyenne_garcons'], 2) }}</td>
                             <td>{{ number_format($stats['max_moyenne_filles'], 2) }}</td>
                             <td>{{ number_format($stats['min_moyenne_garcons'], 2) }}</td>
@@ -137,43 +138,165 @@
             </div>
             @endif
 
+            <!-- TABLEAU SPÉCIAL "CACHÉ" POUR L'IMPRESSION -->
+            @if(isset($resultats))
+            <div class="table-print" id="mainTable" style="display: none;">
+                <!-- En-tête ou titre -->
+                <h4 style="text-align:center; font-weight: bold;">TABLEAU ANALYTIQUE SPÉCIAL POUR IMPRESSION</h4>
+
+                <table class="table table-bordered table-rapport">
+                    <!-- EXEMPLE D'EN-TÊTE AVEC 2 LIGNES -->
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="text-align: center;">GPE</th>
+                            <!-- FORTE MOY -->
+                            <th colspan="2" style="text-align: center;">FORTE MOY</th>
+                            <!-- FAIBLE MOY -->
+                            <th colspan="2" style="text-align: center; " class="bordleft">FAIBLE MOY</th>
+                            <!-- Intervalles : 7 intervalles => 7 "blocs" => chacun colspan=3 -->
+                            @php
+                                // Pour afficher le libellé "0 <= M <= 6.5" etc.
+                                // On suppose que vous avez toujours 7 intervalles dans $stats['intervales'],
+                                // sinon adaptez la logique
+                                $listeIntervales = [];
+                                // On prend la première clé du $resultats pour extraire les intervalles
+                                $anyKey = array_key_first($resultats);
+                                if($anyKey !== null){
+                                    foreach($resultats[$anyKey]['intervales'] as $intervalName => $val){
+                                        // On construit un label du style "0 <= M <= 6.5"
+                                        $min = 0; $max = 0;
+                                        // Si vous avez besoin du min/max exact, il faut les récupérer
+                                        // depuis la requête ou un autre endroit. 
+                                        // Pour la démo, on mettra un placeholder "Intervalle X"
+                                        // 
+                                        // $label = number_format($val['min'],2).' <= M <= '.number_format($val['max'],2);
+                                        // => si vous stockez min/max dans $val
+                                        // 
+                                        // Pour l'exemple, on fait juste "I1", "I2" ...
+                                        $listeIntervales[] = $intervalName; 
+                                    }
+                                }
+                            @endphp
+                            @foreach($listeIntervales as $intervalName)
+                                <th colspan="3" style="text-align: center;">
+                                    {{ $intervalName }} <!-- ou "0 <= M <= 6.5" -->
+                                </th>
+                            @endforeach
+                        </tr>
+                        <tr>
+                            <!-- Sous-colonnes FORTE MOY -->
+                            <th style="text-align: center;">G</th>
+                            <th style="text-align: center;">F</th>
+                            <!-- Sous-colonnes FAIBLE MOY -->
+                            <th style="text-align: center;">G</th>
+                            <th style="text-align: center;">F</th>
+                            <!-- Sous-colonnes Intervalles (G, F, T) -->
+                            @foreach($listeIntervales as $intervalName)
+                                <th style="text-align: center;">G</th>
+                                <th style="text-align: center;">F</th>
+                                <th style="text-align: center;">T</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    @foreach($resultats as $groupeKey => $stats)
+                        <tr>
+                            <!-- GPE -->
+                            <td>{{ $groupeKey }}</td>
+                            <!-- FORTE MOY (max_moyenne_garcons, max_moyenne_filles) -->
+                            <td>{{ number_format($stats['max_moyenne_garcons'], 2) }}</td>
+                            <td>{{ number_format($stats['max_moyenne_filles'], 2) }}</td>
+                            <!-- FAIBLE MOY (min_moyenne_garcons, min_moyenne_filles) -->
+                            <td>{{ number_format($stats['min_moyenne_garcons'], 2) }}</td>
+                            <td class="bordleft">{{ number_format($stats['min_moyenne_filles'], 2) }}</td>
+                            <!-- Intervalles -->
+                            @foreach($stats['intervales'] as $intervalName => $data)
+                                <td>{{ $data['garcons'] }}</td>
+                                <td>{{ $data['filles'] }}</td>
+                                <td>{{ $data['total'] }}</td>
+                            @endforeach
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @endif
+            <!-- FIN DU TABLEAU IMPRIMÉ -->
+
         </div>
     </div>
 </div>
     
-<style>
-    .form-control {
-        border: 1px solid #ddd;
+
+
+
+<script>
+      function injectTableStyles() {
+    var style = document.createElement('style');
+    style.innerHTML = `
+
+    @media print {
+    /* Masquer les éléments non imprimables, etc. */
+    body * {
+        visibility: hidden;
     }
-    .table input.form-control {
+    .table-print, .table-print * {
+        visibility: visible;
+    }
+    .table-print {
+        position: absolute;
+        left: 0;
+        top: 0;
         width: 100%;
-        max-width: 120px;
-        text-align: center;
-        margin: 0 auto;
     }
-    .btn {
-        margin-left: 10px;
+      @page { size: landscape; }
+          table {
+              width: 100%;
+              border-collapse: collapse;
+          }
+              thead {
+                            border: 1px solid #000;
+
+      background-color: #f2f2f2;
+      text-transform: uppercase;
     }
-    .table-responsive {
-        overflow-x: auto;
-    }
-    .table {
-        margin: 0 auto;
-    }
-    .table td, .table th {
-        vertical-align: middle !important;
-    }
-    .table input.form-control {
-        padding: 2px;
-        font-size: 0.9em;
-    }
-    .table-responsive {
-        overflow-x: auto;
-        margin-bottom: 1rem;
-    }
-    .table-responsive table {
-        min-width: 100%;
-        white-space: nowrap;
-    }
-</style>
+
+        .table td:nth-child(n+2), .table th:nth-child(n+2) {
+          margin: 0 !important;
+          padding: 5px 0 5px 5px !important;
+          width: 100px !important;
+          word-wrap: break-word !important;
+          white-space: normal !important;
+                    }
+          th, td {
+              padding: 0 !important;
+              margin: 0 !important;
+              border: 1px solid #000;
+              text-align: center;
+              font-size: 10px !important;
+          }
+              .titles {
+              display: block  !important;
+              }
+          .classe-row {
+              background-color: #f9f9f9;
+              font-weight: bold;
+          }`;
+    document.head.appendChild(style);
+  }
+
+
+  function printNote() {
+    injectTableStyles(); // Injecter les styles pour l'impressionoriginal
+    var originalContent = document.body.innerHTML; // Contenu original de la page
+    var printContent = document.getElementById('mainTable').innerHTML; // Contenu spécifique à imprimer
+    document.body.innerHTML = printContent; // Remplacer le contenu de la page par le contenu à imprimer
+    
+    setTimeout(function() {
+      window.print(); // Ouvrir la boîte de dialogue d'impression
+      document.body.innerHTML = originalContent; // Restaurer le contenu original
+    }, 1000);
+  }
+</script>
 @endsection
