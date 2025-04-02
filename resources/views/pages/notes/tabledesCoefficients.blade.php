@@ -68,37 +68,39 @@
                 <form id="coefficientForm" method="POST" action="{{url('/enregistrerCoefficient')}}">
                     @csrf
                     @method('PUT')
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Classe / Matière</th>
-                            @foreach($listeMatieres as $matiere)
-                                <th>{{ $matiere->LIBELMAT }}</th>
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($listeClasses as $classe)
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
                             <tr>
-                                <td>{{ $classe->CODECLAS }}</td>
+                                <th style="position: sticky; left: 0; background: white; z-index: 2;">Classe / Matière</th>
                                 @foreach($listeMatieres as $matiere)
-                                    @php
-                                        $key = $classe->CODECLAS . '-' . $matiere->CODEMAT;
-                                        $coefficient = $coefficients->get($key);
-                                        $value = $coefficient ? $coefficient->COEF : '';
-                                        $isFondamentale = $coefficient && $coefficient->FONDAMENTALE ? 'fondamentale' : '';
-                                    @endphp
-                                    <td>
-                                        <input type="number" name="coefficients[{{ $classe->CODECLAS }}][{{ $matiere->CODEMAT }}]" 
-                                            class="form-control form-control-sm coefficient-input {{ $isFondamentale }}" 
-                                            min="0" 
-                                            style="width: 90px; text-align: center;" step="1" value="{{ $value }}">
-                                    </td>
+                                    <th>{{ $matiere->LIBELMAT }}</th>
                                 @endforeach
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach($listeClasses as $classe)
+                                <tr>
+                                    <td style="position: sticky; left: 0; background: white; z-index: 1;">{{ $classe->CODECLAS }}</td>
+                                    @foreach($listeMatieres as $matiere)
+                                        @php
+                                            $key = $classe->CODECLAS . '-' . $matiere->CODEMAT;
+                                            $coefficient = $coefficients->get($key);
+                                            $value = $coefficient ? $coefficient->COEF : '';
+                                            $isFondamentale = $coefficient && $coefficient->FONDAMENTALE ? 'fondamentale' : '';
+                                        @endphp
+                                        <td>
+                                            <input type="number" name="coefficients[{{ $classe->CODECLAS }}][{{ $matiere->CODEMAT }}]" 
+                                                class="form-control form-control-sm coefficient-input {{ $isFondamentale }}" 
+                                                min="0" 
+                                                style="width: 90px; text-align: center;" step="1" value="{{ $value }}">
+                                        </td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </form>
             </div>
         </div>

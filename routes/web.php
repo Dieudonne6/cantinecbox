@@ -394,9 +394,14 @@ Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 're
 
 // Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'getMatieresAndNotes'])->name('relevespareleves');
 
+// Routes pour le tableau analytique
 Route::get('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique');
+Route::post('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique');
 
-Route::post('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique.post');
+// Routes pour le tableau synoptique
+Route::get('/tableausynoptique', [TableauController::class, 'tableausynoptique'])->name('tableausynoptique');
+Route::post('/tableausynoptique', [TableauController::class, 'tableausynoptique'])->name('tableausynoptique');
 
-// Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'getMatieresAndNotes'])->name('relevespareleves');
-
+// Routes pour les effectifs (en supposant que vous disposez d'une méthode dédiée dans le contrôleur)
+Route::get('/effectifs', [TableauController::class, 'effectifs'])->name('effectifs');
+Route::post('/effectifs', [TableauController::class, 'effectifs'])->name('effectifs');

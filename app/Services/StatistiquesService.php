@@ -4,47 +4,34 @@ namespace App\Services;
 
 use App\Models\Classes;
 
-
-
 class StatistiquesService
 {
+    protected function getGroupLabel($classe)
+    {
+        $mapPromosCycle1 = [
+            '6EME' => '6è',
+            '5EME' => '5è',
+            '4EME' => '4è',
+            '3EME' => '3è',
+        ];
 
-protected function getGroupLabel($classe)
-{
-    // On peut prévoir des correspondances (mapping) pour que "6EME" s'affiche "6è", etc.
-    $mapPromosCycle1 = [
-        '6EME' => '6è',
-        '5EME' => '5è',
-        '4EME' => '4è',
-        '3EME' => '3è',
-    ];
+        $mapPromosCycle2 = [
+            '2ND'  => '2nd',
+            '1ERE' => '1ère',
+            'TLE'  => 'Tle',
+        ];
 
-    // Mapping pour transformer "2ND" en "2nd", "1ERE" en "1ère", etc.
-    $mapPromosCycle2 = [
-        '2ND'  => '2nd',
-        '1ERE' => '1ère',
-        'TLE'  => 'Tle',
-    ];
-
-    // On détermine si on est en cycle 1 ou cycle 2
-    // (ou plus finement, si vous avez cycle=2,3,4, etc. pour seconde, première, terminale)
-    if ($classe->CYCLE == '1') {
-        // Cycle I => 6è, 5è, 4è, 3è
-        // On remplace avec le mapping si possible
-        return $mapPromosCycle1[$classe->CODEPROMO] ?? $classe->CODEPROMO;
-    } else {
-        // Cycle II => On combine CODEPROMO + SERIE (ex : 2ndA1, 1èreA2, TleB, etc.)
-        // Attention à la casse et à la correspondance
-        $promo = $mapPromosCycle2[$classe->CODEPROMO] ?? $classe->CODEPROMO;
-        $serie = $classe->SERIE; 
-        // Concaténation, ex : "2ndA1"
-        return $promo . $serie;
+        if ($classe->CYCLE == '1') {
+            return $mapPromosCycle1[$classe->CODEPROMO] ?? $classe->CODEPROMO;
+        } else {
+            $promo = $mapPromosCycle2[$classe->CODEPROMO] ?? $classe->CODEPROMO;
+            $serie = $classe->SERIE;
+            return $promo . $serie;
+        }
     }
-}
 
     public function calculerStatistiques($data)
     {
-        // Déterminer la colonne de moyenne selon la période
         if ($data['periode'] == '1') {
             $colonne = 'MS1';
         } elseif ($data['periode'] == '2') {
@@ -54,23 +41,18 @@ protected function getGroupLabel($classe)
         } else {
             $colonne = null;
         }
-        
-        // Récupérer toutes les classes avec leurs élèves
+
         $classes = Classes::with('eleves', 'promo')->get();
         $resultats = [];
-    
-        // Groupement conditionnel :
-        // - Pour le premier cycle (ex. CYCLE == '1') on regroupe par CODEPROMO (6è, 5è, 4è, 3è)
-        // - Pour le second cycle (et pour première, terminale) on regroupe par SERIE (ex. 2ndA1, 2ndA2, etc.)
-        $groupes = $classes->groupBy(function($classe) {
+
+        $groupes = $classes->groupBy(function ($classe) {
             return $this->getGroupLabel($classe);
         });
-    
+
         foreach ($groupes as $groupeKey => $classesGroupe) {
             $elevesGroupe = collect();
-    
+
             foreach ($classesGroupe as $classe) {
-                // Filtrer les élèves qui ont une moyenne renseignée pour la période sélectionnée
                 $elevesFiltrés = $classe->eleves->filter(function ($eleve) use ($colonne) {
                     if (is_null($colonne)) {
                         return !is_null($eleve->MS1) && floatval($eleve->MS1) != -1 && floatval($eleve->MS1) != 21
@@ -80,12 +62,10 @@ protected function getGroupLabel($classe)
                     $note = $eleve->{$colonne};
                     return !is_null($note) && floatval($note) != -1 && floatval($note) != 21;
                 });
-    
-                // Fusionner les élèves filtrés
+
                 $elevesGroupe = $elevesGroupe->merge($elevesFiltrés);
             }
-    
-            // Calculer la moyenne pour chaque élève
+
             $elevesAvecMoyennes = $elevesGroupe->map(function ($eleve) use ($colonne) {
                 if (is_null($colonne)) {
                     $moyenne = ($eleve->MS1 + $eleve->MS2 + $eleve->MS3) / 3;
@@ -95,21 +75,17 @@ protected function getGroupLabel($classe)
                 $eleve->moyenne = $moyenne;
                 return $eleve;
             });
-    
-            // Séparation par sexe
+
             $garcons = $elevesAvecMoyennes->where('SEXE', '1');
             $filles  = $elevesAvecMoyennes->where('SEXE', '2');
-    
-            // Calcul des moyennes maximales et minimales par sexe
+
             $maxMoyenneGarcons = $garcons->max('moyenne');
             $minMoyenneGarcons = $garcons->min('moyenne');
             $maxMoyenneFilles  = $filles->max('moyenne');
             $minMoyenneFilles  = $filles->min('moyenne');
-    
-            // Calcul des intervalles
+
             $intervalesResultats = $this->calculerIntervales($elevesAvecMoyennes, $data['intervales']);
-    
-            // Stockage des résultats pour ce groupe (promotion ou série)
+
             $resultats[$groupeKey] = [
                 'max_moyenne_garcons' => $maxMoyenneGarcons,
                 'min_moyenne_garcons' => $minMoyenneGarcons,
@@ -118,18 +94,16 @@ protected function getGroupLabel($classe)
                 'intervales'          => $intervalesResultats,
             ];
         }
-    
+
         return $resultats;
     }
-    
 
     protected function calculerIntervales($eleves, $intervales)
     {
         $resultat = [];
-
         foreach ($intervales as $intervalle => $valeurs) {
-            $min = $valeurs['min'];
-            $max = $valeurs['max'];
+            $min = floatval($valeurs['min']);
+            $max = floatval($valeurs['max']);
 
             $elevesDansIntervalle = $eleves->filter(function ($eleve) use ($min, $max) {
                 return $eleve->moyenne >= $min && $eleve->moyenne < $max;
@@ -141,7 +115,214 @@ protected function getGroupLabel($classe)
                 'total'   => $elevesDansIntervalle->count(),
             ];
         }
-
         return $resultat;
+    }
+
+    public function calculerSynoptique($data)
+    {
+        $classes = Classes::with('eleves')->get();
+        $resultats = [];
+
+        $groupes = $classes->groupBy(function ($classe) {
+            return $this->getGroupLabel($classe);
+        });
+
+        foreach ($groupes as $groupLabel => $classesGroupe) {
+            $elevesGroupe = collect();
+            foreach ($classesGroupe as $classe) {
+                $elevesGroupe = $elevesGroupe->merge($classe->eleves);
+            }
+
+            $nombreClasses = $classesGroupe->count();
+
+            // Calcul des intervalles selon les critères spécifiques
+            $intervalesResultat = [];
+
+            // I1: Élèves avec STATUTG = 1
+            $elevesI1 = $elevesGroupe->filter(function ($eleve) {
+                return $eleve->STATUTG == 1;
+            });
+
+            $intervalesResultat['I1'] = [
+                'garcons' => $elevesI1->where('SEXE', '1')->count(),
+                'filles'  => $elevesI1->where('SEXE', '2')->count(),
+                'total'   => $elevesI1->count(),
+            ];
+
+            // I2: Élèves avec STATUT = 0, STATUTG = 1 et note MS1
+            $elevesI2 = $elevesGroupe->filter(function ($eleve) {
+                return $eleve->STATUT == 0 &&
+                    $eleve->STATUTG == 1 &&
+                    !is_null($eleve->MS1) &&
+                    floatval($eleve->MS1) != -1 &&
+                    floatval($eleve->MS1) != 21;
+            });
+
+            $intervalesResultat['I2'] = [
+                'garcons' => $elevesI2->where('SEXE', '1')->count(),
+                'filles'  => $elevesI2->where('SEXE', '2')->count(),
+                'total'   => $elevesI2->count(),
+            ];
+
+            // I3: Élèves avec STATUT = 1, STATUTG = 1 et note MS1
+            $elevesI3 = $elevesGroupe->filter(function ($eleve) {
+                return $eleve->STATUT == 1 &&
+                    $eleve->STATUTG == 1 &&
+                    !is_null($eleve->MS1) &&
+                    floatval($eleve->MS1) != -1 &&
+                    floatval($eleve->MS1) != 21;
+            });
+
+            $intervalesResultat['I3'] = [
+                'garcons' => $elevesI3->where('SEXE', '1')->count(),
+                'filles'  => $elevesI3->where('SEXE', '2')->count(),
+                'total'   => $elevesI3->count(),
+            ];
+
+            // I4: Différence entre I1 et (I2 + I3)
+            $totalI2I3 = $elevesI2->count() + $elevesI3->count();
+            $totalI4 = max(0, $elevesI1->count() - $totalI2I3);
+
+            // Calcul des garçons et filles pour I4
+            $garconsI4 = max(0, $elevesI1->where('SEXE', '1')->count() -
+                ($elevesI2->where('SEXE', '1')->count() + $elevesI3->where('SEXE', '1')->count()));
+
+            $fillesI4 = max(0, $elevesI1->where('SEXE', '2')->count() -
+                ($elevesI2->where('SEXE', '2')->count() + $elevesI3->where('SEXE', '2')->count()));
+
+            $intervalesResultat['I4'] = [
+                'garcons' => $garconsI4,
+                'filles'  => $fillesI4,
+                'total'   => $totalI4,
+            ];
+
+            $resultats[$groupLabel] = [
+                'codePromo' => $groupLabel,
+                'nbClasses' => $nombreClasses,
+                'intervales' => $intervalesResultat,
+                'moyenne_ref' => $data['moyenne_ref'] ?? 10.00,
+            ];
+        }
+
+        return $resultats;
+    }
+
+    public function calculerEffectifs($data)
+    {
+        $classes = Classes::with('eleves')->get();
+        $resultats = [];
+
+        $groupes = $classes->groupBy(function ($classe) {
+            return $this->getGroupLabel($classe);
+        });
+
+        foreach ($groupes as $groupLabel => $classesGroupe) {
+            $elevesGroupe = collect();
+            foreach ($classesGroupe as $classe) {
+                $elevesGroupe = $elevesGroupe->merge($classe->eleves);
+            }
+
+            // Calcul des moyennes pour chaque élève
+            $elevesAvecMoyennes = $elevesGroupe->map(function ($eleve) use ($data) {
+                if ($data['periode'] == '4') {
+                    $notes = collect([$eleve->MS1, $eleve->MS2, $eleve->MS3])
+                        ->filter(function ($note) {
+                            return !is_null($note) && floatval($note) != -1 && floatval($note) != 21;
+                        });
+
+                    if ($notes->isEmpty()) {
+                        return null;
+                    }
+                    $eleve->moyenne = $notes->avg();
+                } else {
+                    $colonne = 'MS' . $data['periode'];
+                    $note = $eleve->{$colonne};
+
+                    if (is_null($note) || floatval($note) == -1 || floatval($note) == 21) {
+                        return null;
+                    }
+                    $eleve->moyenne = floatval($note);
+                }
+                return $eleve;
+            })->filter();
+
+            // Calcul des statistiques par sexe
+            $garcons = $elevesAvecMoyennes->where('SEXE', '1');
+            $filles = $elevesAvecMoyennes->where('SEXE', '2');
+
+            // Calcul des moyennes max et min
+            $maxMoyenneGarcons = $garcons->max('moyenne');
+            $minMoyenneGarcons = $garcons->min('moyenne');
+            $maxMoyenneFilles = $filles->max('moyenne');
+            $minMoyenneFilles = $filles->min('moyenne');
+
+            // Calcul des effectifs par statut
+            $elevesI1 = $elevesGroupe->filter(function ($eleve) {
+                return $eleve->STATUTG == 1;
+            });
+
+            $elevesI2 = $elevesGroupe->filter(function ($eleve) {
+                return $eleve->STATUT == 0 &&
+                    $eleve->STATUTG == 1 &&
+                    !is_null($eleve->MS1) &&
+                    floatval($eleve->MS1) != -1 &&
+                    floatval($eleve->MS1) != 21;
+            });
+
+            $elevesI3 = $elevesGroupe->filter(function ($eleve) {
+                return $eleve->STATUT == 1 &&
+                    $eleve->STATUTG == 1 &&
+                    !is_null($eleve->MS1) &&
+                    floatval($eleve->MS1) != -1 &&
+                    floatval($eleve->MS1) != 21;
+            });
+
+            // Calcul des intervalles
+            $intervalesResultat = [];
+            foreach ($data['intervales'] as $intervalle => $valeurs) {
+                $min = floatval($valeurs['min']);
+                $max = floatval($valeurs['max']);
+
+                $elevesDansIntervalle = $elevesAvecMoyennes->filter(function ($eleve) use ($min, $max) {
+                    return $eleve->moyenne >= $min && $eleve->moyenne < $max;
+                });
+
+                $intervalesResultat[$intervalle] = [
+                    'garcons' => $elevesDansIntervalle->where('SEXE', '1')->count(),
+                    'filles'  => $elevesDansIntervalle->where('SEXE', '2')->count(),
+                    'total'   => $elevesDansIntervalle->count(),
+                ];
+            }
+
+            $resultats[$groupLabel] = [
+                'max_moyenne_garcons' => $maxMoyenneGarcons,
+                'max_moyenne_filles' => $maxMoyenneFilles,
+                'min_moyenne_garcons' => $minMoyenneGarcons,
+                'min_moyenne_filles' => $minMoyenneFilles,
+                'total_eleves' => $elevesAvecMoyennes->count(),
+                'total_garcons' => $garcons->count(),
+                'total_filles' => $filles->count(),
+                'effectifs_statut' => [
+                    'I1' => [
+                        'garcons' => $elevesI1->where('SEXE', '1')->count(),
+                        'filles' => $elevesI1->where('SEXE', '2')->count(),
+                        'total' => $elevesI1->count(),
+                    ],
+                    'I2' => [
+                        'garcons' => $elevesI2->where('SEXE', '1')->count(),
+                        'filles' => $elevesI2->where('SEXE', '2')->count(),
+                        'total' => $elevesI2->count(),
+                    ],
+                    'I3' => [
+                        'garcons' => $elevesI3->where('SEXE', '1')->count(),
+                        'filles' => $elevesI3->where('SEXE', '2')->count(),
+                        'total' => $elevesI3->count(),
+                    ],
+                ],
+                'intervales' => $intervalesResultat,
+            ];
+        }
+
+        return $resultats;
     }
 }

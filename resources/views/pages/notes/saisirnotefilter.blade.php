@@ -21,7 +21,7 @@
                         color: #b51818 !important;
                         /* Couleur de l'icône */
                     }
-            
+
                     .btn-arrow:hover {
                         color: #b700ff !important;
                         /* Couleur au survol */
@@ -29,9 +29,9 @@
                 </style>
                 <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
                     <i class="fas fa-arrow-left"></i> Retour
-                </button>   
+                </button>
                 <br>
-                <br>                                   
+                <br>
             </div>
             @if (session('success'))
                 <div class="alert alert-success">
@@ -72,8 +72,7 @@
                                         <!-- Select pour la période -->
                                         <div class="col-md-8 mb-3">
                                             <select class="form-select select2 w-100 mt-2" id="periodSelect"
-                                                onchange="handleChange()"
-                                                aria-label="Choisir une période">
+                                                onchange="handleChange()" aria-label="Choisir une période">
                                                 <option value="" selected>Période</option>
                                                 <option value="1">1ère Période</option>
                                                 <option value="2">2ème Période</option>
