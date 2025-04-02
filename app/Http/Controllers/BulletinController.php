@@ -54,6 +54,13 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\NotesExport;
 use Illuminate\Support\Str;
 
+use App\Imports\ElevesImport;
+
+
+
+// use Maatwebsite\Excel\Facades\Excel;
+
+
 
 class BulletinController extends Controller
 {
@@ -1859,10 +1866,14 @@ $entete = '
             $matiere = $request->input('matiere');
             $nomMatiere = Matieres::where('CODEMAT', $matiere)->first();
 
-            $notes = Notes::where('CODECLAS', $classe)
+            $notes = Notes::with('eleve')
+            ->where('CODECLAS', $classe)
             ->where('CODEMAT', $matiere)
             ->where('SEMESTRE', $periode)
-            ->get();
+            ->get()
+            ->sortBy(function ($note) {
+                return $note->eleve->NOM;
+            });
 
             // Récupérer la valeur de typean depuis la table params2
             $typean = DB::table('params2')->value('typean'); // récupère la première valeur de 'typean'
@@ -1885,11 +1896,15 @@ $entete = '
                 $nomMatiere = Matieres::where('CODEMAT', $matiere)->first();
                 $nomMat = $nomMatiere->LIBELMAT;
 
+
                 $notes = Notes::with('eleve')
                 ->where('CODECLAS', $classe)
                 ->where('CODEMAT', $matiere)
                 ->where('SEMESTRE', $periode)
-                ->get();
+                ->get()
+                ->sortBy(function ($note) {
+                    return $note->eleve->NOM;
+                });
 
 
                 // Récupérer la valeur de typean depuis la table params2
@@ -1910,6 +1925,33 @@ $entete = '
                     $fileName
                 );    
 
-      }          
+      }      
+      
+      public function importernote() {
+        return view('pages.inscriptions.importenote');
+      }
+
+      public function import(Request $request)
+    {
+        $request->validate([
+            'excelFile' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        try {
+            // Importer le fichier Excel dans la table 'eleve' à l'aide de la classe d'import
+            Excel::import(new ElevesImport, $request->file('excelFile'));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Importation réussie.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de l\'import : ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     } 
       

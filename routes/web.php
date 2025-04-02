@@ -400,3 +400,7 @@ Route::post('/tableauanalytique', [TableauController::class, 'tableauanalytique'
 
 // Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 'getMatieresAndNotes'])->name('relevespareleves');
 
+Route::get('/importernote', [BulletinController::class, 'importernote'])->name('importernote');
+// Route::post('/eleves/preview', [BulletinController::class, 'preview'])->name('eleves.preview');
+// Route::post('/eleves/upload', [BulletinController::class, 'upload'])->name('eleves.upload');
+Route::post('/import', [BulletinController::class, 'import'])->name('eleves.import');

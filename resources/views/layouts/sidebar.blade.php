@@ -13,6 +13,9 @@
         'certificatsolarite', 'etatdelacaisse', 'enquetesstatistiques', 'situationfinanciereglobale',
         'etatdesrecouvrements', 'arriereconstate', 'journaldetailleaveccomposante', 'journaldetaillesanscomposante'
       ];
+
+      $activeExtractRoutesInsc = ['importernote', 'import'];
+
       @endphp
 
       <!-- Bloc Inscriptions & disciplines -->
@@ -87,6 +90,33 @@
                 Archives
               </a>
             </li>
+
+                        <!-- Bloc Extraction -->
+                        <li class="nav-item">
+                          <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'active' : '' }}" data-bs-toggle="collapse" href="#extract" aria-expanded="{{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'true' : 'false' }}" aria-controls="extract">
+                            Extraction
+                            <i class="menu-arrow"></i>
+                          </a>
+                          <div class="collapse {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'show' : '' }}" id="extract" data-bs-parent="#form-elements">
+                            <ul class="nav sub-menu">
+                              {{-- <li>
+                                <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutes) ? 'active' : '' }}" href="{{ route('extrairenote') }}">
+                                  Exporter vers EducMaster
+                                </a>
+                              </li> --}}
+                              <li>
+                                <a class="nav-link {{ request()->is('Exporter') ? 'active' : '' }}" href="#">
+                                  Exporter
+                                </a>
+                              </li>
+                              <li>
+                                <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'active' : '' }}" href="{{ route('importernote') }}">
+                                  Importer
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
           </ul>
         </div>
       </li>
@@ -233,7 +263,7 @@
                       Exporter vers EducMaster
                     </a>
                   </li>
-                  <li>
+                  {{-- <li>
                     <a class="nav-link {{ request()->is('Exporter') ? 'active' : '' }}" href="#">
                       Exporter
                     </a>
@@ -242,7 +272,7 @@
                     <a class="nav-link {{ request()->is('Importer') ? 'active' : '' }}" href="#">
                       Importer
                     </a>
-                  </li>
+                  </li> --}}
                 </ul>
               </div>
             </li>
