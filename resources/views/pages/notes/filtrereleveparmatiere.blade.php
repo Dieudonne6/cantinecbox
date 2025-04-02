@@ -82,7 +82,7 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th rowspan="2">N</th>
+                                        {{-- <th rowspan="2">N</th> --}}
                                         <th rowspan="2">Matricule</th>
                                         {{-- <th rowspan="2">MatriculeX</th> --}}
                                         <th rowspan="2">Nom</th>
@@ -107,10 +107,10 @@
                                     @endphp
                                     @foreach ($notes as $note)
                                         <tr>
-                                            <td>{{ $count }}</td>
+                                            {{-- <td>{{ $count }}</td> --}}
                                             <td>{{ $note->MATRICULEX ?? '****' }}</td>
-                                            <td>{{ $note->nom ?? '****' }}</td>
-                                            <td>{{ $note->prenom ?? '****' }}</td>
+                                            <td style="text-align: left;">{{ $note->nom ?? '****' }}</td>
+                                            <td style="text-align: left;">{{ $note->prenom ?? '****' }}</td>
                                             <td>{{ filtrerNote($note->INT1) }}</td>
                                             <td>{{ filtrerNote($note->INT2) }}</td>
                                             <td>{{ filtrerNote($note->INT3) }}</td>
