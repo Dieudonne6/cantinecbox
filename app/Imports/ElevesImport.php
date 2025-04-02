@@ -68,17 +68,17 @@ class ElevesImport implements ToModel, WithHeadingRow
             // Debug : Afficher la valeur récupérée avant l'enregistrement
             // \Log::info('Clés du row:', array_keys($row));
 
-            try {
-                // Vérifier si la classe est définie dans le fichier
-                $classeCode = $row['classe'] ?? null;
+            // try {
+            //     // Vérifier si la classe est définie dans le fichier
+            //     $classeCode = $row['classe'] ?? null;
 
-                if ($classeCode) {
-                    // Vérifier si la classe existe, sinon la créer
-                    $classe = Classes::firstOrCreate(
-                        ['CODECLAS' => $classeCode], // Recherche par CODECLASS
-                        ['LIBELCLAS' => $classeCode] // Création si inexistant
-                    );
-                }
+            //     if ($classeCode) {
+            //         // Vérifier si la classe existe, sinon la créer
+            //         $classe = Classes::firstOrCreate(
+            //             ['CODECLAS' => $classeCode], // Recherche par CODECLASS
+            //             ['LIBELCLAS' => $classeCode] // Création si inexistant
+            //         );
+            //     }
 
             
                 return new Eleve([
@@ -90,14 +90,14 @@ class ElevesImport implements ToModel, WithHeadingRow
                         ? (strtolower(trim($row['sexe'])) == 'féminin' ? 2 : 1) 
                         : null,                
                     'STATUT'     => isset($row['redoublant']) ? intval(trim($row['redoublant'])) : null,
-                    'CODECLAS'   => $classe->CODECLAS, // Utilise la classe trouvée ou créée
+                    'CODECLAS'   => $row['classe'] ?? null, // Utilise la classe trouvée ou créée
                     'DATENAIS'   => $this->convertDate($row['date_naiss'] ?? null),
                     'LIEUNAIS'   => $row['lieu_de_naissance'] ?? null,
                 ]);
-            } catch (\Exception $e) {
-                Log::error("Erreur lors de l'insertion de l'élève : " . $e->getMessage());
-                return null;
-            }
+            // } catch (\Exception $e) {
+            //     Log::error("Erreur lors de l'insertion de l'élève : " . $e->getMessage());
+            //     return null;
+            // }
 
         
     }
