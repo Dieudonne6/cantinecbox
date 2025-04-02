@@ -54,6 +54,13 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\NotesExport;
 use Illuminate\Support\Str;
 
+use App\Imports\ElevesImport;
+
+
+
+// use Maatwebsite\Excel\Facades\Excel;
+
+
 
 class BulletinController extends Controller
 {
@@ -1902,12 +1909,62 @@ class BulletinController extends Controller
         $exportDev1 = $request->input('exportDev1', 1);
         $exportDev2 = $request->input('exportDev2', 1);
 
-        // Création du nom de fichier incluant le nom de la classe.
-        $fileName = $classe . '_' . $nomMat .  '.xlsx';
 
-        return Excel::download(
-            new NotesExport($nomMatiere, $notes, $classe, $periode, $periodLabel, $exportMoy, $exportDev1, $exportDev2),
-            $fileName
-        );
+                $notes = Notes::with('eleve')
+                ->where('CODECLAS', $classe)
+                ->where('CODEMAT', $matiere)
+                ->where('SEMESTRE', $periode)
+                ->get()
+                ->sortBy(function ($note) {
+                    return $note->eleve->NOM;
+                });
+
+
+                // Récupérer la valeur de typean depuis la table params2
+                $typean = DB::table('params2')->value('typean'); // récupère la première valeur de 'typean'
+                $periodLabel = ($typean == 1) ? 'Semestre' : 'Trimestre';
+            
+
+                // Récupérer les options d'export (1 = coché, 0 = décoché)
+                $exportMoy = $request->input('exportMoy', 1);
+                $exportDev1 = $request->input('exportDev1', 1);
+                $exportDev2 = $request->input('exportDev2', 1);
+            
+                // Création du nom de fichier incluant le nom de la classe.
+                $fileName = $classe .'_'.$nomMat.  '.xlsx';
+
+                return Excel::download(
+                    new NotesExport($nomMatiere, $notes, $classe, $periode, $periodLabel, $exportMoy, $exportDev1, $exportDev2),
+                    $fileName
+                );    
+
+      }      
+      
+      public function importernote() {
+        return view('pages.inscriptions.importenote');
+      }
+
+      public function import(Request $request)
+    {
+        $request->validate([
+            'excelFile' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        try {
+            // Importer le fichier Excel dans la table 'eleve' à l'aide de la classe d'import
+            Excel::import(new ElevesImport, $request->file('excelFile'));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Importation réussie.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de l\'import : ' . $e->getMessage()
+            ], 500);
+        }
     }
-}
+
+    } 
+      

@@ -405,3 +405,7 @@ Route::post('/tableausynoptique', [TableauController::class, 'tableausynoptique'
 // Routes pour les effectifs (en supposant que vous disposez d'une méthode dédiée dans le contrôleur)
 Route::get('/effectifs', [TableauController::class, 'effectifs'])->name('effectifs');
 Route::post('/effectifs', [TableauController::class, 'effectifs'])->name('effectifs');
+Route::get('/importernote', [BulletinController::class, 'importernote'])->name('importernote');
+// Route::post('/eleves/preview', [BulletinController::class, 'preview'])->name('eleves.preview');
+// Route::post('/eleves/upload', [BulletinController::class, 'upload'])->name('eleves.upload');
+Route::post('/import', [BulletinController::class, 'import'])->name('eleves.import');
