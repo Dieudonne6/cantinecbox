@@ -31,7 +31,7 @@ class ElevesImport implements ToModel, WithHeadingRow
     // }
 
 
-    private static $ordre = 0;
+    private static $ordre = null;
 
     private function convertDate($date)
     {
@@ -64,42 +64,24 @@ class ElevesImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
-
-            // Debug : Afficher la valeur récupérée avant l'enregistrement
-            // \Log::info('Clés du row:', array_keys($row));
-
-            // try {
-            //     // Vérifier si la classe est définie dans le fichier
-            //     $classeCode = $row['classe'] ?? null;
-
-            //     if ($classeCode) {
-            //         // Vérifier si la classe existe, sinon la créer
-            //         $classe = Classes::firstOrCreate(
-            //             ['CODECLAS' => $classeCode], // Recherche par CODECLASS
-            //             ['LIBELCLAS' => $classeCode] // Création si inexistant
-            //         );
-            //     }
-
-            
-                return new Eleve([
-                    'MATRICULE'  => ++self::$ordre,
-                    'MATRICULEX' => isset($row['matricule']) ? (string) trim($row['matricule']) : null,
-                    'NOM'        => $row['nom'] ?? null,
-                    'PRENOM'     => $row['prenom'] ?? null,
-                    'SEXE'       => isset($row['sexe']) 
-                        ? (strtolower(trim($row['sexe'])) == 'féminin' ? 2 : 1) 
-                        : null,                
-                    'STATUT'     => isset($row['redoublant']) ? intval(trim($row['redoublant'])) : null,
-                    'CODECLAS'   => $row['classe'] ?? null, // Utilise la classe trouvée ou créée
-                    'DATENAIS'   => $this->convertDate($row['date_naiss'] ?? null),
-                    'LIEUNAIS'   => $row['lieu_de_naissance'] ?? null,
-                ]);
-            // } catch (\Exception $e) {
-            //     Log::error("Erreur lors de l'insertion de l'élève : " . $e->getMessage());
-            //     return null;
-            // }
-
-        
+        if (self::$ordre === null) {
+            // Récupère le dernier numéro d'ordre existant en base
+            self::$ordre = Eleve::max('MATRICULE') ?? 0;
+        }
+    
+        return !empty(array_filter($row)) ? new Eleve([
+            'MATRICULE'  => ++self::$ordre,
+            'MATRICULEX' => isset($row['matricule']) ? (string) trim($row['matricule']) : null,
+            'NOM'        => $row['nom'] ?? null,
+            'PRENOM'     => $row['prenom'] ?? null,
+            'SEXE'       => isset($row['sexe']) 
+                ? (strtolower(trim($row['sexe'])) == 'féminin' ? 2 : 1) 
+                : null,                
+            'STATUT'     => isset($row['redoublant']) ? intval(trim($row['redoublant'])) : null,
+            'CODECLAS'   => $row['classe'] ?? null, 
+            'DATENAIS'   => $this->convertDate($row['date_naiss'] ?? null),
+            'LIEUNAIS'   => $row['lieu_de_naissance'] ?? null,
+        ]) : null;
     }
 
 
