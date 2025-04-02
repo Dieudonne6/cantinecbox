@@ -22,7 +22,7 @@
                         color: #b51818 !important;
                         /* Couleur de l'icône */
                     }
-            
+
                     .btn-arrow:hover {
                         color: #b700ff !important;
                         /* Couleur au survol */
@@ -30,9 +30,9 @@
                 </style>
                 <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
                     <i class="fas fa-arrow-left"></i> Retour
-                </button> 
+                </button>
                 <br>
-                <br>                                     
+                <br>
             </div>
 
             @if (Session::has('status'))
@@ -226,7 +226,9 @@
                                         {{-- <td class="" data-promi="{{ $eleve->classe->promo->CODEPROMO }}">{{ $eleve->classe->promo->LIBELPROMO }}</td> --}}
                                         <td class="d-none" data-cycle="{{ $eleve->classe->CYCLE }}">
                                             {{ $eleve->classe->CYCLE }}</td>
-                                        <td class="d-none" data-promo="{{ $eleve->classe->promo->CODEPROMO }}"></td>
+                                        <td class="d-none"
+                                            data-promo="{{ $eleve->classe && $eleve->classe->promo ? $eleve->classe->promo->CODEPROMO : '' }}">
+                                        </td>
                                         <td class="d-none" data-category="{{ $eleve->STATUTG }}"></td>
                                         <td class="d-none" data-statut="{{ $eleve->STATUT }}"></td>
                                         <td class="d-none" data-serie="{{ $eleve->SERIE }}"></td>
