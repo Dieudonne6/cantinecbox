@@ -81,7 +81,7 @@ class ElevesImport implements ToModel, WithHeadingRow
             //     }
 
             
-                return new Eleve([
+            return !empty(array_filter($row)) ? new Eleve([
                     'MATRICULE'  => ++self::$ordre,
                     'MATRICULEX' => isset($row['matricule']) ? (string) trim($row['matricule']) : null,
                     'NOM'        => $row['nom'] ?? null,
@@ -93,7 +93,7 @@ class ElevesImport implements ToModel, WithHeadingRow
                     'CODECLAS'   => $row['classe'] ?? null, // Utilise la classe trouvée ou créée
                     'DATENAIS'   => $this->convertDate($row['date_naiss'] ?? null),
                     'LIEUNAIS'   => $row['lieu_de_naissance'] ?? null,
-                ]);
+                ]) : null;
             // } catch (\Exception $e) {
             //     Log::error("Erreur lors de l'insertion de l'élève : " . $e->getMessage());
             //     return null;
