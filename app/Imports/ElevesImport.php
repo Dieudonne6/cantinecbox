@@ -31,7 +31,7 @@ class ElevesImport implements ToModel, WithHeadingRow
     // }
 
 
-    private static $ordre = 1;
+    private static $ordre = 0;
 
     private function convertDate($date)
     {
