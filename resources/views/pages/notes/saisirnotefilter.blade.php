@@ -209,13 +209,16 @@
                                         @foreach ($eleves as $eleve)
                                             <tr>
                                                 <td>{{ $eleve->MATRICULE ?? '' }}</td>
-                                                <td>{{ $eleve->NOM ?? '' }}<br>{{ $eleve->PRENOM ?? '' }}</td>
+                                                <td>
+                                                    {{ $eleve->NOM ?? '' }}<br>
+                                                    {{ $eleve->PRENOM ?? '' }}
+                                                </td>
 
                                                 @for ($i = 1; $i <= 10; $i++)
                                                     <td class="interro-column" data-interro="{{ $i }}">
                                                         <input type="text"
                                                             name="notes[{{ $eleve->MATRICULE }}][INT{{ $i }}]"
-                                                            value="{{ $eleve['INT' . $i] ?? '' }}"
+                                                            value="{{ isset($eleve['INT' . $i]) && ($eleve['INT' . $i] == 21 || $eleve['INT' . $i] == -1) ? '***' : $eleve['INT' . $i] ?? '' }}"
                                                             class="form-control form-control-sm interro-input fixed-input"
                                                             oninput="calculateMIAndMoy(this)">
                                                     </td>
@@ -223,55 +226,62 @@
 
                                                 <td>
                                                     <input type="text" name="notes[{{ $eleve->MATRICULE }}][MI]"
-                                                        value="{{ $eleve->MI ?? '' }}"
+                                                        value="{{ isset($eleve->MI) && ($eleve->MI == 21 || $eleve->MI == -1) ? '***' : $eleve->MI ?? '' }}"
                                                         class="form-control form-control-sm mi-input fixed-input" readonly>
                                                 </td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
-                                                        value="{{ $eleve->DEV1 ?? '' }}"
+
+                                                <td>
+                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
+                                                        value="{{ isset($eleve->DEV1) && ($eleve->DEV1 == 21 || $eleve->DEV1 == -1) ? '***' : $eleve->DEV1 ?? '' }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
-                                                        oninput="calculateMIAndMoy(this)"></td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
-                                                        value="{{ $eleve->DEV2 ?? '' }}"
+                                                        oninput="calculateMIAndMoy(this)">
+                                                </td>
+
+                                                <td>
+                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
+                                                        value="{{ isset($eleve->DEV2) && ($eleve->DEV2 == 21 || $eleve->DEV2 == -1) ? '***' : $eleve->DEV2 ?? '' }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
-                                                        oninput="calculateMIAndMoy(this)"></td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
-                                                        value="{{ $eleve->DEV3 ?? '' }}"
+                                                        oninput="calculateMIAndMoy(this)">
+                                                </td>
+
+                                                <td>
+                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
+                                                        value="{{ isset($eleve->DEV3) && ($eleve->DEV3 == 21 || $eleve->DEV3 == -1) ? '***' : $eleve->DEV3 ?? '' }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
-                                                        oninput="calculateMIAndMoy(this)"></td>
+                                                        oninput="calculateMIAndMoy(this)">
+                                                </td>
+
                                                 <td>
                                                     <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
-                                                        value="{{ $eleve->MS1 ?? '' }}"
+                                                        value="{{ isset($eleve->MS1) && ($eleve->MS1 == 21 || $eleve->MS1 == -1) ? '***' : $eleve->MS1 ?? '' }}"
                                                         class="form-control form-control-sm ms1-input fixed-input"
                                                         readonly>
                                                 </td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][TEST]"
-                                                        value="{{ $eleve->TEST ?? '' }}"
+
+                                                <td>
+                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][TEST]"
+                                                        value="{{ isset($eleve->TEST) && ($eleve->TEST == 21 || $eleve->TEST == -1) ? '***' : $eleve->TEST ?? '' }}"
                                                         class="form-control form-control-sm test-input fixed-input"
-                                                        oninput="calculateMIAndMoy(this)"></td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
-                                                        value="{{ $eleve->MS ?? '' }}"
+                                                        oninput="calculateMIAndMoy(this)">
+                                                </td>
+
+                                                <td>
+                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
+                                                        value="{{ isset($eleve->MS) && ($eleve->MS == 21 || $eleve->MS == -1) ? '***' : $eleve->MS ?? '' }}"
                                                         class="form-control form-control-sm ms-input fixed-input" readonly>
                                                 </td>
                                             </tr>
                                         @endforeach
+
                                     </tbody>
                                 </table>
                             </div>
                             <script>
-                                const selectElement = document.getElementById('tableSelect1');
-
-                                // Sauvegarder la valeur sélectionnée dans le localStorage
-                                selectElement.addEventListener('change', () => {
-                                    localStorage.setItem('selectedGroup', selectElement.value);
-                                });
-
-                                // Restaurer la valeur sauvegardée lors du chargement de la page
-                                document.addEventListener('DOMContentLoaded', () => {
-                                    const savedValue = localStorage.getItem('selectedGroup');
-                                    if (savedValue) {
-                                        selectElement.value = savedValue;
-                                    }
-                                });
+                                // Fonction utilitaire pour formater l'affichage des résultats
+                                function formatResult(value) {
+                                    const num = parseFloat(value);
+                                    return (num === 21 || num === -1) ? '***' : value;
+                                }
 
                                 function calculateMIAndMoy(input) {
                                     const row = input.closest('tr');
@@ -284,7 +294,6 @@
                                     let interroSum = 0;
                                     let interroCount = 0;
 
-                                    // Calculer la somme et le nombre d'interrogations
                                     interroInputs.forEach(interro => {
                                         const value = parseFloat(interro.value);
                                         if (!isNaN(value)) {
@@ -295,12 +304,11 @@
 
                                     const miField = row.querySelector('.mi-input');
                                     const mi = interroCount > 0 ? (interroSum / interroCount).toFixed(2) : '';
-                                    miField.value = mi;
+                                    miField.value = (mi === '21.00' || mi === '-1.00') ? '***' : mi;
 
                                     let devSum = 0;
                                     let devCount = 0;
 
-                                    // Calculer la somme et le nombre de devoirs
                                     devInputs.forEach(dev => {
                                         const value = parseFloat(dev.value);
                                         if (!isNaN(value)) {
@@ -312,35 +320,39 @@
                                     const moyField = row.querySelector('.ms1-input');
                                     let moy = '';
 
-                                    // Si les devoirs sont présents mais pas les interrogations
                                     if (devCount > 0 && interroCount === 0) {
                                         moy = (devSum / devCount).toFixed(2);
                                     } else if (interroCount > 0) {
-                                        // Si les interrogations sont présentes, calculer la Moyenne
                                         moy = devCount > 0 ? ((parseFloat(mi) + devSum) / (devCount + 1)).toFixed(2) : mi;
                                     }
-
-                                    moyField.value = moy;
+                                    moyField.value = (moy === '21.00' || moy === '-1.00') ? '***' : moy;
 
                                     const msField = row.querySelector('.ms-input');
                                     const testValue = parseFloat(testInput.value) || 0;
+                                    let ms = '';
 
-                                    // Nouvelle logique pour MS
                                     if (devCount === 0 && interroCount === 0 && testValue === 0) {
-                                        // Si les champs dev, test sont vides, alors MI = MS1 = MS
-                                        msField.value = mi || moyField.value;
+                                        ms = mi || moy;
                                     } else if (interroCount === 0 && devCount === 0) {
-                                        // Si les champs int et dev sont vides, MS = TEST
-                                        msField.value = testValue.toFixed(2);
+                                        ms = testValue.toFixed(2);
                                     } else if (interroCount === 0) {
-                                        // Si les champs int sont vides, MS1 est la somme des DEV entrée divisée par le nombre de DEV
-                                        msField.value = (devSum / devCount).toFixed(2);
+                                        ms = (devSum / devCount).toFixed(2);
                                     } else {
-                                        // Sinon, MS est calculé comme la moyenne de MS1 et TEST
-                                        const ms = (parseFloat(moyField.value) + testValue) / (testValue > 0 ? 2 : 1);
-                                        msField.value = ms.toFixed(2);
+                                        ms = (parseFloat(moy) + testValue) / (testValue > 0 ? 2 : 1);
+                                        ms = ms.toFixed(2);
                                     }
+                                    msField.value = (ms === '21.00' || ms === '-1.00') ? '***' : ms;
                                 }
+
+                                // Optionnel : vérifier au chargement si certaines valeurs affichées doivent être remplacées
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    document.querySelectorAll('.fixed-input').forEach(input => {
+                                        const value = parseFloat(input.value);
+                                        if (value === 21 || value === -1) {
+                                            input.value = '***';
+                                        }
+                                    });
+                                });
                             </script>
 
 
@@ -364,9 +376,6 @@
                                         <input type="hidden" value="CE1A" id="tableSelec4" name="classe">
                                         <input type="hidden" value="1" id="tableSelec5" name="matiere">
                                         <input type="hidden" value="1" id="periodSelect" name="periode">
-
-
-
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
@@ -430,15 +439,14 @@
                         function redirectWithSelection() {
                             const classe = document.getElementById("tableSelect4").value; // Récupère la classe sélectionnée
                             const matiere = document.getElementById("tableSelect5").value; // Récupère la matière sélectionnée
-                            const periode = document.getElementById("periodSelect").value; // Récupère la periode sélectionnée
+                            const periode = document.getElementById("periodSelect").value; // Récupère la période sélectionnée
 
                             let url = '/filternotes'; // URL de redirection
                             let params = [];
 
                             if (classe) params.push(`classe=${classe}`); // Ajoute le paramètre de classe si sélectionné
                             if (matiere) params.push(`matiere=${matiere}`); // Ajoute le paramètre de matière si sélectionné
-                            if (periode) params.push(`periode=${periode}`); // Ajoute le paramètre de matière si sélectionné
-
+                            if (periode) params.push(`periode=${periode}`); // Ajoute le paramètre de période si sélectionné
 
                             if (params.length > 0) {
                                 url += '?' + params.join('&'); // Crée la chaîne de requête

@@ -178,7 +178,7 @@ class EditionController extends Controller
     $matiere = $request->matiere;
     // dd($classe);
     $notes = Notes::join('eleve', 'notes.MATRICULE', '=', 'eleve.MATRICULE')
-      ->select('notes.MATRICULE', 'eleve.nom', 'eleve.prenom', 'notes.INT1', 'notes.INT2', 'notes.INT3', 'notes.INT4', 'notes.MI', 'notes.DEV1', 'notes.DEV2', 'notes.DEV3')
+      ->select('notes.MATRICULE', 'eleve.MATRICULEX', 'eleve.nom', 'eleve.prenom', 'notes.INT1', 'notes.INT2', 'notes.INT3', 'notes.INT4', 'notes.MI', 'notes.DEV1', 'notes.DEV2', 'notes.DEV3')
       ->when($classe, function ($q) use ($classe) {
         return $q->where('notes.CODECLAS', $classe);
       })
