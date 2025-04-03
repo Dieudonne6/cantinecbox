@@ -793,29 +793,29 @@ public function destroy($codePromo)
 }
 
 
-  public function indexEleves()
+public function indexEleves()
 {
-    // $eleves = Eleve::with('classe.promo')->get();
     $allClass = Classes::all();
     $serie = Serie::get();
     $promotion = Promo::all();
     $typeenseigne = Typeenseigne::get();
     $typeclah = Typeclasse::get();
 
-        // Récupérer les élèves avec leurs notes
-        $eleves = Eleve::with('notes')->orderBy('nom', 'asc')->get();
+    // Récupérer les élèves avec leurs notes
+    $eleves = Eleve::with('notes')->orderBy('nom', 'asc')->get();
 
-        // Récupérer la classe sélectionnée via la requête, ou utiliser une valeur par défaut (ex: 'CL001')
-    // $selectedClassId = request()->input('classe', '6E1');
+    // Calcul des effectifs
+    $totalEleves = $eleves->count();
+    $filles = $eleves->where('SEXE', 2)->count();
+    $garcons = $eleves->where('SEXE', 1)->count();
+    $totalRedoublants = $eleves->where('STATUT', 1)->count();
+    $fillesRedoublantes = $eleves->where('SEXE', 2)->where('STATUT', 1)->count();
+    $garconsRedoublants = $eleves->where('SEXE', 1)->where('STATUT', 1)->count();
 
-    // $eleves = Eleve::with('notes')
-    //     ->whereHas('classe', function($query) use ($selectedClassId) {
-    //         $query->where('CODECLAS', $selectedClassId);
-    //     })
-    //     ->get();
-
-
-    return view('pages.inscriptions.Acceuil', compact('eleves','allClass','serie','promotion','typeclah','typeenseigne'));
+    return view('pages.inscriptions.Acceuil', compact(
+        'eleves', 'allClass', 'serie', 'promotion', 'typeclah', 'typeenseigne',
+        'totalEleves', 'filles', 'garcons', 'totalRedoublants', 'fillesRedoublantes', 'garconsRedoublants'
+    ));
 }
 
   //   return view('pages.inscriptions.groupes');

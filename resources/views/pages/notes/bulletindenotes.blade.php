@@ -590,10 +590,10 @@
                                     data-bs-target="#optionsEdition">
                                     <i class="fas fa-cog"></i> Options d'édition
                                 </button>
-                                <button class="btn btn-info" type="button" data-bs-toggle="modal"
+                                {{-- <button class="btn btn-info" type="button" data-bs-toggle="modal"
                                     data-bs-target="#configdecisionconseil">
                                     <i class="fas fa-tasks"></i> Configurer décisions du conseil
-                                </button>
+                                </button> --}}
                                 @if ($typean == 1)
                                     {{-- <button class="btn btn-warning" type="button" data-bs-toggle="modal"
                                         data-bs-target="#configdecisionjury">

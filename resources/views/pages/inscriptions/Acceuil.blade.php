@@ -74,23 +74,24 @@
                             <table id="tableau-effectifs" class="table">
                                 <tbody>
                                     <tr>
-                                        <td class="bouton">Eff.Total</td>
-                                        <td id="total">942</td>
-                                        <td class="bouton">Filles</td>
-                                        <td id="filles">60</td>
-                                        <td class="bouton">Garçons</td>
-                                        <td id="garcons">742</td>
+                                        <td class="bouton" style="font-weight: 600">Eff.Total</td>
+                                        <td id="total" >{{ $totalEleves }}</td>
+                                        <td class="bouton" style="font-weight: 600">Filles</td>
+                                        <td id="filles">{{ $filles }}</td>
+                                        <td class="bouton" style="font-weight: 600">Garçons</td>
+                                        <td id="garcons">{{ $garcons }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="bouton">Eff.Red</td>
-                                        <td id="total-red">10</td>
-                                        <td class="bouton">Red.Filles</td>
-                                        <td id="filles-red">2</td>
-                                        <td class="bouton">Red.Garçons</td>
-                                        <td id="garcons-red">0</td>
+                                        <td class="bouton" style="font-weight: 600">Eff.Red</td>
+                                        <td id="total-red" >{{ $totalRedoublants }}</td>
+                                        <td class="bouton" style="font-weight: 600">Red.Filles</td>
+                                        <td id="filles-red">{{ $fillesRedoublantes }}</td>
+                                        <td class="bouton" style="font-weight: 600">Red.Garçons</td>
+                                        <td id="garcons-red">{{ $garconsRedoublants }}</td>
                                     </tr>
                                 </tbody>
-                            </table>
+                            </table><br><br>
+                            
                         </div>
                     </div>
                     <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
@@ -212,7 +213,7 @@
                                 @foreach ($eleves as $eleve)
                                     <tr>
                                         <td>{{ $eleve->MATRICULEX }}</td>
-                                        <td>{{ $eleve->NOM }} <br>{{ $eleve->PRENOM }}</td>
+                                        <td>{{ $eleve->NOM }} {{ $eleve->PRENOM }}</td>
                                         <td data-classe="{{ $eleve->CODECLAS }}">{{ $eleve->CODECLAS }}</td>
                                         <td data-sexe="{{ $eleve->SEXE }}">
                                             @if ($eleve->SEXE == 1)
