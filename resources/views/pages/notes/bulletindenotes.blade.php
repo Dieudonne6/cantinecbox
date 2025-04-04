@@ -121,14 +121,14 @@
                                 <h5>Impression vers</h5>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="paramselection" id="ecran"
-                                        value="ecran">
+                                        value="ecran" checked>
                                     <label class="form-check-label" for="ecran">
                                         Ecran
                                     </label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="paramselection" value="imprimante"
-                                        id="imprimante" checked>
+                                        id="imprimante" >
                                     <label class="form-check-label" for="imprimante">
                                         Imprimante
                                     </label>
@@ -145,7 +145,7 @@
                             <br>
                             <div class="row">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="archive" id="archive">
+                                    <input class="form-check-input" type="checkbox" name="archive" id="archive" checked>
                                     <label class="form-check-label" for="archive">
                                         Archive pdf automatique
                                     </label>
@@ -300,20 +300,30 @@
                         <div class="col-12 col-md-4 column-section">
                             <!-- Contenu de la deuxième colonne -->
                             <div class="form-group">
-                                <select class="js-example-basic-multiple custom-select-width w-auto" id="groupe"
-                                    onchange="fetchClasses(this.value)">
-                                    <option value="">Sélectionner un type d'enseignement</option>
+                                <label for="groupe">Sélectionner un type d'enseignement</label>
+                                <select class="js-example-basic-multiple custom-select-width" id="groupe" 
+                                    onchange="fetchClasses(this.value)" style="width: 300px;">
                                     @foreach ($classesg as $classeg)
-                                        <option value="{{ $classeg->LibelleGroupe }}">
+                                        <option value="{{ $classeg->LibelleGroupe }}" 
+                                            {{ $classeg->LibelleGroupe == 'Ens. General' ? 'selected' : '' }}>
                                             {{ $classeg->LibelleGroupe }}</option>
                                     @endforeach
                                 </select>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        // Déclencher l'événement change au chargement pour charger les classes d'Ens. General
+                                        const groupeSelect = document.getElementById('groupe');
+                                        if(groupeSelect.value === 'Ens. General') {
+                                            fetchClasses('Ens. General');
+                                        }
+                                    });
+                                </script>
                             </div>
                             <div>
                                 <br>
-                                <div class="table-responsive mb-4">
+                                <div class="table-responsive mb-4" style="max-height: 350px; margin: auto; overflow-y: auto;">
                                     <table id="tableClasses" class="table table-bordered">
-                                        <thead>
+                                        <thead style="position: sticky; top: 0; background: white; z-index: 1;">
                                             <tr>
                                                 <th style="width: 10% !important;">
                                                     <input type="checkbox" name="selected_classes[]" value="all"
@@ -491,7 +501,7 @@
                                 </div>
                                 <br>
                                 <div class="form-group d-flex align-items-center">
-                                    <label for="conduite">Quel est le n° de CONDUITE ?</label>
+                                    <label for="conduite">Code CONDUITE ?</label>
                                     <input type="number" class="form-control" id="conduite" name="conduite"
                                         value="{{ session('conduite', 0) }}"
                                         style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
@@ -501,7 +511,7 @@
                                 </div>
                                 <br>
                                 <div class="form-group d-flex align-items-center">
-                                    <label for="eps">Quel est le n° de EPS ?</label>
+                                    <label for="eps">Code EPS ?</label>
                                     <input type="number" class="form-control" id="eps" name="eps"
                                         value="{{ session('eps', 0) }}"
                                         style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
@@ -584,7 +594,7 @@
                             <!-- Nouvelle quatrième colonne -->
                             <div class="action-buttons">
                                 <button class="btn btn-primary" type="submit" id="imprimerClasses">
-                                    <i class="fas fa-print"></i> Imprimer les bulletins
+                                    <i class="fas fa-print"></i> Imprimer bulletins
                                 </button>
                                 <button class="btn btn-secondary" type="button" data-bs-toggle="modal"
                                     data-bs-target="#optionsEdition">

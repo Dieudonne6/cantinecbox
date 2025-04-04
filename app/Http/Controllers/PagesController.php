@@ -2857,6 +2857,7 @@ return view('pages.inscriptions.pdfpaiementsco', [
   
   public function modifieleve(Request $request, $MATRICULE) {
     $modifieleve = Eleve::find($MATRICULE);
+    $matx = $modifieleve->MATRICULEX;
     
     if ($modifieleve) {
       // Gestion des attributs de l'élève à modifier
@@ -2894,7 +2895,7 @@ return view('pages.inscriptions.pdfpaiementsco', [
       $modifieleve->indicatif1 = $request->input('indicatifParent');
       $modifieleve->TEL = $request->input('telephoneParent');
       $modifieleve->TelEleve = $request->input('telephoneEleve');
-      $modifieleve->MATRICULEX = $formateMatricule;
+      $modifieleve->MATRICULEX = $matx;
       $modifieleve->CODEWEB = $formateMatricule;
       
       $modifieleve->update();

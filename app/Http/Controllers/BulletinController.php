@@ -56,6 +56,8 @@ use Illuminate\Support\Str;
 
 use App\Imports\ElevesImport;
 
+use PDF; 
+
 
 
 // use Maatwebsite\Excel\Facades\Excel;
@@ -1284,6 +1286,7 @@ class BulletinController extends Controller
 
             $resultatEleve = [
                 'nom' => $eleve->NOM,
+                'photo' => $eleve->PHOTO,  // Ajout de la photo
                 'prenom' => $eleve->PRENOM,
                 'codeweb' => $eleve->CODEWEB,
                 'moyenne_semestrielle_1' => $moyenneSemestrielle,
@@ -1790,6 +1793,23 @@ class BulletinController extends Controller
             }
         }
 
+        // $data = compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean', 'params2', 'logo', 'logoBase64', 'mimeType', 'interligne');
+
+        //     // Générer le PDF depuis la vue 'pages.notes.printbulletindenotes'
+        //     $pdf = PDF::loadView('pages.notes.printbulletindenotes', $data);
+
+        //     // Définir un dossier d'archives (par exemple, public/archives/bulletins)
+        //     $destinationPath = public_path('archives/bulletins');
+        //     if (!file_exists($destinationPath)) {
+        //         mkdir($destinationPath, 0755, true);
+        //     }
+
+        //     // Créer un nom de fichier unique
+        //     $filename = 'bulletin_' . $codeClasse . '_' . date('Ymd_His') . '.pdf';
+
+        //     // Sauvegarder le PDF dans le dossier
+        //     $pdf->save($destinationPath . '/' . $filename);
+
         return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean', 'params2', 'logo', 'logoBase64', 'mimeType', 'interligne'));
     }
 
@@ -1965,6 +1985,33 @@ class BulletinController extends Controller
             ], 500);
         }
     }
+
+
+    public function archiveBulletin(Request $request)
+    {
+        $data = $request->json()->all();
+        $pdfDataUri = $data['pdf'] ?? null;
+        $filename = $data['filename'] ?? 'bulletin.pdf';
+        $classCode = $data['class'] ?? 'default';
+    
+        if ($pdfDataUri) {
+            $parts = explode(',', $pdfDataUri);
+            $pdfBase64 = end($parts);
+            $pdfContent = base64_decode($pdfBase64);
+    
+            // Créer un dossier pour la classe dans public/archives/bulletins
+            $destinationPath = public_path('archives/bulletins/' . $classCode);
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+            file_put_contents($destinationPath . '/' . $filename, $pdfContent);
+    
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false, 'message' => 'Aucun PDF reçu'], 400);
+    }
+    
+
 
     } 
       

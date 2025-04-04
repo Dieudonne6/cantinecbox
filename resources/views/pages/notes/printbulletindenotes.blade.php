@@ -59,7 +59,7 @@
                 @endphp
                 </br>
 
-                        <div class="bulletin" 
+                        <div class="bulletin" data-nom="{{ $resultat['nom'] }} .''.{{ $resultat['prenom'] }} " data-classe="{{ $resultat['classe'] }}"
                             style=" position: relative; {{ $index < count($resultats) - 1 ? 'page-break-after: always;' : '' }}">
 
                             <div class="row" style="display: flex; align-items: flex-start;">
@@ -68,7 +68,8 @@
                                     @if (!empty($logoBase64))
                                         <div style="align-self: flex-start; margin-bottom: 5px;" class="ml-4">
                                             <img src="data:{{ $mimeType }};base64,{{ $logoBase64 }}" alt="Logo"
-                                                style="max-height: 130px; width: auto;">
+                                                style="width: 145px; height: 140px;">
+                                                {{-- style="max-height: 130px; width: auto;"> --}}
                                         </div>
                                     @endif
 
@@ -104,9 +105,22 @@
                                     @endif
                                 </div>
                                 <div class="col-md-3 p-0" style="text-align: center;">
-                                    <div id="carre" class="ml-9"
-                                         style="width: 145px; height: 140px; margin: 0 auto 20px auto; background-color: transparent; border: 1px solid black; border-radius: 20px;">
-                                    </div>
+                                    @if (isset($option['photo_par_logo']) && $option['photo_par_logo'] && !empty($logoBase64))
+                                        {{-- <div
+                                            style="width: 145px; height: 140px; margin: 0 auto 20px auto; background-color: transparent; border: 1px solid black; border-radius: 20px; display: flex; align-items: center; justify-content: center;"> --}}
+                                            <img src="data:{{ $mimeType }};base64,{{ $logoBase64 }}" alt="Logo"
+                                            style="width: 145px; height: 140px;">
+                                        {{-- </div> --}}
+                                    @else
+                                        <div id="photo" class="ml-9"
+                                            style="width: 145px; height: 140px; margin: 0 auto 20px auto; background-color: transparent; border: 1px solid black; border-radius: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                            @if (!empty($resultat['photo']))
+                                                <img src="data:image/jpeg;base64,{{ base64_encode($resultat['photo']) }}"
+                                                    alt="Photo élève"
+                                                    style="width: 145px; height: 140px;">
+                                            @endif
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 
@@ -115,12 +129,12 @@
                             <div class="d-flex">
                                 <div id="donneeleve"
                                     style="width: 60%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                                    <h5 class="ml-2" style="margin-top: 5px; font-weight: 400;">NOM : <span
-                                            class="font-weight-bold">{{ $resultat['nom'] }}</span></h5>
-                                    <h5 class="ml-2" style="margin-top: 5px; font-weight: 400;">PRENOMS : <span
-                                            class="font-weight-bold">{{ $resultat['prenom'] }}</span></h5>
+                                    <h4 class="ml-2" style="margin-top: 5px; font-weight: 200;">NOM : <span
+                                            class="font-weight-bold">{{ $resultat['nom'] }}</span></h4>
+                                    <h4 class="ml-2" style="margin-top: 5px; font-weight: 200;">PRENOMS : <span
+                                            class="font-weight-bold">{{ $resultat['prenom'] }}</span></h4>
                                     <div class="d-flex">
-                                        <h5 class="ml-2" style="margin-top: 5px; font-weight: 400;">Redoublant (e) :
+                                        <h4 class="ml-2" style="margin-top: 5px; font-weight: 400;">Redoublant (e) :
                                             <input class="ml-2 disable" type="checkbox" name="redoublant"
                                                 id="redoublant_oui" readonly
                                                 {{ $resultat['redoublant'] == 1 ? 'checked' : '' }}>
@@ -130,21 +144,22 @@
                                                 readonly {{ $resultat['redoublant'] == 0 ? 'checked' : '' }}>
                                             <label for="redoublant_non">NON</label>
                                             @if (isset($option['matricule']) && $option['matricule'])
-                                                <label style="margin-left: 40px;">Mat. {{ $resultat['matriculex'] }}</label>
+                                                {{-- <label style="margin-left: 40px; font-size:20px;">Mat. {{ $resultat['matriculex'] }}</label> --}}
+                                                <label style="margin-left: 40px; font-size:20px;">Mat. {{ $resultat['matriculex'] }}</label>
                                             @endif
-                                        </h5>
+                                        </h4>
 
                                     </div>
                                 </div>
                                 <div
                                     style="width: 20%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
                                     <h5 class="ml-2 d-inline-block"
-                                        style="margin-top: 0; margin-bottom: 0; font-size: 14px; font-weight: 400;" id="sco">
+                                        style="margin-top: 20px; margin-bottom: 0; font-size: 14px; font-weight: 400;" id="sco">
                                         Année scolaire : {{ $resultat['anneScolaire'] }}
                                     </h5>
                                     <br>
                                     <br>
-                                    <h5 id="periode" class="text-center">
+                                    <h5 id="periode" class="text-center" style="margin-top: 8px; font-weight: bold;">
                                         @switch($resultat['periode'])
                                             @case('1')
                                                 1er {{ $periode }}
@@ -161,43 +176,43 @@
                                 </div>
                                 <div id="classe"
                                     style="width: 20%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                                    <h5 class="ml-2" style="margin-top: 5px; font-weight: 400;" id="sco">Classe : <span
+                                    <h5 class="ml-2" style="margin-top: 20px; font-weight: 400;" id="sco">Classe : <span
                                             class="font-weight-bold">{{ $resultat['classe'] }}</span></h5>
                                     <br>
-                                    <h5 class="ml-2" style="margin-top: 5px; font-weight: 400;">Effectif : <span
+                                    <h5 class="ml-2" style="margin-top: 0; font-weight: 400;">Effectif : <span
                                             class="font-weight-bold">{{ $resultat['effectif'] }}</span></h5>
                                 </div>
                             </div>
                             <table style="width: 100%; margin-top:2px" id="tableau">
                                 <thead>
                                     <tr>
-                                        <th class="text-center" style="font-weight: bold; width: 150px;">DISCIPLINES</th>
-                                        <th class="text-center" style="font-weight: bold; width: 50px;">Cf</th>
-                                        <th class="text-center" style="font-weight: bold; width: 50px;">Moy.Int</th>
-                                        <th class="text-center" style="font-weight: bold; width: 50px;">Dev.1</th>
-                                        <th class="text-center" style="font-weight: bold; width: 50px;">Dev.2</th>
+                                        <th class="text-center" style="font-size:20px; font-weight: bold; width: 150px;">DISCIPLINES</th>
+                                        <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Cf</th>
+                                        <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Moy. <br> Int</th>
+                                        <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Dev. <br>1</th>
+                                        <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Dev. <br>2</th>
                                         @if (!isset($option['masquer_devoir3']))
-                                            <th class="text-center" style="font-weight: bold; width: 50px;">Dev.3</th>
+                                            <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Dev. <br>3</th>
                                         @endif
                                         @if (!isset($option['note_test']) || !$option['note_test'])
-                                            <th class="text-center" style="font-weight: bold; width: 50px;">Moy.20</th>
-                                            <th class="text-center" style="font-weight: bold; width: 50px;">Moy.coef</th>
+                                            <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Moy.<br>20</th>
+                                            <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Moy.<br>coef</th>
                                         @endif
                                         @if (isset($option['note_test']) && $option['note_test'])
-                                            <th class="text-center" style="font-weight: bold; width: 50px;">Moy. part</th>
-                                            <th class="text-center" style="font-weight: bold; width: 50px;">Compo</th>
-                                            <th class="text-center" style="font-weight: bold; width: 50px;">Moy.20</th>
-                                            <th class="text-center" style="font-weight: bold; width: 50px;">Moy.coef</th>
+                                            <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Moy.<br> part</th>
+                                            <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Compo</th>
+                                            <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Moy.<br>20</th>
+                                            <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Moy.<br>coef</th>
                                         @else
-                                            <th class="text-center" style="font-weight: bold; width: 50px;">Faible moy.</th>
-                                            <th class="text-center" style="font-weight: bold; width: 50px;">Forte moy.</th>
+                                            <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Faible moy.</th>
+                                            <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Forte moy.</th>
                                         @endif
                                         @if (isset($option['rang_matiere']) && $option['rang_matiere'])
-                                            <th class="text-center" style="font-weight: bold; width: 50px;">Rang
+                                            <th class="text-center" style="font-size:20px; font-weight: bold; width: 50px;">Rang
                                             </th>
                                         @endif
-                                        <th class="text-center" style="font-weight: bold; width: 150px;">Appréciations
-                                            des<br>professeurs</th>
+                                        <th class="text-center" style="font-size:20px; font-weight: bold; width: 150px;">Appréciations
+                                            <br>professeurs</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -274,7 +289,7 @@
                                             @continue;
                                         @endif
                                         <tr style="white-space: nowrap;">
-                                            <td style="text-align: left;">{{ $matiere['nom_matiere'] }}</td>
+                                            <td style="text-align: left; font-weight:400">{{ $matiere['nom_matiere'] }}</td>
                                             <td>{{ $matiere['coefficient'] }}</td>
                                             <td>{{ number_format($matiere['moyenne_interro'], 2) ?? '**.**' }}</td>
                                             <td>{{ isset($matiere['devoir1']) && $matiere['devoir1'] != 21 ? $matiere['devoir1'] : '**.**' }}
@@ -318,7 +333,7 @@
                                                 </td>
                                             @endif
                                             @if (isset($option['appreciation_prof']))
-                                                <td>{{ $matiere['mentionProf'] }}</td>
+                                                <td style="text-align: left;">{{ $matiere['mentionProf'] }}</td>
                                             @else
                                                 <td></td>
                                             @endif
@@ -360,7 +375,7 @@
                             <div class="d-flex" style="height: 90px; margin-top:5px; margin-bottom:5px;">
                                 <div
                                     style="width: 23%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                                    <h4 class="text-center" style="margin-top: 5px;">BILAN {{ strtoupper($texte) }}</h4>
+                                    <h4 style="margin-top: 32px; text-align:left;">BILAN {{ strtoupper($texte) }}</h4>
 
                                 </div>
                                 @php
@@ -375,15 +390,15 @@
                                 <div style="width: 45%; margin-left: 1%">
                                     <div class="d-flex">
                                         <h6 style="text-align: center; font-weight: bold" class="mt-1">Moyenne {{ $texte2 }} :
-                                            &nbsp&nbsp{{ $total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**' }}
+                                            &nbsp&nbsp <span style="font-size: 20px;">{{ $total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**' }}</span>
                                         </h6>
                                         @if (isset($option['rang_general']) && $option['rang_general'])
-                                            <h6 style="margin-left: 40px; font-weight: bold" class="mt-1">Rang
+                                            <h6 style="margin-left: 40px; font-weight: 50" class="mt-1">Rang
                                                 :&nbsp&nbsp&nbsp
                                                 @if ($resultat['rang_1'] == 1)
-                                                   {{ $resultat['rang_1'] != -1 }} er
+                                                   <span style="font-size: 20px; font-weight:bold;">{{ $resultat['rang_1'] != -1 }} er</span>
                                                 @else
-                                                    {{ $resultat['rang_1'] != -1 ? $resultat['rang_1'] : '**.**' }} è
+                                                <span style="font-size: 20px; font-weight:bold;"> {{ $resultat['rang_1'] != -1 ? $resultat['rang_1'] : '**.**' }} è</span>
                                                 @endif
                                             </h6>
                                         @endif
@@ -414,19 +429,19 @@
 
                                 <div class=""
                                     style="width: 32%; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px; padding: 5px;">
-                                    <div style="display: flex; justify-content: space-between; font-size: 14px;" class="mt-3">
-                                        <span><strong>Bilan Mat.Lit :</strong></span>
-                                        <span>{{ $resultat['moyenne_bilan_litteraire_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_litteraire_1'], 2) }}</span>
+                                    <div style="display: flex; justify-content: space-between; font-size: 16px;" class="mt-2">
+                                        <span><strong>Bilan Matières Littéraires </strong></span>
+                                        <span style="font-weight: bold; font-size:18px;">{{ $resultat['moyenne_bilan_litteraire_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_litteraire_1'], 2) }}</span>
                                     </div>
 
-                                    <div style="display: flex; justify-content: space-between; font-size: 14px;" class="mt-1">
-                                        <span><strong>Bilan Mat.Sci :</strong></span>
-                                        <span>{{ $resultat['moyenne_bilan_scientifique_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_scientifique_1'], 2) }}</span>
+                                    <div style="display: flex; justify-content: space-between; font-size: 16px;" class="mt-2">
+                                        <span><strong>Bilan Matières Scientifiques </strong></span>
+                                        <span style="font-weight: bold; font-size:18px;">{{ $resultat['moyenne_bilan_scientifique_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_scientifique_1'], 2) }}</span>
                                     </div>
 
-                                    <div style="display: flex; justify-content: space-between; font-size: 14px;" class="mt-1">
-                                        <span><strong>Bilan Mat.Fond :</strong></span>
-                                        <span>{{ $resultat['moyenne_bilan_fondamentale_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_fondamentale_1'], 2) }}</span>
+                                    <div style="display: flex; justify-content: space-between; font-size: 16px;" class="mt-2">
+                                        <span><strong>Bilan Matières Fondamentales </strong></span>
+                                        <span style="font-weight: bold; font-size:18px;">{{ $resultat['moyenne_bilan_fondamentale_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_fondamentale_1'], 2) }}</span>
                                     </div>
                                 </div>
 
@@ -612,7 +627,7 @@
                                         </h6>
 
                                         @if (isset($option['appreciation_directeur']) && $option['appreciation_directeur'])
-                                            <p style="font-weight: bold; text-align: center; margin: 0;">
+                                            <p style="font-weight: bold; text-align: center; margin-top: 10px; font-size:18px">
                                                 {{ $resultat['mentionDir'] }}
                                             </p>
                                         @endif
@@ -635,7 +650,7 @@
                                                 <span
                                                     style="border-bottom: 1px dotted black; width: 131px; display: inline-block;"></span>
                                             </p>
-                                        </div>
+                                        </div><br>
                                         <p style="margin: 10px 0;">
                                             ....................................................................................................................................................
                                         </p>
@@ -857,7 +872,11 @@
                         }
                     </style>
 
-                    <script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+                    {{-- <script>
                         function imprimerliste() {
                             var content = document.querySelector('.main-panel').innerHTML;
                             var originalContent = document.body.innerHTML;
@@ -875,6 +894,99 @@
                         // document.getElementById('redoublant_non').addEventListener('click', function(event) {
                         //     event.preventDefault(); // Empêche la modification
                         // });
-                    </script>
+                    </script> --}}
+
+
+{{-- <script>
+function imprimerliste() {
+    // Sélectionner tous les bulletins individuels
+    var bulletinElements = document.querySelectorAll('.bulletin');
+    
+    if (bulletinElements.length === 0) {
+        console.error("Aucun bulletin trouvé pour l'archivage.");
+        window.print();
+        return;
+    }
+    
+    var promises = [];
+    
+    bulletinElements.forEach(function(bulletinElement, index) {
+        // Récupérer le nom et la classe depuis les attributs data-nom et data-classe
+        var studentName = bulletinElement.getAttribute('data-nom') || 'unknown';
+        studentName = studentName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+        
+        var classCode = bulletinElement.getAttribute('data-classe') || 'default';
+        classCode = classCode.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+        
+        var promise = html2canvas(bulletinElement).then(function(canvas) {
+            var imgData = canvas.toDataURL('image/jpeg', 1.0);
+            const { jsPDF } = window.jspdf;
+            var pdf = new jsPDF('p', 'mm', 'a4');
+            var pdfWidth = pdf.internal.pageSize.getWidth();
+            var pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            
+            // Créer un nom de fichier en utilisant le code de la classe et le nom de l'élève
+            var filename = 'bulletin_' + classCode + '_' + studentName + '_' + new Date().getTime() + '.pdf';
+            
+            var pdfBase64 = pdf.output('datauristring');
+            
+            return fetch('/archiveBulletin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    pdf: pdfBase64,
+                    filename: filename,
+                    class: classCode
+                })
+            });
+        }).catch(function(err) {
+            console.error('Erreur lors de la capture d’un bulletin :', err);
+        });
+        
+        promises.push(promise);
+    });
+    
+    Promise.all(promises).then(function() {
+        var contentN = document.querySelector('.main-panel').innerHTML;
+        var originalContent = document.body.innerHTML;
+        document.body.innerHTML = contentN;
+        window.print();
+        document.body.innerHTML = originalContent;
+    }).catch(function(error) {
+        console.error('Erreur lors de l’archivage de certains bulletins:', error);
+        window.print();
+    });
+}
+
+
+</script> --}}
+
+<script>
+    function imprimerliste() {
+        var content = document.querySelector('.main-panel').innerHTML;
+        var originalContent = document.body.innerHTML;
+
+        document.body.innerHTML = content;
+        window.print();
+
+        document.body.innerHTML = originalContent;
+    }
+
+    // document.getElementById('redoublant_oui').addEventListener('click', function(event) {
+    //     event.preventDefault(); // Empêche la modification
+    // });
+
+    // document.getElementById('redoublant_non').addEventListener('click', function(event) {
+    //     event.preventDefault(); // Empêche la modification
+    // });
+</script>
+
+
+
+  
                 </div>
                 @endsection
