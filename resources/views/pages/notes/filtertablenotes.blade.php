@@ -32,9 +32,13 @@
         .table thead tr:first-child {
             border: 2px solid #000 !important;
         }
+
+        /* Grise les deux dernières colonnes du tbody */
+        #mainTable tbody td:nth-last-child(-n+2) {
+            background-color: #e0e0e0;
+        }
     </style>
 
-    </style>
     <div class="container">
         <div class="card shadow-sm p-4">
             <div>
@@ -106,7 +110,6 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <form action="{{ url('/calculermoyenne') }}" method="POST" class="text-center">
-                        {{-- <form action="{{url('/calculermoyenne') }}" method="POST" class="text-center" id="calculMoyenneForm"> --}}
                         {{ csrf_field() }}
                         <input type="hidden" name="classe" id="classeHidden" value="">
                         <button type="submit" class="btn btn-primary">Calculer moyennes</button>
@@ -139,8 +142,6 @@
                             @endif
                         </strong>
                     </p>
-
-
                 </div>
 
                 <table class="table">
@@ -174,7 +175,6 @@
                                 <th>M.SEM</th>
                                 @if (($typean == 1 && $selectedPeriod == 2) || ($typean == 2 && $selectedPeriod == 3))
                                     <th>M.AN</th>
-                                    {{-- <th>RANG</th> --}}
                                 @endif
                                 <th>RANG</th>
                             @endif
@@ -230,7 +230,6 @@
                                 @endif
                             </tr>
                         @endforeach
-
                     </tbody>
 
                     @php
@@ -269,11 +268,6 @@
                                 <!-- Afficher M.AN si applicable -->
                                 @if (($typean == 1 && $selectedPeriod == 2) || ($typean == 2 && $selectedPeriod == 3))
                                     <td>{{ $moyennesMAN['min'] }}</td>
-                                    <!-- La dernière colonne (ex : RANG) -->
-                                    {{-- <td></td> --}}
-                                @else
-                                    <!-- S'il n'y a pas de colonne M.AN, une seule cellule extra (ex : RANG) -->
-                                    {{-- <td></td> --}}
                                 @endif
                             @else
                                 @for ($i = 0; $i < $extraColumns; $i++)
@@ -296,10 +290,6 @@
                                 <!-- Afficher M.AN si applicable -->
                                 @if (($typean == 1 && $selectedPeriod == 2) || ($typean == 2 && $selectedPeriod == 3))
                                     <td>{{ $moyennesMAN['max'] }}</td>
-                                    <!-- La dernière colonne (ex : RANG) -->
-                                    {{-- <td></td> --}}
-                                @else
-                                    {{-- <td></td> --}}
                                 @endif
                             @else
                                 @for ($i = 0; $i < $extraColumns; $i++)
@@ -324,10 +314,6 @@
                                     <!-- Afficher les intervalles pour M.AN si applicable -->
                                     @if (($typean == 1 && $selectedPeriod == 2) || ($typean == 2 && $selectedPeriod == 3))
                                         <td>{{ $moyenneCountsMAN[$index] ?? 0 }}</td>
-                                        <!-- Dernière colonne (ex : RANG) vide -->
-                                        {{-- <td></td> --}}
-                                    @else
-                                        {{-- <td></td> --}}
                                     @endif
                                 @else
                                     @for ($i = 0; $i < $extraColumns; $i++)
@@ -337,13 +323,8 @@
                             </tr>
                         @endforeach
                     </tfoot>
-
-
                 </table>
-
             </div>
-
-
         </div>
     </div>
     <script>
@@ -373,56 +354,54 @@
         function injectTableStyles() {
             var style = document.createElement('style');
             style.innerHTML = `
-      @page { size: landscape; }
-          table {
-              width: 100%;
-              border-collapse: collapse;
-          }
-              thead {
-      background-color: #f2f2f2;
+                @page { size: landscape; }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                thead {
+                    background-color: #f2f2f2;
                     border: 1px solid #000;
+                    text-transform: uppercase;
+                }
+                .table td:nth-child(n+2), .table th:nth-child(n+2) {
+                    margin: 0 !important;
+                    padding: 5px 0 5px 5px !important;
+                    width: 100px !important;
+                    word-wrap: break-word !important;
+                    white-space: normal !important;
+                }
+                tbody td:nth-last-child(-n+2) {
+                    background-color: #e0e0e0 !important;;
+                }
 
-      text-transform: uppercase;
-    }
-        .table td:nth-child(n+2), .table th:nth-child(n+2) {
-          margin: 0 !important;
-          padding: 5px 0 5px 5px !important;
-          width: 100px !important;
-          word-wrap: break-word !important;
-          white-space: normal !important;
-                    }
-          th, td {
-              padding: 0 !important;
-              margin: 0 !important;
-              border: 1px solid #000;
-              text-align: center;
-              font-size: 10px !important;
-          }
-              .titles {
-              display: block  !important;
-              }
-          .classe-row {
-              background-color: #f9f9f9;
-              font-weight: bold;
-          }
-
-          .table tbody tr:last-child td {
-          border-bottom: 2px solid #000 !important;
-        }
-
-          .table thead tr:first-child {
-          border: 2px solid #000 !important;
-        }
-
-          tr.interval-section td {
-            border: 1px solid #000 !important;
-          }
-              .me {
-                border-collapse: collapse;
-              }`;
-
-            // @media print {
-            // }
+                th, td {
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    border: 1px solid #000;
+                    text-align: center;
+                    font-size: 10px !important;
+                }
+                .titles {
+                    display: block  !important;
+                }
+                .classe-row {
+                    background-color: #f9f9f9;
+                    font-weight: bold;
+                }
+                .table tbody tr:last-child td {
+                    border-bottom: 2px solid #000 !important;
+                }
+                .table thead tr:first-child {
+                    border: 2px solid #000 !important;
+                }
+                tr.interval-section td {
+                    border: 1px solid #000 !important;
+                }
+                .me {
+                    border-collapse: collapse;
+                }
+            `;
             document.head.appendChild(style);
         }
 
@@ -437,7 +416,6 @@
                 document.body.innerHTML = originalContent; // Restaurer le contenu original
             }, 1000);
         }
-
 
         document.getElementById('calculMoyenneForm').addEventListener('submit', function(e) {
             var classeSelect = document.getElementById("tableSelect4");
