@@ -252,7 +252,7 @@
                 @endif
 
                 <!-- TABLEAU SPÉCIAL "CACHÉ" POUR L'IMPRESSION -->
-                {{-- @if (isset($resultats))
+                @if (isset($resultats))
                     <div class="table-print" id="mainTable" style="display: none;">
                         <h4 style="text-align:center; font-weight: bold;">TABLEAU ANALYTIQUE SPÉCIAL POUR IMPRESSION</h4>
                         <table class="table table-bordered table-rapport">
@@ -306,7 +306,7 @@
                             </tbody>
                         </table>
                     </div>
-                @endif --}}
+                @endif
 
             </div>
         </div>
@@ -363,41 +363,53 @@
         }
 
         function printNote() {
-            injectTableStyles();
-            var originalContent = document.body.innerHTML;
-            var typeEtat = document.getElementById('typeEtat').value;
-            var printContent = '';
+     injectTableStyles(); // Injecter les styles pour l'impressionoriginal
+     var originalContent = document.body.innerHTML; // Contenu original de la page
+     var printContent = document.getElementById('mainTable').innerHTML; // Contenu spécifique à imprimer
+     document.body.innerHTML = printContent; // Remplacer le contenu de la page par le contenu à imprimer
+     
+     setTimeout(function() {
+        window.print(); // Ouvrir la boîte de dialogue d'impression
+        document.body.innerHTML = originalContent; // Restaurer le contenu original
+     }, 1000);
+   }
 
-            // Sélectionner le contenu à imprimer selon le type d'état
-            if (typeEtat === 'tableau_analytique') {
-                printContent = document.querySelector(
-                    '.table-responsive:has(h4:contains("Tableau Analytique des Résultats"))').innerHTML;
-            } else if (typeEtat === 'tableau_synoptique') {
-                printContent = document.querySelector(
-                    '.table-responsive:has(h4:contains("Tableau Synoptique des Résultats"))').innerHTML;
-            } else if (typeEtat === 'effectifs') {
-                printContent = document.querySelector(
-                    '.table-responsive:has(h4:contains("Tableau Synoptique des Effectifs"))').innerHTML;
-            }
+        // function printNote() {
+        //     injectTableStyles();
+        //     var originalContent = document.body.innerHTML;
+        //     var typeEtat = document.getElementById('typeEtat').value;
+        //     var printContent = '';
 
-            // Créer le conteneur d'impression
-            var printContainer = document.createElement('div');
-            printContainer.className = 'table-print';
-            printContainer.innerHTML = printContent;
+        //     // Sélectionner le contenu à imprimer selon le type d'état
+        //     if (typeEtat === 'tableau_analytique') {
+        //         printContent = document.querySelector(
+        //             '.table-responsive:has(h4:contains("Tableau Analytique des Résultats"))').innerHTML;
+        //     } else if (typeEtat === 'tableau_synoptique') {
+        //         printContent = document.querySelector(
+        //             '.table-responsive:has(h4:contains("Tableau Synoptique des Résultats"))').innerHTML;
+        //     } else if (typeEtat === 'effectifs') {
+        //         printContent = document.querySelector(
+        //             '.table-responsive:has(h4:contains("Tableau Synoptique des Effectifs"))').innerHTML;
+        //     }
 
-            // Remplacer le contenu du body
-            document.body.innerHTML = '';
-            document.body.appendChild(printContainer);
+        //     // Créer le conteneur d'impression
+        //     var printContainer = document.createElement('div');
+        //     printContainer.className = 'table-print';
+        //     printContainer.innerHTML = printContent;
 
-            // Imprimer
-            setTimeout(function() {
-                window.print();
-                // Restaurer le contenu original
-                document.body.innerHTML = originalContent;
-            }, 1000);
-        }
+        //     // Remplacer le contenu du body
+        //     document.body.innerHTML = '';
+        //     document.body.appendChild(printContainer);
+
+        //     // Imprimer
+        //     setTimeout(function() {
+        //         window.print();
+        //         // Restaurer le contenu original
+        //         document.body.innerHTML = originalContent;
+        //     }, 1000);
+        // }
     </script>
-    <script>
+    {{-- <script>
         document.getElementById('typeEtat').addEventListener('change', function() {
             var form = document.getElementById('etatForm');
             var selectedValue = this.value;
@@ -412,13 +424,13 @@
                 form.action = '#'; // Valeur par défaut ou gestion d'erreur
             }
         });
-    </script>
+    </script> --}}
 
 @endsection
-@section('scripts')
+{{-- @section('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.fr.min.js">
-    </script>
+    </script> --}}
