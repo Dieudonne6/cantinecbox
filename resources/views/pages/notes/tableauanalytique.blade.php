@@ -370,7 +370,7 @@
      
      setTimeout(function() {
         window.print(); // Ouvrir la boîte de dialogue d'impression
-        document.body.innerHTML = originalContent; // Restaurer le contenu original
+        document.body.innerHTML = printContent; // Restaurer le contenu original
      }, 1000);
    }
 
