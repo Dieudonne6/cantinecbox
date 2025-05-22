@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\StatistiquesService;
 use Illuminate\Support\Facades\Cache;
+use App\Models\Params2;
+use App\Models\ParamContrat;
+
 
 class TableauController extends Controller
 {
@@ -29,10 +32,18 @@ class TableauController extends Controller
             'typeEtat'          => 'required|in:tableau_analytique,tableau_synoptique,effectifs',
             'intervales'        => 'required|array',
             'intervales.*.min'  => 'required|numeric|min:0|max:20',
-            'intervales.*.max'  => 'required|numeric|min:0|max:20|gt:intervales.*.min',
+            'intervales.*.max'  => 'required|numeric|min:0|max:20',
         ]);
 
-        $cacheKey = "stats_{$data['periode']}_{$data['typeEtat']}";
+        // dd($data['intervales']);
+
+         // 2. Mettez la sélection en session
+        session(['typeEtat' => $request->input('typeEtat')]);
+        session(['periode' => $request->input('periode')]);
+        // juste après validation :
+        $intervalesHash = md5(json_encode($data['intervales']));
+
+        $cacheKey = "stats_{$data['periode']}_{$data['typeEtat']}_{$intervalesHash}";
 
         // Pour le tableau analytique et les effectifs, on utilise la même méthode de calcul
         if ($data['typeEtat'] === 'tableau_analytique' || $data['typeEtat'] === 'effectifs') {
@@ -168,10 +179,35 @@ class TableauController extends Controller
             $finalResultats['ETABLISSEMENT'] = $aggregateCycleStats($resultatsOrdonnes, $etablissementKeys);
         }
 
-        return view('pages.notes.tableauanalytique', [
-            'resultats' => $finalResultats,
-            'typeEtat'  => $data['typeEtat']
-        ]);
+        // return view('pages.notes.tableauanalytique', [
+        //     'resultats' => $finalResultats,
+        //     'typeEtat'  => $data['typeEtat']
+        // ]);
+
+    // Récupérer les paramètres à afficher
+    $params2 = Params2::all();
+    $typeAn = $params2->first()->TYPEAN;         // ou la logique qui convient
+    $nom    = ($typeAn == 1) ? 'SEMESTRE' : 'TRIMESTRE';
+    // Récupérer l’objet de configuration (par exemple le premier enregistrement)
+    $contrat = ParamContrat::first();
+    // Supposons que la colonne s’appelle 'anneencours_paramcontrat' et contient un entier, ex. 2024
+    $anneeCourante = (int) $contrat->anneencours_paramcontrat;
+    // Calcul de l’année suivante
+    $anneeSuivante = $anneeCourante + 1;
+    // Libellé « année scolaire » : 2024/2025
+    $anneeScolaire = "{$anneeCourante}-{$anneeSuivante}";
+
+    return view('pages.notes.tableauanalytique', [
+        'resultats'   => $finalResultats,
+        'typeEtat'    => $data['typeEtat'],
+        'intervales'  => $data['intervales'],
+        'periode'     => $data['periode'],
+        'moyenne_ref' => $data['moyenne_ref'],
+        'params2'     => $params2,    // ← on ajoute ça
+        'nom'    => $nom,
+        'params2' => $params2,
+        'anneeScolaire' => $anneeScolaire,
+    ]);
     }
 
     public function tableausynoptique(Request $request)

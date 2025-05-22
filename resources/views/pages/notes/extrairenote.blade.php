@@ -163,7 +163,7 @@
 
         <!-- Dix menus déroulants pour choisir des matières, ici uniquement les matières filtrées pour la classe -->
         <div class="row" id="matieresRow">
-            @for($i = 1; $i <= 10; $i++)
+            @for($i = 1; $i <= 15; $i++)
             <div class="col-md-4 mb-2">
                 <label for="matiere_{{ $i }}">Matière {{ $i }}</label>
                 <select class="form-control matiereSelect" id="matiere_{{ $i }}" name="matieres[]" data-index="{{ $i }}">

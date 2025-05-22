@@ -1,3 +1,22 @@
+@php
+  /**
+   * Formatte un nombre :
+   * - sans décimales si c'est un entier
+   * - sinon en supprime les zéros finaux
+   */
+  function fmt($v) {
+      // convertir en float
+      $f = floatval($v);
+      // est-ce un entier ?
+      if (floor($f) == $f) {
+          return (string) intval($f);
+      }
+      // sinon formater 2 décimales puis retirer les zéros (et le point si besoin)
+      return rtrim(rtrim(number_format($f, 2, '.', ''), '0'), '.');
+  }
+@endphp
+
+
 @extends('layouts.master')
 @section('content')
     <div class="col-lg-12 grid-margin stretch-card" id="original">
@@ -44,13 +63,13 @@
                                 <label>Période</label>
                                 <select name="periode" class="form-control" required>
                                     <option value="">Sélectionner une période</option>
-                                    <option value="1" {{ old('periode') == '1' ? 'selected' : '' }}>1ère Période
+                                    <option value="1" {{ old('periode', session('periode')) == '1' ? 'selected' : '' }}>1ère Période
                                     </option>
-                                    <option value="2" {{ old('periode') == '2' ? 'selected' : '' }}>2ème Période
+                                    <option value="2" {{ old('periode', session('periode')) == '2' ? 'selected' : '' }}>2ème Période
                                     </option>
-                                    <option value="3" {{ old('periode') == '3' ? 'selected' : '' }}>3ème Période
+                                    <option value="3" {{ old('periode', session('periode')) == '3' ? 'selected' : '' }}>3ème Période
                                     </option>
-                                    <option value="4" {{ old('periode') == '4' ? 'selected' : '' }}>Annuel</option>
+                                    <option value="4" {{ old('periode', session('periode')) == '4' ? 'selected' : '' }}>Annuel</option>
                                 </select>
                             </div>
                         </div>
@@ -60,12 +79,12 @@
                                 <select name="typeEtat" class="form-control" id="typeEtat" required>
                                     <option value="">Sélectionner un état</option>
                                     <option value="tableau_analytique"
-                                        {{ old('typeEtat') == 'tableau_analytique' ? 'selected' : '' }}>Tableau analytique
+                                        {{ old('typeEtat', session('typeEtat')) == 'tableau_analytique' ? 'selected' : '' }}>Tableau analytique
                                         des résultats</option>
                                     <option value="tableau_synoptique"
-                                        {{ old('typeEtat') == 'tableau_synoptique' ? 'selected' : '' }}>Tableau synoptique
+                                        {{ old('typeEtat', session('typeEtat')) == 'tableau_synoptique' ? 'selected' : '' }}>Tableau synoptique
                                         des résultats</option>
-                                    <option value="effectifs" {{ old('typeEtat') == 'effectifs' ? 'selected' : '' }}>Tableau
+                                    <option value="effectifs" {{ old('typeEtat', session('typeEtat')) == 'effectifs' ? 'selected' : '' }}>Tableau
                                         synoptique des effectifs</option>
                                 </select>
                             </div>
@@ -74,31 +93,46 @@
 
                     <!-- Tableau des intervalles -->
                     <div class="table-responsive">
-                        <table class="table table-bordered" style="max-width: 300px; margin: 0 auto;">
+                        <table class="table table-bordered" style="max-width: 400px; margin: 0 auto;">
                             <thead>
                                 <tr>
-                                    <th style="width: 100px; text-align: center;">Intervalle</th>
-                                    <th style="width: 150px; text-align: center;">Min</th>
-                                    <th style="width: 150px; text-align: center;">Max</th>
+                                    <th style="text-align: center;">Intervalle</th>
+                                    <th style=" text-align: center;">Min</th>
+                                    <th style=" text-align: center;">Max</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (range(1, 7) as $i)
-                                    <tr>
-                                        <td style="text-align: center; vertical-align: middle;">I{{ $i }}</td>
-                                        <td style="text-align: center;">
-                                            <input type="number" name="intervales[I{{ $i }}][min]"
-                                                class="form-control mx-auto"
-                                                value="{{ $i == 1 ? '0.00' : ($i == 2 ? '06.50' : ($i == 3 ? '07.50' : ($i == 4 ? '10.00' : ($i == 5 ? '12.00' : ($i == 6 ? '14.00' : '16.00'))))) }}">
-                                        </td>
-                                        <td style="text-align: center;">
-                                            <input type="number" name="intervales[I{{ $i }}][max]"
-                                                class="form-control mx-auto"
-                                                value="{{ $i == 1 ? '06.50' : ($i == 2 ? '07.50' : ($i == 3 ? '10.00' : ($i == 4 ? '12.00' : ($i == 5 ? '14.00' : ($i == 6 ? '16.00' : '20.00'))))) }}">
-                                        </td>
-                                    </tr>
+                                @foreach(range(1, 7) as $i)
+                                  @php
+                                    // Valeurs issues du contrôleur (ou fallback)
+                                    $defMin = $intervales['I'.$i]['min'] ?? '0.00';
+                                    $defMax = $intervales['I'.$i]['max'] ?? '20.00';
+                                  @endphp
+                                  <tr>
+                                    <td class="text-center align-middle">I{{ $i }}</td>
+                                    <td class="text-center">
+                                      <input
+                                        type="number"
+                                        name="intervales[I{{ $i }}][min]"
+                                        class="form-control w-75 mx-auto"
+                                        min="0" max="20" step="0.01"
+                                        value="{{ old("intervales.I{$i}.min", $defMin) }}"
+                                      >
+                                    </td>
+                                    <td class="text-center">
+                                      <input
+                                        type="number"
+                                        name="intervales[I{{ $i }}][max]"
+                                        class="form-control w-75 mx-auto"
+                                        min="0" max="20" step="0.01"
+                                        value="{{ old("intervales.I{$i}.max", $defMax) }}"
+                                      >
+                                    </td>
+                                  </tr>
                                 @endforeach
                             </tbody>
+                              
+                              
                         </table>
                     </div>
 
@@ -116,7 +150,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-calculator"></i> Calculer
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="printNote()">
+                        <button type="button" class="btn btn-secondary" id="btnPrint">
                             <i class="fas fa-print"></i> Imprimer
                         </button>
                     </div>
@@ -254,34 +288,58 @@
                 <!-- TABLEAU SPÉCIAL "CACHÉ" POUR L'IMPRESSION -->
                 @if (isset($resultats))
                     <div class="table-print" id="mainTable" style="display: none;">
-                        <h4 style="text-align:center; font-weight: bold;">TABLEAU ANALYTIQUE SPÉCIAL POUR IMPRESSION</h4>
+                        <div class="d-flex align-items-center mb-3 gap-1">
+                            {{-- Encadré à gauche --}}
+                            <div class="rounded-left-box">
+                              @foreach($params2 as $param)
+                                <div class="pl-2">
+                                  DDESTFP {{ strtoupper(mb_substr($param->DEPARTEMEN, 0, 3)) }}<br>
+                                  {{ $param->NOMETAB }}<br>
+                                  {!! preg_replace('/\bTél/', '<br>Tél', $param->ADRESSE, 1) !!}
+                                </div>
+                              @endforeach
+                            </div>
+
+                            {{-- Celui-ci prend tout l’espace restant et centre son contenu --}}
+                            <div class="flex-fill">
+                                <h4 class="m-0 fw-bold ml-3">
+                                    TABLEAU ANALYTIQUE DES RÉSULTATS DU
+                                    {{ $periode }}
+                                    {{ $periode == 1 ? 'er' : 'ème' }}
+                                    {{ $nom }} &nbsp;
+                                    {{ $anneeScolaire }}
+                                  </h4>
+                            </div>
+
+                            <div class="text-end align-self-start" style="min-width: 180px;">
+                                <small>{{ \Carbon\Carbon::now()->format('d/m/Y') }}</small>
+                            </div>
+                          </div>
+                        @php
+                        // on récupère la liste ordonnée des intervalles et leurs bornes
+                        $listeIntervals = $intervales;  // $intervales = ['I1'=>['min'=>..,'max'=>..], 'I2'=>…]
+                      @endphp
+
                         <table class="table table-bordered table-rapport">
                             <thead>
                                 <tr>
+                                    {{-- <th class="invisible"></th> --}}
                                     <th rowspan="2" style="text-align: center;">GPE</th>
                                     <th colspan="2" style="text-align: center;">FORTE MOY</th>
                                     <th colspan="2" style="text-align: center;" class="bordleft">FAIBLE MOY</th>
-                                    @php
-                                        $listeIntervales = [];
-                                        $anyKey = array_key_first($resultats);
-                                        if ($anyKey !== null) {
-                                            foreach ($resultats[$anyKey]['intervales'] as $intervalName => $val) {
-                                                $listeIntervales[] = $intervalName;
-                                            }
-                                        }
-                                    @endphp
-                                    @foreach ($listeIntervales as $intervalName)
-                                        <th colspan="3" style="text-align: center;">
-                                            {{ $intervalName }}
-                                        </th>
-                                    @endforeach
+                                        {{-- En-têtes dynamiques « 0 ≤ M < 9 » --}}
+                                        @foreach($listeIntervals as $nom => $bornes)
+                                            <th colspan="3" class="text-center">
+                                                {{ fmt($bornes['min']) }} <= M < {{ fmt($bornes['max']) }}
+                                            </th>
+                                        @endforeach
                                 </tr>
                                 <tr>
                                     <th style="text-align: center;">G</th>
                                     <th style="text-align: center;">F</th>
                                     <th style="text-align: center;">G</th>
-                                    <th style="text-align: center;">F</th>
-                                    @foreach ($listeIntervales as $intervalName)
+                                    <th style="text-align: center; border-right: 4px solid #000 !important;" >F</th>
+                                    @foreach ($listeIntervals as $intervalName)
                                         <th style="text-align: center;">G</th>
                                         <th style="text-align: center;">F</th>
                                         <th style="text-align: center;">T</th>
@@ -290,8 +348,15 @@
                             </thead>
                             <tbody>
                                 @foreach ($resultats as $groupeKey => $stats)
-                                    <tr>
-                                        <td>{{ $groupeKey }}</td>
+                                    @php
+                                    // Les libellés à surligner
+                                    $highlight = in_array($groupeKey, [
+                                    'CYCLE I','SECONDES','PREMIÈRE','TERMINALE','CYCLE II','ETABLISSEMENT'
+                                    ]);
+                                    @endphp
+                              
+                                    <tr class="{{ $highlight ? 'highlight-row' : '' }}">
+                                        <td class="gras">{{ $groupeKey }}</td>
                                         <td>{{ number_format($stats['max_moyenne_garcons'], 2) }}</td>
                                         <td>{{ number_format($stats['max_moyenne_filles'], 2) }}</td>
                                         <td>{{ number_format($stats['min_moyenne_garcons'], 2) }}</td>
@@ -313,66 +378,141 @@
     </div>
 
     <script>
-        function injectTableStyles() {
-            var style = document.createElement('style');
-            style.innerHTML = `
-                @media print {
-                    body * {
-                        visibility: hidden;
-                    }
-                    .table-print, .table-print * {
-                        visibility: visible;
-                    }
-                    .table-print {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 100%;
-                    }
-                    @page { 
-                        size: landscape;
-                        margin: 1cm;
-                    }
-                    .table-print table {
-                        width: 100%;
-                        border-collapse: collapse;
-                    }
-                    .table-print thead {
-                        background-color: #f2f2f2;
-                    }
-                    .table-print th, 
-                    .table-print td {
-                        padding: 8px;
-                        border: 1px solid #000;
-                        text-align: center;
-                        font-size: 12px;
-                    }
-                    .table-print .font-weight-bold {
-                        font-weight: bold;
-                    }
-                    .table-print .text-center {
-                        text-align: center;
-                    }
-                    .table-print h4 {
-                        text-align: center;
-                        margin-bottom: 20px;
-                        font-weight: bold;
-                    }
-                }`;
-            document.head.appendChild(style);
+        // On attend que le DOM soit chargé
+        document.addEventListener('DOMContentLoaded', function() {
+          const btnPrint    = document.getElementById('btnPrint');
+          const selectEtat  = document.getElementById('typeEtat');
+      
+          btnPrint.addEventListener('click', function() {
+            const type = selectEtat.value;
+            if (!type) {
+              alert('Veuillez sélectionner un état avant d’imprimer.');
+              return;
+            }
+      
+            switch (type) {
+              case 'tableau_analytique':
+                printNote();
+                break;
+              case 'tableau_synoptique':
+                printSynoptique();
+                break;
+              case 'effectifs':
+                printEffectifs();
+                break;
+              default:
+                console.error('Type d’état inconnu :', type);
+            }
+          });
+        });
+      
+        // Définissez vos 3 fonctions quelque part dans votre JS :
+        function printAnalytique() {
+          // logique d'impression pour le tableau analytique
+          alert('Impression analytique…');
+          // window.print() ou autre appel AJAX, etc.
+        }
+      
+        function printSynoptique() {
+          console.log('Impression synoptique…');
+        }
+      
+        function printEffectifs() {
+          console.log('Impression des effectifs…');
+        }
+      </script>
+
+    <script>
+
+    function injectTableStyles() {
+    var style = document.createElement('style');
+    style.innerHTML = `
+        @media print {
+        /* Masquer tout sauf la zone d’impression */
+        body * { visibility: hidden; }
+        .table-print, .table-print * { visibility: visible; }
+
+        .rounded-left-box {
+            min-width: 400px;
+            display: inline-block;
+            font-size: 1.1rem;
+            border: 1px solid #333;
+            border-top-left-radius: 0.75rem;
+            border-bottom-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;       /* pas d’arrondi à droite */
+            border-bottom-right-radius: 0.75rem;
+            margin-right: 0.5rem;
+            background-color: rgb(185,185,185);        /* ou ce qui convient */
+             vertical-align: middle; 
         }
 
-        function printNote() {
-     injectTableStyles(); // Injecter les styles pour l'impressionoriginal
-     var originalContent = document.body.innerHTML; // Contenu original de la page
-     var printContent = document.getElementById('mainTable').innerHTML; // Contenu spécifique à imprimer
-     document.body.innerHTML = printContent; // Remplacer le contenu de la page par le contenu à imprimer
-     
-     setTimeout(function() {
-        window.print(); // Ouvrir la boîte de dialogue d'impression
-        document.body.innerHTML = printContent; // Restaurer le contenu original
-     }, 1000);
-   }
+        /* TABLE sur la même balise */
+        .table-print table.table.table-bordered.table-rapport {
+            border: 2px solid #000 !important;
+            border-collapse: collapse !important;
+            width: 100% !important;
+        }
+        
+        .table-print td:nth-child(5) {
+            border-right: 4px solid #000 !important;
+        }
+
+
+
+
+        /* Lignes spéciales en fond noir, texte blanc */
+            .table-print tr.highlight-row th,
+            .table-print tr.highlight-row td {
+            background-color: rgb(170,170,170) !important;
+            color: #000 !important;
+            }
+
+        /* CELLULES */
+        .table-print th,
+        .table-print td {
+            border: 1px solid #000 !important;
+            padding: 12px 8px;
+            font-size: 14px;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        /* TITRE */
+        .table-print h4 { /* … */ }
+
+        /* PAGE & positions… (idem) */
+        @page { size: landscape; margin: 1cm; }
+        .table-print { position: absolute; top: 0; left: 0; width: 100%; margin: 0; }
+        }`;
+    document.head.appendChild(style);
+    }
+
+
+
+    function printNote() {
+        injectTableStyles();  // votre fonction d’injection de CSS
+
+        // 1) on stocke le contenu original
+        var originalContent = document.body.innerHTML;
+
+        // 2) on clone le tableau à imprimer
+        var printContainer = document.getElementById('mainTable').cloneNode(true);
+
+        // 3) on force son affichage
+        printContainer.style.display = 'block';
+        // si besoin, on peut aussi virer TOUS les attributs style pour être sûr :
+        // printContainer.removeAttribute('style');
+
+        // 4) on vide le body et on y colle notre clone visible
+        document.body.innerHTML = '';
+        document.body.appendChild(printContainer);
+
+        // 5) on imprime et on restaure
+        window.print();
+        document.body.innerHTML = originalContent;
+    }
+
+
 
         // function printNote() {
         //     injectTableStyles();
