@@ -77,9 +77,9 @@ Route::post('/savepaiementcontrat', [ClassesController::class, 'savepaiementcont
 Route::get('/telechargerfacture', [ClassesController::class, 'telechargerfacture']);
 
 
-Route::get('/pdffacture',action: [ClassesController::class,'pdffacture'])->name('pdffacture');
-Route::get('/facturenormalise/{nomcompleteleve}',[ClassesController::class,'facturenormalise'])->name('pdffactures');
-Route::get('/create',[ClassesController::class,'create'])->name('qrcode.create');
+Route::get('/pdffacture', action: [ClassesController::class, 'pdffacture'])->name('pdffacture');
+Route::get('/facturenormalise/{nomcompleteleve}', [ClassesController::class, 'facturenormalise'])->name('pdffactures');
+Route::get('/create', [ClassesController::class, 'create'])->name('qrcode.create');
 
 Route::post('/modifierfrais', [PagesController::class, 'modifierfrais']);
 Route::get('/dashbord', [PagesController::class, 'dashbord']);
@@ -174,11 +174,11 @@ Route::get('/paiementeleve/{matricule}', [PagesController::class, 'paiementeleve
 Route::post('/paiement/{matricule}', [PagesController::class, 'enregistrerPaiement'])->name('enregistrer.paiement');
 // Route::get('/recouvrementGenerale', [PagesController::class, 'recouvrementGenerale'])->name('recouvrementGenerale');
 Route::get('/pdfpaiementsco/{matricule}', [PagesController::class, 'afficherFacture'])->name('facturesnormalisesco');
-Route::get('/facturenormalisesco/{nomcompleteleve}',[PagesController::class,'facturenormalisesco'])->name('pdffacturesco');
+Route::get('/facturenormalisesco/{nomcompleteleve}', [PagesController::class, 'facturenormalisesco'])->name('pdffacturesco');
 
 
 
-Route::get('/duplicatainscription/{elevyo}',[ClassesController::class,'duplicatainscription']);
+Route::get('/duplicatainscription/{elevyo}', [ClassesController::class, 'duplicatainscription']);
 Route::get('/majpaiementeleve', [PagesController::class, 'majpaiementeleve'])->name('majpaiementeleve');
 Route::get('/photos', [PagesController::class, 'photos']);
 
@@ -254,7 +254,7 @@ Route::get('/etatdelacaisse/filter', [PagesController::class, 'filterEtatDeLaCai
 
 
 
-Route::get('/situationfinanciereglobale',[PagesController::class, 'situationfinanciereglobale'])->name('situationfinanciereglobale');
+Route::get('/situationfinanciereglobale', [PagesController::class, 'situationfinanciereglobale'])->name('situationfinanciereglobale');
 Route::get('/certificatsolarite', [PagesController::class, 'certificatsolarite'])->name('certificatsolarite');
 
 
@@ -387,7 +387,7 @@ Route::post('/archiveBulletin', [BulletinController::class, 'archiveBulletin']);
 Route::get('/extrairenote', [BulletinController::class, 'extrairenote'])->name('extrairenote');
 Route::post('/extractnote', [BulletinController::class, 'extractnote'])->name('extractnote');
 Route::get('/export-excel', [BulletinController::class, 'exportExcel'])->name('notes.exportExcel');
-Route::get('/listeparmerite',[ListemeriteController::class, 'acceuil'])->name('listeparmerite');
+Route::get('/listeparmerite', [ListemeriteController::class, 'acceuil'])->name('listeparmerite');
 Route::get('/imprimer-liste-merite', [ListemeriteController::class, 'imprimerListeMerite'])->name('imprimer.liste.merite');
 Route::get('/get-classes-by-group', action: [ListemeriteController::class, 'getClassesByGroup'])->name('getClassesByGroup');
 
@@ -410,3 +410,6 @@ Route::get('/importernote', [BulletinController::class, 'importernote'])->name('
 // Route::post('/eleves/preview', [BulletinController::class, 'preview'])->name('eleves.preview');
 // Route::post('/eleves/upload', [BulletinController::class, 'upload'])->name('eleves.upload');
 Route::post('/import', [BulletinController::class, 'import'])->name('eleves.import');
+
+Route::get('/statistiques', [TableauController::class, 'statistiques'])->name('statistiques');
+Route::post('/statistiques', [TableauController::class, 'statistiques'])->name('statistiques');
