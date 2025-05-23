@@ -55,6 +55,7 @@ use App\Exports\NotesExport;
 use Illuminate\Support\Str;
 
 use App\Imports\ElevesImport;
+use App\Exports\NotesClasseMultiExport;
 
 use PDF; 
 
@@ -1859,6 +1860,7 @@ class BulletinController extends Controller
 
     // dd($resultats);
 
+    // code pour une matiere de export vers educ master
 
     public function extrairenote()
     {
@@ -1866,7 +1868,13 @@ class BulletinController extends Controller
         $classes = Classes::get();
         $matieres = Matieres::get();
 
-        return view('pages.notes.extrairenote', compact('classes', 'matieres'));
+        return view('pages.notes.extrairenote', [
+            'classes' => $classes,
+            'matieres' => $matieres,
+            'selectedClasse' => request('classe'),
+            'periode' => request('periode'),
+        ]);
+        // return view('pages.notes.extrairenote', compact('classes', 'matieres' ));
     }
 
 
@@ -1959,6 +1967,133 @@ class BulletinController extends Controller
                 );    
 
       }      
+
+    //   code pour selectionner plusieure matiere pour export vers educmaster
+
+    public function getMatieresParClasse($codeclasse)
+{
+    $matieres = DB::table('notes')
+        ->join('matieres', 'notes.CODEMAT', '=', 'matieres.CODEMAT')
+        ->where('notes.CODECLAS', $codeclasse)
+        ->select('matieres.CODEMAT', 'matieres.LIBELMAT')
+        ->distinct()
+        ->get();
+
+    return response()->json($matieres);
+}
+
+    public function exportMulti(Request $request)
+{
+    // Validation minimale
+    $request->validate([
+        'classe'   => 'required',
+        'periode'  => 'required',
+    ]);
+
+    $classe  = $request->input('classe');
+    $periode = $request->input('periode');
+    // 'matieres' est un tableau
+    $selectedMatieres = array_filter($request->input('matieres', []));
+
+    // Si aucune matière n'est sélectionnée, rediriger avec erreur
+    if(empty($selectedMatieres)) {
+        return redirect()->back()->withErrors('Vous devez sélectionner au moins une matière.');
+    }
+
+    // Récupération de toutes les matières sélectionnées
+    $matieres = \App\Models\Matieres::whereIn('CODEMAT', $selectedMatieres)->get();
+
+    // Pour chaque matière, récupère les notes
+    $result = [];
+    foreach($selectedMatieres as $matiereCode) {
+        // On suppose que 'Notes' a les colonnes CODECLAS, CODEMAT, SEMESTRE
+        $notes = \App\Models\Notes::with('eleve')
+                ->where('CODECLAS', $classe)
+                ->where('CODEMAT', $matiereCode)
+                ->where('SEMESTRE', $periode)
+                ->get();
+
+        // Tri des notes par ordre alphabétique du nom de l'élève
+        $notes = $notes->sortBy(function ($note) {
+            return $note->eleve->NOM;
+        });
+
+        // On stocke les notes pour cette matière dans un tableau associatif
+        $result[$matiereCode] = $notes;
+    }
+
+    // Récupération d'une information sur la période (ex: Semestre ou Trimestre)
+    $typean = \DB::table('params2')->value('typean');
+    $periodLabel = ($typean == 1) ? 'Semestre' : 'Trimestre';
+
+    // Passez les données à la vue de résultats
+    return view('pages.notes.affichageextrairenote', compact('result', 'classe', 'periode', 'periodLabel', 'matieres'));
+}
+
+
+public function exportMultiExcel(Request $request)
+{
+    $request->validate([
+        'classe'   => 'required',
+        'periode'  => 'required',
+        'matieres' => 'array'
+    ]);
+
+    $classe  = $request->input('classe');
+    $periode = $request->input('periode');
+    $selectedMatieres = array_filter($request->input('matieres', []));
+
+    if(empty($selectedMatieres)) {
+        return redirect()->back()->withErrors('Veuillez sélectionner au moins une matière.');
+    }
+
+    // Récupérer les matières sélectionnées depuis la table Matieres
+    $matieres = \App\Models\Matieres::whereIn('CODEMAT', $selectedMatieres)->get();
+
+    // Pour chaque matière sélectionnée, récupérer les notes correspondantes de la table Notes
+    $result = [];
+    foreach($selectedMatieres as $matiereCode) {
+        $notes = \App\Models\Notes::with('eleve')
+                    ->where('CODECLAS', $classe)
+                    ->where('CODEMAT', $matiereCode)
+                    ->where('SEMESTRE', $periode)
+                    ->get()
+                    ->sortBy(function ($note) {
+                        return $note->eleve->NOM;
+                    });
+        if (!$notes->isEmpty()) {
+            $result[$matiereCode] = $notes;
+        }
+    }
+
+    // Récupérer le type d'année depuis la table params2 pour le libellé de période (si nécessaire)
+    $typean = \DB::table('params2')->value('typean');
+    $periodLabel = ($typean == 1) ? 'Semestre' : 'Trimestre';
+
+    // On peut inclure la classe et la période dans le nom du fichier si souhaité
+    $fileName = $classe . '_' . $periodLabel . '_' . $periode . '_note' . '.xlsx';
+    // $fileName = $classe . '_' . $periodLabel . '_' . $periode . '_' . time() . '.xlsx';
+
+    return \Maatwebsite\Excel\Facades\Excel::download(
+        new NotesClasseMultiExport($result, $matieres),
+        $fileName
+    );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // 
       
       public function importernote() {
         return view('pages.inscriptions.importenote');

@@ -387,7 +387,15 @@ Route::post('/archiveBulletin', [BulletinController::class, 'archiveBulletin']);
 Route::get('/extrairenote', [BulletinController::class, 'extrairenote'])->name('extrairenote');
 Route::post('/extractnote', [BulletinController::class, 'extractnote'])->name('extractnote');
 Route::get('/export-excel', [BulletinController::class, 'exportExcel'])->name('notes.exportExcel');
-Route::get('/listeparmerite', [ListemeriteController::class, 'acceuil'])->name('listeparmerite');
+// code pour selectionner plusieur matiere dans export vers educ master
+Route::get('/exportMultiple', [BulletinController::class, 'exportMulti'])->name('notes.exportMulti');
+Route::get('/getmatieres/{codeclasse}', [BulletinController::class, 'getMatieresParClasse']);
+Route::get('/export-notes-multi', [BulletinController::class, 'exportMultiExcel'])->name('notes.exportMultiExcel');
+
+
+
+
+Route::get('/listeparmerite',[ListemeriteController::class, 'acceuil'])->name('listeparmerite');
 Route::get('/imprimer-liste-merite', [ListemeriteController::class, 'imprimerListeMerite'])->name('imprimer.liste.merite');
 Route::get('/get-classes-by-group', action: [ListemeriteController::class, 'getClassesByGroup'])->name('getClassesByGroup');
 
