@@ -146,7 +146,7 @@
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col-md-6 d-flex flex-wrap" id="intCheckboxes">
-                                    @for ($i = 5; $i <= 10; $i++)
+                                    @for ($i = 3; $i <= 10; $i++)
                                         <label class="checkbox-label interro-checkbox me-2"
                                             for="optionINT{{ $i }}" data-interro="{{ $i }}">
                                             <input type="checkbox" id="optionINT{{ $i }}" name="optionGroup1[]"
@@ -198,7 +198,7 @@
                                             <th>M.int</th>
                                             <th>Dev1</th>
                                             <th>Dev2</th>
-                                            <th>Dev3</th>
+                                            {{-- <th>Dev3</th> --}}
                                             <th>Moy</th>
                                             <th>Test</th>
                                             <th>Ms</th>
@@ -233,10 +233,10 @@
                                                         value="{{ $eleve->DEV2 ?? '' }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
+                                                {{-- <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
                                                         value="{{ $eleve->DEV3 ?? '' }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
-                                                        oninput="calculateMIAndMoy(this)"></td>
+                                                        oninput="calculateMIAndMoy(this)"></td> --}}
                                                 <td>
                                                     <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
                                                         value="{{ $eleve->MS1 ?? '' }}"
@@ -483,7 +483,7 @@
 
         // Initialisation : Masque les colonnes Int5 à Int10 au chargement de la page
         document.addEventListener("DOMContentLoaded", () => {
-            for (let i = 5; i <= 10; i++) {
+            for (let i = 3; i <= 10; i++) {
                 toggleColumn(i);
             }
         });

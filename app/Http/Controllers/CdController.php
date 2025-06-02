@@ -120,7 +120,7 @@ class CdController extends Controller
       'notes.MS',
       'notes.TEST',
       'notes.MS1'
-    )->get();
+    )->orderBy('MATRICULE')->get();
     return view('pages.notes.saisirnote', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere', 'getClasmat'));
   }
   public function saisirnotefilter(Request $request)
@@ -177,7 +177,7 @@ class CdController extends Controller
       'notes.MS',
       'notes.TEST',
       'notes.MS1'
-    )->get();
+    )->orderBy('MATRICULE')->get();
     return view('pages.notes.saisirnotefilter', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere', 'getClasmat'));
   }
 

@@ -26,6 +26,20 @@
                         color: #b700ff !important;
                         /* Couleur au survol */
                     }
+
+                      /* 1. On limite la hauteur visible du tableau et on autorise le scroll vertical */
+                        .table-scrollable {
+                            max-height: 500px;       /* Ajustez selon la hauteur souhaitée */
+                            overflow-y: auto;
+                        }
+
+                        /* 2. On rend les <th> “collants” en haut du conteneur */
+                        .table-scrollable thead th {
+                            position: sticky;
+                            top: 0;
+                            background-color: #fff;  /* Couleur d'arrière-plan de l'en-tête */
+                            z-index: 10;             /* Pour que l’en-tête reste au-dessus des lignes du tbody */
+                        }
                 </style>
                 <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
                     <i class="fas fa-arrow-left"></i> Retour
@@ -148,7 +162,7 @@
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col-md-6 d-flex flex-wrap" id="intCheckboxes">
-                                    @for ($i = 5; $i <= 10; $i++)
+                                    @for ($i = 3; $i <= 10; $i++)
                                         <label class="checkbox-label interro-checkbox me-2"
                                             for="optionINT{{ $i }}" data-interro="{{ $i }}">
                                             <input type="checkbox" id="optionINT{{ $i }}" name="optionGroup1[]"
@@ -181,7 +195,7 @@
                     <!-- Card pour afficher le tableau -->
                     <div class="card">
                         <div class="card-body">
-                            <div class="table-responsive mb-4">
+                            <div class="table-scrollable table-responsive mb-4">
                                 <table id="myTab" class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -200,7 +214,7 @@
                                             <th>M.int</th>
                                             <th>Dev1</th>
                                             <th>Dev2</th>
-                                            <th>Dev3</th>
+                                            {{-- <th>Dev3</th> --}}
                                             <th>Moy</th>
                                             <th>Test</th>
                                             <th>Ms</th>
@@ -235,10 +249,10 @@
                                                     value="{{ in_array($eleve->DEV2 ?? '', [21, -1]) ? '' : ($eleve->DEV2 ?? '') }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
+                                                {{-- <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
                                                     value="{{ in_array($eleve->DEV3 ?? '', [21, -1]) ? '' : ($eleve->DEV3 ?? '') }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
-                                                        oninput="calculateMIAndMoy(this)"></td>
+                                                        oninput="calculateMIAndMoy(this)"></td> --}}
                                                 <td>
                                                     <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
                                                     value="{{ in_array($eleve->MS1 ?? '', [21, -1]) ? '' : ($eleve->MS1 ?? '') }}"
@@ -258,6 +272,139 @@
                                     </tbody>
                                 </table>
                             </div>
+
+                            <script>
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. Masquer les colonnes Int3 à Int10 au chargement (votre toggleColumn déjà en place)
+  for (let i = 3; i <= 10; i++) {
+    toggleColumn(i);
+  }
+
+  // 2. Fonction utilitaire pour savoir si un élément est visible (pas en display:none)
+  function isVisible(el) {
+    return el && el.offsetParent !== null;
+  }
+
+  // 3. Gestionnaire global de keydown pour les input.fixed-input
+  document.addEventListener("keydown", function(e) {
+    const target = e.target;
+    if (!target.matches('input.fixed-input')) return;
+
+    const td = target.closest('td');
+    const tr = td.closest('tr');
+    const allTDs = Array.from(tr.children);
+
+    // Indice de la cellule courante dans la ligne
+    const colIndex = td.cellIndex;
+    // Réutilisable pour éviter de réécrire le while/for
+    let nextCell, prevCell, upCell, downCell, cand;
+    let found;
+
+    // --- FLÈCHE DROITE ou Touche Entrée ---
+    if (e.key === 'ArrowRight' || e.key === 'Enter') {
+      e.preventDefault();
+
+      // 3.a. Parcours des TD suivants sur la même ligne
+      nextCell = td.nextElementSibling;
+      while (nextCell) {
+        if (isVisible(nextCell)) {
+          cand = nextCell.querySelector('input.fixed-input');
+          if (cand && !cand.readOnly) {
+            cand.focus();
+            return;
+          }
+        }
+        nextCell = nextCell.nextElementSibling;
+      }
+
+      // Si on appuie sur Entrée et qu’on n’a rien trouvé à droite, on passe à la ligne suivante (comme avant)
+      if (e.key === 'Enter') {
+        let nextTr = tr.nextElementSibling;
+        while (nextTr) {
+          // On cherche dans la nouvelle ligne le premier <input.fixed-input> visible et non readonly
+          found = false;
+          for (let inp of nextTr.querySelectorAll('input.fixed-input')) {
+            const parentTD = inp.closest('td');
+            if (!inp.readOnly && isVisible(parentTD)) {
+              inp.focus();
+              found = true;
+              break;
+            }
+          }
+          if (found) return;
+          nextTr = nextTr.nextElementSibling;
+        }
+      }
+
+      return;
+    }
+
+    // --- FLÈCHE GAUCHE ---
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+
+      // 3.b. Parcours des TD précédents sur la même ligne
+      prevCell = td.previousElementSibling;
+      while (prevCell) {
+        if (isVisible(prevCell)) {
+          cand = prevCell.querySelector('input.fixed-input');
+          if (cand && !cand.readOnly) {
+            cand.focus();
+            return;
+          }
+        }
+        prevCell = prevCell.previousElementSibling;
+      }
+      return;
+    }
+
+    // --- FLÈCHE HAUT ---
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+
+      // 3.c. On remonte les <tr> précédentes
+      let prevTr = tr.previousElementSibling;
+      while (prevTr) {
+        // On essaie de récupérer la cellule au même indice
+        upCell = prevTr.children[colIndex];
+        if (upCell && isVisible(upCell)) {
+          cand = upCell.querySelector('input.fixed-input');
+          if (cand && !cand.readOnly) {
+            cand.focus();
+            return;
+          }
+        }
+        // Si pas trouvé dans cette ligne, on continue à remonter
+        prevTr = prevTr.previousElementSibling;
+      }
+      return;
+    }
+
+    // --- FLÈCHE BAS ---
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+
+      // 3.d. On descend les <tr> suivantes
+      let nextTr2 = tr.nextElementSibling;
+      while (nextTr2) {
+        downCell = nextTr2.children[colIndex];
+        if (downCell && isVisible(downCell)) {
+          cand = downCell.querySelector('input.fixed-input');
+          if (cand && !cand.readOnly) {
+            cand.focus();
+            return;
+          }
+        }
+        nextTr2 = nextTr2.nextElementSibling;
+      }
+      return;
+    }
+
+    // Si ce n'est ni Enter, ni une flèche, on ne fait rien ici.
+  });
+});
+</script>
+
                             <script>
                                 const selectElement = document.getElementById('tableSelect1');
 
@@ -475,9 +622,9 @@
                             });
                         }
 
-                        // Initialisation : Masque les colonnes Int5 à Int10 au chargement de la page
+                        // Initialisation : Masque les colonnes Int3 à Int10 au chargement de la page
                         document.addEventListener("DOMContentLoaded", () => {
-                            for (let i = 5; i <= 10; i++) {
+                            for (let i = 3; i <= 10; i++) {
                                 toggleColumn(i);
                             }
                         });

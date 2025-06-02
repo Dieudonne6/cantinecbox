@@ -33,7 +33,11 @@
                     <button class="btn btn-primary" style="margin-left: 89%;" onclick="imprimerliste()">Imprimer</button>
                 </div>
 
-                @foreach ($resultats as $index => $resultat)
+                @php
+                     $sortedResultats = collect($resultats)->sortBy('matricule');
+                @endphp
+
+                @foreach ($sortedResultats as $index => $resultat)
                     @php
                         // Initialisation des variables en fonction du type d'année
 $periode = null;
@@ -461,7 +465,7 @@ usort($resultat['matieres'], function ($a, $b) {
                             </div>
 
                             <div class=""
-                                style="width: 32%; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px; padding: 5px;">
+                                style="width: 32%; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px;">
                                 <div style="display: flex; justify-content: space-between; font-size: 16px;"
                                     class="mt-2">
                                     <span><strong>Bilan Matières Littéraires </strong></span>
@@ -470,14 +474,14 @@ usort($resultat['matieres'], function ($a, $b) {
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; font-size: 16px;"
-                                    class="mt-2">
+                                    class="mt-1">
                                     <span><strong>Bilan Matières Scientifiques </strong></span>
                                     <span
                                         style="font-weight: bold; font-size:18px;">{{ $resultat['moyenne_bilan_scientifique_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_scientifique_1'], 2) }}</span>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; font-size: 16px;"
-                                    class="mt-2">
+                                    class="mt-1">
                                     <span><strong>Bilan Matières Fondamentales </strong></span>
                                     <span
                                         style="font-weight: bold; font-size:18px;">{{ $resultat['moyenne_bilan_fondamentale_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_fondamentale_1'], 2) }}</span>
@@ -490,22 +494,22 @@ usort($resultat['matieres'], function ($a, $b) {
                                 style="border: 1px solid black; border-radius: 10px;">
                                 <!-- Bloc Bilan Annuel -->
                                 <div style="margin-left: 20px; padding-top: 10px;">
-                                    <h6>BILAN ANNUEL</h6>
-                                    <p>Lettres :
+                                    <h5>BILAN ANNUEL</h5>
+                                    <p style="font-size: 15px">Lettres :
                                         {{ $resultat['moyenneBilanLitteraire'] != -1 ? number_format($resultat['moyenneBilanLitteraire'], 2) : '**.**' }}
                                     </p>
-                                    <p>Sciences :
+                                    <p style="font-size: 15px">Sciences :
                                         {{ $resultat['moyenneBilanScientifique'] != -1 ? number_format($resultat['moyenneBilanScientifique'], 2) : '**.**' }}
                                     </p>
-                                    <p>Moy. Fond :
+                                    <p style="font-size: 15px">Moy. Fond :
                                         {{ $resultat['moyenneBilanFondamentale'] != -1 ? number_format($resultat['moyenneBilanFondamentale'], 2) : '**.**' }}
                                     </p>
                                 </div>
 
                                 <!-- Bloc Moyenne Annuelle -->
-                                <div style="margin-left: 120px;">
+                                <div style="margin-left: 70px;">
                                     <div class="d-flex" style="align-items: normal; padding-top: 10px;">
-                                        <h5>Moyenne Annuelle :
+                                        <h5 class="ml-5">Moyenne Annuelle :
                                             {{ $resultat['moyenneAnnuel'] != -1 ? number_format($resultat['moyenneAnnuel'], 2) : '**.**' }}
                                         </h5>
                                         @if (isset($option['rang_general']) && $option['rang_general'])
@@ -520,7 +524,7 @@ usort($resultat['matieres'], function ($a, $b) {
                                             </h5>
                                         @endif
                                     </div>
-                                    <table id="tableau_bilan_annuel" style="width: 100%; margin-top: 20px;">
+                                    <table id="tableau_bilan_annuel" style="width: 100%; margin-top: 5px;">
                                         <thead>
                                             <tr>
                                                 <th style="font-weight: normal;">Plus forte Moy.</th>
@@ -545,12 +549,12 @@ usort($resultat['matieres'], function ($a, $b) {
                                 </div>
 
                                 <!-- Bloc Récapitulatif Annuel -->
-                                <div style="margin-left: 70px;">
-                                    <h6>RECAPITULATIF ANNUEL</h6>
-                                    <div class="d-flex" style="align-items: center;">
+                                <div style="margin-left: 60px; padding-top: 10px;">
+                                    <h5>RECAPITULATIF ANNUEL</h5>
+                                    <div class="d-flex">
                                         <p style="margin: 0;">Moy. 1er {{ $periode_abr }} :
                                             {{ $resultat['moyenne1erTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne1erTrimestre_Semestre'], 2) : '**.**' }}
-                                        </p>
+                                        </p>&nbsp;&nbsp;
                                         <p style="margin-left: 25px;">Rang :
                                             @if ($resultat['rang1'] == 1)
                                                 {{ $resultat['rang1'] != -1 }} er
@@ -559,10 +563,10 @@ usort($resultat['matieres'], function ($a, $b) {
                                             @endif
                                         </p>
                                     </div>
-                                    <div class="d-flex" style="align-items: center; margin-top: 5px;">
+                                    <div class="d-flex" style="align-items: center;">
                                         <p style="margin: 0;">Moy. 2ème {{ $periode_abr }} :
                                             {{ $resultat['moyenne2emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne2emTrimestre_Semestre'], 2) : '**.**' }}
-                                        </p>
+                                        </p>&nbsp;&nbsp;
                                         <p style="margin-left: 25px;">Rang :
                                             @if ($resultat['rang2'] == 1)
                                                 {{ $resultat['rang2'] != -1 }} er
@@ -572,7 +576,7 @@ usort($resultat['matieres'], function ($a, $b) {
                                         </p>
                                     </div>
                                     @if ($typean == 2)
-                                        <div class="d-flex" style="align-items: center; margin-top: 5px;">
+                                        <div class="d-flex" style="align-items: center;">
                                             <p style="margin: 0;">Moy. 3ème {{ $periode_abr }} :
                                                 {{ $resultat['moyenne3emTrimestre_Semestre'] != -1 ? number_format($resultat['moyenne3emTrimestre_Semestre'], 2) : '**.**' }}
                                             </p>
