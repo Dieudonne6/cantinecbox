@@ -43,7 +43,7 @@ class TableauController extends Controller
         // juste après validation :
         $intervalesHash = md5(json_encode($data['intervales']));
 
-        $cacheKey = "stats_{$data['periode']}_{$data['typeEtat']}_{$intervalesHash}";
+        $cacheKey = "stats_{$data['periode']}{$data['typeEtat']}{$intervalesHash}";
 
         // Pour le tableau analytique et les effectifs, on utilise la même méthode de calcul
         if ($data['typeEtat'] === 'tableau_analytique' || $data['typeEtat'] === 'effectifs') {
@@ -224,7 +224,7 @@ class TableauController extends Controller
             'typeEtat'          => 'required|in:tableau_synoptique',
             'intervales'        => 'required|array',
             'intervales.*.min'  => 'required|numeric|min:0|max:20',
-            'intervales.*.max'  => 'required|numeric|min:0|max:20|gt:intervales.*.min',
+            'intervales..max'  => 'required|numeric|min:0|max:20|gt:intervales..min',
         ]);
 
         $cacheKey = "stats_{$data['periode']}_tableau_synoptique";
@@ -254,7 +254,7 @@ class TableauController extends Controller
             'typeEtat'          => 'required|in:effectifs',
             'intervales'        => 'required|array',
             'intervales.*.min'  => 'required|numeric|min:0|max:20',
-            'intervales.*.max'  => 'required|numeric|min:0|max:20|gt:intervales.*.min',
+            'intervales..max'  => 'required|numeric|min:0|max:20|gt:intervales..min',
         ]);
 
         $cacheKey = "stats_{$data['periode']}_effectifs";
