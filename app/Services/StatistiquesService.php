@@ -68,13 +68,24 @@ class StatistiquesService
 
             $elevesAvecMoyennes = $elevesGroupe->map(function ($eleve) use ($colonne) {
                 if (is_null($colonne)) {
-                    $moyenne = ($eleve->MS1 + $eleve->MS2 + $eleve->MS3) / 3;
+                    $notes = collect([$eleve->MS1, $eleve->MS2, $eleve->MS3])
+                        ->filter(function ($note) {
+                            return !is_null($note) && floatval($note) != -1 && floatval($note) != 21;
+                        });
+
+                    if ($notes->isEmpty()) {
+                        return null;
+                    }
+                    $eleve->moyenne = $notes->avg();
                 } else {
-                    $moyenne = $eleve->{$colonne};
+                    $note = $eleve->{$colonne};
+                    if (is_null($note) || floatval($note) == -1 || floatval($note) == 21) {
+                        return null;
+                    }
+                    $eleve->moyenne = floatval($note);
                 }
-                $eleve->moyenne = $moyenne;
                 return $eleve;
-            });
+            })->filter();
 
             $garcons = $elevesAvecMoyennes->where('SEXE', '1');
             $filles  = $elevesAvecMoyennes->where('SEXE', '2');
@@ -104,6 +115,16 @@ class StatistiquesService
         foreach ($intervales as $intervalle => $valeurs) {
             $min = floatval($valeurs['min']);
             $max = floatval($valeurs['max']);
+
+            // Si les deux valeurs sont 0, on considère quand même l'intervalle
+            if ($min == 0 && $max == 0) {
+                $resultat[$intervalle] = [
+                    'garcons' => 0,
+                    'filles'  => 0,
+                    'total'   => 0,
+                ];
+                continue;
+            }
 
             $elevesDansIntervalle = $eleves->filter(function ($eleve) use ($min, $max) {
                 return $eleve->moyenne >= $min && $eleve->moyenne < $max;
@@ -331,117 +352,89 @@ class StatistiquesService
         $classes = Classes::with('eleves')->get();
         $resultats = [];
 
-        $groupes = $classes->groupBy(function ($classe) {
-            return $this->getGroupLabel($classe);
-        });
+        foreach ($classes as $classe) {
+            $eleves = $classe->eleves;
+            $effectifTotal = $eleves->count();
 
-        foreach ($groupes as $groupLabel => $classesGroupe) {
-            $elevesGroupe = collect();
-            foreach ($classesGroupe as $classe) {
-                $elevesGroupe = $elevesGroupe->merge($classe->eleves);
+            // Initialiser les compteurs pour chaque intervalle
+            $compteursIntervalles = [];
+            foreach ($data['intervales'] as $intervalle => $valeurs) {
+                $compteursIntervalles[$intervalle] = 0;
             }
 
-            // Calcul des moyennes pour chaque élève
-            $elevesAvecMoyennes = $elevesGroupe->map(function ($eleve) use ($data) {
+            $meilleurEleve = null;
+            $plusFaibleEleve = null;
+            $abandons = 0;
+            $elevesAvecMoyenne = 0;
+            $elevesReussite = 0;
+
+            foreach ($eleves as $eleve) {
+                // Déterminer la colonne de moyenne à utiliser selon la période
                 if ($data['periode'] == '4') {
+                    // Pour l'annuel, on calcule la moyenne des 3 périodes
                     $notes = collect([$eleve->MS1, $eleve->MS2, $eleve->MS3])
                         ->filter(function ($note) {
                             return !is_null($note) && floatval($note) != -1 && floatval($note) != 21;
                         });
 
                     if ($notes->isEmpty()) {
-                        return null;
+                        $abandons++;
+                        continue;
                     }
-                    $eleve->moyenne = $notes->avg();
+                    $moyenne = $notes->avg();
                 } else {
                     $colonne = 'MS' . $data['periode'];
-                    $note = $eleve->{$colonne};
+                    $moyenne = $eleve->{$colonne};
 
-                    if (is_null($note) || floatval($note) == -1 || floatval($note) == 21) {
-                        return null;
+                    if (is_null($moyenne) || floatval($moyenne) == -1 || floatval($moyenne) == 21) {
+                        $abandons++;
+                        continue;
                     }
-                    $eleve->moyenne = floatval($note);
+                    $moyenne = floatval($moyenne);
                 }
-                return $eleve;
-            })->filter();
 
-            // Meilleur et plus faible élève
-            $meilleurEleve = $elevesAvecMoyennes->sortByDesc('moyenne')->first();
-            $plusFaibleEleve = $elevesAvecMoyennes->sortBy('moyenne')->first();
+                $elevesAvecMoyenne++;
 
-            // Calcul des abandons (élèves sans note)
-            $abandons = $elevesGroupe->filter(function ($eleve) use ($data) {
-                if ($data['periode'] == '4') {
-                    return is_null($eleve->MS1) || is_null($eleve->MS2) || is_null($eleve->MS3);
+                // Classer la moyenne dans l'intervalle approprié
+                foreach ($data['intervales'] as $intervalle => $valeurs) {
+                    $min = floatval($valeurs['min']);
+                    $max = floatval($valeurs['max']);
+                    if ($moyenne >= $min && $moyenne < $max) {
+                        $compteursIntervalles[$intervalle]++;
+                        break;
+                    }
                 }
-                $colonne = 'MS' . $data['periode'];
-                return is_null($eleve->{$colonne});
-            })->count();
 
-            // Calcul du taux de réussite
-            $elevesReussite = $elevesAvecMoyennes->filter(function ($eleve) use ($data) {
-                return $eleve->moyenne >= $data['moyenne_ref'];
-            });
-            $tauxReussite = $elevesAvecMoyennes->count() > 0
-                ? ($elevesReussite->count() / $elevesAvecMoyennes->count()) * 100
-                : 0;
+                // Mettre à jour le meilleur et plus faible élève
+                if ($meilleurEleve === null || $moyenne > $meilleurEleve['moyenne']) {
+                    $meilleurEleve = [
+                        'nom' => $eleve->NOM . ' ' . $eleve->PRENOM,
+                        'moyenne' => $moyenne
+                    ];
+                }
+                if ($plusFaibleEleve === null || $moyenne < $plusFaibleEleve['moyenne']) {
+                    $plusFaibleEleve = [
+                        'nom' => $eleve->NOM . ' ' . $eleve->PRENOM,
+                        'moyenne' => $moyenne
+                    ];
+                }
 
-            // Répartition des moyennes
-            $repartition = [
-                'moins_6_5' => ['nombre' => 0, 'pourcentage' => 0],
-                '6_5_10' => ['nombre' => 0, 'pourcentage' => 0],
-                '10_12' => ['nombre' => 0, 'pourcentage' => 0],
-                '12_14' => ['nombre' => 0, 'pourcentage' => 0],
-                '14_16' => ['nombre' => 0, 'pourcentage' => 0],
-                '16_18' => ['nombre' => 0, 'pourcentage' => 0],
-                '18_20' => ['nombre' => 0, 'pourcentage' => 0],
-            ];
-
-            $totalEleves = $elevesAvecMoyennes->count();
-            if ($totalEleves > 0) {
-                $repartition['moins_6_5'] = [
-                    'nombre' => $elevesAvecMoyennes->where('moyenne', '<', 6.5)->count(),
-                    'pourcentage' => ($elevesAvecMoyennes->where('moyenne', '<', 6.5)->count() / $totalEleves) * 100
-                ];
-                $repartition['6_5_10'] = [
-                    'nombre' => $elevesAvecMoyennes->whereBetween('moyenne', [6.5, 10])->count(),
-                    'pourcentage' => ($elevesAvecMoyennes->whereBetween('moyenne', [6.5, 10])->count() / $totalEleves) * 100
-                ];
-                $repartition['10_12'] = [
-                    'nombre' => $elevesAvecMoyennes->whereBetween('moyenne', [10, 12])->count(),
-                    'pourcentage' => ($elevesAvecMoyennes->whereBetween('moyenne', [10, 12])->count() / $totalEleves) * 100
-                ];
-                $repartition['12_14'] = [
-                    'nombre' => $elevesAvecMoyennes->whereBetween('moyenne', [12, 14])->count(),
-                    'pourcentage' => ($elevesAvecMoyennes->whereBetween('moyenne', [12, 14])->count() / $totalEleves) * 100
-                ];
-                $repartition['14_16'] = [
-                    'nombre' => $elevesAvecMoyennes->whereBetween('moyenne', [14, 16])->count(),
-                    'pourcentage' => ($elevesAvecMoyennes->whereBetween('moyenne', [14, 16])->count() / $totalEleves) * 100
-                ];
-                $repartition['16_18'] = [
-                    'nombre' => $elevesAvecMoyennes->whereBetween('moyenne', [16, 18])->count(),
-                    'pourcentage' => ($elevesAvecMoyennes->whereBetween('moyenne', [16, 18])->count() / $totalEleves) * 100
-                ];
-                $repartition['18_20'] = [
-                    'nombre' => $elevesAvecMoyennes->whereBetween('moyenne', [18, 20])->count(),
-                    'pourcentage' => ($elevesAvecMoyennes->whereBetween('moyenne', [18, 20])->count() / $totalEleves) * 100
-                ];
+                // Compter les élèves ayant réussi
+                if ($moyenne >= $data['moyenne_ref']) {
+                    $elevesReussite++;
+                }
             }
 
-            $resultats[$groupLabel] = [
-                'effectif_total' => $elevesAvecMoyennes->count(),
-                'meilleur_eleve' => [
-                    'nom' => $meilleurEleve ? $meilleurEleve->NOM . ' ' . $meilleurEleve->PRENOM : '-',
-                    'moyenne' => $meilleurEleve ? $meilleurEleve->moyenne : 0
-                ],
-                'plus_faible_eleve' => [
-                    'nom' => $plusFaibleEleve ? $plusFaibleEleve->NOM . ' ' . $plusFaibleEleve->PRENOM : '-',
-                    'moyenne' => $plusFaibleEleve ? $plusFaibleEleve->moyenne : 0
-                ],
+            // Calculer le taux de réussite
+            $tauxReussite = $elevesAvecMoyenne > 0 ? ($elevesReussite / $elevesAvecMoyenne) * 100 : 0;
+
+            $resultats[$classe->LIBELCLAS] = [
+                'effectif_total' => $effectifTotal,
+                'intervales' => $compteursIntervalles,
+                'meilleur_eleve' => $meilleurEleve,
+                'plus_faible_eleve' => $plusFaibleEleve,
                 'abandons' => $abandons,
-                'taux_reussite' => $tauxReussite,
-                'repartition' => $repartition
+                'taux_reussite' => $tauxReussite
             ];
         }
 
