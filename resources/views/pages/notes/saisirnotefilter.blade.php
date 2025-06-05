@@ -92,12 +92,12 @@
                                                 <option value="1">1ère Période</option>
                                                 <option value="2">2ème Période</option>
                                                 <option value="3">3ème Période</option>
-                                                <option value="4">4ème Période</option>
+                                                {{-- <option value="4">4ème Période</option>
                                                 <option value="5">5ème Période</option>
                                                 <option value="6">6ème Période</option>
                                                 <option value="7">7ème Période</option>
                                                 <option value="8">8ème Période</option>
-                                                <option value="9">9ème Période</option>
+                                                <option value="9">9ème Période</option> --}}
                                             </select>
                                         </div>
 
@@ -171,6 +171,16 @@
                                             INT{{ $i }}
                                         </label>
                                     @endfor
+
+                                    <label class="checkbox-label me-2" for="optionDEV3">
+                                        <input type="checkbox" id="optionDEV3" onchange="toggleDev3()">
+                                        DEV3
+                                    </label>
+                                    <label class="checkbox-label me-2" for="optionTEST">
+                                        <input type="checkbox" id="optionTEST" onchange="toggleTest()">
+                                        TEST
+                                    </label>
+
                                 </div>
                                 <div class="col-md-6 d-flex justify-content-end">
                                     <button type="submit" class="btn btn-primary btn-rounded">
@@ -182,6 +192,8 @@
                                         <i class="typcn typcn-delete-outline"></i>
                                         Supprimer
                                     </button>
+
+                                    
 
 
                                 </div>
@@ -214,9 +226,9 @@
                                             <th>M.int</th>
                                             <th>Dev1</th>
                                             <th>Dev2</th>
-                                            {{-- <th>Dev3</th> --}}
+                                            <th class="dev3-column">Dev3</th>
                                             <th>Moy</th>
-                                            <th>Test</th>
+                                            <th class="test-column">Test</th>
                                             <th>Ms</th>
                                         </tr>
                                     </thead>
@@ -245,24 +257,28 @@
                                                     value="{{ in_array($eleve->DEV1 ?? '', [21, -1]) ? '' : ($eleve->DEV1 ?? '') }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
+
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
                                                     value="{{ in_array($eleve->DEV2 ?? '', [21, -1]) ? '' : ($eleve->DEV2 ?? '') }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
-                                                {{-- <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
+
+                                                <td class="dev3-column"><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
                                                     value="{{ in_array($eleve->DEV3 ?? '', [21, -1]) ? '' : ($eleve->DEV3 ?? '') }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
-                                                        oninput="calculateMIAndMoy(this)"></td> --}}
+                                                        oninput="calculateMIAndMoy(this)"></td>
                                                 <td>
                                                     <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
                                                     value="{{ in_array($eleve->MS1 ?? '', [21, -1]) ? '' : ($eleve->MS1 ?? '') }}"
                                                         class="form-control form-control-sm ms1-input fixed-input"
                                                         readonly>
                                                 </td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][TEST]"
+
+                                                <td class="test-column"><input type="text" name="notes[{{ $eleve->MATRICULE }}][TEST]"
                                                     value="{{ in_array($eleve->TEST ?? '', [21, -1]) ? '' : ($eleve->TEST ?? '') }}"
                                                         class="form-control form-control-sm test-input fixed-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
+
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
                                                     value="{{ in_array($eleve->MS ?? '', [21, -1]) ? '' : ($eleve->MS ?? '') }}"
                                                         class="form-control form-control-sm ms-input fixed-input" readonly>
@@ -273,138 +289,441 @@
                                 </table>
                             </div>
 
+
                             <script>
-document.addEventListener("DOMContentLoaded", () => {
-  // 1. Masquer les colonnes Int3 à Int10 au chargement (votre toggleColumn déjà en place)
-  for (let i = 3; i <= 10; i++) {
-    toggleColumn(i);
-  }
+                                document.addEventListener("DOMContentLoaded", () => {
+                                // 1) Masquer les colonnes Int3 à Int10 au chargement
+                                for (let i = 3; i <= 10; i++) {
+                                    toggleColumn(i);
+                                }
+                                toggleDev3();
+                                toggleTest();
 
-  // 2. Fonction utilitaire pour savoir si un élément est visible (pas en display:none)
-  function isVisible(el) {
-    return el && el.offsetParent !== null;
-  }
 
-  // 3. Gestionnaire global de keydown pour les input.fixed-input
-  document.addEventListener("keydown", function(e) {
-    const target = e.target;
-    if (!target.matches('input.fixed-input')) return;
+                                // 2) Fonction utilitaire pour savoir si un élément est visible (pas en display:none)
+                                function isVisible(el) {
+                                    return el && el.offsetParent !== null;
+                                }
 
-    const td = target.closest('td');
-    const tr = td.closest('tr');
-    const allTDs = Array.from(tr.children);
+                                // 3) Fonction pour passer au champ suivant (même logique que pour →/Enter)
+                                function moveToNext(currentInput) {
+                                    const td = currentInput.closest('td');
+                                    const tr = td.closest('tr');
+                                    const colIndex = td.cellIndex;
 
-    // Indice de la cellule courante dans la ligne
-    const colIndex = td.cellIndex;
-    // Réutilisable pour éviter de réécrire le while/for
-    let nextCell, prevCell, upCell, downCell, cand;
-    let found;
+                                    // a) Chercher dans la même ligne
+                                    let nextCell = td.nextElementSibling;
+                                    while (nextCell) {
+                                    if (isVisible(nextCell)) {
+                                        const candidate = nextCell.querySelector('input.fixed-input');
+                                        if (candidate && !candidate.readOnly) {
+                                        candidate.focus();
+                                        return;
+                                        }
+                                    }
+                                    nextCell = nextCell.nextElementSibling;
+                                    }
 
-    // --- FLÈCHE DROITE ou Touche Entrée ---
-    if (e.key === 'ArrowRight' || e.key === 'Enter') {
-      e.preventDefault();
+                                    // b) Sinon, passer à la ligne suivante
+                                    let nextTr = tr.nextElementSibling;
+                                    while (nextTr) {
+                                    for (let inp of nextTr.querySelectorAll('input.fixed-input')) {
+                                        const parentTD = inp.closest('td');
+                                        if (!inp.readOnly && isVisible(parentTD)) {
+                                        inp.focus();
+                                        return;
+                                        }
+                                    }
+                                    nextTr = nextTr.nextElementSibling;
+                                    }
+                                }
 
-      // 3.a. Parcours des TD suivants sur la même ligne
-      nextCell = td.nextElementSibling;
-      while (nextCell) {
-        if (isVisible(nextCell)) {
-          cand = nextCell.querySelector('input.fixed-input');
-          if (cand && !cand.readOnly) {
-            cand.focus();
-            return;
-          }
-        }
-        nextCell = nextCell.nextElementSibling;
-      }
+                                // 4) Gestionnaire global de keydown pour les flèches et Enter
+                                document.addEventListener("keydown", function(e) {
+                                    const target = e.target;
+                                    if (!target.matches('input.fixed-input')) return;
 
-      // Si on appuie sur Entrée et qu’on n’a rien trouvé à droite, on passe à la ligne suivante (comme avant)
-      if (e.key === 'Enter') {
-        let nextTr = tr.nextElementSibling;
-        while (nextTr) {
-          // On cherche dans la nouvelle ligne le premier <input.fixed-input> visible et non readonly
-          found = false;
-          for (let inp of nextTr.querySelectorAll('input.fixed-input')) {
-            const parentTD = inp.closest('td');
-            if (!inp.readOnly && isVisible(parentTD)) {
-              inp.focus();
-              found = true;
-              break;
-            }
-          }
-          if (found) return;
-          nextTr = nextTr.nextElementSibling;
-        }
-      }
+                                    const td = target.closest('td');
+                                    const tr = td.closest('tr');
+                                    const colIndex = td.cellIndex;
+                                    let nextCell, prevCell, upCell, downCell, cand, found;
 
-      return;
-    }
+                                    // --- FLÈCHE DROITE ou ENTER ---
+                                    if (e.key === 'ArrowRight' || e.key === 'Enter') {
+                                    e.preventDefault();
 
-    // --- FLÈCHE GAUCHE ---
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault();
+                                    // a) Essayer la cellule à droite
+                                    nextCell = td.nextElementSibling;
+                                    while (nextCell) {
+                                        if (isVisible(nextCell)) {
+                                        cand = nextCell.querySelector('input.fixed-input');
+                                        if (cand && !cand.readOnly) {
+                                            cand.focus();
+                                            return;
+                                        }
+                                        }
+                                        nextCell = nextCell.nextElementSibling;
+                                    }
 
-      // 3.b. Parcours des TD précédents sur la même ligne
-      prevCell = td.previousElementSibling;
-      while (prevCell) {
-        if (isVisible(prevCell)) {
-          cand = prevCell.querySelector('input.fixed-input');
-          if (cand && !cand.readOnly) {
-            cand.focus();
-            return;
-          }
-        }
-        prevCell = prevCell.previousElementSibling;
-      }
-      return;
-    }
+                                    // b) Si on a appuyé sur ENTER et rien à droite → ligne suivante
+                                    if (e.key === 'Enter') {
+                                        let nextTr = tr.nextElementSibling;
+                                        while (nextTr) {
+                                        found = false;
+                                        for (let inp of nextTr.querySelectorAll('input.fixed-input')) {
+                                            const parentTD = inp.closest('td');
+                                            if (!inp.readOnly && isVisible(parentTD)) {
+                                            inp.focus();
+                                            found = true;
+                                            break;
+                                            }
+                                        }
+                                        if (found) return;
+                                        nextTr = nextTr.nextElementSibling;
+                                        }
+                                    }
 
-    // --- FLÈCHE HAUT ---
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
+                                    return;
+                                    }
 
-      // 3.c. On remonte les <tr> précédentes
-      let prevTr = tr.previousElementSibling;
-      while (prevTr) {
-        // On essaie de récupérer la cellule au même indice
-        upCell = prevTr.children[colIndex];
-        if (upCell && isVisible(upCell)) {
-          cand = upCell.querySelector('input.fixed-input');
-          if (cand && !cand.readOnly) {
-            cand.focus();
-            return;
-          }
-        }
-        // Si pas trouvé dans cette ligne, on continue à remonter
-        prevTr = prevTr.previousElementSibling;
-      }
-      return;
-    }
+                                    // --- FLÈCHE GAUCHE ---
+                                    if (e.key === 'ArrowLeft') {
+                                    e.preventDefault();
+                                    prevCell = td.previousElementSibling;
+                                    while (prevCell) {
+                                        if (isVisible(prevCell)) {
+                                        cand = prevCell.querySelector('input.fixed-input');
+                                        if (cand && !cand.readOnly) {
+                                            cand.focus();
+                                            return;
+                                        }
+                                        }
+                                        prevCell = prevCell.previousElementSibling;
+                                    }
+                                    return;
+                                    }
 
-    // --- FLÈCHE BAS ---
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
+                                    // --- FLÈCHE HAUT ---
+                                    if (e.key === 'ArrowUp') {
+                                    e.preventDefault();
+                                    let prevTr = tr.previousElementSibling;
+                                    while (prevTr) {
+                                        upCell = prevTr.children[colIndex];
+                                        if (upCell && isVisible(upCell)) {
+                                        cand = upCell.querySelector('input.fixed-input');
+                                        if (cand && !cand.readOnly) {
+                                            cand.focus();
+                                            return;
+                                        }
+                                        }
+                                        prevTr = prevTr.previousElementSibling;
+                                    }
+                                    return;
+                                    }
 
-      // 3.d. On descend les <tr> suivantes
-      let nextTr2 = tr.nextElementSibling;
-      while (nextTr2) {
-        downCell = nextTr2.children[colIndex];
-        if (downCell && isVisible(downCell)) {
-          cand = downCell.querySelector('input.fixed-input');
-          if (cand && !cand.readOnly) {
-            cand.focus();
-            return;
-          }
-        }
-        nextTr2 = nextTr2.nextElementSibling;
-      }
-      return;
-    }
+                                    // --- FLÈCHE BAS ---
+                                    if (e.key === 'ArrowDown') {
+                                    e.preventDefault();
+                                    let nextTr2 = tr.nextElementSibling;
+                                    while (nextTr2) {
+                                        downCell = nextTr2.children[colIndex];
+                                        if (downCell && isVisible(downCell)) {
+                                        cand = downCell.querySelector('input.fixed-input');
+                                        if (cand && !cand.readOnly) {
+                                            cand.focus();
+                                            return;
+                                        }
+                                        }
+                                        nextTr2 = nextTr2.nextElementSibling;
+                                    }
+                                    return;
+                                    }
+                                });
 
-    // Si ce n'est ni Enter, ni une flèche, on ne fait rien ici.
-  });
-});
-</script>
+                                // 5) Fonction pour calculer MI et MS dès qu'un champ change
+                                function calculateMIAndMoy(input) {
+                                    const row = input.closest('tr');
 
+                                    // Récupérer les champs int, dev et test dans la ligne
+                                    const interroInputs = row.querySelectorAll('.interro-input');
+                                    const devInputs     = row.querySelectorAll('.dev-input');
+                                    const testInput     = row.querySelector('[name*="TEST"]');
+
+                                    // --- Calcul de la moyenne d'interrogations (MI) ---
+                                    let interroSum   = 0;
+                                    let interroCount = 0;
+                                    interroInputs.forEach(interro => {
+                                    // Remplacer la virgule par un point pour parseFloat
+                                    const raw = interro.value.replace(',', '.');
+                                    const value = parseFloat(raw);
+                                    if (!isNaN(value)) {
+                                        interroSum += value;
+                                        interroCount++;
+                                    }
+                                    });
+                                    const miField = row.querySelector('.mi-input');
+                                    const mi = interroCount > 0 ? (interroSum / interroCount).toFixed(2) : '';
+                                    miField.value = mi;
+
+                                    // --- Calcul de la moyenne des devoirs (MS1) ---
+                                    let devSum   = 0;
+                                    let devCount = 0;
+                                    devInputs.forEach(dev => {
+                                    const rawDev = dev.value.replace(',', '.');
+                                    const value  = parseFloat(rawDev);
+                                    if (!isNaN(value)) {
+                                        devSum += value;
+                                        devCount++;
+                                    }
+                                    });
+                                    const moyField = row.querySelector('.ms1-input');
+                                    let moy = '';
+
+                                    if (devCount > 0 && interroCount === 0) {
+                                    // queue de devoirs uniquement
+                                    moy = (devSum / devCount).toFixed(2);
+                                    } else if (interroCount > 0) {
+                                    // il y a des interros → on intègre MI
+                                    moy = devCount > 0 
+                                        ? ((parseFloat(mi) + devSum) / (devCount + 1)).toFixed(2)
+                                        : mi;
+                                    }
+                                    moyField.value = moy;
+
+                                    // --- Calcul de la note semestrielle (MS) selon votre logique ---
+                                    const msField   = row.querySelector('.ms-input');
+                                    const rawTest   = testInput.value.replace(',', '.');
+                                    const testValue = parseFloat(rawTest) || 0;
+
+                                    if (devCount === 0 && interroCount === 0 && testValue === 0) {
+                                    // ni int, ni dev, ni test → MS = MI ou MS1
+                                    msField.value = mi || moyField.value;
+                                    } else if (interroCount === 0 && devCount === 0) {
+                                    // seuls test → MS = test
+                                    msField.value = testValue.toFixed(2);
+                                    } else if (interroCount === 0) {
+                                    // seuls les devoirs → MS = moyenne des devoirs
+                                    msField.value = (devSum / devCount).toFixed(2);
+                                    } else {
+                                    // sinon → MS = moyenne(MS1, TEST) si test>0 sinon MS1 seul
+                                    const ms = testValue > 0 
+                                        ? (parseFloat(moyField.value) + testValue) / 2 
+                                        : parseFloat(moyField.value);
+                                    msField.value = ms.toFixed(2);
+                                    }
+                                }
+
+                                // 6) Appliquer calculateMIAndMoy au changement de chaque champ dev ou int ou test
+                                document.querySelectorAll('.interro-input, .dev-input, .test-input').forEach(elem => {
+                                    elem.addEventListener('input', function() {
+                                    calculateMIAndMoy(this);
+                                    });
+                                });
+
+                                // 7) Écouteur 'input' pour formater en "xx,yy" et passer au suivant au 4e chiffre
+                                document.querySelectorAll('input.fixed-input').forEach(inp => {
+                                    inp.addEventListener('input', function() {
+                                    // On retire tout ce qui n'est pas chiffre
+                                    let digits = this.value.replace(/\D/g, '');
+
+                                    // Dès que l'on a au moins 4 chiffres, on formate en "AB,CD"
+                                    if (digits.length >= 4) {
+                                        digits = digits.slice(0, 4); // 4 premiers chiffres
+                                        this.value = digits.slice(0,2) + '.' + digits.slice(2);
+                                        // Puis on recalcule MI/MS1/MS et on passe au champ suivant
+                                            const numericValue = parseFloat(this.value);
+                                           calculateMIAndMoy(this);
+                                           if (!isNaN(numericValue) && numericValue <= 20) {
+                                               moveToNext(this);
+                                           } else {
+                                               // Si > 20, on reste dans la même case (on ne bouge pas le focus).
+                                               // Facultatif : vous pouvez remettre 'this.value = ""' ou
+                                               // afficher un message d'erreur ici si besoin.
+                                           }
+                                    } else {
+                                        // Sinon, on laisse l'utilisateur inscrire librement (sans virgule)
+                                        this.value = digits;
+                                        // On peut quand même recalculer MI/MS1/MS en direct si souhaité :
+                                        calculateMIAndMoy(this);
+                                    }
+                                    });
+                                });
+                                });
+                            </script>
+
+
+{{-- 
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                // 1) Masquer les colonnes Int3 à Int10 au chargement
+                                for (let i = 3; i <= 10; i++) {
+                                    toggleColumn(i);
+                                }
+
+                                // 2) Fonction utilitaire pour savoir si un élément est visible (pas en display:none)
+                                function isVisible(el) {
+                                    return el && el.offsetParent !== null;
+                                }
+
+                                // 3) Fonction qui, à partir d'un <input>, détermine et donne le focus au champ suivant
+                                function moveToNext(currentInput) {
+                                    const td = currentInput.closest('td');
+                                    const tr = td.closest('tr');
+                                    const colIndex = td.cellIndex;
+
+                                    // a) Chercher à droite dans la même ligne
+                                    let nextCell = td.nextElementSibling;
+                                    while (nextCell) {
+                                    if (isVisible(nextCell)) {
+                                        const candidate = nextCell.querySelector('input.fixed-input');
+                                        if (candidate && !candidate.readOnly) {
+                                        candidate.focus();
+                                        return;
+                                        }
+                                    }
+                                    nextCell = nextCell.nextElementSibling;
+                                    }
+
+                                    // b) Si aucun champ à droite, descendre à la ligne suivante
+                                    let nextTr = tr.nextElementSibling;
+                                    while (nextTr) {
+                                    for (let inp of nextTr.querySelectorAll('input.fixed-input')) {
+                                        const parentTD = inp.closest('td');
+                                        if (!inp.readOnly && isVisible(parentTD)) {
+                                        inp.focus();
+                                        return;
+                                        }
+                                    }
+                                    nextTr = nextTr.nextElementSibling;
+                                    }
+                                    // Si on n’a vraiment rien trouvé, on reste où l’on est
+                                }
+
+                                // 4) Gestionnaire global de keydown pour les flèches et Entrée
+                                document.addEventListener("keydown", function(e) {
+                                    const target = e.target;
+                                    if (!target.matches('input.fixed-input')) return;
+
+                                    const td = target.closest('td');
+                                    const tr = td.closest('tr');
+                                    const colIndex = td.cellIndex;
+                                    let nextCell, prevCell, upCell, downCell, cand, found;
+
+                                    // --- FLÈCHE DROITE ou Touche Entrée ---
+                                    if (e.key === 'ArrowRight' || e.key === 'Enter') {
+                                    e.preventDefault();
+
+                                    // 4.a. Parcours des TD suivants sur la même ligne
+                                    nextCell = td.nextElementSibling;
+                                    while (nextCell) {
+                                        if (isVisible(nextCell)) {
+                                        cand = nextCell.querySelector('input.fixed-input');
+                                        if (cand && !cand.readOnly) {
+                                            cand.focus();
+                                            return;
+                                        }
+                                        }
+                                        nextCell = nextCell.nextElementSibling;
+                                    }
+
+                                    // Si on appuie sur Entrée et qu’on n’a rien trouvé à droite, on passe à la ligne suivante
+                                    if (e.key === 'Enter') {
+                                        let nextTr = tr.nextElementSibling;
+                                        while (nextTr) {
+                                        found = false;
+                                        for (let inp of nextTr.querySelectorAll('input.fixed-input')) {
+                                            const parentTD = inp.closest('td');
+                                            if (!inp.readOnly && isVisible(parentTD)) {
+                                            inp.focus();
+                                            found = true;
+                                            break;
+                                            }
+                                        }
+                                        if (found) return;
+                                        nextTr = nextTr.nextElementSibling;
+                                        }
+                                    }
+
+                                    return;
+                                    }
+
+                                    // --- FLÈCHE GAUCHE ---
+                                    if (e.key === 'ArrowLeft') {
+                                    e.preventDefault();
+                                    prevCell = td.previousElementSibling;
+                                    while (prevCell) {
+                                        if (isVisible(prevCell)) {
+                                        cand = prevCell.querySelector('input.fixed-input');
+                                        if (cand && !cand.readOnly) {
+                                            cand.focus();
+                                            return;
+                                        }
+                                        }
+                                        prevCell = prevCell.previousElementSibling;
+                                    }
+                                    return;
+                                    }
+
+                                    // --- FLÈCHE HAUT ---
+                                    if (e.key === 'ArrowUp') {
+                                    e.preventDefault();
+                                    let prevTr = tr.previousElementSibling;
+                                    while (prevTr) {
+                                        upCell = prevTr.children[colIndex];
+                                        if (upCell && isVisible(upCell)) {
+                                        cand = upCell.querySelector('input.fixed-input');
+                                        if (cand && !cand.readOnly) {
+                                            cand.focus();
+                                            return;
+                                        }
+                                        }
+                                        prevTr = prevTr.previousElementSibling;
+                                    }
+                                    return;
+                                    }
+
+                                    // --- FLÈCHE BAS ---
+                                    if (e.key === 'ArrowDown') {
+                                    e.preventDefault();
+                                    let nextTr2 = tr.nextElementSibling;
+                                    while (nextTr2) {
+                                        downCell = nextTr2.children[colIndex];
+                                        if (downCell && isVisible(downCell)) {
+                                        cand = downCell.querySelector('input.fixed-input');
+                                        if (cand && !cand.readOnly) {
+                                            cand.focus();
+                                            return;
+                                        }
+                                        }
+                                        nextTr2 = nextTr2.nextElementSibling;
+                                    }
+                                    return;
+                                    }
+                                });
+
+                                // 5) Écouteur 'input' pour formater en "xx,yy" et passer au suivant dès 4 chiffres
+                                document.querySelectorAll('input.fixed-input').forEach((inp) => {
+                                    inp.addEventListener('input', function() {
+                                    // Garder uniquement les chiffres dans la valeur
+                                    let digits = this.value.replace(/\D/g, '');
+
+                                    // Dès qu'on a au moins 4 chiffres, on formate et on saute au champ suivant
+                                    if (digits.length >= 4) {
+                                        digits = digits.slice(0, 4); // garder les 4 premiers chiffres
+                                        // Format "ABCD" → "AB,CD"
+                                        this.value = digits.slice(0, 2) + '.' + digits.slice(2);
+                                        // On déplace le focus sur le champ suivant
+                                        moveToNext(this);
+                                    } else {
+                                        // Si on a moins de 4 chiffres, on met simplement ce qu'il y a (sans virgule)
+                                        this.value = digits;
+                                    }
+                                    });
+                                });
+                                });
+                            </script> --}}
+
+{{-- 
                             <script>
                                 const selectElement = document.getElementById('tableSelect1');
 
@@ -489,14 +808,14 @@ document.addEventListener("DOMContentLoaded", () => {
                                         msField.value = ms.toFixed(2);
                                     }
                                 }
-                            </script>
+                            </script> --}}
 
 
                         </div>
                     </div>
                     <br><br><br>
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    {{-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                         aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -509,10 +828,10 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <form action="{{ route('delete-notes') }}" method="POST">
                                     @csrf
                                     <div class="modal-body">
-                                        <input type="hidden" value="CE1A" id="tableSelec4" name="classe">
-                                        <input type="hidden" value="1" id="tableSelec5" name="matiere">
-                                        <input type="hidden" value="1" id="periodSelect" name="periode">
 
+                                        <input type="hidden" id="modalClasse" name="CODECLAS" value="">
+                                        <input type="hidden" id="modalMatiere" name="CODEMAT" value="">
+                                        <input type="hidden" id="modalSemestre" name="champ1" value="">
 
 
                                     </div>
@@ -524,7 +843,42 @@ document.addEventListener("DOMContentLoaded", () => {
                                 </form>
                             </div>
                         </div>
+                    </div> --}}
+                </form>
+
+
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                                        Voulez-vous vraiment supprimer les notes pour la classe,
+                                        la matière et la période sélectionnées ?
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <form action="{{ route('delete-notes') }}" method="POST">
+                                    @csrf
+                                    <div class="modal-body">
+                                        <!-- Trois champs cachés mis à jour au moment de l'ouverture -->
+                                        <input type="hidden" id="modalClasse" name="CODECLAS" value="">
+                                        <input type="hidden" id="modalMatiere" name="CODEMAT" value="">
+                                        <input type="hidden" id="modalSemestre" name="champ1" value="">
+                                        <p>La suppression n'affectera que la classe, la matière et la période sélectionnées.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
+                    
                     <script>
                         function updateCodeMat() {
                             // Récupère la valeur sélectionnée dans le select de matières
@@ -583,9 +937,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             let url = '/filternotes'; // URL de redirection
                             let params = [];
 
-                            if (classe) params.push(`classe=${classe}`); // Ajoute le paramètre de classe si sélectionné
-                            if (matiere) params.push(`matiere=${matiere}`); // Ajoute le paramètre de matière si sélectionné
-                            if (periode) params.push(`periode=${periode}`); // Ajoute le paramètre de matière si sélectionné
+                            if (classe) params.push(`classe=${encodeURIComponent(classe)}`); // Ajoute le paramètre de classe si sélectionné
+                            if (matiere) params.push(`matiere=${encodeURIComponent(matiere)}`); // Ajoute le paramètre de matière si sélectionné
+                            if (periode) params.push(`periode=${encodeURIComponent(periode)}`); // Ajoute le paramètre de matière si sélectionné
 
 
                             if (params.length > 0) {
@@ -596,15 +950,15 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
 
                         // Ajoute les écouteurs d'événements pour les deux sélecteurs
-                        document.getElementById("tableSelect4").addEventListener("change", redirectWithSelection);
-                        document.getElementById("tableSelect5").addEventListener("change", redirectWithSelection);
-                        document.getElementById("tableSelec4").addEventListener("change", redirectWithSelection);
-                        document.getElementById("tableSelec5").addEventListener("change", redirectWithSelection);
+                        // document.getElementById("tableSelect4").addEventListener("change", redirectWithSelection);
+                        // document.getElementById("tableSelect5").addEventListener("change", redirectWithSelection);
+                        // document.getElementById("tableSelec4").addEventListener("change", redirectWithSelection);
+                        // document.getElementById("tableSelec5").addEventListener("change", redirectWithSelection);
 
-                        function handleChange() {
-                            redirectWithSelection();
-                            updateCheckbox();
-                        }
+                        // function handleChange() {
+                        //     redirectWithSelection();
+                        //     updateCheckbox();
+                        // }
                     </script>
 
                     <script>
@@ -629,6 +983,114 @@ document.addEventListener("DOMContentLoaded", () => {
                             }
                         });
                     </script>
+
+                    {{-- ——— SCRIPT : toggle DEV3 ——— --}}
+                            <script>
+                                function toggleDev3() {
+                                    const checkbox = document.getElementById("optionDEV3");
+                                    const isChecked = checkbox.checked;
+                                    document.querySelectorAll(".dev3-column").forEach(cell => {
+                                        cell.style.display = isChecked ? '' : 'none';
+                                    });
+                                }
+                            </script>
+
+                            {{-- ——— SCRIPT : toggle TEST ——— --}}
+                            <script>
+                                function toggleTest() {
+                                    const checkbox = document.getElementById("optionTEST");
+                                    const isChecked = checkbox.checked;
+                                    document.querySelectorAll(".test-column").forEach(cell => {
+                                        cell.style.display = isChecked ? '' : 'none';
+                                    });
+                                }
+                            </script>
+
+
+                            {{-- <script>
+                            document.addEventListener('DOMContentLoaded', () => {
+                                // Sélection de tous les inputs de notes
+                                const noteInputs = Array.from(document.querySelectorAll('.interro-input, .dev-input, .test-input'));
+
+                                // Fonction pour trouver l'input suivant non readonly
+                                function findNextEditableInput(currentInput) {
+                                const currentIndex = noteInputs.indexOf(currentInput);
+                                for (let i = currentIndex + 1; i < noteInputs.length; i++) {
+                                    const next = noteInputs[i];
+                                    if (!next.hasAttribute('readonly') && !next.disabled) {
+                                    return next;
+                                    }
+                                }
+                                return null;
+                                }
+
+                                noteInputs.forEach(input => {
+                                // On limite visuellement la saisie, même si la troncature est gérée en JS
+                                input.setAttribute('maxlength', '6');
+                                // Événement à chaque frappe
+                                input.addEventListener('input', () => {
+                                    // On ne garde que les chiffres
+                                    let raw = input.value.replace(/\D/g, '');
+
+                                    // Si l'utilisateur tape plus de 4 chiffres, on ne garde que les 4 premiers
+                                    if (raw.length > 4) {
+                                    raw = raw.slice(0, 4);
+                                    }
+
+                                    if (raw.length === 4) {
+                                    // Conversion en nombre / 100, bornage entre 0 et 20
+                                    let num = parseInt(raw, 10) / 100;
+                                    if (num > 20) num = 20;
+                                    if (num < 0) num = 0;
+                                    // Formatage à deux décimales
+                                    input.value = num.toFixed(2);
+
+                                    // Recalcul des moyennes (à adapter à votre logique)
+                                    calculateMIAndMoy(input);
+
+                                    // Passage automatique à l'input suivant non readonly
+                                    const next = findNextEditableInput(input);
+                                    if (next) {
+                                        next.focus();
+                                    }
+                                    } else {
+                                    // Tant qu'on n'a pas 4 chiffres, on affiche juste les chiffres saisis
+                                    input.value = raw;
+                                    }
+                                });
+
+                                // Au blur : on vérifie, on borne et on formate à xx.xx
+                                input.addEventListener('blur', () => {
+                                    let val = parseFloat(input.value.replace(',', '.'));
+                                    if (isNaN(val)) {
+                                    input.value = '';
+                                    calculateMIAndMoy(input);
+                                    return;
+                                    }
+                                    if (val > 20) val = 20;
+                                    if (val < 0) val = 0;
+                                    input.value = val.toFixed(2);
+                                    calculateMIAndMoy(input);
+                                });
+                                });
+                            });
+
+                            </script> --}}
+
+
+                            <script>
+                                // Au moment où le modal s’ouvre, on copie les valeurs sélectionnées dans les <select>
+                                var exampleModal = document.getElementById('exampleModal');
+                                exampleModal.addEventListener('show.bs.modal', function(event) {
+                                    var valeurClasse = document.getElementById('tableSelect4').value;
+                                    var valeurMatiere = document.getElementById('tableSelect5').value;
+                                    var valeurPeriode = document.getElementById('periodSelect').value;
+
+                                    document.getElementById('modalClasse').value = valeurClasse;
+                                    document.getElementById('modalMatiere').value = valeurMatiere;
+                                    document.getElementById('modalSemestre').value = valeurPeriode;
+                                });
+                            </script>
                     <style>
                         /* Améliore l'affichage des champs de saisie */
                         .table thead th,

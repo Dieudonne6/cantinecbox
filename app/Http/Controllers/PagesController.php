@@ -608,11 +608,11 @@ class PagesController extends Controller
   public function vitrine(){
     if(Session::has('account')){
       $totaleleve = Eleve::count();
-      $totalcantineinscritactif = Contrat::where('statut_contrat', 1)->count();
-      $totalcantineinscritinactif = Contrat::where('statut_contrat', 0)->count();
+      // $totalcantineinscritactif = Contrat::where('statut_contrat', 1)->count();
+      // $totalcantineinscritinactif = Contrat::where('statut_contrat', 0)->count();
       
       // dd($totalcantineinscritactif);
-      return view('pages.vitrine')->with('totalcantineinscritactif', $totalcantineinscritactif)->with('totalcantineinscritinactif', $totalcantineinscritinactif)->with('totaleleve', $totaleleve);
+      return view('pages.vitrine')->with('totaleleve', $totaleleve);
     }return redirect('/');
   }
   public function paramsfacture(){
