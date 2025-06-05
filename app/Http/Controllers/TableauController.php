@@ -166,15 +166,21 @@ class TableauController extends Controller
             return view('pages.notes.tableauanalytique', ['params2' => $params2]);
         }
 
-        $data = $this->validateRequest($request, 'tableau_analytique,tableau_synoptique,effectifs');
-        $cacheKey = "stats_{$data['periode']}_{$data['typeEtat']}";
+        $data = $this->validateRequest($request, 'tableau_analytique,tableau_synoptique,effectifs,statistique');
+        $hashIntervalles = md5(json_encode($data['intervales']));
+        $cacheKey = "stats_{$data['periode']}_{$data['typeEtat']}_{$hashIntervalles}";
+
 
         $resultats = Cache::remember($cacheKey, 300, function () use ($data) {
             if ($data['typeEtat'] === 'tableau_synoptique') {
                 return $this->statistiquesService->calculerSynoptique($data);
+            }elseif($data['typeEtat'] === 'statistique'){
+                return $this->statistiquesService->calculerStatistiquesDetaillees($data);
+            }else{
+                return $this->statistiquesService->calculerStatistiques($data);
             }
-            return $this->statistiquesService->calculerStatistiques($data);
         });
+        
 
         $finalResultats = $this->processResults($resultats, $data['typeEtat'] === 'tableau_synoptique');
 
