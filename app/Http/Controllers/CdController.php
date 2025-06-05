@@ -183,6 +183,7 @@ class CdController extends Controller
 
   public function enregistrerNotes(Request $request)
   {
+    set_time_limit(0); 
     // Valider les données entrantes
     $validatedData = $request->validate([
       'champ1' => 'required|integer',
@@ -211,6 +212,12 @@ class CdController extends Controller
 
     // Parcourir chaque élève et enregistrer les notes
     foreach ($validatedData['notes'] as $matricule => $noteData) {
+        // 1) D’abord, remplacer chaque champ NULL par 21
+        foreach ($noteData as $field => $value) {
+            if (is_null($value)) {
+                $noteData[$field] = 21;
+        }
+      }
       // Rechercher si une note existe déjà pour cet élève, matière, classe et semestre
       $noteExistante = Notes::where('MATRICULE', $matricule)
         ->where('SEMESTRE', $request->champ1)
@@ -239,37 +246,59 @@ class CdController extends Controller
   }
 
   public function deleteNote(Request $request)
-  {
-    // Récupérer les valeurs de 'classe' et 'matiere' depuis le formulaire
-    $classe = $request->input('classe');
-    $matiere = $request->input('matiere');
+    {
+      set_time_limit(0); 
+      // dd('yoyoyoyoy');
+        $classe  = $request->input('CODECLAS');
+        $matiere = $request->input('CODEMAT');
+        $periode = $request->input('champ1'); // ou 'periode' selon votre formulaire
 
-    // Mettre à jour les champs de notes à NULL pour les enregistrements correspondants
-    Notes::where('CODECLAS', $classe)
-      ->where('CODEMAT', $matiere)
-      ->update([
-        'INT1' => null,
-        'INT2' => null,
-        'INT3' => null,
-        'INT4' => null,
-        'INT5' => null,
-        'INT6' => null,
-        'INT7' => null,
-        'INT8' => null,
-        'INT9' => null,
-        'INT10' => null,
-        'MI' => null,
-        'DEV1' => null,
-        'DEV2' => null,
-        'DEV3' => null,
-        'MS' => null,
-        'TEST' => null,
-        'MS1' => null
-      ]);
+        // Vérifie que les champs sont bien présents
+        if (!$classe || !$matiere || !$periode) {
+            return redirect()->back()->with('error', 'Veuillez sélectionner une classe, une matière et une période valides.');
+        }
 
-    // Redirection ou réponse de confirmation
-    return redirect()->back()->with('success', 'Les notes ont été supprimées.');
-  }
+        // Supprime les notes correspondant à la classe, la matière et le semestre
+           Notes::where('CODECLAS', $classe)
+               ->where('CODEMAT', $matiere)
+               ->where('SEMESTRE', $periode)
+               ->delete();
+
+        return redirect()->back()->with('success', 'Les notes ont bien été supprimées pour la classe, la matière et le période sélectionnées.');
+    }
+
+  // public function deleteNote(Request $request)
+  // {
+  //   // Récupérer les valeurs de 'classe' et 'matiere' depuis le formulaire
+  //   $classe = $request->input('classe');
+  //   $matiere = $request->input('matiere');
+
+  //   // Mettre à jour les champs de notes à NULL pour les enregistrements correspondants
+  //   Notes::where('CODECLAS', $classe)
+  //     ->where('CODEMAT', $matiere)
+  //     ->update([
+  //       'INT1' => null,
+  //       'INT2' => null,
+  //       'INT3' => null,
+  //       'INT4' => null,
+  //       'INT5' => null,
+  //       'INT6' => null,
+  //       'INT7' => null,
+  //       'INT8' => null,
+  //       'INT9' => null,
+  //       'INT10' => null,
+  //       'MI' => null,
+  //       'DEV1' => null,
+  //       'DEV2' => null,
+  //       'DEV3' => null,
+  //       'MS' => null,
+  //       'TEST' => null,
+  //       'MS1' => null
+  //     ]);
+
+  //   // Redirection ou réponse de confirmation
+  //   return redirect()->back()->with('success', 'Les notes ont été supprimées.');
+  // }
 
   public function attestationdemerite()
   {

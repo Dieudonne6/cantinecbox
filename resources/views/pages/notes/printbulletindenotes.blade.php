@@ -284,8 +284,16 @@ usort($resultat['matieres'], function ($a, $b) {
                                             $moyenne_sur_20 = $matiere['moyenne_sur_20'];
                                         }
                                         if ($matiere['coefficient'] != -1) {
-                                            $moyenne_coeff = $moyenne_sur_20 * $matiere['coefficient'];
-                                            $total_coefficients += $matiere['coefficient'];
+                                            if (!is_null($moyenne_sur_20)) {
+                                                // Si $moyenne_sur_20 existe, on calcule et on ajoute le coefficient
+                                                $moyenne_coeff = round(($moyenne_sur_20 * $matiere['coefficient']), 2);
+                                                $total_coefficients += $matiere['coefficient'];
+                                            } else {
+                                                // Si $moyenne_sur_20 est null, on ne fait rien (ou on peut initialiser $moyenne_coeff à 0 ou null selon ce que vous souhaitez)
+                                                $moyenne_coeff = null;
+                                            }
+                                            // $moyenne_coeff = $moyenne_sur_20 * $matiere['coefficient'];
+                                            // $total_coefficients += $matiere['coefficient'];
                                         } elseif (
                                             $matiere['coefficient'] == -1 &&
                                             $request->input('bonificationType') == 'integral'
@@ -320,7 +328,8 @@ usort($resultat['matieres'], function ($a, $b) {
                                     <tr style="white-space: nowrap;">
                                         <td style="text-align: left; font-weight:400">{{ $matiere['nom_matiere'] }}</td>
                                         <td>{{ $matiere['coefficient'] }}</td>
-                                        <td>{{ number_format($matiere['moyenne_interro'], 2) ?? '**.**' }}</td>
+                                        {{-- <td>{{ number_format($matiere['moyenne_interro'], 2) ?? '**.**' }}</td> --}}
+                                        <td>{{ isset($matiere['moyenne_interro']) && $matiere['moyenne_interro'] != 21 ? number_format((float) $matiere['moyenne_interro'], 2) : '**.**' }}
                                         <td>{{ isset($matiere['devoir1']) && $matiere['devoir1'] != 21 ? $matiere['devoir1'] : '**.**' }}
                                         </td>
                                         <td>{{ isset($matiere['devoir2']) && $matiere['devoir2'] != 21 ? $matiere['devoir2'] : '**.**' }}
@@ -331,12 +340,25 @@ usort($resultat['matieres'], function ($a, $b) {
                                         @endif
                                         @if (!isset($option['note_test']) || !$option['note_test'])
                                             <td class="bold-text" style="font-weight: bold">
-                                                {{ number_format($moyenne_sur_20, 2) ?? '**.**' }}
+                                                {{-- @php
+                                                    
+                                                    var_dump($moyenne_sur_20)
+                                                @endphp --}}
+                                                    {{ 
+                                                        isset($moyenne_sur_20) 
+                                                            ? number_format($moyenne_sur_20, 2) 
+                                                            : '**.**' 
+                                                    }}
                                             </td>
                                             @if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'integral')
-                                                <td>+ {{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
+
+                                                <td>+ {{ isset($moyenne_coeff) ? number_format($moyenne_coeff, 5) : '**.**' }}</td>
                                             @else
-                                                <td>{{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
+                                                {{-- @php
+                                                    
+                                                    var_dump($moyenne_coeff)
+                                                @endphp --}}
+                                                <td>{{ isset($moyenne_coeff) ? number_format($moyenne_coeff, 5) : '**.**' }}</td>
                                             @endif
                                         @endif
                                         @if (isset($option['note_test']) && $option['note_test'])
@@ -345,9 +367,13 @@ usort($resultat['matieres'], function ($a, $b) {
                                             <td>{{ number_format($moyenne_part, 2) ?? '**.**' }}</td>
                                             <td>{{ $matiere['test'] ?? '**.**' }}</td>
                                             <td class="bold-text" style="font-weight: bold">
-                                                {{ number_format($moyenne_sur_20, 2) ?? '**.**' }}
+                                               {{ isset($moyenne_sur_20) ? number_format($moyenne_sur_20, 2) : '**.**' }}
                                             </td>
-                                            <td>{{ number_format($moyenne_coeff, 2) ?? '**.**' }}</td>
+                                                                                            {{-- @php
+                                                    
+                                                    var_dump($moyenne_coeff)
+                                                @endphp --}}
+                                            <td>{{ isset($moyenne_coeff) ? number_format($moyenne_coeff, 2) : '**.**' }}</td>
                                         @else
                                             <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td>
                                             <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td>
@@ -423,7 +449,8 @@ usort($resultat['matieres'], function ($a, $b) {
                                     <h6 style="text-align: center; font-weight: bold" class="mt-1">Moyenne
                                         {{ $texte2 }} :
                                         &nbsp&nbsp <span
-                                            style="font-size: 20px;">{{ $total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**' }}</span>
+                                            style="font-size: 20px;">{{ $total_moyenne_coeffs != 0 && $resultat['rang_1'] != null  ? round($moyenne, 2) : '**.**' }}</span>
+                                            {{-- style="font-size: 20px;">{{ $total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**' }}</span> --}}
                                     </h6>
                                     @if (isset($option['rang_general']) && $option['rang_general'])
                                         <h6 style="margin-left: 40px; font-weight: 50" class="mt-1">Rang
@@ -510,7 +537,7 @@ usort($resultat['matieres'], function ($a, $b) {
                                 <div style="margin-left: 70px;">
                                     <div class="d-flex" style="align-items: normal; padding-top: 10px;">
                                         <h5 class="ml-5">Moyenne Annuelle :
-                                            {{ $resultat['moyenneAnnuel'] != -1 ? number_format($resultat['moyenneAnnuel'], 2) : '**.**' }}
+                                            {{ $resultat['moyenneAnnuel'] != -1 && $resultat['moyenneAnnuel'] != 21 ? number_format($resultat['moyenneAnnuel'], 2) : '**.**' }}
                                         </h5>
                                         @if (isset($option['rang_general']) && $option['rang_general'])
                                             <h5 style="margin-left: 30px;">

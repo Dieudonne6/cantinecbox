@@ -218,9 +218,15 @@ align-items: center;  */
 <body>
     <div class="container-scroller">
         @include('layouts.navbar')
+
         <div class="container-fluid page-body-wrapper">
             @include('layouts.sidebar')
             <div class="main-panel">
+                @php
+                    // Option 2 : enlève toute limite (0 = infini)
+                    set_time_limit(0);
+                @endphp
+                
                 @yield('content')
                 @include('layouts.footer')
             </div>

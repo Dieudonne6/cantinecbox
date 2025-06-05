@@ -77,12 +77,12 @@
                                                 <option value="1">1ère Période</option>
                                                 <option value="2">2ème Période</option>
                                                 <option value="3">3ème Période</option>
-                                                <option value="4">4ème Période</option>
+                                                {{-- <option value="4">4ème Période</option>
                                                 <option value="5">5ème Période</option>
                                                 <option value="6">6ème Période</option>
                                                 <option value="7">7ème Période</option>
                                                 <option value="8">8ème Période</option>
-                                                <option value="9">9ème Période</option>
+                                                <option value="9">9ème Période</option> --}}
                                             </select>
                                         </div>
 

@@ -843,12 +843,42 @@ class BulletinController extends Controller
                 $totalNoteFondamentale = 0;
                 $countNoteFondamentale = 0;
 
+                    $countValidSubjects = 0;
+                  $totalNote          = 0;
+                  $totalCoef          = 0;
+
                 foreach ($notes as $note) {
                     // Exclure les valeurs indésirables
-                    if ($note->MS !== null && $note->MS != -1 && $note->MS != 21) {
-                        $totalNote += $note->MS * $note->COEF;
-                        $totalCoef += $note->COEF;
-                    }
+                    // if ($note->MS !== null && $note->MS != -1 && $note->MS != 21 ) {
+                    //     $totalNote += $note->MS * $note->COEF;
+                    //     $totalCoef += $note->COEF;
+                    // }
+
+                     // Vérifier qu'au moins un devoir (DEV1 ou DEV2) est valide
+                        $hasValidDevoir = (
+                            isset($note->DEV1) 
+                            && $note->DEV1 !== null 
+                            && $note->DEV1 != -1 
+                            && $note->DEV1 != 21
+                        ) || (
+                            isset($note->DEV2) 
+                            && $note->DEV2 !== null 
+                            && $note->DEV2 != -1 
+                            && $note->DEV2 != 21
+                        );
+
+                        // On ne prend la matière en compte que si MS est valide ET qu'il y a au moins un devoir valide
+                        if (
+                            $note->MS !== null
+                            && $note->MS != -1
+                            && $note->MS != 21
+                            && $hasValidDevoir
+                        ) {
+                            $totalNote += $note->MS * $note->COEF;
+                            $totalCoef += $note->COEF;
+                            $countValidSubjects++;
+                        }
+
 
                     // Récupérer la matière pour déterminer son type
                     $matiereA = Matieres::where('CODEMAT', $note->CODEMAT)->first();
@@ -876,9 +906,18 @@ class BulletinController extends Controller
                 } // fin foreach notes
 
                 // Calcul de la moyenne de la période (pondérée)
-                $moyennePeriode = ($totalCoef > 0) ? round($totalNote / $totalCoef, 2) : null;
+                // $moyennePeriode = ($totalCoef > 0) ? round($totalNote / $totalCoef, 2) : null;
+
+                    if ($countValidSubjects >= 4 && $totalCoef > 0) {
+                      $moyennePeriode = round($totalNote / $totalCoef, 2);
+                  } else {
+                      // Moins de 4 notes valides => pas de moyenne semestrielle
+                      $moyennePeriode = 21;
+                  }
                 // Appréciation pour la période
                 $appreciationPeriode = ($moyennePeriode !== null) ? $this->determineAppreciation($moyennePeriode, $params2) : null;
+
+
 
                 // Calcul des bilans arithmétiques pour la période
                 $moyenneLitteraire = ($countNoteLitteraire > 0) ? round($totalNoteLitteraire / $countNoteLitteraire, 2) : null;
@@ -919,21 +958,82 @@ class BulletinController extends Controller
 
             // dd($pondTrim3);
 
-            $sumWeighted = 0;
-            $totalWeights = 0;
-            if (isset($studentPeriods[1]) && $studentPeriods[1]['moyenne'] !== null) {
-                $sumWeighted += $studentPeriods[1]['moyenne'] * $interligne;
-                $totalWeights += $interligne;
-            }
-            if (isset($studentPeriods[2]) && $studentPeriods[2]['moyenne'] !== null) {
-                $sumWeighted += $studentPeriods[2]['moyenne'] * $interligne;
-                $totalWeights += $interligne;
-            }
-            if (isset($studentPeriods[3]) && $studentPeriods[3]['moyenne'] !== null) {
-                $sumWeighted += $studentPeriods[3]['moyenne'] * $interligne;
-                $totalWeights += $interligne;
-            }
-            $moyenneAnnuelle = ($totalWeights > 0) ? round($sumWeighted / $totalWeights, 2) : null;
+            // $sumWeighted = 0;
+            // $totalWeights = 0;
+            // if (isset($studentPeriods[1]) && $studentPeriods[1]['moyenne'] !== null) {
+            //     $sumWeighted += $studentPeriods[1]['moyenne'] * $interligne;
+            //     $totalWeights += $interligne;
+            // }
+            // if (isset($studentPeriods[2]) && $studentPeriods[2]['moyenne'] !== null) {
+            //     $sumWeighted += $studentPeriods[2]['moyenne'] * $interligne;
+            //     $totalWeights += $interligne;
+            // }
+            // if (isset($studentPeriods[3]) && $studentPeriods[3]['moyenne'] !== null) {
+            //     $sumWeighted += $studentPeriods[3]['moyenne'] * $interligne;
+            //     $totalWeights += $interligne;
+            // }
+
+            // $moyenneAnnuelle = ($totalWeights > 0) ? round($sumWeighted / $totalWeights, 2) : null;
+
+            // calcule moyenne annuelle
+             // Récupération des moyennes des périodes 1 et 2
+              $moyenneP1 = isset($studentPeriods[1]['moyenne']) && $studentPeriods[1]['moyenne'] !== 21 
+                  ? $studentPeriods[1]['moyenne']
+                  : null;
+              $moyenneP2 = isset($studentPeriods[2]['moyenne']) && $studentPeriods[2]['moyenne'] !== 21
+                  ? $studentPeriods[2]['moyenne']
+                  : null;
+              // Si on est en trimestres, on récupère aussi la période 3
+              if ($typean == 2) {
+                  $moyenneP3 = isset($studentPeriods[3]['moyenne']) && $studentPeriods[3]['moyenne'] !== 21 ? $studentPeriods[3]['moyenne'] : null;
+              } else {
+                  $moyenneP3 = 21; // Pas utilisé pour typean == 1
+              }
+
+              // Calcul de la moyenne annuelle pondérée (pour les semestres uniquement)
+              if ($typean == 1) {
+                  // ——— Mode semestres (2 périodes) ———
+                  if ($moyenneP1 !== null  && $moyenneP1 !== 21 && $moyenneP2 !== null && $moyenneP2 !== 21) {
+                      // Pondération 1/3 pour P1, 2/3 pour P2
+                      $moyenneAnnuelle = round((2 * $moyenneP2 + $moyenneP1) / 3, 2);
+                  } elseif ($moyenneP1 !== null && $moyenneP1 !== 21) {
+                      // Seule P1 existe
+                      $moyenneAnnuelle = $moyenneP1;
+                  } elseif ($moyenneP2 !== null  && $moyenneP2 !== 21) {
+                      // Seule P2 existe
+                      $moyenneAnnuelle = $moyenneP2;
+                  } else {
+                      // Aucune période valide
+                      $moyenneAnnuelle = 21;
+                  }
+              } else {
+                  // ——— Mode trimestres (3 périodes) ———
+                  // On ne retient QUE les moyennes non-null
+                  $listeValides = [];
+                  if ($moyenneP1 !== null && $moyenneP1 !== 21) {
+                      $listeValides[] = $moyenneP1;
+                  }
+                  if ($moyenneP2 !== null && $moyenneP2 !== 21) {
+                      $listeValides[] = $moyenneP2;
+                  }
+                  if ($moyenneP3 !== null && $moyenneP3 !== 21) {
+                      $listeValides[] = $moyenneP3;
+                  }
+
+                  $countValides = count($listeValides);
+                  if ($countValides > 0) {
+                      // Si au moins une période valide, on fait la moyenne arithmétique des valeurs présentes
+                      $somme = array_sum($listeValides);
+                      $moyenneAnnuelle = round($somme / $countValides, 2);
+                  } else {
+                      // Aucune note sur les 3 périodes
+                      $moyenneAnnuelle = 21;
+                  }
+              }
+
+
+
+
             $appreciationAnnuelle = ($moyenneAnnuelle !== null) ? $this->determineAppreciation($moyenneAnnuelle, $params2) : null;
 
             // Stocker pour le calcul des classements
@@ -962,6 +1062,7 @@ class BulletinController extends Controller
         foreach ($resultatsA as &$resA) {
             $matricule = $resA['eleve']->MATRICULE;
             $resA['rangAnnuel'] = $annualRankings[$matricule] ?? null;
+            // $resA['moyenneAnnuelle'] = $resA['moyenneAnnuelle'] ;
             foreach ($periodsA as $periodeA) {
                 $resA['periods'][$periodeA]['rang'] = $periodRankings[$periodeA][$matricule] ?? null;
             }
@@ -1020,25 +1121,26 @@ class BulletinController extends Controller
         unset($res);
 
         // Calcul des indicateurs de la classe à partir des élèves de la classe sélectionnée
-        $classesUnique = $elevesA->pluck('CODECLAS')->unique();
+        $elevesAA2 = Eleve::where('CODECLAS', $codeClasse)->get();
+        $classesUnique = $elevesAA2->pluck('CODECLAS')->unique();
 
         foreach ($classesUnique as $codeClasse) {
             // Filtrer les élèves appartenant à la classe courante
-            $elevesClasse = $elevesA->where('CODECLAS', $codeClasse);
+            $elevesClasse = $elevesAA2->where('CODECLAS', $codeClasse);
 
             // Récupérer les moyennes par période en filtrant les valeurs null, -1 ou <= 0
             $moyennesP1 = $elevesClasse->pluck('MS1')->filter(function ($value) {
-                return $value !== null && $value !== -1 && $value > 0;
+                return $value !== null && $value !== -1 && $value > 0 && $value != 21;
             })->toArray();
 
             $moyennesP2 = $elevesClasse->pluck('MS2')->filter(function ($value) {
-                return $value !== null && $value !== -1 && $value > 0;
+                return $value !== null && $value !== -1 && $value > 0 && $value != 21;
             })->toArray();
 
             // Pour la période 3, on calcule seulement si TYPEAN n'est pas 1 (donc pour trimestres)
             if ($typean != 1) {
                 $moyennesP3 = $elevesClasse->pluck('MS3')->filter(function ($value) {
-                    return $value !== null && $value !== -1 && $value > 0;
+                    return $value !== null && $value !== -1 && $value > 0 && $value != 21;
                 })->toArray();
             } else {
                 $moyennesP3 = []; // pour typean == 1, on force un tableau vide
@@ -1127,7 +1229,7 @@ class BulletinController extends Controller
 
         foreach ($eleves as $eleve) {
             // On ajoute la moyenne annuelle (MAN) uniquement si elle n'est pas null, différente de -1 et strictement positive (> 0)
-            if ($eleve->MAN !== null && $eleve->MAN !== -1 && $eleve->MAN > 0) {
+            if ($eleve->MAN !== null && $eleve->MAN !== -1 && $eleve->MAN > 0 && $eleve->MAN != 21) {
                 $moyennesAnnuellesEleves[] = $eleve->MAN;
             }
         }
@@ -1531,10 +1633,41 @@ class BulletinController extends Controller
                 }
 
                 // Calculer les moyennes et les mentions
-                $moyenneInterro = ($note->MI ?? 0) < 21 ? $note->MI : 0;
+                $moyenneInterro = ($note->MI ?? 21) < 21 ? $note->MI : 21;
                 $moyenneDevoir = $nbDevoir > 0 ? $totalDevoir / $nbDevoir : 0;
-                $moyenneSur20 = $nbDevoir > 0 ? ($moyenneInterro + $totalDevoir) / ($nbDevoir + 1) : $moyenneInterro;
-                $moyenneCoeff = $totalCoeff > 0 ? $moyenneSur20 * $totalCoeff : 0;
+                // $moyenneSur20 = $nbDevoir > 0 ? ($moyenneInterro + $totalDevoir) / ($nbDevoir + 1) : $moyenneInterro;
+                // $moyenneCoeff = $totalCoeff > 0 ? $moyenneSur20 * $totalCoeff : 0;
+
+
+
+
+/*
+ * Calcul de la moyenne générale sur 20 :
+ * - Si aucun devoir n’existe ($nbDevoir == 0), on prend juste la moyenneInterro 
+ *   (mais si moyenneInterro == 21, on renverra 0 pour ne pas compter l’absence).
+ * - Si des devoirs existent ($nbDevoir > 0), on ajoute la moyenneInterro *seulement* 
+ *   si elle est < 21. Sinon on ne l’inclut pas dans le calcul, 
+ *   autrement dit on fait totalDevoir / nbDevoir.
+ */
+if ($nbDevoir > 0) {
+    if ($moyenneInterro < 21) {
+        // On inclut l’interro : on ajoute 1 à nbDevoir et moyenneInterro au numérateur
+        $moyenneSur20 = ($moyenneInterro + $totalDevoir) / ($nbDevoir + 1);
+    } else {
+        // Interro absent (==21), on ne l’inclut pas dans le calcul
+        $moyenneSur20 = $totalDevoir / $nbDevoir;
+    }
+} else {
+    // Pas de devoirs :
+    //   - Si l’interro existe (<21), on prend sa valeur.
+    //   - Si l’interro vaut 21 (absence), on renvoie 0.
+    $moyenneSur20 = $moyenneInterro ;
+}
+
+// Calcul de la moyenne pondérée (coeff)
+$moyenneCoeff = $totalCoeff > 0 ? $moyenneSur20 * $totalCoeff : 0;
+
+
 
                 // Stocker les moyennes pour chaque élève et matière
                 $moyennesParClasseEtMatiere[$eleve->CODECLAS][$codeMatiere][] = [
