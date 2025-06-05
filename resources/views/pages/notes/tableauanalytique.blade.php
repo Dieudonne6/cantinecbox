@@ -493,6 +493,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+<<<<<<< HEAD
                                         @php
                                             $ordreDesGroupes = [
                                                 '6è',
@@ -541,6 +542,38 @@
                                                     @endforeach
                                                 </tr>
                                             @endif
+=======
+                                        @foreach ($resultats as $groupeKey => $stats)
+                                            @php
+                                                // Les libellés à surligner
+                                                $highlight = in_array($groupeKey, [
+                                                    '3ème',
+                                                    'CYCLE 1',
+                                                    '2nd',
+                                                    'SECONDES',
+                                                    '1ère',
+                                                    'PREMIERE',
+                                                    'Tle',
+                                                    'TERMINALE',
+                                                    'CYCLE 2',
+                                                    'ETABLISSEMENT',
+                                                ]);
+                                            @endphp
+
+                                            <tr class="{{ $highlight ? 'highlight-row' : '' }}">
+                                                <td class="gras">{{ $groupeKey }}</td>
+                                                <td>{{ number_format($stats['max_moyenne_garcons'], 2) }}</td>
+                                                <td>{{ number_format($stats['max_moyenne_filles'], 2) }}</td>
+                                                <td>{{ number_format($stats['min_moyenne_garcons'], 2) }}</td>
+                                                <td class="bordleft">{{ number_format($stats['min_moyenne_filles'], 2) }}
+                                                </td>
+                                                @foreach ($stats['intervales'] as $intervalName => $data)
+                                                    <td>{{ $data['garcons'] }}</td>
+                                                    <td>{{ $data['filles'] }}</td>
+                                                    <td>{{ $data['total'] }}</td>
+                                                @endforeach
+                                            </tr>
+>>>>>>> 3da20270cd0a406bbd77af658bda80d47a0c6a8f
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -742,8 +775,11 @@
                                                     'taux_reussite' => 0,
                                                     'meilleur_eleve' => null,
                                                     'plus_faible_eleve' => null,
+<<<<<<< HEAD
                                                     'somme_taux' => 0, 
                                                     'nbre_promos' => 0,
+=======
+>>>>>>> 3da20270cd0a406bbd77af658bda80d47a0c6a8f
                                                 ],
                                                 'CYCLE II' => [
                                                     'effectif_total' => 0,
@@ -752,8 +788,11 @@
                                                     'taux_reussite' => 0,
                                                     'meilleur_eleve' => null,
                                                     'plus_faible_eleve' => null,
+<<<<<<< HEAD
                                                     'somme_taux' => 0, 
                                                     'nbre_promos' => 0,
+=======
+>>>>>>> 3da20270cd0a406bbd77af658bda80d47a0c6a8f
                                                 ],
                                             ];
 
@@ -800,7 +839,10 @@
                                                 $groupedClasses[$codepromo]['bilan']['effectif_total'] +=
                                                     $stats['effectif_total'];
                                                 $groupedClasses[$codepromo]['bilan']['abandons'] += $stats['abandons'];
+<<<<<<< HEAD
                                                 $groupedClasses[$codepromo]['bilan']['taux_reussite'] += $stats['taux_reussite'];
+=======
+>>>>>>> 3da20270cd0a406bbd77af658bda80d47a0c6a8f
 
                                                 // Intervalles
                                                 foreach ($stats['intervales'] as $intervalleCle => $nbEleves) {
@@ -936,7 +978,11 @@
                                                 }
                                             }
 
+<<<<<<< HEAD
                                             /* // 7. Calcul des taux de réussite pour chaque cycle
+=======
+                                            // 7. Calcul des taux de réussite pour chaque cycle
+>>>>>>> 3da20270cd0a406bbd77af658bda80d47a0c6a8f
                                             foreach ($bilansCycles as $cycleCle => $bilanCycle) {
                                                 $totalElevesCycle = $bilanCycle['effectif_total'];
                                                 $totalReussiteCycle = 0;
@@ -965,6 +1011,7 @@
                                             $bilanEtablissement['taux_reussite'] =
                                                 $totalElevesEtab > 0
                                                     ? ($totalReussiteEtab / $totalElevesEtab) * 100
+<<<<<<< HEAD
                                                     : 0; */
                                                     // 7. Calcul des taux de réussite pour chaque cycle                                        
                                           
@@ -995,11 +1042,15 @@
                                             $totalElevesEtab = $bilansCycles['CYCLE I']['taux_reussite'] + $bilansCycles['CYCLE II']['taux_reussite'];
                                             $bilanEtablissement['taux_reussite'] =  $totalElevesEtab/2;
                                                                                        
+=======
+                                                    : 0;
+>>>>>>> 3da20270cd0a406bbd77af658bda80d47a0c6a8f
                                         @endphp
 
                                         {{-- 9. Affichage des tableaux par CODEPROMO --}}
                                         @foreach ($groupedClasses as $codepromo => $dataPromo)
                                             @php
+<<<<<<< HEAD
                                             $sommeTauxClasse = 0;
                                                 $nbClasses = count($dataPromo['classes']);
 
@@ -1021,11 +1072,31 @@
                                             @endphp
 
                                            
+=======
+                                                // (Re)calcul du taux de réussite pour ce CODEPROMO
+                                                $totalElevesPromo = $dataPromo['bilan']['effectif_total'];
+                                                $totalReussitePromo = 0;
+                                                foreach (
+                                                    $dataPromo['bilan']['intervales']
+                                                    as $intervalleCle => $nbEleves
+                                                ) {
+                                                    if ($intervalleCle >= 4) {
+                                                        $totalReussitePromo += $nbEleves;
+                                                    }
+                                                }
+                                                $dataPromo['bilan']['taux_reussite'] =
+                                                    $totalElevesPromo > 0
+                                                        ? ($totalReussitePromo / $totalElevesPromo) * 100
+                                                        : 0;
+                                            @endphp
+
+>>>>>>> 3da20270cd0a406bbd77af658bda80d47a0c6a8f
                                             {{-- 9.1. Boucle sur chacune des classes de ce CODEPROMO --}}
                                             @foreach ($dataPromo['classes'] as $classeNom => $statsClasse)
                                                 <tr>
                                                     <td class="font-weight-bold">{{ $classeNom }}</td>
                                                     <td class="text-center">{{ $statsClasse['effectif_total'] }}</td>
+<<<<<<< HEAD
                                                 
                                                     @php
                                                         // Calcul du taux de réussite pour cette classe
@@ -1039,6 +1110,23 @@
 
                                                         // Calcul du taux
                                                         $tauxClasse = $denominateur > 0 ? ($totalReussiteClasse / $denominateur) * 100 : 0;
+=======
+
+                                                    @php
+                                                        // Calcul du taux de réussite pour cette classe
+                                                        $totalReussiteClasse = 0;
+                                                        foreach ($statsClasse['intervales'] as $intervalleCle => $nb) {
+                                                            if ($intervalleCle >= 4) {
+                                                                $totalReussiteClasse += $nb;
+                                                            }
+                                                        }
+                                                        $tauxClasse =
+                                                            $statsClasse['effectif_total'] > 0
+                                                                ? ($totalReussiteClasse /
+                                                                        $statsClasse['effectif_total']) *
+                                                                    100
+                                                                : 0;
+>>>>>>> 3da20270cd0a406bbd77af658bda80d47a0c6a8f
                                                     @endphp
 
                                                     {{-- 9.1.1. Affichage des effectifs par intervalle --}}
