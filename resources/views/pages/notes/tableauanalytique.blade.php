@@ -548,13 +548,13 @@
                                             @if (isset($resultats[$groupeKey]))
                                                 <tr @if (in_array($groupeKey, ['CYCLE I', 'SECONDES', 'PREMIÈRE', 'TERMINALE', 'CYCLE II', 'ETABLISSEMENT'])) class="ligne-bilan" @endif>
                                                     <td class="font-weight-bold">{{ $groupeKey }}</td>
-                                                    <td>{{ number_format($resultats[$groupeKey]['max_moyenne_garcons'], 2) }}
+                                                    <td>{{ is_null($resultats[$groupeKey]['max_moyenne_garcons']) || $resultats[$groupeKey]['max_moyenne_garcons'] == 0 ? '***' : number_format($resultats[$groupeKey]['max_moyenne_garcons'], 2) }}
                                                     </td>
-                                                    <td>{{ number_format($resultats[$groupeKey]['max_moyenne_filles'], 2) }}
+                                                    <td>{{ is_null($resultats[$groupeKey]['max_moyenne_filles']) || $resultats[$groupeKey]['max_moyenne_filles'] == 0 ? '***' : number_format($resultats[$groupeKey]['max_moyenne_filles'], 2) }}
                                                     </td>
-                                                    <td>{{ number_format($resultats[$groupeKey]['min_moyenne_garcons'], 2) }}
+                                                    <td>{{ is_null($resultats[$groupeKey]['min_moyenne_garcons']) || $resultats[$groupeKey]['min_moyenne_garcons'] == 0 ? '***' : number_format($resultats[$groupeKey]['min_moyenne_garcons'], 2) }}
                                                     </td>
-                                                    <td>{{ number_format($resultats[$groupeKey]['min_moyenne_filles'], 2) }}
+                                                    <td>{{ is_null($resultats[$groupeKey]['min_moyenne_filles']) || $resultats[$groupeKey]['min_moyenne_filles'] == 0 ? '***' : number_format($resultats[$groupeKey]['min_moyenne_filles'], 2) }}
                                                     </td>
                                                     @foreach ($resultats[$groupeKey]['intervales'] as $intervalle => $data)
                                                         <td>{{ $data['garcons'] }}</td>
