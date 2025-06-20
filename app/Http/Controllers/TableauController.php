@@ -68,6 +68,7 @@ class TableauController extends Controller
             'intervales' => [],
         ];
 
+        // Initialisation des valeurs pour les statistiques analytiques
         if (!$isSynoptique) {
             $aggregated['max_moyenne_garcons'] = null;
             $aggregated['min_moyenne_garcons'] = null;
@@ -77,7 +78,6 @@ class TableauController extends Controller
             $aggregated['nbClasses'] = 0;
         }
 
-        $first = true;
         foreach ($groupKeys as $key) {
             if (!isset($resultats[$key])) {
                 continue;
@@ -88,6 +88,7 @@ class TableauController extends Controller
                 $aggregated['nbClasses'] += $stats['nbClasses'];
             }
 
+            // Agrégation des intervalles (cette partie est déjà correcte)
             foreach ($stats['intervales'] as $interval => $data) {
                 if (!isset($aggregated['intervales'][$interval])) {
                     $aggregated['intervales'][$interval] = [
@@ -101,18 +102,30 @@ class TableauController extends Controller
                 $aggregated['intervales'][$interval]['total']   += $data['total'];
             }
 
+            // Logique corrigée pour l'agrégation des min/max
             if (!$isSynoptique) {
-                if ($first) {
-                    $aggregated['max_moyenne_garcons'] = $stats['max_moyenne_garcons'];
-                    $aggregated['min_moyenne_garcons'] = $stats['min_moyenne_garcons'];
-                    $aggregated['max_moyenne_filles']  = $stats['max_moyenne_filles'];
-                    $aggregated['min_moyenne_filles']  = $stats['min_moyenne_filles'];
-                    $first = false;
-                } else {
-                    $aggregated['max_moyenne_garcons'] = max($aggregated['max_moyenne_garcons'], $stats['max_moyenne_garcons']);
-                    $aggregated['min_moyenne_garcons'] = min($aggregated['min_moyenne_garcons'], $stats['min_moyenne_garcons']);
-                    $aggregated['max_moyenne_filles']  = max($aggregated['max_moyenne_filles'], $stats['max_moyenne_filles']);
-                    $aggregated['min_moyenne_filles']  = min($aggregated['min_moyenne_filles'], $stats['min_moyenne_filles']);
+                // Pour les garçons
+                if (!is_null($stats['max_moyenne_garcons'])) {
+                    if (is_null($aggregated['max_moyenne_garcons']) || $stats['max_moyenne_garcons'] > $aggregated['max_moyenne_garcons']) {
+                        $aggregated['max_moyenne_garcons'] = $stats['max_moyenne_garcons'];
+                    }
+                }
+                if (!is_null($stats['min_moyenne_garcons'])) {
+                    if (is_null($aggregated['min_moyenne_garcons']) || $stats['min_moyenne_garcons'] < $aggregated['min_moyenne_garcons']) {
+                        $aggregated['min_moyenne_garcons'] = $stats['min_moyenne_garcons'];
+                    }
+                }
+
+                // Pour les filles
+                if (!is_null($stats['max_moyenne_filles'])) {
+                    if (is_null($aggregated['max_moyenne_filles']) || $stats['max_moyenne_filles'] > $aggregated['max_moyenne_filles']) {
+                        $aggregated['max_moyenne_filles'] = $stats['max_moyenne_filles'];
+                    }
+                }
+                if (!is_null($stats['min_moyenne_filles'])) {
+                    if (is_null($aggregated['min_moyenne_filles']) || $stats['min_moyenne_filles'] < $aggregated['min_moyenne_filles']) {
+                        $aggregated['min_moyenne_filles'] = $stats['min_moyenne_filles'];
+                    }
                 }
             }
         }
@@ -166,15 +179,21 @@ class TableauController extends Controller
             return view('pages.notes.tableauanalytique', ['params2' => $params2]);
         }
 
-        $data = $this->validateRequest($request, 'tableau_analytique,tableau_synoptique,effectifs');
-        $cacheKey = "stats_{$data['periode']}_{$data['typeEtat']}";
+        $data = $this->validateRequest($request, 'tableau_analytique,tableau_synoptique,effectifs,statistique');
+        $hashIntervalles = md5(json_encode($data['intervales']));
+        $cacheKey = "stats_{$data['periode']}_{$data['typeEtat']}_{$hashIntervalles}";
+
 
         $resultats = Cache::remember($cacheKey, 300, function () use ($data) {
             if ($data['typeEtat'] === 'tableau_synoptique') {
                 return $this->statistiquesService->calculerSynoptique($data);
+            }elseif($data['typeEtat'] === 'statistique'){
+                return $this->statistiquesService->calculerStatistiquesDetaillees($data);
+            }else{
+                return $this->statistiquesService->calculerStatistiques($data);
             }
-            return $this->statistiquesService->calculerStatistiques($data);
         });
+        
 
         $finalResultats = $this->processResults($resultats, $data['typeEtat'] === 'tableau_synoptique');
 

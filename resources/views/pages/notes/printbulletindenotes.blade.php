@@ -352,13 +352,13 @@ usort($resultat['matieres'], function ($a, $b) {
                                             </td>
                                             @if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'integral')
 
-                                                <td>+ {{ isset($moyenne_coeff) ? number_format($moyenne_coeff, 5) : '**.**' }}</td>
+                                                <td>+ {{ isset($moyenne_coeff) ? number_format($moyenne_coeff, 2) : '**.**' }}</td>
                                             @else
                                                 {{-- @php
                                                     
                                                     var_dump($moyenne_coeff)
                                                 @endphp --}}
-                                                <td>{{ isset($moyenne_coeff) ? number_format($moyenne_coeff, 5) : '**.**' }}</td>
+                                                <td>{{ isset($moyenne_coeff) ? number_format($moyenne_coeff, 2) : '**.**' }}</td>
                                             @endif
                                         @endif
                                         @if (isset($option['note_test']) && $option['note_test'])

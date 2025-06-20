@@ -593,13 +593,13 @@
                         <div class="col-12 col-md-2 column-section">
                             <!-- Nouvelle quatrième colonne -->
                             <div class="action-buttons">
-                                <button class="btn btn-primary" type="submit" id="imprimerClasses">
-                                    <i class="fas fa-print"></i> Imprimer bulletins
-                                </button>
-                                <button class="btn btn-secondary" type="button" data-bs-toggle="modal"
-                                    data-bs-target="#optionsEdition">
+                                <button class="btn btn-secondary" type="button" id="btnOptions" data-bs-toggle="modal" data-bs-target="#optionsEdition">
                                     <i class="fas fa-cog"></i> Options d'édition
                                 </button>
+                                <button class="btn btn-primary" type="submit" id="imprimerClasses" style="display: none;">
+                                    <i class="fas fa-print"></i> Imprimer bulletins
+                                </button>
+                               
                                 {{-- <button class="btn btn-info" type="button" data-bs-toggle="modal"
                                     data-bs-target="#configdecisionconseil">
                                     <i class="fas fa-tasks"></i> Configurer décisions du conseil
@@ -674,27 +674,27 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="entete" id="entete">
+                                    <input class="form-check-input" type="checkbox" name="entete" id="entete" checked>
                                     <label class="form-check-label edition-label" for="entete">Imprimer l'entête</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="fond" id="fond">
+                                    <input class="form-check-input" type="checkbox" name="fond" id="fond" checked>
                                     <label class="form-check-label edition-label" for="fond">Imprimer le fond</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="note_conduite"
-                                        id="note_conduite">
-                                    <label class="form-check-label edition-label" for="note_conduite">Intéger la note de
+                                        id="note_conduite" checked>
+                                    <label class="form-check-label edition-label" for="note_conduite">Intégrer la note de
                                         conduite dans le calcul</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="matricule" id="matricule">
+                                    <input class="form-check-input" type="checkbox" name="matricule" id="matricule" checked>
                                     <label class="form-check-label edition-label" for="matricule">Imprimer le matricule
                                         sur le bulletin</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="annuler_matiere"
-                                        id="annuler_matiere">
+                                        id="annuler_matiere" checked>
                                     <label class="form-check-label edition-label" for="annuler_matiere">Annuler la matière
                                         si aucun devoir</label>
                                 </div>
@@ -702,31 +702,31 @@
                             <div class="col-md-4">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="rang_matiere"
-                                        id="rang_matiere">
+                                        id="rang_matiere" checked>
                                     <label class="form-check-label edition-label" for="rang_matiere">Imprimer le rang par
                                         matière</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="rang_general"
-                                        id="rang_general">
+                                        id="rang_general" checked>
                                     <label class="form-check-label edition-label" for="rang_general">Imprimer le rang
                                         général</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="masquer_devoir3"
-                                        id="masquer_devoir3">
+                                        id="masquer_devoir3" checked>
                                     <label class="form-check-label edition-label" for="masquer_devoir3">Masquer la colonne
                                         Devoir 3</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="appreciation_prof"
-                                        id="appreciation_prof">
+                                        id="appreciation_prof" checked>
                                     <label class="form-check-label edition-label" for="appreciation_prof">Imprimer
                                         l'appréciation du professeur</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="photo_par_logo"
-                                        id="photo_par_logo">
+                                        id="photo_par_logo" checked>
                                     <label class="form-check-label edition-label" for="photo_par_logo">Remplacer la photo
                                         par le logo</label>
                                 </div>
@@ -739,24 +739,24 @@
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="mention_conseil"
-                                        id="mention_conseil">
+                                        id="mention_conseil" checked>
                                     <label class="form-check-label edition-label" for="mention_conseil">Cocher les
                                         mentions du conseil</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="decision_conseil"
-                                        id="decision_conseil">
+                                        id="decision_conseil" checked>
                                     <label class="form-check-label edition-label" for="decision_conseil">Imprimer la
                                         décision du conseil</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="recalculer" id="recalculer">
+                                    <input class="form-check-input" type="checkbox" name="recalculer" id="recalculer" checked>
                                     <label class="form-check-label edition-label" for="recalculer">Recalculer avant
                                         impression</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="appreciation_directeur"
-                                        id="appreciation_directeur">
+                                        id="appreciation_directeur" checked>
                                     <label class="form-check-label edition-label" for="appreciation_directeur">Imprimer
                                         l'appréciation du directeur</label>
                                 </div>
@@ -794,8 +794,14 @@
                     return response.text(); // On attend du texte en retour, pas du JSON
                 })
                 .then(data => {
+
                     // Afficher un message de succès
                     alert('Les options d\'édition ont été enregistrées avec succès');
+
+                    document.getElementById('btnOptions').style.display = 'none';
+
+                    document.getElementById('imprimerClasses').style.display = 'inline-block';
+
                     // Fermer le modal
                     $('#optionsEdition').modal('hide');
                 })
