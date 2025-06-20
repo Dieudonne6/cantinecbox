@@ -1447,8 +1447,8 @@ public function recouvrementgeneral(Request $request){
               'totalPercu' => $sommeScolarite + $sommeArriere + $sommeFrais1 + $sommeFrais2 + $sommeFrais3 + $sommeFrais4
           ];
       }
-
-
+ 
+ 
       // dd($sommeParClasse);
 
 
@@ -1856,9 +1856,17 @@ public function eleveparclasseessai() {
       $newCode = 1;
     }
     $reductions = Reduction::all();
-    return view ('pages.inscriptions.creerprofil')->with('reductions', $reductions)->with('newCode', $newCode);
+
+    $donneLibelle = Params2::first();
+    
+     return view('pages.inscriptions.creerprofil')
+        ->with('reductions', $reductions)
+        ->with('newCode', $newCode)
+        ->with('donneLibelle', $donneLibelle);
   }
   
+  
+
   private function convertToDecimal($percentage)
   {
     // Retirer le signe % et convertir en valeur décimale

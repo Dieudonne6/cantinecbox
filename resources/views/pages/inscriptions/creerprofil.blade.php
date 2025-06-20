@@ -108,30 +108,32 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Réduction accordée sur frais 1</label>
+                        
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">{{ $donneLibelle->LIBELF1 }} </label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="ReductionFrais1" name="Reduction_frais1" placeholder="0">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Réduction accordée sur frais 2</label>
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">{{ $donneLibelle->LIBELF2 }}</label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="ReductionFrais2" name="Reduction_frais2" placeholder="0">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Réduction accordée sur frais 3</label>
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">{{ $donneLibelle->LIBELF3 }}</label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="ReductionFrais3" name="Reduction_frais3" placeholder="0">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Réduction accordée sur frais 4</label>
+                        <label for="exampleInputUsername2" class="col-sm-8 col-form-label">{{ $donneLibelle->LIBELF4 }}</label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="ReductionFrais4" name="Reduction_frais4" placeholder="0">
                         </div>
                     </div>
-{{--                     <div class="form-group row">
+
+                    {{--  <div class="form-group row">
                         <label for="exampleInputUsername2" class="col-sm-12 col-form-label mb-0">Mode d'application de la réduction sur les écheanciers</label>
                         <div class="col-sm-12 mb-2">
                             <select class="js-example-basic-multiple w-100" name="mode">
@@ -140,6 +142,7 @@
                             </select>
                         </div>
                     </div> --}}
+
                     <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>                </form>
             </div>
@@ -262,14 +265,15 @@
                             <!-- Button trigger modal -->
                             {{-- <a  class="btn btn-primary p-2 btn-sm" href="{{url('/modifiertypesclasses')}}">Modif</a> --}}
                             <button type="button" class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#modifModal"
-                            data-code="{{ $reduction->CodeReduction }}"
-                            data-libelle="{{ $reduction->LibelleReduction }}"
-                            data-scolarite="{{ $reduction->Reduction_scolarite }}"
-                            data-arriere="{{ $reduction->Reduction_arriere }}"
-                            data-frais1="{{ $reduction->Reduction_frais1 }}"
-                            data-frais2="{{ $reduction->Reduction_frais2 }}"
-                            data-frais3="{{ $reduction->Reduction_frais3 }}"
-                            data-frais4="{{ $reduction->Reduction_frais4 }}">
+                             data-code="{{ $reduction->CodeReduction }}"
+                                    data-libelle="{{ $reduction->LibelleReduction }}"
+                                    data-scolarite="{{ $reduction->Reduction_scolarite }}"
+                                  data-scolarite="{{ $reduction->typereduction == 'f' ? $reduction->Reduction_fixe_sco : $reduction->Reduction_scolarite }}"
+                                    data-arriere="{{  $reduction->typereduction == 'f' ? $reduction->Reduction_fixe_arriere : $reduction->Reduction_arriere }}"
+                                    data-frais1="{{ $reduction->typereduction == 'f' ? $reduction->Reduction_fixe_frais1 : $reduction->Reduction_frais1 }}"
+                                    data-frais2="{{ $reduction->typereduction == 'f' ? $reduction->Reduction_fixe_frais2 : $reduction->Reduction_frais2 }}"
+                                    data-frais3="{{ $reduction->typereduction == 'f' ? $reduction->Reduction_fixe_frais3 : $reduction->Reduction_frais3 }}"
+                                    data-frais4="{{ $reduction->typereduction == 'f' ? $reduction->Reduction_fixe_frais4 : $reduction->Reduction_frais4 }}">
                                 Modifier
                               </button>
                               <!--Modification Modal -->
@@ -326,25 +330,25 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="modalReductionFrais1" class="col-sm-8 col-form-label text-start">Réduction accordée sur frais 1</label>
+                                                            <label for="modalReductionFrais1" class="col-sm-8 col-form-label text-start">{{ $donneLibelle->LIBELF1 }}</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" id="modalReductionFrais1" name="Reduction_frais1">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="modalReductionFrais2" class="col-sm-8 col-form-label text-start">Réduction accordée sur frais 2</label>
+                                                            <label for="modalReductionFrais2" class="col-sm-8 col-form-label text-start">{{ $donneLibelle->LIBELF2 }}</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" id="modalReductionFrais2" name="Reduction_frais2">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="modalReductionFrais3" class="col-sm-8 col-form-label text-start">Réduction accordée sur frais 3</label>
+                                                            <label for="modalReductionFrais3" class="col-sm-8 col-form-label text-start">{{ $donneLibelle->LIBELF3 }}</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" id="modalReductionFrais3" name="Reduction_frais3">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="modalReductionFrais4" class="col-sm-8 col-form-label text-start">Réduction accordée sur frais 4</label>
+                                                            <label for="modalReductionFrais4" class="col-sm-8 col-form-label text-start">{{ $donneLibelle->LIBELF4 }}</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" id="modalReductionFrais4" name="Reduction_frais4">
                                                             </div>
@@ -455,16 +459,17 @@
                               <!-- Button trigger modal -->
                                <!-- Bouton Détails avec data-attributes -->
                               <button class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#detailsModal"
-                              data-code="{{ $reduction->CodeReduction }}"
-                              data-libelle="{{ $reduction->LibelleReduction }}"
-                              data-scolarite="{{ $reduction->Reduction_scolarite }}"
-                              data-arriere="{{ $reduction->Reduction_arriere }}"
-                              data-frais1="{{ $reduction->Reduction_frais1 }}"
-                              data-frais2="{{ $reduction->Reduction_frais2 }}"
-                              data-frais3="{{ $reduction->Reduction_frais3 }}"
-                              data-frais4="{{ $reduction->Reduction_frais4 }}">
-                              Détails
+                                    data-code="{{ $reduction->CodeReduction }}"
+                                    data-libelle="{{ $reduction->LibelleReduction }}"
+                                    data-scolarite="{{ $reduction->typereduction === 'F' ? $reduction->Reduction_fixe_sco : $reduction->Reduction_scolarite }}"
+                                    data-arriere="{{  $reduction->typereduction === 'F' ? $reduction->Reduction_fixe_arriere : $reduction->Reduction_arriere }}"
+                                    data-frais1="{{ $reduction->typereduction === 'F' ? $reduction->Reduction_fixe_frais1 : $reduction->Reduction_frais1 }}"
+                                    data-frais2="{{ $reduction->typereduction === 'F' ? $reduction->Reduction_fixe_frais2 : $reduction->Reduction_frais2 }}"
+                                    data-frais3="{{ $reduction->typereduction === 'F' ? $reduction->Reduction_fixe_frais3 : $reduction->Reduction_frais3 }}"
+                                    data-frais4="{{ $reduction->typereduction === 'F' ? $reduction->Reduction_fixe_frais4 : $reduction->Reduction_frais4 }}">                                
+                                    Détail
                               </button>
+
                               {{-- <button class="btn btn-primary p-2 btn-sm dropdown" data-bs-toggle="modal" data-bs-target="#exampleModal3">Détails</button> --}}
 
                              <!-- Modal Détails -->
@@ -493,19 +498,19 @@
                                       <input type="text" class="form-control" id="modalReductionArriere" readonly>
                                   </div>
                                   <div class="form-group">
-                                      <label>Réduction accordée sur frais 1</label>
+                                      <label>{{ $donneLibelle->LIBELF1 }}</label>
                                       <input type="text" class="form-control" id="modalReductionFrais1" readonly>
                                   </div>
                                   <div class="form-group">
-                                      <label>Réduction accordée sur frais 2</label>
+                                      <label>{{ $donneLibelle->LIBELF2 }}</label>
                                       <input type="text" class="form-control" id="modalReductionFrais2" readonly>
                                   </div>
                                   <div class="form-group">
-                                      <label>Réduction accordée sur frais 3</label>
+                                      <label>{{ $donneLibelle->LIBELF3 }}</label>
                                       <input type="text" class="form-control" id="modalReductionFrais3" readonly>
                                   </div>
                                   <div class="form-group">
-                                      <label>Réduction accordée sur frais 4</label>
+                                      <label>{{ $donneLibelle->LIBELF4 }}</label>
                                       <input type="text" class="form-control" id="modalReductionFrais4" readonly>
                                   </div>
                               </div>
@@ -544,12 +549,13 @@
             var codeReduction = button.getAttribute('data-code');
             var libelleReduction = button.getAttribute('data-libelle');
             var reductionScolarite = button.getAttribute('data-scolarite');
+              
             var reductionArriere = button.getAttribute('data-arriere');
             var reductionFrais1 = button.getAttribute('data-frais1');
             var reductionFrais2 = button.getAttribute('data-frais2');
             var reductionFrais3 = button.getAttribute('data-frais3');
             var reductionFrais4 = button.getAttribute('data-frais4');
-    
+  
             // Mettre à jour les champs du modal avec les informations correspondantes
             detailsModal.querySelector('#modalCodeReduction').value = codeReduction;
             detailsModal.querySelector('#modalLibelleReduction').value = libelleReduction;
