@@ -263,15 +263,16 @@
                             {{-- <a  class="btn btn-primary p-2 btn-sm" href="{{url('/modifiertypesclasses')}}">Modif</a> --}}
                             <button type="button" class="btn btn-primary p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#modifModal"
                             data-code="{{ $reduction->CodeReduction }}"
+                            data-type="{{ $reduction->typereduction }}"
                             data-libelle="{{ $reduction->LibelleReduction }}"
-                            data-scolarite="{{ $reduction->Reduction_scolarite }}"
-                            data-arriere="{{ $reduction->Reduction_arriere }}"
-                            data-frais1="{{ $reduction->Reduction_frais1 }}"
-                            data-frais2="{{ $reduction->Reduction_frais2 }}"
-                            data-frais3="{{ $reduction->Reduction_frais3 }}"
-                            data-frais4="{{ $reduction->Reduction_frais4 }}">
+                            data-scolarite="{{ $reduction->typereduction === 'F' ? $reduction->Reduction_fixe_sco : $reduction->Reduction_scolarite }}"
+                            data-arriere="{{ $reduction->typereduction === 'F' ? $reduction->Reduction_fixe_arriere : $reduction->Reduction_arriere }}"
+                            data-frais1="{{ $reduction->typereduction === 'F' ? $reduction->Reduction_fixe_frais1 : $reduction->Reduction_frais1 }}"
+                            data-frais2="{{ $reduction->typereduction === 'F' ? $reduction->Reduction_fixe_frais2 : $reduction->Reduction_frais2 }}"
+                            data-frais3="{{ $reduction->typereduction === 'F' ? $reduction->Reduction_fixe_frais3 : $reduction->Reduction_frais3 }}"
+                            data-frais4="{{ $reduction->typereduction === 'F' ? $reduction->Reduction_fixe_frais4 : $reduction->Reduction_frais4 }}">
                                 Modifier
-                              </button>
+                            </button>
                               <!--Modification Modal -->
                               <div class="modal fade" id="modifModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
@@ -306,11 +307,6 @@
                                                                     <option value="1" {{ $reduction->typereduction === 'P' ? 'selected' : '' }}>Réduction par pourcentage</option>
                                                                     <option value="2" {{ $reduction->typereduction === 'F' ? 'selected' : '' }}>Réduction fixe</option>
                                                                 </select>
-                                                                <script>
-                                                                    document.addEventListener('DOMContentLoaded', function() {
-                                                                        document.getElementById('reductionType').value = '{{ $reduction->typereduction === 'P' ? 1 : 2 }}';
-                                                                    });
-                                                                </script>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
@@ -423,12 +419,12 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                              </div>
                             {{-- <button class="btn btn-danger p-2 btn-sm" type="button" id="deleteButton" data-code-reduction="{{ $reduction->CodeReduction }}">Supprimer</button> --}}
-
+                        
                                <!-- Modal Trigger for Deletion -->
+          
             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $reduction->CodeReduction }}">Supprimer</button>
-
             <!-- Modal for Deletion -->
             <div class="modal fade" id="deleteModal{{ $reduction->CodeReduction }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -516,8 +512,7 @@
                       </div>
                     </div>
                             </div>
-
-                          </div>
+                        </div>
                     </td>
                   </tr>
                   @endforeach
@@ -878,14 +873,18 @@
     
             // Récupérer les informations des data-attributes
             var codeReduction = button.getAttribute('data-code');
+            var typereduction = button.getAttribute('data-type');
             var libelleReduction = button.getAttribute('data-libelle');
             var reductionScolarite = button.getAttribute('data-scolarite');
             var reductionArriere = button.getAttribute('data-arriere');
             var reductionFrais1 = button.getAttribute('data-frais1');
             var reductionFrais2 = button.getAttribute('data-frais2');
             var reductionFrais3 = button.getAttribute('data-frais3');
+            var select = detailsModal.querySelector('#reductionType');
             var reductionFrais4 = button.getAttribute('data-frais4');
-    
+            
+            select.value = (typereduction === 'F' ? '2' : '1');
+            select.dispatchEvent(new Event('change'));
             // Mettre à jour les champs du modal avec les informations correspondantes
             document.getElementById('modalReductionId').value = codeReduction;
             detailsModal.querySelector('#modalCodeReduction').value = codeReduction;

@@ -1871,13 +1871,17 @@ public function eleveparclasseessai() {
   
   public function ajouterprofreduction(Request $request)
   {
+      $param = Paramcontrat::first();
+      $anneeCourante = (int) $param->anneencours_paramcontrat;
+      $anneeSuivante =  $anneeCourante + 1;
+      $anneeAcademique = "{$anneeCourante}-{$anneeSuivante}";
       $reduction = new Reduction();
       $reduction->Codereduction = $request->input('Codereduction');
       $reduction->LibelleReduction = $request->input('LibelleReduction');
-  
       // Déterminer le type de réduction
       if ($request->input('reductionType') == 2) { // Réduction fixe
-          // Enregistrer les valeurs dans les colonnes de réduction fixe
+        // Enregistrer les valeurs dans les colonnes de réduction fixe
+          $reduction->anneeacademique = $anneeAcademique;
           $reduction->typereduction = 'F';
           $reduction->Reduction_fixe_sco = $request->input('Reduction_scolarite');
           $reduction->Reduction_fixe_arriere = $request->input('Reduction_arriere');
@@ -1887,6 +1891,7 @@ public function eleveparclasseessai() {
           $reduction->Reduction_fixe_frais4 = $request->input('Reduction_frais4');
       } else { // Réduction par pourcentage
           // Enregistrer les valeurs dans les colonnes de réduction par pourcentage
+          $reduction->anneeacademique = $anneeAcademique;
           $reduction->typereduction = 'P';
           $reduction->Reduction_scolarite = $this->convertToDecimal($request->input('Reduction_scolarite'));
           $reduction->Reduction_arriere = $this->convertToDecimal($request->input('Reduction_arriere'));
@@ -1904,19 +1909,7 @@ public function eleveparclasseessai() {
 
   public function modifreductions(Request $request)
   {
-      // Validation des données
-      // $request->validate([
-      //     'codeReduction' => 'required|string|max:255',
-      //     'libelleReduction' => 'required|string|max:255',
-      //     'reductionScolarite' => 'required|numeric',
-      //     'reductionArriere' => 'required|numeric',
-      //     'reductionFrais1' => 'required|numeric',
-      //     'reductionFrais2' => 'required|numeric',
-      //     'reductionFrais3' => 'required|numeric',
-      //     'reductionFrais4' => 'required|numeric',
-      //     'reductionApplication' => 'required|integer',
-      // ]);
-
+     
       $codereduc = $request->input('CodeReduction');
       // Récupérer la réduction à modifier
       $reduction = Reduction::where('CodeReduction', $codereduc)->first();
