@@ -59,6 +59,9 @@ class RecomputeSem2MI_MS extends Command
                     // 5) Calcul MS: si ni interro valide ni devoir valide → 21
                     if ($mi === 21 && $devCount === 0) {
                         $ms = 21;
+                    } elseif ($mi === 21 && $devCount === 1) {
+                        // cas de conduite
+                        $ms = $sumDevs;
                     } else {
                         // MS = (MI + somme devoirs) / (devCount + 1)
                         $ms = round(($mi + $sumDevs) / ($devCount + 1), 2);

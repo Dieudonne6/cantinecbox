@@ -2128,7 +2128,51 @@ public function filterEtatDeLaCaisse(Request $request) {
     return view ('pages.inscriptions.paiementdesnoninscrits');
   }
   
-      public function paiementeleve($matricule)
+    //   public function paiementeleve($matricule)
+    // {
+    //     if (Session::has('account')) {
+    //         // Retrieve the student details
+    //         $eleve = Eleve::where('MATRICULE', $matricule)->first();
+    //         $scolarite = Scolarite::where('MATRICULE', $matricule)->get();
+    //         $libelle = Params2::first();
+    //         $echeanche = Echeance::first();
+            
+    //         // Calculate the total amounts based on AUTREF
+    //         $totalArriere = Scolarite::where('MATRICULE', $matricule)
+    //             ->where('AUTREF', '2')
+    //             ->sum('MONTANT');
+    
+    //         $totalScolarite = Scolarite::where('MATRICULE', $matricule)
+    //             ->where('AUTREF', '1')
+    //             ->sum('MONTANT');
+    
+    //         $totalLibelle1 = Scolarite::where('MATRICULE', $matricule)
+    //             ->where('AUTREF', '3')
+    //             ->sum('MONTANT');
+    
+    //         $totalLibelle2 = Scolarite::where('MATRICULE', $matricule)
+    //             ->where('AUTREF', '4')
+    //             ->sum('MONTANT');
+    
+    //         $totalLibelle3 = Scolarite::where('MATRICULE', $matricule)
+    //             ->where('AUTREF', '5')
+    //             ->sum('MONTANT');
+            
+    //         $totalLibelle4 = Scolarite::where('MATRICULE', $matricule)
+    //           ->where('AUTREF', '6')
+    //           ->sum('MONTANT');
+    
+    //         // Pass the totals along with other data to the view
+    //         return view('pages.inscriptions.Paiement', compact(
+    //             'eleve', 'scolarite', 'libelle', 
+    //             'totalArriere', 'totalScolarite', 'totalLibelle1', 
+    //             'totalLibelle2', 'totalLibelle3'
+    //         ));
+    //     }
+    //     return redirect('/');
+    // }
+
+    public function paiementeleve($matricule)
     {
         if (Session::has('account')) {
             // Retrieve the student details
@@ -2171,8 +2215,10 @@ public function filterEtatDeLaCaisse(Request $request) {
         }
         return redirect('/');
     }
+
+
     
-    public function enregistrerPaiement(Request $request, $matricule)
+public function enregistrerPaiement(Request $request, $matricule)
     {
         $messages = [];
         $errors = [];
@@ -2182,7 +2228,6 @@ public function filterEtatDeLaCaisse(Request $request) {
         $tokenentreprise = $parametrefacture->token;
         $taxe = $parametrefacture->taxe;
         $type = $parametrefacture->typefacture;
-        $montant_paye =  $request->input('montant_paye');
 
         // Vérifiez si l'élève existe
         if (!$eleve) {
@@ -2365,10 +2410,17 @@ public function filterEtatDeLaCaisse(Request $request) {
             'montantdu' => $request->input('montant_total'),
         ]);
 
+  
+          
+
+
+
+
+
         // -------------------------------
               //  CREATION DE LA FACTURE
         // -------------------------------
-        
+       
     $items = []; // Tableau pour stocker les informations des paiements
     
     // Enregistrement des paiements de scolarité
@@ -2591,7 +2643,7 @@ $total = $decodedResponse['total'];
     
     // Convertissez la réponse JSON en tableau associatif PHP
     $decodedResponseConfirmation = json_decode($responseConfirmation, true);
-    dd($decodedResponseConfirmation);
+    // dd($decodedResponseConfirmation);
     
     
         $codemecef = $decodedResponseConfirmation['codeMECeFDGI'];
@@ -2621,7 +2673,7 @@ $total = $decodedResponse['total'];
 
                     $qrcodecontent = $result->getString();
                     
-                    // $dateTime = DateTime::createFromFormat('d/m/Y H:i:s', $dateTime)->format('Y-m-d H:i:s');
+                    $dateTime = DateTime::createFromFormat('d/m/Y H:i:s', $dateTime)->format('Y-m-d H:i:s');
                     $data = [
                       'uid' => $uid,
                       'id' => $reffacture,
