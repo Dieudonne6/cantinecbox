@@ -12,6 +12,7 @@ class Facturescolarit extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
+    'id',
     'ifu_ecole',
     'client_name',
     'client_matricule',
