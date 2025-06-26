@@ -2864,6 +2864,21 @@ return view('pages.inscriptions.pdfpaiementsco', [
           // 'villeetab' => $villeetab,
       ]);        
   }
+
+
+
+  // -------------------------------------------
+
+  public function listeavoirfacscolarit() 
+  {
+    $listeavoirfacscolarit = Facturescolarit::all();
+
+    // dd($listeavoirfacscolarit);
+
+    return view('pages.facture.listeavoirfacscolarit', compact('listeavoirfacscolarit'));
+
+  }
+  // -------------------------------------------
   
     public function etatdesrecouvrements(){
       $typeclasse = Typeclasse::all();

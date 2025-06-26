@@ -935,7 +935,7 @@ class EditionController extends Controller
                   // Calcul de la moyenne de la période (pondérée) 
                   // uniquement si au moins 4 matières académiques ont une note valide ET totalCoef > 0
                   if ($countValidSubjects >= 4 && $totalCoef > 0) {
-                      $moyennePeriode = round($totalNote / $totalCoef, 2);
+                      $moyennePeriode = number_format($totalNote / $totalCoef, 2);
                   } else {
                       // Moins de 4 notes valides => pas de moyenne semestrielle
                       $moyennePeriode = 21;
@@ -948,13 +948,13 @@ class EditionController extends Controller
 
                   // Calcul des bilans arithmétiques
                   $moyenneLitteraire  = ($countNoteLitteraire > 0)
-                      ? round($totalNoteLitteraire / $countNoteLitteraire, 2)
+                      ? number_format($totalNoteLitteraire / $countNoteLitteraire, 2)
                       : null;
                   $moyenneScientifique = ($countNoteScientifique > 0)
-                      ? round($totalNoteScientifique / $countNoteScientifique, 2)
+                      ? number_format($totalNoteScientifique / $countNoteScientifique, 2)
                       : null;
                   $moyenneFondamentale = ($countNoteFondamentale > 0)
-                      ? round($totalNoteFondamentale / $countNoteFondamentale, 2)
+                      ? number_format($totalNoteFondamentale / $countNoteFondamentale, 2)
                       : null;
 
                   $appreciationLitteraire   = ($moyenneLitteraire !== null)
@@ -1010,7 +1010,7 @@ class EditionController extends Controller
                   // ——— Mode semestres (2 périodes) ———
                   if ($moyenneP1 !== null && $moyenneP1 !== 21 && $moyenneP2 !== null && $moyenneP2 !== 21) {
                       // Pondération 1/3 pour P1, 2/3 pour P2
-                      $moyenneAnnuelle = round((2 * $moyenneP2 + $moyenneP1) / 3, 2);
+                      $moyenneAnnuelle = number_format((2 * $moyenneP2 + $moyenneP1) / 3, 2);
                   } elseif ($moyenneP1 !== null && $moyenneP1 !== 21) {
                       // Seule P1 existe
                       $moyenneAnnuelle = $moyenneP1;
@@ -1039,7 +1039,7 @@ class EditionController extends Controller
                   if ($countValides > 0) {
                       // Si au moins une période valide, on fait la moyenne arithmétique des valeurs présentes
                       $somme = array_sum($listeValides);
-                      $moyenneAnnuelle = round($somme / $countValides, 2);
+                      $moyenneAnnuelle = number_format($somme / $countValides, 2);
                   } else {
                       // Aucune note sur les 3 périodes
                       $moyenneAnnuelle = 21;
