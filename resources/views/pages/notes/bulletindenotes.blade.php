@@ -775,12 +775,12 @@
         </div>
     </div>
 
-<!-- Modal pour décisions jury -->
+<!-- Modal pour décisions du conseil -->
 <div class="modal fade" id="Editionconseils" tabindex="-1" aria-labelledby="EditionconseilsLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg" style="border-color: #844fc1;">
   
-        <form id="decisionForm">
+        <form action="{{ route('configurerDecisions') }}" method="POST">
           @csrf
   
           <div class="modal-header text-white" style="background-color: #844fc1;">
@@ -793,11 +793,19 @@
             <div class="row mb-4 align-items-center">
               <div class="col-md-4">
                 <label class="form-label">Promotion à configurer</label>
-                <select name="promotion" class="form-select" required>
+                {{-- <select name="promotion" class="form-select" required>
                   <option value="" disabled>— Choisis une promotion —</option>
                   @foreach($promotions as $promo)
-                    <option value="{{ $promo->id }}">{{ $promo->LIBELPROMO }}</option>
+                    <option value="{{ $promo->CODEPROMO }}">{{ $promo->LIBELPROMO }}</option>
                   @endforeach
+                </select> --}}
+
+
+                <select id="promoSelect" name="promotion" class="form-select" required>
+                    <option value="" disabled selected>— Choisis une promotion —</option>
+                    @foreach($promotions as $promo)
+                        <option value="{{ $promo->CODEPROMO }}">{{ $promo->LIBELPROMO }}</option>
+                    @endforeach
                 </select>
               </div>
             </div>
@@ -812,7 +820,7 @@
                     <tr><th>Min.</th><th>Max.</th><th>Décision</th></tr>
                   </thead>
                   <tbody>
-                    @php
+                    {{-- @php
                       $defaultsNon = [
                         ['min'=>'0.00','max'=>'6.50','lib'=>'Exclu(e) pour insuffisance'],
                         ['min'=>'6.50','max'=>'7.50','lib'=>'Exclu(e) second tour'],
@@ -820,7 +828,7 @@
                         ['min'=>'9.50','max'=>'10.00','lib'=>'Rattrapage'],
                         ['min'=>'10.00','max'=>'20.00','lib'=>'Admis(e)'],
                       ];
-                    @endphp
+                    @endphp --}}
                     @foreach(range(1,5) as $i)
                       <tr>
                         <td>
@@ -828,20 +836,20 @@
                                  name="intervals[non][{{ $i }}][min]"
                                  class="form-control form-control-sm"
                                  step="0.01"
-                                 value="{{ $defaultsNon[$i-1]['min'] }}">
+                                 >
                         </td>
                         <td>
                           <input type="number"
                                  name="intervals[non][{{ $i }}][max]"
                                  class="form-control form-control-sm"
                                  step="0.01"
-                                 value="{{ $defaultsNon[$i-1]['max'] }}">
+                                 >
                         </td>
                         <td>
                           <input type="text"
                                  name="intervals[non][{{ $i }}][libelle]"
                                  class="form-control form-control-sm"
-                                 value="{{ $defaultsNon[$i-1]['lib'] }}">
+                                >
                         </td>
                       </tr>
                     @endforeach
@@ -862,7 +870,7 @@
                     <tr><th>Min.</th><th>Max.</th><th>Décision</th></tr>
                   </thead>
                   <tbody>
-                    @php
+                    {{-- @php
                       $defaultsDoublant = [
                         ['min'=>'0.00','max'=>'6.50','lib'=>'Exclu(e). Ne peut tripler'],
                         ['min'=>'6.50','max'=>'7.50','lib'=>'Exclu(e) second tour'],
@@ -870,7 +878,7 @@
                         ['min'=>'9.50','max'=>'10.00','lib'=>'Rattrapage'],
                         ['min'=>'10.00','max'=>'20.00','lib'=>'Admis(e)'],
                       ];
-                    @endphp
+                    @endphp --}}
                     @foreach(range(1,5) as $i)
                       <tr>
                         <td>
@@ -878,20 +886,20 @@
                                  name="intervals[doublant][{{ $i }}][min]"
                                  class="form-control form-control-sm"
                                  step="0.01"
-                                 value="{{ $defaultsDoublant[$i-1]['min'] }}">
+                                 >
                         </td>
                         <td>
                           <input type="number"
                                  name="intervals[doublant][{{ $i }}][max]"
                                  class="form-control form-control-sm"
                                  step="0.01"
-                                 value="{{ $defaultsDoublant[$i-1]['max'] }}">
+                                 >
                         </td>
                         <td>
                           <input type="text"
                                  name="intervals[doublant][{{ $i }}][libelle]"
                                  class="form-control form-control-sm"
-                                 value="{{ $defaultsDoublant[$i-1]['lib'] }}">
+                                 >
                         </td>
                       </tr>
                     @endforeach
@@ -903,7 +911,7 @@
   
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            <button type="button" id="saveDecision" class="btn" style="background-color: #844fc1; color: white;">
+            <button type="submit"  class="btn" style="background-color: #844fc1; color: white;">
               <i class="fas fa-save"></i> Enregistrer
             </button>
           </div>
@@ -911,56 +919,11 @@
   
       </div>
     </div>
-  </div>
+</div>
   
   
 
-    <script>
-    document.getElementById('saveDecision').addEventListener('click', async () => {
-        const form = document.getElementById('decisionForm');
-
-        // Récupère l'URL vers laquelle poster (ta route nommée)
-        const url = "{{ route('configurerDecisions') }}";
-        //console.log('POST vers :', url);
-
-        // Construit un FormData à partir du form
-        const formData = new FormData(form);
-
-        // Récupère le token CSRF
-        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-        try {
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: {
-            'X-CSRF-TOKEN': token,
-            'Accept': 'application/json',
-            },
-            body: formData
-        });
-
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-
-        const json = await res.json();
-
-        // Si ton contrôleur renvoie du JSON { success: true, message: '...' }
-        if (json.success) {
-            // Ferme la modal
-            const modalEl = document.getElementById('Editionconseils');
-            const modal = bootstrap.Modal.getInstance(modalEl);
-            modal.hide();
-
-            // Affiche l'alerte
-            alert(json.message || 'Enregistrement réussi !');
-        } else {
-            alert(json.message || 'Une erreur est survenue');
-        }
-
-        } catch (err) {
-        console.error(err);
-        alert('Échec de l’enregistrement : ' + err.message);
-        }
-    });    
+    <script> 
 
         document.getElementById('formedition').addEventListener('submit', function(event) {
             event.preventDefault();

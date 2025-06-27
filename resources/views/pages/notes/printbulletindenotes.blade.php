@@ -719,9 +719,18 @@ usort($resultat['matieres'], function ($a, $b) {
                                                 style="border-bottom: 1px dotted black; width: 131px; display: inline-block;"></span>
                                         </p>
                                     </div><br>
-                                    <p style="margin: 10px 0;">
-                                        ....................................................................................................................................................
-                                    </p>
+
+                                    @if(
+                                        ($typean === 2 && request('periode') == 3) ||
+                                        ($typean === 1 && request('periode') == 2)
+                                    )
+                                        <p style="margin: 10px 0; font-weight:bold; text-align:center;">
+                                            {{ $resultat['decisionAnnuelle'] }}
+                                        </p>
+                                    @endif
+                                    {{-- <p style="margin: 10px 0;">
+                                        {{ $resultat['decisionAnnuelle'] }}
+                                    </p> --}}
                                 </div>
                             </div>
 

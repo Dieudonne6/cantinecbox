@@ -782,6 +782,55 @@ $('#Filtercycle').on('change', function() {
 </script>
 
 
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const select = document.getElementById('promoSelect');
+
+  select.addEventListener('change', function(){
+    const promo = this.value;
+    // Appel AJAX
+    fetch(`/decisions/config/${promo}`)
+      .then(resp => {
+        if (resp.status === 204) return null;
+        if (!resp.ok) throw new Error('Erreur réseau');
+        return resp.json();
+      })
+      .then(data => {
+        ['non','doublant'].forEach(type => {
+          for (let i = 1; i <= 5; i++) {
+            const base = `intervals[${type}][${i}]`;
+            const minEl     = document.querySelector(`[name="${base}[min]"]`);
+            const maxEl     = document.querySelector(`[name="${base}[max]"]`);
+            const libelleEl = document.querySelector(`[name="${base}[libelle]"]`);
+            if (data && data[type] && data[type][i]) {
+              minEl.value     = data[type][i].min;
+              maxEl.value     = data[type][i].max;
+              libelleEl.value = data[type][i].libelle;
+            } else {
+              minEl.value = '';
+              maxEl.value = '';
+              libelleEl.value = '';
+            }
+          }
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        // en cas d'erreur, vider les champs
+        ['non','doublant'].forEach(type => {
+          for (let i = 1; i <= 5; i++) {
+            document.querySelector(`[name="intervals[${type}][${i}][min]"]`).value = '';
+            document.querySelector(`[name="intervals[${type}][${i}][max]"]`).value = '';
+            document.querySelector(`[name="intervals[${type}][${i}][libelle]"]`).value = '';
+          }
+        });
+      });
+  });
+});
+
+</script>
+
+
 
 
 
