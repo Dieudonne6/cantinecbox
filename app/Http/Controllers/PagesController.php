@@ -2131,7 +2131,51 @@ public function filterEtatDeLaCaisse(Request $request) {
     return view ('pages.inscriptions.paiementdesnoninscrits');
   }
   
-      public function paiementeleve($matricule)
+    //   public function paiementeleve($matricule)
+    // {
+    //     if (Session::has('account')) {
+    //         // Retrieve the student details
+    //         $eleve = Eleve::where('MATRICULE', $matricule)->first();
+    //         $scolarite = Scolarite::where('MATRICULE', $matricule)->get();
+    //         $libelle = Params2::first();
+    //         $echeanche = Echeance::first();
+            
+    //         // Calculate the total amounts based on AUTREF
+    //         $totalArriere = Scolarite::where('MATRICULE', $matricule)
+    //             ->where('AUTREF', '2')
+    //             ->sum('MONTANT');
+    
+    //         $totalScolarite = Scolarite::where('MATRICULE', $matricule)
+    //             ->where('AUTREF', '1')
+    //             ->sum('MONTANT');
+    
+    //         $totalLibelle1 = Scolarite::where('MATRICULE', $matricule)
+    //             ->where('AUTREF', '3')
+    //             ->sum('MONTANT');
+    
+    //         $totalLibelle2 = Scolarite::where('MATRICULE', $matricule)
+    //             ->where('AUTREF', '4')
+    //             ->sum('MONTANT');
+    
+    //         $totalLibelle3 = Scolarite::where('MATRICULE', $matricule)
+    //             ->where('AUTREF', '5')
+    //             ->sum('MONTANT');
+            
+    //         $totalLibelle4 = Scolarite::where('MATRICULE', $matricule)
+    //           ->where('AUTREF', '6')
+    //           ->sum('MONTANT');
+    
+    //         // Pass the totals along with other data to the view
+    //         return view('pages.inscriptions.Paiement', compact(
+    //             'eleve', 'scolarite', 'libelle', 
+    //             'totalArriere', 'totalScolarite', 'totalLibelle1', 
+    //             'totalLibelle2', 'totalLibelle3'
+    //         ));
+    //     }
+    //     return redirect('/');
+    // }
+
+    public function paiementeleve($matricule)
     {
         if (Session::has('account')) {
             // Retrieve the student details
@@ -2174,8 +2218,10 @@ public function filterEtatDeLaCaisse(Request $request) {
         }
         return redirect('/');
     }
+
+
     
-    public function enregistrerPaiement(Request $request, $matricule)
+public function enregistrerPaiement(Request $request, $matricule)
     {
         $messages = [];
         $errors = [];
@@ -2367,22 +2413,29 @@ public function filterEtatDeLaCaisse(Request $request) {
             'montantdu' => $request->input('montant_total'),
         ]);
 
+  
+          
+
+
+
+
+
         // -------------------------------
               //  CREATION DE LA FACTURE
         // -------------------------------
-        
+       
     $items = []; // Tableau pour stocker les informations des paiements
     
-            // Enregistrement des paiements de scolarité
-            if ($request->filled('scolarite') && $request->input('scolarite') > 0) {
-              $scolariteMontant = intval($request->input('scolarite'));
-              $items[] = [
-                  'name' => 'Scolarité',
-                  'price' => $scolariteMontant,
-                  'quantity' => 1,
-                  'taxGroup' => $taxe,
-              ];
-          }
+    // Enregistrement des paiements de scolarité
+    if ($request->filled('scolarite') && $request->input('scolarite') > 0) {
+      $scolariteMontant = intval($request->input('scolarite'));
+      $items[] = [
+          'name' => 'Scolarité',
+          'price' => $scolariteMontant,
+          'quantity' => 1,
+          'taxGroup' => $taxe,
+      ];
+    }
 
     // Enregistrement des paiements d'arriérés
     if ($request->filled('arriere') && $request->input('arriere') > 0) {
@@ -2420,6 +2473,10 @@ public function filterEtatDeLaCaisse(Request $request) {
         }
     }
     
+    // montant total des items 
+
+    // Une fois que tous les items sont ajoutés :
+    $montant_total = array_sum(array_column($items, 'price'));
     //  dd($items); // Utilisez cette ligne pour déboguer et vérifier les données
   
     // Préparez les données JSON pour l'API
@@ -2441,7 +2498,7 @@ public function filterEtatDeLaCaisse(Request $request) {
          
       // ],
       "client" => [
-          "ifu" => "0202380068074",
+          // "ifu" => "0202380068074",
           "name"=>  $nomcompleteleve,
           // "contact" => "string",
           // "address"=> "string"
@@ -2452,7 +2509,7 @@ public function filterEtatDeLaCaisse(Request $request) {
       "payment" => [
           [
           "name" => "ESPECES",
-          //   "amount": 0
+          "amount"=> intval($montant_total)
           ]
         ],
   ]);
@@ -2508,7 +2565,7 @@ $uid = $decodedResponse['uid'];
 
 $total = $decodedResponse['total']; 
 //  dd($total);
-}
+// }
 
 
 // -------------------------------
@@ -2622,29 +2679,30 @@ $total = $decodedResponse['total'];
                     $dateTime = DateTime::createFromFormat('d/m/Y H:i:s', $dateTime)->format('Y-m-d H:i:s');
                     $data = [
                       'uid' => $uid,
-                      'ifu_ecole' => $ifuEcoleFacture,
-                      'client_name' => $nameClient,
-                      'client_classe' => $eleve->CODECLAS,
-                      'client_matricule' => $matricule,
-                      'client_ifu' => $decodedDonneFacture['client']['ifu'] ?? null,
-                      'items' => json_encode($itemFacture), // Conversion en JSON
-                      'total_price' => array_sum(array_column($itemFacture, 'price')),
-                      'tax_group' => $taxGroupItemFacture,
+                      'id' => $reffacture,
+                      'codemecef' => $codemecef,
                       'counters' => $counters,
                       'nim' => $nim,
+                      'dateHeure' => $dateTime,
+                      'ifuEcole' => $ifuEcoleFacture,
+                      'MATRICULE' => $matricule,
+                      'nom' => $nameClient,
+                      'classe' => $eleve->CODECLAS,
+                      'itemfacture' => $jsonItem, // Conversion en JSON
+                      'montant_total' => array_sum(array_column($itemFacture, 'price')),
+                      'tax_group' => $taxGroupItemFacture,
                       'date_time' => $dateTime,
-                      'qr_code' => $qrCodeString,
-                      'qr_code_image_path' => '/path/to/saved/qrcode/' . $fileNameqrcode, // Chemin de sauvegarde de l'image
-                      'confirmation_code' => $codemecef,
+                      'qrcode' => $qrcodecontent,
+                      'statut' => 1,
                   ];
                   
                   DB::table('facturescolarit')->insert($data);
 
                   // Chemin pour enregistrer l'image QR Code
-                  $path = 'qrcodes/' . $fileNameqrcode;
+                  // $path = 'qrcodes/' . $fileNameqrcode;
 
                   // Sauvegarder l'image
-                  Storage::disk('public')->put($path, $qrcodecontent);
+                  // Storage::disk('public')->put($path, $qrcodecontent);
 
                   $paramse = Params2::first(); 
 
@@ -2725,6 +2783,8 @@ return view('pages.inscriptions.pdfpaiementsco', [
   'datepaiementcontrat' => $datepaiementcontrat ?? null,
 ]);
 
+
+  }
           
         // Redirection avec un message global de succès
         // return redirect()->back()->with('success', 'Paiement enregistré avec succès !');
@@ -2807,6 +2867,21 @@ return view('pages.inscriptions.pdfpaiementsco', [
           // 'villeetab' => $villeetab,
       ]);        
   }
+
+
+
+  // -------------------------------------------
+
+  public function listeavoirfacscolarit() 
+  {
+    $listeavoirfacscolarit = Facturescolarit::all();
+
+    // dd($listeavoirfacscolarit);
+
+    return view('pages.facture.listeavoirfacscolarit', compact('listeavoirfacscolarit'));
+
+  }
+  // -------------------------------------------
   
     public function etatdesrecouvrements(){
       $typeclasse = Typeclasse::all();

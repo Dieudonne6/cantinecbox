@@ -488,7 +488,7 @@
                                     <td>
                                         <p>Nom : {{ $nomcompleteleve }}</p>
                                         <p>Classe : {{ $classeeleve }}</p>
-                                        <p>IFU : 0202380068074</p>
+                                        {{-- <p>IFU : 0202380068074</p> --}}
                                         {{-- <p>Adresse :</p> --}}
                                         {{-- <p>Contact :</p> --}}
 
@@ -505,14 +505,15 @@
                     <thead>
                         <tr>
                             <th>Désignation</th>
-                            <th>Montant HT</th>
-                            <th>Montant T.T.C</th>
+                            <th>Montant</th>
+                            <th>REGIME TPS [E]</th>
+                            {{-- <th>Montant T.T.C</th> --}}
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($itemFacture as $item)
                             <tr>
-                                <td>{{ $item['name'] }} (A-EX) </td>
+                                <td>{{ $item['name'] }} (E) </td>
                                 <td>{{ $item['price'] }}</td>
                                 <td>{{ $item['price'] }}</td>
                             </tr>
@@ -527,7 +528,7 @@
                 <table id="customers">
                     <thead>
                         <tr>
-                            <th scope="col">Montant total HT</th>
+                            <th scope="col">Montant total</th>
                             <th scope="col">Net à Payer</th>
                         </tr>
                     </thead>

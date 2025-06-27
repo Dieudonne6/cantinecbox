@@ -12,19 +12,22 @@ class Facturescolarit extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-    'id',
-    'ifu_ecole',
-    'client_name',
-    'client_matricule',
-    'client_ifu',
-    'items',
-    'total_price',
-    'tax_group',
-    'counters',
-    'nim',
-    'date_time',
-    'qr_code',
-    'qr_code_image_path',
-    'confirmation_code'];
+        'uid',
+        'id' ,
+        'codemecef' ,
+        'counters',
+        'nim',
+        'dateHeure' ,
+        'ifuEcole' ,
+        'MATRICULE' ,
+        'nom' ,
+        'classe' ,
+        'itemfacture' ,
+        'montant_total' ,
+        'tax_group' ,
+        'date_time' ,
+        'qrcode' ,
+        'statut' 
+];
 
 }

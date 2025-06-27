@@ -72,6 +72,14 @@ Route::get('/frais', [PagesController::class, 'frais']);
 Route::post('/nouveaufrais', [PagesController::class, 'fraisnouveau']);
 Route::post('/modifierfrais', [PagesController::class, 'modifierfrais']);
 
+
+// ---------------------------------------------------------------------
+// avoirfacscolarit
+
+Route::get('/listeavoirfacscolarit', [PagesController::class, 'listeavoirfacscolarit']);
+
+// ---------------------------------------------------------------------
+
 Route::get('/paiementcontrat/{CODECLAS}/{MATRICULE}', [ClassesController::class, 'paiementcontrat']);
 Route::post('/savepaiementcontrat', [ClassesController::class, 'savepaiementcontrat']);
 Route::get('/telechargerfacture', [ClassesController::class, 'telechargerfacture']);

@@ -599,6 +599,9 @@
                                 <button class="btn btn-primary" type="submit" id="imprimerClasses" style="display: none;">
                                     <i class="fas fa-print"></i> Imprimer bulletins
                                 </button>
+                                <button class="btn btn-primary" type="button" id="decision" data-bs-toggle="modal" data-bs-target="#Editionconseils">
+                                    <i class="fas fa-cog"></i> Configurer décisions conseils des profs
+                                </button>
                                
                                 {{-- <button class="btn btn-info" type="button" data-bs-toggle="modal"
                                     data-bs-target="#configdecisionconseil">
@@ -771,6 +774,120 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal pour décisions jury -->
+        <div class="modal fade" id="Editionconseils" tabindex="-1" aria-labelledby="EditionconseilsLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-color: #844fc1;">
+                <div class="modal-header text-white" style="background-color: #844fc1;">
+                <h5 class="modal-title" id="EditionconseilsLabel">Configuration de la décision du Conseil des Profs</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                <!-- Ligne de sélection -->
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-4">
+                        <label for="promotionSelect" class="form-label">Promotion à configurer</label>
+                        <select id="promotionSelect" name="promo_id" class="form-select">
+                          <option value="" disabled selected>— Choisis une promotion —</option>
+                          @foreach($promotions as $promo)
+                            <option value="{{ $promo->id }}">
+                              {{ $promo->LIBELPROMO }}
+                            </option>
+                          @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3 offset-md-2 text-end">
+                    <button class="btn mt-4" style="background-color: #844fc1; color: white;">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                    </div>
+                </div>
+        
+                <!-- Statut : Non Redoublant -->
+                <div class="card mb-4" style="border-color: #844fc1;">
+                    <div class="card-header text-white" style="background-color: #844fc1;">
+                    Statut : Non Redoublant
+                    </div>
+                    <div class="card-body p-0">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Min.</th>
+                            <th>Max.</th>
+                            <th>Décision</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
+                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
+                            <td><input type="text" class="form-control form-control-sm" value=""></td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
+                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
+                            <td><input type="text" class="form-control form-control-sm" value=""></td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
+                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
+                            <td><input type="text" class="form-control form-control-sm" value=""></td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" class="form-control form-control-sm" value="9.50"></td>
+                            <td><input type="number" class="form-control form-control-sm" value="10.00"></td>
+                            <td><input type="text" class="form-control form-control-sm" value=""></td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" class="form-control form-control-sm" value="10.00"></td>
+                            <td><input type="number" class="form-control form-control-sm" value="20.00"></td>
+                            <td><input type="text" class="form-control form-control-sm" value="Admis(e) en classe supérieure"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+        
+                <!-- Statut : Redoublant -->
+                <div class="card" style="border-color: #844fc1;">
+                    <div class="card-header text-white" style="background-color: #844fc1;">
+                    Statut : Redoublant
+                    </div>
+                    <div class="card-body p-0">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Min.</th>
+                            <th>Max.</th>
+                            <th>Décision</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Même structure que ci-dessus, avec valeurs et textes adaptés -->
+                        <tr>
+                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
+                            <td><input type="number" class="form-control form-control-sm" value="6.50"></td>
+                            <td><input type="text" class="form-control form-control-sm" value="Exclu(e). Ne peut tripler"></td>
+                        </tr>
+                        <!-- … autres lignes … -->
+                        <tr>
+                            <td><input type="number" class="form-control form-control-sm" value="10.00"></td>
+                            <td><input type="number" class="form-control form-control-sm" value="21.00"></td>
+                            <td><input type="text" class="form-control form-control-sm" value="Admis(e) en classe supérieure"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+        
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+            </div>
+        </div>
 
     <script>
         document.getElementById('formedition').addEventListener('submit', function(event) {

@@ -286,7 +286,7 @@ usort($resultat['matieres'], function ($a, $b) {
                                         if ($matiere['coefficient'] != -1) {
                                             if (!is_null($moyenne_sur_20)) {
                                                 // Si $moyenne_sur_20 existe, on calcule et on ajoute le coefficient
-                                                $moyenne_coeff = round(($moyenne_sur_20 * $matiere['coefficient']), 2);
+                                                $moyenne_coeff = number_format(($moyenne_sur_20 * $matiere['coefficient']), 2);
                                                 $total_coefficients += $matiere['coefficient'];
                                             } else {
                                                 // Si $moyenne_sur_20 est null, on ne fait rien (ou on peut initialiser $moyenne_coeff à 0 ou null selon ce que vous souhaitez)
@@ -449,7 +449,7 @@ usort($resultat['matieres'], function ($a, $b) {
                                     <h6 style="text-align: center; font-weight: bold" class="mt-1">Moyenne
                                         {{ $texte2 }} :
                                         &nbsp&nbsp <span
-                                            style="font-size: 20px;">{{ $total_moyenne_coeffs != 0 && $resultat['rang_1'] != null  ? round($moyenne, 2) : '**.**' }}</span>
+                                            style="font-size: 20px;">{{ $total_moyenne_coeffs != 0 && $resultat['rang_1'] != null  ? number_format($moyenne, 2) : '**.**' }}</span>
                                             {{-- style="font-size: 20px;">{{ $total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**' }}</span> --}}
                                     </h6>
                                     @if (isset($option['rang_general']) && $option['rang_general'])
