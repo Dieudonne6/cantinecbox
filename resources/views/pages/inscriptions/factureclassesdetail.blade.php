@@ -114,7 +114,7 @@
                             </div>
                         </div>
                     </div>
-                    <input class="btn-sm btn-secondary" type="button" id="default" value="Defaut" >
+                    <input class="btn-sm btn-secondary" type="button" id="default" value="Default" >
                     <hr>
 
                 {{-- <form id="validationForm" action="{{ url('detailfacclasse/'.$CODECLAS) }}" method="post">
@@ -123,9 +123,9 @@
                         <h5 style="margin-left: 10.5rem; font-size:14.5px !important;">Nouveaux</h5>
                         <h5 style="margin-top: -1.4rem; margin-left: 20rem; font-size:14.5px !important;">Anciens</h5>
                         
-                        <label for="scolarite" style="width: 30%; font-size: 14px !important;">Scolarité</label>
-                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="APAYER" id="scolarite"  style="width: 25%;" value="{{ $donneClasse->APAYER }}" >
-                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="APAYER2" id="scolarite_a"  style="width: 25%;" value="{{ $donneClasse->APAYER2 }}" >
+                        <label for="scolarite" id="Scolarite" style="width: 30%; font-size: 14px !important;">Scolarité</label>
+                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name ="APAYER" id="scolaritee"  style="width: 25%;" value="{{ $donneClasse->APAYER }}" >
+                        <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="APAYER2" id="scolarite_a"  style="width: 25%;;" value="{{ $donneClasse->APAYER2 }}" >
 
                         <label for="frais1" id="labelFrais1" style="width: 30%; font-size: 14px !important;">{{ $donneLibelle->LIBELF1 }}</label>
                         <input class="form-control mb-2" type="number"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="FRAIS1" id="frais1"  style="width: 25%;" value="{{ $donneClasse->FRAIS1 }}" >
@@ -337,6 +337,7 @@
 {{-- script pour ajouter readonly sur les inputs si le label est vide --}}
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
     // Fonction pour gerer le boutton defaut
     const defaultBtn = document.getElementById('default');
     const mts = document.getElementById('mts').value;
@@ -345,27 +346,25 @@
     const mt3 = document.getElementById('mt3').value;
     const mt4 = document.getElementById('mt4').value;
 
-    // console.log(mts);
-    
+        defaultBtn.addEventListener('click', setDefaults);
+        function setDefaults() {
+            //console.log(mts);
+            document.getElementById('scolaritee').value = mts;
+            document.getElementById('scolarite_a').value = mts;
 
-    defaultBtn.addEventListener('click', function() {
-        console.log(mts);
-        document.getElementById('scolarite').value = mts;
-        document.getElementById('scolarite_a').value = mts;
+            document.getElementById('frais1').value = mt1;
+            document.getElementById('frais1_a').value = mt1;
 
-        document.getElementById('frais1').value = mt1;
-        document.getElementById('frais1_a').value = mt1;
+            document.getElementById('frais2').value = mt2;
+            document.getElementById('frais2_a').value = mt2;
 
-        document.getElementById('frais2').value = mt2;
-        document.getElementById('frais2_a').value = mt2;
+            document.getElementById('frais3').value = mt3;
+            document.getElementById('frais3_a').value = mt3;
 
-        document.getElementById('frais3').value = mt3;
-        document.getElementById('frais3_a').value = mt3;
+            document.getElementById('frais4').value = mt4;
+            document.getElementById('frais4_a').value = mt4;
 
-        document.getElementById('frais4').value = mt4;
-        document.getElementById('frais4_a').value = mt4;
-
-    });
+        };
 
 
 
@@ -379,6 +378,7 @@
     }
 
     // Vérification pour chaque couple label/input
+    setReadonlyIfEmpty('Scolarite', 'scolaritee', 'scolarite_a');
     setReadonlyIfEmpty('labelFrais1', 'frais1', 'frais1_a');
     setReadonlyIfEmpty('labelFrais2', 'frais2', 'frais2_a');
     setReadonlyIfEmpty('labelFrais3', 'frais3', 'frais3_a');
@@ -387,36 +387,36 @@
 
 
      // Fonction pour calculer la somme des frais et mettre à jour le label
-     function calculerSommeFrais() {
+        function calculerSommeFrais() {
 
-        // nouveau eleves
-        const scolarite = parseFloat(document.getElementById('scolarite').value) || 0;
-        const frais1 = parseFloat(document.getElementById('frais1').value) || 0;
-        const frais2 = parseFloat(document.getElementById('frais2').value) || 0;
-        const frais3 = parseFloat(document.getElementById('frais3').value) || 0;
-        const frais4 = parseFloat(document.getElementById('frais4').value) || 0;
+            // nouveau eleves
+            const scolarite = parseFloat(document.getElementById('scolaritee').value) || 0;
+            const frais1 = parseFloat(document.getElementById('frais1').value) || 0;
+            const frais2 = parseFloat(document.getElementById('frais2').value) || 0;
+            const frais3 = parseFloat(document.getElementById('frais3').value) || 0;
+            const frais4 = parseFloat(document.getElementById('frais4').value) || 0;
 
-        const total = scolarite + frais1 + frais2 + frais3 + frais4;
+            const total = frais1 + scolarite + frais2 + frais3 + frais4;
 
-        // anciens eleves
-        const scolarite_a = parseFloat(document.getElementById('scolarite_a').value) || 0;
-        const frais1_a = parseFloat(document.getElementById('frais1_a').value) || 0;
-        const frais2_a = parseFloat(document.getElementById('frais2_a').value) || 0;
-        const frais3_a = parseFloat(document.getElementById('frais3_a').value) || 0;
-        const frais4_a = parseFloat(document.getElementById('frais4_a').value) || 0;
+            // anciens eleves
+            const scolarite_a = parseFloat(document.getElementById('scolarite_a').value) || 0;
+            const frais1_a = parseFloat(document.getElementById('frais1_a').value) || 0;
+            const frais2_a = parseFloat(document.getElementById('frais2_a').value) || 0;
+            const frais3_a = parseFloat(document.getElementById('frais3_a').value) || 0;
+            const frais4_a = parseFloat(document.getElementById('frais4_a').value) || 0;
 
-        const total_a = scolarite_a + frais1_a + frais2_a + frais3_a + frais4_a ;
-        
-        // Mettre à jour la somme dans le label
-        document.getElementById('totalFrais').textContent = total;
-        document.getElementById('totalFraisAnciens').textContent = total_a;
-    }
+            const total_a = scolarite_a + frais1_a + frais2_a + frais3_a + frais4_a ;
+            
+            // Mettre à jour la somme dans le label
+            document.getElementById('totalFrais').textContent = total;
+            document.getElementById('totalFraisAnciens').textContent = total_a;
+        }
 
-    // Appel initial pour mettre à jour la somme lors du chargement de la page
-    calculerSommeFrais();
+     calculerSommeFrais();
+
 
     // Mettre à jour la somme chaque fois qu'une valeur de frais change pour les nouveau
-    document.getElementById('scolarite').addEventListener('input', calculerSommeFrais);
+    document.getElementById('scolaritee').addEventListener('input', calculerSommeFrais);
     document.getElementById('frais1').addEventListener('input', calculerSommeFrais);
     document.getElementById('frais2').addEventListener('input', calculerSommeFrais);
     document.getElementById('frais3').addEventListener('input', calculerSommeFrais);
@@ -429,419 +429,227 @@
     document.getElementById('frais3_a').addEventListener('input', calculerSommeFrais);
     document.getElementById('frais4_a').addEventListener('input', calculerSommeFrais);
 
-
-
-
-    // ANCIEN CODE
-
-    //     // Fonction pour recalculer les totaux et mettre à jour les échéances
-    // function mettreAJourTotaux() {
-    //     let totalMontantNouveau = 0;
-    //     let totalMontantAncien = 0;
-
-    //     // Calcul du total des nouveaux élèves
-    //     document.querySelectorAll('.montant-nouveau').forEach(function(input) {
-    //         totalMontantNouveau += parseFloat(input.value) || 0;
-    //     });
-
-    //     // Calcul du total des anciens élèves
-    //     document.querySelectorAll('.montant-ancien').forEach(function(input) {
-    //         totalMontantAncien += parseFloat(input.value) || 0;
-    //     });
-
-    //     // Mise à jour des totaux dans le tableau
-    //     document.getElementById('totalMontantNouveauEleve').innerText = totalMontantNouveau;
-    //     document.getElementById('totalMontantAncienEleve').innerText = totalMontantAncien;
-
-    //      // Mettre à jour les montants des tranches dans le tableau des échéances
-    //     mettreAJourMontantsTranches();
-    // }
-
-    // // Fonction pour mettre à jour les montants des tranches dans le tableau des échéances
-    // function mettreAJourMontantsTranches() {
-    //     const montantNouveau = parseFloat(document.getElementById('totalMontantNouveauEleve').innerText);
-    //     const montantAncien = parseFloat(document.getElementById('totalMontantAncienEleve').innerText);
-
-    //     const nbEcheances = parseInt(document.getElementById('nbEcheances').value) || 1;
-    //     const pourcentageParTranche = (100 / nbEcheances).toFixed(2);
-
-    //     // Parcourir les lignes du tableau des échéances pour mettre à jour les montants
-    //     document.querySelectorAll('#tableBody tr').forEach(function(row, index) {
-    //         const montantTrancheNouveau = Math.ceil(montantNouveau * pourcentageParTranche / 100);
-    //         const montantTrancheAncien = Math.ceil(montantAncien * pourcentageParTranche / 100);
-
-    //         // Mettre à jour les cellules des montants
-    //         row.querySelector('#montantTrancheNouveau').innerText = montantTrancheNouveau;
-    //         row.cells[4].innerText = montantTrancheAncien;
-    //     });
-
-    //     // Mettre à jour les totaux des montants dans le tableau des échéances
-    //     document.getElementById('totalMontantNouveau').innerText = montantNouveau;
-    //     document.getElementById('totalMontantAncien').innerText = montantAncien;
-    // }
-
-    //   // Fonction pour générer le tableau des échéances
-    //   function genererEcheancier() {
-    //     // Récupérer le nombre d'échéances et les montants
-    //     const nbEcheances = parseInt(document.getElementById('nbEcheances').value) || 1;
-    //     // recuperer la datedebutpaiement et la peridiocite
-    //     const dateDebut = new Date(document.getElementById('dateDebut').value);
-    //     const periodicite = parseInt(document.getElementById('periodicite').value) || 1;
-
-
-    //         // Vérifier si la date de début et la périodicité sont valides
-    //         // if (isNaN(dateDebut.getTime()) || periodicite <= 0) {
-    //         //     alert('Veuillez entrer une date valide et une périodicité positive.');
-    //         //     return;
-    //         // }
-
-
-    //     let montantNouveau, montantAncien;
-
-    //     // Vérifier quelle option radio est sélectionnée
-    //     if (document.getElementById('flexRadioDefault1').checked) {
-    //     // Option 1 : seulement les frais de scolarité
-    //     montantNouveau = parseFloat(document.getElementById('scolarite').value);
-    //     montantAncien = parseFloat(document.getElementById('scolarite_a').value);
-    //     } else {
-    //     // Option 2 : tous les frais
-    //     montantNouveau = parseFloat(document.getElementById('totalFrais').textContent);
-    //     montantAncien = parseFloat(document.getElementById('totalFraisAnciens').textContent);
-    //     }
-
-
-    //     // const montantScolarite = parseFloat(document.getElementById('scolarite').value);  // Exemple de montant scolarité pour nouveau
-    //     // const montantScolariteA = parseFloat(document.getElementById('scolarite_a').value); // Exemple de montant scolarité pour ancien
-
-    //     const tbody = document.getElementById('tableBody');
-    //     const tbodyNouveaux = document.getElementById('tbodyNouveaux');
-    //     const tbodyAnciens = document.getElementById('tbodyAnciens');
-        
-    //     // Vider les tableaux
-    //     tbody.innerHTML = '';
-    //     tbodyNouveaux.innerHTML = '';
-    //     tbodyAnciens.innerHTML = '';
-
-
-    //     // Variables pour stocker les totaux
-    //     let totalPourcentageNouveau = 0;
-    //     let totalPourcentageAncien = 0;
-    //     let totalMontantNouveau = 0;
-    //     let totalMontantAncien = 0;
-
-    //     // Calculer le pourcentage et les montants par tranche
-    //     const pourcentageParTranche = (100 / nbEcheances).toFixed(2); // Pourcentage par tranche
-
-    //     for (let i = 1; i <= nbEcheances; i++) {
-    //         // Copie de la date de début pour calculer la date d'échéance
-    //         const datePaiement = new Date(dateDebut);
-
-    //         // Calcul de la nouvelle date d'échéance
-    //         if (periodicite < 7) {
-    //             // Ajouter des mois si la périodicité est inférieure à 7
-    //             datePaiement.setMonth(datePaiement.getMonth() + (i - 1) * periodicite);
-    //         } else {
-    //             // Ajouter des jours si la périodicité est supérieure ou égale à 7
-    //             datePaiement.setDate(datePaiement.getDate() + (i - 1) * periodicite);
-    //         }
-
-    //         // Format de la date d'échéance (exemple : 24/10/2023)
-    //         const datePaiementFormat = datePaiement.toLocaleDateString('fr-FR');
-
-    //         const montantTrancheNouveau = Math.ceil(montantNouveau * pourcentageParTranche / 100);
-    //         const montantTrancheAncien = Math.ceil(montantAncien * pourcentageParTranche / 100);
-
-
-
-    //         // Ajouter aux totaux
-    //         totalPourcentageNouveau += parseFloat(pourcentageParTranche);
-    //         totalPourcentageAncien += parseFloat(pourcentageParTranche);
-    //         totalMontantNouveau += parseFloat(montantTrancheNouveau);
-    //         totalMontantAncien += parseFloat(montantTrancheAncien);
-
-
-    //         // Créer une nouvelle ligne pour chaque échéance
-    //         const row = `
-    //             <tr>
-    //                 <td>${i}</td>
-    //                 <td>${pourcentageParTranche}%</td>
-    //                 <td>${pourcentageParTranche}%</td>
-    //                 <td id="montantTrancheNouveau">${montantTrancheNouveau}</td>
-    //                 <td>${montantTrancheAncien}</td>
-    //             </tr>
-    //         `;
-    //         tbody.insertAdjacentHTML('beforeend', row);
-
-    //         // Créer et insérer les lignes dans le tableau des nouveaux élèves
-    //         const rowNouveau = `
-    //             <tr>
-    //                 <td>${i}</td>
-    //                 <td>${datePaiementFormat}</td>
-    //                 <td><input type="number" class="form-control montant-nouveau" value="${montantTrancheNouveau}" /></td>
-
-    //             </tr>
-    //         `;
-    //         tbodyNouveaux.insertAdjacentHTML('beforeend', rowNouveau);
-
-    //         // Créer et insérer les lignes dans le tableau des anciens élèves
-    //         const rowAncien = `
-    //             <tr>
-    //                 <td>${i}</td>
-    //                 <td>${datePaiementFormat}</td>
-    //                 <td><input type="number" class="form-control montant-ancien" value="${montantTrancheAncien}" /></td>
-    //             </tr>
-    //         `;
-    //         tbodyAnciens.insertAdjacentHTML('beforeend', rowAncien);
-
-
-    //             // Insérer les lignes dynamiques dans les tableaux
-    //             // tbody.insertAdjacentHTML('beforeend', row);
-    //             // tbodyNouveaux.insertAdjacentHTML('beforeend', rowNouveau);
-    //             // tbodyAnciens.insertAdjacentHTML('beforeend', rowAncien);
-    //     }
-
-    //     // Mettre à jour les totaux dans le tfoot
-    //     document.getElementById('totalPourcentageNouveau').innerText = totalPourcentageNouveau.toFixed(2) + '%';
-    //     document.getElementById('totalPourcentageAncien').innerText = totalPourcentageAncien.toFixed(2) + '%';
-    //     document.getElementById('totalMontantNouveau').innerText = totalMontantNouveau;
-    //     document.getElementById('totalMontantAncien').innerText = totalMontantAncien;
-    //     document.getElementById('totalMontantNouveauEleve').innerText = totalMontantNouveau;
-    //     document.getElementById('totalMontantAncienEleve').innerText = totalMontantAncien;
-
-
-    //         // Réattacher les événements sur les champs de montants modifiables
-    //         document.querySelectorAll('.montant-nouveau, .montant-ancien').forEach(function(input) {
-    //             input.addEventListener('input', mettreAJourTotaux);
-    //         });
-
-    // }
-
-
-
-
-    // NOUVEAU CODE 
-
 // Fonction pour recalculer les totaux et mettre à jour les échéances
-function mettreAJourTotaux() {
-    let totalMontantNouveau = 0;
-    let totalMontantAncien = 0;
+    function mettreAJourTotaux() {
+        let totalMontantNouveau = 0;
+        let totalMontantAncien = 0;
 
-    // Calcul du total des nouveaux élèves
-    document.querySelectorAll('.montant-nouveau').forEach(function(input) {
-        totalMontantNouveau += parseFloat(input.value) || 0;
-    });
+        // Calcul du total des nouveaux élèves
+        document.querySelectorAll('.montant-nouveau').forEach(function(input) {
+            totalMontantNouveau += parseFloat(input.value) || 0;
+        });
 
-    // Calcul du total des anciens élèves
-    document.querySelectorAll('.montant-ancien').forEach(function(input) {
-        totalMontantAncien += parseFloat(input.value) || 0;
-    });
+        // Calcul du total des anciens élèves
+        document.querySelectorAll('.montant-ancien').forEach(function(input) {
+            totalMontantAncien += parseFloat(input.value) || 0;
+        });
 
-    // Mise à jour des totaux dans le tableau
-    document.getElementById('totalMontantNouveauEleve').innerText = totalMontantNouveau;
-    document.getElementById('totalMontantAncienEleve').innerText = totalMontantAncien;
-      // Mettre à jour les totaux dans le tfoot
+        // Mise à jour des totaux dans le tableau
+        document.getElementById('totalMontantNouveauEleve').innerText = totalMontantNouveau;
+        document.getElementById('totalMontantAncienEleve').innerText = totalMontantAncien;
+        // Mettre à jour les totaux dans le tfoot
 
-        document.getElementById('totalMontantNouveau').innerText = totalMontantNouveau;
-        document.getElementById('totalMontantAncien').innerText = totalMontantAncien;
+            document.getElementById('totalMontantNouveau').innerText = totalMontantNouveau;
+            document.getElementById('totalMontantAncien').innerText = totalMontantAncien;
 
 
-    // Mise à jour des pourcentages dans le tableau des échéances
-    recalculerPourcentages(totalMontantNouveau, totalMontantAncien);
-}
-
-// Fonction pour recalculer les pourcentages dans le tableau des échéances
-function recalculerPourcentages(totalMontantNouveau, totalMontantAncien) {
-    let totalPourcentageNouveau = 0;
-    let totalPourcentageAncien = 0;
-
-    // Recalculer les pourcentages pour chaque tranche de nouveaux élèves
-    document.querySelectorAll('.montant-nouveau').forEach(function(input, index) {
-        const montant = parseFloat(input.value) || 0;
-        const pourcentage = totalMontantNouveau > 0 ? (montant / totalMontantNouveau * 100).toFixed(2) : 0;
-
-        // Mettre à jour le pourcentage pour chaque tranche avec le symbole %
-        document.getElementById(`pourcentageTrancheNouveau-${index + 1}`).innerText = pourcentage + '%';
-
-        // Ajouter le pourcentage calculé au total sans le symbole %
-        totalPourcentageNouveau += parseFloat(pourcentage);
-    });
-
-    // Recalculer les pourcentages pour chaque tranche d'anciens élèves
-    document.querySelectorAll('.montant-ancien').forEach(function(input, index) {
-        const montant = parseFloat(input.value) || 0;
-        const pourcentage = totalMontantAncien > 0 ? (montant / totalMontantAncien * 100).toFixed(4) : 0;
-
-        // Mettre à jour le pourcentage pour chaque tranche avec le symbole %
-        document.getElementById(`pourcentageTrancheAncien-${index + 1}`).innerText = pourcentage + '%';
-
-        // Ajouter le pourcentage calculé au total sans le symbole %
-        totalPourcentageAncien += parseFloat(pourcentage);
-    });
-
-    // Mettre à jour le total des pourcentages avec le symbole % dans le tfoot
-    document.getElementById('totalPourcentageNouveau').innerText = totalPourcentageNouveau.toFixed(4) + '%';
-    document.getElementById('totalPourcentageAncien').innerText = totalPourcentageAncien.toFixed(4) + '%';
-}
-
-// Fonction pour générer le tableau des échéances
-function genererEcheancier() {
-    const nbEcheances = parseInt(document.getElementById('nbEcheances').value) || 1;
-    const dateDebut = new Date(document.getElementById('dateDebut').value);
-    const periodicite = parseInt(document.getElementById('periodicite').value) || 1;
-
-    let montantNouveau, montantAncien;
-
-    if (document.getElementById('flexRadioDefault1').checked) {
-        montantNouveau = parseFloat(document.getElementById('scolarite').value);
-        montantAncien = parseFloat(document.getElementById('scolarite_a').value);
-    } else {
-        montantNouveau = parseFloat(document.getElementById('totalFrais').textContent);
-        montantAncien = parseFloat(document.getElementById('totalFraisAnciens').textContent);
+        // Mise à jour des pourcentages dans le tableau des échéances
+        recalculerPourcentages(totalMontantNouveau, totalMontantAncien);
     }
 
-    const tbody = document.getElementById('tableBody');
-    const tbodyNouveaux = document.getElementById('tbodyNouveaux');
-    const tbodyAnciens = document.getElementById('tbodyAnciens');
+    // Fonction pour recalculer les pourcentages dans le tableau des échéances
+    function recalculerPourcentages(totalMontantNouveau, totalMontantAncien) {
+        let totalPourcentageNouveau = 0;
+        let totalPourcentageAncien = 0;
 
-    // Vider les tableaux
-    tbody.innerHTML = '';
-    tbodyNouveaux.innerHTML = '';
-    tbodyAnciens.innerHTML = '';
+        // Recalculer les pourcentages pour chaque tranche de nouveaux élèves
+        document.querySelectorAll('.montant-nouveau').forEach(function(input, index) {
+            const montant = parseFloat(input.value) || 0;
+            const pourcentage = totalMontantNouveau > 0 ? (montant / totalMontantNouveau * 100).toFixed(2) : 0;
 
-    for (let i = 1; i <= nbEcheances; i++) {
-        const datePaiement = new Date(dateDebut);
-        if (periodicite < 7) {
-            datePaiement.setMonth(datePaiement.getMonth() + (i - 1) * periodicite);
-        } else {
-            datePaiement.setDate(datePaiement.getDate() + (i - 1) * periodicite);
+            // Mettre à jour le pourcentage pour chaque tranche avec le symbole %
+            document.getElementById(`pourcentageTrancheNouveau-${index + 1}`).innerText = pourcentage + '%';
+
+            // Ajouter le pourcentage calculé au total sans le symbole %
+            totalPourcentageNouveau += parseFloat(pourcentage);
+        });
+
+        // Recalculer les pourcentages pour chaque tranche d'anciens élèves
+        document.querySelectorAll('.montant-ancien').forEach(function(input, index) {
+            const montant = parseFloat(input.value) || 0;
+            const pourcentage = totalMontantAncien > 0 ? (montant / totalMontantAncien * 100).toFixed(4) : 0;
+
+            // Mettre à jour le pourcentage pour chaque tranche avec le symbole %
+            document.getElementById(`pourcentageTrancheAncien-${index + 1}`).innerText = pourcentage + '%';
+
+            // Ajouter le pourcentage calculé au total sans le symbole %
+            totalPourcentageAncien += parseFloat(pourcentage);
+        });
+
+        // Mettre à jour le total des pourcentages avec le symbole % dans le tfoot
+        document.getElementById('totalPourcentageNouveau').innerText = totalPourcentageNouveau.toFixed(4) + '%';
+        document.getElementById('totalPourcentageAncien').innerText = totalPourcentageAncien.toFixed(4) + '%';
+    }
+
+    // Fonction pour générer le tableau des échéances
+        function genererEcheancier() {
+            const nbEcheances = parseInt(document.getElementById('nbEcheances').value) || 1;
+            const dateDebut = new Date(document.getElementById('dateDebut').value);
+            const periodicite = parseInt(document.getElementById('periodicite').value) || 1;
+
+            let montantNouveau, montantAncien;
+
+            if (document.getElementById('flexRadioDefault1').checked) {
+                montantNouveau = parseFloat(document.getElementById('scolaritee').value);
+                montantAncien = parseFloat(document.getElementById('scolarite_a').value);
+            } else {
+                montantNouveau = parseFloat(document.getElementById('totalFrais').textContent);
+                montantAncien = parseFloat(document.getElementById('totalFraisAnciens').textContent);
+            }
+
+            const tbody = document.getElementById('tableBody');
+            const tbodyNouveaux = document.getElementById('tbodyNouveaux');
+            const tbodyAnciens = document.getElementById('tbodyAnciens');
+
+            // Vider les tableaux
+            tbody.innerHTML = '';
+            tbodyNouveaux.innerHTML = '';
+            tbodyAnciens.innerHTML = '';
+
+            for (let i = 1; i <= nbEcheances; i++) {
+                const datePaiement = new Date(dateDebut);
+                if (periodicite < 7) {
+                    datePaiement.setMonth(datePaiement.getMonth() + (i - 1) * periodicite);
+                } else {
+                    datePaiement.setDate(datePaiement.getDate() + (i - 1) * periodicite);
+                }
+
+                const datePaiementFormat = datePaiement.toLocaleDateString('fr-FR');
+
+                const montantTrancheNouveau = Math.ceil(montantNouveau / nbEcheances);
+                const montantTrancheAncien = Math.ceil(montantAncien / nbEcheances);
+
+                // Créer une nouvelle ligne pour chaque échéance
+                const row = `
+                    <tr class="echeance-row">
+                        <td>${i}</td>
+                        <td id="pourcentageTrancheNouveau-${i}">0%</td>
+                        <td id="pourcentageTrancheAncien-${i}">0%</td>
+                        <td id="montantTrancheNouveau-${i}">${montantTrancheNouveau}</td>
+                        <td id="montantTrancheAncien-${i}">${montantTrancheAncien}</td>
+                        <td id="datepaie-${i}" classe=".date-paiement" style="display: none;">${datePaiementFormat}</td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', row);
+
+                // Créer et insérer les lignes dans le tableau des nouveaux élèves
+                const rowNouveau = `
+                    <tr>
+                        <td>${i}</td>
+                        <td>${datePaiementFormat}</td>
+                        <td><input type="number" class="form-control montant-nouveau" value="${montantTrancheNouveau}" data-tranche-nouveau="${i}" /></td>
+                    </tr>
+                `;
+                tbodyNouveaux.insertAdjacentHTML('beforeend', rowNouveau);
+
+                // Créer et insérer les lignes dans le tableau des anciens élèves
+                const rowAncien = `
+                    <tr>
+                        <td>${i}</td>
+                        <td>${datePaiementFormat}</td>
+                        <td><input type="number" class="form-control montant-ancien" value="${montantTrancheAncien}" data-tranche-ancien="${i}" /></td>
+                    </tr>
+                `;
+                tbodyAnciens.insertAdjacentHTML('beforeend', rowAncien);
+            }
+
+
+
+
+            // Réattacher les événements sur les champs de montants modifiables
+            document.querySelectorAll('.montant-nouveau').forEach(function(input) {
+                input.addEventListener('input', function() {
+                    const trancheIndex = input.getAttribute('data-tranche-nouveau');
+                    document.getElementById(`montantTrancheNouveau-${trancheIndex}`).innerText = input.value;
+                    mettreAJourTotaux(); // Met à jour les totaux après chaque modification
+                });
+            });
+
+            document.querySelectorAll('.montant-ancien').forEach(function(input) {
+                input.addEventListener('input', function() {
+                    const trancheIndex = input.getAttribute('data-tranche-ancien');
+                    document.getElementById(`montantTrancheAncien-${trancheIndex}`).innerText = input.value;
+                    mettreAJourTotaux(); // Met à jour les totaux après chaque modification
+                });
+            });
+
+            // Calculer les pourcentages initiaux
+            mettreAJourTotaux();
         }
 
-        const datePaiementFormat = datePaiement.toLocaleDateString('fr-FR');
+        // Attacher un événement au champ Nb. échéance pour recalculer à chaque changement
+        document.getElementById('nbEcheances').addEventListener('input', genererEcheancier);
+        document.getElementById('scolaritee').addEventListener('input', genererEcheancier);
+        document.getElementById('scolarite_a').addEventListener('input', genererEcheancier);
+        document.getElementById('frais1').addEventListener('input', genererEcheancier);
+        document.getElementById('frais1_a').addEventListener('input', genererEcheancier);
+        document.getElementById('frais2').addEventListener('input', genererEcheancier);
+        document.getElementById('frais2_a').addEventListener('input', genererEcheancier);
+        document.getElementById('frais3').addEventListener('input', genererEcheancier);
+        document.getElementById('frais3_a').addEventListener('input', genererEcheancier);
+        document.getElementById('frais4').addEventListener('input', genererEcheancier);
+        document.getElementById('frais4_a').addEventListener('input', genererEcheancier);
+        document.getElementById('dateDebut').addEventListener('change', genererEcheancier);
+        document.getElementById('periodicite').addEventListener('input', genererEcheancier);
 
-        const montantTrancheNouveau = Math.ceil(montantNouveau / nbEcheances);
-        const montantTrancheAncien = Math.ceil(montantAncien / nbEcheances);
 
-        // Créer une nouvelle ligne pour chaque échéance
-        const row = `
-            <tr class="echeance-row">
-                <td>${i}</td>
-                <td id="pourcentageTrancheNouveau-${i}">0%</td>
-                <td id="pourcentageTrancheAncien-${i}">0%</td>
-                <td id="montantTrancheNouveau-${i}">${montantTrancheNouveau}</td>
-                <td id="montantTrancheAncien-${i}">${montantTrancheAncien}</td>
-                <td id="datepaie-${i}" classe=".date-paiement" style="display: none;">${datePaiementFormat}</td>
-            </tr>
-        `;
-        tbody.insertAdjacentHTML('beforeend', row);
+        
 
-        // Créer et insérer les lignes dans le tableau des nouveaux élèves
-        const rowNouveau = `
-            <tr>
-                <td>${i}</td>
-                <td>${datePaiementFormat}</td>
-                <td><input type="number" class="form-control montant-nouveau" value="${montantTrancheNouveau}" data-tranche-nouveau="${i}" /></td>
-            </tr>
-        `;
-        tbodyNouveaux.insertAdjacentHTML('beforeend', rowNouveau);
+        // Ajouter des écouteurs aux boutons radio pour recalculer à chaque changement d'option
+        document.getElementById('flexRadioDefault1').addEventListener('change', genererEcheancier);
+        document.getElementById('flexRadioDefault2').addEventListener('change', genererEcheancier);
 
-        // Créer et insérer les lignes dans le tableau des anciens élèves
-        const rowAncien = `
-            <tr>
-                <td>${i}</td>
-                <td>${datePaiementFormat}</td>
-                <td><input type="number" class="form-control montant-ancien" value="${montantTrancheAncien}" data-tranche-ancien="${i}" /></td>
-            </tr>
-        `;
-        tbodyAnciens.insertAdjacentHTML('beforeend', rowAncien);
-    }
+        // Générer l'échéancier initialement
+        genererEcheancier();
 
 
 
+        document.getElementById('validerButton').addEventListener('click', function(event) {
+        // Empêcher la soumission du formulaire si nécessaire
+        event.preventDefault();
 
-    // Réattacher les événements sur les champs de montants modifiables
-    document.querySelectorAll('.montant-nouveau').forEach(function(input) {
-        input.addEventListener('input', function() {
-            const trancheIndex = input.getAttribute('data-tranche-nouveau');
-            document.getElementById(`montantTrancheNouveau-${trancheIndex}`).innerText = input.value;
-            mettreAJourTotaux(); // Met à jour les totaux après chaque modification
+            // Calculer le total des montants dans le tableau des nouveaux élèves
+        let totalMontantNouveauTableau = 0;
+        let totalMontantAncienTableau = 0;
+        document.querySelectorAll('.montant-nouveau').forEach(function(input) {
+            totalMontantNouveauTableau += parseFloat(input.value) || 0;
         });
-    });
 
-    document.querySelectorAll('.montant-ancien').forEach(function(input) {
-        input.addEventListener('input', function() {
-            const trancheIndex = input.getAttribute('data-tranche-ancien');
-            document.getElementById(`montantTrancheAncien-${trancheIndex}`).innerText = input.value;
-            mettreAJourTotaux(); // Met à jour les totaux après chaque modification
+        document.querySelectorAll('.montant-ancien').forEach(function(input) {
+            totalMontantAncienTableau += parseFloat(input.value) || 0;
         });
-    });
 
-    // Calculer les pourcentages initiaux
-    mettreAJourTotaux();
-}
+        if (document.getElementById('flexRadioDefault1').checked) {
+            montantNouveauUtilise = parseFloat(document.getElementById('scolaritee').value);
+            montantAncienUtilise = parseFloat(document.getElementById('scolarite_a').value);
+        } else {
+            montantNouveauUtilise = parseFloat(document.getElementById('totalFrais').textContent);
+            montantAncienUtilise = parseFloat(document.getElementById('totalFraisAnciens').textContent);
+        }
+        // Récupérer le montant des nouveaux à utiliser
+        // const montantNouveauUtilise = parseFloat(document.getElementById('montantNouveauUtilise').value) || 0;
 
-    // Attacher un événement au champ Nb. échéance pour recalculer à chaque changement
-    document.getElementById('nbEcheances').addEventListener('input', genererEcheancier);
-    document.getElementById('scolarite').addEventListener('input', genererEcheancier);
-    document.getElementById('scolarite_a').addEventListener('input', genererEcheancier);
-    document.getElementById('frais1').addEventListener('input', genererEcheancier);
-    document.getElementById('frais1_a').addEventListener('input', genererEcheancier);
-    document.getElementById('frais2').addEventListener('input', genererEcheancier);
-    document.getElementById('frais2_a').addEventListener('input', genererEcheancier);
-    document.getElementById('frais3').addEventListener('input', genererEcheancier);
-    document.getElementById('frais3_a').addEventListener('input', genererEcheancier);
-    document.getElementById('frais4').addEventListener('input', genererEcheancier);
-    document.getElementById('frais4_a').addEventListener('input', genererEcheancier);
-    document.getElementById('dateDebut').addEventListener('change', genererEcheancier);
-    document.getElementById('periodicite').addEventListener('input', genererEcheancier);
+        // Vérifier si les montants correspondent pour les nouveaux élèves
+        if (totalMontantNouveauTableau !== montantNouveauUtilise) {
+            showModalMessage('Le total des montants dans le tableau des nouveaux élèves ne correspond pas au montant des nouveaux à utiliser.');
+            return; // Ne pas soumettre le formulaire
+        }
 
-
-    
-
-    // Ajouter des écouteurs aux boutons radio pour recalculer à chaque changement d'option
-    document.getElementById('flexRadioDefault1').addEventListener('change', genererEcheancier);
-    document.getElementById('flexRadioDefault2').addEventListener('change', genererEcheancier);
-
-    // Générer l'échéancier initialement
-    genererEcheancier();
-
-
-
-    document.getElementById('validerButton').addEventListener('click', function(event) {
-    // Empêcher la soumission du formulaire si nécessaire
-    event.preventDefault();
-
-        // Calculer le total des montants dans le tableau des nouveaux élèves
-    let totalMontantNouveauTableau = 0;
-    let totalMontantAncienTableau = 0;
-    document.querySelectorAll('.montant-nouveau').forEach(function(input) {
-        totalMontantNouveauTableau += parseFloat(input.value) || 0;
-    });
-
-    document.querySelectorAll('.montant-ancien').forEach(function(input) {
-        totalMontantAncienTableau += parseFloat(input.value) || 0;
-    });
-
-    if (document.getElementById('flexRadioDefault1').checked) {
-        montantNouveauUtilise = parseFloat(document.getElementById('scolarite').value);
-        montantAncienUtilise = parseFloat(document.getElementById('scolarite_a').value);
-    } else {
-        montantNouveauUtilise = parseFloat(document.getElementById('totalFrais').textContent);
-        montantAncienUtilise = parseFloat(document.getElementById('totalFraisAnciens').textContent);
-    }
-    // Récupérer le montant des nouveaux à utiliser
-    // const montantNouveauUtilise = parseFloat(document.getElementById('montantNouveauUtilise').value) || 0;
-
-    // Vérifier si les montants correspondent pour les nouveaux élèves
-    if (totalMontantNouveauTableau !== montantNouveauUtilise) {
-        showModalMessage('Le total des montants dans le tableau des nouveaux élèves ne correspond pas au montant des nouveaux à utiliser.');
-        return; // Ne pas soumettre le formulaire
-    }
-
-    // Vérifier si les montants correspondent pour les anciens élèves
-    if (totalMontantAncienTableau !== montantAncienUtilise) {
-        showModalMessage('Le total des montants dans le tableau des anciens élèves ne correspond pas au montant des anciens à utiliser.');
-        return; // Ne pas soumettre le formulaire
-    }
+        // Vérifier si les montants correspondent pour les anciens élèves
+        if (totalMontantAncienTableau !== montantAncienUtilise) {
+            showModalMessage('Le total des montants dans le tableau des anciens élèves ne correspond pas au montant des anciens à utiliser.');
+            return; // Ne pas soumettre le formulaire
+        }
 
         // Vérifier si les champs requis sont remplis
         const nbEcheances = document.getElementById('nbEcheances').value.trim();
@@ -915,8 +723,6 @@ function genererEcheancier() {
         document.getElementById('echeancesData').value = JSON.stringify(echeances);
         // Soumettre le formulaire si la validation est réussie
         document.getElementById('validationForm').submit();    
-        
-
 
 });
 
@@ -940,47 +746,7 @@ function genererEcheancier() {
             let alertModal = new bootstrap.Modal(document.getElementById('alertModal'));
             alertModal.show();
         }
-    
-
-    // soumettre le formulaire dans un nouvell onglet
-
-// document.getElementById('validerButton').addEventListener('click', function(event) {
-//     event.preventDefault(); // Empêche la soumission normale du formulaire
-
-//     // Récupérer l'URL d'action du formulaire
-//     const form = document.getElementById('validationForm');
-//     const formAction = form.getAttribute('action');
-//     const formMethod = form.getAttribute('method');
-
-//     // Créer un nouvel onglet pour soumettre le formulaire
-//     const newTab = window.open('', '_blank'); // Ouvrir un nouvel onglet
-
-//     // Créer un formulaire temporaire dans la nouvelle fenêtre
-//     const tempForm = newTab.document.createElement('form');
-//     tempForm.action = formAction;
-//     tempForm.method = formMethod;
-
-//     // Copier les champs du formulaire original dans le formulaire temporaire
-//     Array.from(form.elements).forEach(function(element) {
-//         if (element.name && element.value) {
-//             const input = newTab.document.createElement('input');
-//             input.type = 'hidden';
-//             input.name = element.name;
-//             input.value = element.value;
-//             tempForm.appendChild(input);
-//         }
-//     });
-
-//     // Soumettre le formulaire temporaire dans le nouvel onglet
-//     newTab.document.body.appendChild(tempForm);
-//     tempForm.submit();
-// });
+});
 </script>
 
 @endsection
-
-
-{{-- 
-
-
---}}

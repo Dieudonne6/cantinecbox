@@ -37,6 +37,7 @@ use App\Models\Matieres;
 use App\Models\Notes;
 use App\Models\Clasmat;
 use App\Models\Imgbulletin;
+use App\Models\DecisionConfiguration;
 use Carbon\Carbon;
 
 use App\Models\Duplicatafacture;
@@ -80,6 +81,51 @@ class BulletinController extends Controller
         $params2 = Params2::first();
         $typean = $params2->TYPEAN;
         return view('pages.notes.bulletindenotes', compact('classes', 'promotions', 'eleves', 'matieres', 'typean', 'classesg'));
+    }
+
+    public function configurerDecisions(Request $request)
+    {
+
+        $data = $request->validate([
+            'promotion'                => 'required',
+            'intervals.non.*.min'     => 'required|numeric|between:0,100',
+            'intervals.non.*.max'     => 'required|numeric|between:0,100',
+            'intervals.non.*.libelle' => 'required|string',
+            'intervals.doublant.*.min'     => 'required|numeric|between:0,100',
+            'intervals.doublant.*.max'     => 'required|numeric|between:0,100',
+            'intervals.doublant.*.libelle' => 'required|string',
+        ]);
+        dd($request->all());
+
+        // Montage du tableau de données
+        $payload = ['promotion' => $data['promotion']];
+
+        // Non-redoublants
+        foreach (range(1,5) as $i) {
+            $payload["NouveauBorneI{$i}A"]  = $data['intervals']['non'][$i]['min'];
+            $payload["NouveauBorneI{$i}B"]  = $data['intervals']['non'][$i]['max'];
+            $payload["NouveauLibelleI{$i}"] = $data['intervals']['non'][$i]['libelle'];
+        }
+
+        // Redoublants
+        foreach (range(1,5) as $i) {
+            $payload["AncienBorneI{$i}A"]    = $data['intervals']['doublant'][$i]['min'];
+            $payload["AncienBorneI{$i}B"]    = $data['intervals']['doublant'][$i]['max'];
+            $payload["AncienLibelleI{$i}"]   = $data['intervals']['doublant'][$i]['libelle'];
+        }
+
+        // Mise à jour ou création
+        $config=DecisionConfiguration::updateOrCreate(
+            ['promotion' => $data['promotion']],
+            $payload
+        );
+        
+        dd($config->toArray());
+        return response()->json([
+            'success' => true,
+            'message' => 'Configuration enregistrée avec succès !'
+          ]);
+          // Ici tu dd() l'objet pour voir ses attributs et l'ID généré
     }
 
     public function getClassesByType(Request $request)
