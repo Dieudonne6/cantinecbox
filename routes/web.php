@@ -371,6 +371,11 @@ Route::get('/elevessansnote/{classCode}',  [EditionController::class, 'elevessan
 Route::get('/editions2/tableauanalytiqueparmatiere', [EditionController2::class, 'tableauanalytiqueparmatiere'])->name('tableauanalytiqueparmatiere');
 
 Route::get('/bulletindenotes', [BulletinController::class, 'bulletindenotes'])->name('bulletindenotes');
+
+// retourne { non: {1:{min, max, lib}, …}, doublant: {…} } ou 404
+Route::get('decisions/config/{promotion}', [BulletinController::class, 'getConfig'])
+     ->name('decisions.getConfig');
+
 Route::match(['get', 'post'], '/filtertableaunotes', [EditionController::class, 'filtertableaunotes'])->name('filtertableaunotes');
 Route::get('/tableaudenotes', [EditionController::class, 'tableaudenotes'])->name('tableaudenotes');
 
@@ -387,6 +392,7 @@ Route::get('/attestation/template', [CdController::class, 'printTemplate'])->nam
 Route::post('/bulletindenotes', [BulletinController::class, 'storebulletindenotes'])->name('storebulletindenotes');
 Route::post('/bulletindenotes/config', [BulletinController::class, 'configurerDecisions'])->name('configurerDecisions');
 Route::post('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');
+// Route::match(['get', 'post'], '/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');
 Route::post('/optionsbulletindenotes', [BulletinController::class, 'optionsbulletindenotes'])->name('optionsbulletindenotes');
 Route::get('/get-classes-by-group', [BulletinController::class, 'getClassesByType'])->name('getClassesByGroup');
 // Route::get('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');

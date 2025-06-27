@@ -69,6 +69,32 @@ use PDF;
 
 class BulletinController extends Controller
 {
+
+    public function getConfig($promotion)
+    {
+        $cfg = DecisionConfiguration::where('promotion', $promotion)->first();
+        if (! $cfg) {
+            return response()->json(null, 204);   // pas de contenu
+        }
+
+        // Recomposer la structure “intervals” exactement comme dans ton formulaire
+        $intervals = ['non'=>[], 'doublant'=>[]];
+        for ($i = 1; $i <= 5; $i++) {
+            $intervals['non'][$i] = [
+                'min'     => $cfg->{"NouveauBorneI{$i}A"},
+                'max'     => $cfg->{"NouveauBorneI{$i}B"},
+                'libelle' => $cfg->{"NouveauLibelleI{$i}"},
+            ];
+            $intervals['doublant'][$i] = [
+                'min'     => $cfg->{"AncienBorneI{$i}A"},
+                'max'     => $cfg->{"AncienBorneI{$i}B"},
+                'libelle' => $cfg->{"AncienLibelleI{$i}"},
+            ];
+        }
+
+        return response()->json($intervals);
+    }
+
     public function bulletindenotes()
     {
         $classes = Classes::withCount(['eleves' => function ($query) {
@@ -80,12 +106,20 @@ class BulletinController extends Controller
         $eleves = Eleve::all();
         $params2 = Params2::first();
         $typean = $params2->TYPEAN;
+
+            // 1) On met en session tout ce qu'il faut reprendre après configurerDecisions()
+            session()->put('bulletinInit', compact(
+                'classes', 'classesg', 'promotions',
+                'matieres', 'eleves', 'typean'
+            ));
+
         return view('pages.notes.bulletindenotes', compact('classes', 'promotions', 'eleves', 'matieres', 'typean', 'classesg'));
     }
 
     public function configurerDecisions(Request $request)
     {
 
+        // dd('yoyoyoyoyoyo');
         $data = $request->validate([
             'promotion'                => 'required',
             'intervals.non.*.min'     => 'required|numeric|between:0,100',
@@ -95,7 +129,9 @@ class BulletinController extends Controller
             'intervals.doublant.*.max'     => 'required|numeric|between:0,100',
             'intervals.doublant.*.libelle' => 'required|string',
         ]);
-        dd($request->all());
+
+        /* dd($data); */
+        // dd($request->all());
 
         // Montage du tableau de données
         $payload = ['promotion' => $data['promotion']];
@@ -115,18 +151,27 @@ class BulletinController extends Controller
         }
 
         // Mise à jour ou création
-        $config=DecisionConfiguration::updateOrCreate(
+        DecisionConfiguration::updateOrCreate(
             ['promotion' => $data['promotion']],
             $payload
         );
         
-        dd($config->toArray());
-        return response()->json([
-            'success' => true,
-            'message' => 'Configuration enregistrée avec succès !'
-          ]);
-          // Ici tu dd() l'objet pour voir ses attributs et l'ID généré
+
+            // 1) Récupère les données initiales de la page (classes, promos…)
+            $init = session()->get('bulletinInit', []);
+            if (empty($init)) {
+                // au cas où on arrive ici sans avoir d'init, on peut abort ou refetch
+                abort(404, 'Données de configuration manquantes en session.');
+            }
+   
+        // return redirect()->route('bulletindenotes');
+
+        // 3) Redirige vers bulletindenotes (qui relira bulletinInit + decisions)
+
+        return redirect()->route('bulletindenotes')
+                     ->with('success', 'Décisions bien enregistrées !');
     }
+
 
     public function getClassesByType(Request $request)
     {
@@ -820,6 +865,9 @@ class BulletinController extends Controller
         $nbabsence = $request->input('nbabsence');
         $classeSelectionne = $request->input('selected_classes');
         $interligne = $request->input('interligne', 7); // Valeur par défaut de 7mm
+        $promo = Promo::all();
+        $decisions = DecisionConfiguration::all();
+        //COnfgurer décisions en fonction de l'intervalles
 
         session()->put('conduite', $conduite);
         session()->put('eps', $eps);
@@ -883,13 +931,17 @@ class BulletinController extends Controller
 
         // Récupérer tous les élèves de la classe sélectionnée
         $elevesA = Eleve::where('CODECLAS', $codeClasse)->get();
-
+        
         $resultats = [];
         $annualAverages = [];      // [matricule => moyenneAnnuelle]
         $periodAverages = [];      // [periode => [matricule => moyennePourLaPeriode]]
 
         // Parcourir chaque élève
         foreach ($elevesA as $eleveA) {
+
+
+
+
             // Tableau pour stocker les infos par période pour cet élève
             $studentPeriods = [];
 
@@ -1111,6 +1163,8 @@ class BulletinController extends Controller
                 $periodAverages[$periodeA][$eleveA->MATRICULE] = $data['moyenne'];
             }
 
+
+
             // Stocker les résultats de l'élève, y compris les bilans annuels et appréciations
             $resultatsA[] = [
                 'eleve'                   => $eleveA,
@@ -1119,6 +1173,8 @@ class BulletinController extends Controller
                 // 'bilanLitteraireAnnuel'   => $studentPeriods, // Vous pouvez calculer un bilan annuel de façon similaire si besoin
                 'periods'                 => $studentPeriods,
             ];
+
+            // dd($resultatsA);
         } // fin foreach élèves
 
         // Calcul des classements (annual et par période)
@@ -1454,6 +1510,56 @@ class BulletinController extends Controller
             $moyenneAnnuelleClasse = $compteur > 0 ? $somme / $compteur : null;
 
 
+                        // recuperer la decision correspondante
+
+
+
+                $classeElev = $eleve->CODECLAS;
+                $CodePromo = Classes::where('CODECLAS', $classeElev)->first();
+                $CODEPROMO = $CodePromo->CODEPROMO;
+                $moyenneAnnuelle = $eleve->MAN;
+                $infoDecision = DecisionConfiguration::where('promotion', $CODEPROMO)->first();
+                // $NouveauBorneI1A = $infoDecision->NouveauBorneI1A;
+                // dd($infoDecision);
+
+                // On récupère la configuration pour la promotion
+                // $infoDecision = DecisionConfiguration::where('promotion', $CODEPROMO)->first();
+
+                // On choisit le préfixe selon le statut
+                if ($eleveA->STATUT == 0) {
+                    $prefix = 'Nouveau';
+                } elseif ($eleveA->STATUT == 1) {
+                    $prefix = 'Ancien';
+                } else {
+                    $prefix = null;
+                }
+
+                // On détermine le libellé
+                $decisionAnnuelle = null;
+                if ($prefix) {
+                    // Parcours des 5 intervalles
+                    for ($i = 1; $i <= 5; $i++) {
+                        // Construction dynamique du nom des propriétés
+                        $lowProp   = "{$prefix}BorneI{$i}A";
+                        $highProp  = "{$prefix}BorneI{$i}B";
+                        $labelProp = "{$prefix}LibelleI{$i}";
+
+                        $low   = floatval($infoDecision->$lowProp);
+                        $high  = floatval($infoDecision->$highProp);
+                        $moy   = floatval($moyenneAnnuelle);
+
+                        // Test inclusif : [borneA, borneB[
+                        if ($moy >= $low && $moy < $high) {
+                            $decisionAnnuelle = $infoDecision->$labelProp;
+                            break;
+                        }
+                        // Pour le dernier intervalle (qui va jusqu'à la borne B incluse)
+                        // if ($i === 5 && $moy >= $low && $moy <= $high) {
+                        //     $appreciationAnnuelle = $infoDecision->$labelProp;
+                        //     break;
+                        // }
+                    }
+                }
 
 
             $resultatEleve = [
@@ -1476,6 +1582,7 @@ class BulletinController extends Controller
                 'moyenne2emTrimestre_Semestre' => $moyenne2emTrimestre_Semestre,
                 'moyenne3emTrimestre_Semestre' => $moyenne3emTrimestre_Semestre,
                 'moyenneAnnuel' => $eleve->MAN,
+                'decisionAnnuelle'    => $decisionAnnuelle,
                 'rangAnnuel' => $eleve->RANGA,
                 'rang1' => $eleve->RANG1,
                 'rang2' => $eleve->RANG2,
