@@ -36,6 +36,7 @@ use App\Models\Matiere;
 use App\Models\Matieres;
 use App\Models\Notes;
 use App\Models\Clasmat;
+use App\Models\Imgbulletin;
 use App\Models\DecisionConfiguration;
 use Carbon\Carbon;
 
@@ -825,10 +826,33 @@ class BulletinController extends Controller
     }
 
 
+    public function printimagefond(Request $request)
+    {
+        
+    }
+
 
 
     public function printbulletindenotes(Request $request)
     {
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+
+            $image->move(public_path('img/fonds'), $imageName);
+
+            Imgbulletin::create([
+                'nom_image' => $imageName
+            ]);
+
+            $image = $imageName;
+        } else {
+            $lastImage = Imgbulletin::latest()->first();
+            $image = $lastImage ? $lastImage->nom_image : null;
+        }
+
+
         $option = Session::get('option');
         $moyennesParClasseEtMatiere = [];
         $paramselection = $request->input('paramselection');
@@ -860,14 +884,14 @@ class BulletinController extends Controller
         $formatter = new HtmlFormatter();
         $enteteNonStyle = $formatter->Format($document);
         $entete = '
-<div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
-    <style>
-        p { margin: 0; padding: 0; line-height: 1.2; }
-        span { display: inline-block; }
-    </style>
-    ' . $enteteNonStyle . '
-</div>
-';
+        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+            <style>
+                p { margin: 0; padding: 0; line-height: 1.2; }
+                span { display: inline-block; }
+            </style>
+            ' . $enteteNonStyle . '
+        </div>
+        ';
         // dd($entete);
         $logo = $params2->logoimage;
 
@@ -876,7 +900,6 @@ class BulletinController extends Controller
 
         // Définir le type MIME de l'image (adaptez-le en fonction de votre image)
         $mimeType = 'image/png';
-
 
         $infoparamcontrat = Paramcontrat::first();
         $anneencours = $infoparamcontrat->anneencours_paramcontrat;
@@ -1794,31 +1817,31 @@ class BulletinController extends Controller
 
 
 
-/*
- * Calcul de la moyenne générale sur 20 :
- * - Si aucun devoir n’existe ($nbDevoir == 0), on prend juste la moyenneInterro 
- *   (mais si moyenneInterro == 21, on renverra 0 pour ne pas compter l’absence).
- * - Si des devoirs existent ($nbDevoir > 0), on ajoute la moyenneInterro *seulement* 
- *   si elle est < 21. Sinon on ne l’inclut pas dans le calcul, 
- *   autrement dit on fait totalDevoir / nbDevoir.
- */
-if ($nbDevoir > 0) {
-    if ($moyenneInterro < 21) {
-        // On inclut l’interro : on ajoute 1 à nbDevoir et moyenneInterro au numérateur
-        $moyenneSur20 = ($moyenneInterro + $totalDevoir) / ($nbDevoir + 1);
-    } else {
-        // Interro absent (==21), on ne l’inclut pas dans le calcul
-        $moyenneSur20 = $totalDevoir / $nbDevoir;
-    }
-} else {
-    // Pas de devoirs :
-    //   - Si l’interro existe (<21), on prend sa valeur.
-    //   - Si l’interro vaut 21 (absence), on renvoie 0.
-    $moyenneSur20 = $moyenneInterro ;
-}
+        /*
+        * Calcul de la moyenne générale sur 20 :
+        * - Si aucun devoir n’existe ($nbDevoir == 0), on prend juste la moyenneInterro 
+        *   (mais si moyenneInterro == 21, on renverra 0 pour ne pas compter l’absence).
+        * - Si des devoirs existent ($nbDevoir > 0), on ajoute la moyenneInterro *seulement* 
+        *   si elle est < 21. Sinon on ne l’inclut pas dans le calcul, 
+        *   autrement dit on fait totalDevoir / nbDevoir.
+        */
+        if ($nbDevoir > 0) {
+            if ($moyenneInterro < 21) {
+                // On inclut l’interro : on ajoute 1 à nbDevoir et moyenneInterro au numérateur
+                $moyenneSur20 = ($moyenneInterro + $totalDevoir) / ($nbDevoir + 1);
+            } else {
+                // Interro absent (==21), on ne l’inclut pas dans le calcul
+                $moyenneSur20 = $totalDevoir / $nbDevoir;
+            }
+        } else {
+            // Pas de devoirs :
+            //   - Si l’interro existe (<21), on prend sa valeur.
+            //   - Si l’interro vaut 21 (absence), on renvoie 0.
+            $moyenneSur20 = $moyenneInterro ;
+        }
 
-// Calcul de la moyenne pondérée (coeff)
-$moyenneCoeff = $totalCoeff > 0 ? $moyenneSur20 * $totalCoeff : 0;
+        // Calcul de la moyenne pondérée (coeff)
+        $moyenneCoeff = $totalCoeff > 0 ? $moyenneSur20 * $totalCoeff : 0;
 
 
 
@@ -2097,9 +2120,8 @@ $moyenneCoeff = $totalCoeff > 0 ? $moyenneSur20 * $totalCoeff : 0;
         //     // Sauvegarder le PDF dans le dossier
         //     $pdf->save($destinationPath . '/' . $filename);
 
-
-        // dd($request->periode);
-        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean', 'params2', 'logo', 'logoBase64', 'mimeType', 'interligne'));
+        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean', 'params2', 'logo', 'logoBase64', 'mimeType', 'interligne', 'image'));
+    
     }
 
     /**

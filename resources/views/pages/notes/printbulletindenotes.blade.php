@@ -1,10 +1,26 @@
 @extends('layouts.master')
 @section('content')
-    <div style="margin-left: 10px; margin-right: 10px;">
+    <div style=" position: relative; margin-left: 10px; margin-right: 10px; min-height: 100vh; overflow: hidden;">          
+       <div class="bulletin-bg" style="position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background-image: url('{{ $image ? asset('img/fonds/' . $image) : '' }}');
+                                background-position: center;
+                                "> </div>
+        <div style="
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(255, 255, 255, 0.7);
+        "></div> 
         <div class="col-lg-12" style="margin-top: 0; padding-top: 0;">
             <div class="card-body" {{-- style="margin-top: 0; padding-top: 0;" --}}>
                 <div>
-                    <style>
+                    <style> 
                         .btn-arrow {
                             position: absolute;
                             top: 0px;
@@ -34,32 +50,32 @@
                 </div>
 
                 @php
-                     $sortedResultats = collect($resultats)->sortBy('matricule');
+                    $sortedResultats = collect($resultats)->sortBy('matricule');
                 @endphp
 
                 @foreach ($sortedResultats as $index => $resultat)
                     @php
                         // Initialisation des variables en fonction du type d'année
-$periode = null;
-$texte = null;
-$texte2 = null;
-$periode_abr = null;
-if ($typean == 1) {
-    $periode = 'Semestre';
-    $texte = 'Semestriel';
-    $texte2 = 'Semestrielle';
-    $periode_abr = 'Sem.';
-} else {
-    $periode = 'Trimestre';
-    $texte = 'Trimestriel';
-    $texte2 = 'Trimestrielle';
-    $periode_abr = 'Trim.';
-}
+                        $periode = null;
+                        $texte = null;
+                        $texte2 = null;
+                        $periode_abr = null;
+                        if ($typean == 1) {
+                            $periode = 'Semestre';
+                            $texte = 'Semestriel';
+                            $texte2 = 'Semestrielle';
+                            $periode_abr = 'Sem.';
+                        } else {
+                            $periode = 'Trimestre';
+                            $texte = 'Trimestriel';
+                            $texte2 = 'Trimestrielle';
+                            $periode_abr = 'Trim.';
+                        }
 
-// Trier les matières par CODEMAT
-usort($resultat['matieres'], function ($a, $b) {
-    return $a['code_matiere'] - $b['code_matiere'];
-                        });
+                        // Trier les matières par CODEMAT
+                        usort($resultat['matieres'], function ($a, $b) {
+                            return $a['code_matiere'] - $b['code_matiere'];
+                                                });
                     @endphp
                     </br>
 
@@ -367,7 +383,7 @@ usort($resultat['matieres'], function ($a, $b) {
                                             <td>{{ number_format($moyenne_part, 2) ?? '**.**' }}</td>
                                             <td>{{ $matiere['test'] ?? '**.**' }}</td>
                                             <td class="bold-text" style="font-weight: bold">
-                                               {{ isset($moyenne_sur_20) ? number_format($moyenne_sur_20, 2) : '**.**' }}
+                                            {{ isset($moyenne_sur_20) ? number_format($moyenne_sur_20, 2) : '**.**' }}
                                             </td>
                                                                                             {{-- @php
                                                     
@@ -410,9 +426,9 @@ usort($resultat['matieres'], function ($a, $b) {
                                         <td colspan="4"></td>
                                     @endif
                                     {{--                                     @if (isset($option['note_test']) && $option['note_test'])
-                                      <td colspan="7"></td>
-                                      @else
-                                      <td colspan="4"></td>              
+                                    <td colspan="7"></td>
+                                    @else
+                                    <td colspan="4"></td>              
                                     @endif --}}
                                     <td>{{ number_format($total_moyenne_coeffs, 2) }}</td>
                                     @if (isset($option['rang_matiere']) && $option['rang_matiere'])
@@ -691,7 +707,7 @@ usort($resultat['matieres'], function ($a, $b) {
                                 <div
                                     style="flex: 1; display: flex; flex-direction: column; align-items: center; margin-bottom: 10px;">
                                     <h6 style="margin-top: 5px; text-align: center; text-decoration: underline;">
-                                        Appréciation du chef d'établissement
+                                        Appréciation du chef d'établissement 
                                     </h6>
 
                                     @if (isset($option['appreciation_directeur']) && $option['appreciation_directeur'])
@@ -956,7 +972,7 @@ usort($resultat['matieres'], function ($a, $b) {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 
-        {{-- <script>
+                    {{-- <script>
                         function imprimerliste() {
                             var content = document.querySelector('.main-panel').innerHTML;
                             var originalContent = document.body.innerHTML;
@@ -978,72 +994,73 @@ usort($resultat['matieres'], function ($a, $b) {
 
 
         {{-- <script>
-function imprimerliste() {
-    // Sélectionner tous les bulletins individuels
-    var bulletinElements = document.querySelectorAll('.bulletin');
-    
-    if (bulletinElements.length === 0) {
-        console.error("Aucun bulletin trouvé pour l'archivage.");
-        window.print();
-        return;
-    }
-    
-    var promises = [];
-    
-    bulletinElements.forEach(function(bulletinElement, index) {
-        // Récupérer le nom et la classe depuis les attributs data-nom et data-classe
-        var studentName = bulletinElement.getAttribute('data-nom') || 'unknown';
-        studentName = studentName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
-        
-        var classCode = bulletinElement.getAttribute('data-classe') || 'default';
-        classCode = classCode.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
-        
-        var promise = html2canvas(bulletinElement).then(function(canvas) {
-            var imgData = canvas.toDataURL('image/jpeg', 1.0);
-            const { jsPDF } = window.jspdf;
-            var pdf = new jsPDF('p', 'mm', 'a4');
-            var pdfWidth = pdf.internal.pageSize.getWidth();
-            var pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-            
-            // Créer un nom de fichier en utilisant le code de la classe et le nom de l'élève
-            var filename = 'bulletin_' + classCode + '_' + studentName + '_' + new Date().getTime() + '.pdf';
-            
-            var pdfBase64 = pdf.output('datauristring');
-            
-            return fetch('/archiveBulletin', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    pdf: pdfBase64,
-                    filename: filename,
-                    class: classCode
-                })
-            });
-        }).catch(function(err) {
-            console.error('Erreur lors de la capture d'un bulletin :', err);
-        });
-        
-        promises.push(promise);
-    });
-    
-    Promise.all(promises).then(function() {
-        var contentN = document.querySelector('.main-panel').innerHTML;
-        var originalContent = document.body.innerHTML;
-        document.body.innerHTML = contentN;
-        window.print();
-        document.body.innerHTML = originalContent;
-    }).catch(function(error) {
-        console.error('Erreur lors de l'archivage de certains bulletins:', error);
-        window.print();
-    });
-}
+            function imprimerliste() {
+                // Sélectionner tous les bulletins individuels
+                var bulletinElements = document.querySelectorAll('.bulletin');
+                
+                if (bulletinElements.length === 0) {
+                    console.error("Aucun bulletin trouvé pour l'archivage.");
+                    window.print();
+                    return;
+                }
+                
+                var promises = [];
+                
+                bulletinElements.forEach(function(bulletinElement, index) {
+                    // Récupérer le nom et la classe depuis les attributs data-nom et data-classe
+                    var studentName = bulletinElement.getAttribute('data-nom') || 'unknown';
+                    studentName = studentName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+                    
+                    var classCode = bulletinElement.getAttribute('data-classe') || 'default';
+                    classCode = classCode.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+                    
+                    var promise = html2canvas(bulletinElement).then(function(canvas) {
+                        var imgData = canvas.toDataURL('image/jpeg', 1.0);
+                        const { jsPDF } = window.jspdf;
+                        var pdf = new jsPDF('p', 'mm', 'a4');
+                        var pdfWidth = pdf.internal.pageSize.getWidth();
+                        var pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                        
+                        // Créer un nom de fichier en utilisant le code de la classe et le nom de l'élève
+                        var filename = 'bulletin_' + classCode + '_' + studentName + '_' + new Date().getTime() + '.pdf';
+                        
+                        var pdfBase64 = pdf.output('datauristring');
+                        
+                        return fetch('/archiveBulletin', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                pdf: pdfBase64,
+                                filename: filename,
+                                class: classCode
+                            })
+                        });
+                    }).catch(function(err) {
+                        console.error('Erreur lors de la capture d'un bulletin :', err);
+                    });
+                    
+                    promises.push(promise);
+                });
+                
+                Promise.all(promises).then(function() {
+                    var contentN = document.querySelector('.main-panel').innerHTML;
+                    var originalContent = document.body.innerHTML;
+                    document.body.innerHTML = contentN;
+                    window.print();
+                    document.body.innerHTML = originalContent;
+                }).catch(function(error) {
+                    console.error('Erreur lors de l'archivage de certains bulletins:', error);
+                    window.print();
+                });
+            }
 
 
-</script> --}}
+            </script> 
+        --}}
 
         <script>
             function imprimerliste() {
@@ -1064,9 +1081,6 @@ function imprimerliste() {
             //     event.preventDefault(); // Empêche la modification
             // });
         </script>
-
-
-
 
     </div>
 @endsection
