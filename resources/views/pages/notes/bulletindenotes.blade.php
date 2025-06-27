@@ -775,121 +775,193 @@
         </div>
     </div>
 
-    <!-- Modal pour décisions jury -->
-        <div class="modal fade" id="Editionconseils" tabindex="-1" aria-labelledby="EditionconseilsLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg" style="border-color: #844fc1;">
-                <div class="modal-header text-white" style="background-color: #844fc1;">
-                <h5 class="modal-title" id="EditionconseilsLabel">Configuration de la décision du Conseil des Profs</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                </div>
-                <div class="modal-body">
-                <!-- Ligne de sélection -->
-                <div class="row mb-4 align-items-center">
-                    <div class="col-md-4">
-                        <label for="promotionSelect" class="form-label">Promotion à configurer</label>
-                        <select id="promotionSelect" name="promo_id" class="form-select">
-                          <option value="" disabled selected>— Choisis une promotion —</option>
-                          @foreach($promotions as $promo)
-                            <option value="{{ $promo->id }}">
-                              {{ $promo->LIBELPROMO }}
-                            </option>
-                          @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-3 offset-md-2 text-end">
-                    <button class="btn mt-4" style="background-color: #844fc1; color: white;">
-                        <i class="fas fa-save"></i> Enregistrer
-                    </button>
-                    </div>
-                </div>
-        
-                <!-- Statut : Non Redoublant -->
-                <div class="card mb-4" style="border-color: #844fc1;">
-                    <div class="card-header text-white" style="background-color: #844fc1;">
-                    Statut : Non Redoublant
-                    </div>
-                    <div class="card-body p-0">
-                    <table class="table table-sm mb-0">
-                        <thead class="table-light">
-                        <tr>
-                            <th>Min.</th>
-                            <th>Max.</th>
-                            <th>Décision</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
-                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
-                            <td><input type="text" class="form-control form-control-sm" value=""></td>
-                        </tr>
-                        <tr>
-                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
-                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
-                            <td><input type="text" class="form-control form-control-sm" value=""></td>
-                        </tr>
-                        <tr>
-                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
-                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
-                            <td><input type="text" class="form-control form-control-sm" value=""></td>
-                        </tr>
-                        <tr>
-                            <td><input type="number" class="form-control form-control-sm" value="9.50"></td>
-                            <td><input type="number" class="form-control form-control-sm" value="10.00"></td>
-                            <td><input type="text" class="form-control form-control-sm" value=""></td>
-                        </tr>
-                        <tr>
-                            <td><input type="number" class="form-control form-control-sm" value="10.00"></td>
-                            <td><input type="number" class="form-control form-control-sm" value="20.00"></td>
-                            <td><input type="text" class="form-control form-control-sm" value="Admis(e) en classe supérieure"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    </div>
-                </div>
-        
-                <!-- Statut : Redoublant -->
-                <div class="card" style="border-color: #844fc1;">
-                    <div class="card-header text-white" style="background-color: #844fc1;">
-                    Statut : Redoublant
-                    </div>
-                    <div class="card-body p-0">
-                    <table class="table table-sm mb-0">
-                        <thead class="table-light">
-                        <tr>
-                            <th>Min.</th>
-                            <th>Max.</th>
-                            <th>Décision</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!-- Même structure que ci-dessus, avec valeurs et textes adaptés -->
-                        <tr>
-                            <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
-                            <td><input type="number" class="form-control form-control-sm" value="6.50"></td>
-                            <td><input type="text" class="form-control form-control-sm" value="Exclu(e). Ne peut tripler"></td>
-                        </tr>
-                        <!-- … autres lignes … -->
-                        <tr>
-                            <td><input type="number" class="form-control form-control-sm" value="10.00"></td>
-                            <td><input type="number" class="form-control form-control-sm" value="21.00"></td>
-                            <td><input type="text" class="form-control form-control-sm" value="Admis(e) en classe supérieure"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    </div>
-                </div>
-        
-                </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                </div>
+<!-- Modal pour décisions jury -->
+<div class="modal fade" id="Editionconseils" tabindex="-1" aria-labelledby="EditionconseilsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-color: #844fc1;">
+  
+        <form id="decisionForm">
+          @csrf
+  
+          <div class="modal-header text-white" style="background-color: #844fc1;">
+            <h5 class="modal-title" id="EditionconseilsLabel">Configuration de la décision du Conseil des Profs</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+  
+          <div class="modal-body">
+            <!-- Sélection de la promo -->
+            <div class="row mb-4 align-items-center">
+              <div class="col-md-4">
+                <label class="form-label">Promotion à configurer</label>
+                <select name="promotion" class="form-select" required>
+                  <option value="" disabled>— Choisis une promotion —</option>
+                  @foreach($promotions as $promo)
+                    <option value="{{ $promo->id }}">{{ $promo->LIBELPROMO }}</option>
+                  @endforeach
+                </select>
+              </div>
             </div>
+  
+            <div class="card mb-4" style="border-color: #844fc1;">
+              <div class="card-header text-white" style="background-color: #844fc1;">
+                Statut : Non Redoublant
+              </div>
+              <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                  <thead class="table-light">
+                    <tr><th>Min.</th><th>Max.</th><th>Décision</th></tr>
+                  </thead>
+                  <tbody>
+                    @php
+                      $defaultsNon = [
+                        ['min'=>'0.00','max'=>'6.50','lib'=>'Exclu(e) pour insuffisance'],
+                        ['min'=>'6.50','max'=>'7.50','lib'=>'Exclu(e) second tour'],
+                        ['min'=>'7.50','max'=>'9.50','lib'=>'Redouble'],
+                        ['min'=>'9.50','max'=>'10.00','lib'=>'Rattrapage'],
+                        ['min'=>'10.00','max'=>'20.00','lib'=>'Admis(e)'],
+                      ];
+                    @endphp
+                    @foreach(range(1,5) as $i)
+                      <tr>
+                        <td>
+                          <input type="number"
+                                 name="intervals[non][{{ $i }}][min]"
+                                 class="form-control form-control-sm"
+                                 step="0.01"
+                                 value="{{ $defaultsNon[$i-1]['min'] }}">
+                        </td>
+                        <td>
+                          <input type="number"
+                                 name="intervals[non][{{ $i }}][max]"
+                                 class="form-control form-control-sm"
+                                 step="0.01"
+                                 value="{{ $defaultsNon[$i-1]['max'] }}">
+                        </td>
+                        <td>
+                          <input type="text"
+                                 name="intervals[non][{{ $i }}][libelle]"
+                                 class="form-control form-control-sm"
+                                 value="{{ $defaultsNon[$i-1]['lib'] }}">
+                        </td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
             </div>
-        </div>
+  
+            <!-- Redoublants -->
+            
+            <div class="card" style="border-color: #844fc1;">
+              <div class="card-header text-white" style="background-color: #844fc1;">
+                Statut : Redoublant
+              </div>
+              <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                  <thead class="table-light">
+                    <tr><th>Min.</th><th>Max.</th><th>Décision</th></tr>
+                  </thead>
+                  <tbody>
+                    @php
+                      $defaultsDoublant = [
+                        ['min'=>'0.00','max'=>'6.50','lib'=>'Exclu(e). Ne peut tripler'],
+                        ['min'=>'6.50','max'=>'7.50','lib'=>'Exclu(e) second tour'],
+                        ['min'=>'7.50','max'=>'9.50','lib'=>'Redouble'],
+                        ['min'=>'9.50','max'=>'10.00','lib'=>'Rattrapage'],
+                        ['min'=>'10.00','max'=>'20.00','lib'=>'Admis(e)'],
+                      ];
+                    @endphp
+                    @foreach(range(1,5) as $i)
+                      <tr>
+                        <td>
+                          <input type="number"
+                                 name="intervals[doublant][{{ $i }}][min]"
+                                 class="form-control form-control-sm"
+                                 step="0.01"
+                                 value="{{ $defaultsDoublant[$i-1]['min'] }}">
+                        </td>
+                        <td>
+                          <input type="number"
+                                 name="intervals[doublant][{{ $i }}][max]"
+                                 class="form-control form-control-sm"
+                                 step="0.01"
+                                 value="{{ $defaultsDoublant[$i-1]['max'] }}">
+                        </td>
+                        <td>
+                          <input type="text"
+                                 name="intervals[doublant][{{ $i }}][libelle]"
+                                 class="form-control form-control-sm"
+                                 value="{{ $defaultsDoublant[$i-1]['lib'] }}">
+                        </td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+  
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            <button type="button" id="saveDecision" class="btn" style="background-color: #844fc1; color: white;">
+              <i class="fas fa-save"></i> Enregistrer
+            </button>
+          </div>
+        </form>
+  
+      </div>
+    </div>
+  </div>
+  
+  
 
     <script>
+    document.getElementById('saveDecision').addEventListener('click', async () => {
+        const form = document.getElementById('decisionForm');
+
+        // Récupère l'URL vers laquelle poster (ta route nommée)
+        const url = "{{ route('configurerDecisions') }}";
+        //console.log('POST vers :', url);
+
+        // Construit un FormData à partir du form
+        const formData = new FormData(form);
+
+        // Récupère le token CSRF
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        try {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+            'X-CSRF-TOKEN': token,
+            'Accept': 'application/json',
+            },
+            body: formData
+        });
+
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+
+        const json = await res.json();
+
+        // Si ton contrôleur renvoie du JSON { success: true, message: '...' }
+        if (json.success) {
+            // Ferme la modal
+            const modalEl = document.getElementById('Editionconseils');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+
+            // Affiche l'alerte
+            alert(json.message || 'Enregistrement réussi !');
+        } else {
+            alert(json.message || 'Une erreur est survenue');
+        }
+
+        } catch (err) {
+        console.error(err);
+        alert('Échec de l’enregistrement : ' + err.message);
+        }
+    });    
+
         document.getElementById('formedition').addEventListener('submit', function(event) {
             event.preventDefault();
 
