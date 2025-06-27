@@ -1969,7 +1969,10 @@ public function eleveparclasseessai() {
   }
   
   public function duplicatarecu(){
-    return view ('pages.inscriptions.duplicatarecu');
+     // Récupérer toutes les données
+     $params2 = Params2::all();
+     $factures = FactureScolarit::all();
+     return view('pages.inscriptions.duplicatarecu', compact('params2', 'factures'));
   }
   
   public function transfert(){

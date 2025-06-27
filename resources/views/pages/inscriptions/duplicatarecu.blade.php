@@ -52,31 +52,84 @@
                                             <th>N° reçu</th>
                                             <th>Date reçu</th>
                                             <th>Scolarité</th>
-                                            <th>Arrièré</th>
-                                            <th> </th>
-                                            <th> </th>
-                                            <th> </th>
-                                            <th> </th>
+                                            <th>Arriéré</th>
+                                            @foreach($params2 as $param)
+                                            <th>{{ $param->LIBELF1 }}</th>
+                                            <th>{{ $param->LIBELF2 }}</th>
+                                            <th>{{ $param->LIBELF3 }}</th>
+                                            <th>{{ $param->LIBELF4 }}</th>
+                                            @endforeach
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>10/08/2022</td>
-                                                <td>90 000</td>
-                                                <td>0</td>
-                                                <td>20 000</td>
-                                                <td>23 000</td>
-                                                <td>2 000</td>
-                                                <td>0</td>
-                                                <td>
-                                                    <a href="#" class="btn btn-secondary btn-sm mb-1">
-                                                        <i class="far">Imprimer</i> 
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
+                                        @foreach($factures as $facture)
+                                          <tr>
+                                            {{-- N° reçu --}}
+                                            <td>{{ $facture->id }}</td>
+                                      
+                                            {{-- Date (sans l’heure) --}}
+                                            <td>
+                                              {{ \Illuminate\Support\Carbon::parse($facture->date_time)
+                                                   ->toDateString() }}
+                                            </td>
+                                      
+                                            {{-- Scolarité (colonne dédiée dans ta table FactureScolarit) --}}
+                                            
+                                            {{-- Pour chaque libellé défini dans Params2, on cherche dans le JSON Itemfacture --}}
+                                            @php
+                                              // Transformer le JSON en collection Laravel pour simplifier la recherche
+                                              $items = collect(json_decode($facture->itemfacture, true));
+                                              $scolarite = "Scolarité";
+                                              $arriere = "Arriéré";
+                                            @endphp
+                                      
+                                            <td>
+                                                {{ optional(
+                                                    $items->firstWhere('name', $scolarite)
+                                                  )['price'] ?? 0 }}
+                                            </td>
+                                            <td>
+                                                {{ optional(
+                                                    $items->firstWhere('name', $arriere)
+                                                  )['price'] ?? 0 }}
+                                            </td>
+                                            @foreach($params2 as $param)
+                                              <td>
+                                                {{-- LIBELF1 --}}
+                                                {{ optional(
+                                                    $items->firstWhere('name', $param->LIBELF1)
+                                                  )['price'] ?? 0 }}
+                                              </td>
+                                              <td>
+                                                {{-- LIBELF2 --}}
+                                                {{ optional(
+                                                    $items->firstWhere('name', $param->LIBELF2)
+                                                  )['price'] ?? 0 }}
+                                              </td>
+                                              <td>
+                                                {{-- LIBELF3 --}}
+                                                {{ optional(
+                                                    $items->firstWhere('name', $param->LIBELF3)
+                                                  )['price'] ?? 0 }}
+                                              </td>
+                                              <td>
+                                                {{-- LIBELF4 --}}
+                                                {{ optional(
+                                                    $items->firstWhere('name', $param->LIBELF4)
+                                                  )['price'] ?? 0 }}
+                                              </td>
+                                            @endforeach
+                                      
+                                            {{-- Colonne Action --}}
+                                              <td>
+                                                  <a href="#" class="btn btn-secondary btn-sm mb-1">
+                                                      <i class="">Imprimer</i> 
+                                                  </a>
+                                              </td>
+                                          </tr>
+                                        @endforeach
+                                      </tbody>
                                 </table>
                             </div>
                         </div>
