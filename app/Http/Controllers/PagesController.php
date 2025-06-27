@@ -2878,6 +2878,7 @@ return view('pages.inscriptions.pdfpaiementsco', [
     return view('pages.facture.listeavoirfacscolarit', compact('listeavoirfacscolarit'));
 
   }
+  
   // -------------------------------------------
   
     public function etatdesrecouvrements(){
