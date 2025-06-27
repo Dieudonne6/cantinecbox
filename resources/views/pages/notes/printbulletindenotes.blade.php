@@ -1,22 +1,31 @@
 @extends('layouts.master')
 @section('content')
-    <div style=" position: relative; margin-left: 10px; margin-right: 10px; min-height: 100vh; overflow: hidden;">          
-       <div class="bulletin-bg" style="position: absolute;
+        @if (isset($option['fond']) || isset($option['fond']))
+                <div style=" position: relative; margin-left: 10px; margin-right: 10px; min-height: 100vh; overflow: hidden;">    
+
+                           <div class="bulletin-bg" style="position: absolute;
                                 top: 0;
                                 left: 0;
                                 width: 100%;
                                 height: 100%;
-                                background-image: url('{{ $image ? asset('img/fonds/' . $image) : asset('img/fonds/essai.jpg') }}');
+                                background-image: url('{{ $image ? asset('img/fonds/' . $image) : '' }}');
                                 background-position: center;
                                 "> </div>
-        <div style="
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(255, 255, 255, 0.7);
-        "></div> 
+            <div style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(255, 255, 255, 0.7);
+            "></div> 
+
+        @else
+
+        <div style="margin-left: 10px; margin-right: 10px;">    
+        @endif
+              
+
         <div class="col-lg-12" style="margin-top: 0; padding-top: 0;">
             <div class="card-body" {{-- style="margin-top: 0; padding-top: 0;" --}}>
                 <div>

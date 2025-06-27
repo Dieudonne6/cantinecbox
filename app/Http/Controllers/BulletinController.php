@@ -2120,6 +2120,7 @@ class BulletinController extends Controller
         //     // Sauvegarder le PDF dans le dossier
         //     $pdf->save($destinationPath . '/' . $filename);
 
+        // dd($option);
         return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean', 'params2', 'logo', 'logoBase64', 'mimeType', 'interligne', 'image'));
     
     }
