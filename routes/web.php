@@ -392,6 +392,10 @@ Route::get('/get-classes-by-group', [BulletinController::class, 'getClassesByTyp
 Route::post('/archiveBulletin', [BulletinController::class, 'archiveBulletin']);
 
 
+Route::post('/bulletindenotes', [BulletinController::class, 'printimagefond'])->name('bulletindenotes');
+
+
+
 Route::get('/extrairenote', [BulletinController::class, 'extrairenote'])->name('extrairenote');
 Route::post('/extractnote', [BulletinController::class, 'extractnote'])->name('extractnote');
 Route::get('/export-excel', [BulletinController::class, 'exportExcel'])->name('notes.exportExcel');

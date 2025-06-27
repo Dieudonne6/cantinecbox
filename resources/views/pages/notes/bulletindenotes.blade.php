@@ -10,7 +10,7 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div>
-                <style>
+                <style> 
                     .btn-arrow {
                         position: absolute;
                         top: 0px;
@@ -111,9 +111,15 @@
                 <br>
             </div>
             <div class="card-body">
-                <h4 class="card-title">Edition des Bulletins de notes</h4>
-                <form id="formBulletin" action="{{ route('printbulletindenotes') }}" method="POST">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="card-title mb-0">Edition des Bulletins de notes</h4>
+                    
+                </div>
+
+                <form id="formBulletin" action="{{ route('printbulletindenotes') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                   
                     <div class="row">
                         <div class="col-12 col-md-3 column-section">
                             <!-- Contenu de la première colonne -->
@@ -470,7 +476,6 @@
                                             onclick="getMessage()">Sauvegarder</button>
                                     </div>
                             </div>
-
                         </div>
                         <div class="col-12 col-md-3 column-section">
                             <!-- Contenu de la troisième colonne -->
@@ -599,7 +604,11 @@
                                 <button class="btn btn-primary" type="submit" id="imprimerClasses" style="display: none;">
                                     <i class="fas fa-print"></i> Imprimer bulletins
                                 </button>
-                               
+                                <label for="imageUpload" class="btn btn-primary mb-0">
+                                    <i class="fas fa-image"></i> Déposer une image de fond
+                                </label>
+                                <input type="file" name="image" id="imageUpload" accept="image/*" style="display: none;">
+                              
                                 {{-- <button class="btn btn-info" type="button" data-bs-toggle="modal"
                                     data-bs-target="#configdecisionconseil">
                                     <i class="fas fa-tasks"></i> Configurer décisions du conseil
@@ -611,6 +620,7 @@
                                     </button> --}}
                                 @endif
                             </div>
+                           
                         </div>
                     </div>
                 </form>
