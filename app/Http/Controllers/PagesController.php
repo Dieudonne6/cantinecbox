@@ -1972,6 +1972,8 @@ public function eleveparclasseessai() {
      // Récupérer toutes les données
      $params2 = Params2::all();
      $factures = FactureScolarit::all();
+//     $uneFacture = FactureScolarit::all();
+//     dd($uneFacture->toArray());
      return view('pages.inscriptions.duplicatarecu', compact('params2', 'factures'));
   }
   

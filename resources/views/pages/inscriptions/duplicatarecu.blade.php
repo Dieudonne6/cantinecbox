@@ -123,9 +123,9 @@
                                       
                                             {{-- Colonne Action --}}
                                               <td>
-                                                  <a href="#" class="btn btn-secondary btn-sm mb-1">
-                                                      <i class="">Imprimer</i> 
-                                                  </a>
+                                                  <button type="button" class="btn btn-primary btn-sm mb-1">
+                                                      Imprimer
+                                                  </button>
                                               </td>
                                           </tr>
                                         @endforeach
