@@ -119,7 +119,13 @@ Route::delete('/delreductions/{codeRedu}', [PagesController::class, 'delreductio
 
 Route::get('/paramcomposantes', [PagesController::class, 'paramcomposantes']);
 
+// --------------------------------------------------
 Route::get('/duplicatarecu', [PagesController::class, 'duplicatarecu']);
+Route::get('/pdfduplicatarecu/{counters}', [PagesController::class, 'pdfduplicatarecu']);
+Route::match(['get', 'post'], '/listefacturescolarite', [PagesController::class, 'listefacturescolarite'])->name('listefacturescolarite');
+Route::get('/avoirfacturepaiescolarite/{codemecef}', [PagesController::class, 'avoirfacturepaiescolarite'])->name('avoirfacturepaiescolarite');
+Route::post('/avoirfacturescolarite/{codemecef}', [PagesController::class, 'avoirfacturescolarite'])->name('avoirfacturescolarite');
+
 
 Route::get('/transfert', [PagesController::class, 'transfert']);
 

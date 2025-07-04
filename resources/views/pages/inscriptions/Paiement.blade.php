@@ -42,36 +42,7 @@
                     <br>                                     
                 </div>
                 <div class="card-body">
-                    <h4 class="card-title">Paiement</h4>
-
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input type="checkbox" class="form-check-input" checked>
-                                    Envoyer un SMS accuse de reception aux parents au numero
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div>
-                                <input class="form-control" type="text" value="+229"
-                                    style="text-align: center; color:black;" readonly>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div>
-                                @php
-                                    $tel = $eleve->TEL;
-                                    $formattedTel =
-                                        strlen($tel) > 10 ? substr($tel, 0, 8) . ' / ' . substr($tel, 8) : $tel;
-                                @endphp
-                                <input id="numero" class="form-control" type="text" value="{{ $formattedTel }}"
-                                    placeholder="numero" readonly>
-                            </div>
-
-                        </div>
-                    </div><br><br>
+                    <h4 class="card-title">Paiement pour <strong>{{ $eleve->NOM }} {{ $eleve->PRENOM }} </strong></h4><br><br>
 
                     <div class="row">
                         <div class="col-9">
@@ -123,19 +94,15 @@
                                                 <td>
                                                     @switch($item->MODEPAIE)
                                                         @case(1)
-                                                            Espèce
+                                                            ESPECES
                                                         @break
 
                                                         @case(2)
-                                                            Chèque
-                                                        @break
-
-                                                        @case(3)
-                                                            Opposition
+                                                            CHEQUES
                                                         @break
 
                                                         @case(4)
-                                                            Autre
+                                                            AUTRE
                                                         @break
                                                     @endswitch
                                                 </td>
@@ -243,10 +210,9 @@
                                 <label for="mode-paiement" class="form-label">Mode de Paiement</label>
                                 <select id="mode-paiement" name="mode_paiement" class="form-select" required>
                                     <option value="" disabled selected>Choisir un mode de paiement</option>
-                                    <option value="1">Espèce</option>
-                                    <option value="2">Chèque</option>
-                                    <option value="3">Opposition</option>
-                                    <option value="4">Autre</option>
+                                    <option value="1">ESPECES</option>
+                                    <option value="2">CHEQUES</option>
+                                    <option value="4">AUTRE</option>
                                 </select>
                             </div>
                         </div>
@@ -282,10 +248,10 @@
                                         <p style="margin: 0; font-size: 16px; text-align: center;">{{ $eleve->NOM }} {{ $eleve->PRENOM }}</p>
                                         <p style="margin: 0; font-size: 16px;"><strong>Montant payé:</strong> {{ Session::get('montantPaye') }} F CFA</p>
                                         <p style="margin: 0; font-size: 16px;"><strong>Mode de paiement:</strong>
-                                            @if (Session::get('modePaiement') == 1) Espèce
-                                            @elseif(Session::get('modePaiement') == 2) Chèque
-                                            @elseif(Session::get('modePaiement') == 3) Opposition
-                                            @else Autre @endif
+                                            @if (Session::get('modePaiement') == 1) ESPECES
+                                            @elseif(Session::get('modePaiement') == 2) CHEQUES
+                                            {{-- @elseif(Session::get('modePaiement') == 3) Opposition --}}
+                                            @else AUTRE @endif
                                         </p>
                                         </div>
                                         <hr style="border-top: 1px solid #007bff; margin: 15px 0;">
@@ -308,7 +274,7 @@
                                         <p style="margin: 0; font-size: 16px;"><strong>{{ $libelle->NOMETAB }}</strong></p>
                                         <h5 style="text-align: center; font-size: 20px; font-weight: bold; color: #28a745;">Reçu de Paiement (Original)</h5>
                                         <div style="text-align: right;"><p style="margin: 0; font-size: 16px;">{{ $eleve->CODECLAS }}</p><p style="margin: 0; font-size: 16px;"><strong>QUITANCE N°</strong> {{ Session::get('numeroRecu') }}/{{ $eleve->anneeacademique }}</p></div>
-                                        <div style="margin-bottom: 15px;"><p style="margin: 0; font-size: 16px;"><strong>{{ $eleve->NOM }} {{ $eleve->PRENOM }}</strong></p><p style="margin: 0; font-size: 16px;"><strong>Montant payé:</strong> {{ Session::get('montantPaye') }} F CFA</p><p style="margin: 0; font-size: 16px;"><strong>Mode de paiement:</strong> @if(Session::get('modePaiement')==1) Espèce @elseif(Session::get('modePaiement')==2) Chèque @elseif(Session::get('modePaiement')==3) Opposition @else Autre @endif</p></div>
+                                        <div style="margin-bottom: 15px;"><p style="margin: 0; font-size: 16px;"><strong>{{ $eleve->NOM }} {{ $eleve->PRENOM }}</strong></p><p style="margin: 0; font-size: 16px;"><strong>Montant payé:</strong> {{ Session::get('montantPaye') }} F CFA</p><p style="margin: 0; font-size: 16px;"><strong>Mode de paiement:</strong> @if(Session::get('modePaiement')==1) ESPECES @elseif(Session::get('modePaiement')==2) CHEQUES {{-- @elseif(Session::get('modePaiement')==3) Opposition --}} @else AUTRE @endif</p></div>
                                         <hr style="border-top: 1px solid #28a745; margin: 15px 0;">
                                         <div style="margin-bottom: 15px;">
                                         <p style="margin: 0; font-size: 16px;"><strong>Arriéré:</strong><span class="float-right">{{ Session::get('arriere', 0) }} F CFA Payer</span></p>
@@ -339,7 +305,7 @@
                             </div>
                         </div>
 
-                        <!-- Bouton d'Impression -->
+                        {{-- <!-- Bouton d'Impression -->
                         <button onclick="imprimerRecu()" class="btn btn-success mt-4">Imprimer le Reçu</button>
 
                         <!-- Script d'Impression -->
@@ -390,13 +356,14 @@
                                     imprimerRecu();
                                 };
                             @endif
-                        </script>
+                        </script> --}}
                     @endif
                 </div>
                 <br>
                 <br>
 
-                <script>
+
+                   <script>
                     let saisieManuelle = false;
 
                     // Gestion de la répartition dynamique des montants
@@ -559,71 +526,78 @@
 
 
                 <script>
-                    // Gestion des priorités dynamiques pour monter/descendre les options et les champs correspondants
+
+
+                  // On attend que le DOM soit chargé si le <script> est dans <head>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        // On peut ajouter un console.log pour vérifier que la fonction est bien chargée
+                        console.log("Script chargé, fonctions moveUp et moveDown OK");
+                    });
+
                     function moveUp() {
-                        var select = document.getElementById("priority-select");
-                        var selectedOptions = Array.from(select.selectedOptions);
+                        console.log("moveUp appelé");
+                        const select = document.getElementById("priority-select");
+                        const selectedOptions = Array.from(select.selectedOptions);
 
-                        selectedOptions.forEach(function(option) {
-                            var index = option.index;
-                            if (index > 0) {
-                                // Déplacer les options dans le select
-                                select.insertBefore(option, select.options[index - 1]);
+                        selectedOptions.forEach(option => {
+                        const index = option.index;
+                        if (index > 0) {
+                            // Dans le <select>
+                            select.insertBefore(option, select.options[index - 1]);
 
-                                // Déplacer les champs correspondants dans le formulaire
-                                var field = document.querySelector(#form-fields [data-id="${option.value}"]);
-                                var prevField = field.previousElementSibling;
-                                if (prevField) {
-                                    field.style.transition = 'transform 0.3s ease'; // Animation
-                                    prevField.style.transition = 'transform 0.3s ease';
-                                    document.getElementById("form-fields").insertBefore(field, prevField);
-                                }
+                            // Dans le formulaire
+                            const fieldSelector = #form-fields [data-id="${option.value}"];
+                            const field = document.querySelector(fieldSelector);
+                            const prevField = field?.previousElementSibling;
+                            if (prevField) {
+                            field.style.transition = prevField.style.transition = 'transform 0.3s ease';
+                            document.getElementById("form-fields").insertBefore(field, prevField);
                             }
+                        }
                         });
 
-                        mettreAJourPriorites(); // Mettre à jour les priorités après avoir changé l'ordre
+                        mettreAJourPriorites();
                         mettreAJourEtatBoutons();
                     }
 
                     function moveDown() {
-                        var select = document.getElementById("priority-select");
-                        var selectedOptions = Array.from(select.selectedOptions);
+                        console.log("moveDown appelé");
+                        const select = document.getElementById("priority-select");
+                        const selectedOptions = Array.from(select.selectedOptions);
 
-                        for (var i = selectedOptions.length - 1; i >= 0; i--) {
-                            var option = selectedOptions[i];
-                            var index = option.index;
-                            if (index < select.options.length - 1) {
-                                // Déplacer les options dans le select
-                                select.insertBefore(select.options[index + 1], option);
+                        // On itère à l’envers pour ne pas se mélanger
+                        for (let i = selectedOptions.length - 1; i >= 0; i--) {
+                        const option = selectedOptions[i];
+                        const index = option.index;
+                        if (index < select.options.length - 1) {
+                            select.insertBefore(select.options[index + 1], option);
 
-                                // Déplacer les champs correspondants dans le formulaire
-                                var field = document.querySelector(#form-fields [data-id="${option.value}"]);
-                                var nextField = field.nextElementSibling;
-                                if (nextField) {
-                                    field.style.transition = 'transform 0.3s ease'; // Animation
-                                    nextField.style.transition = 'transform 0.3s ease';
-                                    document.getElementById("form-fields").insertBefore(nextField, field);
-                                }
+                            const fieldSelector = #form-fields [data-id="${option.value}"];
+                            const field = document.querySelector(fieldSelector);
+                            const nextField = field?.nextElementSibling;
+                            if (nextField) {
+                            field.style.transition = nextField.style.transition = 'transform 0.3s ease';
+                            document.getElementById("form-fields").insertBefore(nextField, field);
                             }
                         }
+                        }
 
-                        mettreAJourPriorites(); // Mettre à jour les priorités après avoir changé l'ordre
+                        mettreAJourPriorites();
                         mettreAJourEtatBoutons();
                     }
 
                     function mettreAJourPriorites() {
-                        // Met à jour l'attribut data-priorite en fonction de l'ordre dans le select
-                        var select = document.getElementById("priority-select");
-                        var options = Array.from(select.options);
-
-                        options.forEach((option, index) => {
-                            // Met à jour les priorités dans le formulaire
-                            var field = document.querySelector(#form-fields [data-id="${option.value}"]);
-                            field.querySelector('.composante').dataset.priorite = index + 1; // L'index correspond à la priorité
+                        const select = document.getElementById("priority-select");
+                        Array.from(select.options).forEach((option, idx) => {
+                        const field = document.querySelector(#form-fields [data-id="${option.value}"]);
+                        if (field) {
+                            field.querySelector('.composante').dataset.priorite = idx + 1;
+                        }
                         });
                     }
                     // document.getElementById("priority-select").addEventListener("change", mettreAJourEtatBoutons);
                 </script>
+
 
                 <style>
                     /* Cacher le placeholder avec une opacité réduite */

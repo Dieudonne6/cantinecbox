@@ -1,905 +1,655 @@
 @extends('layouts.master')
 @section('content')
-    <div class="main-panel-10">
+    <div class="container">
+        @if (Session::has('success'))
+            <div class="alert alert-success">{{ Session::get('success') }}</div>
+        @endif
 
-        <div class="container">
-            <div>
-                <style>
-                    .btn-arrow {
-                        position: absolute;
-                        top: 0px;
-                        /* Ajustez la position verticale */
-                        left: 0px;
-                        /* Positionnez à gauche */
-                        background-color: transparent !important;
-                        border: 1px !important;
-                        text-transform: uppercase !important;
-                        font-weight: bold !important;
-                        cursor: pointer !important;
-                        font-size: 17px !important;
-                        /* Taille de l'icône */
-                        color: #b51818 !important;
-                        /* Couleur de l'icône */
-                    }
+        @if (Session::has('error'))
+            <div class="alert alert-danger">{{ Session::get('error') }}</div>
+        @endif
 
-                    .btn-arrow:hover {
-                        color: #b700ff !important;
-                        /* Couleur au survol */
-                    }
-
-                    /* 1. On limite la hauteur visible du tableau et on autorise le scroll vertical */
-                    .table-scrollable {
-                        max-height: 500px;
-                        /* Ajustez selon la hauteur souhaitée */
-                        overflow-y: auto;
-                    }
-
-                    /* 2. On rend les <th> "collants" en haut du conteneur */
-                    .table-scrollable thead th {
-                        position: sticky;
-                        top: 0;
-                        background-color: #fff;
-                        /* Couleur d'arrière-plan de l'en-tête */
-                        z-index: 10;
-                        /* Pour que l'en-tête reste au-dessus des lignes du tbody */
-                    }
-                </style>
-                <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
-                    <i class="fas fa-arrow-left"></i> Retour
-                </button>
-                <br>
-                <br>
-            </div>
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div>
+                    <style>
+                        .btn-arrow {
+                            position: absolute;
+                            top: 0px;
+                            /* Ajustez la position verticale */
+                            left: 0px;
+                            /* Positionnez à gauche */
+                            background-color: transparent !important;
+                            border: 1px !important;
+                            text-transform: uppercase !important;
+                            font-weight: bold !important;
+                            cursor: pointer !important;
+                            font-size: 17px !important;
+                            /* Taille de l'icône */
+                            color: #b51818 !important;
+                            /* Couleur de l'icône */
+                        }
+                
+                        .btn-arrow:hover {
+                            color: #b700ff !important;
+                            /* Couleur au survol */
+                        }
+                    </style>
+                    <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </button>
+                    <br>
+                    <br>                                     
                 </div>
-            @endif
+                <div class="card-body">
+                    <h4 class="card-title">Paiement</h4>
 
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            <form action="{{ route('enregistrer_notes') }}" method="POST">
-                @csrf
-                <div class="row">
-                    <div class="col-6 md-3 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center justify-content-between flex-wrap mb-4">
-                                    <div class="row w-100">
-                                        <!-- Select pour le groupe -->
-                                        <div class="col-md-8 mb-3">
-                                            <select class="form-select select2 w-100" id="tableSelect1"
-                                                aria-label="Choisir un groupe">
-                                                <option value="" selected>Choisir un groupe</option>
-                                                @foreach ($gclasses as $gclasse)
-                                                    <option value="{{ $gclasse->LibelleGroupe }}">
-                                                        {{ $gclasse->LibelleGroupe }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-
-                                        <!-- Select pour la période -->
-                                        <div class="col-md-8 mb-3">
-                                            <select class="form-select select2 w-100 mt-2" id="periodSelect"
-                                                onchange="handleChange()" aria-label="Choisir une période">
-                                                <option value="" selected>Période</option>
-                                                <option value="1">1ère Période</option>
-                                                <option value="2">2ème Période</option>
-                                                <option value="3">3ème Période</option>
-                                                {{-- <option value="4">4ème Période</option>
-                                                <option value="5">5ème Période</option>
-                                                <option value="6">6ème Période</option>
-                                                <option value="7">7ème Période</option>
-                                                <option value="8">8ème Période</option>
-                                                <option value="9">9ème Période</option> --}}
-                                            </select>
-                                        </div>
-
-                                        <!-- Champ de nombre -->
-                                        <div class="col-md-4">
-                                            <input type="number" id="champ1" name="champ1" class="form-control"
-                                                placeholder="Valeur" value="" readonly>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" checked>
+                                    Envoyer un SMS accuse de reception aux parents au numero
+                                </label>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-6 md-3 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center justify-content-between flex-wrap mb-4">
-                                    <div class="col">
-                                        <div class="col-md-8 mb-3">
-                                            <select class="form-select select2 w-100" id="tableSelect4" name="CODECLAS"
-                                                onchange="redirectWithSelection()">
-                                                <option value="">Classe</option>
-                                                @foreach ($classes as $classeOption)
-                                                    <option value="{{ $classeOption->CODECLAS }}"
-                                                        {{ $classeOption->CODECLAS == $classe ? 'selected' : '' }}>
-                                                        {{ $classeOption->CODECLAS }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-
-                                        <div class="col-md-8 mb-3">
-                                            <select class="form-select select2 w-100 mt-2" id="tableSelect5" name="CODEMAT"
-                                                onchange="redirectWithSelection()">
-                                                <option value="">Matières</option>
-                                                @foreach ($matieres as $matiereOption)
-                                                    <option value="{{ $matiereOption->CODEMAT }}"
-                                                        {{ $matiereOption->CODEMAT == $matiere ? 'selected' : '' }}>
-                                                        {{ $matiereOption->LIBELMAT }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <!-- Champ de nombre -->
-                                    <div class="col-md-4 mb-3">
-                                        <input type="number" id="champ2" name="champ2" class="form-control"
-                                            value="{{ $getClasmat ? $getClasmat->COEF : 'Valeur non trouvée' }}"
-                                            placeholder="Valeur" readonly>
-                                    </div>
-
-                                </div>
+                        <div class="col-2">
+                            <div>
+                                <input class="form-control" type="text" value="+229"
+                                    style="text-align: center; color:black;" readonly>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-12 md-3 grid-margin">
-                    <!-- Card pour afficher les cases à cocher -->
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col-md-6 d-flex flex-wrap" id="intCheckboxes">
-                                    @for ($i = 3; $i <= 10; $i++)
-                                        <label class="checkbox-label interro-checkbox me-2"
-                                            for="optionINT{{ $i }}" data-interro="{{ $i }}">
-                                            <input type="checkbox" id="optionINT{{ $i }}" name="optionGroup1[]"
-                                                value="INT{{ $i }}"
-                                                onchange="toggleColumn({{ $i }})">
-                                            INT{{ $i }}
-                                        </label>
-                                    @endfor
-
-                                    <label class="checkbox-label me-2" for="optionDEV3">
-                                        <input type="checkbox" id="optionDEV3" onchange="toggleDev3()">
-                                        DEV3
-                                    </label>
-                                    <label class="checkbox-label me-2" for="optionTEST">
-                                        <input type="checkbox" id="optionTEST" onchange="toggleTest()">
-                                        TEST
-                                    </label>
-
-                                </div>
-                                <div class="col-md-6 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary btn-rounded">
-                                        <i class="typcn typcn-home-outline"></i> Enregistrer
-                                    </button>
-
-                                    <!-- Bouton Permuter (ouvre le modal) -->
-                                    <button type="button" class="btn btn-warning btn-rounded ms-2" data-bs-toggle="modal"
-                                        data-bs-target="#permuterModal">
-                                        <i class="typcn typcn-refresh-outline"></i> Permuter
-                                    </button>
-
-                                    <button type="button" class="btn btn-danger btn-rounded" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal">
-                                        <i class="typcn typcn-delete-outline"></i>
-                                        Supprimer
-                                    </button>
-
-                                </div>
+                        <div class="col-3">
+                            <div>
+                                @php
+                                    $tel = $eleve->TEL;
+                                    $formattedTel =
+                                        strlen($tel) > 10 ? substr($tel, 0, 8) . ' / ' . substr($tel, 8) : $tel;
+                                @endphp
+                                <input id="numero" class="form-control" type="text" value="{{ $formattedTel }}"
+                                    placeholder="numero" readonly>
                             </div>
 
                         </div>
-                    </div>
-                </div>
+                    </div><br><br>
 
-                <div class="col-12 md-3 grid-margin">
-                    <!-- Card pour afficher le tableau -->
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="table-scrollable table-responsive mb-4">
-                                <table id="myTab" class="table table-bordered">
+                    <div class="row">
+                        <div class="col-9">
+                            <div>
+                                <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>MATRICULE</th>
-                                            <th>Nom et Prénoms</th>
-                                            <th class="interro-column" data-interro="1">Int1</th>
-                                            <th class="interro-column" data-interro="2">Int2</th>
-                                            <th class="interro-column" data-interro="3">Int3</th>
-                                            <th class="interro-column" data-interro="4">Int4</th>
-                                            <th class="interro-column" data-interro="5">Int5</th>
-                                            <th class="interro-column" data-interro="6">Int6</th>
-                                            <th class="interro-column" data-interro="7">Int7</th>
-                                            <th class="interro-column" data-interro="8">Int8</th>
-                                            <th class="interro-column" data-interro="9">Int9</th>
-                                            <th class="interro-column" data-interro="10">Int10</th>
-                                            <th>M.int</th>
-                                            <th>Dev1</th>
-                                            <th>Dev2</th>
-                                            <th class="dev3-column">Dev3</th>
-                                            <th>Moy</th>
-                                            <th class="test-column">Test</th>
-                                            <th>Ms</th>
+                                            <th>Numero</th>
+                                            <th>Date</th>
+                                            <th>Montant</th>
+                                            <th></th>
+                                            <th>Mode Paiement</th>
+                                            <th>SIGNATURE</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($eleves as $eleve)
+                                        @foreach ($scolarite as $item)
                                             <tr>
-                                                <td>{{ $eleve->MATRICULEX ?? '' }}</td>
-                                                <td style="text-align: left;">{{ $eleve->NOM ?? '' }}
-                                                    {{ $eleve->PRENOM ?? '' }}</td>
-
-                                                @for ($i = 1; $i <= 10; $i++)
-                                                    <td class="interro-column" data-interro="{{ $i }}">
-                                                        <input type="text"
-                                                            name="notes[{{ $eleve->MATRICULE }}][INT{{ $i }}]"
-                                                            value="{{ in_array($eleve['INT' . $i] ?? '', [21, -1]) ? '' : $eleve['INT' . $i] ?? '' }}"
-                                                            class="form-control form-control-sm interro-input fixed-input"
-                                                            oninput="calculateMIAndMoy(this)">
-                                                    </td>
-                                                @endfor
-
+                                                <td>{{ $item->NUMERO }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($item->DATEOP)->format('d-m-Y') }}</td>
+                                                <td>{{ $item->MONTANT }}</td>
                                                 <td>
-                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][MI]"
-                                                        value="{{ in_array($eleve->MI ?? '', [21, -1]) ? '' : $eleve->MI ?? '' }}"
-                                                        class="form-control form-control-sm mi-input fixed-input" readonly>
+                                                    @switch($item->AUTREF)
+                                                        @case(1)
+                                                            Scolarité
+                                                        @break
+
+                                                        @case(2)
+                                                            Arriéré
+                                                        @break
+
+                                                        @case(3)
+                                                            {{ $libelle->LIBELF1 }}
+                                                        @break
+
+                                                        @case(4)
+                                                            {{ $libelle->LIBELF2 }}
+                                                        @break
+
+                                                        @case(5)
+                                                            {{ $libelle->LIBELF3 }}
+                                                        @break
+
+                                                        @case(6)
+                                                            {{ $libelle->LIBELF4 }}
+                                                        @break
+                                                    @endswitch
                                                 </td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
-                                                        value="{{ in_array($eleve->DEV1 ?? '', [21, -1]) ? '' : $eleve->DEV1 ?? '' }}"
-                                                        class="form-control form-control-sm dev-input fixed-input"
-                                                        oninput="calculateMIAndMoy(this)"></td>
-
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
-                                                        value="{{ in_array($eleve->DEV2 ?? '', [21, -1]) ? '' : $eleve->DEV2 ?? '' }}"
-                                                        class="form-control form-control-sm dev-input fixed-input"
-                                                        oninput="calculateMIAndMoy(this)"></td>
-
-                                                <td class="dev3-column"><input type="text"
-                                                        name="notes[{{ $eleve->MATRICULE }}][DEV3]"
-                                                        value="{{ in_array($eleve->DEV3 ?? '', [21, -1]) ? '' : $eleve->DEV3 ?? '' }}"
-                                                        class="form-control form-control-sm dev-input fixed-input"
-                                                        oninput="calculateMIAndMoy(this)"></td>
                                                 <td>
-                                                    <input type="text" name="notes[{{ $eleve->MATRICULE }}][MS1]"
-                                                        value="{{ in_array($eleve->MS1 ?? '', [21, -1]) ? '' : $eleve->MS1 ?? '' }}"
-                                                        class="form-control form-control-sm ms1-input fixed-input"
-                                                        readonly>
-                                                </td>
+                                                    @switch($item->MODEPAIE)
+                                                        @case(1)
+                                                            Espèce
+                                                        @break
 
-                                                <td class="test-column"><input type="text"
-                                                        name="notes[{{ $eleve->MATRICULE }}][TEST]"
-                                                        value="{{ in_array($eleve->TEST ?? '', [21, -1]) ? '' : $eleve->TEST ?? '' }}"
-                                                        class="form-control form-control-sm test-input fixed-input"
-                                                        oninput="calculateMIAndMoy(this)"></td>
+                                                        @case(2)
+                                                            Chèque
+                                                        @break
 
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][MS]"
-                                                        value="{{ in_array($eleve->MS ?? '', [21, -1]) ? '' : $eleve->MS ?? '' }}"
-                                                        class="form-control form-control-sm ms-input fixed-input" readonly>
+                                                        @case(3)
+                                                            Opposition
+                                                        @break
+
+                                                        @case(4)
+                                                            Autre
+                                                        @break
+                                                    @endswitch
                                                 </td>
+                                                <td>{{ $item->SIGNATURE }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
-
-                            <script>
-                                document.addEventListener("DOMContentLoaded", () => {
-                                    // 1) Masquer les colonnes Int3 à Int10 au chargement
-                                    for (let i = 3; i <= 10; i++) {
-                                        toggleColumn(i);
-                                    }
-                                    toggleDev3();
-                                    toggleTest();
-
-
-                                    // 2) Fonction utilitaire pour savoir si un élément est visible (pas en display:none)
-                                    function isVisible(el) {
-                                        return el && el.offsetParent !== null;
-                                    }
-
-                                    // 3) Fonction pour passer au champ suivant (même logique que pour →/Enter)
-                                    function moveToNext(currentInput) {
-                                        const td = currentInput.closest('td');
-                                        const tr = td.closest('tr');
-                                        const colIndex = td.cellIndex;
-
-                                        // a) Chercher dans la même ligne
-                                        let nextCell = td.nextElementSibling;
-                                        while (nextCell) {
-                                            if (isVisible(nextCell)) {
-                                                const candidate = nextCell.querySelector('input.fixed-input');
-                                                if (candidate && !candidate.readOnly) {
-                                                    candidate.focus();
-                                                    return;
-                                                }
-                                            }
-                                            nextCell = nextCell.nextElementSibling;
-                                        }
-
-                                        // b) Sinon, passer à la ligne suivante
-                                        let nextTr = tr.nextElementSibling;
-                                        while (nextTr) {
-                                            for (let inp of nextTr.querySelectorAll('input.fixed-input')) {
-                                                const parentTD = inp.closest('td');
-                                                if (!inp.readOnly && isVisible(parentTD)) {
-                                                    inp.focus();
-                                                    return;
-                                                }
-                                            }
-                                            nextTr = nextTr.nextElementSibling;
-                                        }
-                                    }
-
-                                    // 4) Gestionnaire global de keydown pour les flèches et Enter
-                                    document.addEventListener("keydown", function(e) {
-                                        const target = e.target;
-                                        if (!target.matches('input.fixed-input')) return;
-
-                                        const td = target.closest('td');
-                                        const tr = td.closest('tr');
-                                        const colIndex = td.cellIndex;
-                                        let nextCell, prevCell, upCell, downCell, cand, found;
-
-                                        // --- FLÈCHE DROITE ou ENTER ---
-                                        if (e.key === 'ArrowRight' || e.key === 'Enter') {
-                                            e.preventDefault();
-
-                                            // a) Essayer la cellule à droite
-                                            nextCell = td.nextElementSibling;
-                                            while (nextCell) {
-                                                if (isVisible(nextCell)) {
-                                                    cand = nextCell.querySelector('input.fixed-input');
-                                                    if (cand && !cand.readOnly) {
-                                                        cand.focus();
-                                                        return;
-                                                    }
-                                                }
-                                                nextCell = nextCell.nextElementSibling;
-                                            }
-
-                                            // b) Si on a appuyé sur ENTER et rien à droite → ligne suivante
-                                            if (e.key === 'Enter') {
-                                                let nextTr = tr.nextElementSibling;
-                                                while (nextTr) {
-                                                    found = false;
-                                                    for (let inp of nextTr.querySelectorAll('input.fixed-input')) {
-                                                        const parentTD = inp.closest('td');
-                                                        if (!inp.readOnly && isVisible(parentTD)) {
-                                                            inp.focus();
-                                                            found = true;
-                                                            break;
-                                                        }
-                                                    }
-                                                    if (found) return;
-                                                    nextTr = nextTr.nextElementSibling;
-                                                }
-                                            }
-
-                                            return;
-                                        }
-
-                                        // --- FLÈCHE GAUCHE ---
-                                        if (e.key === 'ArrowLeft') {
-                                            e.preventDefault();
-                                            prevCell = td.previousElementSibling;
-                                            while (prevCell) {
-                                                if (isVisible(prevCell)) {
-                                                    cand = prevCell.querySelector('input.fixed-input');
-                                                    if (cand && !cand.readOnly) {
-                                                        cand.focus();
-                                                        return;
-                                                    }
-                                                }
-                                                prevCell = prevCell.previousElementSibling;
-                                            }
-                                            return;
-                                        }
-
-                                        // --- FLÈCHE HAUT ---
-                                        if (e.key === 'ArrowUp') {
-                                            e.preventDefault();
-                                            let prevTr = tr.previousElementSibling;
-                                            while (prevTr) {
-                                                upCell = prevTr.children[colIndex];
-                                                if (upCell && isVisible(upCell)) {
-                                                    cand = upCell.querySelector('input.fixed-input');
-                                                    if (cand && !cand.readOnly) {
-                                                        cand.focus();
-                                                        return;
-                                                    }
-                                                }
-                                                prevTr = prevTr.previousElementSibling;
-                                            }
-                                            return;
-                                        }
-
-                                        // --- FLÈCHE BAS ---
-                                        if (e.key === 'ArrowDown') {
-                                            e.preventDefault();
-                                            let nextTr2 = tr.nextElementSibling;
-                                            while (nextTr2) {
-                                                downCell = nextTr2.children[colIndex];
-                                                if (downCell && isVisible(downCell)) {
-                                                    cand = downCell.querySelector('input.fixed-input');
-                                                    if (cand && !cand.readOnly) {
-                                                        cand.focus();
-                                                        return;
-                                                    }
-                                                }
-                                                nextTr2 = nextTr2.nextElementSibling;
-                                            }
-                                            return;
-                                        }
-                                    });
-
-                                    // 5) Fonction pour calculer MI et MS dès qu'un champ change
-                                    function calculateMIAndMoy(input) {
-                                        const row = input.closest('tr');
-
-                                        // Récupérer les champs int, dev et test dans la ligne
-                                        const interroInputs = row.querySelectorAll('.interro-input');
-                                        const devInputs = row.querySelectorAll('.dev-input');
-                                        const testInput = row.querySelector('[name*="TEST"]');
-
-                                        // --- Calcul de la moyenne d'interrogations (MI) ---
-                                        let interroSum = 0;
-                                        let interroCount = 0;
-                                        interroInputs.forEach(interro => {
-                                            // Remplacer la virgule par un point pour parseFloat
-                                            const raw = interro.value.replace(',', '.');
-                                            const value = parseFloat(raw);
-                                            if (!isNaN(value)) {
-                                                interroSum += value;
-                                                interroCount++;
-                                            }
-                                        });
-                                        const miField = row.querySelector('.mi-input');
-                                        const mi = interroCount > 0 ? (interroSum / interroCount).toFixed(2) : '';
-                                        miField.value = mi;
-
-                                        // --- Calcul de la moyenne des devoirs (MS1) ---
-                                        let devSum = 0;
-                                        let devCount = 0;
-                                        devInputs.forEach(dev => {
-                                            const rawDev = dev.value.replace(',', '.');
-                                            const value = parseFloat(rawDev);
-                                            if (!isNaN(value)) {
-                                                devSum += value;
-                                                devCount++;
-                                            }
-                                        });
-                                        const moyField = row.querySelector('.ms1-input');
-                                        let moy = '';
-
-                                        if (devCount > 0 && interroCount === 0) {
-                                            // queue de devoirs uniquement
-                                            moy = (devSum / devCount).toFixed(2);
-                                        } else if (interroCount > 0) {
-                                            // il y a des interros → on intègre MI
-                                            moy = devCount > 0 ?
-                                                ((parseFloat(mi) + devSum) / (devCount + 1)).toFixed(2) :
-                                                mi;
-                                        }
-                                        moyField.value = moy;
-
-                                        // --- Calcul de la note semestrielle (MS) selon votre logique ---
-                                        const msField = row.querySelector('.ms-input');
-                                        const rawTest = testInput.value.replace(',', '.');
-                                        const testValue = parseFloat(rawTest) || 0;
-
-                                        if (devCount === 0 && interroCount === 0 && testValue === 0) {
-                                            // ni int, ni dev, ni test → MS = MI ou MS1
-                                            msField.value = mi || moyField.value;
-                                        } else if (interroCount === 0 && devCount === 0) {
-                                            // seuls test → MS = test
-                                            msField.value = testValue.toFixed(2);
-                                        } else if (interroCount === 0) {
-                                            // seuls les devoirs → MS = moyenne des devoirs
-                                            msField.value = (devSum / devCount).toFixed(2);
-                                        } else {
-                                            // sinon → MS = moyenne(MS1, TEST) si test>0 sinon MS1 seul
-                                            const ms = testValue > 0 ?
-                                                (parseFloat(moyField.value) + testValue) / 2 :
-                                                parseFloat(moyField.value);
-                                            msField.value = ms.toFixed(2);
-                                        }
-                                    }
-
-                                    // 6) Appliquer calculateMIAndMoy au changement de chaque champ dev ou int ou test
-                                    document.querySelectorAll('.interro-input, .dev-input, .test-input').forEach(elem => {
-                                        elem.addEventListener('input', function() {
-                                            calculateMIAndMoy(this);
-                                        });
-                                    });
-
-                                    // 7) Écouteur 'input' pour formater en "xx,yy" et passer au suivant au 4e chiffre
-                                    document.querySelectorAll('input.fixed-input').forEach(inp => {
-                                        inp.addEventListener('input', function() {
-                                            // On retire tout ce qui n'est pas chiffre
-                                            let digits = this.value.replace(/\D/g, '');
-
-                                            // Dès que l'on a au moins 4 chiffres, on formate en "AB,CD"
-                                            if (digits.length >= 4) {
-                                                digits = digits.slice(0, 4); // 4 premiers chiffres
-                                                this.value = digits.slice(0, 2) + '.' + digits.slice(2);
-                                                // Puis on recalcule MI/MS1/MS et on passe au champ suivant
-                                                const numericValue = parseFloat(this.value);
-                                                calculateMIAndMoy(this);
-                                                if (!isNaN(numericValue) && numericValue <= 20) {
-                                                    moveToNext(this);
-                                                } else {
-                                                    // Si > 20, on reste dans la même case (on ne bouge pas le focus).
-                                                    // Facultatif : vous pouvez remettre 'this.value = ""' ou
-                                                    // afficher un message d'erreur ici si besoin.
-                                                }
-                                            } else {
-                                                // Sinon, on laisse l'utilisateur inscrire librement (sans virgule)
-                                                this.value = digits;
-                                                // On peut quand même recalculer MI/MS1/MS en direct si souhaité :
-                                                calculateMIAndMoy(this);
-                                            }
-                                        });
-                                    });
-                                });
-                            </script>
                         </div>
-                    </div>
-                </div>
-                <br><br><br>
-            </form>
 
-            <!-- Modal de permutation -->
-            <div class="modal fade" id="permuterModal" tabindex="-1" aria-labelledby="permuterModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <form action="{{ route('permuter_notes') }}" method="POST" class="modal-content">
+                        <div class="col-3">
+                            <div class="card">
+                                <div>
+                                    <label for="priority-select" class="form-label" style="text-align: center">Ordre de
+                                        priorité des
+                                        composantes</label>
+                                    <select id="priority-select" class="form-select" multiple
+                                        aria-label="Sélection multiple">
+                                        <option value="1">Scolarité</option>
+                                        <option value="2">Arriéré</option>
+                                        <option value="3">{{ $libelle->LIBELF1 }}</option>
+                                        <option value="4">{{ $libelle->LIBELF2 }}</option>
+                                        <option value="5">{{ $libelle->LIBELF3 }}</option>
+                                        <option value="6">{{ $libelle->LIBELF4 }}</option>
+                                    </select>
+                                    <div class="mt-2" style="text-align: center">
+                                        <button id="monter-btn" type="button" class="btn btn-primary btn-sm"
+                                            onclick="moveUp()">Monter</button>
+                                        <button id="descendre-btn" type="button" class="btn btn-secondary btn-sm"
+                                            onclick="moveDown()">Descendre</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><br><br>
+                    <!-- Formulaire -->
+
+                    <form action="{{ route('enregistrer.paiement', $eleve->MATRICULE) }}" method="POST">
                         @csrf
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="permuterModalLabel">Permuter les notes</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Fermer"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row g-4"> {{-- même "row" pour que ça tienne sur une ligne --}}
-                                {{-- ---- Bloc SOURCE (gauche) ---- --}}
-                                <div class="col-12 col-lg-6">
-                                    <div class="mb-3">
-                                        <label for="source_classe" class="form-label">Classe source</label>
-                                        <select class="form-select select2 w-100" id="tableSelect4" name="CODECLAS"
-                                            onchange="redirectWithSelection()" disabled>
-                                            <option value="">Classe</option>
-                                            @foreach ($classes as $classeOption)
-                                                <option value="{{ $classeOption->CODECLAS }}"
-                                                    {{ $classeOption->CODECLAS == $classe ? 'selected' : '' }}>
-                                                    {{ $classeOption->CODECLAS }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <input type="hidden" name="CODECLAS" id="hidden_CODECLAS">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <!-- Champs fixes -->
+                                    <div class="col">
+                                        <label for="date-operation">Date Opération</label>
+                                        <input id="date-operation" name="date_operation" class="form-control"
+                                            type="datetime-local" value="{{ \Carbon\Carbon::now()->format('Y-m-d\TH:i') }}"
+                                            required>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="source_mat" class="form-label">Matière source</label>
-                                        <select class="form-select select2 w-100 mt-2" id="tableSelect5" name="CODEMAT"
-                                            onchange="redirectWithSelection()" disabled>
-                                            <option value="">Matières</option>
-                                            @foreach ($matieres as $matiereOption)
-                                                <option value="{{ $matiereOption->CODEMAT }}"
-                                                    {{ $matiereOption->CODEMAT == $matiere ? 'selected' : '' }}>
-                                                    {{ $matiereOption->LIBELMAT }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <input type="hidden" name="CODEMAT" id="hidden_CODEMAT">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="source_periode" class="form-label">Période source</label>
-                                        <select id="periode_source_affiche" name="periode_source_affiche"
-                                            class="form-control" disabled>
-                                            <option value="">Période</option>
-                                            <option value="1"
-                                                {{ isset($periode) && $periode == 1 ? 'selected' : '' }}>1ʳᵉ Période
-                                            </option>
-                                            <option value="2"
-                                                {{ isset($periode) && $periode == 2 ? 'selected' : '' }}>2ᵉ Période
-                                            </option>
-                                            <option value="3"
-                                                {{ isset($periode) && $periode == 3 ? 'selected' : '' }}>3ᵉ Période
-                                            </option>
-                                        </select>
-                                        <input type="hidden" name="periode_source_affiche"
-                                            id="hidden_periode_source_affiche">
+                                    <div class="col">
+                                        <label for="montant-paye">Montant payé</label>
+                                        <input id="montant-paye" name="montant_paye" class="form-control" type="number"
+                                            placeholder="Entrez le montant payé" oninput="repartirMontant()" required>
                                     </div>
                                 </div>
-                                {{-- ---- Bloc CIBLE (droite) ---- --}}
-                                <div class="col-12 col-lg-6">
-                                    <div class="mb-3">
-                                        <label for="target_classe" class="form-label">Classe cible</label>
-                                        <input type="text" class="form-control" id="target_classe" name="target_classe" 
-                                               value="{{ $classe }}" readonly>
+
+                                <div class="form-group row mt-4" id="form-fields">
+                                    <div class="col-md-2" data-id="1">
+                                        <label for="scolarite">Scolarité</label>
+                                        <input id="scolarite" name="scolarite" class="form-control composante"
+                                            type="number" placeholder="{{ $eleve->APAYER - $totalScolarite }}"
+                                            value="0" data-priorite="1" oninput="verifierSaisie()">
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="target_mat" class="form-label">Matière cible</label>
-                                        <select name="target_mat" id="target_mat" class="form-select">
-                                            @foreach ($matieres as $m)
-                                                <option value="{{ $m->CODEMAT }}">{{ $m->LIBELMAT }}</option>
-                                            @endforeach
-                                        </select>
+
+                                    <div class="col-md-2" data-id="2">
+                                        <label for="arriere">Arriéré</label>
+                                        <input id="arriere" name="arriere" class="form-control composante" type="number"
+                                            placeholder="{{ $eleve->ARRIERE ? $eleve->ARRIERE - $totalArriere : $eleve->ARRIERE }}"
+                                            value="0" data-priorite="2" oninput="verifierSaisie()"
+                                            {{ $eleve->ARRIERE == 0 ? 'disabled' : '' }}>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="target_periode" class="form-label">Période cible</label>
-                                        <select name="target_periode" id="target_periode" class="form-select">
-                                            <option value="1">1ʳᵉ Période</option>
-                                            <option value="2">2ᵉ Période</option>
-                                            <option value="3">3ᵉ Période</option>
-                                        </select>
-                                    </div>
+
+                                    <!-- Champs générés dynamiquement -->
+                                    @foreach (['LIBELF1', 'LIBELF2', 'LIBELF3', 'LIBELF4'] as $key => $libelleField)
+                                        <div class="col-md-2" data-id="{{ $key + 3 }}">
+                                            <label for="libelle-{{ $key }}">{{ $libelle->$libelleField }}</label>
+                                            @php
+                                                $fraisField = 'FRAIS' . ($key + 1);
+                                                $totalLibelle = ${'totalLibelle' . ($key + 1)} ?? 0;
+                                            @endphp
+                                            <input id="libelle-{{ $key }}" name="libelle_{{ $key }}"
+                                                class="form-control composante" type="number"
+                                                data-priorite="{{ $key + 3 }}"
+                                                placeholder="{{ $eleve->$fraisField - $totalLibelle }}" value="0"
+                                                oninput="verifierSaisie()">
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                            <button type="submit" class="btn btn-warning">Permuter</button>
+
+                        <!-- Reliquat restant -->
+                        <div style="color: red; font-weight: bold;">
+                            <label for="reliquat">Reliquat restant : </label>
+                            <span id="reliquat" name="reliquat">0</span> F CFA
+                            <input type="hidden" id="reliquat-hidden" name="reliquat_hidden" value="0">
                         </div>
+
+                        <br>
+
+                        <!-- Mode de paiement -->
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label for="mode-paiement" class="form-label">Mode de Paiement</label>
+                                <select id="mode-paiement" name="mode_paiement" class="form-select" required>
+                                    <option value="" disabled selected>Choisir un mode de paiement</option>
+                                    <option value="1">Espèce</option>
+                                    <option value="2">Chèque</option>
+                                    <option value="3">Opposition</option>
+                                    <option value="4">Autre</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Champ caché pour le MATRICULE -->
+                        <input type="hidden" name="matricule" value="{{ $eleve->MATRICULE }}">
+
+                        <button type="submit" class="btn btn-primary">Enregistrer le paiement</button>
                     </form>
-                </div>
-            </div>
+                    @if (Session::has('success'))
+                        <div id="recu" class="mt-4">
+                            <div class="row">
+                                @php
+                                    $libelles = ['LIBELF1', 'LIBELF2', 'LIBELF3', 'LIBELF4'];
+                                    $recentMontants = Session::get('recent_montants', []);
+                                @endphp
 
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">
-                                Voulez-vous vraiment supprimer les notes pour la classe,
-                                la matière et la période sélectionnées ?
-                            </h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+                                <!-- Conteneur des reçus -->
+                                <!-- Updated structure: wrap receipts in Bootstrap rows -->
+                                <div class="container">
+                                <!-- Row for a pair of receipts -->
+                                <div class="row mb-4">
+                                    <!-- Reçu Souche -->
+                                    <div class="col-md-6">
+                                    <div class="recu-section" style="border: 1px solid #007bff; border-radius: 8px; padding: 20px; background-color: #ffffff; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                                        <p style="margin: 0; font-size: 20px;"><strong>CBOX</strong></p>
+                                        <h5 style="text-align: center; font-size: 20px; font-weight: bold; color: #007bff;">Reçu de Paiement (Souche)</h5>
+                                        <div style="margin-bottom: 15px; text-align: right;">
+                                        <p style="margin: 0; font-size: 16px;">{{ $eleve->CODECLAS }}</p>
+                                        <p style="margin: 0; font-size: 16px; display: flex; justify-content: flex-end;"><strong>QUITANCE N°</strong> {{ Session::get('numeroRecu') }}/{{ $eleve->anneeacademique }}</p>
+                                        </div>
+                                        <div style="margin-bottom: 15px;">
+                                        <p style="margin: 0; font-size: 16px; text-align: center;">{{ $eleve->NOM }} {{ $eleve->PRENOM }}</p>
+                                        <p style="margin: 0; font-size: 16px;"><strong>Montant payé:</strong> {{ Session::get('montantPaye') }} F CFA</p>
+                                        <p style="margin: 0; font-size: 16px;"><strong>Mode de paiement:</strong>
+                                            @if (Session::get('modePaiement') == 1) Espèce
+                                            @elseif(Session::get('modePaiement') == 2) Chèque
+                                            @elseif(Session::get('modePaiement') == 3) Opposition
+                                            @else Autre @endif
+                                        </p>
+                                        </div>
+                                        <hr style="border-top: 1px solid #007bff; margin: 15px 0;">
+                                        <div style="margin-bottom: 15px;">
+                                        <p style="margin: 0; font-size: 16px; display: flex; justify-content: space-between;"><strong>Arriéré:</strong><span>{{ Session::get('arriere', 0) }} F CFA</span></p>
+                                        <p style="margin: 0; font-size: 16px; display: flex; justify-content: space-between;"><strong>Scolarité:</strong><span>{{ Session::get('scolarite', 0) }} F CFA</span></p>
+                                        @foreach ($libelles as $index => $libelleKey)
+                                            <p style="margin: 0; font-size: 16px; display: flex; justify-content: space-between;"><strong>{{ $libelle->$libelleKey }}:</strong><span>@if(isset($recentMontants['libelle_' . $index])){{ $recentMontants['libelle_' . $index] }} F CFA @else 0 F CFA @endif</span></p>
+                                        @endforeach
+                                        </div>
+                                        <hr style="border-top: 1px solid #007bff; margin: 15px 0;">
+                                        <div style="text-align: right;"><p style="margin: 0; font-size: 16px;"><strong>Reliquat restant:</strong> {{ Session::get('reliquat') }} F CFA</p></div>
+                                        <hr style="border-top: 1px solid #007bff; margin: 15px 0;">
+                                        <div class="recu-footer" style="text-align: center; margin-top: 20px;"><p style="font-size: 16px; color: #333;"><strong>CCC, le {{ \Carbon\Carbon::now()->format('d/m/Y') }}</strong></p><p style="font-size: 16px; color: #333;"><strong>Le Comptable Gestion</strong></p><p style="font-size: 16px; color: #333;">{{ Session::get('signature') }}</p></div>
+                                    </div>
+                                    </div>
+                                    <!-- Reçu Original -->
+                                    <div class="col-md-6">
+                                    <div class="recu-section" style="border: 1px solid #28a745; border-radius: 8px; padding: 20px; background-color: #ffffff; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                                        <p style="margin: 0; font-size: 16px;"><strong>{{ $libelle->NOMETAB }}</strong></p>
+                                        <h5 style="text-align: center; font-size: 20px; font-weight: bold; color: #28a745;">Reçu de Paiement (Original)</h5>
+                                        <div style="text-align: right;"><p style="margin: 0; font-size: 16px;">{{ $eleve->CODECLAS }}</p><p style="margin: 0; font-size: 16px;"><strong>QUITANCE N°</strong> {{ Session::get('numeroRecu') }}/{{ $eleve->anneeacademique }}</p></div>
+                                        <div style="margin-bottom: 15px;"><p style="margin: 0; font-size: 16px;"><strong>{{ $eleve->NOM }} {{ $eleve->PRENOM }}</strong></p><p style="margin: 0; font-size: 16px;"><strong>Montant payé:</strong> {{ Session::get('montantPaye') }} F CFA</p><p style="margin: 0; font-size: 16px;"><strong>Mode de paiement:</strong> @if(Session::get('modePaiement')==1) Espèce @elseif(Session::get('modePaiement')==2) Chèque @elseif(Session::get('modePaiement')==3) Opposition @else Autre @endif</p></div>
+                                        <hr style="border-top: 1px solid #28a745; margin: 15px 0;">
+                                        <div style="margin-bottom: 15px;">
+                                        <p style="margin: 0; font-size: 16px;"><strong>Arriéré:</strong><span class="float-right">{{ Session::get('arriere', 0) }} F CFA Payer</span></p>
+                                        <p><strong>Reste:</strong><span class="float-right">{{ $eleve->ARRIERE ? $eleve->ARRIERE - $totalArriere : $eleve->ARRIERE }} F CFA</span></p>
+                                        <p style="margin: 0; font-size: 16px;"><strong>Scolarité:</strong><span class="float-right">{{ Session::get('scolarite', 0) }} F CFA Payer</span></p>
+                                        <p><strong>Reste:</strong><span class="float-right">{{ $eleve->APAYER - $totalScolarite }} F CFA</span></p>
+                                        @php $sommeReste = 0; @endphp
+                                        @foreach ($libelles as $index => $libelleKey)
+                                            @php
+                                            $fraisField = 'FRAIS' . ($index + 1);
+                                            $totalLibelle = ${'totalLibelle' . ($index + 1)} ?? 0;
+                                            $fraisValue = $eleve->$fraisField ?? 0;
+                                            $reste = $fraisValue - $totalLibelle;
+                                            $sommeReste += $reste;
+                                            @endphp
+                                            <p style="margin: 0; font-size: 16px;"><strong>{{ $libelle->$libelleKey }}:</strong><span class="float-right">@if(isset($recentMontants['libelle_' . $index])){{ $recentMontants['libelle_' . $index] }} F CFA @else 0 F CFA @endif</span><br><strong>Reste:</strong><span class="float-right" style="font-size: 13px;">{{ $reste }} F CFA</span></p>
+                                        @endforeach
+                                        </div>
+                                        <hr style="border-top: 1px solid #28a745; margin: 15px 0;">
+                                        <div style="text-align: right;"><p style="margin: 0; font-size: 16px;"><strong>Reliquat restant:</strong> {{ Session::get('reliquat') }} F CFA</p><p style="margin: 0; font-size: 16px;"><strong>Reste a payer:</strong> {{ $sommeReste }} F CFA</p></div>
+                                        <hr style="border-top: 1px solid #28a745; margin: 15px 0;">
+                                        <div class="recu-footer" style="text-align: center; margin-top: 20px;"><p style="font-size: 16px; color: #333;"><strong>CCC, le {{ \Carbon\Carbon::now()->format('d/m/Y') }}</strong></p><p style="font-size: 16px; color: #333;"><strong>Le Comptable Gestion</strong></p><p style="font-size: 16px; color: #333;">{{ Session::get('signature') }}</p></div>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+
+                            </div>
                         </div>
 
-                        <form action="{{ route('delete-notes') }}" method="POST">
-                            @csrf
-                            <div class="modal-body">
-                                <!-- Trois champs cachés mis à jour au moment de l'ouverture -->
-                                <input type="hidden" id="modalClasse" name="CODECLAS" value="">
-                                <input type="hidden" id="modalMatiere" name="CODEMAT" value="">
-                                <input type="hidden" id="modalSemestre" name="champ1" value="">
-                                <p>La suppression n'affectera que la classe, la matière et la période sélectionnées.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                <button type="submit" class="btn btn-danger">Supprimer</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+                        <!-- Bouton d'Impression -->
+                        <button onclick="imprimerRecu()" class="btn btn-success mt-4">Imprimer le Reçu</button>
 
-            <script>
-                function updateCodeMat() {
-                    // Récupère la valeur sélectionnée dans le select de matières
-                    var selectedMatiere = document.getElementById("tableSelect2").value;
-                    // Met à jour le champ d'input avec le CODEMAT sélectionné
-                    document.getElementById("champ2").value = selectedMatiere;
-                }
-
-                function updateInterroVisibility() {
-                    const value = parseInt(document.getElementById('champ2').value);
-                    document.querySelectorAll('.interro-checkbox').forEach(checkbox => {
-                        const interroNumber = parseInt(checkbox.dataset.interro);
-                        checkbox.style.display = interroNumber <= value ? 'inline-block' : 'none';
-                    });
-
-                    document.querySelectorAll('.interro-column').forEach(column => {
-                        const interroNumber = parseInt(column.dataset.interro);
-                        column.style.display = interroNumber <= value ? '' : 'none';
-                    });
-                }
-
-                function updateCheckbox() {
-                    const periodSelect = document.getElementById('periodSelect');
-                    const champ1 = document.getElementById('champ1');
-
-                    // Met à jour la valeur de champ1 avec la valeur sélectionnée dans periodSelect
-                    if (periodSelect.value) {
-                        champ1.value = periodSelect.value;
-
-                        // Sauvegarde de la sélection dans localStorage
-                        localStorage.setItem('selectedPeriod', periodSelect.value);
-                    } else {
-                        champ1.value = '';
-                        localStorage.removeItem('selectedPeriod');
-                    }
-                }
-
-                // Restaure la sélection après le rechargement
-                window.addEventListener('DOMContentLoaded', () => {
-                    const periodSelect = document.getElementById('periodSelect');
-                    const champ1 = document.getElementById('champ1');
-                    const savedPeriod = localStorage.getItem('selectedPeriod');
-
-                    if (savedPeriod) {
-                        periodSelect.value = savedPeriod;
-                        champ1.value = savedPeriod;
-                    }
-                });
-
-
-                function redirectWithSelection() {
-                    const classe = document.getElementById("tableSelect4").value; // Récupère la classe sélectionnée
-                    const matiere = document.getElementById("tableSelect5").value; // Récupère la matière sélectionnée
-                    const periode = document.getElementById("periodSelect").value; // Récupère la periode sélectionnée
-
-                    let url = '/filternotes'; // URL de redirection
-                    let params = [];
-
-                    if (classe) params.push(classe=${encodeURIComponent(classe)}); // Ajoute le paramètre de classe si sélectionné
-                    if (matiere) params.push(
-                        matiere=${encodeURIComponent(matiere)}); // Ajoute le paramètre de matière si sélectionné
-                    if (periode) params.push(
-                        periode=${encodeURIComponent(periode)}); // Ajoute le paramètre de matière si sélectionné
-
-
-                    if (params.length > 0) {
-                        url += '?' + params.join('&'); // Crée la chaîne de requête
-                    }
-
-                    window.location.href = url; // Redirige vers l'URL construite
-                }
-            </script>
-
-            <script>
-                function toggleColumn(interroNumber) {
-                    // Récupère l'état de la case à cocher
-                    const checkbox = document.getElementById("optionINT" + interroNumber);
-                    const isChecked = checkbox.checked;
-
-                    // Récupère toutes les cellules de la colonne correspondante
-                    const columns = document.querySelectorAll(.interro-column[data-interro="${interroNumber}"]);
-
-                    // Affiche ou masque la colonne selon l'état de la case à cocher
-                    columns.forEach(column => {
-                        column.style.display = isChecked ? '' : 'none';
-                    });
-                }
-
-                // Initialisation : Masque les colonnes Int3 à Int10 au chargement de la page
-                document.addEventListener("DOMContentLoaded", () => {
-                    for (let i = 3; i <= 10; i++) {
-                        toggleColumn(i);
-                    }
-                });
-            </script>
-
-            {{-- ——— SCRIPT : toggle DEV3 ——— --}}
-            <script>
-                function toggleDev3() {
-                    const checkbox = document.getElementById("optionDEV3");
-                    const isChecked = checkbox.checked;
-                    document.querySelectorAll(".dev3-column").forEach(cell => {
-                        cell.style.display = isChecked ? '' : 'none';
-                    });
-                }
-            </script>
-
-            {{-- ——— SCRIPT : toggle TEST ——— --}}
-            <script>
-                function toggleTest() {
-                    const checkbox = document.getElementById("optionTEST");
-                    const isChecked = checkbox.checked;
-                    document.querySelectorAll(".test-column").forEach(cell => {
-                        cell.style.display = isChecked ? '' : 'none';
-                    });
-                }
-            </script>
-
-            <script>
-                // Au moment où le modal s'ouvre, on copie les valeurs sélectionnées dans les <select>
-                var exampleModal = document.getElementById('exampleModal');
-                exampleModal.addEventListener('show.bs.modal', function(event) {
-                    var valeurClasse = document.getElementById('tableSelect4').value;
-                    var valeurMatiere = document.getElementById('tableSelect5').value;
-                    var valeurPeriode = document.getElementById('periodSelect').value;
-
-                    document.getElementById('modalClasse').value = valeurClasse;
-                    document.getElementById('modalMatiere').value = valeurMatiere;
-                    document.getElementById('modalSemestre').value = valeurPeriode;
-                });
-            </script>
-            <style>
-                /* Améliore l'affichage des champs de saisie */
-                .table thead th,
-                .table tbody td {
-                    text-align: center;
-                    vertical-align: middle;
-                }
-
-                .form-control-sm {
-                    width: 100%;
-                    padding: 0px;
-                    text-align: center;
-                    border: 1px solid #ddd;
-                }
-
-                /* Ajustement des marges dans les cellules */
-                td {
-                    padding: 0px;
-                }
-
-                .fixed-input {
-                    width: 50px;
-                    /* Fixe la largeur */
-                    height: 30px;
-                    /* Fixe la hauteur */
-                }
-
-                /* Style pour les colonnes fixes */
-                .table-responsive {
-                    position: relative;
-                    overflow-x: auto;
-                }
-
-                .table thead th:first-child,
-                .table tbody td:first-child {
-                    position: sticky;
-                    left: 0;
-                    background-color: #f8f9fa;
-                    z-index: 1;
-                }
-
-                .table thead th:nth-child(2),
-                .table tbody td:nth-child(2) {
-                    position: sticky;
-                    left: 100px;
-                    /* Ajustez cette valeur selon la largeur de la première colonne */
-                    background-color: #f8f9fa;
-                    z-index: 1;
-                }
-
-                /* Assure que les colonnes fixes restent au-dessus des autres */
-                .table thead th:first-child,
-                .table thead th:nth-child(2) {
-                    z-index: 2;
-                }
-            </style>
-
-            <script>
-                // Synchronise la période sélectionnée avec le modal Permuter
-                document.addEventListener('DOMContentLoaded', function() {
-                    var permuterModal = document.getElementById('permuterModal');
-                    if (permuterModal) {
-                        permuterModal.addEventListener('show.bs.modal', function() {
-                            var selectedPeriod = document.getElementById('periodSelect').value;
-                            var periodeSource = document.getElementById('periode_source_affiche');
-                            if (periodeSource && selectedPeriod) {
-                                periodeSource.value = selectedPeriod;
-                            } else if (periodeSource) {
-                                periodeSource.value = '';
+                        <!-- Script d'Impression -->
+                        <script>
+                            function imprimerRecu() {
+                                var contenu = document.getElementById('recu').innerHTML;
+                                var fenetre = window.open('', '_blank', 'width=800,height=600');
+                                fenetre.document.open();
+                                fenetre.document.write(`
+                                <html>
+                                    <head>
+                                        <title>Reçu de Paiement</title>
+                                        <style>
+                                            body { font-family: Arial, sans-serif; padding: 20px; }
+                                            .recu-section {
+                                                border: 1px solid black;
+                                                padding: 15px;
+                                                background-color: #fff;
+                                                margin: 10px;
+                                                display: inline-block;
+                                                width: calc(50% - 20px); /* Pour un affichage côte à côte */
+                                                vertical-align: top; /* Aligner les sections */
+                                            }
+                                            h5 { text-align: center; font-size: 18px; font-weight: bold; }
+                                            p { font-size: 14px; margin: 5px 0; }
+                                            .recu-footer { text-align: center; margin-top: 20px; }
+                                            @media print {
+                                                .recu-section { page-break-inside: avoid; }
+                                                body { margin: 0; padding: 0; }
+                                            }
+                                        </style>
+                                    </head>
+                                    <body>${contenu}</body>
+                                </html>
+                            `);
+                                fenetre.document.close();
+                                fenetre.onload = function() {
+                                    fenetre.focus();
+                                    fenetre.print();
+                                    fenetre.onafterprint = function() {
+                                        fenetre.close();
+                                    };
+                                };
                             }
-                            // Synchronise les champs cachés pour l'envoi du formulaire
-                            document.getElementById('hidden_CODECLAS').value = document.getElementById(
-                                'tableSelect4').value;
-                            document.getElementById('hidden_CODEMAT').value = document.getElementById(
-                                'tableSelect5').value;
-                            document.getElementById('hidden_periode_source_affiche').value = periodeSource.value;
+
+                            @if (Session::has('success'))
+                                window.onload = function() {
+                                    imprimerRecu();
+                                };
+                            @endif
+                        </script>
+                    @endif
+                </div>
+                <br>
+                <br>
+
+                <script>
+                    let saisieManuelle = false;
+
+                    // Gestion de la répartition dynamique des montants
+                    document.getElementById('montant-paye').addEventListener('input', function() {
+                        if (this.value.trim() === '') {
+                            resetFields();
+                        } else {
+                            repartirMontant();
+                        }
+                        verifierEtat();
+                    });
+
+                    document.querySelectorAll('.composante').forEach(element => {
+                        element.addEventListener('input', function() {
+                            verifierSaisie(event);
+                            verifierEtat(); // Vérifie l'état après chaque saisie
+                        });
+                    });
+
+                    function repartirMontant() {
+                        const montantPaye = parseFloat(document.getElementById('montant-paye').value) || 0;
+                        if (montantPaye <= 0) return;
+
+                        const composantes = Array.from(document.querySelectorAll('.composante'));
+
+                        // Vérification : Si un champ a un montant dû de 0, il est désactivé
+                        composantes.forEach(c => {
+                            if (parseFloat(c.placeholder) === 0) {
+                                c.disabled = true;
+                                c.style.backgroundColor = "#e9ecef"; // Changer la couleur de fond pour indiquer le blocage
+                                c.value = 0; // Remet à 0 pour éviter toute saisie
+                            } else {
+                                c.disabled = false; // Réactiver les champs qui ont un montant dû supérieur à 0
+                                c.style.backgroundColor = ""; // Remettre la couleur de fond par défaut
+                            }
+                        });
+
+                        // Réinitialiser la saisie manuelle
+                        saisieManuelle = false;
+                        composantes.forEach(c => c.dataset.saisieManuelle = 'false');
+
+                        const priorites = composantes.map(c => ({
+                            element: c,
+                            priorite: parseInt(c.dataset.priorite),
+                            montant: parseFloat(c.value) || 0,
+                            montantDu: parseFloat(c.placeholder) || 0
+                        })).sort((a, b) => a.priorite - b.priorite);
+
+                        let montantRestant = montantPaye;
+
+                        // Répartition des montants en respectant la priorité
+                        priorites.forEach(item => {
+                            if (montantRestant > 0 && item.montantDu > 0 && !item.element.disabled) {
+                                const paiement = Math.min(item.montantDu, montantRestant);
+                                item.element.value = paiement;
+                                montantRestant -= paiement;
+                            } else {
+                                item.element.value = 0;
+                            }
+                        });
+
+                        // Met à jour l'affichage du reliquat restant
+                        document.getElementById('reliquat').textContent = montantRestant.toFixed(2);
+                        document.getElementById('reliquat-hidden').value = montantRestant.toFixed(2);
+
+                        if (montantRestant > 0) {
+                            console.log("Le montant payé dépasse les besoins calculés par priorité.");
+                        }
+                    }
+
+                    function verifierSaisie(event) {
+                        const composante = event.target;
+                        const valeur = parseFloat(composante.value) || 0;
+
+                        // Empêcher toute modification si le montant dû avant répartition est 0
+                        if (parseFloat(composante.placeholder) === 0) {
+                            composante.value = 0;
+                            composante.disabled = true;
+                            composante.style.backgroundColor = "#e9ecef"; // Indique que le champ est bloqué
+                            alert("Ce champ est bloqué car le montant dû est 0.");
+                            return; // Empêche toute saisie supplémentaire
+                        }
+
+                        // Si le montant est inférieur à 0, l'annuler
+                        if (valeur < 0) {
+                            composante.value = 0;
+                            alert("Les montants doivent être positifs.");
+                        }
+
+                        // Marquer le champ comme ayant une saisie manuelle
+                        composante.dataset.saisieManuelle = 'true';
+                        saisieManuelle = true;
+                        ajusterMontants();
+                    }
+
+                    function ajusterMontants() {
+                        const montantPaye = parseFloat(document.getElementById('montant-paye').value) || 0;
+                        const composantes = Array.from(document.querySelectorAll('.composante'));
+
+                        let totalSaisie = composantes.reduce((total, elem) => {
+                            return total + (elem.dataset.saisieManuelle === 'true' ? parseFloat(elem.value) || 0 : 0);
+                        }, 0);
+
+                        let montantRestant = montantPaye - totalSaisie;
+
+                        composantes.forEach(elem => {
+                            if (elem.dataset.saisieManuelle !== 'true' && !elem.disabled) {
+                                elem.value = montantRestant > 0 ? montantRestant : 0;
+                                montantRestant -= parseFloat(elem.value);
+                            }
+                        });
+
+                        // Met à jour l'affichage du reliquat restant
+                        document.getElementById('reliquat').textContent = montantRestant.toFixed(2);
+                        document.getElementById('reliquat-hidden').value = montantRestant.toFixed(2);
+                    }
+
+                    function resetFields() {
+                        document.querySelectorAll('.composante').forEach(element => {
+                            if (parseFloat(element.placeholder) === 0) {
+                                element.disabled = true; // Désactiver les champs avec un montant dû de 0
+                                element.style.backgroundColor = "#e9ecef"; // Indiquer qu'ils sont bloqués
+                                element.value = 0; // Remet à zéro
+                            } else {
+                                element.disabled = false; // Réactiver les champs avec un montant dû supérieur à 0
+                                element.value = 0; // Remet à zéro
+                                element.style.backgroundColor = ""; // Réinitialiser la couleur de fond
+                            }
+                        });
+                        // Réinitialiser le reliquat à 0
+                        document.getElementById('reliquat').textContent = '0';
+                    }
+
+                    function verifierEtat() {
+                        const composantes = Array.from(document.querySelectorAll('.composante'));
+                        const montantPaye = parseFloat(document.getElementById('montant-paye').value) || 0;
+
+                        // Vérifier si tous les champs sont à zéro
+                        const tousZeros = composantes.every(c => parseFloat(c.value) === 0);
+
+                        // Griser le bouton et le champ de mode de paiement si tous les champs sont à zéro
+                        const boutonEnregistrer = document.getElementById('btn-enregistrer'); // Remplacez par l'ID de votre bouton
+                        const champModePaiement = document.getElementById(
+                            'mode-paiement'); // Remplacez par l'ID de votre champ de mode de paiement
+
+                        if (tousZeros && montantPaye === 0) {
+                            boutonEnregistrer.disabled = true;
+                            boutonEnregistrer.style.backgroundColor = "#e9ecef"; // Changez la couleur pour indiquer qu'il est désactivé
+                            champModePaiement.disabled = true;
+                            champModePaiement.style.backgroundColor = "#e9ecef"; // Changez la couleur pour indiquer qu'il est désactivé
+                            alert("L'élève est à jour."); // Message à afficher
+                        } else {
+                            boutonEnregistrer.disabled = false;
+                            boutonEnregistrer.style.backgroundColor = ""; // Réinitialiser la couleur
+                            champModePaiement.disabled = false;
+                            champModePaiement.style.backgroundColor = ""; // Réinitialiser la couleur
+                        }
+                    }
+                </script>
+
+
+                <script>
+                    // Gestion des priorités dynamiques pour monter/descendre les options et les champs correspondants
+                    function moveUp() {
+                        var select = document.getElementById("priority-select");
+                        var selectedOptions = Array.from(select.selectedOptions);
+
+                        selectedOptions.forEach(function(option) {
+                            var index = option.index;
+                            if (index > 0) {
+                                // Déplacer les options dans le select
+                                select.insertBefore(option, select.options[index - 1]);
+
+                                // Déplacer les champs correspondants dans le formulaire
+                                var field = document.querySelector(#form-fields [data-id="${option.value}"]);
+                                var prevField = field.previousElementSibling;
+                                if (prevField) {
+                                    field.style.transition = 'transform 0.3s ease'; // Animation
+                                    prevField.style.transition = 'transform 0.3s ease';
+                                    document.getElementById("form-fields").insertBefore(field, prevField);
+                                }
+                            }
+                        });
+
+                        mettreAJourPriorites(); // Mettre à jour les priorités après avoir changé l'ordre
+                        mettreAJourEtatBoutons();
+                    }
+
+                    function moveDown() {
+                        var select = document.getElementById("priority-select");
+                        var selectedOptions = Array.from(select.selectedOptions);
+
+                        for (var i = selectedOptions.length - 1; i >= 0; i--) {
+                            var option = selectedOptions[i];
+                            var index = option.index;
+                            if (index < select.options.length - 1) {
+                                // Déplacer les options dans le select
+                                select.insertBefore(select.options[index + 1], option);
+
+                                // Déplacer les champs correspondants dans le formulaire
+                                var field = document.querySelector(#form-fields [data-id="${option.value}"]);
+                                var nextField = field.nextElementSibling;
+                                if (nextField) {
+                                    field.style.transition = 'transform 0.3s ease'; // Animation
+                                    nextField.style.transition = 'transform 0.3s ease';
+                                    document.getElementById("form-fields").insertBefore(nextField, field);
+                                }
+                            }
+                        }
+
+                        mettreAJourPriorites(); // Mettre à jour les priorités après avoir changé l'ordre
+                        mettreAJourEtatBoutons();
+                    }
+
+                    function mettreAJourPriorites() {
+                        // Met à jour l'attribut data-priorite en fonction de l'ordre dans le select
+                        var select = document.getElementById("priority-select");
+                        var options = Array.from(select.options);
+
+                        options.forEach((option, index) => {
+                            // Met à jour les priorités dans le formulaire
+                            var field = document.querySelector(#form-fields [data-id="${option.value}"]);
+                            field.querySelector('.composante').dataset.priorite = index + 1; // L'index correspond à la priorité
                         });
                     }
-                });
-            </script>
+                    // document.getElementById("priority-select").addEventListener("change", mettreAJourEtatBoutons);
+                </script>
 
-        @endsection
+                <style>
+                    /* Cacher le placeholder avec une opacité réduite */
+                    input[id^="libelle-"]::placeholder,
+                    input#arriere::placeholder,
+                    input#scolarite::placeholder {
+                        opacity: 0;
+                    }
+
+                    /* Animation et mise en évidence lors du changement de priorité */
+                    #form-fields .col-md-2 {
+                        transition: transform 0.3s ease, background-color 0.3s ease;
+                    }
+
+                    #priority-select option {
+                        transition: background-color 0.3s ease;
+                    }
+
+                    #form-fields .col-md-2.moving,
+                    #priority-select option.moving {
+                        background-color: #f0f8ff;
+                    }
+
+                    #form-fields .composante:disabled {
+                        background-color: #e9ecef;
+                        /* Grise les champs désactivés */
+                    }
+                </style>
+@endsection

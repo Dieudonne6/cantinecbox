@@ -1971,12 +1971,320 @@ public function eleveparclasseessai() {
   public function duplicatarecu(){
      // Récupérer toutes les données
      $params2 = Params2::all();
-     $factures = FactureScolarit::all();
+    //  $factures = FactureScolarit::all();
+      $factures = DB::table('facturescolarit')
+        ->whereRaw("RIGHT(counters, 2) = 'FV'")
+        ->get();;
+
 //     $uneFacture = FactureScolarit::all();
 //     dd($uneFacture->toArray());
      return view('pages.inscriptions.duplicatarecu', compact('params2', 'factures'));
   }
+
+
+
+
+
+      public function pdfduplicatarecu($counters)
+    {
+        $counters1 = substr_replace(preg_replace('/_/', '/', $counters, 1), ' ', -2, 0);
+        // dd($counters1);
+
+
+        $facturePaie = DB::table('facturescolarit')
+            ->where('counters', $counters1)
+            ->first();
+
+            // dd($facturePaie);
+
+        $infoecole = DB::table('params2')->first();
+        $nomecole = $infoecole->NOMETAB;
+        $logo = $infoecole->logoimage;
+        $jsonItem = $facturePaie->itemfacture;
+        $donneItem = json_decode($jsonItem);
+        // dd($facturePaie);
+
+        return view('pages.Etats.pdfduplicatarecu', compact('nomecole', 'logo', 'facturePaie', 'donneItem'));
+    }
   
+
+    public function listefacturescolarite() {
+        $facturesPaiementscolarite = DB::table('facturescolarit')->where('statut', 1)->get();
+        // $facturesInscription = DB::table('facturenormaliseinscription')->where('statut', 1)->get();
+        // dd($factures);
+        // return view('pages.Etats.listefacture')->with('factures', $factures);
+        return view('pages.Etats.listefacturescolarite', compact('facturesPaiementscolarite'));
+    }
+
+
+    public function avoirfacturepaiescolarite($codemecef) {
+        $factureOriginale = DB::table('facturescolarit')->where('codemecef', $codemecef)->first();
+        // dd($factures);
+        return view('pages.Etats.avoirfacturepaiescolarite')->with('factureOriginale', $factureOriginale)->with('codemecef', $codemecef);
+    }
+
+
+    public function avoirfacturescolarite(Request $request, $codemecef){
+          // dd('code correct');
+          $codemecefEntrer = $request->input('inputCodemecef');
+          if ($codemecefEntrer == $codemecef) {
+              // dd('codemecef correct');
+              $infoparam = Params2::first();
+              $tokenentreprise = $infoparam->token;
+      
+              $factureoriginale = DB::table('facturescolarit')->where('codemecef', $codemecef)->first();
+              $ifuentreprise = $factureoriginale->ifuEcole;
+              $montanttotal = $factureoriginale->montant_total;
+              // $TOTALTVA = $factureoriginale->TOTALTVA;
+              // $TOTALHT = $factureoriginale->TOTALHT;
+      
+              $nomcompleteleve = $factureoriginale->nom;
+              // $moisConcatenes = $factureoriginale->moispayes;
+              $matriculeeleve = $factureoriginale->MATRICULE;
+              // $idcontratEleve = $factureoriginale->idcontrat;
+              $classeeleve = $factureoriginale->classe;
+              $itemFac = $factureoriginale->itemfacture;
+              $itemFacdecode = json_decode($itemFac, true);
+              $mode_paiement = $factureoriginale->mode_paiement;
+              // $montantparmois = $factureoriginale->montant_par_mois;
+              $dateHeure = $factureoriginale->dateHeure;
+              // $typefac = $factureoriginale->typefac;
+              // $montantInscription = $factureoriginale->montantInscription;
+              // dd($moisConcatenes);
+                          // -------------------------------
+                              //  CREATION DE LA FACTURE
+                          // -------------------------------
+      
+                              $items = $itemFacdecode; // Initialiser un tableau vide pour les éléments
+      
+      
+                              // Préparez les données JSON pour l'API
+                              $jsonData = json_encode([
+                                  "ifu" => $ifuentreprise, // ici on doit rendre la valeur de l'ifu dynamique
+                                  // "aib" => "A",
+                                  "type" => 'FA',
+                                  "items" => $items,
+                                  "client" => [
+                                      // "ifu" => '',
+                                      "name"=>  $nomcompleteleve,
+                                      // "contact" => "string",
+                                      // "address"=> "string"
+                                  ],
+                                  "operator" => [
+                                      "name" => "CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
+                                  ],
+                                  "payment" => [
+                                      [
+                                      "name" => $mode_paiement,
+                                        "amount" => intval($montanttotal), 
+                                      ]
+                                    ],
+                                    "reference" => $codemecef,
+                              ]);
+                          // $jsonDataliste = json_encode($jsonData, JSON_FORCE_OBJECT);
+      
+      
+                          //  dd($jsonData);
+      
+                          // Définissez l'URL de l'API de facturation
+                          $apiUrl = 'https://developper.impots.bj/sygmef-emcf/api/invoice';
+      
+                          // Définissez le jeton d'authentification
+                          // $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjAyMDIzODU5MTExMzh8VFMwMTAxMTQ3MiIsInJvbGUiOiJUYXhwYXllciIsIm5iZiI6MTcyNDI1NzQyMywiZXhwIjoxNzM3NDE0MDAwLCJpYXQiOjE3MjQyNTc0MjMsImlzcyI6ImltcG90cy5iaiIsImF1ZCI6ImltcG90cy5iaiJ9.sRcSeEbIuQNSgFebRRaxW4zPLCqlF6PQXc90e2xfHCs';
+                          $token = $tokenentreprise;
+      
+                          // Effectuez la requête POST à l'API
+                          // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                          $ch = curl_init($apiUrl);
+                          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                          curl_setopt($ch, CURLOPT_POST, true);
+                          curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+                          curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                              'Content-Type: application/json',
+                              'Authorization: Bearer ' . $token
+                          ));
+                          curl_setopt($ch, CURLOPT_CAINFO, storage_path('certificates/cacert.pem'));
+      
+                      // Exécutez la requête cURL et récupérez la réponse
+              $response = curl_exec($ch);
+              // dd($response);
+      
+              $decodedResponse = json_decode($response, true);
+      
+                  // Vérifiez si l'UID est présent dans la réponse
+                  if (isset($decodedResponse['uid'])) {
+                      // L'UID de la demande
+                      $uid = $decodedResponse['uid'];
+                      // $taxb = 0.18;
+      
+                      // -------------------------------
+                          //  RECUPERATION DE LA FACTURE PAR SON UID
+                      // -------------------------------
+      
+                      // Définissez l'URL de l'API de confirmation de facture
+                      $recuperationUrl = 'https://developper.impots.bj/sygmef-emcf/api/invoice/'.$uid;
+          
+                      // Configuration de la requête cURL pour la confirmation
+                      $chRecuperation = curl_init($recuperationUrl);
+                      curl_setopt($chRecuperation, CURLOPT_RETURNTRANSFER, true);
+                      curl_setopt($chRecuperation, CURLOPT_CUSTOMREQUEST, 'GET');
+                      curl_setopt($chRecuperation, CURLOPT_HTTPHEADER, [
+                          'Authorization: Bearer ' . $token,
+                          'Content-Length: 0'
+                      ]);
+                      curl_setopt($chRecuperation, CURLOPT_CAINFO, storage_path('certificates/cacert.pem'));
+          
+                      // Exécutez la requête cURL pour la confirmation
+                      $responseRecuperation = curl_exec($chRecuperation);
+                      // dd($responseRecuperation);
+                      // Vérifiez les erreurs de cURL pour la confirmation
+      
+          
+                      // Fermez la session cURL pour la confirmation
+                      curl_close($chRecuperation);
+          
+                  // Convertissez la réponse JSON en tableau associatif PHP
+                  $decodedDonneFacture = json_decode($responseRecuperation, true);
+          
+                  // $facturedetaille = json_decode($jsonData, true);
+                  $ifuEcoleFacture = $decodedDonneFacture['ifu'];
+                  // dd($ifuEcoleFacture);
+                  $itemFacture = $decodedDonneFacture['items'];
+                  $jsonItems = json_encode($itemFacture);
+                  $doneeDetailleItemFacture = $itemFacture['0'];
+                  $nameItemFacture = $doneeDetailleItemFacture['name'];
+                  $prixTotalItemFacture = $doneeDetailleItemFacture['price'];
+                  $quantityItemFacture = $doneeDetailleItemFacture['quantity'];
+                  $taxGroupItemFacture = $doneeDetailleItemFacture['taxGroup'];
+                  // $idd = $responseRecuperation.ifu;
+                  $nameClient = $decodedDonneFacture['client']['name'];
+                  // dd($itemFacture);
+      
+                  // -------------------------------
+                          //  CONFIRMATION DE LA FACTURE 
+                      // -------------------------------
+      
+                      // ACTION pour la confirmation
+                      $actionConfirmation = 'confirm';
+      
+                      // Définissez l'URL de l'API de confirmation de facture
+                      $confirmationUrl = 'https://developper.impots.bj/sygmef-emcf/api/invoice/'.$uid.'/'.$actionConfirmation;
+                  
+                      // Configuration de la requête cURL pour la confirmation
+                      $chConfirmation = curl_init($confirmationUrl);
+                      curl_setopt($chConfirmation, CURLOPT_RETURNTRANSFER, true);
+                      curl_setopt($chConfirmation, CURLOPT_CUSTOMREQUEST, 'PUT');
+                      curl_setopt($chConfirmation, CURLOPT_HTTPHEADER, [
+                          'Authorization: Bearer ' . $token,
+                          'Content-Length: 0'
+                      ]);
+                      curl_setopt($chConfirmation, CURLOPT_CAINFO, storage_path('certificates/cacert.pem'));
+                  
+                      // Exécutez la requête cURL pour la confirmation
+                      $responseConfirmation = curl_exec($chConfirmation);
+                  
+                  
+                      // Fermez la session cURL pour la confirmation
+                      curl_close($chConfirmation);
+                  
+                  // Convertissez la réponse JSON en tableau associatif PHP
+                  $decodedResponseConfirmation = json_decode($responseConfirmation, true);
+                  // dd($decodedResponseConfirmation);
+      
+          
+                      $codemecefavoir = $decodedResponseConfirmation['codeMECeFDGI'];
+          
+                      $counters = $decodedResponseConfirmation['counters'];
+          
+                      $nim = $decodedResponseConfirmation['nim'];
+          
+                      $dateTime = $decodedResponseConfirmation['dateTime'];
+          
+                            // Générer le code QR
+                            $qrCodeString = $decodedResponseConfirmation['qrCode'];
+          
+                            $reffactures = $nim.'-'.$counters;
+      
+                            $reffacture = explode('/', $reffactures)[0];
+      
+                            
+                
+                            // dd($reffacture);
+            
+                        // gestion du code qr sous forme d'image
+                
+                        // $fileNameqrcode = $nomcompleteleve . time() . '.png';
+                        $result = Builder::create()
+                            ->writer(new PngWriter())
+                            ->data($qrCodeString)
+                            ->size(100)
+                            // ->margin(10)
+                            ->build();
+                
+                            $qrcodecontent = $result->getString();
+      
+                            // dd($qrcodecontent);
+              $dateTime = DateTime::createFromFormat('d/m/Y H:i:s', $dateTime)->format('Y-m-d H:i:s');
+          // ENREGISTREMENT DE LA FACTURE
+          $facturenormalise = new Facturescolarit();
+          $facturenormalise->uid = $uid;
+          $facturenormalise->id = $reffacture;
+          $facturenormalise->codemecef = $codemecefavoir;
+          $facturenormalise->codemeceffacoriginale = $codemecef;
+          $facturenormalise->counters = $counters;
+          $facturenormalise->nim = $nim;
+          $facturenormalise->dateHeure = $dateTime;
+          $facturenormalise->date_time = $dateTime;
+          $facturenormalise->ifuEcole = $ifuEcoleFacture;
+          $facturenormalise->MATRICULE = $matriculeeleve;
+          $facturenormalise->itemfacture = $jsonItems;
+          $facturenormalise->classe = $classeeleve;
+          $facturenormalise->nom = $nameClient;
+          $facturenormalise->tax_group = $factureoriginale->tax_group;
+          // $facturenormalise->designation = $nameItemFacture;
+          $facturenormalise->montant_total = $montanttotal;
+          //  $facturenormalise->montant_total = $prixTotalItemFacture;
+          $facturenormalise->qrcode = $qrcodecontent;
+          $facturenormalise->NUMRECU = $factureoriginale->NUMRECU;
+          $facturenormalise->mode_paiement = $factureoriginale->mode_paiement;
+          $facturenormalise->statut = 0;
+      
+          $facturenormalise->save();
+
+          DB::table('facturescolarit')
+              ->where('codemecef', $codemecef)
+              ->update(['statut' => 0]);
+      
+          //  $factureoriginale->statut = 0;
+          //  $factureoriginale->update();  
+      
+      
+      
+      
+          // effacer les donnes de la facture qui sont dans scolarite et journal
+      
+          // MISE À JOUR DES LIGNES DANS scolarite
+          Scolarite::where('NUMRECU', $factureoriginale->NUMRECU)
+              ->update(['VALIDE' => 0]);
+
+          // MISE À JOUR DES LIGNES DANS journal
+          Journal::where('NUMRECU', $factureoriginale->NUMRECU)
+              ->update(['VALIDE' => 0]);
+      
+      
+          return back()->with('status', "Facture d'avoir generer avec succes");
+      
+      
+          }
+      } else {
+          // dd('codemecef incorrect');
+          return back()->with('erreur', "Le codemecef entrer ne correspond pas a celui de la facture originale.");
+
+      }
+
+    }
+
+
   public function transfert(){
     return view ('pages.inscriptions.transfert');
   }
@@ -2182,33 +2490,39 @@ public function filterEtatDeLaCaisse(Request $request) {
         if (Session::has('account')) {
             // Retrieve the student details
             $eleve = Eleve::where('MATRICULE', $matricule)->first();
-            $scolarite = Scolarite::where('MATRICULE', $matricule)->get();
+            $scolarite = Scolarite::where('MATRICULE', $matricule)->where('VALIDE', '1')->get();
             $libelle = Params2::first();
             $echeanche = Echeance::first();
             
             // Calculate the total amounts based on AUTREF
             $totalArriere = Scolarite::where('MATRICULE', $matricule)
                 ->where('AUTREF', '2')
+                ->where('VALIDE', '1')
                 ->sum('MONTANT');
     
             $totalScolarite = Scolarite::where('MATRICULE', $matricule)
                 ->where('AUTREF', '1')
+                ->where('VALIDE', '1')
                 ->sum('MONTANT');
     
             $totalLibelle1 = Scolarite::where('MATRICULE', $matricule)
                 ->where('AUTREF', '3')
+                ->where('VALIDE', '1')
                 ->sum('MONTANT');
     
             $totalLibelle2 = Scolarite::where('MATRICULE', $matricule)
                 ->where('AUTREF', '4')
+                ->where('VALIDE', '1')
                 ->sum('MONTANT');
     
             $totalLibelle3 = Scolarite::where('MATRICULE', $matricule)
                 ->where('AUTREF', '5')
+                ->where('VALIDE', '1')
                 ->sum('MONTANT');
             
             $totalLibelle4 = Scolarite::where('MATRICULE', $matricule)
               ->where('AUTREF', '6')
+              ->where('VALIDE', '1')
               ->sum('MONTANT');
     
             // Pass the totals along with other data to the view
@@ -2254,6 +2568,12 @@ public function enregistrerPaiement(Request $request, $matricule)
             // Sinon, générer un nouveau numéro basé sur le maximum existant
             return Scolarite::max('NUMERO') + 1; // Ajustement pour générer un nouveau numéro
           };
+
+          // generer un nouveau NUMRECU
+            $maxNUMRECUSco = Scolarite::max('NUMRECU') ?? 0;
+            $nouvNUMRECU = $maxNUMRECUSco + 1;
+            // dd($sco);
+
           
           // Enregistrer le montant de la scolarité si présent et supérieur à 0
           if ($request->filled('scolarite') && $request->input('scolarite') > 0) {
@@ -2273,7 +2593,7 @@ public function enregistrerPaiement(Request $request, $matricule)
                   $scolarite->DATESAISIE = $request->input('date_operation'); // Enregistrer la date actuelle
                   $scolarite->ANSCOL = $eleve->anneeacademique;
                   $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
-                  $scolarite->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                  $scolarite->NUMRECU = $nouvNUMRECU;
                   $scolarite->MONTANT = $request->input('scolarite');
                   $scolarite->AUTREF = '1'; // Scolarité
                   $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
@@ -2285,7 +2605,7 @@ public function enregistrerPaiement(Request $request, $matricule)
                   $journal->DATEOP = $request->input('date_operation');
                   $journal->MODEPAIE = $request->input('mode_paiement');
                   $journal->ANSCOL = $eleve->anneeacademique;
-                  $journal->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                  $journal->NUMRECU = $nouvNUMRECU;
                   $journal->DEBIT = $request->input('scolarite');
                   $journal->NumFRais = '1'; // Scolarité
                   $journal->SIGNATURE = session()->get('nom_user');
@@ -2313,7 +2633,7 @@ public function enregistrerPaiement(Request $request, $matricule)
                 $scolarite->DATESAISIE = $request->input('date_operation'); // Enregistrer la date actuelle
                 $scolarite->ANSCOL = $eleve->anneeacademique;
                 $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
-                $scolarite->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                $scolarite->NUMRECU = $nouvNUMRECU;
                 $scolarite->MONTANT = $request->input('arriere');
                 $scolarite->AUTREF = '2'; // Arriéré
                 $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
@@ -2325,7 +2645,7 @@ public function enregistrerPaiement(Request $request, $matricule)
                 $journal->DATEOP = $request->input('date_operation');
                 $journal->MODEPAIE = $request->input('mode_paiement');
                 $journal->ANSCOL = $eleve->anneeacademique;
-                $journal->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                $journal->NUMRECU = $nouvNUMRECU;
                 $journal->DEBIT = $request->input('arriere');
                 $journal->NumFRais = '2'; // Arriéré
                 $journal->SIGNATURE = session()->get('nom_user');
@@ -2359,7 +2679,7 @@ public function enregistrerPaiement(Request $request, $matricule)
                     $scolarite->DATESAISIE = $request->input('date_operation'); // Enregistrer la date actuelle
                     $scolarite->ANSCOL = $eleve->anneeacademique;
                     $scolarite->NUMERO = $getNumero($matricule, $request->input('date_operation'));
-                    $scolarite->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                    $scolarite->NUMRECU = $nouvNUMRECU;
                     $scolarite->MONTANT = $libelle;
                     $scolarite->AUTREF = strval($i + 3); // Différencier les libellés
                     $scolarite->SIGNATURE = session()->get('nom_user'); // Récupérer la valeur depuis la session
@@ -2373,7 +2693,7 @@ public function enregistrerPaiement(Request $request, $matricule)
                     $journal->DATEOP = $request->input('date_operation');
                     $journal->MODEPAIE = $request->input('mode_paiement');
                     $journal->ANSCOL = $eleve->anneeacademique;
-                    $journal->NUMRECU = $getNumero($matricule, $request->input('date_operation'));
+                    $journal->NUMRECU = $nouvNUMRECU;
                     $journal->DEBIT = $libelle;
                     $journal->NumFRais = strval($i + 3); // Différencier les libellés
                     $journal->SIGNATURE = session()->get('nom_user');
@@ -2409,7 +2729,7 @@ public function enregistrerPaiement(Request $request, $matricule)
             'arriere' => $request->input('arriere'),
             'arriere_hidden' => $request->input('arriere_hidden'),
             'reliquat' => $request->input('reliquat_hidden'),
-            'numeroRecu' => $getNumero($matricule, $request->input('date_operation')),
+            'numeroRecu' => $nouvNUMRECU,
             'signature' => session()->get('nom_user'),
             'modePaiement' => $request->input('mode_paiement'),
             'montantdu' => $request->input('montant_total'),
@@ -2425,6 +2745,13 @@ public function enregistrerPaiement(Request $request, $matricule)
         // -------------------------------
               //  CREATION DE LA FACTURE
         // -------------------------------
+
+            // Choix du texte selon le mode
+          $libelleMode = match ($request->input('mode_paiement')) {
+              1 => 'ESPECES',
+              2 => 'CHEQUES',
+              default => 'AUTRE',
+          };
        
     $items = []; // Tableau pour stocker les informations des paiements
     
@@ -2510,7 +2837,8 @@ public function enregistrerPaiement(Request $request, $matricule)
       ],
       "payment" => [
           [
-          "name" => "ESPECES",
+          "name" => $libelleMode,
+          // "name" => "ESPECES",
           "amount"=> intval($montant_total)
           ]
         ],
@@ -2696,6 +3024,8 @@ $total = $decodedResponse['total'];
                       'date_time' => $dateTime,
                       'qrcode' => $qrcodecontent,
                       'statut' => 1,
+                      'NUMRECU' => $nouvNUMRECU,
+                      'mode_paiement' => $request->input('mode_paiement'),
                   ];
                   
                   DB::table('facturescolarit')->insert($data);
@@ -2729,7 +3059,9 @@ Session::put([
   'qrcodecontent' => $qrcodecontent,               // Contenu du QR code
   'NOMETAB' => $NOMETAB,                           // Nom de l'établissement
   'nim' => $nim,                                   // Identifiant NIM
-  'dateTime' => $dateTime                          // Date et heure
+  'dateTime' => $dateTime,                         // Date et heure
+  'NUMRECU' => $nouvNUMRECU,                         
+  'mode_paiement' => $request->input('mode_paiement')
 ]);
 
 // Ajouter les données liées à l'élève
@@ -2779,6 +3111,8 @@ return view('pages.inscriptions.pdfpaiementsco', [
 
   // Optionnel : logo de l'école (si disponible)
   'logoUrl' => $logoUrl ?? null,
+
+  'mode_paiement' => $request->input('mode_paiement'),
 
   // Données supplémentaires si nécessaires
   'montanttotal' => $total,

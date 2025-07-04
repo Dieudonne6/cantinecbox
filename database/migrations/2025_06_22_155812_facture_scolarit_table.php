@@ -21,13 +21,16 @@ return new class extends Migration
             $table->string('id')->primary();
 
             $table->string('codemecef')->nullable();
-            $table->integer('counters')->nullable();
+            $table->string('codemeceffacoriginale')->nullable();
+            $table->string('counters')->nullable();
             $table->string('nim')->nullable();
             $table->dateTime('dateHeure')->nullable();
             $table->string('ifuEcole')->nullable();
             $table->string('MATRICULE')->nullable();
             $table->string('nom')->nullable();
             $table->string('classe')->nullable();
+            $table->string('mode_paiement')->nullable();
+            $table->string('NUMRECU')->nullable();
 
             // JSON content of items
             $table->json('itemfacture')->nullable();
@@ -58,3 +61,7 @@ return new class extends Migration
         Schema::dropIfExists('facturescolarit');
     }
 };
+
+
+
+

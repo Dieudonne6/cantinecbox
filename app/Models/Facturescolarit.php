@@ -16,6 +16,7 @@ class Facturescolarit extends Model
         'uid',
         'id' ,
         'codemecef' ,
+        'codemeceffacoriginale' ,
         'counters',
         'nim',
         'dateHeure' ,
@@ -28,7 +29,9 @@ class Facturescolarit extends Model
         'tax_group' ,
         'date_time' ,
         'qrcode' ,
-        'statut' 
+        'statut',
+        'NUMRECU',
+        'mode_paiement' 
 ];
 
 }
