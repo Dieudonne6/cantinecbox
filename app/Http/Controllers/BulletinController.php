@@ -1117,9 +1117,9 @@ class BulletinController extends Controller
                   if ($moyenneP1 !== null  && $moyenneP1 !== 21 && $moyenneP2 !== null && $moyenneP2 !== 21) {
                       // Pondération 1/3 pour P1, 2/3 pour P2
                       $moyenneAnnuelle = round((2 * $moyenneP2 + $moyenneP1) / 3, 2);
-                  } elseif ($moyenneP1 !== null && $moyenneP1 !== 21) {
-                      // Seule P1 existe
-                      $moyenneAnnuelle = $moyenneP1;
+                //   } elseif ($moyenneP1 !== null && $moyenneP1 !== 21) {
+                //       // Seule P1 existe
+                //       $moyenneAnnuelle = $moyenneP1;
                   } elseif ($moyenneP2 !== null  && $moyenneP2 !== 21) {
                       // Seule P2 existe
                       $moyenneAnnuelle = $moyenneP2;
@@ -1518,48 +1518,84 @@ class BulletinController extends Controller
                 $CodePromo = Classes::where('CODECLAS', $classeElev)->first();
                 $CODEPROMO = $CodePromo->CODEPROMO;
                 $moyenneAnnuelle = $eleve->MAN;
-                $infoDecision = DecisionConfiguration::where('promotion', $CODEPROMO)->first();
-                // $NouveauBorneI1A = $infoDecision->NouveauBorneI1A;
-                // dd($infoDecision);
-
-                // On récupère la configuration pour la promotion
                 // $infoDecision = DecisionConfiguration::where('promotion', $CODEPROMO)->first();
+                // // $NouveauBorneI1A = $infoDecision->NouveauBorneI1A;
+                // // dd($infoDecision);
 
-                // On choisit le préfixe selon le statut
-                if ($eleveA->STATUT == 0) {
-                    $prefix = 'Nouveau';
-                } elseif ($eleveA->STATUT == 1) {
-                    $prefix = 'Ancien';
-                } else {
-                    $prefix = null;
-                }
+                // // On récupère la configuration pour la promotion
+                // // $infoDecision = DecisionConfiguration::where('promotion', $CODEPROMO)->first();
 
-                // On détermine le libellé
-                $decisionAnnuelle = null;
-                if ($prefix) {
-                    // Parcours des 5 intervalles
-                    for ($i = 1; $i <= 5; $i++) {
-                        // Construction dynamique du nom des propriétés
-                        $lowProp   = "{$prefix}BorneI{$i}A";
-                        $highProp  = "{$prefix}BorneI{$i}B";
-                        $labelProp = "{$prefix}LibelleI{$i}";
+                // // On choisit le préfixe selon le statut
+                // if ($eleveA->STATUT == 0) {
+                //     $prefix = 'Nouveau';
+                // } elseif ($eleveA->STATUT == 1) {
+                //     $prefix = 'Ancien';
+                // } else {
+                //     $prefix = null;
+                // }
 
-                        $low   = floatval($infoDecision->$lowProp);
-                        $high  = floatval($infoDecision->$highProp);
-                        $moy   = floatval($moyenneAnnuelle);
+                // // On détermine le libellé
+                // $decisionAnnuelle = null;
+                // if ($prefix) {
+                //     // Parcours des 5 intervalles
+                //     for ($i = 1; $i <= 5; $i++) {
+                //         // Construction dynamique du nom des propriétés
+                //         $lowProp   = "{$prefix}BorneI{$i}A";
+                //         $highProp  = "{$prefix}BorneI{$i}B";
+                //         $labelProp = "{$prefix}LibelleI{$i}";
 
-                        // Test inclusif : [borneA, borneB[
-                        if ($moy >= $low && $moy < $high) {
-                            $decisionAnnuelle = $infoDecision->$labelProp;
-                            break;
-                        }
-                        // Pour le dernier intervalle (qui va jusqu'à la borne B incluse)
-                        // if ($i === 5 && $moy >= $low && $moy <= $high) {
-                        //     $appreciationAnnuelle = $infoDecision->$labelProp;
-                        //     break;
-                        // }
-                    }
-                }
+                //         $low   = floatval($infoDecision->$lowProp);
+                //         $high  = floatval($infoDecision->$highProp);
+                //         $moy   = floatval($moyenneAnnuelle);
+
+                //         // Test inclusif : [borneA, borneB[
+                //         if ($moy >= $low && $moy < $high) {
+                //             $decisionAnnuelle = $infoDecision->$labelProp;
+                //             break;
+                //         }
+                //         // Pour le dernier intervalle (qui va jusqu'à la borne B incluse)
+                //         // if ($i === 5 && $moy >= $low && $moy <= $high) {
+                //         //     $appreciationAnnuelle = $infoDecision->$labelProp;
+                //         //     break;
+                //         // }
+                //     }
+                // }
+
+
+                $infoDecision = DecisionConfiguration::where('promotion', $CODEPROMO)->first();
+
+if (!$infoDecision) {
+    // Pas de config trouvée : on peut définir un libellé par défaut
+    $decisionAnnuelle = '......................................................................';
+} else {
+    // Votre logique existante
+    $prefix = $eleveA->STATUT == 0 ? 'Nouveau'
+            : ($eleveA->STATUT == 1 ? 'Ancien' : null);
+
+    $decisionAnnuelle = null;
+    if ($prefix) {
+        for ($i = 1; $i <= 5; $i++) {
+            $lowProp   = "{$prefix}BorneI{$i}A";
+            $highProp  = "{$prefix}BorneI{$i}B";
+            $labelProp = "{$prefix}LibelleI{$i}";
+
+            $low  = floatval($infoDecision->$lowProp);
+            $high = floatval($infoDecision->$highProp);
+            $moy  = floatval($moyenneAnnuelle);
+
+            if ($moy >= $low && $moy < $high) {
+                $decisionAnnuelle = $infoDecision->$labelProp;
+                break;
+            }
+            // pour l'intervalle final, si vous voulez inclure la borne haute :
+            if ($i === 5 && $moy >= $low && $moy <= $high) {
+                $decisionAnnuelle = $infoDecision->$labelProp;
+                break;
+            }
+        }
+    }
+    $decisionAnnuelle ??= '......................................................................';
+}
 
 
             $resultatEleve = [
@@ -1840,6 +1876,8 @@ class BulletinController extends Controller
             $moyenneSur20 = $moyenneInterro ;
         }
 
+        // dd($moyenneInterro);
+
         // Calcul de la moyenne pondérée (coeff)
         $moyenneCoeff = $totalCoeff > 0 ? $moyenneSur20 * $totalCoeff : 0;
 
@@ -2068,23 +2106,25 @@ class BulletinController extends Controller
         // Calculer le rang pour chaque matière et chaque classe
         foreach ($moyennesParClasseEtMatiere as $classe => $matieres) {
             foreach ($matieres as $matiere => $moyennes) {
-                // Filtrer les moyennes pour exclure celles qui valent 0
-                // $moyennes = array_filter($moyennes, function($item) {
-                //   return $item['moyenne'] > 0;
-                // });
-                // // Si après filtrage il n'y a aucune moyenne, on passe à la suivante
-                // if (empty($moyennes)) {
-                //   continue;
-                // }
+        // 1) on ne garde que les moyennes valides
+                $valeurs = array_filter(
+                    $moyennes,
+                    fn($item) => $item['moyenne'] !== 21 && $item['moyenne'] !== -1 && $item['moyenne'] !== null
+                );
 
-                usort($moyennes, fn($a, $b) => $b['moyenne'] <=> $a['moyenne']);
+                // 2) on trie ces moyennes
+                usort($valeurs, fn($a, $b) => $b['moyenne'] <=> $a['moyenne']);
 
-                $maxMoyenne = max(array_column($moyennes, 'moyenne'));
-                $minMoyenne = min(array_column($moyennes, 'moyenne'));
+                // si après filtre on n'a plus de valeurs, on passe au suivant
+                if (empty($valeurs)) {
+                    continue;
+                }
+                $maxMoyenne = max(array_column($valeurs, 'moyenne'));
+                $minMoyenne = min(array_column($valeurs, 'moyenne'));
 
                 $rang = 1;
-                foreach ($moyennes as $index => $item) {
-                    $rangAttribue = $index > 0 && $item['moyenne'] == $moyennes[$index - 1]['moyenne'] ? $rang : $index + 1;
+                foreach ($valeurs as $index => $item) {
+                    $rangAttribue = $index > 0 && $item['moyenne'] == $valeurs[$index - 1]['moyenne'] ? $rang : $index + 1;
                     $rang = $rangAttribue;
 
                     foreach ($resultats as &$resultatEleve) {
@@ -2099,9 +2139,14 @@ class BulletinController extends Controller
                             }
                         }
                     }
+
+                    // dd($minMoyenne);
                 }
             }
         }
+
+        // dd($moyennesParClasseEtMatiere);
+
 
         // $data = compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean', 'params2', 'logo', 'logoBase64', 'mimeType', 'interligne');
 

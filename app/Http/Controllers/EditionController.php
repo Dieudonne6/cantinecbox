@@ -314,7 +314,7 @@ class EditionController extends Controller
     $eleves = DB::table('eleve')
       ->where('CODECLAS', $selectedClass)
       ->select('MATRICULE', 'MATRICULEX', 'NOM', 'PRENOM', 'MS' . $selectedPeriod . ' AS MSEM', 'RANG' . $selectedPeriod . ' AS RANG')
-      ->get();
+      ->orderBy('NOM')->get();;
 
     // dd($eleves);
 
@@ -401,7 +401,7 @@ class EditionController extends Controller
     $eleves = DB::table('eleve')
       ->where('CODECLAS', $selectedClass)
       ->select('MATRICULE', 'MATRICULEX', 'NOM', 'MAN', 'PRENOM', 'MS' . $selectedPeriod . ' AS MSEM', 'RANG' . $selectedPeriod . ' AS RANG')
-      ->get();
+      ->orderBy('NOM')->get();;
 
 
     // $notes = DB::table('notes')
@@ -1011,9 +1011,9 @@ class EditionController extends Controller
                   if ($moyenneP1 !== null && $moyenneP1 !== 21 && $moyenneP2 !== null && $moyenneP2 !== 21) {
                       // Pondération 1/3 pour P1, 2/3 pour P2
                       $moyenneAnnuelle = number_format((2 * $moyenneP2 + $moyenneP1) / 3, 2);
-                  } elseif ($moyenneP1 !== null && $moyenneP1 !== 21) {
-                      // Seule P1 existe
-                      $moyenneAnnuelle = $moyenneP1;
+                  // } elseif ($moyenneP1 !== null && $moyenneP1 !== 21) {
+                  //     // Seule P1 existe
+                  //     $moyenneAnnuelle = $moyenneP1;
                   } elseif ($moyenneP2 !== null && $moyenneP2 !== 21) {
                       // Seule P2 existe
                       $moyenneAnnuelle = $moyenneP2;

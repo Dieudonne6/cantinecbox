@@ -400,12 +400,42 @@
                                                 @endphp --}}
                                             <td>{{ isset($moyenne_coeff) ? number_format($moyenne_coeff, 2) : '**.**' }}</td>
                                         @else
-                                            <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td>
-                                            <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td>
+                                            {{-- <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td> --}}
+                                            <td>
+  {{ 
+    isset($matiere['plusFaibleMoyenne'])
+      ? number_format($matiere['plusFaibleMoyenne'], 2)
+      : '**.**'
+  }}
+</td>
+                                            <td>
+  {{ 
+    isset($matiere['plusForteMoyenne'])
+      ? number_format($matiere['plusForteMoyenne'], 2)
+      : '**.**'
+  }}
+</td>
+                                            {{-- <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td> --}}
                                             {{-- <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td>
                                             <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td> --}}
                                         @endif
+
                                         @if (isset($option['rang_matiere']) && $option['rang_matiere'])
+    <td>
+        @if (isset($matiere['rang']))
+            {{-- Affiche le rang + suffixe --}}
+            {{ $matiere['rang'] }}
+            @php
+                $suffixe = $matiere['rang'] == 1 ? 'er' : 'ème';
+            @endphp
+            {{ $suffixe }}
+        @else
+            {{-- Placeholder quand 'rang' n'existe pas --}}
+            **.**
+        @endif
+    </td>
+@endif
+                                        {{-- @if (isset($option['rang_matiere']) && $option['rang_matiere'])
                                             <td>
                                                 {{ $matiere['rang'] }}
                                                 @php
@@ -413,7 +443,7 @@
                                                 @endphp
                                                 {{ $suffixe }}
                                             </td>
-                                        @endif
+                                        @endif --}}
                                         @if (isset($option['appreciation_prof']))
                                             <td style="text-align: left;">{{ $matiere['mentionProf'] }}</td>
                                         @else
@@ -745,14 +775,23 @@
                                         </p>
                                     </div><br>
 
-                                    @if(
+                                    @if (isset($option['decision_conseil']) && $option['decision_conseil'])
+                                        @if(
                                         ($typean === 2 && request('periode') == 3) ||
                                         ($typean === 1 && request('periode') == 2)
-                                    )
-                                        <p style="margin: 10px 0; font-weight:bold; text-align:center;">
-                                            {{ $resultat['decisionAnnuelle'] }}
-                                        </p>
+                                        )
+                                            <p style="margin: 10px 0; font-weight:bold; text-align:center;">
+                                                {{ $resultat['decisionAnnuelle'] }}
+                                            </p>
+                                        @endif
+                                    @else
+                                            <p style="margin: 10px 0; font-weight:bold; text-align:center;">
+                                                <span
+                                                style="border-bottom: 1px dotted black; width: 250px; display: inline-block;"></span>
+                                            </p>
                                     @endif
+
+
                                     {{-- <p style="margin: 10px 0;">
                                         {{ $resultat['decisionAnnuelle'] }}
                                     </p> --}}

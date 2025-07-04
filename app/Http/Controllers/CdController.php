@@ -120,7 +120,7 @@ class CdController extends Controller
       'notes.MS',
       'notes.TEST',
       'notes.MS1'
-    )->orderBy('MATRICULE')->get();
+    )->orderBy('NOM')->get();
     return view('pages.notes.saisirnote', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere', 'getClasmat'));
   }
   public function saisirnotefilter(Request $request)
@@ -177,7 +177,7 @@ class CdController extends Controller
       'notes.MS',
       'notes.TEST',
       'notes.MS1'
-    )->orderBy('MATRICULE')->get();
+    )->orderBy('NOM')->get();
     return view('pages.notes.saisirnotefilter', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere', 'getClasmat'));
   }
 
@@ -186,7 +186,7 @@ class CdController extends Controller
     set_time_limit(0); 
     // Valider les données entrantes
     $validatedData = $request->validate([
-      'champ1' => 'required|integer',
+      'periode' => 'required|integer',
       'champ2' => 'required|integer',
       'CODEMAT' => 'required|integer',
       'CODECLAS' => 'required|string',
@@ -220,7 +220,7 @@ class CdController extends Controller
       }
       // Rechercher si une note existe déjà pour cet élève, matière, classe et semestre
       $noteExistante = Notes::where('MATRICULE', $matricule)
-        ->where('SEMESTRE', $request->champ1)
+        ->where('SEMESTRE', $request->periode)
         ->where('CODEMAT', $request->CODEMAT)
         ->where('CODECLAS', $request->CODECLAS)
         ->first();
@@ -234,7 +234,7 @@ class CdController extends Controller
         // Sinon, on crée une nouvelle entrée
         Notes::create(array_merge($noteData, [
           'MATRICULE' => $matricule,
-          'SEMESTRE' => $request->champ1,
+          'SEMESTRE' => $request->periode,
           'COEF' => $request->champ2,
           'CODEMAT' => $request->CODEMAT,
           'CODECLAS' => $request->CODECLAS,
@@ -365,4 +365,97 @@ class CdController extends Controller
   {
     return view('pages.notes.template_certificate');
   }
+
+
+
+  public function permuterNotes(Request $request)
+    {
+        // 1. Validation des données
+        $data = $request->validate([
+            'CODEMAT' => 'required|integer|exists:clasmat,CODEMAT', // matière source
+            'CODECLAS' => 'required|string|exists:clasmat,CODECLAS', // classe source
+            'periode_source_affiche' => 'required|integer|in:1,2,3', // période source
+            'target_mat' => 'required|integer', // matière cible
+            'target_classe' => 'required|string', // classe cible (vérifiée via exists:clasmat,CODECLAS)
+            'target_periode' => 'required|integer|in:1,2,3', // période cible
+        ]);
+
+        // dd($request->all());
+
+        // Vérifier que la classe cible existe
+        if (!\App\Models\Clasmat::where('CODECLAS', $data['target_classe'])->exists()) {
+            return back()->with('error', 'Classe cible invalide.');
+        }
+
+        // 2. Vérifier qu'on ne permute pas vers la même combinaison
+        if (
+            $data['CODEMAT'] === $data['target_mat'] &&
+            $data['CODECLAS'] === $data['target_classe'] &&
+            $data['periode_source_affiche'] === $data['target_periode']
+        ) {
+            return back()->with('error', 'Source et cible sont identiques, aucune permutation nécessaire.');
+        }
+
+        // 3. Récupérer tous les matricules de la classe source
+        $matricules = \App\Models\Eleve::where('CODECLAS', $data['CODECLAS'])->pluck('MATRICULE');
+        
+        // 4. Récupérer toutes les notes source de ces élèves, matière et période
+        $notesSource = \App\Models\Notes::whereIn('MATRICULE', $matricules)
+            ->where('CODEMAT', $data['CODEMAT'])
+            ->where('SEMESTRE', $data['periode_source_affiche'])
+            ->get();
+
+        if ($notesSource->isEmpty()) {
+            return back()->with('error', 'Aucune note trouvée pour ces critères source.');
+        }
+
+        // dd($notesSource);
+
+        DB::beginTransaction();
+        try {
+            foreach ($notesSource as $note) {
+                // Préparer les données à copier
+                $attributes = [
+                    'MATRICULE' => $note->MATRICULE,
+                    'CODEMAT' => $data['target_mat'],
+                    'CODECLAS' => $data['target_classe'],
+                    'SEMESTRE' => $data['target_periode'],
+                ];
+                
+
+                $values = $note->only([
+                    'INT1', 'INT2', 'INT3', 'INT4', 'INT5',
+                    'INT6', 'INT7', 'INT8', 'INT9', 'INT10',
+                    'MI', 'DEV1', 'DEV2', 'DEV3', 'MS',
+                    'TEST', 'MS1'
+                ]);
+
+                // Créer ou mettre à jour la note cible
+                Notes::updateOrCreate($attributes, $values);
+
+                // dd('yoyoy');
+
+
+                // Supprimer la note source
+                // $note->delete();
+                            
+
+            }
+
+          // 2. Supprimer les notes sources en lot
+        Notes::whereIn('MATRICULE', $matricules)
+            ->where('CODECLAS', $data['CODECLAS'])           // <-- classe source
+            ->where('CODEMAT', $data['CODEMAT'])             // <-- matière source
+            ->where('SEMESTRE', $data['periode_source_affiche']) // <-- période source
+            ->delete();
+            DB::commit();
+
+
+            // dd('yoyoy');
+            return back()->with('success', 'Permutation des notes effectuée avec succès.');
+        } catch (\Throwable $e) {
+            // DB::rollBack();
+            return back()->with('error', 'Erreur lors de la permutation : ' . $e->getMessage());
+        }
+    }
 }

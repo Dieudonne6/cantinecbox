@@ -1,3 +1,3 @@
 @echo off
-cd C:\wamp64\www\cantinecbox
-php artisan serve --host=127.0.0.1 --port=8000
+cd C:\SCHOOLBOX
+php artisan serve --host=0.0.0.0 --port=8000

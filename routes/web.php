@@ -304,6 +304,7 @@ Route::get('/inscrireeleve', [PagesController::class, 'inscrireeleve'])->name('i
 Route::post('/nouveaueleve', [GestionclasseController::class, 'nouveaueleve'])->name('nouveaueleve');
 Route::post('/enregistrerclasse', [GestionclasseController::class, 'enregistrerclasse'])->name('enregistrerclasse');
 Route::put('/promotions/{codePromo}', [GestionclasseController::class, 'update'])->name('promotions.update');
+Route::post('/notes/permuter', [CdController::class, 'permuterNotes'])->name('permuter_notes');
 // Route::get('/modifierclasse', [PagesController::class, 'modifierclasse']);
 
 Route::post('/enregistrerinfo', [GestionclasseController::class, 'enregistrerinfo']);
