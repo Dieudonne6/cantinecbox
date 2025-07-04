@@ -9,7 +9,8 @@ class Facturescolarit extends Model
 {
     use HasFactory;
     protected $table = 'facturescolarit';
-    protected $primaryKey = 'id';
+    //protected $primaryKey = 'id';
+    protected $keyType = 'string';
 
     protected $fillable = [
         'uid',
