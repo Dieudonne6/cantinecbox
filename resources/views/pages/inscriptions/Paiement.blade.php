@@ -130,10 +130,8 @@
                                         <option value="6">{{ $libelle->LIBELF4 }}</option>
                                     </select>
                                     <div class="mt-2" style="text-align: center">
-                                        <button id="monter-btn" type="button" class="btn btn-primary btn-sm"
-                                            onclick="moveUp()">Monter</button>
-                                        <button id="descendre-btn" type="button" class="btn btn-secondary btn-sm"
-                                            onclick="moveDown()">Descendre</button>
+                                        <button id="monter-btn" type="button" class="btn btn-primary btn-sm">Monter</button>
+                                        <button id="descendre-btn" type="button" class="btn btn-secondary btn-sm">Descendre</button>
                                     </div>
                                 </div>
                             </div>
@@ -222,7 +220,6 @@
 
                         <button type="submit" class="btn btn-primary">Enregistrer le paiement</button>
                     </form>
-                    
                     @if (Session::has('success'))
                         <div id="recu" class="mt-4">
                             <div class="row">
@@ -362,6 +359,8 @@
                 </div>
                 <br>
                 <br>
+
+
                    <script>
                     let saisieManuelle = false;
 
@@ -523,85 +522,83 @@
                     }
                 </script>
 
-                <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                    console.log("Script chargé, fonctions moveUp et moveDown OK");
-                    });
-                
-                    function moveUp() {
-                    console.log("moveUp appelé");
-                    const select = document.getElementById("priority-select");
-                    const selectedOptions = Array.from(select.selectedOptions);
-                
-                    selectedOptions.forEach(option => {
-                        const index = option.index;
-                        if (index > 0) {
-                        // Déplacement dans le <select>
-                        select.insertBefore(option, select.options[index - 1]);
-                
-                        // Déplacement dans le formulaire
-                        const fieldSelector = `#form-fields [data-id="${option.value}"]`;
-                        const field = document.querySelector(fieldSelector);
-                        const prevField = field?.previousElementSibling;
-                        if (prevField) {
-                            field.style.transition = prevField.style.transition = 'transform 0.3s ease';
-                            document.getElementById("form-fields").insertBefore(field, prevField);
-                        }
-                        }
-                    });
-                
-                    mettreAJourPriorites();
-                    mettreAJourEtatBoutons();
-                    }
-                
-                    function moveDown() {
-                    console.log("moveDown appelé");
-                    const select = document.getElementById("priority-select");
-                    const selectedOptions = Array.from(select.selectedOptions);
-                
-                    for (let i = selectedOptions.length - 1; i >= 0; i--) {
-                        const option = selectedOptions[i];
-                        const index = option.index;
-                        if (index < select.options.length - 1) {
-                        // Dans le <select>
-                        select.insertBefore(select.options[index + 1], option);
-                
-                        // Dans le formulaire
-                        const fieldSelector = `#form-fields [data-id="${option.value}"]`;
-                        const field = document.querySelector(fieldSelector);
-                        const nextField = field?.nextElementSibling;
-                        if (nextField) {
-                            field.style.transition = nextField.style.transition = 'transform 0.3s ease';
-                            document.getElementById("form-fields").insertBefore(nextField, field);
-                        }
-                        }
-                    }
-                
-                    mettreAJourPriorites();
-                    mettreAJourEtatBoutons();
-                    }
-                
-                    function mettreAJourPriorites() {
-                    const select = document.getElementById("priority-select");
-                    Array.from(select.options).forEach((option, idx) => {
-                        const fieldSelector = `#form-fields [data-id="${option.value}"]`;
-                        const field = document.querySelector(fieldSelector);
-                        if (field) {
-                        field.querySelector('.composante').dataset.priorite = idx + 1;
-                        }
-                    });
-                    }
-                
-                    function mettreAJourEtatBoutons() {
-                    const select = document.getElementById("priority-select");
-                    const hasSelection = select.selectedOptions.length > 0;
-                    document.getElementById("monter-btn").disabled = !hasSelection;
-                    document.getElementById("descendre-btn").disabled = !hasSelection;
-                    }
-                
-                    // Initialisation de l’état des boutons au chargement
-                    document.addEventListener('DOMContentLoaded', mettreAJourEtatBoutons);
-                </script>
+<script>
+    // 1) Déclarations hors de DOMContentLoaded pour pouvoir y accéder globalement
+    function moveUp() {
+      console.log("moveUp appelé");
+      const select = document.getElementById("priority-select");
+      Array.from(select.selectedOptions).forEach(option => {
+        const idx = option.index;
+        if (idx > 0) {
+          // Déplace l'option dans le <select>
+          select.insertBefore(option, select.options[idx - 1]);
+  
+          // Déplace le champ correspondant dans le formulaire
+          const sel = `#form-fields [data-id="${option.value}"]`;
+          const field = document.querySelector(sel);
+          const prev = field?.previousElementSibling;
+          if (prev) {
+            field.style.transition = prev.style.transition = 'transform 0.3s ease';
+            document.getElementById("form-fields").insertBefore(field, prev);
+          }
+        }
+      });
+      mettreAJourPriorites();
+      mettreAJourEtatBoutons();
+    }
+  
+    function moveDown() {
+      console.log("moveDown appelé");
+      const select = document.getElementById("priority-select");
+      const opts = Array.from(select.selectedOptions);
+      for (let i = opts.length - 1; i >= 0; i--) {
+        const option = opts[i], idx = option.index;
+        if (idx < select.options.length - 1) {
+          select.insertBefore(select.options[idx + 1], option);
+  
+          const sel = `#form-fields [data-id="${option.value}"]`;
+          const field = document.querySelector(sel);
+          const next = field?.nextElementSibling;
+          if (next) {
+            field.style.transition = next.style.transition = 'transform 0.3s ease';
+            document.getElementById("form-fields").insertBefore(next, field);
+          }
+        }
+      }
+      mettreAJourPriorites();
+      mettreAJourEtatBoutons();
+    }
+  
+    function mettreAJourPriorites() {
+      const select = document.getElementById("priority-select");
+      Array.from(select.options).forEach((opt, i) => {
+        const sel = `#form-fields [data-id="${opt.value}"]`;
+        const field = document.querySelector(sel);
+        if (field) {
+          field.querySelector('.composante').dataset.priorite = i + 1;
+        }
+      });
+    }
+  
+    function mettreAJourEtatBoutons() {
+      const select = document.getElementById("priority-select");
+      const actif = select.selectedOptions.length > 0;
+      document.getElementById("monter-btn").disabled = !actif;
+      document.getElementById("descendre-btn").disabled = !actif;
+    }
+  
+    // 2) On attend que le DOM soit prêt avant de lier les boutons et le select
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log("DOM chargé, on attache les events");
+      const select = document.getElementById("priority-select");
+      document.getElementById("monter-btn").addEventListener('click', moveUp);
+      document.getElementById("descendre-btn").addEventListener('click', moveDown);
+      select.addEventListener('change', mettreAJourEtatBoutons);
+  
+      // initialise l’état des boutons
+      mettreAJourEtatBoutons();
+    });
+  </script>
                 <style>
                     /* Cacher le placeholder avec une opacité réduite */
                     input[id^="libelle-"]::placeholder,
