@@ -314,7 +314,7 @@ class EditionController extends Controller
     $eleves = DB::table('eleve')
       ->where('CODECLAS', $selectedClass)
       ->select('MATRICULE', 'MATRICULEX', 'NOM', 'PRENOM', 'MS' . $selectedPeriod . ' AS MSEM', 'RANG' . $selectedPeriod . ' AS RANG')
-      ->get();
+      ->orderBy('NOM')->get();;
 
     // dd($eleves);
 
@@ -401,7 +401,7 @@ class EditionController extends Controller
     $eleves = DB::table('eleve')
       ->where('CODECLAS', $selectedClass)
       ->select('MATRICULE', 'MATRICULEX', 'NOM', 'MAN', 'PRENOM', 'MS' . $selectedPeriod . ' AS MSEM', 'RANG' . $selectedPeriod . ' AS RANG')
-      ->get();
+      ->orderBy('NOM')->get();;
 
 
     // $notes = DB::table('notes')

@@ -120,7 +120,13 @@ Route::delete('/delreductions/{codeRedu}', [PagesController::class, 'delreductio
 
 Route::get('/paramcomposantes', [PagesController::class, 'paramcomposantes']);
 
+// --------------------------------------------------
 Route::get('/duplicatarecu', [PagesController::class, 'duplicatarecu']);
+Route::get('/pdfduplicatarecu/{counters}', [PagesController::class, 'pdfduplicatarecu']);
+Route::match(['get', 'post'], '/listefacturescolarite', [PagesController::class, 'listefacturescolarite'])->name('listefacturescolarite');
+Route::get('/avoirfacturepaiescolarite/{codemecef}', [PagesController::class, 'avoirfacturepaiescolarite'])->name('avoirfacturepaiescolarite');
+Route::post('/avoirfacturescolarite/{codemecef}', [PagesController::class, 'avoirfacturescolarite'])->name('avoirfacturescolarite');
+
 
 Route::get('/transfert', [PagesController::class, 'transfert']);
 
@@ -305,6 +311,7 @@ Route::get('/inscrireeleve', [PagesController::class, 'inscrireeleve'])->name('i
 Route::post('/nouveaueleve', [GestionclasseController::class, 'nouveaueleve'])->name('nouveaueleve');
 Route::post('/enregistrerclasse', [GestionclasseController::class, 'enregistrerclasse'])->name('enregistrerclasse');
 Route::put('/promotions/{codePromo}', [GestionclasseController::class, 'update'])->name('promotions.update');
+Route::post('/notes/permuter', [CdController::class, 'permuterNotes'])->name('permuter_notes');
 // Route::get('/modifierclasse', [PagesController::class, 'modifierclasse']);
 
 Route::post('/enregistrerinfo', [GestionclasseController::class, 'enregistrerinfo']);

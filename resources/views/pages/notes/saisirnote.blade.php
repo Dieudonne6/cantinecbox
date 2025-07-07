@@ -72,7 +72,7 @@
                                         <!-- Select pour la période -->
                                         <div class="col-md-8 mb-3">
                                             <select class="form-select select2 w-100 mt-2" id="periodSelect"
-                                                onchange="handleChange()" aria-label="Choisir une période">
+                                                onchange="redirectWithSelection()" aria-label="Choisir une période">
                                                 <option value="" selected>Période</option>
                                                 <option value="1">1ère Période</option>
                                                 <option value="2">2ème Période</option>
@@ -407,7 +407,7 @@
             });
         }
 
-        function updateCheckbox() {
+/*         function updateCheckbox() {
             const periodSelect = document.getElementById('periodSelect');
             const champ1 = document.getElementById('champ1');
 
@@ -421,9 +421,9 @@
                 champ1.value = '';
                 localStorage.removeItem('selectedPeriod');
             }
-        }
+        } */
 
-        // Restaure la sélection après le rechargement
+/*         // Restaure la sélection après le rechargement
         window.addEventListener('DOMContentLoaded', () => {
             const periodSelect = document.getElementById('periodSelect');
             const champ1 = document.getElementById('champ1');
@@ -433,7 +433,7 @@
                 periodSelect.value = savedPeriod;
                 champ1.value = savedPeriod;
             }
-        });
+        }); */
 
 
         function redirectWithSelection() {

@@ -39,14 +39,14 @@
                 </div>
                 <div class="card-body">
                     <h4 class="card-title">Duplicata reçu</h4>
-                    <div class="col-sm-6">
+                    {{-- <div class="col-sm-6">
                         <button type="button" class="btn btn-primary">Imprimer tout</button>
-                    </div>
+                    </div> --}}
                     <br>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div class="table-responsive">
-                                <table class="table custom-table">
+                            <div  class="table-responsive">
+                                <table id="myTable" class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>N° reçu</th>
@@ -123,9 +123,21 @@
                                       
                                             {{-- Colonne Action --}}
                                               <td>
-                                                  <a href="#" class="btn btn-secondary btn-sm mb-1">
-                                                      <i class="">Imprimer</i> 
-                                                  </a>
+                                                {{-- @php
+                                                    echo($facture->counters)
+                                                @endphp --}}
+                                                  {{-- <button type="button" class="btn btn-primary btn-sm mb-1">
+                                                      Imprimer
+                                                  </button> --}}
+                                                  
+                                                {{-- <a href="{{ url('pdfduplicatarecu/' . $facture->counters) }}"
+                                                    class="btn btn-primary">
+                                                    Imprimer
+                                                </a> --}}
+                                                <a href="{{ url('pdfduplicatarecu/' . str_replace(' ', '', preg_replace('/\//', '_', trim($facture->counters), 1))) }}"
+                                                    class="btn btn-primary">
+                                                    Imprimer
+                                                </a>
                                               </td>
                                           </tr>
                                         @endforeach

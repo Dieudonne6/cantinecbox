@@ -826,8 +826,17 @@ public function indexEleves()
 public function nouveaueleve (inscriptionEleveRequest $request) {
 
    
-    $imageName = $request->file('photo');
-    $imageContent = file_get_contents($imageName->getRealPath());
+    // $imageName = $request->file('photo');
+    // $imageContent = file_get_contents($imageName->getRealPath());
+
+    if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+        // Le fichier a bien été uploadé et est valide
+        $file = $request->file('photo');
+        $imageContent = file_get_contents($file->getRealPath());
+    } else {
+        // Pas de photo envoyée ou fichier invalide
+        $imageContent = null;  // ou gérer une valeur par défaut
+    }
 
     // Gestion des atributs MATRICULEX et CODEWEB
     // Convertir le nouveau matricule en chaîne de caractères avec des zéros devant
@@ -898,7 +907,7 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
     $nouveauEleve->ARRIERE_INITIAL = $arriere;
     $nouveauEleve->MATRICULE = $matricule;
     } else {
-        // chercher son arrierer dans la table elevesa dans scoracine
+        // chercher son arrierer dans la table elevea dans scoracine
         $archiveEleve = Elevea::where('NOM', $request->input('nom'))
                         ->where('PRENOM', $request->input('prenom'))
                         ->first();

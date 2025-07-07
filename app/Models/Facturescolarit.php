@@ -9,12 +9,14 @@ class Facturescolarit extends Model
 {
     use HasFactory;
     protected $table = 'facturescolarit';
-    protected $primaryKey = 'id';
+    //protected $primaryKey = 'id';
+    protected $keyType = 'string';
 
     protected $fillable = [
         'uid',
         'id' ,
         'codemecef' ,
+        'codemeceffacoriginale' ,
         'counters',
         'nim',
         'dateHeure' ,
@@ -27,7 +29,9 @@ class Facturescolarit extends Model
         'tax_group' ,
         'date_time' ,
         'qrcode' ,
-        'statut' 
+        'statut',
+        'NUMRECU',
+        'mode_paiement' 
 ];
 
 }
