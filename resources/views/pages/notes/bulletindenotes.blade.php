@@ -1281,7 +1281,7 @@
     </script>
     {{-- sxript de soumission du formulaire --}}
     {{-- <script>
-  document.getElementById('formBulletin').addEventListener('submit', async function(event) {
+       document.getElementById('formBulletin').addEventListener('submit', async function(event) {
       event.preventDefault(); // Empêche le rafraîchissement de la page
   
       const form = event.target;

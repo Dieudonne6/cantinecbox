@@ -16,7 +16,7 @@
 
       $activeExtractRoutesInsc = ['importernote', 'import'];
 
-      @endphp
+      @endphp 
 
       <!-- Bloc Inscriptions & disciplines -->
       <li class="nav-item"> 
@@ -244,7 +244,7 @@
                 <ul class="nav sub-menu">
                   <li><a class="nav-link  {{ in_array(request()->route()->getName(), $activeResultatRoutes) ? 'active' : '' }}"  href="{{ route('listeparmerite') }}">Liste par ordre de mérite</a></li>
                   <li><a class="nav-link {{ request()->is('Tableau analytique') ? 'active' : '' }}" href="{{ route('tableauanalytique') }}">Tableau analytique</a></li>
-                  <li><a class="nav-link {{ request()->is('Rapports annuels') ? 'active' : '' }}" href="#">Rapports annuels</a></li>
+                  <li><a class="nav-link {{ request()->is('Rapports annuels') ? 'active' : '' }}" href="{{ route('rapportannuel')}}">Rapports annuels</a></li>
                   <li><a class="nav-link {{ request()->is('Livrets scolaires') ? 'active' : '' }}" href="#">Livrets scolaires</a></li>
                 </ul>
               </div>

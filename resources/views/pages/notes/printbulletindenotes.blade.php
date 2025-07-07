@@ -1,21 +1,31 @@
 @extends('layouts.master')
 @section('content')
-    <div style=" position: relative; margin-left: 10px; margin-right: 10px; min-height: 100vh; overflow: hidden;">          
-       <div class="bulletin-bg" style="position: absolute;
+        @if (isset($option['fond']) || isset($option['fond']))
+                <div style=" position: relative; margin-left: 10px; margin-right: 10px; min-height: 100vh; overflow: hidden;">    
+
+                           <div class="bulletin-bg" style="position: absolute;
                                 top: 0;
                                 left: 0;
                                 width: 100%;
                                 height: 100%;
-                                background-image: url('{{ $image ? asset('img/fonds/' . $image) : '');
+                                background-image: url('{{ $image ? asset('img/fonds/' . $image) : '' }}');
                                 background-position: center;
-        <div style="
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(255, 255, 255, 0.7);
-        "></div> 
+                                "> </div>
+            <div style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(255, 255, 255, 0.7);
+            "></div> 
+
+        @else
+
+        <div style="margin-left: 10px; margin-right: 10px;">    
+        @endif
+              
+
         <div class="col-lg-12" style="margin-top: 0; padding-top: 0;">
             <div class="card-body" {{-- style="margin-top: 0; padding-top: 0;" --}}>
                 <div>
@@ -265,6 +275,7 @@
                                     $note_conduite = null;
                                     $total_coefficients = 0;
                                     $total_moyenne_coeffs = 0;
+                                   
                                 @endphp
                                 @foreach ($resultat['matieres'] as $matiere)
                                     {{-- DEBUT ignorer la matiere si l'eleve n'a pas fait aucun des deux devoirs --}}
@@ -715,7 +726,7 @@
                                         </p>
                                     @endif
                                 </div>
-                                <hr style="border: 1px solid black; margin: 0;">
+                                <hr style="border: 1px solid black; margin: 0;">                              
                                 <div
                                     style="flex: 1; display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
                                     <h6 style="text-align: center; text-decoration: underline; margin-bottom: 10px;">
@@ -733,22 +744,19 @@
                                             <span
                                                 style="border-bottom: 1px dotted black; width: 131px; display: inline-block;"></span>
                                         </p>
-                                    </div><br>
-
-                                    @if(
-                                        ($typean === 2 && request('periode') == 3) ||
-                                        ($typean === 1 && request('periode') == 2)
-                                    )
-                                        <p style="margin: 10px 0; font-weight:bold; text-align:center;">
-                                            {{ $resultat['decisionAnnuelle'] }}
-                                        </p>
-                                    @endif
-                                    {{-- <p style="margin: 10px 0;">
-                                        {{ $resultat['decisionAnnuelle'] }}
-                                    </p> --}}
-                                </div>
+                                    </div><br>         
+                                    @if (isset($option['decision_conseil']) && isset($option['decision_conseil']))                      
+                                        @if(
+                                            ($typean === 2 && request('periode') == 3) ||
+                                            ($typean === 1 && request('periode') == 2)
+                                        )
+                                            <p style="margin: 10px 0; font-weight:bold; text-align:center;">
+                                                {{ $resultat['decisionAnnuelle'] }}
+                                            </p>
+                                        @endif                                    
+                                    @endif                                        
+                                </div>                            
                             </div>
-
                             <div id="signature"
                                 style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
                                 <h5 id="signature_chef" style="margin-top: 5px; font-weight: 500; font-size: 15px;"

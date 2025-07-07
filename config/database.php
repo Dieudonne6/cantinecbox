@@ -48,7 +48,7 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', '2022-2023'),
+            'database' => env('DB_DATABASE', 'nokoue_2024_2025'),
             // 'database' => env('DB_DATABASE', 'petit_poucet_2023_2024'),
             'username' => env('DB_USERNAME', 'root'),
             'password' => env('DB_PASSWORD', ''),

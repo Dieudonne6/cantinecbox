@@ -21,6 +21,7 @@ use App\Http\Controllers\EditionController2;
 use App\Http\Controllers\ListemeriteController;
 use App\Http\Controllers\ReleveparelevesController;
 use App\Http\Controllers\TableauController;
+use App\Http\Controllers\RapportannuelController;
 
 
 /*
@@ -425,6 +426,10 @@ Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 're
 // Routes pour le tableau analytique
 Route::get('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique');
 Route::post('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique');
+
+// Routes pour le rapport annuel
+Route::get('/rapportannuel', [RapportannuelController::class, 'rapportannuel'])->name('rapportannuel');
+
 
 // Routes pour le tableau synoptique
 Route::get('/tableausynoptique', [TableauController::class, 'tableausynoptique'])->name('tableausynoptique');
