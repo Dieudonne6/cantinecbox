@@ -369,8 +369,6 @@ Route::get('/verrouillage', [CdController::class, 'verrouillage'])->name('verrou
 
 Route::put('/tabledesmatieres',  [EditionController::class, 'updatetabledesmatieres'])->name('updatetabledesmatieres');
 
-Route::get('/saisirnote', [CdController::class, 'saisirnote'])->name('saisirnote');
-Route::get('/filternotes', [CdController::class, 'saisirnotefilter'])->name('saisirnotefilter');
 
 Route::post('/enregistrer-notes', [CdController::class, 'enregistrerNotes'])->name('enregistrer_notes');
 Route::post('/delete-notes', [CdController::class, 'deleteNote'])->name('delete-notes');
@@ -436,6 +434,8 @@ Route::post('/tableauanalytique', [TableauController::class, 'tableauanalytique'
 
 // Routes pour le rapport annuel
 Route::get('/rapportannuel', [RapportannuelController::class, 'rapportannuel'])->name('rapportannuel');
+Route::post('/decision-config/store', [RapportannuelController::class, 'storeDecisionConfig'])->name('decision.config.store');
+
 
 
 // Routes pour le tableau synoptique

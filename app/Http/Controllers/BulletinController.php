@@ -1598,7 +1598,7 @@ if (!$infoDecision) {
     }
     $decisionAnnuelle ??= '......................................................................';
 }
-
+            $choixSemestre = request('periode');
 
             $resultatEleve = [
                 'nom' => $eleve->NOM,
@@ -1638,7 +1638,7 @@ if (!$infoDecision) {
                 'plus_faible_moyenne_classe' => $plusFaibleMoyenne,
                 'moyenneAnnueleClasse' => $moyenneAnnuelleClasse,
                 'effectif' => $effectifsParClasse[$eleve->CODECLAS] ?? 0,
-                'mentionDir' => $this->determineMentionDir($eleve->MS1, $params2),
+                'mentionDir' => $this->determineMentionDir($eleve, $params2, $choixSemestre),
                 'matieres' => []
             ];
 
@@ -2195,8 +2195,12 @@ if (!$infoDecision) {
             return $params2->Mention8p;
         }
     }
-    private function determineMentionDir($moyenne, $params2)
+    
+    private function determineMentionDir($eleve, $params2, int $semestre = 1)
     {
+        // on choisit la bonne moyenne
+        $moyenne = $semestre === 2 ? $eleve->MAN : $eleve->MS1;
+
         if ($moyenne < $params2->Borne1) {
             return $params2->Mention1d;
         } elseif ($moyenne <= $params2->Borne2) {
@@ -2212,9 +2216,10 @@ if (!$infoDecision) {
         } elseif ($moyenne <= $params2->Borne7) {
             return $params2->Mention7d;
         } else {
-            return $params2->Mention8d;
+            return ' ';
         }
     }
+
 
     // dd($resultats);
 

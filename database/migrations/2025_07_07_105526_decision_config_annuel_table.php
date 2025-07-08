@@ -24,6 +24,7 @@ return new class extends Migration
             $table->decimal('Seuil_Felicitations', 4, 2);
             $table->decimal('Seuil_Encouragements', 4, 2);
             $table->decimal('Seuil_tableau_Honneur', 4, 2);
+            $table->timestamps();
         });
     }
 

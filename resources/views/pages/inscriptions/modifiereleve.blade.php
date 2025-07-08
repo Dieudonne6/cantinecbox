@@ -128,8 +128,8 @@
                       <!-- Section Identification -->
                       <div class="form-group row mt-3">
                         <div class="col-md-4">
-                          <label for="matricule">Matricule</label>
-                          <input type="text" id="matricule" class="form-control" value="{{ $modifieleve->MATRICULE }}" readonly>
+                          <label for="matriculex">Matricule</label>
+                          <input type="text" id="matriculex" name="matriculex" class="form-control" value="{{ $modifieleve->MATRICULEX }}">
                         </div>
                         <div class="col-md-4 d-flex align-items-center" style="margin-top: 2rem">
                           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">
