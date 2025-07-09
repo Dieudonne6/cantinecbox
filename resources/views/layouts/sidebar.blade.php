@@ -16,7 +16,7 @@
 
       $activeExtractRoutesInsc = ['importernote', 'import'];
 
-      @endphp
+      @endphp 
 
       <!-- Bloc Inscriptions & disciplines -->
       <li class="nav-item"> 
@@ -56,13 +56,25 @@
                 Scolarité
                 <i class="menu-arrow"></i>
               </a>
-              <div class="collapse {{ request()->is('creerprofil') || request()->is('paramcomposantes') || request()->is('paiementdesnoninscrits') || request()->is('duplicatarecu') || in_array(request()->route()->getName(), $routesFacture) ? 'show' : '' }}" id="scolarite" data-bs-parent="#ui-basic">
+              <div class="collapse {{ request()->is('creerprofil') || request()->is('paramcomposantes') || request()->is('paiementdesnoninscrits') || request()->is('duplicatarecu') || request()->is('listefacturescolarite') || in_array(request()->route()->getName(), $routesFacture) ? 'show' : '' }}" id="scolarite" data-bs-parent="#ui-basic">
                 <ul class="nav sub-menu">
                   <li><a class="nav-link {{ request()->is('creerprofil') ? 'active' : '' }}" href="{{ url('/creerprofil') }}">Créer profils</a></li>
                   <li><a class="nav-link {{ request()->is('paramcomposantes') ? 'active' : '' }}" href="{{ url('/paramcomposantes') }}"><span class="ab">Paramétrage composantes</span></a></li>
                   <li><a class="nav-link {{ in_array(request()->route()->getName(), $routesFacture) ? 'active' : '' }}" href="{{ route('facturesclasses') }}">Factures classes</a></li>
                   {{-- <li><a class="nav-link {{ request()->is('paiementdesnoninscrits') ? 'active' : '' }}" href="{{ url('/paiementdesnoninscrits') }}">Paiement des non inscrits</a></li> --}}
                   <li><a class="nav-link {{ request()->is('duplicatarecu') ? 'active' : '' }}" href="{{ url('/duplicatarecu') }}">Duplicata</a></li>
+                  <!-- Mise à jour des Paiements pour scolarite-->
+                  <li>
+                    @php
+                      $routesAvoirFacPaiementScolarit = ['listefacturescolarite', 'avoirfacturepaiescolarite', 'avoirfacturescolarite'];
+                    @endphp
+                    <a class="nav-link {{ in_array(request()->route()->getName(), $routesAvoirFacPaiementScolarit) ? 'active' : '' }}"
+                      href="{{ url('/listefacturescolarite') }}">
+                      <span class="menu-title-wrapper">
+                        <span class="menu-title n">Mise à jour des Paiements</span>
+                      </span>
+                    </a>
+                  </li>                
                 </ul>
               </div>
             </li>
@@ -244,7 +256,7 @@
                 <ul class="nav sub-menu">
                   <li><a class="nav-link  {{ in_array(request()->route()->getName(), $activeResultatRoutes) ? 'active' : '' }}"  href="{{ route('listeparmerite') }}">Liste par ordre de mérite</a></li>
                   <li><a class="nav-link {{ request()->is('Tableau analytique') ? 'active' : '' }}" href="{{ route('tableauanalytique') }}">Tableau analytique</a></li>
-                  <li><a class="nav-link {{ request()->is('Rapports annuels') ? 'active' : '' }}" href="#">Rapports annuels</a></li>
+                  <li><a class="nav-link {{ request()->is('Rapports annuels') ? 'active' : '' }}" href="{{ route('rapportannuel')}}">Rapports annuels</a></li>
                   <li><a class="nav-link {{ request()->is('Livrets scolaires') ? 'active' : '' }}" href="#">Livrets scolaires</a></li>
                 </ul>
               </div>

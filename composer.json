@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.8",
         "league/fractal": "^0.20.1",
         "maatwebsite/excel": "^3.1",
+        "phpoffice/phpspreadsheet": "^1.29",
         "roundcube/rtf-html-php": "^2.2",
         "symfony/polyfill-mbstring": "^1.23"
     },

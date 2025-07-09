@@ -60,7 +60,7 @@ class inscriptionEleveRequest extends FormRequest
         if ($this->routeIs('nouveaueleve')) {
             $rules = [
             'classe' => 'required',
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'nom' => 'required',
             'prenom' => 'required',
             'aptituteSport' => 'nullable',
@@ -75,7 +75,7 @@ class inscriptionEleveRequest extends FormRequest
             // 'classe.required' => 'La classe de l\'élève est obligatoire.',
             'classe.required' => 'Le classe est obligatoire.',
             'classeEntre.required' => 'La classe d\'entree college est obligatoire.',
-            'photo.required' => 'La photo est obligatoire',
+            // 'photo.required' => 'La photo est obligatoire',
             'photo.mimes' => 'La photo doit etre de type: jpeg, png, jpg, gif.',
             'photo.max' => 'La taille de la photo ne doit pas depasser 2 Mo',
             'photo.image' => 'Le fichier doit etre une image',

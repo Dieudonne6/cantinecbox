@@ -85,27 +85,23 @@
 
                                         <!-- Select pour la période -->
                                         <div class="col-md-8 mb-3">
-                                            <select class="form-select select2 w-100 mt-2" id="periodSelect"
-                                                onchange="handleChange()"
-                                                aria-label="Choisir une période">
-                                                <option value="" selected>Période</option>
-                                                <option value="1">1ère Période</option>
-                                                <option value="2">2ème Période</option>
-                                                <option value="3">3ème Période</option>
-                                                {{-- <option value="4">4ème Période</option>
-                                                <option value="5">5ème Période</option>
-                                                <option value="6">6ème Période</option>
-                                                <option value="7">7ème Période</option>
-                                                <option value="8">8ème Période</option>
-                                                <option value="9">9ème Période</option> --}}
+                                            <select class="form-select select2 w-100 mt-2" 
+                                                    id="periodSelect" 
+                                                    name="periode"
+                                                    onchange="handleChange()"
+                                                    aria-label="Choisir une période">
+                                                <option value="">Période</option>
+                                                <option value="1" {{ request('periode')=='1' ? 'selected':'' }}>1ère Période</option>
+                                                <option value="2" {{ request('periode')=='2' ? 'selected':'' }}>2ème Période</option>
+                                                <option value="3" {{ request('periode')=='3' ? 'selected':'' }}>3ème Période</option>
                                             </select>
                                         </div>
 
-                                        <!-- Champ de nombre -->
+{{--                                         <!-- Champ de nombre -->
                                         <div class="col-md-4">
                                             <input type="number" id="champ1" name="champ1" class="form-control"
                                                 placeholder="Valeur" value="" readonly>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -185,6 +181,12 @@
                                 <div class="col-md-6 d-flex justify-content-end">
                                     <button type="submit" class="btn btn-primary btn-rounded">
                                         <i class="typcn typcn-home-outline"></i> Enregistrer
+                                    </button>
+
+                                    <!-- Bouton Permuter (ouvre le modal) -->
+                                    <button type="button" class="btn btn-warning btn-rounded ms-2" data-bs-toggle="modal"
+                                        data-bs-target="#permuterModal">
+                                        <i class="typcn typcn-refresh-outline"></i> Permuter
                                     </button>
 
                                     <button type="button" class="btn btn-danger btn-rounded" data-bs-toggle="modal"
@@ -847,6 +849,101 @@
                 </form>
 
 
+                            <!-- Modal de permutation -->
+            <div class="modal fade" id="permuterModal" tabindex="-1" aria-labelledby="permuterModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{{ route('permuter_notes') }}" method="POST" class="modal-content">
+                        @csrf
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="permuterModalLabel">Permuter les notes</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Fermer"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row g-4"> {{-- même "row" pour que ça tienne sur une ligne --}}
+                                {{-- ---- Bloc SOURCE (gauche) ---- --}}
+                                <div class="col-12 col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="source_classe" class="form-label">Classe source</label>
+                                        <select class="form-select select2 w-100" id="tableSelect4" name="CODECLAS"
+                                            onchange="redirectWithSelection()" disabled>
+                                            <option value="">Classe</option>
+                                            @foreach ($classes as $classeOption)
+                                                <option value="{{ $classeOption->CODECLAS }}"
+                                                    {{ $classeOption->CODECLAS == $classe ? 'selected' : '' }}>
+                                                    {{ $classeOption->CODECLAS }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <input type="hidden" name="CODECLAS" id="hidden_CODECLAS">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="source_mat" class="form-label">Matière source</label>
+                                        <select class="form-select select2 w-100 mt-2" id="tableSelect5" name="CODEMAT"
+                                            onchange="redirectWithSelection()" disabled>
+                                            <option value="">Matières</option>
+                                            @foreach ($matieres as $matiereOption)
+                                                <option value="{{ $matiereOption->CODEMAT }}"
+                                                    {{ $matiereOption->CODEMAT == $matiere ? 'selected' : '' }}>
+                                                    {{ $matiereOption->LIBELMAT }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <input type="hidden" name="CODEMAT" id="hidden_CODEMAT">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="source_periode" class="form-label">Période source</label>
+                                        <select id="periode_source_affiche" name="periode_source_affiche"
+                                            class="form-control" disabled>
+                                            <option value="">Période</option>
+                                            <option value="1"
+                                                {{ isset($periode) && $periode == 1 ? 'selected' : '' }}>1ʳᵉ Période
+                                            </option>
+                                            <option value="2"
+                                                {{ isset($periode) && $periode == 2 ? 'selected' : '' }}>2ᵉ Période
+                                            </option>
+                                            <option value="3"
+                                                {{ isset($periode) && $periode == 3 ? 'selected' : '' }}>3ᵉ Période
+                                            </option>
+                                        </select>
+                                        <input type="hidden" name="periode_source_affiche"
+                                            id="hidden_periode_source_affiche">
+                                    </div>
+                                </div>
+                                {{-- ---- Bloc CIBLE (droite) ---- --}}
+                                <div class="col-12 col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="target_classe" class="form-label">Classe cible</label>
+                                        <input type="text" class="form-control" id="target_classe" name="target_classe" 
+                                               value="{{ $classe }}" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="target_mat" class="form-label">Matière cible</label>
+                                        <select name="target_mat" id="target_mat" class="form-select">
+                                            @foreach ($matieres as $m)
+                                                <option value="{{ $m->CODEMAT }}">{{ $m->LIBELMAT }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="target_periode" class="form-label">Période cible</label>
+                                        <select name="target_periode" id="target_periode" class="form-select">
+                                            <option value="1">1ʳᵉ Période</option>
+                                            <option value="2">2ᵉ Période</option>
+                                            <option value="3">3ᵉ Période</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-warning">Permuter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                         aria-hidden="true">
@@ -900,24 +997,24 @@
                             });
                         }
 
-                        function updateCheckbox() {
-                            const periodSelect = document.getElementById('periodSelect');
-                            const champ1 = document.getElementById('champ1');
+                        // function updateCheckbox() {
+                        //     const periodSelect = document.getElementById('periodSelect');
+                        //     const champ1 = document.getElementById('champ1');
 
-                            // Met à jour la valeur de champ1 avec la valeur sélectionnée dans periodSelect
-                            if (periodSelect.value) {
-                                champ1.value = periodSelect.value;
+                        //     // Met à jour la valeur de champ1 avec la valeur sélectionnée dans periodSelect
+                        //     if (periodSelect.value) {
+                        //         champ1.value = periodSelect.value;
 
-                                // Sauvegarde de la sélection dans localStorage
-                                localStorage.setItem('selectedPeriod', periodSelect.value);
-                            } else {
-                                champ1.value = '';
-                                localStorage.removeItem('selectedPeriod');
-                            }
-                        }
+                        //         // Sauvegarde de la sélection dans localStorage
+                        //         localStorage.setItem('selectedPeriod', periodSelect.value);
+                        //     } else {
+                        //         champ1.value = '';
+                        //         localStorage.removeItem('selectedPeriod');
+                        //     }
+                        // }
 
                         // Restaure la sélection après le rechargement
-                        window.addEventListener('DOMContentLoaded', () => {
+       /*                  window.addEventListener('DOMContentLoaded', () => {
                             const periodSelect = document.getElementById('periodSelect');
                             const champ1 = document.getElementById('champ1');
                             const savedPeriod = localStorage.getItem('selectedPeriod');
@@ -926,7 +1023,7 @@
                                 periodSelect.value = savedPeriod;
                                 champ1.value = savedPeriod;
                             }
-                        });
+                        }); */
 
 
                         function redirectWithSelection() {
@@ -955,10 +1052,10 @@
                         // document.getElementById("tableSelec4").addEventListener("change", redirectWithSelection);
                         // document.getElementById("tableSelec5").addEventListener("change", redirectWithSelection);
 
-                        // function handleChange() {
-                        //     redirectWithSelection();
-                        //     updateCheckbox();
-                        // }
+                         function handleChange() {
+                            redirectWithSelection();
+                            updateCheckbox();
+                         }
                     </script>
 
                     <script>
@@ -1146,5 +1243,30 @@
                             z-index: 2;
                         }
                     </style>
+
+                    
+            <script>
+                // Synchronise la période sélectionnée avec le modal Permuter
+                document.addEventListener('DOMContentLoaded', function() {
+                    var permuterModal = document.getElementById('permuterModal');
+                    if (permuterModal) {
+                        permuterModal.addEventListener('show.bs.modal', function() {
+                            var selectedPeriod = document.getElementById('periodSelect').value;
+                            var periodeSource = document.getElementById('periode_source_affiche');
+                            if (periodeSource && selectedPeriod) {
+                                periodeSource.value = selectedPeriod;
+                            } else if (periodeSource) {
+                                periodeSource.value = '';
+                            }
+                            // Synchronise les champs cachés pour l'envoi du formulaire
+                            document.getElementById('hidden_CODECLAS').value = document.getElementById(
+                                'tableSelect4').value;
+                            document.getElementById('hidden_CODEMAT').value = document.getElementById(
+                                'tableSelect5').value;
+                            document.getElementById('hidden_periode_source_affiche').value = periodeSource.value;
+                        });
+                    }
+                });
+            </script>
 
                 @endsection

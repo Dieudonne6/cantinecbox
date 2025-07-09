@@ -256,6 +256,10 @@ align-items: center;  */
 
 
     <script src="{{ asset('assets/dataTables.js') }}"></script>
+
+                 
+
+
     <script>
         var statusAlert = document.getElementById('statusAlert');
         if (statusAlert) {
@@ -829,6 +833,10 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 </script>
+
+
+{{-- script ddddd --}}
+
 
 
 

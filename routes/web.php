@@ -22,6 +22,7 @@ use App\Http\Controllers\ListemeriteController;
 use App\Http\Controllers\ReleveparelevesController;
 use App\Http\Controllers\TableauController;
 use App\Http\Controllers\ParametreController;
+use App\Http\Controllers\RapportannuelController;
 
 
 /*
@@ -120,7 +121,13 @@ Route::delete('/delreductions/{codeRedu}', [PagesController::class, 'delreductio
 
 Route::get('/paramcomposantes', [PagesController::class, 'paramcomposantes']);
 
+// --------------------------------------------------
 Route::get('/duplicatarecu', [PagesController::class, 'duplicatarecu']);
+Route::get('/pdfduplicatarecu/{counters}', [PagesController::class, 'pdfduplicatarecu']);
+Route::match(['get', 'post'], '/listefacturescolarite', [PagesController::class, 'listefacturescolarite'])->name('listefacturescolarite');
+Route::get('/avoirfacturepaiescolarite/{codemecef}', [PagesController::class, 'avoirfacturepaiescolarite'])->name('avoirfacturepaiescolarite');
+Route::post('/avoirfacturescolarite/{codemecef}', [PagesController::class, 'avoirfacturescolarite'])->name('avoirfacturescolarite');
+
 
 Route::get('/transfert', [PagesController::class, 'transfert']);
 
@@ -305,6 +312,7 @@ Route::get('/inscrireeleve', [PagesController::class, 'inscrireeleve'])->name('i
 Route::post('/nouveaueleve', [GestionclasseController::class, 'nouveaueleve'])->name('nouveaueleve');
 Route::post('/enregistrerclasse', [GestionclasseController::class, 'enregistrerclasse'])->name('enregistrerclasse');
 Route::put('/promotions/{codePromo}', [GestionclasseController::class, 'update'])->name('promotions.update');
+Route::post('/notes/permuter', [CdController::class, 'permuterNotes'])->name('permuter_notes');
 // Route::get('/modifierclasse', [PagesController::class, 'modifierclasse']);
 
 Route::post('/enregistrerinfo', [GestionclasseController::class, 'enregistrerinfo']);
@@ -362,8 +370,7 @@ Route::get('/verrouillage', [CdController::class, 'verrouillage'])->name('verrou
 
 Route::put('/tabledesmatieres',  [EditionController::class, 'updatetabledesmatieres'])->name('updatetabledesmatieres');
 
-Route::get('/saisirnote', [CdController::class, 'saisirnote'])->name('saisirnote');
-Route::get('/filternotes', [CdController::class, 'saisirnotefilter'])->name('saisirnotefilter');
+
 
 Route::post('/enregistrer-notes', [CdController::class, 'enregistrerNotes'])->name('enregistrer_notes');
 Route::post('/delete-notes', [CdController::class, 'deleteNote'])->name('delete-notes');
@@ -426,6 +433,13 @@ Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 're
 // Routes pour le tableau analytique
 Route::get('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique');
 Route::post('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique');
+
+// Routes pour le rapport annuel
+Route::get('/rapportannuel', [RapportannuelController::class, 'rapportannuel'])->name('rapportannuel');
+Route::post('/decision-config/store', [RapportannuelController::class, 'storeDecisionConfig'])->name('decision.config.store');
+Route::post('config/promotions/update',[RapportannuelController::class, 'updateConfigClasses'])->name('config.promotions.update');
+
+
 
 // Routes pour le tableau synoptique
 Route::get('/tableausynoptique', [TableauController::class, 'tableausynoptique'])->name('tableausynoptique');

@@ -4,6 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Contrat;
+use App\Models\eleves;
 use App\Models\Notes;
 
 class Eleve extends Model

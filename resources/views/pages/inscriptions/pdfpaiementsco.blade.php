@@ -505,8 +505,8 @@
                     <thead>
                         <tr>
                             <th>Désignation</th>
-                            <th>Montant</th>
-                            <th>REGIME TPS [E]</th>
+                            <th>Montant T.T.C</th>
+                            
                             {{-- <th>Montant T.T.C</th> --}}
                         </tr>
                     </thead>
@@ -515,7 +515,7 @@
                             <tr>
                                 <td>{{ $item['name'] }} (E) </td>
                                 <td>{{ $item['price'] }}</td>
-                                <td>{{ $item['price'] }}</td>
+                                {{-- <td>{{ $item['price'] }}</td> --}}
                             </tr>
                         @endforeach
 
@@ -528,8 +528,8 @@
                 <table id="customers">
                     <thead>
                         <tr>
-                            <th scope="col">Montant total</th>
-                            <th scope="col">Net à Payer</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">REGIME TPS [E]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -579,7 +579,17 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>ESPECE</td>
+                            <td>
+                                @if ($mode_paiement == 1)
+                                    ESPECES
+                                @elseif($mode_paiement == 2)
+                                    CHEQUES
+                                @else
+                                    AUTRE
+                                @endif
+                                
+                                {{-- {{ $mode_paiement }} --}}
+                            </td>
                             <td>{{ $montanttotal }}</td>
                         </tr>
                     </tbody>

@@ -38,6 +38,8 @@ use App\Models\Notes;
 use App\Models\Clasmat;
 use App\Models\Imgbulletin;
 use App\Models\DecisionConfiguration;
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Carbon\Carbon;
 
 use App\Models\Duplicatafacture;
@@ -1117,9 +1119,9 @@ class BulletinController extends Controller
                   if ($moyenneP1 !== null  && $moyenneP1 !== 21 && $moyenneP2 !== null && $moyenneP2 !== 21) {
                       // Pondération 1/3 pour P1, 2/3 pour P2
                       $moyenneAnnuelle = round((2 * $moyenneP2 + $moyenneP1) / 3, 2);
-                  } elseif ($moyenneP1 !== null && $moyenneP1 !== 21) {
-                      // Seule P1 existe
-                      $moyenneAnnuelle = $moyenneP1;
+                //   } elseif ($moyenneP1 !== null && $moyenneP1 !== 21) {
+                //       // Seule P1 existe
+                //       $moyenneAnnuelle = $moyenneP1;
                   } elseif ($moyenneP2 !== null  && $moyenneP2 !== 21) {
                       // Seule P2 existe
                       $moyenneAnnuelle = $moyenneP2;
@@ -1518,49 +1520,85 @@ class BulletinController extends Controller
                 $CodePromo = Classes::where('CODECLAS', $classeElev)->first();
                 $CODEPROMO = $CodePromo->CODEPROMO;
                 $moyenneAnnuelle = $eleve->MAN;
-                $infoDecision = DecisionConfiguration::where('promotion', $CODEPROMO)->first();
-                // $NouveauBorneI1A = $infoDecision->NouveauBorneI1A;
-                // dd($infoDecision);
-
-                // On récupère la configuration pour la promotion
                 // $infoDecision = DecisionConfiguration::where('promotion', $CODEPROMO)->first();
+                // // $NouveauBorneI1A = $infoDecision->NouveauBorneI1A;
+                // // dd($infoDecision);
 
-                // On choisit le préfixe selon le statut
-                if ($eleveA->STATUT == 0) {
-                    $prefix = 'Nouveau';
-                } elseif ($eleveA->STATUT == 1) {
-                    $prefix = 'Ancien';
-                } else {
-                    $prefix = null;
-                }
+                // // On récupère la configuration pour la promotion
+                // // $infoDecision = DecisionConfiguration::where('promotion', $CODEPROMO)->first();
 
-                // On détermine le libellé
-                $decisionAnnuelle = null;
-                if ($prefix) {
-                    // Parcours des 5 intervalles
-                    for ($i = 1; $i <= 5; $i++) {
-                        // Construction dynamique du nom des propriétés
-                        $lowProp   = "{$prefix}BorneI{$i}A";
-                        $highProp  = "{$prefix}BorneI{$i}B";
-                        $labelProp = "{$prefix}LibelleI{$i}";
+                // // On choisit le préfixe selon le statut
+                // if ($eleveA->STATUT == 0) {
+                //     $prefix = 'Nouveau';
+                // } elseif ($eleveA->STATUT == 1) {
+                //     $prefix = 'Ancien';
+                // } else {
+                //     $prefix = null;
+                // }
 
-                        $low   = floatval($infoDecision->$lowProp);
-                        $high  = floatval($infoDecision->$highProp);
-                        $moy   = floatval($moyenneAnnuelle);
+                // // On détermine le libellé
+                // $decisionAnnuelle = null;
+                // if ($prefix) {
+                //     // Parcours des 5 intervalles
+                //     for ($i = 1; $i <= 5; $i++) {
+                //         // Construction dynamique du nom des propriétés
+                //         $lowProp   = "{$prefix}BorneI{$i}A";
+                //         $highProp  = "{$prefix}BorneI{$i}B";
+                //         $labelProp = "{$prefix}LibelleI{$i}";
 
-                        // Test inclusif : [borneA, borneB[
-                        if ($moy >= $low && $moy < $high) {
-                            $decisionAnnuelle = $infoDecision->$labelProp;
-                            break;
-                        }
-                        // Pour le dernier intervalle (qui va jusqu'à la borne B incluse)
-                        // if ($i === 5 && $moy >= $low && $moy <= $high) {
-                        //     $appreciationAnnuelle = $infoDecision->$labelProp;
-                        //     break;
-                        // }
-                    }
-                }
+                //         $low   = floatval($infoDecision->$lowProp);
+                //         $high  = floatval($infoDecision->$highProp);
+                //         $moy   = floatval($moyenneAnnuelle);
 
+                //         // Test inclusif : [borneA, borneB[
+                //         if ($moy >= $low && $moy < $high) {
+                //             $decisionAnnuelle = $infoDecision->$labelProp;
+                //             break;
+                //         }
+                //         // Pour le dernier intervalle (qui va jusqu'à la borne B incluse)
+                //         // if ($i === 5 && $moy >= $low && $moy <= $high) {
+                //         //     $appreciationAnnuelle = $infoDecision->$labelProp;
+                //         //     break;
+                //         // }
+                //     }
+                // }
+
+
+                $infoDecision = DecisionConfiguration::where('promotion', $CODEPROMO)->first();
+
+if (!$infoDecision) {
+    // Pas de config trouvée : on peut définir un libellé par défaut
+    $decisionAnnuelle = '......................................................................';
+} else {
+    // Votre logique existante
+    $prefix = $eleveA->STATUT == 0 ? 'Nouveau'
+            : ($eleveA->STATUT == 1 ? 'Ancien' : null);
+
+    $decisionAnnuelle = null;
+    if ($prefix) {
+        for ($i = 1; $i <= 5; $i++) {
+            $lowProp   = "{$prefix}BorneI{$i}A";
+            $highProp  = "{$prefix}BorneI{$i}B";
+            $labelProp = "{$prefix}LibelleI{$i}";
+
+            $low  = floatval($infoDecision->$lowProp);
+            $high = floatval($infoDecision->$highProp);
+            $moy  = floatval($moyenneAnnuelle);
+
+            if ($moy >= $low && $moy < $high) {
+                $decisionAnnuelle = $infoDecision->$labelProp;
+                break;
+            }
+            // pour l'intervalle final, si vous voulez inclure la borne haute :
+            if ($i === 5 && $moy >= $low && $moy <= $high) {
+                $decisionAnnuelle = $infoDecision->$labelProp;
+                break;
+            }
+        }
+    }
+    $decisionAnnuelle ??= '......................................................................';
+}
+            $choixSemestre = request('periode');
 
             $resultatEleve = [
                 'nom' => $eleve->NOM,
@@ -1600,7 +1638,7 @@ class BulletinController extends Controller
                 'plus_faible_moyenne_classe' => $plusFaibleMoyenne,
                 'moyenneAnnueleClasse' => $moyenneAnnuelleClasse,
                 'effectif' => $effectifsParClasse[$eleve->CODECLAS] ?? 0,
-                'mentionDir' => $this->determineMentionDir($eleve->MS1, $params2),
+                'mentionDir' => $this->determineMentionDir($eleve, $params2, $choixSemestre),
                 'matieres' => []
             ];
 
@@ -1840,6 +1878,8 @@ class BulletinController extends Controller
             $moyenneSur20 = $moyenneInterro ;
         }
 
+        // dd($moyenneInterro);
+
         // Calcul de la moyenne pondérée (coeff)
         $moyenneCoeff = $totalCoeff > 0 ? $moyenneSur20 * $totalCoeff : 0;
 
@@ -2068,23 +2108,25 @@ class BulletinController extends Controller
         // Calculer le rang pour chaque matière et chaque classe
         foreach ($moyennesParClasseEtMatiere as $classe => $matieres) {
             foreach ($matieres as $matiere => $moyennes) {
-                // Filtrer les moyennes pour exclure celles qui valent 0
-                // $moyennes = array_filter($moyennes, function($item) {
-                //   return $item['moyenne'] > 0;
-                // });
-                // // Si après filtrage il n'y a aucune moyenne, on passe à la suivante
-                // if (empty($moyennes)) {
-                //   continue;
-                // }
+        // 1) on ne garde que les moyennes valides
+                $valeurs = array_filter(
+                    $moyennes,
+                    fn($item) => $item['moyenne'] !== 21 && $item['moyenne'] !== -1 && $item['moyenne'] !== null
+                );
 
-                usort($moyennes, fn($a, $b) => $b['moyenne'] <=> $a['moyenne']);
+                // 2) on trie ces moyennes
+                usort($valeurs, fn($a, $b) => $b['moyenne'] <=> $a['moyenne']);
 
-                $maxMoyenne = max(array_column($moyennes, 'moyenne'));
-                $minMoyenne = min(array_column($moyennes, 'moyenne'));
+                // si après filtre on n'a plus de valeurs, on passe au suivant
+                if (empty($valeurs)) {
+                    continue;
+                }
+                $maxMoyenne = max(array_column($valeurs, 'moyenne'));
+                $minMoyenne = min(array_column($valeurs, 'moyenne'));
 
                 $rang = 1;
-                foreach ($moyennes as $index => $item) {
-                    $rangAttribue = $index > 0 && $item['moyenne'] == $moyennes[$index - 1]['moyenne'] ? $rang : $index + 1;
+                foreach ($valeurs as $index => $item) {
+                    $rangAttribue = $index > 0 && $item['moyenne'] == $valeurs[$index - 1]['moyenne'] ? $rang : $index + 1;
                     $rang = $rangAttribue;
 
                     foreach ($resultats as &$resultatEleve) {
@@ -2099,9 +2141,14 @@ class BulletinController extends Controller
                             }
                         }
                     }
+
+                    // dd($minMoyenne);
                 }
             }
         }
+
+        // dd($moyennesParClasseEtMatiere);
+
 
         // $data = compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean', 'params2', 'logo', 'logoBase64', 'mimeType', 'interligne');
 
@@ -2148,8 +2195,12 @@ class BulletinController extends Controller
             return $params2->Mention8p;
         }
     }
-    private function determineMentionDir($moyenne, $params2)
+    
+    private function determineMentionDir($eleve, $params2, int $semestre = 1)
     {
+        // on choisit la bonne moyenne
+        $moyenne = $semestre === 2 ? $eleve->MAN : $eleve->MS1;
+
         if ($moyenne < $params2->Borne1) {
             return $params2->Mention1d;
         } elseif ($moyenne <= $params2->Borne2) {
@@ -2165,9 +2216,10 @@ class BulletinController extends Controller
         } elseif ($moyenne <= $params2->Borne7) {
             return $params2->Mention7d;
         } else {
-            return $params2->Mention8d;
+            return ' ';
         }
     }
+
 
     // dd($resultats);
 
@@ -2220,7 +2272,7 @@ class BulletinController extends Controller
     }
 
 
-    // Méthode pour exporter en Excel
+    
     public function exportExcel(Request $request)
     {
         $periode = $request->input('periode');
@@ -2294,52 +2346,52 @@ class BulletinController extends Controller
 }
 
     public function exportMulti(Request $request)
-{
-    // Validation minimale
-    $request->validate([
-        'classe'   => 'required',
-        'periode'  => 'required',
-    ]);
+    {
+        // Validation minimale
+        $request->validate([
+            'classe'   => 'required',
+            'periode'  => 'required',
+        ]);
 
-    $classe  = $request->input('classe');
-    $periode = $request->input('periode');
-    // 'matieres' est un tableau
-    $selectedMatieres = array_filter($request->input('matieres', []));
+        $classe  = $request->input('classe');
+        $periode = $request->input('periode');
+        // 'matieres' est un tableau
+        $selectedMatieres = array_filter($request->input('matieres', []));
 
-    // Si aucune matière n'est sélectionnée, rediriger avec erreur
-    if(empty($selectedMatieres)) {
-        return redirect()->back()->withErrors('Vous devez sélectionner au moins une matière.');
+        // Si aucune matière n'est sélectionnée, rediriger avec erreur
+        if(empty($selectedMatieres)) {
+            return redirect()->back()->withErrors('Vous devez sélectionner au moins une matière.');
+        }
+
+        // Récupération de toutes les matières sélectionnées
+        $matieres = \App\Models\Matieres::whereIn('CODEMAT', $selectedMatieres)->get();
+
+        // Pour chaque matière, récupère les notes
+        $result = [];
+        foreach($selectedMatieres as $matiereCode) {
+            // On suppose que 'Notes' a les colonnes CODECLAS, CODEMAT, SEMESTRE
+            $notes = \App\Models\Notes::with('eleve')
+                    ->where('CODECLAS', $classe)
+                    ->where('CODEMAT', $matiereCode)
+                    ->where('SEMESTRE', $periode)
+                    ->get();
+
+            // Tri des notes par ordre alphabétique du nom de l'élève
+            $notes = $notes->sortBy(function ($note) {
+                return $note->eleve->NOM;
+            });
+
+            // On stocke les notes pour cette matière dans un tableau associatif
+            $result[$matiereCode] = $notes;
+        }
+
+        // Récupération d'une information sur la période (ex: Semestre ou Trimestre)
+        $typean = \DB::table('params2')->value('typean');
+        $periodLabel = ($typean == 1) ? 'Semestre' : 'Trimestre';
+
+        // Passez les données à la vue de résultats
+        return view('pages.notes.affichageextrairenote', compact('result', 'classe', 'periode', 'periodLabel', 'matieres'));
     }
-
-    // Récupération de toutes les matières sélectionnées
-    $matieres = \App\Models\Matieres::whereIn('CODEMAT', $selectedMatieres)->get();
-
-    // Pour chaque matière, récupère les notes
-    $result = [];
-    foreach($selectedMatieres as $matiereCode) {
-        // On suppose que 'Notes' a les colonnes CODECLAS, CODEMAT, SEMESTRE
-        $notes = \App\Models\Notes::with('eleve')
-                ->where('CODECLAS', $classe)
-                ->where('CODEMAT', $matiereCode)
-                ->where('SEMESTRE', $periode)
-                ->get();
-
-        // Tri des notes par ordre alphabétique du nom de l'élève
-        $notes = $notes->sortBy(function ($note) {
-            return $note->eleve->NOM;
-        });
-
-        // On stocke les notes pour cette matière dans un tableau associatif
-        $result[$matiereCode] = $notes;
-    }
-
-    // Récupération d'une information sur la période (ex: Semestre ou Trimestre)
-    $typean = \DB::table('params2')->value('typean');
-    $periodLabel = ($typean == 1) ? 'Semestre' : 'Trimestre';
-
-    // Passez les données à la vue de résultats
-    return view('pages.notes.affichageextrairenote', compact('result', 'classe', 'periode', 'periodLabel', 'matieres'));
-}
 
 
 public function exportMultiExcel(Request $request)
@@ -2406,31 +2458,100 @@ public function exportMultiExcel(Request $request)
 
     // 
       
-      public function importernote() {
+    public function importernote() {
         return view('pages.inscriptions.importenote');
       }
 
-      public function import(Request $request)
+
+    public function import(Request $request)
     {
-        $request->validate([
-            'excelFile' => 'required|mimes:xlsx,xls,csv'
-        ]);
+        if (!$request->hasFile('excelFile')) {
+            return response()->json(['success' => false, 'message' => 'Aucun fichier sélectionné.']);
+        }
+
+        $file = $request->file('excelFile');
 
         try {
-            // Importer le fichier Excel dans la table 'eleve' à l'aide de la classe d'import
-            Excel::import(new ElevesImport, $request->file('excelFile'));
+            $spreadsheet = IOFactory::load($file);
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Importation réussie.'
-            ]);
+            if (count($rows) < 2) {
+                return response()->json(['success' => false, 'message' => 'Le fichier est vide ou mal formaté.']);
+            }
+
+            // Vider la table eleve
+            DB::table('eleve')->truncate();
+
+            $insertData = [];
+
+            foreach ($rows as $index => $row) {
+                if (($index === 0) || ($index === 1) ) continue; // Ignorer la ligne des en-têtes
+
+                $matricul = $row[0] ?? null;
+                $nom      = $row[1] ?? null;
+                $prenoms = $row[2] ?? null;
+                if ($prenoms) {
+                    // Nettoyer les espaces superflus et les caractères invisibles
+                    $prenoms = trim($prenoms); // Enlever les espaces avant et après
+                    $prenoms = preg_replace('/[\x00-\x1F\x7F]/', '', $prenoms); // Enlever les caractères invisibles
+
+                    // Limiter la longueur à 500 caractères
+                    if (strlen($prenoms) > 500) {
+                        $prenoms = substr($prenoms, 0, 500);
+                    }
+                }
+                $sexe     = isset($row[3]) ? ($row[3] === 'M' ? 1 : ($row[3] === 'F' ? 2 : null)) : null;
+                $statut   = isset($row[4]) ? ($row[4] === 'R' ? 1 : ($row[4] === 'N' ? 0 : null)) : null;
+                $classe   = $row[5] ?? null;
+                
+                // Ignorer les lignes sans matricule
+                if (!$matricul) continue;
+
+                // Vérifier si les colonnes existent dans la table `eleve`
+                $columns = DB::getSchemaBuilder()->getColumnListing('eleve');
+                
+                // Préparer les données à insérer avec des UUID pour les colonnes guid_matri, guid_classe, guid_red
+                $insertRow = [
+                    'MATRICULEX' => $matricul,
+                    'NOM'        => $nom,
+                    'PRENOM'     => $prenoms,
+                    'SEXE'       => $sexe,
+                    'STATUT'     => $statut,
+                    'CODECLAS'   => $classe,
+                ];
+
+                // Ajouter les valeurs uniques pour guid_matri, guid_classe, guid_red si ces colonnes existent
+                if (in_array('guid_matri', $columns)) {
+                    $insertRow['guid_matri'] = Str::uuid();
+                }
+
+                if (in_array('guid_classe', $columns)) {
+                    $insertRow['guid_classe'] = Str::uuid();
+                }
+
+                if (in_array('guid_red', $columns)) {
+                    $insertRow['guid_red'] = Str::uuid();
+                }
+
+                $insertData[] = $insertRow;
+            }
+
+            if (!empty($insertData)) {
+                DB::table('eleve')->insert($insertData);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Importation effectuée avec succès.']);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors de l\'import : ' . $e->getMessage()
-            ], 500);
+                'message' => 'Erreur lors de l\'importation : ' . $e->getMessage()
+            ]);
         }
     }
+
+
+
 
 
     public function archiveBulletin(Request $request)
@@ -2457,7 +2578,7 @@ public function exportMultiExcel(Request $request)
         return response()->json(['success' => false, 'message' => 'Aucun PDF reçu'], 400);
     }
     
-
+ 
 
     } 
       
