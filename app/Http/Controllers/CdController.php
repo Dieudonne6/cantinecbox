@@ -120,100 +120,59 @@ class CdController extends Controller
       'notes.MS',
       'notes.TEST',
       'notes.MS1'
-    
-      )->orderBy('NOM')->get();
+    )->orderBy('NOM')->get();
     return view('pages.notes.saisirnote', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere', 'getClasmat'));
   }
-
- public function saisirnotefilter(Request $request)
+public function saisirnotefilter(Request $request)
 {
-    $classes = Classe::all();
-    $classe = $request->input('classe');
-    $matiere = $request->input('matiere');
-    $periode = $request->input('periode', 1);
-    $gclasses = Groupeclasse::all();
+    $classes   = Classe::all();
+    $classe    = $request->input('classe');
+    $matiere   = $request->input('matiere');
+    $periode   = $request->input('periode', 1);
+    $gclasses  = Groupeclasse::all();
 
-    $classeSelectionnee = Classe::where('CODECLAS', $classe)->first();
-    $cycle = $classeSelectionnee ? $classeSelectionnee->CYCLE : null;
-
-    $matieres = Matieres::query();
-
-    // Définir toutes les exclusions de base
-    $exclusionsCycle2 = [ 'allemand', 'espagnol', 'lecture', 'communication écrite', 'spct', 'anglais', 'pct'];
-    $exclusionsCycle1 = ['economie', 'LV1', 'LV2', 'philosophie', 'composition française'];
-    $exclusionsSpecifiquesCycle1_56 = ['LV1', 'LV2', 'allemand', 'philosophie', 'spct', 'pct', 'espagnol', 'composition française', 'economie'];
-    $exclusionsSpecifiquesCycle2_CD = ['economie', 'LV1', 'LV2', 'allemand', 'espagnol', 'lecture', 'communication écrite'];
-     $exclusionsSpecifiquesCycle2_A = array_merge($exclusionsCycle2, ['economie']);
-
-    // Appliquer les règles de filtrage des matières du cycle 1
-    if ($cycle == 1) {
-        $premierChar = substr($classe, 0, 1);
-        //pour vérifier si la classe en question est 6ème ou 5ème
-        if ($premierChar == '5' || $premierChar == '6') {
-            $matieres = $matieres->whereNotIn(DB::raw('LOWER(LIBELMAT)'), array_map('strtolower', $exclusionsSpecifiquesCycle1_56));
-        } else {
-            $matieres = $matieres->whereNotIn(DB::raw('LOWER(LIBELMAT)'), array_map('strtolower', $exclusionsCycle1));
-        }
-    } elseif ($cycle == 2) {
-       //pour vérifier si la classe en question est de série scientifique
-        if (stripos($classe, 'B') !== false || stripos($classe, 'AB') !== false) {
-            $matieres = $matieres->whereNotIn(DB::raw('LOWER(LIBELMAT)'), array_map('strtolower', $exclusionsCycle2));
-        } elseif (stripos($classe, 'A') !== false) {
-            $matieres = $matieres->whereNotIn(DB::raw('LOWER(LIBELMAT)'), array_map('strtolower', $exclusionsSpecifiquesCycle2_A));
-        } else {
-          $matieres = $matieres->whereNotIn(DB::raw('LOWER(LIBELMAT)'), array_map('strtolower', $exclusionsSpecifiquesCycle2_CD));
-        }
-    }
-
-    $matieres = $matieres->get();
-
-    // Requête élèves
-    $elevesQuery = Eleve::query();
-
+    // On ne récupère les matières que si une classe est sélectionnée
     if ($classe) {
-        $elevesQuery->where('eleve.CODECLAS', $classe);
+        $matieres = Clasmat::with('matiere')
+            ->where('CODECLAS', $classe)
+            ->where('COEF', '!=', 0)
+            ->get()
+            // on pluck les modèles Matieres pour la vue
+            ->pluck('matiere');
+    } else {
+        // Par défaut, on renvoie une collection vide
+        $matieres = collect();
     }
 
-    $elevesQuery->leftJoin('notes', function ($join) use ($matiere, $periode) {
-        $join->on('eleve.MATRICULE', '=', 'notes.MATRICULE');
-        if ($matiere) {
-            $join->where('notes.CODEMAT', $matiere);
-        }
-        if ($periode) {
-            $join->where('notes.SEMESTRE', $periode);
-        }
-    });
+    // Requête pour les élèves
+    $elevesQuery = Eleve::query()
+        ->when($classe, fn($q) => $q->where('eleve.CODECLAS', $classe))
+        ->leftJoin('notes', function ($join) use ($matiere, $periode) {
+            $join->on('eleve.MATRICULE', '=', 'notes.MATRICULE')
+                 ->when($matiere, fn($j) => $j->where('notes.CODEMAT', $matiere))
+                 ->where('notes.SEMESTRE', $periode);
+        });
 
     $getClasmat = Clasmat::where([
         ['CODECLAS', '=', $classe],
-        ['CODEMAT', '=', $matiere]
+        ['CODEMAT',  '=', $matiere]
     ])->first();
 
-    $eleves = $elevesQuery->select(
-        'eleve.*',
-        'notes.INT1',
-        'notes.INT2',
-        'notes.INT3',
-        'notes.INT4',
-        'notes.INT5',
-        'notes.INT6',
-        'notes.INT7',
-        'notes.INT8',
-        'notes.INT9',
-        'notes.INT10',
-        'notes.MI',
-        'notes.DEV1',
-        'notes.DEV2',
-        'notes.DEV3',
-        'notes.MS',
-        'notes.TEST',
-        'notes.MS1'
-    )->orderBy('NOM')->get();
+    $eleves = $elevesQuery
+        ->select([
+            'eleve.*',
+            'notes.INT1','notes.INT2','notes.INT3','notes.INT4','notes.INT5',
+            'notes.INT6','notes.INT7','notes.INT8','notes.INT9','notes.INT10',
+            'notes.MI','notes.DEV1','notes.DEV2','notes.DEV3',
+            'notes.MS','notes.TEST','notes.MS1',
+        ])
+        ->orderBy('NOM')
+        ->get();
 
-    return view('pages.notes.saisirnotefilter', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere', 'getClasmat'));
+    return view('pages.notes.saisirnotefilter', compact(
+        'classes','eleves','gclasses','matieres','classe','matiere','getClasmat'
+    ));
 }
-
-
 
   public function enregistrerNotes(Request $request)
   {

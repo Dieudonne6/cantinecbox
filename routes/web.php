@@ -370,6 +370,7 @@ Route::get('/verrouillage', [CdController::class, 'verrouillage'])->name('verrou
 Route::put('/tabledesmatieres',  [EditionController::class, 'updatetabledesmatieres'])->name('updatetabledesmatieres');
 
 
+
 Route::post('/enregistrer-notes', [CdController::class, 'enregistrerNotes'])->name('enregistrer_notes');
 Route::post('/delete-notes', [CdController::class, 'deleteNote'])->name('delete-notes');
 
@@ -435,6 +436,7 @@ Route::post('/tableauanalytique', [TableauController::class, 'tableauanalytique'
 // Routes pour le rapport annuel
 Route::get('/rapportannuel', [RapportannuelController::class, 'rapportannuel'])->name('rapportannuel');
 Route::post('/decision-config/store', [RapportannuelController::class, 'storeDecisionConfig'])->name('decision.config.store');
+Route::post('config/promotions/update',[RapportannuelController::class, 'updateConfigClasses'])->name('config.promotions.update');
 
 
 
