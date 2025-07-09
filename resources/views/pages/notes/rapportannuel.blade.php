@@ -60,7 +60,7 @@
                             <div class="row align-items-center g-2">
                                 <div class="col-md-2 d-flex align-items-center">
                                     <label for="seuil" class="me-1 mb-0" style="min-width: 40px;">Seuil:</label>
-                                    <input type="number" id="seuil" class="form-control form-control-sm" value="{{ $config->seuil_Passage }}" readonly style="width: 4.5rem; margin-left: -0.3rem;">
+                                    <input type="number" id="seuil" class="form-control form-control-sm" value="{{ $config->seuil_Passage ?? 0}}" readonly style="width: 4.5rem; margin-left: -0.3rem;">
                                 </div>
                                 <div class="col-md-4 d-flex align-items-center">
                                     <label for="classeSup" class="me-1 mb-0" style="min-width: 100px;">Classe sup :</label>
@@ -69,12 +69,12 @@
                                 <div class="col-md-3 d-flex align-items-center">
                                     <label for="minCycle1" class="me-1 mb-0" style="min-width: 100px;">Min.Cycle 1
                                         :</label>
-                                    <input type="number" id="minCycle1" class="form-control form-control-sm" value="{{ $config->Min_Cycle1 }}" readonly style="width: 5rem; margin-left: -1rem;">
+                                    <input type="number" id="minCycle1" class="form-control form-control-sm" value="{{ $config->Min_Cycle1 ?? 0 }}" readonly style="width: 5rem; margin-left: -1rem;">
                                 </div>
                                 <div class="col-md-3 d-flex align-items-center">
                                     <label for="minCycle2" class="me-1 mb-0" style="min-width: 100px;" >Min.Cycle 2
                                         :</label>
-                                    <input type="number" id="minCycle2" class="form-control form-control-sm" value="{{ $config->Min_Cycle1 }}" readonly style="width: 5rem; margin-left: -1rem;">
+                                    <input type="number" id="minCycle2" class="form-control form-control-sm" value="{{ $config->Min_Cycle2 ?? 0}}" readonly style="width: 5rem; margin-left: -1rem;">
                                 </div>
                             </div>
                         </div>

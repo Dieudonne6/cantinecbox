@@ -17,7 +17,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('codeClas')->unique();
             $table->string('libelle_promotion');
-            $table->string('libelle_classe_sup');
+            $table->string('libelle_classe_sup')->nullable();
         });
     }
 
