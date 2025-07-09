@@ -21,6 +21,7 @@ use App\Http\Controllers\EditionController2;
 use App\Http\Controllers\ListemeriteController;
 use App\Http\Controllers\ReleveparelevesController;
 use App\Http\Controllers\TableauController;
+use App\Http\Controllers\ParametreController;
 
 
 /*
@@ -440,3 +441,18 @@ Route::post('/import', [BulletinController::class, 'import'])->name('eleves.impo
 
 Route::get('/statistiques', [TableauController::class, 'statistiques'])->name('statistiques');
 Route::post('/statistiques', [TableauController::class, 'statistiques'])->name('statistiques');
+
+Route::prefix('parametre')->group(function() {
+      Route::get('inscriptions-discipline', [ParametreController::class, 'inscriptionsDiscipline'])
+         ->name('parametre.inscriptions');
+    Route::get('tables', [ParametreController::class, 'tables'])
+         ->name('parametre.tables');
+    Route::get('bornes-exercice', [ParametreController::class, 'bornes'])
+         ->name('parametre.bornes');
+    Route::get('op-ouverture', [ParametreController::class, 'opOuverture'])
+         ->name('parametre.opouverture');
+    Route::get('config-imprimante', [ParametreController::class, 'configImprimante'])
+         ->name('parametre.configimprimante');
+    Route::get('changement-trimestre', [ParametreController::class, 'changementTrimestre'])
+         ->name('parametre.changementtrimestre');
+});
