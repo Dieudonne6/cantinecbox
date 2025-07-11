@@ -1519,6 +1519,7 @@ class BulletinController extends Controller
                 $classeElev = $eleve->CODECLAS;
                 $CodePromo = Classes::where('CODECLAS', $classeElev)->first();
                 $CODEPROMO = $CodePromo->CODEPROMO;
+                // dd($CODEPROMO);
                 $moyenneAnnuelle = $eleve->MAN;
                 // $infoDecision = DecisionConfiguration::where('promotion', $CODEPROMO)->first();
                 // // $NouveauBorneI1A = $infoDecision->NouveauBorneI1A;
@@ -1571,8 +1572,8 @@ if (!$infoDecision) {
     $decisionAnnuelle = '......................................................................';
 } else {
     // Votre logique existante
-    $prefix = $eleveA->STATUT == 0 ? 'Nouveau'
-            : ($eleveA->STATUT == 1 ? 'Ancien' : null);
+    $prefix = $eleve->STATUT == 0 ? 'Nouveau'
+            : ($eleve->STATUT == 1 ? 'Ancien' : null);
 
     $decisionAnnuelle = null;
     if ($prefix) {
@@ -1585,6 +1586,7 @@ if (!$infoDecision) {
             $high = floatval($infoDecision->$highProp);
             $moy  = floatval($moyenneAnnuelle);
 
+            // dd($lowProp , $highProp , $eleve);
             if ($moy >= $low && $moy < $high) {
                 $decisionAnnuelle = $infoDecision->$labelProp;
                 break;
