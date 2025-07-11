@@ -76,10 +76,10 @@
                     <td>
 
                         {{-- Sinon, on affiche “Modifier” ET “Supprimer” --}}
-                        {{-- <a class="btn btn-primary"
-                           href="{{ url('avoirfacturepaiemodif/'.$facture->codemecef) }}">
+                        <a class="btn btn-primary"
+                           href="{{ url('avoirfacturepaiescolaritemodif/'.$facture->codemecef) }}">
                           Modifier
-                        </a> --}}
+                        </a>
                         <a class="btn btn-danger"
                            href="{{ url('avoirfacturepaiescolarite/'.$facture->codemecef) }}">
                           Supprimer

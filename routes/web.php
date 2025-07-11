@@ -125,7 +125,8 @@ Route::get('/pdfduplicatarecu/{counters}', [PagesController::class, 'pdfduplicat
 Route::match(['get', 'post'], '/listefacturescolarite', [PagesController::class, 'listefacturescolarite'])->name('listefacturescolarite');
 Route::get('/avoirfacturepaiescolarite/{codemecef}', [PagesController::class, 'avoirfacturepaiescolarite'])->name('avoirfacturepaiescolarite');
 Route::post('/avoirfacturescolarite/{codemecef}', [PagesController::class, 'avoirfacturescolarite'])->name('avoirfacturescolarite');
-
+Route::get('/avoirfacturepaiescolaritemodif/{codemecef}', [PagesController::class, 'avoirfacturepaiescolaritemodif'])->name('avoirfacturepaiescolaritemodif');
+Route::post('/avoirfacturescolaritmodification/{codemecef}', [PagesController::class, 'avoirfacturescolaritmodification'])->name('avoirfacturescolaritmodification');
 
 Route::get('/transfert', [PagesController::class, 'transfert']);
 
