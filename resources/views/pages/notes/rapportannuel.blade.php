@@ -34,47 +34,134 @@
             </div>
 
             <div class="card-body">
+
+                {{-- Bloc d’impression de listes filtrées --}}
+                @if(isset($rapportsParClasse) && count($rapportsParClasse))
+                    <div class="mb-3 d-print-none">
+                        <button onclick="window.print()" class="btn btn-dark">Imprimer</button>
+                    </div>
+
+                    @foreach ($rapportsParClasse as $codeClasse => $eleves)
+                        <div class="text-center fw-bold my-3" style="font-size: 1.2rem;">
+                            LISTE NOMINATIVE DES ELEVES PROPOSÉS AU 
+                            @if ($statut === 'P') PASSAGE
+                            @elseif ($statut === 'R') REDOUBLEMENT
+                            @elseif ($statut === 'X') EXCLUSION
+                            @else ABANDON
+                            @endif
+                        </div>
+
+                        <div><strong>CLASSE :</strong> {{ $codeClasse }} /2021-2022</div>
+
+                        <table class="table table-bordered table-sm text-center align-middle">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Nom et prénoms</th>
+                                    <th>N° Mle</th>
+                                    <th>Sexe</th>
+                                    <th>Stat</th>
+                                    <th>Moy1</th>
+                                    <th>Moy2</th>
+                                    <th>MoyAn</th>
+                                    <th>Observ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($eleves as $index => $eleve)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $eleve->NOM }}</td>
+                                        <td>{{ $eleve->NMATRIC }}</td>
+                                        <td>{{ $eleve->SEXE == 1 ? 'M' : 'F' }}</td>
+                                        <td>{{ $eleve->statutF }}</td>
+                                        <td>{{ number_format($eleve->MOY1, 2) }}</td>
+                                        <td>{{ number_format($eleve->MOY2, 2) }}</td>
+                                        <td><strong>{{ number_format($eleve->MOYAN, 2) }}</strong></td>
+                                        <td>{{ $eleve->OBSERV }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <hr class="d-print-none">
+                    @endforeach
+                @endif
+
+
                 <div class="row">
                     <div class="col-md-9">
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-6 d-flex align-items-center">
                                 <label for="tableSelect1" class="mb-0" style="min-width: 90px;">Classe :</label>
-                                <select class="form-control js-example-basic-multiple" id="tableSelect1"
+                                <select class="form-control js-example-basic-multiple" name="classe_code" id="tableSelect1"
                                     onchange="displayTable()">
                                     @foreach ($classes as $classe)
-                                        <option value="{{ $classe->CODECLAS }}">{{ $classe->CODECLAS }}</option>
+                                        <option name="classe_code" value="{{ $classe->CODECLAS }}"
+                                            {{ isset($selectedClasseCode) && $classe->CODECLAS === $selectedClasseCode ? 'selected' : '' }}>
+                                            {{ $classe->CODECLAS }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
 
                             <div class="col-md-6 d-flex align-items-center">
-                                <label for="tableSelect2" class="me-2 mb-0" style="min-width: 170px;">Classes déjà créées
-                                    :</label>
-                                <select class="form-control js-example-basic-multiple" id="tableSelect2" readonly>
-                                    <option value=""> Classes créées</option>
+                                <label for="tableSelect2" class="me-2 mb-0" style="min-width: 170px;">
+                                    Classes déjà créées :
+                                </label>
+                                <select class="form-control js-example-basic-multiple" id="tableSelect2" onchange="displayTable2()">
+                                    @foreach ($classesAvecRapport as $classeCR)
+                                        <option name="classe_selectionne" value="{{ $classeCR->CODECLAS }}">
+                                            {{ $classeCR->CODECLAS }}
+                                            @if (isset($classeCR->libelle))
+                                                — {{ $classeCR->libelle }}
+                                            @endif
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
 
-                        <div class="p-3 rounded" style="background-color: #f5f5dc; border: 1px solid #ccc;">
-                            <div class="row align-items-center g-2">
+                        <div class="p-3 rounded">
+                            <div class="row align-items-center g-2"
+                                style="background-color: #f5f5dc; border: 1px solid #ccc;">
                                 <div class="col-md-2 d-flex align-items-center">
                                     <label for="seuil" class="me-1 mb-0" style="min-width: 40px;">Seuil:</label>
-                                    <input type="number" id="seuil" class="form-control form-control-sm" value="{{ $config->seuil_Passage ?? 0}}" readonly style="width: 4.5rem; margin-left: -0.3rem;">
+                                    <input type="number" id="seuil" class="form-control form-control-sm"
+                                        value="{{ $config->seuil_Passage ?? 0 }}" readonly
+                                        style="width: fit-content; min-width: 40px; padding: 0 4px; margin-left: -0.3rem;">
                                 </div>
                                 <div class="col-md-4 d-flex align-items-center">
                                     <label for="classeSup" class="me-1 mb-0" style="min-width: 100px;">Classe sup :</label>
-                                    <input type="text" id="classeSup" class="form-control form-control-sm" readonly>
+                                    <input type="text" id="classeSup" class="form-control form-control-sm" readonly
+                                        style="margin-left: -0.1rem;" >
                                 </div>
                                 <div class="col-md-3 d-flex align-items-center">
-                                    <label for="minCycle1" class="me-1 mb-0" style="min-width: 100px;">Min.Cycle 1
-                                        :</label>
-                                    <input type="number" id="minCycle1" class="form-control form-control-sm" value="{{ $config->Min_Cycle1 ?? 0 }}" readonly style="width: 5rem; margin-left: -1rem;">
+                                    <label for="minCycle1" class="me-1 mb-0" style="min-width: 100px;"
+                                        style="margin-left: -0.3rem;">Min.Cycle 1:</label>
+                                    <input type="number" id="minCycle1" class="form-control form-control-sm"
+                                        value="{{ $config->Min_Cycle1 ?? 0 }}" readonly
+                                        style="width: fit-content; min-width: 40px; padding: 0 4px; margin-left: -1rem;">
                                 </div>
                                 <div class="col-md-3 d-flex align-items-center">
-                                    <label for="minCycle2" class="me-1 mb-0" style="min-width: 100px;" >Min.Cycle 2
-                                        :</label>
-                                    <input type="number" id="minCycle2" class="form-control form-control-sm" value="{{ $config->Min_Cycle2 ?? 0}}" readonly style="width: 5rem; margin-left: -1rem;">
+                                    <label for="minCycle2" class="me-1 mb-0" style="min-width: 100px;">Min.Cycle 2:</label>
+                                    <input type="number" id="minCycle2" class="form-control form-control-sm"
+                                        value="{{ $config->Min_Cycle2 ?? 0 }}" readonly
+                                         style="width: fit-content; min-width: 40px; padding: 0 4px; margin-left: -1rem;">
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt-5">
+                                <div class="ad-flex justify-content-between mb-2">
+                                    <button type="button" class="a btn btn-link text-primary btn-outline-primary fw-bold"
+                                        data-bs-toggle="modal" data-bs-target="#configClassesModal">
+                                        1. Configurer les classes supérieures
+                                    </button>
+
+                                    <button type="button" class="a btn btn-link text-danger btn-outline-danger fw-bold"
+                                        data-bs-toggle="modal" data-bs-target="#modalConfiguration"
+                                        style="margin-left: 5rem;">
+                                        2. Configurer décisions
+                                    </button>
+
                                 </div>
                             </div>
                         </div>
@@ -85,51 +172,52 @@
 
                             <div class="d-flex align-items-center mb-2">
                                 <label class="fw-bold me-2" style="min-width: 80px;">Effectif :</label>
-                                <input type="number" class="form-control form-control-sm me-1" value="" readonly
-                                    style="width: 20px;">
+                                <input type="number" class="form-control form-control-sm me-1"
+                                    value="{{ $effectifTotal }}" readonly style="width: fit-content; min-width: 40px; padding: 0 4px;">
                                 <span class="mx-1">dont</span>
-                                <input type="number" class="form-control form-control-sm mx-1" value="" readonly
-                                    style="width: 20px;">
+                                <input type="number" class="form-control form-control-sm mx-1"
+                                    value="{{ $effectifFilles }}" readonly style="width: fit-content; min-width: 40px; padding: 0 4px;">
                                 <span>filles</span>
                             </div>
 
                             <div class="d-flex align-items-center mb-2">
                                 <label class="fw-bold me-2" style="min-width: 80px;">Passage :</label>
-                                <input type="number" class="form-control form-control-sm me-1" value="" readonly
-                                    style="width: 20px;">
+                                <input type="number" class="form-control form-control-sm me-1"
+                                    value="{{ $passantsTotal }}" readonly style="width: fit-content; min-width: 40px; padding: 0 4px;">
                                 <span class="mx-1">dont</span>
-                                <input type="number" class="form-control form-control-sm mx-1" value="" readonly
-                                    style="width: 20px;">
+                                <input type="number" class="form-control form-control-sm mx-1"
+                                    value="{{ $passantesFilles }}" readonly style="width: fit-content; min-width: 40px; padding: 0 4px;">
+                                <span>filles</span>
+                            </div>
+
+
+                            <div class="d-flex align-items-center mb-2">
+                                <label class="fw-bold me-2" style="min-width: 90px;">Redouble :</label>
+                                <input type="number" class="form-control form-control-sm me-1"
+                                    value="{{ $redoublesTotal }}" readonly style="width: fit-content; min-width: 40px; padding: 0 4px;">
+                                <span class="mx-1">dont</span>
+                                <input type="number" class="form-control form-control-sm mx-1"
+                                    value="{{ $redoublesFilles }}" readonly style="width: fit-content; min-width: 40px; padding: 0 4px;">
                                 <span>filles</span>
                             </div>
 
                             <div class="d-flex align-items-center mb-2">
-                                <label class="fw-bold me-2" style="min-width: 90px;">Redouble:</label>
-                                <input type="number" class="form-control form-control-sm me-1" value="" readonly
-                                    style="width: 20px;">
+                                <label class="fw-bold me-2" style="min-width: 90px;">Exclusion :</label>
+                                <input type="number" class="form-control form-control-sm me-1"
+                                    value="{{ $exlusesTotal }}" readonly style="width: fit-content; min-width: 40px; padding: 0 4px;">
                                 <span class="mx-1">dont</span>
-                                <input type="number" class="form-control form-control-sm mx-1" value="" readonly
-                                    style="width: 20px;">
-                                <span>filles</span>
-                            </div>
-
-                            <div class="d-flex align-items-center mb-2">
-                                <label class="fw-bold me-2" style="min-width: 90px;">Exclusion:</label>
-                                <input type="number" class="form-control form-control-sm me-1" value="" readonly
-                                    style="width: 20px;">
-                                <span class="mx-1">dont</span>
-                                <input type="number" class="form-control form-control-sm mx-1" value="" readonly
-                                    style="width: 20px;">
+                                <input type="number" class="form-control form-control-sm mx-1"
+                                    value="{{ $exlusFilles }}" readonly style="width: fit-content; min-width: 40px; padding: 0 4px;">
                                 <span>filles</span>
                             </div>
 
                             <div class="d-flex align-items-center">
-                                <label class="fw-bold me-2" style="min-width: 90px;">Abandon:</label>
-                                <input type="number" class="form-control form-control-sm me-1" value="" readonly
-                                    style="width: 20px;">
+                                <label class="fw-bold me-2" style="min-width: 90px;">Abandon :</label>
+                                <input type="number" class="form-control form-control-sm me-1"
+                                    value="{{ $abandonsTotal }}" readonly style="width: fit-content; min-width: 40px; padding: 0 4px;">
                                 <span class="mx-1">dont</span>
-                                <input type="number" class="form-control form-control-sm mx-1" value="" readonly
-                                    style="width: 20px;">
+                                <input type="number" class="form-control form-control-sm"
+                                    value="{{ $abandonsFilles }}" readonly style="width: fit-content; min-width: 40px; padding: 0 4px;">
                                 <span>filles</span>
                             </div>
 
@@ -137,53 +225,73 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12 mt-n5">
+                    <div class="card shadow-sm p-1 rounded" style="background-color: #f8f9fa;">
+                        <div class=" gap-5" style="display: flex; flex-wrap: nowrap; justify-content:center;">
 
+                            <form method="POST" action="{{ route('rapportannuel') }}">
+                                @csrf
+                                <input type="hidden" name="classe_code" id="selectedClasseCode"
+                                    value="{{ old('classe_code') }}">
+                                <button class="btn btn-outline-primary btn-sm" type="submit">Créer rapport</button>
+                            </form>
+
+                            <button class="btn btn-outline-primary btn-sm" onclick="printDiv('printableArea')">Imprimer rapport</button>
+                            <button id="btnToggle" class="btn btn-outline-secondary btn-sm">Afficher/ignorer</button>
+
+                            <form method="POST" action="{{ route('classe.delete') }}">
+                                @csrf
+                                <input type="hidden" name="classe_selectionne" id="classeCR" value="{{ old('classe_selectionne')}}">
+                                <button class="btn btn-danger btn-sm">Supprimer</button>
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row" style="margin-left: 0.5rem">
-
-                <div class="col-md-8" style="margin-top: -4rem">
-                    <div class="ad-flex justify-content-between mb-2">
-                        <button type="button" class="a btn btn-link text-primary btn-outline-primary fw-bold"
-                            data-bs-toggle="modal" data-bs-target="#configClassesModal">
-                            1. Configurer les classes supérieures
-                        </button>
-
-                        <button type="button" class="a btn btn-link text-danger btn-outline-danger fw-bold"
-                            data-bs-toggle="modal" data-bs-target="#modalConfiguration" style="margin-left: 5rem;">
-                            2. Configurer décisions
-                        </button>
+                <div class="mt-4">
+                    <div id="printableArea" class="table-responsive" style="max-height: 100vh; overflow-y: auto;">
+                        <table id="rapportTable"class="table table-bordered table-light table-sm text-center mb-0">
+                            <thead class="table-secondary sticky-top">
+                                <tr>
+                                    <th scope="col">Statut</th>
+                                    <th scope="col">Rang</th>
+                                    <th scope="col">Nom et prénoms</th>
+                                    <th scope="col">Redou</th>
+                                    <th scope="col">Moy1</th>
+                                    <th scope="col">Moy2</th>
+                                    <th scope="col">Moy An</th>
+                                    <th scope="col">Observation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($rapports as $rapport)
+                                    <tr>
+                                        <td>{{ $rapport->STATUTF }}</td>
+                                        <td>{{ $rapport->RANG }}</td>
+                                        <td class="text-start">{{ $rapport->NOM }} {{ $rapport->PRENOM }}</td>
+                                        <td>{{ $rapport->STATUT == 0 ? 'Nouveau' : 'Redouble' }}</td>
+                                        <td>{{ number_format($rapport->MOY1, 2) }}</td>
+                                        <td>{{ number_format($rapport->MOY2, 2) }}</td>
+                                        <td>{{ number_format($rapport->MOYAN, 2) }}</td>
+                                        <td>{{ $rapport->OBSERVATION }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-muted">Aucune donnée</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
 
                     </div>
-
-                    <!-- Tableau principal -->
-                    <table class="table table-bordered table-light table-sm text-center">
-                        <thead class="table-secondary">
-                            <tr>
-                                <th>#</th>
-                                <th>Rang</th>
-                                <th>Nom et prénoms</th>
-                                <th>Redou</th>
-                                <th>Moy1</th>
-                                <th>Moy2</th>
-                                <th>Moy An</th>
-                                <th>Observation</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="8" class="text-muted">Aucune donnée</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <br>
+                    <br>
+                    <br>
                 </div>
-
-                <div class="col-md-3 d-grid gap-2" style="margin-top: 1rem; margin-left: 4rem">
-                    <button class="btn btn-outline-primary btn-sm">Créer rapport</button>
-                    <button class="btn btn-outline-primary btn-sm">Imprimer rapport</button>
-                    <button class="btn btn-outline-secondary btn-sm">Afficher/ignorer</button>
-                    <button class="btn btn-success btn-sm">Enregistrer</button>
-                    <br> <br><br>
-                </div>
-
+                <br><br><br><br>
                 <!-- Modale de la configuration des décisions -->
                 <div class="modal fade" id="modalConfiguration" tabindex="-1" aria-labelledby="modalConfigLabel"
                     aria-hidden="true">
@@ -257,6 +365,7 @@
                                                 <th>Passe</th>
                                                 <th>Redouble</th>
                                                 <th>Exclu</th>
+                                                <th style="display: none">Cycle</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -341,6 +450,10 @@
                                                                 {{ in_array($i, [1, 2]) ? 'checked' : '' }}></td>
                                                         <td><input type="radio" name="decision_{{ $rowIndex }}"
                                                                 value="X" {{ $i === 3 ? 'checked' : '' }}></td>
+                                                        <td style="display: none">{{ $cycle }}                                    
+                                                            <input type="hidden"  name="cycle_{{ $rowIndex }}"
+                                                                value="{{ $cycle }}"></td>
+
                                                     </tr>
                                                     @php
                                                         $rowIndex++;
@@ -366,13 +479,29 @@
                 <div class="row">
                     <div class="col-md-12 mt-n5">
                         <div class="card shadow-sm p-3 rounded" style="background-color: #f8f9fa;">
-                            <div class=" gap-1" style="display: flex; flex-wrap:nowrap">
-                                <button class="btn btn-outline-primary btn-sm fw-bold">Liste générale passage</button>
-                                <button class="btn btn-outline-warning btn-sm fw-bold">Liste générale redoublement</button>
-                                <button class="btn btn-outline-danger btn-sm fw-bold">Liste générale exclusion</button>
-                                <button class="btn btn-outline-secondary btn-sm fw-bold">Liste générale abandon</button>
-                                <button class="btn btn-outline-success btn-sm fw-bold">Exporter liste</button>
+                            <div class="gap-1" style="display: flex; flex-wrap: nowrap">
+                               <form action="{{ route('rapport.passage') }}" method="POST" class="me-1">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-primary btn-sm fw-bold">Liste générale passage</button>
+                                </form>
+
+                                <form action="{{ route('rapport.redoublement') }}" method="POST" class="me-1">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-warning btn-sm fw-bold">Liste générale redoublement</button>
+                                </form>
+
+                                <form action="{{ route('rapport.exclusion') }}" method="POST" class="me-1">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-danger btn-sm fw-bold">Liste générale exclusion</button>
+                                </form>
+
+                                <form action="{{ route('rapport.abandon') }}" method="POST" class="me-1">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm fw-bold">Liste générale abandon</button>
+                                </form>
+
                             </div>
+                           
                             <br><br> <br>
                         </div>
                     </div>
@@ -477,8 +606,26 @@
             });
         </script>
 
+<script>
+function printDiv(divId) {
+    // Sauvegarde du contenu complet
+    const originalContents = document.body.innerHTML;
+    // Contenu à imprimer
+    const printContents = document.getElementById(divId).innerHTML;
+    // Remplace tout le body par la zone à imprimer
+    document.body.innerHTML = printContents;
+    // Lance la boîte d'impression
+    window.print();
+    // Restaure le contenu original de la page
+    document.body.innerHTML = originalContents;
+    // Recharge le script et le CSS
+    window.location.reload();
+}
+</script>
+
     </div>
 
+    {{-- SCRIPT pour synchroniser le select et le hidden --}}
 
     <script>
         window.setTimeout(function() {
@@ -501,6 +648,7 @@
             const select = document.getElementById('tableSelect1');
             const code = select.value; // ex: "6EM1", "TleA2-1"
             const firstChr = code.charAt(0); // "6" ou "T", etc.
+            document.getElementById('selectedClasseCode').value = code;
             let libSup = ''; // valeur par défaut
 
             // Parcours des clés de la map
@@ -514,6 +662,17 @@
             // Injecte dans l’input
             document.getElementById('classeSup').value = libSup;
         }
+        function displayTable2() {
+            const select = document.getElementById('tableSelect2');
+            const classe = select.value;
+            document.getElementById('classeCR').value = classe;
+        }
+
+        document.getElementById('btnToggle')
+            .addEventListener('click', function() {
+                const tbl = document.getElementById('rapportTable');
+                tbl.style.display = (tbl.style.display === 'none') ? '' : 'none';
+            });
 
         // 3. Liaison de l’événement
         document
@@ -539,6 +698,7 @@
             position: relative;
         }
 
+
         /* Rend chaque <th> collant en haut du conteneur */
         #configClassesModal .table-responsive thead th {
             position: sticky;
@@ -548,5 +708,84 @@
             background-color: #f8f9fa;
             /* même couleur que .table-secondary */
         }
+
+        thead tr {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            /* pour qu'ils restent au-dessus des lignes */
+            background-color: #f8f9fa;
+            /* même couleur que .table-secondary */
+        }
     </style>
+
+    <style>
+@media print {
+  /* Imprime les couleurs de fond et textes comme à l’écran */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Masque tout sauf la zone à imprimer */
+  body * {
+    visibility: hidden;
+  }
+  #printableArea, 
+  #printableArea * {
+    visibility: visible;
+  }
+  #printableArea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Corps de page sans marges externes (optionnel, selon besoin) */
+  @page {
+    margin: 1cm;
+  }
+
+  /* Tableau plein largeur, bordures nettes */
+  #printableArea table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-bottom: 0.5em;
+  }
+  #printableArea th,
+  #printableArea td {
+    border: 1px solid #333 !important;
+    padding: 0.6em !important;
+    font-size: 11pt !important;
+  }
+
+  /* En‑tête contrasté */
+  #printableArea thead th {
+    background-color: #2c3e50 !important;
+    color: #ecf0f1 !important;
+    text-transform: uppercase;
+    font-size: 12pt !important;
+  }
+
+  /* Lignes zébrées pour le print */
+  #printableArea tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2 !important;
+  }
+
+  /* Hover désactivé (inutile à l’impression) */
+  #printableArea tbody tr:hover {
+    background: none !important;
+  }
+
+  /* Empêche les coupures de lignes à l’intérieur d’une ligne du tableau */
+  tr {
+    page-break-inside: avoid;
+  }
+}
+
+</style>
+
 @endsection

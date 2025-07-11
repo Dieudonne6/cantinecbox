@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('Promotion');
             $table->boolean('Statut')->default(0);
             $table->enum('StatutF', ['P', 'X', 'R'])->default('P');
+            $table->unsignedTinyInteger('Cycle')->after('StatutF');
             $table->decimal('Seuil_Felicitations', 4, 2);
             $table->decimal('Seuil_Encouragements', 4, 2);
             $table->decimal('Seuil_tableau_Honneur', 4, 2);

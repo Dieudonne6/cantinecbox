@@ -13,16 +13,19 @@ class DecisionConfigAnnuel extends Model
 
     public $timestamps = false;
 
+ 
+
     protected $fillable = [
         'seuil_Passage',
         'Min_Cycle1',
         'Min_Cycle2',
-        'seuil_Felicitations',
-        'seuil_Encouragements',
-        'seuil_tableau_Honneur',
+        'Seuil_Felicitations',
+        'Seuil_Encouragements',
+        'Seuil_tableau_Honneur',
         'Promotion',
         'Statut',
         'StatutF',
+        'Cycle',
     ];
 
 }
