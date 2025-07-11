@@ -21,6 +21,7 @@ use App\Http\Controllers\EditionController2;
 use App\Http\Controllers\ListemeriteController;
 use App\Http\Controllers\ReleveparelevesController;
 use App\Http\Controllers\TableauController;
+use App\Http\Controllers\ParametreController;
 use App\Http\Controllers\RapportannuelController;
 
 
@@ -126,7 +127,8 @@ Route::get('/pdfduplicatarecu/{counters}', [PagesController::class, 'pdfduplicat
 Route::match(['get', 'post'], '/listefacturescolarite', [PagesController::class, 'listefacturescolarite'])->name('listefacturescolarite');
 Route::get('/avoirfacturepaiescolarite/{codemecef}', [PagesController::class, 'avoirfacturepaiescolarite'])->name('avoirfacturepaiescolarite');
 Route::post('/avoirfacturescolarite/{codemecef}', [PagesController::class, 'avoirfacturescolarite'])->name('avoirfacturescolarite');
-
+Route::get('/avoirfacturepaiescolaritemodif/{codemecef}', [PagesController::class, 'avoirfacturepaiescolaritemodif'])->name('avoirfacturepaiescolaritemodif');
+Route::post('/avoirfacturescolaritmodification/{codemecef}', [PagesController::class, 'avoirfacturescolaritmodification'])->name('avoirfacturescolaritmodification');
 
 Route::get('/transfert', [PagesController::class, 'transfert']);
 
@@ -459,3 +461,18 @@ Route::post('/import', [BulletinController::class, 'import'])->name('eleves.impo
 
 Route::get('/statistiques', [TableauController::class, 'statistiques'])->name('statistiques');
 Route::post('/statistiques', [TableauController::class, 'statistiques'])->name('statistiques');
+
+Route::prefix('parametre')->group(function() {
+      Route::get('inscriptions-discipline', [ParametreController::class, 'inscriptionsDiscipline'])
+         ->name('parametre.inscriptions');
+    Route::get('tables', [ParametreController::class, 'tables'])
+         ->name('parametre.tables');
+    Route::get('bornes-exercice', [ParametreController::class, 'bornes'])
+         ->name('parametre.bornes');
+    Route::get('op-ouverture', [ParametreController::class, 'opOuverture'])
+         ->name('parametre.opouverture');
+    Route::get('config-imprimante', [ParametreController::class, 'configImprimante'])
+         ->name('parametre.configimprimante');
+    Route::get('changement-trimestre', [ParametreController::class, 'changementTrimestre'])
+         ->name('parametre.changementtrimestre');
+});

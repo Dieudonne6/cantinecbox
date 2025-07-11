@@ -574,7 +574,7 @@
                         </div>
                         @if (($typean == 1 && $resultat['periode'] == 2) || ($typean == 2 && $resultat['periode'] == 3))
                             <div {{-- id="bilan_annuel" --}} class="d-flex"
-                                style="border: 1px solid black; border-radius: 10px;">
+                                style="border: 1px solid black; border-radius: 10px; background-color: rgb(128, 128, 128, 0.2)">
                                 <!-- Bloc Bilan Annuel -->
                                 <div style="margin-left: 20px; padding-top: 10px;">
                                     <h5>BILAN ANNUEL</h5>
@@ -818,7 +818,7 @@
                             {{-- <div class="flex-grow-1">
                                     <p>Code web: {{ $resultat['codeweb'] }}</p>
                                 </div> --}}
-                            <div class="flex-grow-1 justify-content-end" style="margin-left: 600px;">
+                            <div class="flex-grow-1 justify-content-end" style="margin-left: 800px;">
                                 <p>Edité le {{ date('d/m/Y') }}</p>
                             </div>
                         </div>

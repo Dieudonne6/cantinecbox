@@ -34,17 +34,6 @@
 </div>
     <div class="card-body">
 
-        <nav>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <button class="nav-link active" id="nav-cantine-tab" data-bs-toggle="tab" data-bs-target="#nav-cantine" type="button" role="tab" aria-controls="nav-cantine" aria-selected="true">Cantine</button>
-              <button class="nav-link" id="nav-inscriptions-tab" data-bs-toggle="tab" data-bs-target="#nav-inscriptions" type="button" role="tab" aria-controls="nav-inscriptions" aria-selected="true">Inscriptions et Discipline</button>
-              {{-- <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Tables des paramères</button>
-              <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Modifier les bornes de l'exercice</button>
-              <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-ouverture" aria-selected="false">Op. Ouverture</button>
-              <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-confimp" aria-selected="false">Configurer imprimente</button>
-              <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-ouverture" aria-selected="false">Changement de trimestre</button> --}}
-            </div>
-        </nav>
         <div class="tab-content col-md-10 mx-auto " id="nav-tabContent">
 
             <div class="tab-pane fade show active" id="nav-cantine" role="tabpanel" aria-labelledby="nav-cantine-tab">
