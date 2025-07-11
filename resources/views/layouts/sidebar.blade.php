@@ -16,7 +16,7 @@
 
       $activeExtractRoutesInsc = ['importernote', 'import'];
 
-      @endphp
+      @endphp 
 
       <!-- Bloc Inscriptions & disciplines -->
       <li class="nav-item"> 
@@ -256,7 +256,7 @@
                 <ul class="nav sub-menu">
                   <li><a class="nav-link  {{ in_array(request()->route()->getName(), $activeResultatRoutes) ? 'active' : '' }}"  href="{{ route('listeparmerite') }}">Liste par ordre de mérite</a></li>
                   <li><a class="nav-link {{ request()->is('Tableau analytique') ? 'active' : '' }}" href="{{ route('tableauanalytique') }}">Tableau analytique</a></li>
-                  <li><a class="nav-link {{ request()->is('Rapports annuels') ? 'active' : '' }}" href="#">Rapports annuels</a></li>
+                  <li><a class="nav-link {{ request()->is('Rapports annuels') ? 'active' : '' }}" href="{{ route('rapportannuel')}}">Rapports annuels</a></li>
                   <li><a class="nav-link {{ request()->is('Livrets scolaires') ? 'active' : '' }}" href="#">Livrets scolaires</a></li>
                 </ul>
               </div>
@@ -294,11 +294,75 @@
 
       <!-- Lien vers Paramètres -->
       <li class="nav-item">
-        <a class="nav-link" href="{{ url('/parametre') }}">
+        <a class="nav-link collapsed"
+          data-bs-toggle="collapse"
+          href="#parametreSubmenu"
+          aria-expanded="{{ in_array(request()->route()->getName(), [
+            'parametre.index',
+            'parametre.cantine',
+            'parametre.tables',
+            'parametre.bornes',
+            'parametre.opouverture',
+            'parametre.configimprimante',
+            'parametre.changementtrimestre'
+          ]) ? 'true' : 'false' }}"
+          aria-controls="parametreSubmenu">
           <i class="typcn typcn-globe-outline menu-icon"></i>
           <span class="menu-title">Paramètres</span>
+          <i class="menu-arrow"></i>
         </a>
+        <div class="collapse {{ in_array(request()->route()->getName(), [
+            'parametre.index',
+            'parametre.cantine',
+            'parametre.tables',
+            'parametre.bornes',
+            'parametre.opouverture',
+            'parametre.configimprimante',
+            'parametre.changementtrimestre'
+          ]) ? 'show' : '' }}"
+            id="parametreSubmenu"
+            data-bs-parent="#parent-accordion">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+              <a class="nav-link {{ request()->is('parametre') ? 'active' : '' }}"
+                href="{{ url('/parametre') }}">
+                Cantine
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {{ request()->routeIs('parametre.tables') ? 'active' : '' }}"
+                href="{{ route('parametre.tables') }}">
+                Tables des paramètres
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {{ request()->routeIs('parametre.bornes') ? 'active' : '' }}"
+                href="{{ route('parametre.bornes') }}">
+                Modifier bornes exercice
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {{ request()->routeIs('parametre.opouverture') ? 'active' : '' }}"
+                href="{{ route('parametre.opouverture') }}">
+                Op. Ouverture
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {{ request()->routeIs('parametre.configimprimante') ? 'active' : '' }}"
+                href="{{ route('parametre.configimprimante') }}">
+                Configurer imprimante
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {{ request()->routeIs('parametre.changementtrimestre') ? 'active' : '' }}"
+                href="{{ route('parametre.changementtrimestre') }}">
+                Changement de trimestre
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
+
     </ul>
   </nav>
 </div>

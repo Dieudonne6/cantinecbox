@@ -123,63 +123,56 @@ class CdController extends Controller
     )->orderBy('NOM')->get();
     return view('pages.notes.saisirnote', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere', 'getClasmat'));
   }
-  public function saisirnotefilter(Request $request)
-  {
-    $classes = Classe::all();
-    $classe = $request->input('classe');
-    $matiere = $request->input('matiere');
-    $periode = $request->input('periode', 1);
-    $matieres = Matieres::all();
-    $gclasses = Groupeclasse::all();
+public function saisirnotefilter(Request $request)
+{
+    $classes   = Classe::all();
+    $classe    = $request->input('classe');
+    $matiere   = $request->input('matiere');
+    $periode   = $request->input('periode', 1);
+    $gclasses  = Groupeclasse::all();
 
-    // Commencer la requête pour les élèves
-    $elevesQuery = Eleve::query();
-
-    // Appliquer le filtre de classe uniquement si une classe est sélectionnée
+    // On ne récupère les matières que si une classe est sélectionnée
     if ($classe) {
-      $elevesQuery->where('eleve.CODECLAS', $classe);
+        $matieres = Clasmat::with('matiere')
+            ->where('CODECLAS', $classe)
+            ->where('COEF', '!=', 0)
+            ->get()
+            // on pluck les modèles Matieres pour la vue
+            ->pluck('matiere');
+    } else {
+        // Par défaut, on renvoie une collection vide
+        $matieres = collect();
     }
 
-    $elevesQuery->leftJoin('notes', function ($join) use ($matiere, $periode) {
-      $join->on('eleve.MATRICULE', '=', 'notes.MATRICULE');
+    // Requête pour les élèves
+    $elevesQuery = Eleve::query()
+        ->when($classe, fn($q) => $q->where('eleve.CODECLAS', $classe))
+        ->leftJoin('notes', function ($join) use ($matiere, $periode) {
+            $join->on('eleve.MATRICULE', '=', 'notes.MATRICULE')
+                 ->when($matiere, fn($j) => $j->where('notes.CODEMAT', $matiere))
+                 ->where('notes.SEMESTRE', $periode);
+        });
 
-      if ($matiere) {
-        $join->where('notes.CODEMAT', $matiere);
-      }
-
-      if ($periode) {
-        $join->where('notes.SEMESTRE', $periode);
-      }
-    });
-
-    // $getClasmat = Clasmat::where('CODEMAT', $matiere)->first();
     $getClasmat = Clasmat::where([
-      ['CODECLAS', '=', $classe],
-      ['CODEMAT', '=', $matiere]
+        ['CODECLAS', '=', $classe],
+        ['CODEMAT',  '=', $matiere]
     ])->first();
-    // Sélectionner les colonnes des deux tables pour les afficher dans la vue
-    $eleves = $elevesQuery->select(
-      'eleve.*',
-      'notes.INT1',
-      'notes.INT2',
-      'notes.INT3',
-      'notes.INT4',
-      'notes.INT5',
-      'notes.INT6',
-      'notes.INT7',
-      'notes.INT8',
-      'notes.INT9',
-      'notes.INT10',
-      'notes.MI',
-      'notes.DEV1',
-      'notes.DEV2',
-      'notes.DEV3',
-      'notes.MS',
-      'notes.TEST',
-      'notes.MS1'
-    )->orderBy('NOM')->get();
-    return view('pages.notes.saisirnotefilter', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere', 'getClasmat'));
-  }
+
+    $eleves = $elevesQuery
+        ->select([
+            'eleve.*',
+            'notes.INT1','notes.INT2','notes.INT3','notes.INT4','notes.INT5',
+            'notes.INT6','notes.INT7','notes.INT8','notes.INT9','notes.INT10',
+            'notes.MI','notes.DEV1','notes.DEV2','notes.DEV3',
+            'notes.MS','notes.TEST','notes.MS1',
+        ])
+        ->orderBy('NOM')
+        ->get();
+
+    return view('pages.notes.saisirnotefilter', compact(
+        'classes','eleves','gclasses','matieres','classe','matiere','getClasmat'
+    ));
+}
 
   public function enregistrerNotes(Request $request)
   {

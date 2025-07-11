@@ -4650,6 +4650,7 @@ return view('pages.inscriptions.pdfpaiementsco', [
       $groupeclasse = Groupeclasse::all();
       return view ('pages.inscriptions.etatdesrecouvrements', compact('typeclasse', 'typeenseign', 'groupeclasse'));
     }
+
   public function modifieeleve(Request $request, $MATRICULE){
     $modifyeleve = Eleveplus::find($MATRICULE);
     if ($modifyeleve) {
@@ -4685,6 +4686,7 @@ return view('pages.inscriptions.pdfpaiementsco', [
       $modifyeleve->adrurgence = $request->input('adressepersonnelleurgence');
       $modifyeleve->autorisefilm = $request->input('autorisevideo');
       $modifyeleve->autoriseuseimage = $request->input('autoriseimage');
+      $modifyeleve->MATRICULEX = $request->input('matriculex');
       $modifyeleve->update();
       return back()->with('status','Modifier avec succes');
       
@@ -4697,7 +4699,7 @@ return view('pages.inscriptions.pdfpaiementsco', [
   
   public function modifieleve(Request $request, $MATRICULE) {
     $modifieleve = Eleve::find($MATRICULE);
-    $matx = $modifieleve->MATRICULEX;
+    // $matx = $modifieleve->MATRICULEX;
     
     if ($modifieleve) {
       // Gestion des attributs de l'élève à modifier
@@ -4735,7 +4737,8 @@ return view('pages.inscriptions.pdfpaiementsco', [
       $modifieleve->indicatif1 = $request->input('indicatifParent');
       $modifieleve->TEL = $request->input('telephoneParent');
       $modifieleve->TelEleve = $request->input('telephoneEleve');
-      $modifieleve->MATRICULEX = $matx;
+      // $modifieleve->MATRICULEX = $matx;
+      $modifieleve->MATRICULEX = $request->input('matriculex');
       $modifieleve->CODEWEB = $formateMatricule;
       
       $modifieleve->update();
@@ -4747,6 +4750,7 @@ return view('pages.inscriptions.pdfpaiementsco', [
   }
 
 
+
   public function etatdesarriérés() {
     $archive = Elevea::select('MATRICULE', 'NOM', 'PRENOM')->get();
     $delevea = Deleve::where('MONTANTARRIERE', '!=', 0)
@@ -4755,6 +4759,9 @@ return view('pages.inscriptions.pdfpaiementsco', [
     $eleve = Eleve::select('MATRICULE')->get();
     return view('pages.inscriptions.etatdesarrieres', compact('archive', 'delevea', 'eleve'));
 }
+
+
+
 public function recouvrementoperateur(Request $request) {
   $params = Params2::all();
   

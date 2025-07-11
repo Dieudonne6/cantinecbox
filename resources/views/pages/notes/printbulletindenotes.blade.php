@@ -275,6 +275,7 @@
                                     $note_conduite = null;
                                     $total_coefficients = 0;
                                     $total_moyenne_coeffs = 0;
+                                   
                                 @endphp
                                 @foreach ($resultat['matieres'] as $matiere)
                                     {{-- DEBUT ignorer la matiere si l'eleve n'a pas fait aucun des deux devoirs --}}
@@ -755,7 +756,7 @@
                                         </p>
                                     @endif
                                 </div>
-                                <hr style="border: 1px solid black; margin: 0;">
+                                <hr style="border: 1px solid black; margin: 0;">                              
                                 <div
                                     style="flex: 1; display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
                                     <h6 style="text-align: center; text-decoration: underline; margin-bottom: 10px;">
@@ -797,7 +798,6 @@
                                     </p> --}}
                                 </div>
                             </div>
-
                             <div id="signature"
                                 style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
                                 <h5 id="signature_chef" style="margin-top: 5px; font-weight: 500; font-size: 15px;"

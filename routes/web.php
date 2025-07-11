@@ -21,6 +21,8 @@ use App\Http\Controllers\EditionController2;
 use App\Http\Controllers\ListemeriteController;
 use App\Http\Controllers\ReleveparelevesController;
 use App\Http\Controllers\TableauController;
+use App\Http\Controllers\ParametreController;
+use App\Http\Controllers\RapportannuelController;
 
 
 /*
@@ -369,8 +371,7 @@ Route::get('/verrouillage', [CdController::class, 'verrouillage'])->name('verrou
 
 Route::put('/tabledesmatieres',  [EditionController::class, 'updatetabledesmatieres'])->name('updatetabledesmatieres');
 
-Route::get('/saisirnote', [CdController::class, 'saisirnote'])->name('saisirnote');
-Route::get('/filternotes', [CdController::class, 'saisirnotefilter'])->name('saisirnotefilter');
+
 
 Route::post('/enregistrer-notes', [CdController::class, 'enregistrerNotes'])->name('enregistrer_notes');
 Route::post('/delete-notes', [CdController::class, 'deleteNote'])->name('delete-notes');
@@ -434,6 +435,13 @@ Route::get('/editions2/relevespareleves', [ReleveparelevesController::class, 're
 Route::get('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique');
 Route::post('/tableauanalytique', [TableauController::class, 'tableauanalytique'])->name('tableauanalytique');
 
+// Routes pour le rapport annuel
+Route::get('/rapportannuel', [RapportannuelController::class, 'rapportannuel'])->name('rapportannuel');
+Route::post('/decision-config/store', [RapportannuelController::class, 'storeDecisionConfig'])->name('decision.config.store');
+Route::post('config/promotions/update',[RapportannuelController::class, 'updateConfigClasses'])->name('config.promotions.update');
+
+
+
 // Routes pour le tableau synoptique
 Route::get('/tableausynoptique', [TableauController::class, 'tableausynoptique'])->name('tableausynoptique');
 Route::post('/tableausynoptique', [TableauController::class, 'tableausynoptique'])->name('tableausynoptique');
@@ -448,3 +456,18 @@ Route::post('/import', [BulletinController::class, 'import'])->name('eleves.impo
 
 Route::get('/statistiques', [TableauController::class, 'statistiques'])->name('statistiques');
 Route::post('/statistiques', [TableauController::class, 'statistiques'])->name('statistiques');
+
+Route::prefix('parametre')->group(function() {
+      Route::get('inscriptions-discipline', [ParametreController::class, 'inscriptionsDiscipline'])
+         ->name('parametre.inscriptions');
+    Route::get('tables', [ParametreController::class, 'tables'])
+         ->name('parametre.tables');
+    Route::get('bornes-exercice', [ParametreController::class, 'bornes'])
+         ->name('parametre.bornes');
+    Route::get('op-ouverture', [ParametreController::class, 'opOuverture'])
+         ->name('parametre.opouverture');
+    Route::get('config-imprimante', [ParametreController::class, 'configImprimante'])
+         ->name('parametre.configimprimante');
+    Route::get('changement-trimestre', [ParametreController::class, 'changementTrimestre'])
+         ->name('parametre.changementtrimestre');
+});

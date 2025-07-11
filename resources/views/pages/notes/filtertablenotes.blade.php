@@ -380,7 +380,7 @@
                     margin: 0 !important;
                     border: 1px solid #000;
                     text-align: center;
-                    font-size: 10px !important;
+                    font-size: 15px !important;
                 }
                 .titles {
                     display: block  !important;

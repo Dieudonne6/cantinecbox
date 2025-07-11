@@ -609,7 +609,7 @@
                                 </label>
                                 <input type="file" name="image" id="imageUpload" accept="image/*" style="display: none;">
                               
-                                <button class="btn btn-primary" type="button" id="decision" data-bs-toggle="modal" data-bs-target="#Editionconseils">
+                               <button class="btn btn-primary" type="button" id="decision" data-bs-toggle="modal" data-bs-target="#Editionconseils">
                                     <i class="fas fa-cog"></i> Configurer décisions conseils des profs
                                 </button>
                                
@@ -1281,7 +1281,7 @@
     </script>
     {{-- sxript de soumission du formulaire --}}
     {{-- <script>
-  document.getElementById('formBulletin').addEventListener('submit', async function(event) {
+       document.getElementById('formBulletin').addEventListener('submit', async function(event) {
       event.preventDefault(); // Empêche le rafraîchissement de la page
   
       const form = event.target;

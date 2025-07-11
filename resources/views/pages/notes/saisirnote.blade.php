@@ -46,7 +46,7 @@
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
-                </div>
+                </div> 
             @endif
             <form action="{{ route('enregistrer_notes') }}" method="POST">
                 @csrf

@@ -66,7 +66,7 @@
 
     const reader = new FileReader();
     reader.readAsBinaryString(file);
-
+ 
     reader.onload = function(e) {
         const data = e.target.result;
         const workbook = XLSX.read(data, { type: "binary" });
@@ -154,8 +154,10 @@ function jsonToHtmlTable(data) {
         })
         .catch(error => {
             console.error("Erreur :", error);
+            console.info("");
             document.getElementById('errorSection').innerHTML = `<div class="alert alert-danger">Erreur lors de l'importation.</div>`;
         });
     }
 </script>
 @endsection
+
