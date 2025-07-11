@@ -1425,7 +1425,7 @@ class BulletinController extends Controller
             // Vérifiez et ajoutez chaque bilan littéraire
             $bilanLitteraires = [$eleve->MBILANL1, $eleve->MBILANL2, $eleve->MBILANL3];
             foreach ($bilanLitteraires as $bilan) {
-                if ($bilan !== -1 && $bilan !== null) {
+                if ($bilan != -1 && $bilan !== null) {
                     $bilanLitteraireTotal += $bilan;
                     $bilanLitteraireCount++;
                 }
@@ -1442,7 +1442,7 @@ class BulletinController extends Controller
             // Vérifiez et ajoutez chaque bilan Scientifique
             $bilanScientifiques = [$eleve->MBILANS1, $eleve->MBILANS2, $eleve->MBILANS3];
             foreach ($bilanScientifiques as $bilan) {
-                if ($bilan !== -1 && $bilan !== null) {
+                if ($bilan != -1 && $bilan !== null) {
                     $bilanScientifiqueTotal += $bilan;
                     $bilanScientifiqueCount++;
                 }
@@ -1451,7 +1451,8 @@ class BulletinController extends Controller
             // Calcul de la moyenne (évitez la division par zéro)
             $moyenneBilanScientifique = $bilanScientifiqueCount > 0 ? $bilanScientifiqueTotal / $bilanScientifiqueCount : null;
 
-
+            // dd($eleve->MBILANS1, $eleve->MBILANS2, $eleve->MBILANS3);
+            // dd($moyenneBilanScientifique);
             // CALCUL DU BILAN ANNUELLE DES MATIERES FONDAMENTALES 
             $bilanFondamentaleTotal = 0; // Somme des bilans littéraires valides
             $bilanFondamentaleCount = 0; // Compteur des bilans littéraires valides
@@ -1459,7 +1460,7 @@ class BulletinController extends Controller
             // Vérifiez et ajoutez chaque bilan Fondamentale
             $bilanFondamentales = [$eleve->MoyMatFond1, $eleve->MoyMatFond2, $eleve->MoyMatFond3];
             foreach ($bilanFondamentales as $bilan) {
-                if ($bilan !== -1 && $bilan !== null) {
+                if ($bilan != -1 && $bilan !== null) {
                     $bilanFondamentaleTotal += $bilan;
                     $bilanFondamentaleCount++;
                 }
