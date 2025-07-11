@@ -1922,15 +1922,15 @@ if (!$infoDecision) {
 
         foreach ($eleves as $eleve) {
             // Période 1
-            if ($eleve->MS1 !== null && $eleve->MS1 !== -1 && $eleve->MS1 > 0) {
+            if ($eleve->MS1 !== null && $eleve->MS1 !== -1 && $eleve->MS1 !== 21 && $eleve->MS1 > 0) {
                 $moyennesP1[] = $eleve->MS1;
             }
             // Période 2
-            if ($eleve->MS2 !== null && $eleve->MS2 !== -1 && $eleve->MS2 > 0) {
+            if ($eleve->MS2 !== null && $eleve->MS2 !== -1 && $eleve->MS2 !== 21 && $eleve->MS2 > 0) {
                 $moyennesP2[] = $eleve->MS2;
             }
             // Période 3
-            if ($eleve->MS3 !== null && $eleve->MS3 !== -1 && $eleve->MS3 > 0) {
+            if ($eleve->MS3 !== null && $eleve->MS3 !== -1 && $eleve->MS3 !== 21 && $eleve->MS3 > 0) {
                 $moyennesP3[] = $eleve->MS3;
             }
         }
@@ -1956,17 +1956,17 @@ if (!$infoDecision) {
 
         foreach ($eleves as $eleve) {
             // Période 1 : on prend MS1 uniquement si elle est définie, différente de -1 et supérieure à 0
-            if ($eleve->MS1 !== null && $eleve->MS1 !== -1 && $eleve->MS1 > 0) {
+            if ($eleve->MS1 !== null && $eleve->MS1 !== -1 && $eleve->MS1 !== 21 && $eleve->MS1 > 0) {
                 $totalP1 += $eleve->MS1;
                 $countP1++;
             }
             // Période 2
-            if ($eleve->MS2 !== null && $eleve->MS2 !== -1 && $eleve->MS2 > 0) {
+            if ($eleve->MS2 !== null && $eleve->MS2 !== -1 && $eleve->MS2 !== 21 && $eleve->MS2 > 0) {
                 $totalP2 += $eleve->MS2;
                 $countP2++;
             }
             // Période 3
-            if ($eleve->MS3 !== null && $eleve->MS3 !== -1 && $eleve->MS3 > 0) {
+            if ($eleve->MS3 !== null && $eleve->MS3 !== -1 && $eleve->MS3 !== 21 && $eleve->MS3 > 0) {
                 $totalP3 += $eleve->MS3;
                 $countP3++;
             }
