@@ -907,11 +907,6 @@ class BulletinController extends Controller
         $anneencours = $infoparamcontrat->anneencours_paramcontrat;
         $annesuivante = $anneencours + 1;
         $annescolaire = $anneencours . '-' . $annesuivante;
-
-        // Filtrer le tableau en enlevant l'élément 'all'
-        $classeSelectionne = array_filter($classeSelectionne, function ($value) {
-            return $value !== 'all';
-        });
         $clases = DB::table('eleve')->select('CODECLAS')->distinct()->get();
 
         // 
@@ -920,9 +915,15 @@ class BulletinController extends Controller
 
         // Récupérer la classe sélectionnée
         $codeClasse = $classeSelectionne;
-        if (!$codeClasse) {
-            return redirect()->back()->with('error', 'Veuillez sélectionner une classe.');
+        if (empty($codeClasse)) {
+            // dd('vide');
+            return redirect()->back()->with('success', 'Veuillez sélectionner une classe.');
         }
+
+                // Filtrer le tableau en enlevant l'élément 'all'
+        $classeSelectionne = array_filter($classeSelectionne, function ($value) {
+            return $value !== 'all';
+        });
 
         //  dd($classeSelectionne);
 
