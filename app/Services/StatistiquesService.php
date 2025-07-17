@@ -146,7 +146,9 @@ class StatistiquesService
             $colonne = 'MAN';
         }
     
-        $classes   = Classes::with('eleves')->get();
+        // 2. On eager‑load les élèves **et** leurs notes
+        $classes = Classes::with(['eleves.notes'])->get();
+
         $resultats = [];
     
         // 2. Regroupement par groupe
@@ -157,8 +159,14 @@ class StatistiquesService
             $elevesGroupe = $classesGroupe->flatMap->eleves;
             
             /* dd(count($elevesGroupe)); */
-            // 4. I1 : élèves inscrits (STATUTG = 1)
-            $elevesI1 = $elevesGroupe->filter(fn($e) => $e->STATUTG == 1);
+            // 4. I1 : élèves ayant au moins une note INT1 valide
+            $elevesI1 = $elevesGroupe->filter(function ($e) {
+                return $e->notes->contains(function ($note) {
+                    return ! is_null($note->INT1)
+                        && floatval($note->INT1) !== 21
+                        && floatval($note->INT1) !== -1;
+                });
+            });
     
             // 5. I2 : STATUT = 0, STATUTG = 1 et note valide en $colonne
             $elevesI2 = $elevesI1->filter(fn($e) =>

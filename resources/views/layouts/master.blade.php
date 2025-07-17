@@ -134,25 +134,26 @@ align-items: center;  */
 
 /* Style de la scrollbar */
 #sidebar::-webkit-scrollbar {
-    width: 2px; /* Largeur de la scrollbar */
+    width: 7px; /* Largeur de la scrollbar */
+    max-height: 50vh;
 }
 
 /* Style de la piste de la scrollbar */
 #sidebar::-webkit-scrollbar-track {
-    background: #eee; /* Couleur de la piste */
+    background: #ffffff; /* Couleur de la piste */
     border-radius: 10px; /* Optionnel : arrondir les coins */
 }
 
 /* Style de la thumb (partie mobile de la scrollbar) */
 #sidebar::-webkit-scrollbar-thumb {
-    background-color: #eee; /* Couleur de la thumb */
+    background-color: rgba(106, 106, 107, 0.52); /* Couleur de la thumb */
     border-radius: 10px; /* Optionnel : arrondir les coins */
-    border: 2px solid #eee; /* Optionnel : espace autour de la thumb */
+    border: 2px solid rgba(113, 114, 116, 0.52); /* Optionnel : espace autour de la thumb */
 }
 
 /* Style de la thumb au survol */
 #sidebar::-webkit-scrollbar-thumb:hover {
-    background-color: #eee; /* Couleur de la thumb au survol */
+    background-color: rgba(113, 114, 116, 0.52); /* Couleur de la thumb au survol */
 }
 
         .sidebar {

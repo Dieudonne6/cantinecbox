@@ -189,12 +189,19 @@
                         }
                     }
                 </style>
+                
                 <button type="button" class="btn btn-arrow no-print" onclick="window.history.back();" aria-label="Retour">
                     <i class="fas fa-arrow-left"></i> Retour
                 </button>
-                <br><br>
+                <br>
+               
+                <br>
             </div>
-
+                 @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
             <div class="card-body">
                 <!-- Formulaire pour le filtrage et le calcul -->
                 <form action="{{ route('tableauanalytique') }}" method="POST" id="etatForm" class="no-print">
@@ -545,6 +552,9 @@
                         </button>
                     </div>
                 </form>
+                <br>
+                <br>
+                <br>
 
                 <!-- Affichage conditionnel des tableaux -->
                 @if (isset($resultats) && isset($typeEtat))
