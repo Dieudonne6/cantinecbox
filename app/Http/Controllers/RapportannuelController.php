@@ -9,6 +9,8 @@ use App\Models\ConfigClasseSup;
 use App\Models\Classe;
 use App\Models\Eleve;
 use App\Models\Rapport;
+use App\Models\Params2;
+use App\Models\ParamContrat;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +25,16 @@ class RapportannuelController extends Controller
         $promotions = Promo::all();
         $classes = Classe::all();
         $configs = ConfigClasseSup::all()->keyBy('codeClas');
+        $params2 = Params2::all();
 
+        $contrat = ParamContrat::first();
+
+        $anneeCourante = (int) $contrat->anneencours_paramcontrat;
+        // Calcul de l'année suivante
+        $anneeSuivante = $anneeCourante + 1;
+        $anneeScolaire = "{$anneeCourante}-{$anneeSuivante}";
+
+      
         // Pour la config des décisions
         $promo = Classes::select('CODEPROMO', 'CYCLE')->get();
         $config = \App\Models\DecisionConfigAnnuel::latest()->first();
@@ -36,6 +47,7 @@ class RapportannuelController extends Controller
         ->get();
 
         $rapports = Rapport::all();
+        
                                 // CALCUL DES STATISTIQUES
         $effectifTotal     = $rapports->count();
         $effectifFilles    = $rapports->where('SEXE', 2)->count();
@@ -65,26 +77,59 @@ class RapportannuelController extends Controller
                                     ->where('SEXE', 2)
                                     ->count();
 
-        return view('pages.notes.rapportannuel', [
-            'promotions' => $promotions,
-            'classes'    => $classes,
-            'configs'    => $configs,
-            'promo'      => $promo,
-            'config'     => $config,
-            'rapports'   => [],
-            'classesAvecRapport'=> $classesAvecRapport,
-            'effectifTotal'      => $effectifTotal,
-            'effectifFilles'     => $effectifFilles,
-            'passantsTotal'      => $passantsTotal,
-            'passantesFilles'    => $passantesFilles,
-            'redoublesFilles' => $redoublesFilles,
-            'redoublesTotal' => $redoublesTotal,
-            'exlusesTotal'      => $exlusesTotal,
-            'exlusFilles'    => $exlusFilles,
-            'abandonsTotal'      => $abandonsTotal,
-            'abandonsFilles'    => $abandonsFilles,
-        ]);
-    }
+        $codeClasse = request('classe_selectionne'); // récupère la classe sélectionnée si elle existe
+        
+        if ($codeClasse) {
+                $rapports = Rapport::where('CODECLAS', $codeClasse)->get();
+
+                // recalculer les statistiques liées à cette classe
+                $effectifTotal     = $rapports->count();
+                $effectifFilles    = $rapports->where('SEXE', 2)->count();
+
+                $passantsTotal     = $rapports->where('STATUTF', 'P')->count();
+                $passantesFilles   = $rapports->where('STATUTF', 'P')->where('SEXE', 2)->count();
+
+                $redoublesTotal    = $rapports->where('STATUTF', 'R')->count();
+                $redoublesFilles   = $rapports->where('STATUTF', 'R')->where('SEXE', 2)->count();
+
+                $exlusesTotal      = $rapports->where('STATUTF', 'X')->count();
+                $exlusFilles       = $rapports->where('STATUTF', 'X')->where('SEXE', 2)->count();
+
+                $abandonsTotal     = $rapports->where('RANG', 0)->count();
+                $abandonsFilles    = $rapports->where('RANG', 0)->where('SEXE', 2)->count();
+
+                $selectedClasseCode = $codeClasse;
+            } else {
+                $rapports = collect();
+                $selectedClasseCode = null;
+            }
+
+    
+
+            return view('pages.notes.rapportannuel', [
+                'promotions' => $promotions,
+                'classes'    => $classes,
+                'configs'    => $configs,
+                'promo'      => $promo,
+                'config'     => $config,
+                'rapports'   => $rapports,
+                'selectedClasseCode' => $selectedClasseCode,
+                'classesAvecRapport'=> $classesAvecRapport,
+                'effectifTotal'      => $effectifTotal,
+                'effectifFilles'     => $effectifFilles,
+                'passantsTotal'      => $passantsTotal,
+                'passantesFilles'    => $passantesFilles,
+                'redoublesFilles' => $redoublesFilles,
+                'redoublesTotal' => $redoublesTotal,
+                'exlusesTotal'      => $exlusesTotal,
+                'exlusFilles'    => $exlusFilles,
+                'abandonsTotal'      => $abandonsTotal,
+                'abandonsFilles'    => $abandonsFilles,
+                'params2'   => $params2,
+                'anneeScolaire' => $anneeScolaire,
+            
+            ]);
+        }
 
 
 
@@ -185,20 +230,32 @@ class RapportannuelController extends Controller
         // Récupérer la configuration annuelle
         $config = DecisionConfigAnnuel::where('Promotion', $codePromo)->get();
         //   dd($config);
+
+        //Pour vérifier si la configuration est déjà faite
+        if ($config->isEmpty()) {
+            return back()->with('error', "Aucune configuration trouvée pour la promotion $codePromo. Veuillez d'abord configurer les décisions.");
+        }
+
        
 
         // Récupérer les seuils globaux
-         $seuilPassage = DecisionConfigAnnuel::where('Promotion', $codePromo)
-        ->value('seuil_Passage');
+        //  $seuilPassage = DecisionConfigAnnuel::where('Promotion', $codePromo)
+        // ->value('seuil_Passage');
 
-        $seuilFelicitations = DecisionConfigAnnuel::where('Promotion', $codePromo)
-        ->value('seuil_felicitations');
+        // $seuilFelicitations = DecisionConfigAnnuel::where('Promotion', $codePromo)
+        // ->value('seuil_felicitations');
         
-        $seuilEncouragements = DecisionConfigAnnuel::where('Promotion', $codePromo)
-        ->value('seuil_encouragements');
+        // $seuilEncouragements = DecisionConfigAnnuel::where('Promotion', $codePromo)
+        // ->value('seuil_encouragements');
 
-        $seuilTH = DecisionConfigAnnuel::where('Promotion', $codePromo)
-            ->value('seuil_tableau_honneur');
+        // $seuilTH = DecisionConfigAnnuel::where('Promotion', $codePromo)
+        //     ->value('seuil_tableau_honneur');
+
+        $seuilPassage = $config->first()->seuil_Passage;
+        $seuilFelicitations = $config->first()->Seuil_Felicitations;
+        $seuilEncouragements = $config->first()->Seuil_Encouragements;
+        $seuilTH = $config->first()->Seuil_tableau_Honneur;
+        
 
         $minCycle = $classe->CYCLE == 1 ? $config[0]->Min_Cycle1 : $config[0]->Min_Cycle2;
         //  dd($seuilEncouragements);
@@ -213,7 +270,7 @@ class RapportannuelController extends Controller
 
 
         foreach ($eleves as $eleve) {
-            $man = $eleve->MAN;
+            $man = $eleve->MAN;  
             $statut = $eleve->STATUT;
             $ran = $eleve->RANGA;
             $matricule = $eleve->MATRICULEX;
@@ -224,7 +281,9 @@ class RapportannuelController extends Controller
             // Déterminer STATUTF
             
             
-             if ($man >= $seuilPassage) {
+            if ($man == 21 || $man == -1){
+                $statutf = 'Z';
+            } elseif ($man >= $seuilPassage) {
                 $statutf = $statuts[0];
             } elseif ($man < $minCycle && $statut == 0) {
                 $statutf = $statuts[1];
@@ -236,7 +295,9 @@ class RapportannuelController extends Controller
                 $statutf = null;
             }
 
-            if ($man >= $seuilFelicitations) {
+           if($man == 21 || $man == -1){
+                $observation = 'Abandon';
+           } elseif ($man >= $seuilFelicitations) {
                 // le plus haut : Tableau d’honneur
                 $observation = 'Fél.Enc.TH';
             }
@@ -263,8 +324,9 @@ class RapportannuelController extends Controller
 
 
              Rapport::create([
-                'RANG' => $eleve->RANGA,
-                'MATRICULE'   => $matricule,
+                'RANG' =>  $eleve->RANGA,
+                'MATRICULEID' => $eleve->MATRICULE,
+                'MATRICULEX'   => $matricule,
                 'NOM'         => $eleve->NOM,
                 'PRENOM'      => $eleve->PRENOM,
                 'MOY1'        => $eleve->MS1,
@@ -292,7 +354,7 @@ class RapportannuelController extends Controller
 
         // 6. Charger et passer à la vue pour affichage immédiat
         $rapports = Rapport::where('CODECLAS', $codeClasse)
-            ->orderBy('RANG', 'ASC')
+             ->orderByRaw('RANG IS NULL, RANG ASC')
             ->get();
 
 
@@ -324,6 +386,16 @@ class RapportannuelController extends Controller
                                     ->where('SEXE', 2)
                                     ->count();
 
+        $params2 = Params2::all();
+
+        $contrat = ParamContrat::first();
+
+        $anneeCourante = (int) $contrat->anneencours_paramcontrat;
+        // Calcul de l'année suivante
+        $anneeSuivante = $anneeCourante + 1;
+        $anneeScolaire = "{$anneeCourante}-{$anneeSuivante}";
+       
+
         return view('pages.notes.rapportannuel', [
             'promotions' => $promotions,
             'classes'    => $classes,
@@ -343,8 +415,12 @@ class RapportannuelController extends Controller
             'exlusFilles'    => $exlusFilles,
             'abandonsTotal'      => $abandonsTotal,
             'abandonsFilles'    => $abandonsFilles,
+            'params2'   => $params2,
+            'anneeScolaire' => $anneeScolaire,
         ])->with('success', 'Rapport créé avec succès.');  
     }
+
+
 
     public function deleteClasse(Request $request){
          
@@ -361,15 +437,15 @@ class RapportannuelController extends Controller
         {
             $query = Rapport::query();
 
-            if ($statut === 'abandon') {
-                $query->where('MOYAN', -1);
+            if ($statut === 'Z') {
+                $query->where('MOYAN', 21)->orWhere('MOYAN', -1);
             } else {
-                $query->where('statutF', strtoupper($statut))->where('MOYAN', '!=', -1);
+                $query->where('statutF', strtoupper($statut))->where('MOYAN', '!=', -1)->orWhere('MOYAN', '!=', 21);
             }
 
             $rapports = $query->orderBy('CODECLAS')->orderBy('RANG')->get()->groupBy('CODECLAS');
 
-            return view('pages.notes.rapportannuel', [
+            return view('pages.notes.listeannuelle', [
                 'rapportsParClasse' => $rapports,
                 'statut' => $statut
             ]);
@@ -377,18 +453,18 @@ class RapportannuelController extends Controller
         }
 
         // Méthodes spécifiques :
-        public function imprimerPassage() {
-            return $this->imprimerParStatut('P');
-        }
-        public function imprimerRedoublement() {
-            return $this->imprimerParStatut('R');
-        }
-        public function imprimerExclusion() {
-            return $this->imprimerParStatut('X');
-        }
-        public function imprimerAbandon() {
-            return $this->imprimerParStatut('abandon');
-        }
+    public function imprimerPassage() {
+        return $this->imprimerParStatut('P');
+    }
+    public function imprimerRedoublement() {
+        return $this->imprimerParStatut('R');
+    }
+    public function imprimerExclusion() {
+        return $this->imprimerParStatut('X');
+    }
+    public function imprimerAbandon() {
+        return $this->imprimerParStatut('Z');
+    }
 
 
 }
