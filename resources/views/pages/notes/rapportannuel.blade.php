@@ -1,5 +1,11 @@
 @extends('layouts.master')
-@section('content')
+@section('content') 
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Erreur :</strong> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+        </div>
+    @endif
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -33,60 +39,7 @@
                 <br><br>
             </div>
 
-            <div class="card-body">
-
-                {{-- Bloc d’impression de listes filtrées --}}
-                @if(isset($rapportsParClasse) && count($rapportsParClasse))
-                    <div class="mb-3 d-print-none">
-                        <button onclick="window.print()" class="btn btn-dark">Imprimer</button>
-                    </div>
-
-                    @foreach ($rapportsParClasse as $codeClasse => $eleves)
-                        <div class="text-center fw-bold my-3" style="font-size: 1.2rem;">
-                            LISTE NOMINATIVE DES ELEVES PROPOSÉS AU 
-                            @if ($statut === 'P') PASSAGE
-                            @elseif ($statut === 'R') REDOUBLEMENT
-                            @elseif ($statut === 'X') EXCLUSION
-                            @else ABANDON
-                            @endif
-                        </div>
-
-                        <div><strong>CLASSE :</strong> {{ $codeClasse }} /2021-2022</div>
-
-                        <table class="table table-bordered table-sm text-center align-middle">
-                            <thead class="table-secondary">
-                                <tr>
-                                    <th>N°</th>
-                                    <th>Nom et prénoms</th>
-                                    <th>N° Mle</th>
-                                    <th>Sexe</th>
-                                    <th>Stat</th>
-                                    <th>Moy1</th>
-                                    <th>Moy2</th>
-                                    <th>MoyAn</th>
-                                    <th>Observ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($eleves as $index => $eleve)
-                                    <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $eleve->NOM }}</td>
-                                        <td>{{ $eleve->NMATRIC }}</td>
-                                        <td>{{ $eleve->SEXE == 1 ? 'M' : 'F' }}</td>
-                                        <td>{{ $eleve->statutF }}</td>
-                                        <td>{{ number_format($eleve->MOY1, 2) }}</td>
-                                        <td>{{ number_format($eleve->MOY2, 2) }}</td>
-                                        <td><strong>{{ number_format($eleve->MOYAN, 2) }}</strong></td>
-                                        <td>{{ $eleve->OBSERV }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        <hr class="d-print-none">
-                    @endforeach
-                @endif
-
+            <div class="card-body">            
 
                 <div class="row">
                     <div class="col-md-9">
@@ -109,12 +62,11 @@
                                     Classes déjà créées :
                                 </label>
                                 <select class="form-control js-example-basic-multiple" id="tableSelect2" onchange="displayTable2()">
+                                    <option value="" selected disabled> -- Classes -- </option>
                                     @foreach ($classesAvecRapport as $classeCR)
                                         <option name="classe_selectionne" value="{{ $classeCR->CODECLAS }}">
                                             {{ $classeCR->CODECLAS }}
-                                            @if (isset($classeCR->libelle))
-                                                — {{ $classeCR->libelle }}
-                                            @endif
+                                            
                                         </option>
                                     @endforeach
                                 </select>
@@ -233,12 +185,12 @@
                             <form method="POST" action="{{ route('rapportannuel') }}">
                                 @csrf
                                 <input type="hidden" name="classe_code" id="selectedClasseCode"
-                                    value="{{ old('classe_code') }}">
-                                <button class="btn btn-outline-primary btn-sm" type="submit">Créer rapport</button>
+                                    value="{{ old('selectedClasseCode') }}">
+                                <button class="btn btn-outline-primary btn-sm fw-bold" type="submit">Créer rapport</button>
                             </form>
 
-                            <button class="btn btn-outline-primary btn-sm" onclick="printDiv('printableArea')">Imprimer rapport</button>
-                            <button id="btnToggle" class="btn btn-outline-secondary btn-sm">Afficher/ignorer</button>
+                            <button class="btn btn-outline-secondary btn-sm fw-bold " type="button" onclick="printTable()" >Imprimer rapport</button>
+                            <button id="btnToggle" class="btn btn-outline-primary btn-sm fw-bold ">Afficher/ignorer</button>
 
                             <form method="POST" action="{{ route('classe.delete') }}">
                                 @csrf
@@ -253,6 +205,7 @@
             <div class="row" style="margin-left: 0.5rem">
                 <div class="mt-4">
                     <div id="printableArea" class="table-responsive" style="max-height: 100vh; overflow-y: auto;">
+
                         <table id="rapportTable"class="table table-bordered table-light table-sm text-center mb-0">
                             <thead class="table-secondary sticky-top">
                                 <tr>
@@ -273,9 +226,9 @@
                                         <td>{{ $rapport->RANG }}</td>
                                         <td class="text-start">{{ $rapport->NOM }} {{ $rapport->PRENOM }}</td>
                                         <td>{{ $rapport->STATUT == 0 ? 'Nouveau' : 'Redouble' }}</td>
-                                        <td>{{ number_format($rapport->MOY1, 2) }}</td>
-                                        <td>{{ number_format($rapport->MOY2, 2) }}</td>
-                                        <td>{{ number_format($rapport->MOYAN, 2) }}</td>
+                                        <td>{{ number_format($rapport->MOY1, 2) == 21 || number_format($rapport->MOY1, 2) == -1 ? '**' : number_format($rapport->MOY1, 2) }}</td>
+                                        <td>{{ number_format($rapport->MOY2, 2) == 21 || number_format($rapport->MOY2, 2) == -1 ? '**' : number_format($rapport->MOY2, 2) }}</td>
+                                        <td>{{ number_format($rapport->MOYAN, 2) == 21 || number_format($rapport->MOYAN, 2) == -1 ? '**' : number_format($rapport->MOYAN, 2) }}</td>
                                         <td>{{ $rapport->OBSERVATION }}</td>
                                     </tr>
                                 @empty
@@ -312,51 +265,51 @@
                                             <label>Seuil passage :</label>
                                             <input type="number" id="seuil_Passage" name="seuil_Passage"
                                                 class="form-control form-control-sm"
-                                                value="{{ old('seuil_Passage', $config->seuil_Passage ?? 0) }}"
+                                                value="{{ old('seuil_Passage', $config->seuil_Passage ?? 10) }}"
                                                 step="0.01" style="background-color: whitesmoke">
                                         </div>
                                         <div class="col-md-3 fw-bold">
                                             <label>Minimum Cycle 1 :</label>
                                             <input type="number" id="min_Cycle1" name="min_Cycle1"
                                                 class="form-control form-control-sm"
-                                                value="{{ old('min_Cycle1', $config->Min_Cycle1 ?? 0) }}" step="0.01"
+                                                value="{{ old('min_Cycle1', $config->Min_Cycle1 ?? 6.50) }}" step="0.01"
                                                 style="background-color: whitesmoke">
                                         </div>
                                         <div class="col-md-3 fw-bold">
                                             <label>Minimum Cycle 2 :</label>
                                             <input type="number" id="min_Cycle2" name="min_Cycle2"
                                                 class="form-control form-control-sm"
-                                                value="{{ old('min_Cycle2', $config->Min_Cycle2 ?? 0) }}" step="0.01"
+                                                value="{{ old('min_Cycle2', $config->Min_Cycle2 ?? 7.50) }}" step="0.01"
                                                 style="background-color: whitesmoke">
                                         </div>
                                     </div>
                                     <div class="row mb-4" style="margin-left: 10rem">
-                                        <div class="col-md-3 fw-bold">
-                                            <label>Félicitations :</label>
-                                            <input type="number" name="Seuil_Félicitations"
+                                        <div class="col-md-3 mt-2 fw-bold">
+                                            <label>Tableau d'honneur :</label>
+                                            <input type="number" name="Seuil_tableau_Honneur"
                                                 class="form-control form-control-sm"
-                                                value="{{ old('Seuil_Félicitations', $config->Seuil_Felicitations ?? 0) }}"
+                                                value="{{ old('Seuil_tableau_Honneur', $config->Seuil_tableau_Honneur ?? 12) }}"
                                                 step="0.01" style="background-color: whitesmoke">
-
                                         </div>
                                         <div class="col-md-3 mt-2 fw-bold">
                                             <label>Encouragements :</label>
                                             <input type="number" name="Seuil_Encouragements"
                                                 class="form-control form-control-sm"
-                                                value="{{ old('Seuil_Encouragements', $config->Seuil_Encouragements ?? 0) }}"
+                                                value="{{ old('Seuil_Encouragements', $config->Seuil_Encouragements ?? 14) }}"
                                                 step="0.01" style="background-color: whitesmoke">
                                         </div>
-                                        <div class="col-md-3 mt-2 fw-bold">
-                                            <label>Tableau d'honneur :</label>
-                                            <input type="number" name="Seuil_tableau_Honneur"
+                                        <div class="col-md-3 fw-bold">
+                                            <label>Félicitations :</label>
+                                            <input type="number" name="Seuil_Félicitations"
                                                 class="form-control form-control-sm"
-                                                value="{{ old('Seuil_tableau_Honneur', $config->Seuil_tableau_Honneur ?? 0) }}"
+                                                value="{{ old('Seuil_Félicitations', $config->Seuil_Felicitations ?? 16) }}"
                                                 step="0.01" style="background-color: whitesmoke">
-                                        </div>
+
+                                        </div>                                      
                                     </div>
 
                                     <!-- TABLEAU -->
-                                    <table class="table table-bordered table-sm text-center align-middle">
+                                    <table id="printableContent" class="table table-bordered table-sm text-center align-middle">
                                         <thead class="table-light sticky-top">
                                             <tr>
                                                 <th>Promotion</th>
@@ -394,9 +347,9 @@
 
                                                     //Récupération des valeurs de mincycle1 et minCycle2 pour préremplir le tableau
 
-                                                    $seuilPassage = old('seuil_Passage', $config->seuil_Passage ?? 0);
-                                                    $minCycle1 = old('min_Cycle1', $config->Min_Cycle1 ?? 0);
-                                                    $minCycle2 = old('min_Cycle2', $config->Min_Cycle2 ?? 0);
+                                                    $seuilPassage = old('seuil_Passage', $config->seuil_Passage ?? 10);
+                                                    $minCycle1 = old('min_Cycle1', $config->Min_Cycle1 ?? 6.50);
+                                                    $minCycle2 = old('min_Cycle2', $config->Min_Cycle2 ?? 7.50);
                                                 @endphp
 
                                                 @for ($i = 0; $i < 4; $i++)
@@ -478,10 +431,10 @@
 
                 <div class="row">
                     <div class="col-md-12 mt-n5">
-                        <div class="card shadow-sm p-3 rounded" style="background-color: #f8f9fa;">
-                            <div class="gap-1" style="display: flex; flex-wrap: nowrap">
-                               <form action="{{ route('rapport.passage') }}" method="POST" class="me-1">
-                                    @csrf
+                        <div class="card shadow-sm p-3 rounded" style="background-color: #f8f9fa; margin-left: 1rem">
+                            <div class="gap-2" style="display: flex; flex-wrap: nowrap; margin-left: 2.5rem">
+                               
+                                <form action="{{ route('rapport.passage') }}" method="GET" class="me-1">
                                     <button type="submit" class="btn btn-outline-primary btn-sm fw-bold">Liste générale passage</button>
                                 </form>
 
@@ -499,15 +452,106 @@
                                     @csrf
                                     <button type="submit" class="btn btn-outline-secondary btn-sm fw-bold">Liste générale abandon</button>
                                 </form>
-
-                            </div>
-                           
+                            </div>                        
                             <br><br> <br>
                         </div>
                     </div>
                 </div>
             </div>
 
+
+            {{-- debut div cacher pour le bouton imprimer rapport --}}
+            <div id="rapportData" style="display: none;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div style="border: 1px solid #333; padding: 10px; background-color: rgb(185,185,185); border-radius: 8px;">
+                        @foreach ($params2 as $param)
+                            <strong>{{ $param->NOMETAB }}</strong><br>
+                            {{ $param->ADRESSE }}<br>
+                        @endforeach
+                    </div>
+                    <div style="text-align: center; flex: 1;">
+                        <h3 style="margin-bottom: 0;">RAPPORT DE FIN D'ANNEE</h3>
+                        <div>{{ $anneeScolaire }}</div>
+                    </div>
+                    <div>
+                        <img src="data:image/png;base64,{{ base64_encode($params2[0]->logoimage ?? '') }}" alt="Logo" width="60">
+                    </div>
+                </div>
+
+                <p style="margin-top: 10px;"><strong>DEPARTEMENT / VILLE :</strong> LITTORAL / COTONOU</p>
+                <p><strong>CLASSE :</strong> {{ $selectedClasseCode ?? '' }}  </p>
+                <p><strong>EFFECTIF :</strong> {{ $effectifTotal }} DONT {{ $effectifFilles }} FILLES</p>
+                <p><strong>PASSAGE :</strong> {{ $passantsTotal }} DONT {{ $passantesFilles }} FILLES</p>
+                <p><strong>REDOUBLEMENT :</strong> {{ $redoublesTotal }} DONT {{ $redoublesFilles }} FILLES</p>
+                <p><strong>EXCLUSION :</strong> {{ $exlusesTotal }} DONT {{ $exlusFilles }} FILLES</p>
+                <p><strong>ABANDON :</strong> {{ $abandonsTotal }} DONT {{ $abandonsFilles }} FILLES</p>
+
+                @php
+                    $rapports = collect($rapports);
+                    $groupes = ['P' => 'A/ PASSAGE', 'R' => 'B/ REDOUBLEMENT', 'X' => 'C/ EXCLUSION', 'Z' => 'D/ ABANDON'];
+                @endphp
+
+
+                @foreach ($groupes as $code => $titre)
+                    @php
+                        $groupe = $rapports->where('STATUTF', $code);
+                    @endphp
+
+                    @if ($groupe->count())
+                        <h4 style="margin-top: 20px;">{{ $titre }}</h4>
+                        @if ($code === 'P')
+                            <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT SONT PROPOSES AU PASSAGE EN CLASSE DE :   <span id="libSup" style="font-weight: bold;"></span> </p>
+                        @elseif ($code === 'R')
+                            <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT REDOUBLENT LA CLASSE DE : {{ $selectedClasseCode ?? '' }} </p>
+                        @elseif ($code === 'X')
+                            <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT SONT PROPOSES A L'EXCLUSION DE LA  CLASSE DE : {{ $selectedClasseCode ?? '' }} </p>
+                        @else
+                            <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT SONT ABANDON DE LA CLASSE DE : {{ $selectedClasseCode ?? '' }} </p>
+                        @endif
+
+                        <table border="1" cellspacing="0" cellpadding="4" style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #f2f2f2;">
+                                    <th>Ordre Mérite</th>
+                                    <th>Nom</th>
+                                    <th>Sexe</th>
+                                    <th>Red</th>
+                                    <th>Moy1</th>
+                                    <th>Moy2</th>
+                                    <th>Ann</th>
+                                    <th>Observation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($groupe->sortBy('RANG') as $rapport)
+                                    <tr>
+                                        <td>{{ $rapport->RANG }}</td>
+                                        <td>{{ $rapport->NOM }} {{ $rapport->PRENOM }}</td>
+                                        <td>{{ $rapport->SEXE == 1 ? 'M' : 'F' }}</td>
+                                        <td>{{ $rapport->STATUT == 0 ? 'N' : 'R' }}</td>
+                                        <td>{{ in_array(number_format($rapport->MOY1, 2), [21.00, -1.00]) ? '**' : number_format($rapport->MOY1, 2) }}</td>
+                                        <td>{{ in_array(number_format($rapport->MOY2, 2), [21.00, -1.00]) ? '**' : number_format($rapport->MOY2, 2) }}</td>
+                                        <td>{{ in_array(number_format($rapport->MOYAN, 2), [21.00, -1.00]) ? '**' : number_format($rapport->MOYAN, 2) }}</td>
+                                        <td>{{ $rapport->OBSERVATION }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endif
+                @endforeach
+                <br>
+                <div class="droite" >
+                    <p style="text-align: end">Fait à  {{ $param->VILLE }} le,  {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p> 
+                    <p style="text-align: end; margin-right: 6rem;">{{ $param->TITRE}},</p> <br>
+                    <p style="text-align: end; margin-right: 3rem;">{{ $param->NOMDIRECT}}</p>
+
+                </div>
+            </div>
+            {{-- fin div cacher pour le bouton imprimer rapport --}}
+
+
+
+            {{-- Modal de configuration de classe supérieur --}}
             <div class="modal fade" id="configClassesModal" tabindex="-1" aria-labelledby="configClassesModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -570,8 +614,8 @@
                     </div>
                 </div>
             </div>
-
         </div>
+
 
         <!-- script pour la configuration des décisions -->
 
@@ -606,22 +650,64 @@
             });
         </script>
 
-<script>
-function printDiv(divId) {
-    // Sauvegarde du contenu complet
-    const originalContents = document.body.innerHTML;
-    // Contenu à imprimer
-    const printContents = document.getElementById(divId).innerHTML;
-    // Remplace tout le body par la zone à imprimer
-    document.body.innerHTML = printContents;
-    // Lance la boîte d'impression
-    window.print();
-    // Restaure le contenu original de la page
-    document.body.innerHTML = originalContents;
-    // Recharge le script et le CSS
-    window.location.reload();
-}
-</script>
+        <script>
+            function printDiv(divId) {
+                // Sauvegarde du contenu complet
+                const originalContents = document.body.innerHTML;
+                // Contenu à imprimer
+                const printContents = document.getElementById(divId).innerHTML;
+                // Remplace tout le body par la zone à imprimer
+                document.body.innerHTML = printContents;
+                // Lance la boîte d'impression
+                window.print();
+                // Restaure le contenu original de la page
+                document.body.innerHTML = originalContents;
+                // Recharge le script et le CSS
+                window.location.reload();
+            }
+        </script>
+
+        <!-- script pour imprimer rapport par classe -->
+        <script>
+            function printTable() {
+
+            const select = document.getElementById('classeSup');
+            const code = select.value; // ex: "6EM1", "TleA2-1"
+          
+            document.getElementById('libSup').textContent  = code;
+
+                const content = document.getElementById('rapportData');
+                if (!content) {
+                    alert('Rapport non généré. Veuillez d\'abord cliquer sur "Créer rapport".');
+                    return;
+                }
+
+                const win = window.open('', '_blank');
+                win.document.write(`
+                    <html>
+                    <head>
+                        <title>Impression du rapport</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            table { width: 100%; border-collapse: collapse; }
+                            th, td { border: 1px solid #000; padding: 5px; text-align: center; }
+                            th { background-color: #f2f2f2; }
+                            h4 { margin-top: 30px; margin-bottom: 10px; }
+                            p { margin: 2px 0; }
+                        </style>
+                    </head>
+                    <body>${content.innerHTML}</body>
+                    </html>
+                `);
+                win.document.close();
+                win.focus();
+
+                win.onload = () => {
+                    win.print();
+                    win.close();
+                };
+            }
+        </script>
 
     </div>
 
@@ -662,11 +748,20 @@ function printDiv(divId) {
             // Injecte dans l’input
             document.getElementById('classeSup').value = libSup;
         }
-        function displayTable2() {
+         function displayTable2() {
             const select = document.getElementById('tableSelect2');
             const classe = select.value;
             document.getElementById('classeCR').value = classe;
+
+                const selectedClass = document.getElementById('tableSelect2').value;
+                if (!selectedClass) return;
+
+                // Redirige vers l'URL avec le code classe sélectionné en paramètre
+                const url = new URL(window.location.href);
+                url.searchParams.set('classe_selectionne', selectedClass);
+                window.location.href = url.toString();
         }
+
 
         document.getElementById('btnToggle')
             .addEventListener('click', function() {
@@ -681,6 +776,9 @@ function printDiv(divId) {
 
         // 4. Optionnel : pré-remplir au chargement de la page/modal
         document.addEventListener('DOMContentLoaded', displayTable);
+
+          // Appel au chargement de la page
+      window.addEventListener('DOMContentLoaded', displayTable2);
     </script>
 
     <style>
@@ -720,72 +818,71 @@ function printDiv(divId) {
     </style>
 
     <style>
-@media print {
-  /* Imprime les couleurs de fond et textes comme à l’écran */
-  * {
-    -webkit-print-color-adjust: exact !important;
-    color-adjust: exact !important;
-  }
+        @media print {
+        /* Imprime les couleurs de fond et textes comme à l’écran */
+        * {
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+        }
 
-  /* Masque tout sauf la zone à imprimer */
-  body * {
-    visibility: hidden;
-  }
-  #printableArea, 
-  #printableArea * {
-    visibility: visible;
-  }
-  #printableArea {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-  }
+        /* Masque tout sauf la zone à imprimer */
+        body * {
+            visibility: hidden;
+        }
+        #printableArea, 
+        #printableArea * {
+            visibility: visible;
+        }
+        #printableArea {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
-  /* Corps de page sans marges externes (optionnel, selon besoin) */
-  @page {
-    margin: 1cm;
-  }
+        /* Corps de page sans marges externes (optionnel, selon besoin) */
+        @page {
+            margin: 1cm;
+        }
 
-  /* Tableau plein largeur, bordures nettes */
-  #printableArea table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    margin-bottom: 0.5em;
-  }
-  #printableArea th,
-  #printableArea td {
-    border: 1px solid #333 !important;
-    padding: 0.6em !important;
-    font-size: 11pt !important;
-  }
+        /* Tableau plein largeur, bordures nettes */
+        #printableArea table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin-bottom: 0.5em;
+        }
+        #printableArea th,
+        #printableArea td {
+            border: 1px solid #333 !important;
+            padding: 0.6em !important;
+            font-size: 11pt !important;
+        }
 
-  /* En‑tête contrasté */
-  #printableArea thead th {
-    background-color: #2c3e50 !important;
-    color: #ecf0f1 !important;
-    text-transform: uppercase;
-    font-size: 12pt !important;
-  }
+        /* En‑tête contrasté */
+        #printableArea thead th {
+            background-color: #2c3e50 !important;
+            color: #ecf0f1 !important;
+            text-transform: uppercase;
+            font-size: 12pt !important;
+        }
 
-  /* Lignes zébrées pour le print */
-  #printableArea tbody tr:nth-of-type(odd) {
-    background-color: #f2f2f2 !important;
-  }
+        /* Lignes zébrées pour le print */
+        #printableArea tbody tr:nth-of-type(odd) {
+            background-color: #f2f2f2 !important;
+        }
 
-  /* Hover désactivé (inutile à l’impression) */
-  #printableArea tbody tr:hover {
-    background: none !important;
-  }
+        /* Hover désactivé (inutile à l’impression) */
+        #printableArea tbody tr:hover {
+            background: none !important;
+        }
 
-  /* Empêche les coupures de lignes à l’intérieur d’une ligne du tableau */
-  tr {
-    page-break-inside: avoid;
-  }
-}
-
-</style>
+        /* Empêche les coupures de lignes à l’intérieur d’une ligne du tableau */
+        tr {
+            page-break-inside: avoid;
+        }
+        }
+    </style>
 
 @endsection
