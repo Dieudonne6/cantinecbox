@@ -78,7 +78,7 @@ class RapportannuelController extends Controller
                                     ->count();
 
         $codeClasse = request('classe_selectionne'); // récupère la classe sélectionnée si elle existe
-        
+
         if ($codeClasse) {
                 $rapports = Rapport::where('CODECLAS', $codeClasse)->get();
 
@@ -433,38 +433,43 @@ class RapportannuelController extends Controller
     }
 
 
-    public function imprimerParStatut($statut = null)
-        {
-            $query = Rapport::query();
+    public function imprimerParStatut($statut = null){
 
-            if ($statut === 'Z') {
-                $query->where('MOYAN', 21)->orWhere('MOYAN', -1);
-            } else {
-                $query->where('statutF', strtoupper($statut))->where('MOYAN', '!=', -1)->orWhere('MOYAN', '!=', 21);
-            }
+        $query = Rapport::query();
 
-            $rapports = $query->orderBy('CODECLAS')->orderBy('RANG')->get()->groupBy('CODECLAS');
-
-            return view('pages.notes.listeannuelle', [
-                'rapportsParClasse' => $rapports,
-                'statut' => $statut
-            ]);
-
+        if ($statut === 'Z') {
+            // Cas abandon : moyenne absente
+            $query->whereIn('MOYAN', [21, -1]);
+        } else {
+            $query->where(function ($q) use ($statut) {
+                $q->where('statutF', strtoupper($statut))
+                ->whereNotIn('MOYAN', [21, -1]);
+            });
         }
 
-        // Méthodes spécifiques :
+        $rapports = $query->orderBy('CODECLAS')->orderBy('RANG')->get()->groupBy('CODECLAS');
+
+        return view('pages.notes.listeannuelle', [
+            'rapportsParClasse' => $rapports,
+            'statut' => $statut
+        ]);
+    }
+
+    // Méthodes spécifiques :
     public function imprimerPassage() {
         return $this->imprimerParStatut('P');
     }
+
     public function imprimerRedoublement() {
         return $this->imprimerParStatut('R');
     }
+
     public function imprimerExclusion() {
         return $this->imprimerParStatut('X');
     }
+
     public function imprimerAbandon() {
         return $this->imprimerParStatut('Z');
     }
-
 
 }
