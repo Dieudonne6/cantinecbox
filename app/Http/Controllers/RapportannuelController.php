@@ -426,6 +426,7 @@ class RapportannuelController extends Controller
          
         $codeClasse = $request->input('classe_selectionne');
  
+        // dd($codeClasse);
         Rapport::where('CODECLAS', $codeClasse)->delete();
 
         return redirect()->back()->with('success', 'Classes Supprimée avec succès');

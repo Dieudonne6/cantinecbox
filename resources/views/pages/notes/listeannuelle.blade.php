@@ -124,7 +124,7 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td class="azerty text-start">{{ $eleve->NOM }} {{ $eleve->PRENOM }}</td>
-                                        <td>{{ $eleve->MATRICULE }}</td>
+                                        <td>{{ $eleve->MATRICULEX }}</td>
                                          <td>
                                             @if($eleve->SEXE == 1) M
                                             @elseif($eleve->SEXE == 2) F
