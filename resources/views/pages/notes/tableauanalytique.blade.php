@@ -278,7 +278,7 @@
                                         Tableau synoptique des effectifs</option>
                                     {{-- <option value="effectifs"
                                         {{ old('typeEtat', request('typeEtat')) == 'effectifs' ? 'selected' : '' }}>Tableau
-                                        synoptique des effe</option> --}}
+                                        synoptique des effectifs</option> --}}
                                     <option value="statistique"
                                         {{ old('typeEtat', request('typeEtat')) == 'statistique' ? 'selected' : '' }}>
                                         Statistique des résultats</option>
@@ -312,14 +312,14 @@
                                                 class="form-control mx-auto interval-input"
                                                 data-interval="{{ $i }}" data-type="min" step="0.01"
                                                 min="0" max="20"
-                                                value="{{ old("intervales.I{$i}.min", $oldIntervals["I{$i}"]['min'] ?? '0.00') }}">
+                                               value="{{ old("intervales.I{$i}.min", request("intervales.I{$i}.min") ?? ($i == 1 ? '0.00' : ($i == 2 ? '08.50' : ($i == 3 ? '10.00' : ($i == 4 ? '12.00' : ($i == 5 ? '16.00' : '' ))))) ) }}">
                                         </td>
                                         <td style="text-align: center;">
                                             <input type="number" name="intervales[I{{ $i }}][max]"
                                                 class="form-control mx-auto interval-input"
                                                 data-interval="{{ $i }}" data-type="max" step="0.01"
-                                                min="0" max="20"
-                                                value="{{ old("intervales.I{$i}.max", $oldIntervals["I{$i}"]['max'] ?? '0.00') }}">
+                                                min="0" max="20"                                              
+                                                value="{{ old("intervales.I{$i}.max", request("intervales.I{$i}.max") ?? ($i == 1 ? '08.50' : ($i == 2 ? '10.00' : ($i == 3 ? '12.00' : ($i == 4 ? '16.00' : ($i == 5 ? '20.00' : '' )))))) }}">
                                         </td>
                                     </tr>
                                 @endforeach

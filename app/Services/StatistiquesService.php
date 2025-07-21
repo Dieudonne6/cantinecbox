@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Classes;
+use App\Models\Eleve;
 use App\Models\DecisionConfigAnnuel;
 use Illuminate\Support\Facades\DB;
 
@@ -271,6 +272,8 @@ class StatistiquesService
                     // I2 / I3 : MS1 valide + STATUT
                     $elevesI2 = $hasMS1->where('STATUT', 0);
                     $elevesI3 = $hasMS1->where('STATUT', 1);
+
+                
 
                     // I4 
 
