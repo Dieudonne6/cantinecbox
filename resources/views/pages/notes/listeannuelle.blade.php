@@ -140,7 +140,7 @@
                                         <td>{{ number_format($eleve->MOY2, 2) == 21 || number_format($eleve->MOY2, 2) == -1 ? '**' : number_format($eleve->MOY2, 2)  }}</td>
                                         <td><strong>{{ number_format($eleve->MOYAN, 2) == 21 || number_format($eleve->MOYAN, 2) == -1 ? '**' : number_format($eleve->MOYAN, 2)  }}</strong></td>
                                         <td class="text-start">
-                                            @if($eleve->STATUTF == "P") PASSE
+                                            @if($eleve->STATUTF == 'P') PASSE
                                             @elseif($eleve->STATUTF == 'R') Redouble
                                             @elseif($eleve->STATUTF == 'X') Exclu
                                             @else Abandon
@@ -162,15 +162,15 @@
                         </div>
                     </div>
 
-                    <SCRipt>
+                    <script>
                         function imprimerliste() {
-                var content = document.querySelector('.main-panel').innerHTML;
-                var originalContent = document.body.innerHTML;
+                            var content = document.querySelector('.main-panel').innerHTML;
+                            var originalContent = document.body.innerHTML;
 
-                document.body.innerHTML = content;
-                window.print();
+                            document.body.innerHTML = content;
+                            window.print();
 
-                document.body.innerHTML = originalContent;
-            }
-                    </SCRipt>
+                            document.body.innerHTML = originalContent;
+                        }
+                    </script>
                     @endsection

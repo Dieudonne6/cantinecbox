@@ -396,17 +396,18 @@
                                                         </td>
 
                                                         <td>{!! $moyenne !!}</td>
-                                                        <td><input type="radio" name="decision_{{ $rowIndex }}"
-                                                                value="P" {{ $i === 0 ? 'checked' : '' }}></td>
-                                                        <td><input type="radio" name="decision_{{ $rowIndex }}"
-                                                                value="R"
-                                                                {{ in_array($i, [1, 2]) ? 'checked' : '' }}></td>
-                                                        <td><input type="radio" name="decision_{{ $rowIndex }}"
-                                                                value="X" {{ $i === 3 ? 'checked' : '' }}></td>
+                                                        <td>
+                                                            <input type="radio" name="decision_{{ $rowIndex }}" value="P" {{ $i === 0 ? 'checked' : '' }}>
+                                                        </td>
+                                                        <td>
+                                                            <input type="radio" name="decision_{{ $rowIndex }}" value="R" {{ $i === 2 ? 'checked' : '' }}>
+                                                        </td>
+                                                        <td>
+                                                            <input type="radio" name="decision_{{ $rowIndex }}" value="X" {{ in_array($i, [1, 3]) ? 'checked' : '' }}>
+                                                        </td>
                                                         <td style="display: none">{{ $cycle }}                                    
-                                                            <input type="hidden"  name="cycle_{{ $rowIndex }}"
-                                                                value="{{ $cycle }}"></td>
-
+                                                            <input type="hidden"  name="cycle_{{ $rowIndex }}" value="{{ $cycle }}">
+                                                        </td>
                                                     </tr>
                                                     @php
                                                         $rowIndex++;
