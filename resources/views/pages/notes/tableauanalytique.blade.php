@@ -189,19 +189,19 @@
                         }
                     }
                 </style>
-                
+
                 <button type="button" class="btn btn-arrow no-print" onclick="window.history.back();" aria-label="Retour">
                     <i class="fas fa-arrow-left"></i> Retour
                 </button>
                 <br>
-               
+
                 <br>
             </div>
-                 @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="card-body">
                 <!-- Formulaire pour le filtrage et le calcul -->
                 <form action="{{ route('tableauanalytique') }}" method="POST" id="etatForm" class="no-print">
@@ -214,7 +214,7 @@
                                     value="{{ old('moyenne_ref', '10.00') }}" step="0.01" required>
                             </div>
                         </div>
-                       <div class="col-md-4">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Période</label>
                                 <select name="periode" class="form-control" required>
@@ -224,21 +224,43 @@
                                     @endphp
                                     @if ($typeAn == 1)
                                         {{-- SEMESTRES --}}
-                                        <option value="1" {{ old('periode', request('periode')) == '1' ? 'selected' : '' }}>1er Semestre</option>
-                                        <option value="2" {{ old('periode', request('periode')) == '2' ? 'selected' : '' }}>2ème Semestre</option>
-                                        <option value="4" {{ old('periode', request('periode')) == '4' ? 'selected' : '' }}>Annuel</option>
+                                        <option value="1"
+                                            {{ old('periode', request('periode')) == '1' ? 'selected' : '' }}>1er Semestre
+                                        </option>
+                                        <option value="2"
+                                            {{ old('periode', request('periode')) == '2' ? 'selected' : '' }}>2ème Semestre
+                                        </option>
+                                        <option value="4"
+                                            {{ old('periode', request('periode')) == '4' ? 'selected' : '' }}>Annuel
+                                        </option>
                                     @elseif ($typeAn == 2)
                                         {{-- TRIMESTRES --}}
-                                        <option value="1" {{ old('periode', request('periode')) == '1' ? 'selected' : '' }}>1er Trimestre</option>
-                                        <option value="2" {{ old('periode', request('periode')) == '2' ? 'selected' : '' }}>2ème Trimestre</option>
-                                        <option value="3" {{ old('periode', request('periode')) == '3' ? 'selected' : '' }}>3ème Trimestre</option>
-                                        <option value="4" {{ old('periode', request('periode')) == '4' ? 'selected' : '' }}>Annuel</option>
+                                        <option value="1"
+                                            {{ old('periode', request('periode')) == '1' ? 'selected' : '' }}>1er Trimestre
+                                        </option>
+                                        <option value="2"
+                                            {{ old('periode', request('periode')) == '2' ? 'selected' : '' }}>2ème Trimestre
+                                        </option>
+                                        <option value="3"
+                                            {{ old('periode', request('periode')) == '3' ? 'selected' : '' }}>3ème Trimestre
+                                        </option>
+                                        <option value="4"
+                                            {{ old('periode', request('periode')) == '4' ? 'selected' : '' }}>Annuel
+                                        </option>
                                     @else
                                         {{-- Cas par défaut --}}
-                                        <option value="1" {{ old('periode', request('periode')) == '1' ? 'selected' : '' }}>Période 1</option>
-                                        <option value="2" {{ old('periode', request('periode')) == '2' ? 'selected' : '' }}>Période 2</option>
-                                        <option value="3" {{ old('periode', request('periode')) == '3' ? 'selected' : '' }}>Période 3</option>
-                                        <option value="4" {{ old('periode', request('periode')) == '4' ? 'selected' : '' }}>Annuel</option>
+                                        <option value="1"
+                                            {{ old('periode', request('periode')) == '1' ? 'selected' : '' }}>Période 1
+                                        </option>
+                                        <option value="2"
+                                            {{ old('periode', request('periode')) == '2' ? 'selected' : '' }}>Période 2
+                                        </option>
+                                        <option value="3"
+                                            {{ old('periode', request('periode')) == '3' ? 'selected' : '' }}>Période 3
+                                        </option>
+                                        <option value="4"
+                                            {{ old('periode', request('periode')) == '4' ? 'selected' : '' }}>Annuel
+                                        </option>
                                     @endif
                                 </select>
                             </div>
@@ -266,57 +288,61 @@
                     </div>
 
                     <!-- Tableau des intervalles -->
-                        <div class="table-responsive">
-                            
-                            <table class="table table-bordered" style="max-width: 500px; margin: 0 auto;">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: center;">Intervalle</th>
-                                        <th style="text-align: center;">Min</th>
-                                        <th style="text-align: center;">Max</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{-- Détermination du nombre d'intervalles à afficher (old input ou 5 par défaut) --}}
-                                    @php
-                                        $oldIntervals = old('intervales', request('intervales', []));
-                                        $initialCount = count($oldIntervals) ? min(count($oldIntervals), 10) : 5;
-                                    @endphp
-                                    @foreach (range(1, $initialCount) as $i)
-                                        <tr>
-                                            <td style="text-align: center; vertical-align: middle;">I{{ $i }}</td>
-                                            <td style="text-align: center;">
-                                                <input type="number" name="intervales[I{{ $i }}][min]"
-                                                    class="form-control mx-auto interval-input" data-interval="{{ $i }}" data-type="min"
-                                                    step="0.01" min="0" max="20"
-                                                    value="{{ old("intervales.I{$i}.min", $oldIntervals["I{$i}"]['min'] ?? '0.00') }}">
-                                            </td>
-                                            <td style="text-align: center;">
-                                                <input type="number" name="intervales[I{{ $i }}][max]"
-                                                    class="form-control mx-auto interval-input" data-interval="{{ $i }}" data-type="max"
-                                                    step="0.01" min="0" max="20"
-                                                    value="{{ old("intervales.I{$i}.max", $oldIntervals["I{$i}"]['max'] ?? '0.00') }}">
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    <!-- Template caché pour intervalles dynamiques -->
-                                    <tr id="interval-template" style="display: none;">
-                                        <td class="interval-label" style="text-align: center; vertical-align: middle;"></td>
-                                        <td style="text-align: center;">
-                                            <input type="number" class="form-control mx-auto interval-input" data-type="min" step="0.01" min="0" max="20">
-                                        </td>
-                                        <td style="text-align: center;">
-                                            <input type="number" class="form-control mx-auto interval-input" data-type="max" step="0.01" min="0" max="20">
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            
-                        </div>
+                    <div class="table-responsive">
 
-                        <div class="text-center mt-3">
-                            <button type="button" id="add-interval-btn" class="btn btn-success">Ajouter un intervalle</button>
-                        </div>
+                        <table class="table table-bordered" style="max-width: 500px; margin: 0 auto;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center;">Intervalle</th>
+                                    <th style="text-align: center;">Min</th>
+                                    <th style="text-align: center;">Max</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{-- Détermination du nombre d'intervalles à afficher (old input ou 5 par défaut) --}}
+                                @php
+                                    $oldIntervals = old('intervales', request('intervales', []));
+                                    $initialCount = count($oldIntervals) ? min(count($oldIntervals), 10) : 5;
+                                @endphp
+                                @foreach (range(1, $initialCount) as $i)
+                                    <tr>
+                                        <td style="text-align: center; vertical-align: middle;">I{{ $i }}</td>
+                                        <td style="text-align: center;">
+                                            <input type="number" name="intervales[I{{ $i }}][min]"
+                                                class="form-control mx-auto interval-input"
+                                                data-interval="{{ $i }}" data-type="min" step="0.01"
+                                                min="0" max="20"
+                                                value="{{ old("intervales.I{$i}.min", $oldIntervals["I{$i}"]['min'] ?? '0.00') }}">
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <input type="number" name="intervales[I{{ $i }}][max]"
+                                                class="form-control mx-auto interval-input"
+                                                data-interval="{{ $i }}" data-type="max" step="0.01"
+                                                min="0" max="20"
+                                                value="{{ old("intervales.I{$i}.max", $oldIntervals["I{$i}"]['max'] ?? '0.00') }}">
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                <!-- Template caché pour intervalles dynamiques -->
+                                <tr id="interval-template" style="display: none;">
+                                    <td class="interval-label" style="text-align: center; vertical-align: middle;"></td>
+                                    <td style="text-align: center;">
+                                        <input type="number" class="form-control mx-auto interval-input" data-type="min"
+                                            step="0.01" min="0" max="20">
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <input type="number" class="form-control mx-auto interval-input" data-type="max"
+                                            step="0.01" min="0" max="20">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button type="button" id="add-interval-btn" class="btn btn-success">Ajouter un intervalle</button>
+                    </div>
 
                     {{-- <script>
                         document.addEventListener('DOMContentLoaded', function() {
@@ -491,7 +517,8 @@
                                     formatValue(this);
                                     if (this.dataset.type === 'max') {
                                         const interval = parseInt(this.dataset.interval);
-                                        const nextMin = document.querySelector(`input[data-interval="${interval+1}"][data-type="min"]`);
+                                        const nextMin = document.querySelector(
+                                            `input[data-interval="${interval+1}"][data-type="min"]`);
                                         if (nextMin && parseFloat(this.value) > 0) {
                                             nextMin.value = this.value;
                                         }
@@ -573,15 +600,17 @@
                                             <th colspan="2" class="text-center">FAIBLE MOY</th>
 
                                             {{-- Entêtes dynamiques intervalles --}}
-                                            @foreach($intervales as $key => $val)
+                                            @foreach ($intervales as $key => $val)
                                                 @php
                                                     $min = floatval($val['min']);
                                                     $max = floatval($val['max']);
-                                                    $format = fn($n) => rtrim(rtrim(number_format($n,4,'.',''), '0'), '.');
+                                                    $format = fn($n) => rtrim(
+                                                        rtrim(number_format($n, 4, '.', ''), '0'),
+                                                        '.',
+                                                    );
                                                 @endphp
                                                 <th colspan="3" class="text-center">
-                                                    {{ $format($min) }} &le; M < {{ $format($max) }}
-                                                </th>
+                                                    {{ $format($min) }} &le; M < {{ $format($max) }} </th>
                                             @endforeach
                                         </tr>
                                         <tr class="print-only">
@@ -589,7 +618,7 @@
                                             <th class="text-center">F</th>
                                             <th class="text-center">G</th>
                                             <th class="text-center">F</th>
-                                            @foreach($intervales as $key => $val)
+                                            @foreach ($intervales as $key => $val)
                                                 <th class="text-center">G</th>
                                                 <th class="text-center">F</th>
                                                 <th class="text-center">T</th>
@@ -601,50 +630,72 @@
                                             <th class="text-center">MFOF</th>
                                             <th class="text-center">MFAG</th>
                                             <th class="text-center">MFAF</th>
-                                            @foreach($intervales as $key => $val)
-                                                <th class="text-center">I{{ $loop->index+1 }}G</th>
-                                                <th class="text-center">I{{ $loop->index+1 }}F</th>
-                                                <th class="text-center">I{{ $loop->index+1 }}T</th>
+                                            @foreach ($intervales as $key => $val)
+                                                <th class="text-center">I{{ $loop->index + 1 }}G</th>
+                                                <th class="text-center">I{{ $loop->index + 1 }}F</th>
+                                                <th class="text-center">I{{ $loop->index + 1 }}T</th>
                                             @endforeach
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php
                                             $ordreDesGroupes = [
-                                                '6è','5è','4è','3è','CYCLE I','2ndA1','2ndA2','2ndB','2ndC','2ndD',
-                                                'SECONDES','1èreA1','1èreA2','1èreB','1èreC','1èreD','PREMIÈRE',
-                                                'TleA1','TleA2','TleB','TleC','TleD','TERMINALE','CYCLE II','ETABLISSEMENT'
+                                                '6è',
+                                                '5è',
+                                                '4è',
+                                                '3è',
+                                                'CYCLE I',
+                                                '2ndA1',
+                                                '2ndA2',
+                                                '2ndB',
+                                                '2ndC',
+                                                '2ndD',
+                                                'SECONDES',
+                                                '1èreA1',
+                                                '1èreA2',
+                                                '1èreB',
+                                                '1èreC',
+                                                '1èreD',
+                                                'PREMIÈRE',
+                                                'TleA1',
+                                                'TleA2',
+                                                'TleB',
+                                                'TleC',
+                                                'TleD',
+                                                'TERMINALE',
+                                                'CYCLE II',
+                                                'ETABLISSEMENT',
                                             ];
                                         @endphp
 
-                                        @foreach($ordreDesGroupes as $groupe)
-                                            @if(isset($resultats[$groupe]))
-                                                <tr @if(in_array($groupe,['CYCLE I','SECONDES','PREMIÈRE','TERMINALE','CYCLE II','ETABLISSEMENT'])) class="ligne-bilan" @endif>
+                                        @foreach ($ordreDesGroupes as $groupe)
+                                            @if (isset($resultats[$groupe]))
+                                                <tr @if (in_array($groupe, ['CYCLE I', 'SECONDES', 'PREMIÈRE', 'TERMINALE', 'CYCLE II', 'ETABLISSEMENT'])) class="ligne-bilan" @endif>
                                                     <td class="font-weight-bold">{{ $groupe }}</td>
                                                     {{-- Moyennes fortes/faibles --}}
                                                     <td class="text-center">
                                                         {{ $resultats[$groupe]['max_moyenne_garcons']
-                                                            ? number_format($resultats[$groupe]['max_moyenne_garcons'],2)
+                                                            ? number_format($resultats[$groupe]['max_moyenne_garcons'], 2)
                                                             : '***' }}
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $resultats[$groupe]['max_moyenne_filles']
-                                                            ? number_format($resultats[$groupe]['max_moyenne_filles'],2)
+                                                            ? number_format($resultats[$groupe]['max_moyenne_filles'], 2)
                                                             : '***' }}
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $resultats[$groupe]['min_moyenne_garcons']
-                                                            ? number_format($resultats[$groupe]['min_moyenne_garcons'],2)
+                                                            ? number_format($resultats[$groupe]['min_moyenne_garcons'], 2)
                                                             : '***' }}
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $resultats[$groupe]['min_moyenne_filles']
-                                                            ? number_format($resultats[$groupe]['min_moyenne_filles'],2)
+                                                            ? number_format($resultats[$groupe]['min_moyenne_filles'], 2)
                                                             : '***' }}
                                                     </td>
 
                                                     {{-- Valeurs par intervalle --}}
-                                                    @foreach($intervales as $key => $val)
+                                                    @foreach ($intervales as $key => $val)
                                                         @php $data = $resultats[$groupe]['intervales'][$key] ?? ['garcons'=>0,'filles'=>0,'total'=>0]; @endphp
                                                         <td class="text-center">{{ $data['garcons'] }}</td>
                                                         <td class="text-center">{{ $data['filles'] }}</td>
@@ -657,6 +708,119 @@
                                 </table>
                             </div>
                         @elseif($typeEtat == 'tableau_synoptique')
+                            @if (request('periode') == 4)
+                                <div class="table-responsive mt-5">
+                                <h4 class="text-center mb-4 no-print">Tableau Synoptique des Effectifs</h4>
+                                <table class="table table-bordered table-synoptique">
+                                    <thead class="thead-dark">
+                                        <tr class="print-only">
+                                            <th colspan="2"></th>
+                                            <th colspan="3">EFFECTIF TOTAL DES ELEVES<br>INSCRITS</th>
+
+                                            <th colspan="3">
+                                                    EFFECTIF DES PROMUS
+                                            </th>
+                                            <th colspan="3">
+                                                    EFFECTIF DES REDOUBLANT
+                                            </th>
+                                            <th colspan="3">
+                                                    EFFECTIF DES ABANDONS
+                                            </th>
+                                            <th colspan="3">
+                                                    EFFECTIF DES EXCLUS
+                                            </th>
+                                        </tr>
+                                        <tr class="print-only">
+                                            <th>ANNEE</th>
+                                            <th>NB GROUPE PEDAGOGIQUE</th>
+                                            <th>G</th>
+                                            <th>F</th>
+                                            <th>T</th>
+                                            <th>G</th>
+                                            <th>F</th>
+                                            <th>T</th>
+                                            <th>G</th>
+                                            <th>F</th>
+                                            <th>T</th>
+                                            <th>G</th>
+                                            <th>F</th>
+                                            <th>T</th>
+                                            <th>G</th>
+                                            <th>F</th>
+                                            <th>T</th>
+                                        </tr>
+                                        <tr class="screen-only">
+                                            <th style="width: 100px;">GPE</th>
+                                            <th>NBGPE</th>
+                                            <th>I1G</th>
+                                            <th>I1F</th>
+                                            <th>I1T</th>
+                                            <th>I2G</th>
+                                            <th>I2F</th>
+                                            <th>I2T</th>
+                                            <th>I3G</th>
+                                            <th>I3F</th>
+                                            <th>I3T</th>
+                                            <th>I4G</th>
+                                            <th>I4F</th>
+                                            <th>I4T</th>
+                                            <th>I5G</th>
+                                            <th>I5F</th>
+                                            <th>I5T</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $ordreDesGroupes = [
+                                                '6è',
+                                                '5è',
+                                                '4è',
+                                                '3è',
+                                                'CYCLE I',
+                                                '2ndA1',
+                                                '2ndA2',
+                                                '2ndB',
+                                                '2ndC',
+                                                '2ndD',
+                                                'SECONDES',
+                                                '1èreA1',
+                                                '1èreA2',
+                                                '1èreB',
+                                                '1èreC',
+                                                '1èreD',
+                                                'PREMIÈRE',
+                                                'TleA1',
+                                                'TleA2',
+                                                'TleB',
+                                                'TleC',
+                                                'TleD',
+                                                'TERMINALE',
+                                                'CYCLE II',
+                                                'ETABLISSEMENT',
+                                            ];
+                                        @endphp
+                                        @foreach ($ordreDesGroupes as $codePromo)
+                                            @if (isset($resultats[$codePromo]))
+                                                <tr @if (in_array($codePromo, ['CYCLE I', 'SECONDES', 'PREMIÈRE', 'TERMINALE', 'CYCLE II', 'ETABLISSEMENT'])) class="ligne-bilan" @endif>
+                                                    <td class="font-weight-bold col-gpe">{{ $codePromo }}</td>
+                                                    <td>{{ $resultats[$codePromo]['nbClasses'] }}</td>
+                                                    @foreach (range(1, 5) as $i)
+                                                        <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['garcons'] ?? 0 }}
+                                                        </td>
+                                                        <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['filles'] ?? 0 }}
+                                                        </td>
+                                                        <td class="total-cell">
+                                                            {{ $resultats[$codePromo]['intervales']['I' . $i]['total'] ?? 0 }}
+                                                        </td>
+                                                    @endforeach
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            @else
                             <div class="table-responsive mt-5">
                                 <h4 class="text-center mb-4 no-print">Tableau Synoptique des Effectifs</h4>
                                 <table class="table table-bordered table-synoptique">
@@ -665,9 +829,24 @@
                                             <th colspan="2" rowspan="2"></th>
                                             <th colspan="3" rowspan="2">EFFECTIF TOTAL DES ELEVES<br>INSCRITS EN
                                                 DEBUT D'ANNEE</th>
-                                            <th colspan="6">EFFECTIF TOTAL DES ELEVES A LA FIN DU SEMESTRE</th>
-                                            <th colspan="3" rowspan="2">EFFECTIF TOTAL DES ELEVES<br>AYANT ABANDONNE
-                                                AU COURS DU SEMESTRE</th>
+                                            <th colspan="6">
+                                                @if (request('periode') == 2)
+                                                    EFFECTIF TOTAL DES ELEVES A LA FIN DU 2nd SEMESTRE 
+                                                @elseif (request('periode') == 1)
+                                                   EFFECTIF TOTAL DES ELEVES A LA FIN DU 1er SEMESTRE
+                                                @endif
+                                                
+                                            </th>
+
+                                            <th colspan="3" rowspan="2">
+                                                @if (request('periode') == 2)
+                                                    EFFECTIF TOTAL DES ELEVES<br>AYANT ABANDONNE
+                                                    AU COURS DE L'ANNEE
+                                                @elseif (request('periode') == 1)
+                                                    EFFECTIF TOTAL DES ELEVES<br>AYANT ABANDONNE
+                                                    AU COURS DU 1er SEMESTRE
+                                                @endif
+                                            </th>
                                         </tr>
                                         <tr class="print-only">
                                             <th colspan="3">ELEVES NON REDOUBLANTS</th>
@@ -756,6 +935,8 @@
                                     </tbody>
                                 </table>
                             </div>
+                            @endif
+
                         @elseif($typeEtat == 'statistique')
                             <div class="table-responsive mt-5">
                                 <h4 class="text-center mb-4 no-print">Statistique des Résultats</h4>
@@ -995,18 +1176,18 @@
                                                 }
 
                                                 // Meilleur élève de l'établissement
-                                                if (!empty($stats['meilleur_eleve'])) {
-                                                    $meilleurEtab = $bilanEtablissement['meilleur_eleve'];
-                                                    if (
-                                                        !$meilleurEtab ||
-                                                        $stats['meilleur_eleve']['moyenne'] > $meilleurEtab['moyenne']
-                                                    ) {
-                                                        $bilanEtablissement['meilleur_eleve'] =
-                                                            $stats['meilleur_eleve'];
-                                                    }
-                                                }
+    if (!empty($stats['meilleur_eleve'])) {
+        $meilleurEtab = $bilanEtablissement['meilleur_eleve'];
+        if (
+            !$meilleurEtab ||
+            $stats['meilleur_eleve']['moyenne'] > $meilleurEtab['moyenne']
+        ) {
+            $bilanEtablissement['meilleur_eleve'] =
+                $stats['meilleur_eleve'];
+        }
+    }
 
-                                                // Plus faible élève de l'établissement
+    // Plus faible élève de l'établissement
                                                 if (!empty($stats['plus_faible_eleve'])) {
                                                     $faibleEtab = $bilanEtablissement['plus_faible_eleve'];
                                                     if (
@@ -1052,16 +1233,16 @@
                                             }
 
                                             // 9. Taux global de l'établissement (cycle I + cycle II)
-                                                $totalReussiteEtab = 0;
-                                                $effectifSansAbandonEtab =
-                                                    $bilanEtablissement['effectif_total'] - $bilanEtablissement['abandons'];
+$totalReussiteEtab = 0;
+$effectifSansAbandonEtab =
+    $bilanEtablissement['effectif_total'] - $bilanEtablissement['abandons'];
 
-                                                foreach ($intervalesReussite as $intervale) {
-                                                    $totalReussiteEtab +=
-                                                        $bilanEtablissement['intervales'][$intervale] ?? 0;
-                                                }
+foreach ($intervalesReussite as $intervale) {
+    $totalReussiteEtab +=
+        $bilanEtablissement['intervales'][$intervale] ?? 0;
+}
 
-                                                $bilanEtablissement['taux_reussite'] =
+$bilanEtablissement['taux_reussite'] =
                                                 $effectifSansAbandonEtab > 0
                                                     ? ($totalReussiteEtab / $effectifSansAbandonEtab) * 100
                                                     : 0;
@@ -1507,26 +1688,39 @@
                             </div>
                             @php
                                 $typeEtat = request('typeEtat'); // Ajout pour éviter l'erreur variable indéfinie
-                                $periode = request('periode');
-                                $titre = '';
-                                $typeAn = $params2->first()->TYPEAN ?? null;
-                                if ($typeAn == 1) {
-                                    if ($periode == 1) $titre = 'FIN DU 1er SEMESTRE';
-                                    elseif ($periode == 2) $titre = 'FIN DU 2ème SEMESTRE';
-                                    elseif ($periode == 4) $titre = 'FIN D\'ANNÉE';
+$periode = request('periode');
+$titre = '';
+$typeAn = $params2->first()->TYPEAN ?? null;
+if ($typeAn == 1) {
+    if ($periode == 1) {
+        $titre = 'FIN DU 1er SEMESTRE';
+    } elseif ($periode == 2) {
+        $titre = 'FIN DU 2ème SEMESTRE';
+    } elseif ($periode == 4) {
+        $titre = 'FIN D\'ANNÉE';
+                                    }
                                 } elseif ($typeAn == 2) {
-                                    if ($periode == 1) $titre = 'FIN DU 1er TRIMESTRE';
-                                    elseif ($periode == 2) $titre = 'FIN DU 2ème TRIMESTRE';
-                                    elseif ($periode == 3) $titre = 'FIN DU 3ème TRIMESTRE';
-                                    elseif ($periode == 4) $titre = 'FIN D\'ANNÉE';
+                                    if ($periode == 1) {
+                                        $titre = 'FIN DU 1er TRIMESTRE';
+                                    } elseif ($periode == 2) {
+                                        $titre = 'FIN DU 2ème TRIMESTRE';
+                                    } elseif ($periode == 3) {
+                                        $titre = 'FIN DU 3ème TRIMESTRE';
+                                    } elseif ($periode == 4) {
+                                        $titre = 'FIN D\'ANNÉE';
+                                    }
                                 }
                             @endphp
 
                             <div class="title">
                                 <h4>
-                                    {{ $typeEtat === 'tableau_analytique' ? 'TABLEAU ANALYTIQUE DES RÉSULTATS' : 
-                                    ($typeEtat === 'tableau_synoptique' ? 'TABLEAU ANALYTIQUE DES EFFECTIFS' :
-                                    ($typeEtat === 'effectifs' ? 'TABLEAU SYNOPTIQUE DES EFFECTIFS' : 'STATISTIQUE DES RÉSULTATS')) }}
+                                    {{ $typeEtat === 'tableau_analytique'
+                                        ? 'TABLEAU ANALYTIQUE DES RÉSULTATS'
+                                        : ($typeEtat === 'tableau_synoptique'
+                                            ? 'TABLEAU ANALYTIQUE DES EFFECTIFS'
+                                            : ($typeEtat === 'effectifs'
+                                                ? 'TABLEAU SYNOPTIQUE DES EFFECTIFS'
+                                                : 'STATISTIQUE DES RÉSULTATS')) }}
                                     {{ ' - ' . $titre . ' ' . $anneeScolaire }}
                                 </h4>
                             </div>

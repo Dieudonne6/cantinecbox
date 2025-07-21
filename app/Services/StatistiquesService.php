@@ -251,30 +251,33 @@ class StatistiquesService
             $hasMAN = $eleves->filter(fn($e) => $isValid($e->MAN));
 
             switch ($periode) {
+
                 case 1:
+                    
+                    // I1
+                    $elevesInscritDebutAnne = $eleves->filter(function($e) use ($isValid) {
+                            return
+                             ($isValid($e->INT1) && $e->SEMESTRE = 1) 
+                            || ($isValid($e->INT2 ) && $e->SEMESTRE = 1) 
+                            || ($isValid($e->INT3 ) && $e->SEMESTRE = 1)
+                            || ($isValid($e->INT4 ) && $e->SEMESTRE = 1)
+                            || ($isValid($e->DEV1 ) && $e->SEMESTRE = 1)
+                            || ($isValid($e->DEV2 ) && $e->SEMESTRE = 1);
+                        });
+                    $countI1Garcons = $elevesInscritDebutAnne->where('SEXE','1')->count();
+                    $countI1Filles  = $elevesInscritDebutAnne->where('SEXE','2')->count();
+                    $countI1 = $countI1Garcons + $countI1Filles;
+
                     // I2 / I3 : MS1 valide + STATUT
                     $elevesI2 = $hasMS1->where('STATUT', 0);
                     $elevesI3 = $hasMS1->where('STATUT', 1);
 
                     // I4 
-                    // 1) les élèves sans MS1
-                        $elevesSansMS1 = $eleves->reject(fn($e) => $isValid($e->MS1));
 
-                        // 2) parmi eux, ceux qui ont MS2 valide (ceux-là ne sont pas abandonnistes)
-                        $elevesAvecMS2MaisSansMS1 = $hasMS2->reject(fn($e) => $isValid($e->MS1));
-
-                        // 3) candidats à l’abandon = sans MS1 - ceux qui ont MS2 valide
-                        $elevesAbandon = $elevesSansMS1->diff($elevesAvecMS2MaisSansMS1);
-
-                        // 4) ne garder parmi ces élèves que ceux qui manquent au moins un INT1–INT4
-                        $elevesAbandonSem1 = $elevesAbandon->filter(function($e) use ($isValid) {
+                        // 4) parmis tous les eleves inscrit en debut d'anne , ne garder que ceux qui n'ont pas MS1
+                        $elevesAbandonSem1 = $elevesInscritDebutAnne->filter(function($e) use ($isValid) {
                             return 
-                                ! ($isValid($e->INT1) && $e->SEMESTRE = 2) 
-                            || ! ($isValid($e->INT2 ) && $e->SEMESTRE = 2) 
-                            || ! ($isValid($e->INT3 ) && $e->SEMESTRE = 2)
-                            || ! ($isValid($e->INT4 ) && $e->SEMESTRE = 2)
-                            || ! ($isValid($e->DEV1 ) && $e->SEMESTRE = 2)
-                            || ! ($isValid($e->DEV2 ) && $e->SEMESTRE = 2);
+                                ! ($isValid($e->MS1));
                         });
 
                         // 5) comptage par sexe et total
@@ -282,14 +285,6 @@ class StatistiquesService
                         $countI4Filles  = $elevesAbandonSem1->where('SEXE', '2')->count();
                         $countI4        = $countI4Garcons + $countI4Filles;
 
-                    // I1 = I2 + I3 + I4
-                    $countI1Garcons = $elevesI2->where('SEXE','1')->count()
-                                    + $elevesI3->where('SEXE','1')->count()
-                                    + $countI4Garcons;
-                    $countI1Filles  = $elevesI2->where('SEXE','2')->count()
-                                    + $elevesI3->where('SEXE','2')->count()
-                                    + $countI4Filles;
-                    $countI1 = $countI1Garcons + $countI1Filles;
 
                     $intervales = [
                         'I1' => [
@@ -316,23 +311,36 @@ class StatistiquesService
                 break;
 
                 case 2:
+
+                    // I1
+                    $elevesInscritDebutAnne = $eleves->filter(function($e) use ($isValid) {
+                            return
+                             ($isValid($e->INT1) && $e->SEMESTRE = 1) 
+                            || ($isValid($e->INT2 ) && $e->SEMESTRE = 1) 
+                            || ($isValid($e->INT3 ) && $e->SEMESTRE = 1)
+                            || ($isValid($e->INT4 ) && $e->SEMESTRE = 1)
+                            || ($isValid($e->DEV1 ) && $e->SEMESTRE = 1)
+                            || ($isValid($e->DEV2 ) && $e->SEMESTRE = 1);
+                        });
+                    $countI1Garcons = $elevesInscritDebutAnne->where('SEXE','1')->count();
+                    $countI1Filles  = $elevesInscritDebutAnne->where('SEXE','2')->count();
+                    $countI1 = $countI1Garcons + $countI1Filles;
+                    
                     // I2 / I3 : MS2 valide + STATUT
                     $elevesI2 = $hasMS2->where('STATUT', 0);
                     $elevesI3 = $hasMS2->where('STATUT', 1);
 
                     // I4 = élèves sans MAN
-                    $countI4Garcons = $eleves->where('SEXE','1')->count() - $hasMAN->where('SEXE','1')->count();
-                    $countI4Filles  = $eleves->where('SEXE','2')->count() - $hasMAN->where('SEXE','2')->count();
-                    $countI4 = $countI4Garcons + $countI4Filles;
+                        $elevesAbandonAnne = $eleves->filter(function($e) use ($isValid) {
+                            return 
+                                ! ($isValid($e->MAN));
+                        });
 
-                    // I1 = même répartition que période 1
-                    $countI1Garcons = $hasMS1->where('SEXE','1')->where('STATUT',0)->count()
-                                    + $hasMS1->where('SEXE','1')->where('STATUT',1)->count()
-                                    + $countI4Garcons;
-                    $countI1Filles  = $hasMS1->where('SEXE','2')->where('STATUT',0)->count()
-                                    + $hasMS1->where('SEXE','2')->where('STATUT',1)->count()
-                                    + $countI4Filles;
-                    $countI1 = $countI1Garcons + $countI1Filles;
+                        // 5) comptage par sexe et total
+                        $countI4Garcons = $elevesAbandonAnne->where('SEXE', '1')->count();
+                        $countI4Filles  = $elevesAbandonAnne->where('SEXE', '2')->count();
+                        $countI4        = $countI4Garcons + $countI4Filles;
+
 
                     $intervales = [
                         'I1' => ['garcons' => $countI1Garcons, 'filles' => $countI1Filles, 'total' => $countI1],
@@ -346,6 +354,8 @@ class StatistiquesService
                     // I2 / I3 : MS2 valide + STATUT
                     $DecisionConfigAnnuel = DecisionConfigAnnuel::first();
                     $seuilPassage = $DecisionConfigAnnuel->seuil_Passage;
+
+                    // I2
 
                     $elevesI2   = [];
                     $garconsI2  = 0;
@@ -363,6 +373,8 @@ class StatistiquesService
                             }
                         }
                     }
+
+                    // I3
 
                     $elevesI3  = [];
                     $garconsI3  = 0;
@@ -394,11 +406,25 @@ class StatistiquesService
                         fn($e) => $e->SEXE === 1
                     ));
                     $fillesI3 = count($elevesI3) - $garconsI3;
-                    
-                    
-                    $elevesI4  = [];
-                    $garconsI4  = 0;
-                    $fillesI4   = 0;
+
+
+                        // I4 = élèves sans MAN
+                        $elevesAbandonAnne = $eleves->filter(function($e) use ($isValid) {
+                            return 
+                                ! ($isValid($e->MAN));
+                        });
+
+                        // 5) comptage par sexe et total
+                        $garconsI4 = $elevesAbandonAnne->where('SEXE', '1')->count();
+                        $fillesI4  = $elevesAbandonAnne->where('SEXE', '2')->count();
+                        $elevesI4        = $garconsI4 + $fillesI4;
+
+
+                
+                    // I5
+                    $elevesI5  = [];
+                    $garconsI5  = 0;
+                    $fillesI5   = 0;
 
                     foreach ($hasMAN as $singleStudent) {
                         // On récupère le cycle de la promo de l'élève
@@ -416,15 +442,15 @@ class StatistiquesService
                             ($singleStudent->MAN < $seuilPassage && $singleStudent->STATUT === 1)
                         ) {
                             // Ajout à la liste I3
-                            $elevesI4[] = $singleStudent;
+                            $elevesI5[] = $singleStudent;
                         }
                     }
                     // maintenant on filtre la liste I3 pour compter
-                    $garconsI4 = count(array_filter(
-                        $elevesI4,
+                    $garconsI5 = count(array_filter(
+                        $elevesI5,
                         fn($e) => $e->SEXE === 1
                     ));
-                    $fillesI4 = count($elevesI4) - $garconsI4;
+                    $fillesI5 = count($elevesI5) - $garconsI5;
 
                     
                     // $elevesI2 = $hasMAN  >= ;
@@ -449,7 +475,8 @@ class StatistiquesService
                         'I1' => ['garcons' => $countI1Garcons, 'filles' => $countI1Filles, 'total' => $countI1],
                         'I2' => ['garcons' => $garconsI2, 'filles'  => $fillesI2, 'total' => count($elevesI2)],
                         'I3' => ['garcons' => $garconsI3, 'filles' => $fillesI3, 'total' => count($elevesI3)],
-                        'I4' => ['garcons' => $garconsI4, 'filles' => $fillesI4, 'total' => count($elevesI4)],
+                        'I4' => ['garcons' => $garconsI4, 'filles' => $fillesI4, 'total' => $elevesI4],
+                        'I5' => ['garcons' => $garconsI5, 'filles' => $fillesI5, 'total' => count($elevesI5)],
                     ];
                 break;
 
