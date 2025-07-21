@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0d6da21fbe05cfc61541e33c099488bb",
+    "content-hash": "03b7c2a77d3fbca28904b1635eea7fde",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1589,53 +1589,6 @@
                 }
             ],
             "time": "2025-02-03T10:55:03+00:00"
-        },
-        {
-            "name": "henck/rtf-to-html",
-            "version": "1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/henck/rtf-html-php.git",
-                "reference": "ff984a1d44fa359c85c0cffa0d66e991bf4dc967"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/henck/rtf-html-php/zipball/ff984a1d44fa359c85c0cffa0d66e991bf4dc967",
-                "reference": "ff984a1d44fa359c85c0cffa0d66e991bf4dc967",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "7"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "RtfHtmlPhp\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Alexander van Oostenrijk",
-                    "email": "alex.vanoostenrijk@gmail.com"
-                }
-            ],
-            "description": "RTF to HTML converter in PHP",
-            "keywords": [
-                "converter",
-                "rtf"
-            ],
-            "support": {
-                "issues": "https://github.com/henck/rtf-html-php/issues",
-                "source": "https://github.com/henck/rtf-html-php/tree/v1.2"
-            },
-            "time": "2021-09-10T15:19:14+00:00"
         },
         {
             "name": "knplabs/knp-snappy",
@@ -9477,12 +9430,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.1"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

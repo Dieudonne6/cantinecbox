@@ -3,19 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Params2;
+
+
 
 class ParametreController extends Controller
 {
-    // public function index()
-    // {
-    //     return view('parametre.index');
-    // }
-
-    // public function cantine()
-    // {
-    //     return view('parametre.cantine');
-    // }
-
     public function inscriptionsDiscipline()
     {
         return view('parametre.inscriptions');
@@ -23,26 +17,131 @@ class ParametreController extends Controller
 
     public function tables()
     {
-        return view('pages.parametre.tables');
+        // On récupère le premier (ou unique) enregistrement de params2
+        $settings = Params2::first();
+
+        // On récupère la liste des attributs "fillable" (convertible en inputs)
+        $fields = (new Params2)->getFillable();
+          
+        return view('pages.parametre.tables', compact('settings', 'fields'));
     }
 
-    public function bornesExercice()
+    public function updateIdentification(Request $request)
     {
-        return view('pages.parametre.bornes');
+        $request->validate([
+            'nom_etablissement' => 'nullable|string|max:255',
+            'code_etablissement' => 'nullable|string|max:50',
+            'email' => 'nullable|email',
+            // Ajoute d'autres validations si besoin
+        ]);
+
+        // Préparation des données à enregistrer
+        $data = [
+            'NOMETAB' => $request->nom_etablissement,
+            'CodeSITE' => $request->code_etablissement,
+            'EMAIL' => $request->email,
+            'DEPARTEMEN' => $request->departement,
+            'Secteur' => $request->statut,
+            'ADRESSE' => $request->adresse,
+            'VILLE' => $request->ville,
+            'NOMDIRECT' => $request->directeur1,
+            'TITRE' => $request->titre_directeur1,
+            'NOMDIRECT2' => $request->directeur2,
+            'TITRE2' => $request->titre_directeur2,
+            'NOMDIRECT3' => $request->directeur3,
+            'TITRE3' => $request->titre_directeur3,
+            'NOMCENSEUR' => $request->censeur,
+            'TITRECENSEUR' => $request->titre_censeur,
+            'NOMINTEND' => $request->comptable,
+            'TITREINTENDANT' => $request->titre_comptable,
+            'DeviseEtab' => $request->devise,
+            'Typeetab' => is_array($request->Typeetab) ? implode('', $request->Typeetab) : '',
+        ];
+
+        // Gestion des fichiers logo
+        if ($request->hasFile('logo_gauche')) {
+            $data['logoimage1'] = $request->file('logo_gauche')->store('logos', 'public');
+        }
+
+        if ($request->hasFile('logo_droit')) {
+            $data['LOGO1'] = $request->file('logo_droit')->store('logos', 'public');
+        }
+
+        // Mise à jour ou insertion (s'il n'existe pas encore)
+        $exists = DB::table('params2')->exists();
+
+        if ($exists) {
+            DB::table('params2')->update($data); // mise à jour du seul enregistrement
+        } else {
+            DB::table('params2')->insert($data); // insertion si vide
+        }
+
+        return redirect()->back()->with('success', 'Les informations ont été enregistrées avec succès.');
+    }
+
+     public function editAppreciation()
+    {
+        $appreciations = Params2::first();
+        return view('pages.parametre.appreciations', compact('appreciations'));
+    }
+    
+    public function updateAppreciation(Request $request)
+    {
+        $appreciations = Params2::first();
+
+        for ($i = 1; $i <= 8; $i++) {
+            $appreciations->{'Borne' . $i} = $request->input('Borne' . $i);
+            $appreciations->{'Mention' . $i . 'p'} = $request->input('Mention' . $i . 'p');
+            $appreciations->{'Mention' . $i . 'd'} = $request->input('Mention' . $i . 'd');
+        }
+
+        $appreciations->save();
+
+        return redirect()->back()->with('success', 'Grille des appréciations mise à jour avec succès.');
+    }
+
+    public function updateGeneraux(Request $request)
+{
+    $params = Params2::first(); // ou find(1) si tu connais l'ID
+
+    if (!$params) {
+        return back()->withErrors('Paramètres introuvables.');
+    }
+
+    // Mise à jour simple (attention aux noms des inputs HTML)
+    $params->update([
+
+        'Date1erPaie_Standard' => $request->input('date1'),
+        'Periodicite_Standard' => $request->input('periodicite'),
+        'Echeancier_tous_frais' => $request->has('echeancier_frais'),
+        'TYPEMATRI' => $request->input('type_matricule'),
+        'TYPEAN' => $request->input('TYPEAN'),
+    ]);
+
+    return back()->with('success', 'Paramètres mis à jour avec succès.');
+}
+
+
+
+    public function bornes()
+    {
+        $exercices = DB::connection('mysql2')->table('exercice')->get();
+
+        return view('pages.parametre.bornes-exercice', compact('exercices'));
     }
 
     public function opOuverture()
     {
-        return view('pages.parametre.op_ouverture');
+        return view('pages.parametre.op-ouverture');
     }
 
     public function configImprimante()
     {
-        return view('pages.parametre.config_imprimante');
+        return view('pages.parametre.config-imprimante');
     }
 
     public function changementTrimestre()
     {
-        return view('pages.parametre.changement_trimestre');
+        return view('pages.parametre.changement-trimestre');
     }
 }

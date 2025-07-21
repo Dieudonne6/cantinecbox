@@ -171,7 +171,7 @@ Route::get('/inscriptions', [PagesController::class, 'inscriptions']);
 Route::post('/enregistreruser', [PagesController::class, 'enregistreruser']);
 Route::get('/listedesretardsdepaiement', [PagesController::class, 'listedesretardsdepaiement']);
 
-Route::get('/parametre', [PagesController::class, 'parametre']);
+// Route::get('/parametre', [PagesController::class, 'parametre']);
 Route::get('/echeancier/{MATRICULE}', [PagesController::class, 'echeancier'])->name('echeancier');
 Route::get('/tabledesclasses', [PagesController::class, 'tabledesclasses']);
 Route::get('/enrclasse', [GestionclasseController::class, 'enrclasse'])->name('enrclasse');
@@ -457,12 +457,20 @@ Route::get('/statistiques', [TableauController::class, 'statistiques'])->name('s
 Route::post('/statistiques', [TableauController::class, 'statistiques'])->name('statistiques');
 
 Route::prefix('parametre')->group(function() {
+     Route::get('/parametre.parametre', [PagesController::class, 'parametre'])->name('parametrecantine');
       Route::get('inscriptions-discipline', [ParametreController::class, 'inscriptionsDiscipline'])
          ->name('parametre.inscriptions');
     Route::get('tables', [ParametreController::class, 'tables'])
          ->name('parametre.tables');
+         Route::post('/params2/updateIdentification', [ParametreController::class, 'updateIdentification'])->name('params2.updateIdentification');
+         Route::get('/appreciations/edit', [ParametreController::class, 'editAppreciation'])->name('appreciations.edit');
+         Route::post('/appreciations/update', [ParametreController::class, 'updateAppreciation'])->name('appreciations.update');
+         Route::put('/params2/updateGeneraux', [ParametreController::class, 'updateGeneraux'])->name('params2.updateGeneraux');
+
     Route::get('bornes-exercice', [ParametreController::class, 'bornes'])
          ->name('parametre.bornes');
+     Route::put('bornes-exercice/{anscol}', [ParametreController::class, 'updateExercice'])
+          ->name('exercice.update');
     Route::get('op-ouverture', [ParametreController::class, 'opOuverture'])
          ->name('parametre.opouverture');
     Route::get('config-imprimante', [ParametreController::class, 'configImprimante'])

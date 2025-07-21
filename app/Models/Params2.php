@@ -10,6 +10,8 @@ class Params2 extends Model
     use HasFactory;
     protected $table = 'params2';
     public $timestamps = false;
+    protected $primaryKey = null;
+    public $incrementing = false;
     protected $fillable = [
         'NOMETAB',
         'ADRESSE',

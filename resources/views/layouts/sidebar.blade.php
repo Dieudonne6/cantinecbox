@@ -297,35 +297,34 @@
         <a class="nav-link collapsed"
           data-bs-toggle="collapse"
           href="#parametreSubmenu"
-          aria-expanded="{{ in_array(request()->route()->getName(), [
-            'parametre.index',
-            'parametre.cantine',
+          aria-expanded="{{ request()->routeIs(
+            'parametrecantine',
             'parametre.tables',
             'parametre.bornes',
             'parametre.opouverture',
             'parametre.configimprimante',
             'parametre.changementtrimestre'
-          ]) ? 'true' : 'false' }}"
+          ) ? 'true' : 'false' }}"
           aria-controls="parametreSubmenu">
           <i class="typcn typcn-globe-outline menu-icon"></i>
           <span class="menu-title">Paramètres</span>
           <i class="menu-arrow"></i>
         </a>
-        <div class="collapse {{ in_array(request()->route()->getName(), [
-            'parametre.index',
-            'parametre.cantine',
+
+        <div class="collapse {{ request()->routeIs(
+            'parametre.parametre',
             'parametre.tables',
             'parametre.bornes',
             'parametre.opouverture',
             'parametre.configimprimante',
             'parametre.changementtrimestre'
-          ]) ? 'show' : '' }}"
-            id="parametreSubmenu"
-            data-bs-parent="#parent-accordion">
+          ) ? 'show' : '' }}"
+          id="parametreSubmenu"
+          data-bs-parent="#parent-accordion">
           <ul class="nav flex-column sub-menu">
             <li class="nav-item">
-              <a class="nav-link {{ request()->is('parametre') ? 'active' : '' }}"
-                href="{{ url('/parametre') }}">
+              <a class="nav-link {{ request()->routeIs('parametre') ? 'active' : '' }}"
+                href="{{ route('parametrecantine') }}">
                 Cantine
               </a>
             </li>
@@ -362,6 +361,7 @@
           </ul>
         </div>
       </li>
+
 
     </ul>
   </nav>
