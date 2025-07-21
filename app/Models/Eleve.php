@@ -13,8 +13,12 @@ class Eleve extends Model
 
     protected $casts = [
         'MATRICULEX' => 'string',
+        
     ];
     protected $table = 'eleve';
+
+    
+
     protected $primaryKey = 'MATRICULE';
     public $timestamps = false;
     protected $fillable = [

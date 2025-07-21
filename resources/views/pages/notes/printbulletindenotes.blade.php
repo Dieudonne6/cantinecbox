@@ -62,6 +62,10 @@
                     $sortedResultats = collect($resultats)->sortBy('matricule');
                 @endphp
 
+
+                    @php
+                        $page = 1;
+                    @endphp
                 @foreach ($sortedResultats as $index => $resultat)
                     @php
                         // Initialisation des variables en fonction du type d'année
@@ -88,9 +92,10 @@
                     @endphp
                     </br>
 
+
                     <div class="bulletin" data-nom="{{ $resultat['nom'] }} .''.{{ $resultat['prenom'] }} "
                         data-classe="{{ $resultat['classe'] }}"
-                        style=" position: relative; {{ $index < count($resultats) - 1 ? 'page-break-after: always;' : '' }}">
+                        style="position: relative; {{ $index < count($resultats) - 1 ? 'page-break-after: always;' : '' }}">
 
                         <div class="row" style="display: flex; align-items: flex-start;">
                             {{-- Logo, aligné en haut --}}
@@ -403,39 +408,39 @@
                                         @else
                                             {{-- <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td> --}}
                                             <td>
-  {{ 
-    isset($matiere['plusFaibleMoyenne'])
-      ? number_format($matiere['plusFaibleMoyenne'], 2)
-      : '**.**'
-  }}
-</td>
+                                                {{ 
+                                                    isset($matiere['plusFaibleMoyenne'])
+                                                    ? number_format($matiere['plusFaibleMoyenne'], 2)
+                                                    : '**.**'
+                                                }}
+                                            </td>
                                             <td>
-  {{ 
-    isset($matiere['plusForteMoyenne'])
-      ? number_format($matiere['plusForteMoyenne'], 2)
-      : '**.**'
-  }}
-</td>
+                                                {{ 
+                                                    isset($matiere['plusForteMoyenne'])
+                                                    ? number_format($matiere['plusForteMoyenne'], 2)
+                                                    : '**.**'
+                                                }}
+                                            </td>
                                             {{-- <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td> --}}
                                             {{-- <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td>
                                             <td>{{ number_format($matiere['plusForteMoyenne'], 2) ?? '**.**' }}</td> --}}
                                         @endif
 
                                         @if (isset($option['rang_matiere']) && $option['rang_matiere'])
-    <td>
-        @if (isset($matiere['rang']))
-            {{-- Affiche le rang + suffixe --}}
-            {{ $matiere['rang'] }}
-            @php
-                $suffixe = $matiere['rang'] == 1 ? 'er' : 'ème';
-            @endphp
-            {{ $suffixe }}
-        @else
-            {{-- Placeholder quand 'rang' n'existe pas --}}
-            **.**
-        @endif
-    </td>
-@endif
+                                            <td>
+                                                @if (isset($matiere['rang']))
+                                                    {{-- Affiche le rang + suffixe --}}
+                                                    {{ $matiere['rang'] }}
+                                                    @php
+                                                        $suffixe = $matiere['rang'] == 1 ? 'er' : 'ème';
+                                                    @endphp
+                                                    {{ $suffixe }}
+                                                @else
+                                                    {{-- Placeholder quand 'rang' n'existe pas --}}
+                                                    **.**
+                                                @endif
+                                            </td>
+                                        @endif
                                         {{-- @if (isset($option['rang_matiere']) && $option['rang_matiere'])
                                             <td>
                                                 {{ $matiere['rang'] }}
@@ -574,7 +579,7 @@
                         </div>
                         @if (($typean == 1 && $resultat['periode'] == 2) || ($typean == 2 && $resultat['periode'] == 3))
                             <div {{-- id="bilan_annuel" --}} class="d-flex"
-                                style="border: 1px solid black; border-radius: 10px;">
+                                style="border: 1px solid black; border-radius: 10px; background-color: rgb(128, 128, 128, 0.2)">
                                 <!-- Bloc Bilan Annuel -->
                                 <div style="margin-left: 20px; padding-top: 10px;">
                                     <h5>BILAN ANNUEL</h5>
@@ -818,7 +823,7 @@
                             {{-- <div class="flex-grow-1">
                                     <p>Code web: {{ $resultat['codeweb'] }}</p>
                                 </div> --}}
-                            <div class="flex-grow-1 justify-content-end" style="margin-left: 600px;">
+                            <div class="flex-grow-1 justify-content-end" style="margin-left: 800px;">
                                 <p>Edité le {{ date('d/m/Y') }}</p>
                             </div>
                         </div>
@@ -827,13 +832,51 @@
                                 {!! html_entity_decode($request->input('msgEnBasBulletin')) !!}
                             </div>
                         </div>
+                        <div class="container-parent">
+                        <div class="paginer">
+                            @php
+                                 echo($page); 
+                            @endphp
+                        </div>
+                        </div>
                     </div>
                     <br>
+
+                    @php
+                        $page++;
+                    @endphp
                 @endforeach
             </div>
         </div>
         {{-- </div> --}}
+
+
         <style>
+            /* Pour que margin-left: auto fonctionne, le parent doit être un flex container */
+            .container-parent { 
+                display: flex;
+                /* facultatif, pour que les éléments s’alignent sur une même ligne */
+                align-items: center;
+            }
+            .paginer {
+                /* Pour que le conteneur ne prenne que la place de son contenu */
+                display: inline-block;
+                /* Décale le bloc complètement à droite de son parent */
+                margin-left: auto;
+                /* Un peu d’air autour des liens/pages */
+                padding: 0.5rem 1rem;
+                /* Fond blanc (optionnel) pour bien voir l’ombre */
+                background-color: #fff;
+                /* Coins légèrement arrondis */
+                border-radius: 4px;
+                /* Ombre portée plus marquée */
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.514);
+            }
+
+            .bulletin {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.164);
+            }
+
             th,
             td {
                 border: 1px solid black;
@@ -901,10 +944,17 @@
                     width: 1000px !important;
                 }
 
+                .bulletin {
+                box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
+            }
+
                 .card-body {
                     overflow: hidden;
                 }
 
+                .paginer {
+                    display: none;
+                }
                 .watermark {
                     position: absolute;
                     top: 50%;

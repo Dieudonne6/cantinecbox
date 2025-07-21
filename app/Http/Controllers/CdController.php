@@ -8,6 +8,7 @@ use App\Models\Notes;
 use App\Models\Matieres;
 use App\Models\Clasmat;
 use App\Models\Params2;
+use App\Models\ParamContrat;
 
 use App\Models\Groupeclasse;
 use Illuminate\Http\Request;
@@ -218,6 +219,15 @@ public function saisirnotefilter(Request $request)
         ->where('CODECLAS', $request->CODECLAS)
         ->first();
 
+
+        $contrat = ParamContrat::first();
+
+        $anneeCourante = (int) $contrat->anneencours_paramcontrat;
+        // Calcul de l'année suivante
+        $anneeSuivante = $anneeCourante + 1;
+        $anneeScolaire = "{$anneeCourante}-{$anneeSuivante}";
+
+
       if ($noteExistante) {
         // Si la note existe, on la met à jour
         $noteExistante->update(array_merge($noteData, [
@@ -231,6 +241,7 @@ public function saisirnotefilter(Request $request)
           'COEF' => $request->champ2,
           'CODEMAT' => $request->CODEMAT,
           'CODECLAS' => $request->CODECLAS,
+          'ANSCOL'    => $anneeScolaire,
         ]));
       }
     }

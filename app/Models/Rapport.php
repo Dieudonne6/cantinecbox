@@ -13,15 +13,20 @@ class Rapport extends Model
 
     public $timestamps = false;
 
+    protected $primaryKey = 'MATRICULEID';
+
     protected $fillable = [
         'RANG',
-        'MATRICULE',
+        'MATRICULEID',
+        'MATRICULEX',
+        'NOM',        
+        'PRENOM', 
         'MOY1',
         'MOY2',
         'MOY3',
         'MOYAN',
         'OBSERVATION',
-        'STATUTF ',
+        'STATUTF',
         'CODECLAS',
         'SEXE',
         'STATUT',

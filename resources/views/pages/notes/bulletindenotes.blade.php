@@ -550,18 +550,18 @@
                                     <legend style="font-weight: bold; color: #fff; font-size: 1rem;">Calcul moyenne
                                         annuelle</legend>
                                     <div class="form-group d-flex align-items-center mb-2">
-                                        <label for="pondTrim1">Pondération Semestre 1</label>
-                                        <input type="number" class="form-control" id="pondTrim1" name="pondTrim1"
+                                        <label for="pondSem1Check">Pondération Semestre 1</label>
+                                        <input type="number" class="form-control" name="pondSem1"
                                             value="1"
-                                            style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                                        {{-- <input type="checkbox" class="form-check-input" name="pondTrim1" id="pondTrim1" style="right: 1rem !important;"> --}}
+                                            style="margin-left: 10px; width: 30px !important; padding: 0; height: 2rem;">
+                                        <input type="checkbox" class="form-check-input" name="pondSem1Check" id="pondSem1Check" style="right: 1rem !important;">
                                     </div>
                                     <div class="form-group d-flex align-items-center mb-2">
-                                        <label for="pondTrim2">Pondération Semestre 2</label>
-                                        <input type="number" class="form-control" id="pondTrim2" name="pondTrim2"
-                                            value="1"
-                                            style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                                        {{-- <input type="checkbox" class="form-check-input" name="pondTrim2" id="pondTrim2" style="right: 1rem !important;"> --}}
+                                        <label for="pondSem2Check">Pondération Semestre 2</label>
+                                        <input type="number" class="form-control"  name="pondSem2"
+                                            value="2"
+                                            style="margin-left: 10px; width: 30px !important; padding: 0; height: 2rem;">
+                                        <input type="checkbox" checked class="form-check-input" name="pondSem2Check" id="pondSem2Check" style="right: 1rem !important;">
                                     </div>
 
                                 </div>
@@ -574,22 +574,22 @@
                                         <label for="pondTrim1">Pondération Trimestre 1</label>
                                         <input type="number" class="form-control" id="pondTrim1" name="pondTrim1"
                                             value="1"
-                                            style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                                        {{-- <input type="checkbox" class="form-check-input" name="pondTrim1" id="pondTrim1" style="right: 1rem !important;"> --}}
+                                            style="margin-left: 10px; width: 30px !important; padding: 0; height: 2rem;">
+                                        <input type="checkbox" class="form-check-input" name="pondTrim1" id="pondTrim1" style="right: 1rem !important;">
                                     </div>
                                     <div class="form-group d-flex align-items-center mb-2">
                                         <label for="pondTrim2">Pondération Trimestre 2</label>
                                         <input type="number" class="form-control" id="pondTrim2" name="pondTrim2"
                                             value="1"
-                                            style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                                        {{-- <input type="checkbox" class="form-check-input" name="pondTrim2" id="pondTrim2" style="right: 1rem !important;"> --}}
+                                            style="margin-left: 10px; width: 30px !important; padding: 0; height: 2rem;">
+                                        <input type="checkbox" checked class="form-check-input" name="pondTrim2" id="pondTrim2" style="right: 1rem !important;">
                                     </div>
                                     <div class="form-group d-flex align-items-center mb-1">
                                         <label for="pondTrim3">Pondération Trimestre 3</label>
                                         <input type="number" class="form-control" id="pondTrim3" name="pondTrim3"
                                             value="1"
-                                            style="margin-left: 10px; width: 50px !important; padding: 0; height: 2rem;">
-                                        {{-- <input type="checkbox" class="form-check-input" name="pondTrim3" id="pondTrim3" style="right: 1rem !important;;"> --}}
+                                            style="margin-left: 10px; width: 30px !important; padding: 0; height: 2rem;">
+                                        <input type="checkbox" checked class="form-check-input" name="pondTrim3" id="pondTrim3" style="right: 1rem !important;;">
                                     </div>
                                 </div>
                             @endif
@@ -634,7 +634,7 @@
             </div>
         </div>
 
-        <!-- Modal pour afficher les élèves -->
+        <!-- Modal pour afficher les matieres -->
         <div class="modal fade" id="listematiere" tabindex="-1" aria-labelledby="listematiereLabel"
             aria-hidden="true">
             <div class="modal-dialog">
@@ -932,6 +932,23 @@
     </div>
 </div>
   
+
+<script>
+  const chk1 = document.getElementById('pondSem1Check');
+  const chk2 = document.getElementById('pondSem2Check');
+
+  chk1.addEventListener('change', () => {
+    if (chk1.checked) {
+      chk2.checked = false;
+    }
+  });
+
+  chk2.addEventListener('change', () => {
+    if (chk2.checked) {
+      chk1.checked = false;
+    }
+  });
+</script>
   
 
     <script> 

@@ -127,7 +127,8 @@ Route::get('/pdfduplicatarecu/{counters}', [PagesController::class, 'pdfduplicat
 Route::match(['get', 'post'], '/listefacturescolarite', [PagesController::class, 'listefacturescolarite'])->name('listefacturescolarite');
 Route::get('/avoirfacturepaiescolarite/{codemecef}', [PagesController::class, 'avoirfacturepaiescolarite'])->name('avoirfacturepaiescolarite');
 Route::post('/avoirfacturescolarite/{codemecef}', [PagesController::class, 'avoirfacturescolarite'])->name('avoirfacturescolarite');
-
+Route::get('/avoirfacturepaiescolaritemodif/{codemecef}', [PagesController::class, 'avoirfacturepaiescolaritemodif'])->name('avoirfacturepaiescolaritemodif');
+Route::post('/avoirfacturescolaritmodification/{codemecef}', [PagesController::class, 'avoirfacturescolaritmodification'])->name('avoirfacturescolaritmodification');
 
 Route::get('/transfert', [PagesController::class, 'transfert']);
 
@@ -438,6 +439,14 @@ Route::post('/tableauanalytique', [TableauController::class, 'tableauanalytique'
 Route::get('/rapportannuel', [RapportannuelController::class, 'rapportannuel'])->name('rapportannuel');
 Route::post('/decision-config/store', [RapportannuelController::class, 'storeDecisionConfig'])->name('decision.config.store');
 Route::post('config/promotions/update',[RapportannuelController::class, 'updateConfigClasses'])->name('config.promotions.update');
+Route::post('/rapportannuel', [RapportannuelController::class, 'creerRapport'])->name('rapportannuel');
+Route::post('/classe/delete', [RapportannuelController::class, 'deleteClasse'])->name('classe.delete');
+Route::get('/listeannuelle', [RapportannuelController::class, 'listeannuelle'])->name('listeannuelle');
+Route::get('/rapport/passage', [RapportannuelController::class, 'imprimerPassage'])->name('rapport.passage');
+Route::post('/rapport/redoublement', [RapportannuelController::class, 'imprimerRedoublement'])->name('rapport.redoublement');
+Route::post('/rapport/exclusion', [RapportannuelController::class, 'imprimerExclusion'])->name('rapport.exclusion');
+Route::post('/rapport/abandon', [RapportannuelController::class, 'imprimerAbandon'])->name('rapport.abandon');
+
 
 
 
