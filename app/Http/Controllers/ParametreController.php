@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Params2;
 
+use Roundcube\Rtf\Html; 
+// use RtfHtmlPhp\Document;
+use RtfHtmlPhp\Document;
+use RtfHtmlPhp\Html\HtmlFormatter;
+
 
 
 class ParametreController extends Controller
@@ -20,10 +25,87 @@ class ParametreController extends Controller
         // On récupère le premier (ou unique) enregistrement de params2
         $settings = Params2::first();
 
+        // Pour l'enteteRecu
+        $rtfContent = Params2::first()->EnteteRecu;
+        $document = new Document($rtfContent);
+        $formatter = new HtmlFormatter();
+        $enteteNonStyle = $formatter->Format($document);
+        $enteteRecu = '
+        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+            <style>
+                p { margin: 0; padding: 0; line-height: 1.2; }
+                span { display: inline-block; }
+            </style>
+            ' . $enteteNonStyle . '
+        </div>
+        ';
+
+        // Pour l'EnteteDoc
+        $rtfContent = Params2::first()->EnteteDoc;
+        $document = new Document($rtfContent);
+        $formatter = new HtmlFormatter();
+        $enteteNonStyle = $formatter->Format($document);
+        $enteteDoc = '
+        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+            <style>
+                p { margin: 0; padding: 0; line-height: 1.2; }
+                span { display: inline-block; }
+            </style>
+            ' . $enteteNonStyle . '
+        </div>
+        ';
+
+        // Pour l'EnteteEngage
+        $rtfContent = Params2::first()->EnteteEngage;
+        $document = new Document($rtfContent);
+        $formatter = new HtmlFormatter();
+        $enteteNonStyle = $formatter->Format($document);
+        $enteteEngage = '
+        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+            <style>
+                p { margin: 0; padding: 0; line-height: 1.2; }
+                span { display: inline-block; }
+            </style>
+            ' . $enteteNonStyle . '
+        </div>
+        ';
+
+         // Pour l'enteteFiches
+        if ($settings && !empty($settings->EnteteFiches)) {
+            $document = new Document($settings->EnteteFiches);
+            $formatter = new HtmlFormatter();
+            $enteteNonStyle = $formatter->Format($document);
+            $enteteFiches = '
+                <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+                    <style>
+                        p { margin: 0; padding: 0; line-height: 1.2; }
+                        span { display: inline-block; }
+                    </style>
+                    ' . $enteteNonStyle . '
+                </div>';
+        } else {
+            $enteteFiches = '<p></p>';
+        }
+
+        // Pour l'entête
+        $rtfContent = Params2::first()->EnteteBull;
+        $document = new Document($rtfContent);
+        $formatter = new HtmlFormatter();
+        $enteteNonStyle = $formatter->Format($document);
+        $entete = '
+        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+            <style>
+                p { margin: 0; padding: 0; line-height: 1.2; }
+                span { display: inline-block; }
+            </style>
+            ' . $enteteNonStyle . '
+        </div>
+        ';
+
         // On récupère la liste des attributs "fillable" (convertible en inputs)
         $fields = (new Params2)->getFillable();
           
-        return view('pages.parametre.tables', compact('settings', 'fields'));
+        return view('pages.parametre.tables', compact('settings', 'fields', 'entete', 'enteteEngage', 'enteteDoc', 'enteteRecu', 'enteteFiches'));
     }
 
     public function updateIdentification(Request $request)

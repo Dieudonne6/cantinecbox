@@ -446,7 +446,7 @@ Route::get('/rapport/passage', [RapportannuelController::class, 'imprimerPassage
 Route::post('/rapport/redoublement', [RapportannuelController::class, 'imprimerRedoublement'])->name('rapport.redoublement');
 Route::post('/rapport/exclusion', [RapportannuelController::class, 'imprimerExclusion'])->name('rapport.exclusion');
 Route::post('/rapport/abandon', [RapportannuelController::class, 'imprimerAbandon'])->name('rapport.abandon');
-
+Route::get('/listeRaport', [RapportannuelController::class, 'imprimerlistegeneralerapport'])->name('rapport.liste');
 
 
 
@@ -487,3 +487,5 @@ Route::prefix('parametre')->group(function() {
     Route::get('changement-trimestre', [ParametreController::class, 'changementTrimestre'])
          ->name('parametre.changementtrimestre');
 });
+
+

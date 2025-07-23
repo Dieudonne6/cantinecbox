@@ -528,12 +528,12 @@
                 <div class="row mt-4 mb-4">
                     <div class="col-md-6 mb-4">
                         <label>Message fiche de notes</label>
-                        <div class="quill-editor" data-name="message_fiche_notes">{!! $settings->EnteteFiches  ?? '' !!}</div>
+                        <div class="quill-editor" data-name="message_fiche_notes">{!! $enteteFiches  ?? '' !!}</div>
                         <input type="hidden" name="message_fiche_notes">
                     </div>
                     <div class="col-md-6 mb-4">
                         <label>Message des reçus</label>
-                        <div class="quill-editor" data-name="message_des_recus">{!! $settings->EnteteRecu ?? '' !!}</div>
+                        <div class="quill-editor" data-name="message_des_recus">{!! $enteteRecu ?? '' !!}</div>
                         <input type="hidden" name="message_des_recus">
                     </div>
                 </div>
@@ -543,12 +543,12 @@
                 <div class="row mb-4">
                     <div class="col-md-6 mb-4">
                         <label>Entête des Documents</label>
-                        <div class="quill-editor" data-name="entete_des_documents">{!! $settings->EnteteDoc ?? '' !!}</div>
+                        <div class="quill-editor" data-name="entete_des_documents">{!! $enteteDoc ?? '' !!}</div>
                         <input type="hidden" name="entete_des_documents">
                     </div>
                     <div class="col-md-6 mb-4">
                         <label>Texte Fiche d’Engagement</label>
-                        <div class="quill-editor" data-name="texte_fiche_engagement">{!! $settings->EnteteEngage ?? '' !!}</div>
+                        <div class="quill-editor" data-name="texte_fiche_engagement">{!! $enteteEngage ?? '' !!}</div>
                         <input type="hidden" name="texte_fiche_engagement">
                     </div>
                 </div>
@@ -557,7 +557,7 @@
                 {{-- Groupe 3 --}}
                 <div class="col-md-12 mb-4">
                     <label>Entête des bulletins</label>
-                    <div class="quill-editor" data-name="entete_bulletins">{!! $settings->EnteteBull ?? '' !!}</div>
+                    <div class="quill-editor" data-name="entete_bulletins">{!! $entete ?? '' !!}</div>
                     <input type="hidden" name="entete_bulletins">
                 </div> 
 
@@ -571,6 +571,7 @@
                 <div class="d-flex justify-content-end mb-4">
                     <button type="submit" class="btn btn-success">Enregistrer</button>
                 </div>
+                <br>
             </div>
 
             <!-- Quill CDN -->

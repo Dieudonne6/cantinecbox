@@ -62,6 +62,9 @@ class RecomputeSem2MI_MS extends Command
                     } elseif ($mi === 21 && $devCount === 1) {
                         // cas de conduite
                         $ms = $sumDevs;
+                    } elseif ($mi === 21 && $devCount > 1) {
+                        // cas de conduite
+                        $ms = round(($sumDevs) / ($devCount), 2);
                     } else {
                         // MS = (MI + somme devoirs) / (devCount + 1)
                         $ms = round(($mi + $sumDevs) / ($devCount + 1), 2);

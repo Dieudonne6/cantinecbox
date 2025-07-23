@@ -33,6 +33,7 @@
               </div>
             @endif
               <h3 class="font-weight-light text-center text-uppercase">Connectez-vous</h3>
+        
                 <form action="{{url('logins')}}" class="pt-3" method="POST">
                   {{csrf_field() }}
                   <div class="form-group">

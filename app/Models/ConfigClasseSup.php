@@ -9,7 +9,7 @@ class ConfigClasseSup extends Model
     public $timestamps = false;       // si vous n’avez pas created_at/updated_at
     protected $primaryKey = 'id';     // clé primaire
     protected $fillable = [
-        'codeClas',
+        'classeSup',
         'libelle_promotion',
         'libelle_classe_sup',
     ];

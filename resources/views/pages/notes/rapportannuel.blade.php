@@ -64,9 +64,8 @@
                                 <select class="form-control js-example-basic-multiple" id="tableSelect2" onchange="displayTable2()">
                                     <option value="" selected disabled> -- Classes -- </option>
                                     @foreach ($classesAvecRapport as $classeCR)
-                                        <option name="classe_selectionne" value="{{ $classeCR->CODECLAS }}">
-                                            {{ $classeCR->CODECLAS }}
-                                            
+                                        <option name="classe_selectionne" value="{{ $classeCR->CODECLAS }}" >
+                                            {{ $classeCR->CODECLAS }}  
                                         </option>
                                     @endforeach
                                 </select>
@@ -190,12 +189,19 @@
                             </form>
 
                             <button class="btn btn-outline-secondary btn-sm fw-bold " type="button" onclick="printTable()" >Imprimer rapport</button>
+                            <button class="btn btn-outline-secondary btn-sm fw-bold " type="button" onclick="exportToExcel()" >Exporter vers Excel</button>
                             <button id="btnToggle" class="btn btn-outline-primary btn-sm fw-bold ">Afficher/ignorer</button>
-
+                            
+                            
                             <form method="POST" action="{{ route('classe.delete') }}">
                                 @csrf
                                 <input type="hidden" name="classe_selectionne" id="classeCR" value="{{ old('classe_selectionne')}}">
                                 <button class="btn btn-danger btn-sm">Supprimer</button>
+                            </form>
+
+                            <form action="{{ route('rapport.liste') }}" method="GET">
+                                @csrf
+                                <button  class="btn btn-outline-secondary btn-sm fw-bold">Tous les rapports</button>
                             </form>
                             
                         </div>
@@ -463,8 +469,8 @@
 
             {{-- debut div cacher pour le bouton imprimer rapport --}}
             <div id="rapportData" style="display: none;">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <div style="border: 1px solid #333; padding: 10px; background-color: rgb(185,185,185); border-radius: 8px;">
+                <div  style="display: flex; align-items: center; justify-content: space-between;">
+                    <div class="screen-only" style="border: 1px solid #333; padding: 10px; background-color: rgb(185,185,185); border-radius: 8px;">
                         @foreach ($params2 as $param)
                             <strong>{{ $param->NOMETAB }}</strong><br>
                             {{ $param->ADRESSE }}<br>
@@ -474,7 +480,7 @@
                         <h3 style="margin-bottom: 0;">RAPPORT DE FIN D'ANNEE</h3>
                         <div>{{ $anneeScolaire }}</div>
                     </div>
-                    <div>
+                    <div class="screen-only">
                         <img src="data:image/png;base64,{{ base64_encode($params2[0]->logoimage ?? '') }}" alt="Logo" width="60">
                     </div>
                 </div>
@@ -672,41 +678,114 @@
         <script>
             function printTable() {
 
-            const select = document.getElementById('classeSup');
-            const code = select.value; // ex: "6EM1", "TleA2-1"
+                const select = document.getElementById('classeSup');
+                const code = select.value; // ex: "6EM1", "TleA2-1"
           
-            document.getElementById('libSup').textContent  = code;
+                document.getElementById('libSup').textContent  = code;
 
-                const content = document.getElementById('rapportData');
-                if (!content) {
-                    alert('Rapport non généré. Veuillez d\'abord cliquer sur "Créer rapport".');
+                    const content = document.getElementById('rapportData');
+                    if (!content) {
+                        alert('Rapport non généré. Veuillez d\'abord cliquer sur "Créer rapport".');
+                        return;
+                    }
+
+                    const win = window.open('', '_blank');
+                    win.document.write(`
+                        <html>
+                        <head>
+                            <title>Impression du rapport</title>
+                            <style>
+                                body { font-family: Arial, sans-serif; padding: 20px; }
+                                table { width: 100%; border-collapse: collapse; }
+                                th, td { border: 1px solid #000; padding: 5px; text-align: center; }
+                                th { background-color: #f2f2f2; }
+                                h4 { margin-top: 30px; margin-bottom: 10px; }
+                                p { margin: 2px 0; }
+                            </style>
+                        </head>
+                        <body>${content.innerHTML}</body>
+                        </html>
+                    `);
+                    win.document.close();
+                    win.focus();
+
+                    win.onload = () => {
+                        win.print();
+                        win.close();
+                    };
+            }
+
+
+           
+
+            const classes = @json($selectedClasseCode);
+
+            function exportToExcel() {
+        
+
+                const contentElement = document.getElementById('rapportData');
+              
+                if (!contentElement) {
+                    alert('Aucun rapport à exporter. Veuillez d\'abord créer les rapports.');
                     return;
                 }
 
-                const win = window.open('', '_blank');
-                win.document.write(`
-                    <html>
-                    <head>
-                        <title>Impression du rapport</title>
-                        <style>
-                            body { font-family: Arial, sans-serif; padding: 20px; }
-                            table { width: 100%; border-collapse: collapse; }
-                            th, td { border: 1px solid #000; padding: 5px; text-align: center; }
-                            th { background-color: #f2f2f2; }
-                            h4 { margin-top: 30px; margin-bottom: 10px; }
-                            p { margin: 2px 0; }
-                        </style>
-                    </head>
-                    <body>${content.innerHTML}</body>
-                    </html>
-                `);
-                win.document.close();
-                win.focus();
+               
+                // Cloner le contenu pour ne pas modifier l'original
+                const clone = contentElement.cloneNode(true);
 
-                win.onload = () => {
-                    win.print();
-                    win.close();
-                };
+                // Supprimer les éléments avec la classe .no-print ou .screen-only
+                const unwantedElements = clone.querySelectorAll('.screen-only');
+                unwantedElements.forEach(el => el.remove());
+
+                // style Excel plus propre
+                const style = `
+                    <style>
+                        table {
+                            border-collapse: collapse;
+                            width: 100%;
+                        }
+                        th, td {
+                            border: 1px solid black;
+                            padding: 5px;
+                            text-align: center;
+                            font-size: 20px;
+                            line-height: 1.5rem;
+                        }
+                        th {
+                            font-weight: bold;
+                        }
+                        td {
+                            text-align: center;
+                        }
+                    </style>
+                `;
+
+                // Construire le HTML complet pour Excel
+                const html = `
+                    <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                        xmlns:x="urn:schemas-microsoft-com:office:excel"
+                        xmlns="http://www.w3.org/TR/REC-html40">
+                    <head>
+                        <meta charset="UTF-8">
+                        ${style}
+                    </head>
+                    <body>
+                       
+                        ${clone.innerHTML}
+                    </body>
+                    </html>
+                `;
+
+                const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `rapport_${classes}.xls`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
             }
         </script>
 
