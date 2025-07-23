@@ -230,9 +230,18 @@ class StatistiquesService
     public function calculerSynoptique(array $data)
     {
         $periode = (int) ($data['periode'] ?? 1);
-        $classes = Classes::with(['eleves.notes'])->get();
+        // $classes = Classes::with(['eleves.notes'])->get();
+        // $resultats = [];
+        // $groupes = $classes->groupBy(fn($classe) => $this->getGroupLabel($classe));
+
+            // ON NE CHARGE QUE LES CLASSES AYANT AU MOINS UN élève
+        $classes = Classes::with(['eleves.notes'])
+            ->whereHas('eleves')     // <— filtre SQL : effectif > 0
+            ->get();
+
         $resultats = [];
-        $groupes = $classes->groupBy(fn($classe) => $this->getGroupLabel($classe));
+        $groupes   = $classes->groupBy(fn($classe) => $this->getGroupLabel($classe));
+
 
         foreach ($groupes as $groupLabel => $classesGroupe) {
             $eleves = $classesGroupe->flatMap->eleves;
@@ -742,5 +751,6 @@ class StatistiquesService
     
         return $resultats;
     }
+    
     
 }

@@ -290,7 +290,7 @@
                     <!-- Tableau des intervalles -->
                     <div class="table-responsive">
 
-                        <table class="table table-bordered" style="max-width: 500px; margin: 0 auto;">
+                        <table style="max-width: 500px; margin: 0 auto;">
                             <thead>
                                 <tr>
                                     <th style="text-align: center;">Intervalle</th>
@@ -321,6 +321,9 @@
                                                 min="0" max="20"                                              
                                                 value="{{ old("intervales.I{$i}.max", request("intervales.I{$i}.max") ?? ($i == 1 ? '08.50' : ($i == 2 ? '10.00' : ($i == 3 ? '12.00' : ($i == 4 ? '16.00' : ($i == 5 ? '20.00' : '' )))))) }}">
                                         </td>
+                                        <td style="display: none;">
+                                            <a href="jojoo">jjojo</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                                 <!-- Template caché pour intervalles dynamiques -->
@@ -334,6 +337,13 @@
                                         <input type="number" class="form-control mx-auto interval-input" data-type="max"
                                             step="0.01" min="0" max="20">
                                     </td>
+
+                                    <td style="text-align: center;">
+                                        <button type="button" class="btn btn-sm btn-danger remove-interval-btn">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+
                                 </tr>
                             </tbody>
                         </table>
@@ -530,35 +540,51 @@
                                 });
                             }
 
-                            // Initialize existing inputs
-                            document.querySelectorAll('.interval-input').forEach(input => {
-                                attachEvents(input);
-                            });
+                              function bindRemove(btn) {
+                                    btn.addEventListener('click', () => {
+                                    btn.closest('tr').remove();
+                                    currentIntervalCount--;
+                                    if (currentIntervalCount < maxIntervals) {
+                                        addIntervalBtn.disabled = false;
+                                    }
+                                    });
+                                }
 
-                            addIntervalBtn.addEventListener('click', () => {
-                                if (currentIntervalCount >= maxIntervals) return;
-                                currentIntervalCount++;
-                                const newRow = intervalTemplate.cloneNode(true);
-                                newRow.id = '';
-                                newRow.style.display = '';
-                                newRow.querySelector('.interval-label').textContent = `I${currentIntervalCount}`;
-                                const minIn = newRow.querySelector('input[data-type="min"]');
-                                const maxIn = newRow.querySelector('input[data-type="max"]');
-                                minIn.dataset.interval = currentIntervalCount;
-                                maxIn.dataset.interval = currentIntervalCount;
-                                minIn.name = `intervales[I${currentIntervalCount}][min]`;
-                                maxIn.name = `intervales[I${currentIntervalCount}][max]`;
-                                // restore old values if exist
-                                const old = oldIntervals[`I${currentIntervalCount}`] || {};
-                                minIn.value = old.min ?? '';
-                                maxIn.value = old.max ?? '';
-                                attachEvents(minIn);
-                                attachEvents(maxIn);
-                                tableBody.appendChild(newRow);
-                                if (currentIntervalCount === maxIntervals) addIntervalBtn.disabled = true;
-                            });
-                        });
-                    </script>
+ // Initialise les inputs existants
+  document.querySelectorAll('.interval-input').forEach(attachEvents);
+
+  addIntervalBtn.addEventListener('click', () => {
+    if (currentIntervalCount >= maxIntervals) return;
+    currentIntervalCount++;
+
+    // 1) Clone du template (inclut déjà la colonne "Supprimer")
+    const newRow = intervalTemplate.cloneNode(true);
+    newRow.id = '';
+    newRow.style.display = '';
+
+    // 2) Mise à jour du label et des inputs
+    newRow.querySelector('.interval-label').textContent = `I${currentIntervalCount}`;
+    ['min','max'].forEach(type => {
+      const inp = newRow.querySelector(`input[data-type="${type}"]`);
+      inp.dataset.interval = currentIntervalCount;
+      inp.name            = `intervales[I${currentIntervalCount}][${type}]`;
+      inp.value           = oldIntervals[`I${currentIntervalCount}`]?.[type] ?? '0.00';
+      attachEvents(inp);
+    });
+
+    // 3) Binder le bouton Supprimer **uniquement** sur ce newRow
+    bindRemove(newRow.querySelector('.remove-interval-btn'));
+
+    // 4) L'ajoute au tableau
+    tableBody.appendChild(newRow);
+
+    // 5) Désactive "Ajouter" si on atteint la limite
+    if (currentIntervalCount === maxIntervals) {
+      addIntervalBtn.disabled = true;
+    }
+  });
+});
+</script>
 
                     @if ($errors->any())
                         <div class="alert alert-danger">
@@ -966,7 +992,6 @@
                                     </table>
                                 </div>
                             @endif
-
                         @elseif($typeEtat == 'statistique')
                             <div class="table-responsive mt-5">
                                 <h4 class="text-center mb-4 no-print" id="titre">Statistique des Résultats  {{ ' - ' . $titre . ' ' . $anneeScolaire }}</h4>

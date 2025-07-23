@@ -186,6 +186,7 @@ class RapportannuelController extends Controller
         $labelsSup  = $request->input('libelle_classe_sup');
 
         foreach ($codes as $i => $code) {
+           // dd( $code);
             // On peut faire un updateOrCreate pour éviter les doublons sur codeClas
             ConfigClasseSup::updateOrCreate(
                 ['codeClas' => $code],
@@ -426,6 +427,7 @@ class RapportannuelController extends Controller
          
         $codeClasse = $request->input('classe_selectionne');
  
+        // dd($codeClasse);
         Rapport::where('CODECLAS', $codeClasse)->delete();
 
         return redirect()->back()->with('success', 'Classes Supprimée avec succès');
