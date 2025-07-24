@@ -478,6 +478,9 @@ class RapportannuelController extends Controller
     public function imprimerlistegeneralerapport() {
 
         $rapports = Rapport::orderBy('CODECLAS')->orderBy('RANG')->get();
+        $classe = Classes::all();
+        $promo = Promo::get();
+        $classeSup = ConfigClasseSup::all();
 
         // Regrouper les rapports par CODECLAS
         $rapportsParClasse = $rapports->groupBy('CODECLAS');
@@ -525,6 +528,9 @@ class RapportannuelController extends Controller
             'statsParClasse'  => $statsParClasse,
             'params2'   => $params2,
             'anneeScolaire' => $anneeScolaire,
+            'classe' => $classe,
+            'promo' => $promo,
+            'classeSup' => $classeSup,
         ]);
     }
 

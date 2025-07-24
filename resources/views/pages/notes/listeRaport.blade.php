@@ -93,7 +93,14 @@
                                     @if ($groupe->count())
                                         <h4 style="margin-top: 20px;">{{ $titre }}</h4>
                                         @if ($code === 'P')
-                                            <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT SONT PROPOSES AU PASSAGE : <span id="libSup" style="font-weight: bold;"></span> </p>
+                                        @php
+                                            $codepromo = $classe->where('CODECLAS', $codeClasse)->pluck('CODEPROMO');
+                                            $codeP = $codepromo[0];
+                                            $LibelpromoSup = $classeSup->where('codeClas', $codeP)->pluck('libelle_classe_sup');
+                                            $LibelpromoSupp = $LibelpromoSup[0];
+                                            // echo($LibelpromoSupp);   
+                                        @endphp
+                                            <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT SONT PROPOSES AU PASSAGE : <span id="libSup" style="font-weight: bold;">  {{ $LibelpromoSupp }} </span> </p>
                                         @elseif ($code === 'R')
                                             <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT REDOUBLENT LA CLASSE DE : {{ $codeClasse ?? '' }} </p>
                                         @elseif ($code === 'X')
