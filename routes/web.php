@@ -474,7 +474,11 @@ Route::prefix('parametre')->group(function() {
          Route::post('/params2/updateIdentification', [ParametreController::class, 'updateIdentification'])->name('params2.updateIdentification');
          Route::get('/appreciations/edit', [ParametreController::class, 'editAppreciation'])->name('appreciations.edit');
          Route::post('/appreciations/update', [ParametreController::class, 'updateAppreciation'])->name('appreciations.update');
-         Route::put('/params2/updateGeneraux', [ParametreController::class, 'updateGeneraux'])->name('params2.updateGeneraux');
+         Route::put('parametre/params2/updateGeneraux', [ParametreController::class, 'updateGeneraux'])->name('params2.updateGeneraux');
+         Route::put('/params2/updateNumerotation', [ParametreController::class, 'updateNumerotation'])->name('params2.updateNumerotation');
+         Route::post('tables/update-messages', [ParametreController::class, 'updateMessages'])->name('parametre.updateMessages');
+Route::post('parametre/tester-rtf', [ParametreController::class, 'testerRtf'])
+     ->name('parametre.testerRtf');
 
     Route::get('bornes-exercice', [ParametreController::class, 'bornes'])
          ->name('parametre.bornes');
