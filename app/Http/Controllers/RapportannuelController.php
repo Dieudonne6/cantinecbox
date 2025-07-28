@@ -186,6 +186,7 @@ class RapportannuelController extends Controller
         $labelsSup  = $request->input('libelle_classe_sup');
 
         foreach ($codes as $i => $code) {
+           // dd( $code);
             // On peut faire un updateOrCreate pour éviter les doublons sur codeClas
             ConfigClasseSup::updateOrCreate(
                 ['codeClas' => $code],
@@ -426,6 +427,7 @@ class RapportannuelController extends Controller
          
         $codeClasse = $request->input('classe_selectionne');
  
+        // dd($codeClasse);
         Rapport::where('CODECLAS', $codeClasse)->delete();
 
         return redirect()->back()->with('success', 'Classes Supprimée avec succès');
@@ -471,5 +473,66 @@ class RapportannuelController extends Controller
     public function imprimerAbandon() {
         return $this->imprimerParStatut('Z');
     }
+
+
+    public function imprimerlistegeneralerapport() {
+
+        $rapports = Rapport::orderBy('CODECLAS')->orderBy('RANG')->get();
+        $classe = Classes::all();
+        $promo = Promo::get();
+        $classeSup = ConfigClasseSup::all();
+
+        // Regrouper les rapports par CODECLAS
+        $rapportsParClasse = $rapports->groupBy('CODECLAS');
+
+        $effectifTotal = $rapportsParClasse->map(function($rapportsDeLaClasse) {
+            return $rapportsDeLaClasse->count();
+        });
+
+        $statsParClasse = $rapportsParClasse->map(function($rapportsDeLaClasse, $codeClasse) {
+            return [
+              
+                'effectifFilles'   => $rapportsDeLaClasse->where('SEXE', 2)->count(),
+
+                'passantsTotal'    => $rapportsDeLaClasse->where('STATUTF', 'P')->count(),
+                'passantesFilles'  => $rapportsDeLaClasse->where('STATUTF', 'P')->where('SEXE', 2)->count(),
+
+                'redoublesTotal'   => $rapportsDeLaClasse->where('STATUTF', 'R')->count(),
+                'redoublesFilles'=> $rapportsDeLaClasse->where('STATUTF', 'R')->where('SEXE', 2)->count(),
+
+                'exclusTotal'      => $rapportsDeLaClasse->where('STATUTF', 'X')->count(),
+                'excluesFilles'    => $rapportsDeLaClasse->where('STATUTF', 'X')->where('SEXE', 2)->count(),
+
+                'abandonsTotal'    => $rapportsDeLaClasse->where('RANG', 0)->count(),
+                'abandonsFilles'   => $rapportsDeLaClasse->where('RANG', 0)->where('SEXE', 2)->count(),
+            ];
+        });
+
+
+        $params2 = Params2::all();
+
+        $contrat = ParamContrat::first();
+
+        $anneeCourante = (int) $contrat->anneencours_paramcontrat;
+        // Calcul de l'année suivante
+        $anneeSuivante = $anneeCourante + 1;
+        $anneeScolaire = "{$anneeCourante}-{$anneeSuivante}";
+
+
+        
+
+        return view('pages.notes.listeRaport', [
+            'rapports' => $rapports,
+            'effectifTotal' => $effectifTotal,
+            'rapportsParClasse' => $rapportsParClasse,
+            'statsParClasse'  => $statsParClasse,
+            'params2'   => $params2,
+            'anneeScolaire' => $anneeScolaire,
+            'classe' => $classe,
+            'promo' => $promo,
+            'classeSup' => $classeSup,
+        ]);
+    }
+
 
 }

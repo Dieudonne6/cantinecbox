@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Classes;
+use App\Models\Eleve;
 use App\Models\DecisionConfigAnnuel;
 use Illuminate\Support\Facades\DB;
 
@@ -229,9 +230,18 @@ class StatistiquesService
     public function calculerSynoptique(array $data)
     {
         $periode = (int) ($data['periode'] ?? 1);
-        $classes = Classes::with(['eleves.notes'])->get();
+        // $classes = Classes::with(['eleves.notes'])->get();
+        // $resultats = [];
+        // $groupes = $classes->groupBy(fn($classe) => $this->getGroupLabel($classe));
+
+            // ON NE CHARGE QUE LES CLASSES AYANT AU MOINS UN élève
+        $classes = Classes::with(['eleves.notes'])
+            ->whereHas('eleves')     // <— filtre SQL : effectif > 0
+            ->get();
+
         $resultats = [];
-        $groupes = $classes->groupBy(fn($classe) => $this->getGroupLabel($classe));
+        $groupes   = $classes->groupBy(fn($classe) => $this->getGroupLabel($classe));
+
 
         foreach ($groupes as $groupLabel => $classesGroupe) {
             $eleves = $classesGroupe->flatMap->eleves;
@@ -255,27 +265,49 @@ class StatistiquesService
                 case 1:
                     
                     // I1
-                    $elevesInscritDebutAnne = $eleves->filter(function($e) use ($isValid) {
-                            return
-                             ($isValid($e->INT1) && $e->SEMESTRE = 1) 
-                            || ($isValid($e->INT2 ) && $e->SEMESTRE = 1) 
-                            || ($isValid($e->INT3 ) && $e->SEMESTRE = 1)
-                            || ($isValid($e->INT4 ) && $e->SEMESTRE = 1)
-                            || ($isValid($e->DEV1 ) && $e->SEMESTRE = 1)
-                            || ($isValid($e->DEV2 ) && $e->SEMESTRE = 1);
+                    // $elevesInscritsDebutAnnee = $eleves->filter(function($e) use ($isValid) {
+                    //         return
+                    //          ($isValid($e->INT1) && $e->SEMESTRE == 1) 
+                    //         || ($isValid($e->INT2 ) && $e->SEMESTRE == 1) 
+                    //         || ($isValid($e->INT3 ) && $e->SEMESTRE == 1)
+                    //         || ($isValid($e->INT4 ) && $e->SEMESTRE == 1)
+                    //         || ($isValid($e->DEV1 ) && $e->SEMESTRE == 1)
+                    //         || ($isValid($e->DEV2 ) && $e->SEMESTRE == 1);
+                    //     });
+
+                    
+                    // 2) Filtrage avec la relation 'notes'
+                    $elevesInscritsDebutAnnee = $eleves
+                        ->filter(function($eleve) {
+                        return $eleve->notes
+                                ->where('SEMESTRE', '1')
+                                ->filter(function($note) {
+                                    foreach (['INT1','INT2','INT3','INT4','DEV1','DEV2'] as $col) {
+                                        $val = $note->$col;
+                                        if (! is_null($val) && $val !== -1 && $val !== 21) {
+                                            return true;
+                                        }
+                                    }
+                                    return false;
+                                })
+                                ->isNotEmpty();
                         });
-                    $countI1Garcons = $elevesInscritDebutAnne->where('SEXE','1')->count();
-                    $countI1Filles  = $elevesInscritDebutAnne->where('SEXE','2')->count();
+
+                    $countI1Garcons = $elevesInscritsDebutAnnee->where('SEXE','1')->count();
+                    $countI1Filles  = $elevesInscritsDebutAnnee->where('SEXE','2')->count();
                     $countI1 = $countI1Garcons + $countI1Filles;
 
                     // I2 / I3 : MS1 valide + STATUT
-                    $elevesI2 = $hasMS1->where('STATUT', 0);
-                    $elevesI3 = $hasMS1->where('STATUT', 1);
+                    $elevesI2 = $hasMS1->where('STATUT', '0');
+                    $elevesI3 = $hasMS1->where('STATUT', '1');
 
+                
+
+                    // dd($elevesI2);
                     // I4 
 
                         // 4) parmis tous les eleves inscrit en debut d'anne , ne garder que ceux qui n'ont pas MS1
-                        $elevesAbandonSem1 = $elevesInscritDebutAnne->filter(function($e) use ($isValid) {
+                        $elevesAbandonSem1 = $elevesInscritsDebutAnnee->filter(function($e) use ($isValid) {
                             return 
                                 ! ($isValid($e->MS1));
                         });
@@ -313,22 +345,30 @@ class StatistiquesService
                 case 2:
 
                     // I1
-                    $elevesInscritDebutAnne = $eleves->filter(function($e) use ($isValid) {
-                            return
-                             ($isValid($e->INT1) && $e->SEMESTRE = 1) 
-                            || ($isValid($e->INT2 ) && $e->SEMESTRE = 1) 
-                            || ($isValid($e->INT3 ) && $e->SEMESTRE = 1)
-                            || ($isValid($e->INT4 ) && $e->SEMESTRE = 1)
-                            || ($isValid($e->DEV1 ) && $e->SEMESTRE = 1)
-                            || ($isValid($e->DEV2 ) && $e->SEMESTRE = 1);
+                    // 2) Filtrage avec la relation 'notes'
+                    $elevesInscritsDebutAnnee = $eleves
+                        ->filter(function($eleve) {
+                        return $eleve->notes
+                                ->where('SEMESTRE', '1')
+                                ->filter(function($note) {
+                                    foreach (['INT1','INT2','INT3','INT4','DEV1','DEV2'] as $col) {
+                                        $val = $note->$col;
+                                        if (! is_null($val) && $val !== -1 && $val !== 21) {
+                                            return true;
+                                        }
+                                    }
+                                    return false;
+                                })
+                                ->isNotEmpty();
                         });
-                    $countI1Garcons = $elevesInscritDebutAnne->where('SEXE','1')->count();
-                    $countI1Filles  = $elevesInscritDebutAnne->where('SEXE','2')->count();
+
+                    $countI1Garcons = $elevesInscritsDebutAnnee->where('SEXE','1')->count();
+                    $countI1Filles  = $elevesInscritsDebutAnnee->where('SEXE','2')->count();
                     $countI1 = $countI1Garcons + $countI1Filles;
                     
                     // I2 / I3 : MS2 valide + STATUT
-                    $elevesI2 = $hasMS2->where('STATUT', 0);
-                    $elevesI3 = $hasMS2->where('STATUT', 1);
+                    $elevesI2 = $hasMS2->where('STATUT', '0');
+                    $elevesI3 = $hasMS2->where('STATUT', '1');
 
                     // I4 = élèves sans MAN
                         $elevesAbandonAnne = $eleves->filter(function($e) use ($isValid) {
@@ -500,7 +540,7 @@ class StatistiquesService
     
     
 
-        public function calculerEffectifs(array $data)
+    public function calculerEffectifs(array $data)
     {
         // 1. Choix de la colonne selon la période
         if ($data['periode'] === '1') {
@@ -711,5 +751,6 @@ class StatistiquesService
     
         return $resultats;
     }
+    
     
 }

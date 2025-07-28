@@ -13,6 +13,11 @@ use RtfHtmlPhp\Html\HtmlFormatter;
 use RtfHtmlPhp\RtfDocument;
 use PHPRtfLite\Rtf;
 
+use Roundcube\Rtf\Html; 
+// use RtfHtmlPhp\Document;
+use RtfHtmlPhp\Document;
+use RtfHtmlPhp\Html\HtmlFormatter;
+
 
 
 class ParametreController extends Controller

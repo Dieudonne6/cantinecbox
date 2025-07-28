@@ -588,7 +588,8 @@
                     <button type="submit" class="btn btn-success">Enregistrer</button>
                     <button type="reset" class="btn btn-secondary">Annuler</button>
                 </div>
-                <br>
+                    <br>
+                    <br>
                 <!-- Quill CDN -->
                 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
                 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>

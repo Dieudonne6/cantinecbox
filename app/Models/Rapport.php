@@ -22,7 +22,7 @@ class Rapport extends Model
         'NOM',        
         'PRENOM', 
         'MOY1',
-        'MOY2',
+        'MOY2',                                                                         
         'MOY3',
         'MOYAN',
         'OBSERVATION',
