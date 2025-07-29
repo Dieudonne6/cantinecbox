@@ -118,6 +118,9 @@
                 <div class="col-md-2 mb-3">
                     <button onclick="printNote()" class="btn btn-primary">Imprimer</button>
                 </div>
+                <div class="com-md-2 mb-3">
+                     <button class="btn btn-outline-secondary btn-sm fw-bold " type="button" onclick="exportToExcel()" >Exporter</button>
+                </div>
             </div>
             <div class="table-responsive mb-4" id="mainTable">
                 <div class="titles mb-4 d-none">
@@ -416,6 +419,98 @@
                 document.body.innerHTML = originalContent; // Restaurer le contenu original
             }, 1000);
         }
+
+        const selectedClass = @json($selectedClass);
+        const selectedPeriod = @json($selectedPeriod);
+        let typean = @json($typean);
+        let selectedEvaluation = @json($selectedEvaluation);
+
+        if(typean == 2){
+            typean = 'Trimestre';
+        }else {
+            typean = 'Semestre';
+        }
+
+        if(selectedEvaluation == 'MS1'){
+            selectedEvaluation = 'Moyenne';
+        } else if(selectedEvaluation == 'DEV1'){
+            selectedEvaluation = 'DEV1';
+        }else if(selectedEvaluation == 'DEV3'){
+            selectedEvaluation = 'DEV3';
+        }else if(selectedEvaluation == 'DEV2'){
+            selectedEvaluation = 'DEV2';
+        }else {
+            selectedEvaluation = 'Test';
+        }
+
+         function exportToExcel() {
+                const contentElement = document.getElementById('mainTable');
+              
+                if (!contentElement) {
+                    alert('Aucun tableau à exporter. Veuillez d\'abord calculer les moyennes.');
+                    return;
+                }
+
+               
+                // Cloner le contenu pour ne pas modifier l'original
+                const clone = contentElement.cloneNode(true);
+
+                // Supprimer les éléments avec la classe .no-print ou .screen-only
+                const unwantedElements = clone.querySelectorAll('.screen-only');
+                unwantedElements.forEach(el => el.remove());
+
+                // style Excel plus propre
+                const style = `
+                    <style>
+                        table {
+                            border-collapse: collapse;
+                            width: 100%;
+                        }
+                        th, td {
+                            border: 1px solid black;
+                            padding: 5px;
+                            text-align: center;
+                            font-size: 20px;
+                            line-height: 1.5rem;
+                        }
+                        th {
+                            font-weight: bold;
+                        }
+                        td {
+                            text-align: center;
+                        }
+                        td.mat {
+                            mso-number-format:"0";
+                        }
+                    </style>
+                `;
+
+                // Construire le HTML complet pour Excel
+                const html = `
+                    <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                        xmlns:x="urn:schemas-microsoft-com:office:excel"
+                        xmlns="http://www.w3.org/TR/REC-html40">
+                    <head>
+                        <meta charset="UTF-8">
+                        ${style}
+                    </head>
+                    <body>
+                       
+                        ${clone.innerHTML}
+                    </body>
+                    </html>
+                `;
+
+                const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `tableauDeNotes_${selectedClass}_/_${typean}_${selectedPeriod}_${selectedEvaluation}.xls`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
 
         document.getElementById('calculMoyenneForm').addEventListener('submit', function(e) {
             var classeSelect = document.getElementById("tableSelect4");
