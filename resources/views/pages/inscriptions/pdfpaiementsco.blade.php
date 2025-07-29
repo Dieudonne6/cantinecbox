@@ -452,7 +452,7 @@
 
             <section>
                 <div class="facture-container2">
-                    <div class="table4">
+                    <div class="table4 entre">
                         <table id="customers4">
                             <thead>
                                 <tr>
@@ -476,7 +476,7 @@
                         </table>
                     </div>
 
-                    <div class="table4">
+                    <div class="table4 cli">
                         <table id="customers4">
                             <thead>
                                 <tr>
@@ -524,7 +524,7 @@
             </div>
 
 
-            <div class="table2">
+            <div class="table2 specifique">
                 <table id="customers">
                     <thead>
                         <tr>
@@ -628,7 +628,7 @@
         </div>
     </div>
     {{-- </body> --}}
-    <script>
+    {{-- <script>
         function printInvoice() {
             // Vérifiez si une section spécifique doit être imprimée
             const invoice = document.querySelector('.invoice');
@@ -695,5 +695,264 @@
             printWindow.print();
             printWindow.close();
         }
-    </script>
+    </script> --}}
+
+    {{-- <script>
+    function printInvoice() {
+        const invoice = document.querySelector('.invoice');
+        const printWindow = window.open('', '', 'width=800,height=600');
+
+        printWindow.document.write('<html><head><title>Facture</title>');
+        printWindow.document.write('<style>');
+        printWindow.document.write(`
+            @media print {
+                @page {
+                    size: A5 portrait;
+                }
+                body {
+                    margin: 0;
+                    padding: 0;
+                }
+                .invoice {
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                    zoom: 0.4;
+                    width: 100%;
+                    height: auto;
+                    overflow: hidden;
+                    box-sizing: border-box;
+                }
+                body, p, td, th {
+                    font-size: 12px !important;
+                }
+            }
+
+            body { font-family: Arial, sans-serif; }
+
+            .btn-arrow { position: absolute; top: 0px; left: 0px; background-color: transparent !important; border: 1px !important; text-transform: uppercase !important; font-weight: bold !important; cursor: pointer !important; font-size: 17px !important; color: #b51818 !important; }
+            .btn-arrow:hover { color: #b700ff !important; }
+            p { font-size: 14px; margin-bottom: 10px; }
+            #mecef p { font-size: 1px; }
+            .facture-container1, .facture-container2, .facture-container5 { display: flex; justify-content: space-between; gap: 30px; border-radius: 5px; margin: 10px 20px; }
+            .info { flex: 1; padding: 10px; border-radius: 5px; margin-top: 1rem; }
+            .table4 { width: 100%; overflow: auto; }
+            #customers4 { width: 100%; border-collapse: collapse; }
+            #customers4 th, #customers4 td { border: 1px solid #ddd; padding: 6px; text-align: left; }
+            #customers4 th { background-color: #f2f2f2; }
+            #customers4 td p { margin: 0; }
+            .invoice { background-color: #fff; padding: 10px; margin: 10px auto; width: 100%; }
+            .entete, .bas { border: 1px solid #ccc; font-size: 13px; background: #cccccc34; }
+            .titre { margin: 10px auto; font-size: 14px; }
+            h2 { color: #333; }
+            ul { list-style-type: none; padding: 0; }
+            .title { font-size: 15px; font-weight: bold; text-align: center; }
+            .entreprise, .client { margin-left: 20px; border: 1px solid black; background: #aeadad35; width: 10rem; height: 7rem; text-align: center; margin-top: 1rem; }
+            .client { margin-top: -7.4rem; margin-left: 20rem; }
+            .infomecef { border: 1px solid black; width: 90%; margin: 2px auto; padding: 10px; }
+            .qcode { padding: 0px 10px 10px 5px; margin-top: -1rem; }
+            .mecef { margin-top: -7rem; margin-left: 4rem; font-size: 10px; padding: 2px; }
+            .textmontant { margin-left: 20px; margin-top: 10px; }
+            .textremerciement, .logo1 { margin-left: 10px; }
+            .info1 { margin-top: -1rem; margin-left: 20rem; }
+            .prix { font-weight: bold; color: black; font-size: 14px; text-align: center; padding: 4px; }
+            #customers, #customers2, #customers3, #customers8 {
+                font-family: Arial, Helvetica, sans-serif;
+                border-collapse: collapse;
+                margin-left: 10px;
+                margin-top: 1rem;
+                width: 90%;
+            }
+            #customers td, #customers th,
+            #customers2 td, #customers2 th,
+            #customers3 td, #customers3 th {
+                border: 1px solid #ddd;
+                padding: 6px;
+                text-align: left;
+                word-break: break-word;
+            }
+            #customers tr:nth-child(even),
+            #customers2 tr:nth-child(even),
+            #customers3 tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+            #customers th, #customers2 th, #customers3 th {
+                background-color: #a5d5e9;
+                color: black;
+                font-size: 12px;
+            }
+        `);
+        printWindow.document.write('</style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(invoice.innerHTML); // Injecte le HTML
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+    }
+</script> --}}
+
+<script>
+    function printInvoice() {
+        const invoice = document.querySelector('.invoice');
+        const printWindow = window.open('', '', 'width=800,height=600');
+
+        printWindow.document.write('<html><head><title>Facture</title>');
+        printWindow.document.write('<style>');
+        printWindow.document.write(`
+            @media print {
+                @page {
+                    size: A5 paysage;
+                    margin: 5mm;
+                }
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-size: 10px;
+                }
+                .invoice {
+                    zoom: 0.6;
+                    width: 100%;
+                    height: auto;
+                    margin: 0 auto;
+                    padding: 0;
+                    overflow: hidden;
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                }
+                *, *::before, *::after {
+                    box-sizing: border-box;
+                }
+            }
+
+            body { font-family: Arial, sans-serif; font-size: 10px; }
+
+            .btn-arrow { display: none; }
+
+            p, td, th, li, h1, h2, h3, h4 {
+                font-size: 10px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            #customers, #customers2, #customers3, #customers8 { font-family: Arial, Helvetica, sans-serif; border-collapse: collapse; margin-left: 40px; margin-top: 2rem; }
+
+            #customers td, #customers th, #customers2 td, #customers2 th, #customers3 td, #customers3 th { border: 1px solid #ddd; padding: 8px; text-align: left; max-width: 200px; word-wrap: break-word; word-break: break-all; }
+            #customers tr:nth-child(even), #customers2 tr:nth-child(even), #customers3 tr:nth-child(even) { background-color: #f2f2f2; }
+            #customers tr:hover, #customers2 tr:hover, #customers3 tr:hover { background-color: #ddd; }
+            #customers th, #customers2 th, #customers3 th { padding-top: 12px; padding-bottom: 12px; background-color: #a5d5e9; color: black; }
+
+            #customers4 th, #customers4 td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            #customers4 th { background-color: #f2f2f2; }
+            
+            .entete, .bas { border: 1px solid #ccc; font-size: 15px; background: #cccccc34; }
+
+            .facture-container1, .facture-container2, .facture-container5 {
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+                margin: 0 0;
+            }
+
+            .info {
+                padding: 5px;
+            }
+
+            .logo img{
+                width: 90px;
+                height: 60px;
+            }
+
+            .qcode img{
+                width: 60px;
+                height: 60px;
+            }
+
+            .invoice {
+                background-color: #fff;
+                margin: 0 auto;
+                padding: 5px;
+            }
+
+            .entete, .bas {
+                font-size: 10px;
+                padding: 4px;
+            }
+
+
+
+            .cli, .entre {
+                width: 43% !important;
+                background: #aeadad35; 
+            }
+
+            .info {
+                width: 43% !important;
+            }
+
+            .infomecef {
+                width: 90%;
+                margin: 5px auto;
+                padding: 5px;
+            }
+
+            .mecef { margin-top: -3.8rem; margin-left: 4rem; font-size: 10px; padding: 2px; }
+
+            .prix {
+                font-weight: bold;
+                font-size: 11px;
+                text-align: center;
+            }
+
+            #customers, #customers2, #customers3, #customers4 {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 5px 0;
+            }
+
+            table, th, td {
+                border: 1px solid #ccc;
+                padding: 4px;
+                font-size: 10px;
+            }
+
+            .table2 {
+                width: 50% !important;
+            }
+
+            .table3 {
+                width: 45% !important;
+                margin-left: 18rem;
+            }
+            
+            .specifique {
+                width: 45% !important;
+                margin-top: -4rem;
+                margin-left: 18rem;
+            }
+
+            .bas {
+                width: 45% !important;
+                margin-top: -5rem;
+                margin-left: 18rem;
+            }
+
+            th {
+                background-color: #e0e0e0;
+            }
+        `);
+        printWindow.document.write('</style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(invoice.innerHTML);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+    }
+</script>
+
+
 @endsection

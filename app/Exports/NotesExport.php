@@ -59,7 +59,8 @@ class NotesExport implements FromCollection, WithHeadings, WithStyles, WithColum
 
             $row = [
                 'MATRICULE'    => "\u{200B}" . $firstNote->eleve->MATRICULEX,
-                'Nom et Prenom'=> $firstNote->eleve->NOM . ' ' . $firstNote->eleve->PRENOM,
+                'Nom'=> $firstNote->eleve->NOM,
+                'Prenom'=> $firstNote->eleve->PRENOM,
             ];
 
             if ($this->exportMoy) {
@@ -84,7 +85,7 @@ class NotesExport implements FromCollection, WithHeadings, WithStyles, WithColum
     // Les en-têtes commencent à partir de la ligne de données (à partir de A3)
     public function headings(): array
     {
-        $headings = ['MATRICULE', 'Nom et Prenom'];
+        $headings = ['MATRICULE', 'Nom', 'Prenom'];
         if ($this->exportMoy) {
             $headings[] = 'Moyenne Interro';
         }
