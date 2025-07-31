@@ -464,7 +464,7 @@
                             <tr>
                                 <td>{{ $chaquemois->name }} (E) </td>
                                 {{-- <td> - {{ $chaquemois->price }}</td> --}}
-                                <td> - {{ $chaquemois->price }}</td>
+                            <td style="text-align: end"> - {{ number_format($chaquemois->price, 0, ',', ',') }}</td>
                             </tr>
                         @endforeach
                     @else
@@ -472,7 +472,7 @@
                             <tr>
                                 <td>{{ $chaquemois->name }} (E) </td>
                                 {{-- <td>{{ $chaquemois->price }}</td> --}}
-                                <td>{{ $chaquemois->price }}</td>
+                                <td style="text-align: end">{{ number_format($chaquemois->price, 0, ',', ',') }}</td>
                             </tr>
                         @endforeach
                     @endif
@@ -491,21 +491,19 @@
 
                         </tr>
                     </thead>
-                    <tbody>
+                        <tbody>
                         @if (substr($typefa, -2) === 'FA')
                             <tr>
-                                <td> - {{ $facturePaie->montant_total }}</td>
-                                <td> - {{ $facturePaie->montant_total }}</td>
-
+                            <td>- {{ number_format($facturePaie->montant_total, 0, ',', ',') }} </td>
+                            <td>- {{ number_format($facturePaie->montant_total, 0, ',', ',') }} </td>
                             </tr>
                         @else
                             <tr>
-                                <td>{{ $facturePaie->montant_total }}</td>
-                                <td>{{ $facturePaie->montant_total }}</td>
-
+                            <td>{{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
+                            <td>{{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
                             </tr>
                         @endif
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
 
@@ -531,9 +529,9 @@
                                     {{-- {{ $mode_paiement }} --}}
                                 </td>
                             @if (substr($typefa, -2) === 'FA')
-                                <td> - {{ $facturePaie->montant_total }}</td>
+                                <td> - {{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
                             @else
-                                <td>{{ $facturePaie->montant_total }}</td>
+                                <td style="text-align: end">{{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
                             @endif
                         </tr>
                     </tbody>
@@ -545,13 +543,40 @@
         
     {{-- </div> --}}
 
-        <p class="textmontant">Arrêtée, la présente facture à la somme de <span class="prix">
+        @php
+            use NumberToWords\NumberToWords;
+
+            // Crée le convertisseur
+            $numberToWords = new NumberToWords();
+            $transformer = $numberToWords->getNumberTransformer('fr');
+            $abs = abs($facturePaie->montant_total);
+            $words = ucfirst(trim($transformer->toWords($abs)));
+
+            // Si négatif, on préfixe "moins"
+            if ($facturePaie->montant_total < 0) {
+                $words = 'Moins ' . $words;
+            }
+        @endphp
+
+    
+        <p class="textmontant">
+            Arrêtée, la présente facture à la somme de
+            <span class="prix">
                 @if (substr($typefa, -2) === 'FA')
-                    - {{ $facturePaie->montant_total }}
+                    - {{ $words }} ({{ number_format($facturePaie->montant_total, 0, ',', ',') }})
                 @else
-                    {{ $facturePaie->montant_total }}
+                    {{ $words }} {{ number_format($facturePaie->montant_total, 0, ',', ',') }}
                 @endif
             </span> FCFA.</p>
+ 
+        </p>
+        {{-- <p class="textmontant">Arrêtée, la présente facture à la somme de <span class="prix">
+                @if (substr($typefa, -2) === 'FA')
+                    - {{ number_format($facturePaie->montant_total, 0, ',', ',') }}
+                @else
+                    {{ number_format($facturePaie->montant_total, 0, ',', ',') }}
+                @endif
+            </span> FCFA.</p> --}}
         <br>
         <div>
             <div class="infomecef">
