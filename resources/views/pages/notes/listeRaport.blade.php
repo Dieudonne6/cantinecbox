@@ -51,7 +51,8 @@
                     </div>
                     @foreach ($rapportsParClasse as $codeClasse => $rapports)
                         <div class="classe-section">
-                            <h4 class="text-center text-uppercase mb-3">Classe : {{ $codeClasse }}</h4>
+                            <br>
+                            <h4 class="text-uppercase mb-3" style="text-align: center">Classe : {{ $codeClasse }}</h4>
                             <div  style="display: flex; align-items: center; justify-content: space-between;">
                                 <div class="screen-only no-export" style="border: 1px solid #333; padding: 10px; background-color: rgb(185,185,185); border-radius: 8px;">
                                     @foreach ($params2 as $param)
@@ -91,9 +92,8 @@
                                     @endphp
 
                                     @if ($groupe->count())
-                                        <h4 style="margin-top: 20px;">{{ $titre }}</h4>
-                                        @if ($code === 'P')
-                                        @php
+                                        <h4 style="mar<<<<<<< HEAD
+                                            <p>SUITE AUX DECISIONS DU CONSEIL DE                                         @php
                                             $codepromo = $classe->where('CODECLAS', $codeClasse)->pluck('CODEPROMO');
                                             $codeP = $codepromo[0];
                                             $LibelpromoSup = $classeSup->where('codeClas', $codeP)->pluck('libelle_classe_sup');
@@ -101,12 +101,13 @@
                                             // echo($LibelpromoSupp);   
                                         @endphp
                                             <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT SONT PROPOSES AU PASSAGE : <span id="libSup" style="font-weight: bold;">  {{ $LibelpromoSupp }} </span> </p>
+>
                                         @elseif ($code === 'R')
-                                            <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT REDOUBLENT LA CLASSE DE : {{ $codeClasse ?? '' }} </p>
+                                            <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT REDOUBLENT LA CLASSE DE : <span style="font-weight: bold;">{{ $codeClasse ?? '' }}</span> </p>
                                         @elseif ($code === 'X')
-                                            <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT SONT PROPOSES A L'EXCLUSION DE LA  CLASSE DE : {{ $codeClasse ?? '' }} </p>
+                                            <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT SONT PROPOSES A L'EXCLUSION DE LA  CLASSE DE : <span style="font-weight: bold;">{{ $codeClasse ?? '' }}</span> </p>
                                         @else
-                                            <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT SONT ABANDON DE LA CLASSE DE : {{ $codeClasse ?? '' }} </p>
+                                            <p>SUITE AUX DECISIONS DU CONSEIL DE FIN D'ANNEE LES ELEVES DONT LES NOMS SUIVENT SONT ABANDON DE LA CLASSE DE : <span style="font-weight: bold;">{{ $codeClasse ?? '' }}</span> </p>
                                         @endif
 
                                     
@@ -115,8 +116,10 @@
                                             <thead class="table-secondary sticky-top">
                                                 <tr>
                                                     <th scope="col">Statut</th>
+                                                    <th scope="col">Mat</th>
                                                     <th scope="col">Rang</th>
-                                                    <th scope="col">Nom et prénoms</th>
+                                                    <th scope="col">Nom </th>
+                                                    <th scope="col">Prénom</th>
                                                     <th scope="col">Redou</th>
                                                     <th scope="col">Moy1</th>
                                                     <th scope="col">Moy2</th>
@@ -128,8 +131,10 @@
                                                 @foreach ($groupe->sortBy('RANG') as $rapport)
                                                     <tr>
                                                         <td>{{ $rapport->STATUTF }}</td>
+                                                        <td class="mat">{{ $rapport->MATRICULEX }}</td>
                                                         <td>{{ $rapport->RANG }}</td>
-                                                        <td class="text-start">{{ $rapport->NOM }} {{ $rapport->PRENOM }}</td>
+                                                        <td class="text-start">{{ $rapport->NOM }} </td>
+                                                        <td>{{ $rapport->PRENOM }}</td>
                                                         <td>{{ $rapport->STATUT == 0 ? 'Nouveau' : 'Redouble' }}</td>
                                                         <td>{{ number_format($rapport->MOY1, 2) == 21 || number_format($rapport->MOY1, 2) == -1 ? '**' : number_format($rapport->MOY1, 2) }}</td>
                                                         <td>{{ number_format($rapport->MOY2, 2) == 21 || number_format($rapport->MOY2, 2) == -1 ? '**' : number_format($rapport->MOY2, 2) }}</td>
@@ -188,9 +193,9 @@
                                     }
                                     
                                     
-                                     .classe-section:last-of-type {
-    page-break-after: auto !important;
-  }
+                                    .classe-section:last-of-type {
+                                            page-break-after: auto !important;
+                                        }
                                 }  
                                      
                             </style>
@@ -247,6 +252,9 @@
                         }
                         td {
                             text-align: center;
+                        }
+                        td.mat {
+                            mso-number-format:"0";
                         }
                     </style>
                 `;
