@@ -367,8 +367,8 @@
             <div class="facture-container1">
                 <div class="info">
                     <div class="logo">
-                       {{--   <img src="data:image/jpeg;base64,{{ base64_encode($logo) }}" alt="Logo" class="logoimg"> --}}
-                        <p>CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</p>
+                         <img src="data:image/jpeg;base64,{{ base64_encode($logo) }}" alt="Logo" class="logoimg">
+                        {{-- <p>CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</p> --}}
                     </div>
                 </div>
                 <div class="info">
@@ -401,7 +401,7 @@
 
         <section>
             <div class="facture-container2">
-                <div class="table4">
+                <div class="table4 entre">
                     <table id="customers4">
                         <thead>
                             <tr>
@@ -425,11 +425,11 @@
                     </table>
                 </div>
 
-                <div class="table4">
+                <div class="table4 cli">
                     <table id="customers4">
                         <thead>
                             <tr>
-                                <th>Informations du client</th>
+                                <th>Eleve</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -437,7 +437,7 @@
                                 <td>
                                     <p>Nom : {{ $facturePaie->nom }}</p>
                                     <p>Classe : {{ $facturePaie->classe }}</p>
-                                    <p>IFU : </p>
+                                    {{-- <p>IFU : </p> --}}
                                     {{-- <p>Adresse :</p> --}}
                                     {{-- <p>Contact :</p> --}}
 
@@ -448,8 +448,8 @@
                 </div>
             </div>
         </section>
-
-        <div class="table2">
+    <div class="tables-wrapper">
+        <div class="tableZ">
             <table id="customers">
                 <thead>
                     <tr>
@@ -480,67 +480,70 @@
                 </tbody>
             </table>
         </div>
-
-
-        <div class="table2">
-            <table id="customers">
-                <thead>
-                    <tr>
-                        <th scope="col">Total </th>
-                        <th scope="col">REGIME TPS [E]</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (substr($typefa, -2) === 'FA')
+        <div class="yes">
+        {{-- <div class="right-column"> --}}
+            <div class="table2 specifique">
+                <table id="customers" >
+                    <thead>
                         <tr>
-                            <td> - {{ $facturePaie->montant_total }}</td>
-                            <td> - {{ $facturePaie->montant_total }}</td>
+                            <th class="jojo">Total </th>
+                            <th class="test">REGIME TPS [E]</th>
 
                         </tr>
-                    @else
-                        <tr>
-                            <td>{{ $facturePaie->montant_total }}</td>
-                            <td>{{ $facturePaie->montant_total }}</td>
-
-                        </tr>
-                    @endif
-                </tbody>
-            </table>
-        </div>
-
-
-        <div class="table3">
-            <table id="customers3">
-                <thead>
-                    <tr>
-                        <th>Type de paiement</th>
-                        <th>Payé</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                            <td>
-                                @if ($facturePaie->mode_paiement == 1)
-                                    ESPECES
-                                @elseif($facturePaie->mode_paiement == 2)
-                                    CHEQUES
-                                @else
-                                    AUTRE
-                                @endif
-                                
-                                {{-- {{ $mode_paiement }} --}}
-                            </td>
+                    </thead>
+                    <tbody>
                         @if (substr($typefa, -2) === 'FA')
-                            <td> - {{ $facturePaie->montant_total }}</td>
-                        @else
-                            <td>{{ $facturePaie->montant_total }}</td>
-                        @endif
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                            <tr>
+                                <td> - {{ $facturePaie->montant_total }}</td>
+                                <td> - {{ $facturePaie->montant_total }}</td>
 
+                            </tr>
+                        @else
+                            <tr>
+                                <td>{{ $facturePaie->montant_total }}</td>
+                                <td>{{ $facturePaie->montant_total }}</td>
+
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table3">
+                <table id="customers3">
+                    <thead>
+                        <tr>
+                            <th>Type de paiement</th>
+                            <th>Payé</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                                <td>
+                                    @if ($facturePaie->mode_paiement == 1)
+                                        ESPECES
+                                    @elseif($facturePaie->mode_paiement == 2)
+                                        CHEQUES
+                                    @else
+                                        AUTRE
+                                    @endif
+                                    
+                                    {{-- {{ $mode_paiement }} --}}
+                                </td>
+                            @if (substr($typefa, -2) === 'FA')
+                                <td> - {{ $facturePaie->montant_total }}</td>
+                            @else
+                                <td>{{ $facturePaie->montant_total }}</td>
+                            @endif
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+        
+    {{-- </div> --}}
 
         <p class="textmontant">Arrêtée, la présente facture à la somme de <span class="prix">
                 @if (substr($typefa, -2) === 'FA')
@@ -550,7 +553,7 @@
                 @endif
             </span> FCFA.</p>
         <br>
-        <div class="table2">
+        <div>
             <div class="infomecef">
                 <div class="qcode">
                     <img src="data:image/jpeg;base64,{{ base64_encode($facturePaie->qrcode) }}" alt="QR Code">
@@ -563,18 +566,16 @@
                 </div>
             </div>
         </div>
-        <div class="bas">
+        {{-- <div class="bas">
             <div class="logo1">
-                {{-- <p><strong>{{ $nomecole }}</strong></p> --}}
                 <p><strong> CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</strong></p>
             </div>
             <div class="info1">
                 <p>Fait à Cotonou le, <strong>{{ $facturePaie->dateHeure }}</strong></p>
             </div>
-            {{-- <p class="textremerciement"><i>Merci d'avoir choisi le {{ $nomecole }}</i></p> --}}
             <p class="textremerciement"><i>Merci d'avoir choisi CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</i></p>
-        </div>
-    </div>
+        </div> --}}
+    
 </body>
 
 
@@ -702,20 +703,34 @@
                 font-size: 10px;
             }
 
-            .table2 {
-                width: 50% !important;
-            }
 
-            .table3 {
-                width: 45% !important;
-                margin-left: 18rem;
-            }
+            .tables-wrapper {
+    display: flex;
+    align-items: flex-start;    
+    justify-content: space-between;
+    gap: 10px;                   
+    }
+
+    .table2 {
+    flex: 2;                    
+    max-width: 100%;
+    box-sizing: border-box;
+    }
+    .tableZ{
+        width : 50%;
+    }
             
-            .specifique {
-                width: 45% !important;
-                margin-top: -4rem;
-                margin-left: 18rem;
-            }
+
+    .yes {
+    flex: 1; 
+        max-width: 50% !important;
+    }
+
+    
+
+   
+
+            
 
             .bas {
                 width: 45% !important;
