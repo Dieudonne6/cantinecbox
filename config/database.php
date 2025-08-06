@@ -50,7 +50,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             // 'database' => env('DB_DATABASE', 'nok_2024_202'),
             // 'database' => env('DB_DATABASE', 'nokoue_2024_2025'),
-            'database' => env('DB_DATABASE', '2024_2025'),
+            'database' => env('DB_DATABASE', 'gbegamey'),
             'username' => env('DB_USERNAME', 'root'),
             'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),

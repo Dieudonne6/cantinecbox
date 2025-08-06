@@ -4,48 +4,19 @@
 
 <div class="col-lg-12 grid-margin stretch-card">
   <div class="card">
-    <div>
-      <style>
-          .btn-arrow {
-              position: absolute;
-              top: 0px;
-              /* Ajustez la position verticale */
-              left: 0px;
-              /* Positionnez à gauche */
-              background-color: transparent !important;
-              border: 1px !important;
-              text-transform: uppercase !important;
-              font-weight: bold !important;
-              cursor: pointer !important;
-              font-size: 17px !important;
-              /* Taille de l'icône */
-              color: #b51818 !important;
-              /* Couleur de l'icône */
-          }
-  
-          .btn-arrow:hover {
-              color: #b700ff !important;
-              /* Couleur au survol */
-          }
-      </style>
-      <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
-          <i class="fas fa-arrow-left"></i> Retour
-      </button>   
-      <br>
-      <br>                                   
-  </div>
     <div class="card-body">
       <h4 class="card-title">Toutes les classes</h4>
-      @if(Session::has('status'))
-      <div id="statusAlert" class="alert alert-succes btn-primary">
-      {{ Session::get('status')}}
-      </div>
-      @endif
-      @if(Session::has('erreur'))
-      <div class="alert alert-danger btn-primary">
-      {{ Session::get('erreur')}}
-      </div>
-      @endif
+        @if(Session::has('status'))
+        <div id="statusAlert" class="alert alert-succes btn-primary">
+        {{ Session::get('status')}}
+        </div>
+        @endif
+        @if(Session::has('erreur'))
+        <div class="alert alert-danger btn-primary">
+        {{ Session::get('erreur')}}
+        </div>
+        @endif
+
       <div class="form-group row">
         <div class="col-3">
         <select class="js-example-basic-multiple w-100" onchange="window.location.href=this.value">
@@ -54,6 +25,11 @@
              <option value="{{$classes->CODECLAS}}">{{$classes->CODECLAS}}</option>
             @endforeach
         </select>
+      </div>
+      <div class="col-3">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nouveaucontrat">
+          Nouveau Contrat
+        </button>
       </div>
       {{-- <div class="col-3">
         <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -89,8 +65,8 @@
                     <td>
 
                       <a href='/paiementcontrat/{{$filterEleves->CODECLAS}}/{{$filterEleves->MATRICULE}}' class='btn btn-primary w-40'>Paiement</a>
-                      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo $filterEleves->MATRICULE; ?>">Suspendre</button> 
-                      <div class="modal fade" id="exampleModal<?php echo $filterEleves->MATRICULE; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal-{{$filterEleves->MATRICULE}}">Suspendre</button> 
+                      <div class="modal fade" id="exampleModal-{{$filterEleves->MATRICULE}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">
@@ -102,16 +78,19 @@
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                              <form action="{{ url('supprimercontrat')}}" method="post">
+                              <form action="{{ url('supprimercontrat')}}" method="POST">
                                 @csrf
-                                @method('DELETE')
-                                <input type="hidden" name="MATRICULE" value="<?php echo $filterEleves->MATRICULE; ?>">
-                                <input type="submit" class="btn btn-danger" value="Confirmer">
-                              </form>  
+                                <input type="hidden" value="{{ $filterEleves->MATRICULE }}"
+                                name="matricule">
+                                {{-- @method('DELETE') --}}
+                                {{-- <a href='/admin/deletecashier/{{$eleves->MATRICULE}}' class='btn btn-danger w-50'>Suspendre</a> --}}
+                                <input type="submit" class="btn btn-danger" value="Suspendre">
+                              </form> 
                             </div>
                           </div>
                         </div>
                       </div>
+
                   </td>
                 </tr>
             @endforeach
@@ -122,8 +101,112 @@
     </div>
     
 
-
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="nouveaucontrat" tabindex="-1" aria-labelledby="examplePaiementLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title fs-3" id="exampleModalLabel">Nouveau contrat</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+                              {{-- erreur concernant un nouveau contrat --}}
+                              @if($errors->any())
+                              <div id="statusAlert" class="alert alert-danger">
+                                  <ul>
+                                      @foreach($errors->all() as $error)
+                                          <li>{{ $error }}</li>
+                                      @endforeach
+                                  </ul>
+                              </div>
+                              @endif
+              <div class="col-md-12 mx-auto grid-margin stretch-card">
+                {{-- <div class="card"> --}}
+                    {{-- <div class="card-body"> --}}
+          
+                      {{-- <h4 class="card-title">Nouveau contrat</h4> --}}
+                      {{-- affichage des erreur et les message de succes --}}
+                      
+                      <form id="myModalForm" method="POST" action="{{url('creercontrat')}}">
+                        {{csrf_field()}}
+                        @if(Session::has('id_usercontrat'))
+                        <?php $id_usercontrat = Session::get('id_usercontrat'); ?>
+                        <input type="hidden" value="{{$id_usercontrat}}" name="id_usercontrat">
+                        @endif
+                        <div class="form-group w-100 mb-6">
+                          @csrf
+                          <label for="classSelect">Classe</label>
+                          <select class="js-example-basic-multiple w-100" id="classSelect" name="classes">
+                            {{-- <option value="">Sélectionner la classe</option> --}}
+                            @foreach ($classe as $eleves)
+                            <option value="{{$eleves->CODECLAS}}">{{$eleves->CODECLAS}}</option>
+                            @endforeach
+                          </select>
+                        </div>
+                        <div class="form-group w-100">
+                          <label for="eleveSelect">Elève</label>
+                          <select id="eleveSelect" class="js-example-basic-multiple w-100" name="matricules">
+                            {{-- <option value="">Sélectionner un élève</option> --}}
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <div class="form-group row">
+                            <div class="col">
+                              <label>Date</label>
+                              <div id="the-basics">
+                                <input class="typeaheads" type="date" id="date" name="date"
+                                value="{{ date('Y-m-d') }}">
+                              </div>
+                            </div>
+                            <div class="col">
+                              <label>Montant</label>
+                              <div id="bloodhound">
+                                <input class="typeaheads mater" type="text" readonly name="montant"  id="montant" value="">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {{-- <div class="">
+                          <input type="reset" class="btn btn-secondary" data-bs-dismiss="modal" value="Annuler">
+                          <button type="submit" class="btn btn-primary">Enregister</button>
+                        </div> --}}
+                    {{-- </div> --}}
+                    
+                  {{-- </div> --}}
+              </div>
+    
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="submit"  class="btn btn-primary" id="enregistrerBt">Enregister</button>
+          </div>
+        </form>
+    
+        </div>
+      </div>
+    </div>
+<!-- Modal de confirmation -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Cet éleve est déja inscrit .Cependant sont inscription a été suspendu.Désirez vous réactiver cette souscription?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+        <button type="button" class="btn btn-primary" id="confirmYesBtn">Oui</button>
+      </div>
+    </div>
+  </div>
+</div>
+    {{-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -191,7 +274,7 @@
         </form>
         </div>
       </div>
-    </div>
+    </div> --}}
     {{-- @foreach ($filterEleve as  $filterEleves)
 
       <div class="modal fade" id="examplePaiement{{$filterEleves->MATRICULE}}" tabindex="-1" aria-labelledby="examplePaiementLabel" aria-hidden="true">
@@ -277,8 +360,52 @@
 
       @endforeach --}}
 <!-- Scripts -->
-{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> --}}
 
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+// $(document).ready(function() {
+//     $('#nouveaucontrat').on('hidden.bs.modal', function () {
+//         // Réinitialiser les champs du formulaire
+//         $('#myModalForm')[0].reset();
+
+//         // Réinitialiser les selects
+//         $('#myModalForm select').each(function() {
+//             $(this).prop('selectedIndex', 0);
+//         });
+//     });
+// });
+
+        document.addEventListener('DOMContentLoaded', function() {
+        var myModal = new bootstrap.Modal(document.getElementById('nouveaucontrat'));
+
+        @if ($errors->any())
+            myModal.show();
+        @endif
+
+        // Réinitialiser les champs du formulaire à la fermeture du modal
+        document.getElementById('nouveaucontrat').addEventListener('hidden.bs.modal', function () {
+            document.getElementById('myModalForm').reset();
+            document.querySelectorAll('#myModalForm .form-control').forEach(input => input.value = '');
+        });
+    });
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     var myModal = document.getElementById('nouveaucontrat');
+//     myModal.addEventListener('hidden.bs.modal', function () {
+//         // Réinitialiser les champs du formulaire
+//         document.getElementById('myModalForm').reset();
+        
+//         // Réinitialiser les champs de sélection
+//         var selects = document.querySelectorAll('#myModalForm select');
+//         selects.forEach(function(select) {
+//             select.selectedIndex = 0;
+//         });
+//     });
+// });
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 @endsection
