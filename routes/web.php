@@ -472,12 +472,13 @@ Route::prefix('parametre')->group(function() {
     Route::get('tables', [ParametreController::class, 'tables'])
          ->name('parametre.tables');
          Route::post('/params2/updateIdentification', [ParametreController::class, 'updateIdentification'])->name('params2.updateIdentification');
+         Route::get('/settings/logo/{side}', [ParametreController::class, 'showLogo'])->name('settings.logo');
          Route::get('/appreciations/edit', [ParametreController::class, 'editAppreciation'])->name('appreciations.edit');
          Route::post('/appreciations/update', [ParametreController::class, 'updateAppreciation'])->name('appreciations.update');
          Route::put('parametre/params2/updateGeneraux', [ParametreController::class, 'updateGeneraux'])->name('params2.updateGeneraux');
          Route::put('/params2/updateNumerotation', [ParametreController::class, 'updateNumerotation'])->name('params2.updateNumerotation');
          Route::post('tables/update-messages', [ParametreController::class, 'updateMessages'])->name('parametre.updateMessages');
-Route::post('parametre/tester-rtf', [ParametreController::class, 'testerRtf'])
+     Route::post('parametre/tester-rtf', [ParametreController::class, 'testerRtf'])
      ->name('parametre.testerRtf');
 
     Route::get('bornes-exercice', [ParametreController::class, 'bornes'])

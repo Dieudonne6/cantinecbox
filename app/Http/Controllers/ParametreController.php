@@ -13,11 +13,6 @@ use RtfHtmlPhp\Html\HtmlFormatter;
 use RtfHtmlPhp\RtfDocument;
 use PHPRtfLite\Rtf;
 
-use Roundcube\Rtf\Html; 
-// use RtfHtmlPhp\Document;
-use RtfHtmlPhp\Document;
-use RtfHtmlPhp\Html\HtmlFormatter;
-
 
 
 class ParametreController extends Controller
@@ -267,9 +262,29 @@ public function updateMessages(Request $request)
         return view('pages.parametre.tables', compact('settings', 'fields', 'entete', 'enteteEngage', 'enteteDoc', 'enteteRecu', 'enteteFiches'));
     }
 
+    public function showLogo($side)
+    {
+        $settings = DB::table('params2')->first();
 
+        if (!$settings) {
+            abort(404);
+        }
 
+        if ($side === 'left' && $settings->logoimage1) {
+            $imageData = $settings->logoimage1;
+        } elseif ($side === 'right' && $settings->LOGO1) {
+            $imageData = $settings->LOGO1;
+        } else {
+            abort(404);
+        }
 
+        // Détection automatique du mime-type
+        $finfo = finfo_open();
+        $mimeType = finfo_buffer($finfo, $imageData, FILEINFO_MIME_TYPE);
+        finfo_close($finfo);
+
+        return response($imageData)->header('Content-Type', $mimeType);
+    }
 
     public function updateIdentification(Request $request)
     {
@@ -297,7 +312,7 @@ public function updateMessages(Request $request)
             'TITRE3' => $request->titre_directeur3,
             'NOMCENSEUR' => $request->censeur,
             'TITRECENSEUR' => $request->titre_censeur,
-            'NOMINTEND' => $request->comptable,
+            'NOMINTEND' => $request->filled('comptable') ? $request->comptable : '',
             'TITREINTENDANT' => $request->titre_comptable,
             'DeviseEtab' => $request->devise,
             'Typeetab' => is_array($request->Typeetab) ? implode('', $request->Typeetab) : '',
@@ -305,11 +320,14 @@ public function updateMessages(Request $request)
 
         // Gestion des fichiers logo
         if ($request->hasFile('logo_gauche')) {
-            $data['logoimage1'] = $request->file('logo_gauche')->store('logos', 'public');
+            $data['logoimage1'] = file_get_contents($request->file('logo_gauche')->getRealPath());
         }
 
         if ($request->hasFile('logo_droit')) {
-            $data['LOGO1'] = $request->file('logo_droit')->store('logos', 'public');
+            // image enregistrée sur le disque
+            $path = $request->file('logo_droit')->store('logos', 'public'); // storage/app/public/logos/...
+            $filename = basename($path); // on ne garde que le nom pour respecter le VARCHAR(20)
+            $data['LOGO1'] = substr($filename, 0, 20); // coupe à 20 caractères si nécessaire
         }
 
         // Mise à jour ou insertion (s'il n'existe pas encore)
@@ -347,73 +365,95 @@ public function updateMessages(Request $request)
 
     public function updateGeneraux(Request $request)
     {
-        // Valider les données reçues
-        $validated = $request->validate([
-            'libel'       => 'required|array|size:5',
-            'montant'     => 'required|array|size:5',
-            'date1'       => 'nullable|date',
-            'periodicite' => 'required|integer|min:0',
-            'echeancier_frais'  => 'sometimes|accepted',
-            'type_matricule'    => 'required|in:manuel,auto',
-            'TYPEAN'            => 'required|in:Semestrielle,Trimestrielle',
-            'NMININOTES'        => 'required|integer',
-            't1'                => 'required|numeric|min:0|max:100',
-            't2'                => 'required|numeric|min:0|max:100',
-            't3'                => 'required|numeric|min:0|max:100',
-            'ModeSalaire'       => 'nullable|string',
-            'moyenne'           => 'nullable|in:classique,avance',
-            'Ponderation_MI'    => 'nullable|numeric|min:0|max:100',
-            'Ponderation_Dev'   => 'nullable|numeric|min:0|max:100',
-            'Ponderation_Comp'  => 'required|numeric|min:0|max:100',
-        ]);
+        // 2. Chargement du modèle de settings (supposé unique)
+        $settings = Params2::first(); // ou find(1) selon votre logique
 
-        // Récupérer l'instance existante
-        $params = Params2::firstOrFail();
+        // 3. Mise à jour des composantes de scolarité
+        $settings->MTS       = $request->input('montant.0');
+        $settings->LIBELF1   = $request->input('libel.1');
+        $settings->MT1       = $request->input('montant.1');
+        $settings->LIBELF2   = $request->input('libel.2');
+        $settings->MT2       = $request->input('montant.2');
+        $settings->LIBELF3   = $request->input('libel.3');
+        $settings->MT3       = $request->input('montant.3');
+        $settings->LIBELF4   = $request->input('libel.4');
+        $settings->MT4       = $request->input('montant.4');
 
-        // Mettre à jour les libellés et montants
-        $fields = ['Scolarité', 'LIBELF1', 'LIBELF2', 'LIBELF3', 'LIBELF4'];
-        foreach ($fields as $i => $column) {
-            if ($i === 0) {
-                $params->MTS = $validated['montant'][$i];
-            } else {
-                $params->{$column} = $validated['libel'][$i];
-                $mtKey = 'MT'. $i;
-                $params->{$mtKey} = $validated['montant'][$i];
-            }
+        // 4. Échéancier standard
+        $settings->Date1erPaie_Standard = $request->input('date1');
+        $settings->Periodicite_Standard = $request->input('periodicite');
+        $settings->Echeancier_tous_frais = $request->has('echeancier_frais');
+        $settings->pcen1_standard = $request->input('t1');
+        $settings->pcen2_standard = $request->input('t2');
+        $settings->pcent3_standard = $request->input('t3');
+
+        // 5. Type de matricule, périodicité, absences
+        $settings->TYPEMATRI  = $request->input('type_matricule');
+        $settings->TYPEAN = (int) $request->input('TYPEAN');
+        $settings->NMININOTES = $request->input('NMININOTES');
+
+        // 6. Pondérations (on stocke en fraction 0–1)
+        $settings->Ponderation_MI   = $request->input('Ponderation_MI')  / 100;
+        $settings->Ponderation_Dev  = $request->input('Ponderation_Dev') / 100;
+        $settings->Ponderation_Comp = $request->input('Ponderation_Comp')/ 100;
+
+        // 7. Ne pas toucher à ModeSalaire ici
+        $settings->ModeSalaire = $request->input('ModeSalaire');
+        $mode = $request->input('moyenne'); // 'classique' ou 'avance'
+        if ($mode === 'classique') {
+            // Seulement Pondération Composition
+            $settings->Ponderation_Comp = $request->input('Ponderation_Comp') / 100;
+
+            // Ne pas enregistrer les autres (mettre à null ou 0 si nécessaire)
+            // $settings->Ponderation_MI = null;   
+            // $settings->Ponderation_Dev = null;
+        } elseif ($mode === 'avance') {
+            // Prend toutes les pondérations
+            $settings->Ponderation_MI  = $request->input('Ponderation_MI') / 100;
+            $settings->Ponderation_Dev = $request->input('Ponderation_Dev') / 100;
+            $settings->Ponderation_Comp = $request->input('Ponderation_Comp') / 100;
+                    // dd($settings->Ponderation_MI, $settings->Ponderation_Dev, $settings->Ponderation_Comp);
+
         }
+        // 8. Sauvegarde et retour
+        $settings->save();
 
-        // Échéancier standard
-        $params->Date1erPaie_Standard   = $validated['date1'];
-        $params->Periodicite_Standard   = $validated['periodicite'];
-        $params->Echeancier_tous_frais  = $request->has('echeancier_frais');
-
-        // Tranches
-        $params->pcen1_standard = $validated['t1'];
-        $params->pcen2_standard = $validated['t2'];
-        $params->pcent3_standard = $validated['t3'];
-
-        // Type de matricule et périodicité
-        $params->TYPEMATRI = $validated['type_matricule'];
-        $params->TYPEAN    = $validated['TYPEAN'];
-
-        // Absences
-        $params->NMININOTES = $validated['NMININOTES'];
-
-        // Mode de remunération et calcul moyenne
-        $params->ModeSalaire      = $request->input('ModeSalaire');
-        $params->mode_moyenne     = $validated['moyenne'];
-        if ($validated['moyenne'] === 'avance') {
-            $params->Ponderation_MI   = $validated['Ponderation_MI'] / 100;
-            $params->Ponderation_Dev  = $validated['Ponderation_Dev'] / 100;
-        }
-        $params->Ponderation_Comp    = $validated['Ponderation_Comp'] / 100;
-
-        // Sauvegarde
-        $params->save();
-
-        return redirect()->back()
-                        ->with('success', 'Paramètres mis à jour avec succès.');
+        return redirect()
+            ->back()
+            ->with('success', 'Les paramètres ont bien été mis à jour.');
     }
+
+// public function updateGeneraux(Request $request)
+// {
+//     $settings = Params2::first();
+
+//     if (!$settings) {
+//         return back()->with('error', 'Paramètres non trouvés.');
+//     }
+
+//     // Récupération des tableaux
+//     $libels = $request->input('libel');
+//     $montants = $request->input('montant');
+
+//     // ✅ Assigner tous les champs correctement
+//     $settings->MTS     = $montants[0];
+//     $settings->LIBELF1 = $libels[1];
+//     $settings->MT1     = $montants[1];
+//     $settings->LIBELF2 = $libels[2];
+//     $settings->MT2     = $montants[2];
+//     $settings->LIBELF3 = $libels[3];
+//     $settings->MT3     = $montants[3];
+//     $settings->LIBELF4 = $libels[4];
+//     $settings->MT4     = $montants[4];
+
+//     // Sauvegarde
+//     $settings->save();
+
+//     return back()->with('success', 'Paramètres mis à jour avec succès.');
+// }
+
+
+
 
     public function updateNumerotation(Request $request)
     {
