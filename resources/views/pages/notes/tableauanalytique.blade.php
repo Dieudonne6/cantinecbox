@@ -1801,18 +1801,16 @@
      
         const typeEtat = @json($typeEtat);
         let periode = @json($periode);
- if (periode == 1) {
-                                        periode = 'FIN DU 1er SEMESTRE';
-                                    } else if (periode == 2) {
-                                        periode = 'FIN DU 2ème SEMESTRE';
-                                    } else  {
-                                        periode = 'FIN D\'ANNÉE';
-                                    } 
+        if (periode == 1) {
+            periode = 'FIN DU 1er SEMESTRE';
+            } else if (periode == 2) {
+                periode = 'FIN DU 2ème SEMESTRE';
+            } else  {
+                periode = 'FIN D\'ANNÉE';
+        } 
             
                         
-        function exportToExcel() {
-        
-
+        function exportToExcel() {        
                 const contentElement = document.getElementById('printableContent');
                 const contentElements = document.getElementById('titre');
                 if (!contentElement) {
@@ -1860,13 +1858,11 @@
                         <meta charset="UTF-8">
                         ${style}
                     </head>
-                    <body>
-                       
+                    <body>                       
                         ${clone.innerHTML}
                     </body>
                     </html>
                 `;
-
                 const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');

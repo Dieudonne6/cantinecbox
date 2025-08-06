@@ -244,6 +244,7 @@
                             <thead class="table-secondary sticky-top">
                                 <tr>
                                     <th scope="col">Statut</th>
+                                    <th scope="col">Mat</th>
                                     <th scope="col">Rang</th>
                                     <th scope="col">Nom et prénoms</th>
                                     <th scope="col">Redou</th>
@@ -257,6 +258,7 @@
                                 @forelse ($rapports as $rapport)
                                     <tr>
                                         <td>{{ $rapport->STATUTF }}</td>
+                                         <td>{{ $rapport->MATRICULEX }}</td>
                                         <td>{{ $rapport->RANG }}</td>
                                         <td class="text-start">{{ $rapport->NOM }} {{ $rapport->PRENOM }}</td>
                                         <td>{{ $rapport->STATUT == 0 ? 'Nouveau' : 'Redouble' }}</td>
@@ -571,7 +573,9 @@
                             <thead>
                                 <tr style="background-color: #f2f2f2;">
                                     <th>Ordre Mérite</th>
+                                    <th>Mat</th>
                                     <th>Nom</th>
+                                    <th>Prénoms</th>
                                     <th>Sexe</th>
                                     <th>Red</th>
                                     <th>Moy1</th>
@@ -584,7 +588,9 @@
                                 @foreach ($groupe->sortBy('RANG') as $rapport)
                                     <tr>
                                         <td>{{ $rapport->RANG }}</td>
-                                        <td>{{ $rapport->NOM }} {{ $rapport->PRENOM }}</td>
+                                        <td class="mat">{{ $rapport->MATRICULEX }}</td>
+                                        <td>{{ $rapport->NOM }}</td>
+                                        <td> {{ $rapport->PRENOM }}</td>
                                         <td>{{ $rapport->SEXE == 1 ? 'M' : 'F' }}</td>
                                         <td>{{ $rapport->STATUT == 0 ? 'N' : 'R' }}</td>
                                         <td>{{ in_array(number_format($rapport->MOY1, 2), [21.0, -1.0]) ? '**' : number_format($rapport->MOY1, 2) }}
@@ -768,10 +774,7 @@
                         win.print();
                         win.close();
                     };
-            }
-
-
-           
+            }       
 
             const classes = @json($selectedClasseCode);
 
@@ -812,6 +815,9 @@
                         }
                         td {
                             text-align: center;
+                        }
+                        td.mat {
+                            mso-number-format:"0";
                         }
                     </style>
                 `;

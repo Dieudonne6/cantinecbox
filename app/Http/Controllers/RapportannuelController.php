@@ -219,7 +219,7 @@ class RapportannuelController extends Controller
         // dd($codeClasse);
 
          // 0. Supprimer l’ancien rapport pour cette classe
-         Rapport::where('CODECLAS', $codeClasse)->delete();
+        Rapport::where('CODECLAS', $codeClasse)->delete();
 
         $total = Eleve::where('CODECLAS', $codeClasse)->count();
          //  dd("Il y a $total élèves enregistrés");
@@ -472,17 +472,15 @@ class RapportannuelController extends Controller
 
     public function imprimerAbandon() {
         return $this->imprimerParStatut('Z');
-    }
+    }   
 
 
     public function imprimerlistegeneralerapport() {
-
         $rapports = Rapport::orderBy('CODECLAS')->orderBy('RANG')->get();
         $classe = Classes::all();
         $promo = Promo::get();
         $classeSup = ConfigClasseSup::all();
 
-        // Regrouper les rapports par CODECLAS
         $rapportsParClasse = $rapports->groupBy('CODECLAS');
 
         $effectifTotal = $rapportsParClasse->map(function($rapportsDeLaClasse) {
@@ -491,42 +489,45 @@ class RapportannuelController extends Controller
 
         $statsParClasse = $rapportsParClasse->map(function($rapportsDeLaClasse, $codeClasse) {
             return [
-              
-                'effectifFilles'   => $rapportsDeLaClasse->where('SEXE', 2)->count(),
-
-                'passantsTotal'    => $rapportsDeLaClasse->where('STATUTF', 'P')->count(),
-                'passantesFilles'  => $rapportsDeLaClasse->where('STATUTF', 'P')->where('SEXE', 2)->count(),
-
-                'redoublesTotal'   => $rapportsDeLaClasse->where('STATUTF', 'R')->count(),
-                'redoublesFilles'=> $rapportsDeLaClasse->where('STATUTF', 'R')->where('SEXE', 2)->count(),
-
-                'exclusTotal'      => $rapportsDeLaClasse->where('STATUTF', 'X')->count(),
-                'excluesFilles'    => $rapportsDeLaClasse->where('STATUTF', 'X')->where('SEXE', 2)->count(),
-
-                'abandonsTotal'    => $rapportsDeLaClasse->where('RANG', 0)->count(),
-                'abandonsFilles'   => $rapportsDeLaClasse->where('RANG', 0)->where('SEXE', 2)->count(),
+                'effectifFilles'     => $rapportsDeLaClasse->where('SEXE', 2)->count(),
+                'passantsTotal'      => $rapportsDeLaClasse->where('STATUTF', 'P')->count(),
+                'passantesFilles'    => $rapportsDeLaClasse->where('STATUTF', 'P')->where('SEXE', 2)->count(),
+                'redoublesTotal'     => $rapportsDeLaClasse->where('STATUTF', 'R')->count(),
+                'redoublesFilles'    => $rapportsDeLaClasse->where('STATUTF', 'R')->where('SEXE', 2)->count(),
+                'exclusTotal'        => $rapportsDeLaClasse->where('STATUTF', 'X')->count(),
+                'excluesFilles'      => $rapportsDeLaClasse->where('STATUTF', 'X')->where('SEXE', 2)->count(),
+                'abandonsTotal'      => $rapportsDeLaClasse->where('RANG', 0)->count(),
+                'abandonsFilles'     => $rapportsDeLaClasse->where('RANG', 0)->where('SEXE', 2)->count(),
             ];
         });
 
+        // Nouvelle logique : récupérer la classe supérieure de chaque CODECLAS
+        $classes = Classes::all()->keyBy('CODECLAS');
+        $configClasses = ConfigClasseSup::all()->keyBy('codeClas');
+
+        $classeSuperieureParClasse = [];
+
+        foreach ($rapportsParClasse as $codeClasse => $raps) {
+            $codePromo = $classes[$codeClasse]->CODEPROMO ?? null;
+            if ($codePromo && isset($configClasses[$codePromo])) {
+                $classeSuperieureParClasse[$codeClasse] = $configClasses[$codePromo]->libelle_classe_sup;
+            } else {
+                $classeSuperieureParClasse[$codeClasse] = 'Classe supérieure inconnue';
+            }
+        }
 
         $params2 = Params2::all();
-
         $contrat = ParamContrat::first();
-
         $anneeCourante = (int) $contrat->anneencours_paramcontrat;
-        // Calcul de l'année suivante
         $anneeSuivante = $anneeCourante + 1;
         $anneeScolaire = "{$anneeCourante}-{$anneeSuivante}";
-
-
-        
 
         return view('pages.notes.listeRaport', [
             'rapports' => $rapports,
             'effectifTotal' => $effectifTotal,
             'rapportsParClasse' => $rapportsParClasse,
-            'statsParClasse'  => $statsParClasse,
-            'params2'   => $params2,
+            'statsParClasse' => $statsParClasse,
+            'params2' => $params2,
             'anneeScolaire' => $anneeScolaire,
             'classe' => $classe,
             'promo' => $promo,

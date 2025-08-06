@@ -45,7 +45,8 @@ class NotesMatiereSheetExport implements FromCollection, WithHeadings, WithTitle
             
             $data->push([
                 'MATRICULE'     => "\u{200B}" . $firstNote->eleve->MATRICULEX,
-                'Nom et Prenom' => $firstNote->eleve->NOM . ' ' . $firstNote->eleve->PRENOM,
+                'Nom' => $firstNote->eleve->NOM,
+                'Prenom' => $firstNote->eleve->PRENOM,
                 'Moyenne Interro' => ($firstNote->MI == 21 || $firstNote->MI == -1) ? '**.**' : round($firstNote->MI, 2),
                 'DEV1'          => ($firstNote->DEV1 == 21 || $firstNote->DEV1 == -1) ? '**.**' : $firstNote->DEV1,
                 'DEV2'          => ($firstNote->DEV2 == 21 || $firstNote->DEV2 == -1) ? '**.**' : $firstNote->DEV2,
@@ -57,7 +58,7 @@ class NotesMatiereSheetExport implements FromCollection, WithHeadings, WithTitle
 
     public function headings(): array
     {
-        return ['MATRICULE', 'Nom et Prenom', 'Moyenne Interro', 'DEV1', 'DEV2'];
+        return ['MATRICULE', 'Nom', 'Prenom', 'Moyenne Interro', 'DEV1', 'DEV2'];
     }
 
     // Début des données à partir de la cellule A2 (la ligne 1 sera utilisée pour l'en-tête personnalisé)
