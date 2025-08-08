@@ -836,6 +836,48 @@ class BulletinController extends Controller
     public function printimagefond(Request $request) {}
 
 
+    /**
+     * Retourne une chaîne style inline (font-family + font-size) en extrayant
+     * la police et la taille depuis le contenu RTF.
+     */
+    private function getStyleFromRtf(string $rtfContent): string
+    {
+        // Taille (first \fsN) -> N is half-points in RTF
+        $fontSizePx = 14; // fallback
+        if (preg_match('/\\\\fs(\d+)/', $rtfContent, $m)) {
+            $pt = ((int)$m[1]) / 2;            // points
+            $fontSizePx = round($pt * 1.333);  // approx px
+        }
+
+        // Police : chercher la fonttbl et la première police référencée (\fX)
+        $fontFamily = 'Arial, sans-serif';
+        // Récupère toutes les définitions de font dans le fonttbl
+        if (preg_match_all('/\\{\\\\f(\d+)\s+([^;\\}]+);\\}/i', $rtfContent, $fonts, PREG_SET_ORDER)) {
+            // récupérer l'index de la première occurrence \fX utilisée dans le document
+            if (preg_match('/\\\\f(\d+)/', $rtfContent, $m2)) {
+                $usedIndex = $m2[1];
+                foreach ($fonts as $f) {
+                    if ((string)$f[1] === (string)$usedIndex) {
+                        $fontFamily = trim($f[2]);
+                        // add fallback generic
+                        if (stripos($fontFamily, 'times') !== false) {
+                            $fontFamily .= ', "Times New Roman", serif';
+                        } else {
+                            $fontFamily .= ', Arial, sans-serif';
+                        }
+                        break;
+                    }
+                }
+            } else {
+                // sinon prends la première définition trouvée
+                $fontFamily = trim($fonts[0][2]) . ', Arial, sans-serif';
+            }
+        }
+
+        return "font-family: {$fontFamily}; font-size: {$fontSizePx}px;";
+    }
+
+
 
     public function printbulletindenotes(Request $request)
     {
@@ -896,20 +938,37 @@ class BulletinController extends Controller
         $rtfContent = Params2::first()->EnteteBull;
         // $entete = $this->extractTextFromRtf($rtfContent);
 
-        $rtfContent = Params2::first()->EnteteBull;
-        $document = new Document($rtfContent);
-        $formatter = new HtmlFormatter();
-        $enteteNonStyle = $formatter->Format($document);
-        $entete = '
-        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
-            <style>
-                p { margin: 0; padding: 0; line-height: 1.2; }
-                span { display: inline-block; }
-            </style>
-            ' . $enteteNonStyle . '
-        </div>
-        ';
+        // ancien code pour appliqué les style a lentete du bulletin
+
+        // $rtfContent = Params2::first()->EnteteBull;
+        // $document = new Document($rtfContent);
+        // $formatter = new HtmlFormatter();
+        // $enteteNonStyle = $formatter->Format($document);
+        // $entete = '
+        // <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+        //     <style>
+        //         p { margin: 0; padding: 0; line-height: 1.2; }
+        //         span { display: inline-block; }
+        //     </style>
+        //     ' . $enteteNonStyle . '
+        // </div>
+        // ';
         // dd($entete);
+
+        $rtfContent = Params2::first()->EnteteBull;
+    $document = new Document($rtfContent);
+    $formatter = new HtmlFormatter();
+    $enteteNonStyle = $formatter->Format($document);
+
+    // build inline style from rtf
+    $inlineStyle = $this->getStyleFromRtf($rtfContent);
+
+    $entete = '
+    <div style="text-align: center; line-height: 1.2; ' . $inlineStyle . '">
+        <style>p { margin:0; padding:0; line-height:1.2 } span { display:inline-block; }</style>
+        ' . $enteteNonStyle . '
+    </div>';
+
         $logo = $params2->logoimage;
 
         // Conversion des données en Base64
