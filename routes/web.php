@@ -62,7 +62,7 @@ Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees']);
 Route::get('/', [PagesController::class, 'connexion']);
 Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
 Route::get('/listegeneraleeleve/{CODECLAS}', [ClassesController::class, 'listegeneraleeleve']);
-// Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'getElevesByClasse']);
+//Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'getElevesByClasse']);
 
 Route::get('/filterlisteselectiveeleve', [ClassesController::class, 'filterlisteselectiveeleve']);
 
@@ -468,6 +468,12 @@ Route::get('/importernote', [BulletinController::class, 'importernote'])->name('
 // Route::post('/eleves/upload', [BulletinController::class, 'upload'])->name('eleves.upload');
 Route::post('/import', [BulletinController::class, 'import'])->name('eleves.import');
 
+Route::get('/exporternote', [BulletinController::class, 'exporternote'])->name('exporternote');
+
+Route::get('/exporter-eleves', [BulletinController::class, 'getEleves'])->name('exporter.eleves');
+
+
+
 Route::get('/statistiques', [TableauController::class, 'statistiques'])->name('statistiques');
 Route::post('/statistiques', [TableauController::class, 'statistiques'])->name('statistiques');
 
@@ -478,9 +484,14 @@ Route::prefix('parametre')->group(function() {
     Route::get('tables', [ParametreController::class, 'tables'])
          ->name('parametre.tables');
          Route::post('/params2/updateIdentification', [ParametreController::class, 'updateIdentification'])->name('params2.updateIdentification');
+         Route::get('/settings/logo/{side}', [ParametreController::class, 'showLogo'])->name('settings.logo');
          Route::get('/appreciations/edit', [ParametreController::class, 'editAppreciation'])->name('appreciations.edit');
          Route::post('/appreciations/update', [ParametreController::class, 'updateAppreciation'])->name('appreciations.update');
-         Route::put('/params2/updateGeneraux', [ParametreController::class, 'updateGeneraux'])->name('params2.updateGeneraux');
+         Route::put('parametre/params2/updateGeneraux', [ParametreController::class, 'updateGeneraux'])->name('params2.updateGeneraux');
+         Route::put('/params2/updateNumerotation', [ParametreController::class, 'updateNumerotation'])->name('params2.updateNumerotation');
+         Route::post('tables/update-messages', [ParametreController::class, 'updateMessages'])->name('parametre.updateMessages');
+     Route::post('parametre/tester-rtf', [ParametreController::class, 'testerRtf'])
+     ->name('parametre.testerRtf');
 
     Route::get('bornes-exercice', [ParametreController::class, 'bornes'])
          ->name('parametre.bornes');

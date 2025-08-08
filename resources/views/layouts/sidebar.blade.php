@@ -116,7 +116,7 @@
                                 </a>
                               </li> --}}
                               <li>
-                                <a class="nav-link {{ request()->is('Exporter') ? 'active' : '' }}" href="#">
+                                <a class="nav-link  {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'active' : '' }}" href="{{ route('exporternote') }}">
                                   Exporter
                                 </a>
                               </li>

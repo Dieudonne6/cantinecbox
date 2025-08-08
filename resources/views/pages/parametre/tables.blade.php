@@ -8,9 +8,10 @@
     </button>
   </div>
 
-  @if(session('success'))
-    <div class="alert alert-success">
-      {{ session('success') }}
+  {{-- Affichage des messages flash --}}
+  @if(session('success') || session('error'))
+    <div class="alert {{ session('success') ? 'alert-success' : 'alert-danger' }}" id="flash-alert">
+      {{ session('success') ?? session('error') }}
     </div>
   @endif
 
@@ -21,9 +22,9 @@
       <div class="col-md-12">
 
           <!-- Onglets -->
-          <ul class="nav nav-tabs" role="tablist">
+          <ul class="nav nav-tabs" id="settingsTab" role="tablist">
             <li class="nav-item">
-              <button class="nav-link active" id="nav-ident-tab" data-bs-toggle="tab" data-bs-target="#pane-identification" type="button" role="tab" aria-controls="pane-identification" aria-selected="true">
+              <button class="nav-link" id="nav-ident-tab" data-bs-toggle="tab" data-bs-target="#pane-identification" type="button" role="tab" aria-controls="pane-identification" aria-selected="false">
                 Identification
               </button>
             </li>
@@ -43,8 +44,7 @@
           <div class="tab-content mt-3">
 
             <!-- Identification -->
-            <div class="tab-pane fade show active" id="pane-identification" role="tabpanel" aria-labelledby="nav-ident-tab">
-              <div class="card">
+            <div class="tab-pane fade" id="pane-identification" role="tabpanel" aria-labelledby="nav-ident-tab">              <div class="card">
                 <div class="card-body">
                   <form action="{{ route('params2.updateIdentification') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -61,28 +61,52 @@
 
                       <!-- Logos -->
                       <div class="col-12 d-flex gap-3">
-                        {{-- Logo gauche --}}
-                        <div class="card flex-fill text-center">
-                          <div class="card-header">Logo gauche</div>
-                          <div class="card-body">
-                            @if(isset($settings->logoimage1))
-                              <img  src="{{ asset('storage/' . $settings->logoimage1) }}"  class="img-fluid mb-2"  style="max-height:160px"  alt="logo gauche">
-                            @endif
-                            <input  type="file"  name="logo_gauche"  class="form-control-sm">
+                          {{-- Logo gauche --}}
+                          <div class="card flex-fill text-center">
+                              <div class="card-header">Logo gauche</div>
+                              <div class="card-body">
+                                  <img
+                                      id="preview-logo-gauche"
+                                      src="{{ $settings->logoimage1 ? route('settings.logo', ['side' => 'left']) : '#' }}"
+                                      class="img-fluid mb-2"
+                                      style="max-height:120px; {{ $settings->logoimage1 ? '' : 'display:none;' }}"
+                                      alt="logo gauche"
+                                  />
+                                  <input type="file" name="logo_gauche" class="form-control-sm"
+                                      onchange="previewImage(this, 'preview-logo-gauche')">
+                              </div>
                           </div>
-                        </div>
 
-                        {{-- Logo droite --}}
-                        <div class="card flex-fill text-center">
-                          <div class="card-header">Logo droite</div>
-                          <div class="card-body">
-                            @if(isset($settings->LOGO1))
-                              <img  src="{{ asset('storage/' . $settings->LOGO1) }}"  class="img-fluid mb-2"  style="max-height:160px"  alt="logo droite">
-                            @endif
-                            <input  type="file"  name="logo_droit"  class="form-control-sm">
+                          {{-- Logo droite --}}
+                          <div class="card flex-fill text-center">
+                              <div class="card-header">Logo droite</div>
+                              <div class="card-body">
+                                  <img
+                                      id="preview-logo-droit"
+                                      src="{{ $settings->LOGO1 ? asset('storage/logos/' . $settings->LOGO1) : '#' }}"
+                                      class="img-fluid mb-2"
+                                      style="max-height:160px; {{ $settings->LOGO1 ? '' : 'display:none;' }}"
+                                      alt="logo droite"
+                                  />
+                                  <input type="file" name="logo_droit" class="form-control-sm"
+                                      onchange="previewImage(this, 'preview-logo-droit')">
+                              </div>
                           </div>
-                        </div>
                       </div>
+
+                      <script>
+                          function previewImage(input, targetId) {
+                              const preview = document.getElementById(targetId);
+                              if (input.files && input.files[0]) {
+                                  const reader = new FileReader();
+                                  reader.onload = function (e) {
+                                      preview.src = e.target.result;
+                                      preview.style.display = 'block';
+                                  };
+                                  reader.readAsDataURL(input.files[0]);
+                              }
+                          }
+                      </script>
 
                       <!-- Types d'établissement -->
                       @php
@@ -245,7 +269,6 @@
                       <div class="col-12 text-end mt-4">
                         <a href="{{ route('appreciations.edit') }}" class="btn btn-primary">Appréciation</a>
                         <button type="submit" class="btn btn-success me-2">Enregistrer</button>
-                        <button type="reset" class="btn btn-secondary">Annuler</button>
                       </div>
 
                     </div>
@@ -255,98 +278,92 @@
             </div>
 
             <!-- Paramètres Généraux -->
-            <div class="tab-pane fade" id="pane-parametres" role="tabpanel" aria-labelledby="nav-param-tab">
-              <!-- Contenu Paramètres Généraux -->
-              <div class="row gx-3 gy-3 mt-2">
-                <form>
-                    <div class="row">                     
-                      <div class="col-md-8">
-                        <div class="row">
-                          @php
-                            $libelles = [
-                              'Libellé scolarité' => ['field' => 'Scolarité', 'montant' => $settings->MTS ?? 0],
-                              'Libellé frais annexes 1' => ['field' => $settings->LIBELF1 ?? '', 'montant' => $settings->MT1 ?? 0],
-                              'Libellé frais annexes 2' => ['field' => $settings->LIBELF2 ?? '', 'montant' => $settings->MT2 ?? 0],
-                              'Libellé frais annexes 3' => ['field' => $settings->LIBELF3 ?? '', 'montant' => $settings->MT3 ?? 0],
-                              'Libellé frais annexes 4' => ['field' => $settings->LIBELF4 ?? '', 'montant' => $settings->MT4 ?? 0],
-                            ];
-                          @endphp
-
-                          @foreach($libelles as $label => $info)
-                            <div class="col-md-12 mb-2 d-flex align-items-center">
-                              <label class="me-2" style="min-width: 220px;">{{ $label }} :</label>
-                              <input type="text" name="libel[]" class="form-control form-control-sm me-3" style="max-width: 300px;" value="{{ $info['field'] }}">
-                              <label class="me-2">Montant :</label>
-                              <input type="number" name="montant[]" class="form-control form-control-sm" style="width: 100px;" value="{{ $info['montant'] }}">
-                            </div>
-                          @endforeach
-                        </div>
-                      </div>
-
-                      <div class="col-md-4 bg-warning-subtle p-3 rounded">
-                        <input type="text" class="form-control form-control-sm mb-3 text-center fw-bold bg-warning-subtle border-0" value="Échéancier standard" readonly>
-
-                        <div class="mb-3 d-flex align-items-center">
-                          <label class="me-2" style="min-width: 180px;">Date 1er paiement standard :</label>
-                          <input type="date" name="date1" class="form-control form-control-sm" value="{{ $settings->Date1erPaie_Standard ?? '' }}" style="max-width: 170px;">
-                        </div>
-
-                        <div class="mb-3 d-flex align-items-center">
-                          <label class="me-2" style="min-width: 180px;">Périodicité standard (mois) :</label>
-                          <input type="number" name="periodicite" class="form-control form-control-sm" value="{{ $settings->Periodicite_Standard ?? 0 }}" style="max-width: 100px;">
-                        </div>
-
-                        <div class="form-check mb-3">
-                          <input class="me-2 form-check-input" type="checkbox" name="echeancier_frais" {{ ($settings->Echeancier_tous_frais ?? false) ? 'checked' : '' }} id="fraisCheck">
-                          <label class="form-check-label" for="fraisCheck">Échéancier prend en compte tous les frais</label>
-                        </div>
-
-                        <div class="mb-2 d-flex align-items-center">
-                          <label class="me-2" style="min-width: 180px;">Tranche 1 :</label>
-                          <input type="number" name="t1" class="form-control form-control-sm" value="{{ $settings->pcen1_standard ?? 0 }}" style="max-width: 100px;">
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                          <label class="me-2" style="min-width: 180px;">Tranche 2 :</label>
-                          <input type="number" name="t2" class="form-control form-control-sm" value="{{ $settings->pcen2_standard ?? 0 }}" style="max-width: 100px;">
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                          <label class="me-2" style="min-width: 180px;">Tranche 3 :</label>
-                          <input type="number" name="t3" class="form-control form-control-sm" value="{{ $settings->pcent3_standard ?? 0 }}" style="max-width: 100px;">
-                        </div>
-                      </div>
+            <div class="tab-pane fade" id="pane-parametres" role="tabpanel" aria-labelledby="nav-param-tab">              <div class="row gx-3 gy-3 mt-2">
+                <!-- Formulaire principal -->
+                <form method="POST" action="{{ route('params2.updateGeneraux') }}">
+                  @csrf
+                  @method('PUT')
+                  <div class="row gx-3 gy-3 mt-2">
+                    <div class="col-md-8">
+                      <fieldset>
+                        <legend class="w-auto fs-6 px-2">Paramétrage des composantes de la scolarité</legend>
+                        @php
+                          $libelles = [
+                            'Libellé scolarité'       => ['field' => 'Scolarité',          'montant' => $settings->MTS ?? 0],
+                            'Libellé frais annexes 1' => ['field' => $settings->LIBELF1 ?? '', 'montant' => $settings->MT1 ?? 0],
+                            'Libellé frais annexes 2' => ['field' => $settings->LIBELF2 ?? '', 'montant' => $settings->MT2 ?? 0],
+                            'Libellé frais annexes 3' => ['field' => $settings->LIBELF3 ?? '', 'montant' => $settings->MT3 ?? 0],
+                            'Libellé frais annexes 4' => ['field' => $settings->LIBELF4 ?? '', 'montant' => $settings->MT4 ?? 0],
+                          ];
+                        @endphp
+                        @foreach($libelles as $label => $info)
+                          <div class="mb-2 d-flex align-items-center">
+                            <label class="me-2" style="min-width:200px;">{{ $label }} :</label>
+                            <input type="text" name="libel[]" class="form-control form-control-sm me-3" style="max-width:250px;" value="{{ $info['field'] }}">
+                            <label class="me-2">Montant :</label>
+                            <input type="number" name="montant[]" class="form-control form-control-sm" style="width:100px;" value="{{ $info['montant'] }}">
+                          </div>
+                        @endforeach
+                      </fieldset>
                     </div>
 
-                    <div class="row">
+                    <div class="col-md-4 bg-warning-subtle p-3 rounded">
+                      <div class="text-center fw-bold mb-3">Échéancier standard</div>
+
+                      <div class="mb-3 d-flex align-items-center">
+                        <label class="me-2" style="min-width:180px;">Date 1er paiement standard :</label>
+                        <input type="date" name="date1" class="form-control form-control-sm" style="max-width:170px;" value="{{ $settings->Date1erPaie_Standard ?? '' }}">
+                      </div>
+
+                      <div class="mb-3 d-flex align-items-center">
+                        <label class="me-2" style="min-width:180px;">Périodicité standard (mois) :</label>
+                        <input type="number" name="periodicite" class="form-control form-control-sm" style="max-width:100px;" value="{{ $settings->Periodicite_Standard ?? 0 }}">
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="echeancier_frais" id="fraisCheck" {{ old('echeancier_frais', $settings->Echeancier_tous_frais ?? false) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="fraisCheck">Échéancier prend en compte tous les frais</label>
+                      </div>
+
+                      @foreach([1,2,3] as $n)
+                        <div class="mb-2 d-flex align-items-center">
+                          <label class="me-2" style="min-width:180px;">Tranche {{ $n }} :</label>
+                          <input type="number" name="t{{ $n }}" class="form-control form-control-sm" style="max-width:100px;" value="{{ $settings->{'pcen'.$n.'_standard'} ?? 0 }}">
+                        </div>
+                      @endforeach
+                    </div>
+                  </div>
+                  <!-- Suite du formulaire principal (Type de matricule, périodicité, etc.) -->
+                  <div class="row">
                       <!-- Colonne gauche -->
                       <div class="col-md-8">
                         <div class="row">
                           <!-- Type de matricule dans un cadre -->
                           <div class="col-md-4">
-                            <fieldset class="border rounded p-3 mb-3 h-100">
-                              <legend class="w-auto fs-6 px-2">Type de matricule</legend>
+                              <fieldset class="border rounded p-3 mb-3 h-100">
+                                  <legend class="w-auto fs-6 px-2">Type de matricule</legend>
 
-                              <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="type_matricule" value="manuel"
-                                  {{ $settings->TYPEMATRI === 'manuel' ? 'checked' : '' }}>
-                                <label class="form-check-label">Manuel</label>
-                              </div>
+                                  <div class="form-check form-check-inline">
+                                      <input class="form-check-input" type="radio" name="type_matricule" value="1"
+                                          {{ $settings->TYPEMATRI == 1 ? 'checked' : '' }}>
+                                      <label class="form-check-label">Manuel</label>
+                                  </div>
 
-                              <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="type_matricule" value="auto"
-                                  {{ $settings->TYPEMATRI === 'auto' ? 'checked' : '' }}>
-                                <label class="form-check-label">Automatique</label>
-                              </div>
-                            </fieldset>
+                                  <div class="form-check form-check-inline">
+                                      <input class="form-check-input" type="radio" name="type_matricule" value="2"
+                                          {{ $settings->TYPEMATRI == 2 ? 'checked' : '' }}>
+                                      <label class="form-check-label">Automatique</label>
+                                  </div>
+                              </fieldset>
                           </div>
-
 
                           <!-- Periodicité et Absences -->
                           <div class="col-md-8">
                             <div class="mb-3 d-flex align-items-center">
                               <label class="me-2" style="min-width: 200px;">Periodicité :</label>
-                              <select class="form-select form-select-sm" style="max-width: 200px;" name="TYPEAN">
-                                <option value="Semestrielle" {{ $settings->TYPEAN === 'Semestrielle' ? 'selected' : '' }}>Semestrielle</option>
-                                <option value="Trimestrielle" {{ $settings->TYPEAN === 'Trimestrielle' ? 'selected' : '' }}>Trimestrielle</option>
+                              <select name="TYPEAN">
+                                  <option value="1" {{ $settings->TYPEAN == 1 ? 'selected' : '' }}>Semestrielle</option>
+                                  <option value="2" {{ $settings->TYPEAN == 2 ? 'selected' : '' }}>Trimestrielle</option>
                               </select>
                             </div>
 
@@ -375,108 +392,116 @@
                           <input type="number" name="NUMDERCERTIF" class="form-control form-control-sm" value="{{ $settings->NUMDERCERTIF }}" style="max-width: 100px;" readonly>
                         </div>
                       </div>
+                  </div>
+
+                  <div class="row">
+                    <!-- Bloc Mode de remunération -->
+                    <div class="col-md-6">
+                      <fieldset class="border rounded p-3 mb-3 h-100">
+                        <legend class="fs-6 w-auto px-2">Mode de rémunération des vacataires</legend>
+
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="ModeSalaire" value="parclasse"
+                            {{ $settings->ModeSalaire == 'parclasse' ? 'checked' : '' }}>
+                          <label class="form-check-label">Taux horaire par classe</label>
+                        </div>
+
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="ModeSalaire" value="parcycle"
+                            {{ $settings->ModeSalaire == 'parcycle' ? 'checked' : '' }}>
+                          <label class="form-check-label">Taux horaire par cycle</label>
+                        </div>
+
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="ModeSalaire" value="parpromotion"
+                            {{ $settings->ModeSalaire == 'parpromotion' ? 'checked' : '' }}>
+                          <label class="form-check-label">Taux horaire par promotion</label>
+                        </div>
+
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="ModeSalaire" value="unique"
+                            {{ $settings->ModeSalaire == 'unique' ? 'checked' : '' }}>
+                          <label class="form-check-label">Taux horaire unique</label>
+                        </div>
+
+                      </fieldset>
                     </div>
+                    <!-- Bloc Calcul de la moyenne -->
+                    <div class="col-md-6">
+                      <fieldset class="border rounded p-3 mb-3 h-100">
+                        <legend class="fs-6 w-auto px-2">Calcul de la moyenne par matière</legend>
 
-                    <div class="row">
-                      <!-- Bloc Mode de répartition -->
-                      <div class="col-md-6">
-                        <fieldset class="border rounded p-3 mb-3 h-100">
-                          <legend class="fs-6 w-auto px-2">Mode de répartition des volumes horaires</legend>
+                        <!-- Option Classique -->
+                        <div class="form-check mb-2">
+                          <input class="form-check-input" type="radio" name="moyenne" id="mode_classique" value="classique" checked>
+                          <label class="form-check-label" for="mode_classique">
+                            Classique : Moy. Int et Devoirs ont même pondération
+                          </label>
+                        </div>
 
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="repartition" checked>
-                            <label class="form-check-label">Taux horaire par classe</label>
+                        <!-- Option Avancé -->
+                        <div class="form-check mb-2">
+                          <input class="form-check-input" type="radio" name="moyenne" id="mode_avance" value="avance">
+                          <label class="form-check-label" for="mode_avance">
+                            Avancé : Calculer Moy. Int et Moy. Devoirs
+                          </label>
+                        </div>
+
+                        <!-- Champs pondération (masqués par défaut) -->
+                        <div id="advanced-settings" class="mt-3 ms-3" style="display: none;">
+                          <div class="mb-2 d-flex align-items-center">
+                            <label class="me-2" style="min-width: 230px;">Pondération Interrogations :</label>
+                            <input type="number" name="Ponderation_MI" class="form-control form-control-sm" 
+                                  value="{{ $settings->Ponderation_MI * 100 }}" 
+                                  style="max-width: 100px;" min="0" max="100">%
                           </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="repartition">
-                            <label class="form-check-label">Taux horaire par cycle</label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="repartition">
-                            <label class="form-check-label">Taux horaire par promotion</label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="repartition">
-                            <label class="form-check-label">Taux horaire unique</label>
-                          </div>
-                        </fieldset>
-                      </div>
+                          <div class="mb-2 d-flex align-items-center">
+                            <label class="me-2" style="min-width: 230px;">Pondération Devoirs :</label>
+                            <input type="number" name="Ponderation_Dev" class="form-control form-control-sm" 
+                                  value="{{ $settings->Ponderation_Dev * 100 }}" 
+                                  style="max-width: 100px;" min="0" max="100" readonly>%
+                          </div>                    
+                        </div>
+                        <div class="mb-2 d-flex align-items-center">
+                            <label class="me-2" style="min-width: 230px;">Pondération Composition :</label>
+                            <input type="number" name="Ponderation_Comp" class="form-control form-control-sm" 
+                                  value="{{ $settings->Ponderation_Comp * 100 }}" 
+                                  style="max-width: 100px;" min="0" max="100">%
+                        </div>
+                      </fieldset>
+                    </div>
+                    <!-- Script pour activer/désactiver les champs -->
+                    <script>
+                      document.addEventListener("DOMContentLoaded", function() {
+                        const radioClassique = document.getElementById("mode_classique");
+                        const radioAvance = document.getElementById("mode_avance");
+                        const advancedDiv = document.getElementById("advanced-settings");
 
-                      <!-- Bloc Calcul de la moyenne -->
-                      <div class="col-md-6">
-                        <fieldset class="border rounded p-3 mb-3 h-100">
-                          <legend class="fs-6 w-auto px-2">Calcul de la moyenne par matière</legend>
+                        function toggleAdvancedFields() {
+                          advancedDiv.style.display = radioAvance.checked ? "block" : "none";
+                        }
 
-                          <!-- Option Classique -->
-                          <div class="form-check mb-2">
-                            <input class="form-check-input" type="radio" name="moyenne" id="mode_classique" value="classique" checked>
-                            <label class="form-check-label" for="mode_classique">
-                              Classique : Moy. Int et Devoirs ont même pondération
-                            </label>
-                          </div>
+                        // Ajout des listeners
+                        radioClassique.addEventListener("change", toggleAdvancedFields);
+                        radioAvance.addEventListener("change", toggleAdvancedFields);
 
-                          <!-- Option Avancé -->
-                          <div class="form-check mb-2">
-                            <input class="form-check-input" type="radio" name="moyenne" id="mode_avance" value="avance">
-                            <label class="form-check-label" for="mode_avance">
-                              Avancé : Calculer Moy. Int et Moy. Devoirs
-                            </label>
-                          </div>
+                        // Initialisation à l'ouverture de la page
+                        toggleAdvancedFields();
+                      });
+                    </script>
+                  </div>  
 
-                          <!-- Champs pondération (masqués par défaut) -->
-                          <div id="advanced-settings" class="mt-3 ms-3" style="display: none;">
-                            <div class="mb-2 d-flex align-items-center">
-                              <label class="me-2" style="min-width: 230px;">Pondération Interrogations :</label>
-                              <input type="number" name="Ponderation_MI" class="form-control form-control-sm" 
-                                    value="{{ $settings->Ponderation_MI * 100 }}" 
-                                    style="max-width: 100px;" min="0" max="100">%
-                            </div>
-                            <div class="mb-2 d-flex align-items-center">
-                              <label class="me-2" style="min-width: 230px;">Pondération Devoirs :</label>
-                              <input type="number" name="Ponderation_Dev" class="form-control form-control-sm" 
-                                    value="{{ $settings->Ponderation_Dev * 100 }}" 
-                                    style="max-width: 100px;" min="0" max="100">%
-                            </div>
-                            <div class="mb-2 d-flex align-items-center">
-                              <label class="me-2" style="min-width: 230px;">Pondération Composition :</label>
-                              <input type="number" name="Ponderation_Comp" class="form-control form-control-sm" 
-                                    value="{{ $settings->Ponderation_Comp * 100 }}" 
-                                    style="max-width: 100px;" min="0" max="100">%
-                            </div>
-                          </div>
+                  <!-- Actions du formulaire principal -->
+                  <div class="col-12 text-end mt-4">
+                    <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#renumeroterModal">
+                      Renuméroter
+                    </button>
+                    <button type="submit" class="btn btn-success me-2">Enregistrer</button>
+                    {{-- <button type="reset" class="btn btn-secondary">Annuler</button> --}}
+                  </div>
+                </form> {{-- ← Fermeture du form principal --}}
 
-                        </fieldset>
-                      </div>
-
-                      <!-- Script pour activer/désactiver les champs -->
-                      <script>
-                        document.addEventListener("DOMContentLoaded", function() {
-                          const radioClassique = document.getElementById("mode_classique");
-                          const radioAvance = document.getElementById("mode_avance");
-                          const advancedDiv = document.getElementById("advanced-settings");
-
-                          function toggleAdvancedFields() {
-                            advancedDiv.style.display = radioAvance.checked ? "block" : "none";
-                          }
-
-                          // Ajout des listeners
-                          radioClassique.addEventListener("change", toggleAdvancedFields);
-                          radioAvance.addEventListener("change", toggleAdvancedFields);
-
-                          // Initialisation à l'ouverture de la page
-                          toggleAdvancedFields();
-                        });
-                      </script>
-
-                    </div>   
-                    <!-- Actions -->
-                      <div class="col-12 text-end mt-4">
-                        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#renumeroterModal">Renuméroter</button>
-                        <button type="submit" class="btn btn-success me-2">Enregistrer</button>
-                        <button type="reset" class="btn btn-secondary">Annuler</button>
-                      </div>
-                </form>
-                <!-- Modal -->
+                <!-- Modal placé en dehors du form principal -->
                 <div class="modal fade" id="renumeroterModal" tabindex="-1" aria-labelledby="renumeroterModalLabel" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -487,21 +512,27 @@
                       </div>
 
                       <div class="modal-body">
-                        {{-- <form method="POST" action="{{ route('ta_route') }}"> --}}
-                          {{-- @csrf --}}
-
+                        <form method="POST" action="{{ route('params2.updateNumerotation') }}">
+                          @csrf
+                          @method('PUT')
                           <div class="mb-3 d-flex align-items-center">
-                            <label for="numAttestation" class="form-label me-3 mb-0" style="width: 200px;">Dernière Attestation</label>
+                            <label for="numAttestation" class="form-label me-3 mb-0" style="width: 200px;">
+                              Dernière Attestation
+                            </label>
                             <input type="number" class="form-control" id="numAttestation" name="NUMDERATT" style="width: 200px;" value="{{ $settings->NUMDERATT }}">
                           </div>
 
                           <div class="mb-3 d-flex align-items-center">
-                            <label for="numCarte" class="form-label me-3 mb-0" style="width: 200px;">Dernière Carte</label>
+                            <label for="numCarte" class="form-label me-3 mb-0" style="width: 200px;">
+                              Dernière Carte
+                            </label>
                             <input type="number" class="form-control" id="numCarte" name="NUMDERCARTE" style="width: 200px;" value="{{ $settings->NUMDERCARTE }}">
                           </div>
 
                           <div class="mb-3 d-flex align-items-center">
-                            <label for="numCertif" class="form-label me-3 mb-0" style="width: 200px;">Dernier Certificat</label>
+                            <label for="numCertif" class="form-label me-3 mb-0" style="width: 200px;">
+                              Dernier Certificat
+                            </label>
                             <input type="number" class="form-control" id="numCertif" name="NUMDERCERTIF" style="width: 200px;" value="{{ $settings->NUMDERCERTIF }}">
                           </div>
 
@@ -509,123 +540,92 @@
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                             <button type="submit" class="btn btn-primary">Enregistrer</button>
                           </div>
-
-                        {{-- </form> --}}
+                        </form>
                       </div>
 
                     </div>
                   </div>
                 </div>
+                
               </div>
-            </br></br></br>
             </div>
 
             <!-- Entete et Message -->
             <div class="tab-pane fade" id="pane-entetes-messages" role="tabpanel" aria-labelledby="nav-messages-tab">
+              <form action="{{ route('parametre.updateMessages') }}" method="POST">
                 @csrf
 
                 {{-- Groupe 1 --}}
                 <div class="row mt-4 mb-4">
-                    <div class="col-md-6 mb-4">
-                        <label>Message fiche de notes</label>
-                        <div class="quill-editor" data-name="message_fiche_notes">{!! $enteteFiches  ?? '' !!}</div>
-                        <input type="hidden" name="message_fiche_notes">
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <label>Message des reçus</label>
-                        <div class="quill-editor" data-name="message_des_recus">{!! $enteteRecu ?? '' !!}</div>
-                        <input type="hidden" name="message_des_recus">
-                    </div>
+                  <div class="col-md-6 mb-4">
+                    <label>Message fiche de notes</label>
+                    <textarea name="message_fiche_notes" class="form-control my-editor">{!! $enteteFiches ?? '' !!}</textarea>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <label>Message des reçus</label>
+                    <textarea name="message_des_recus" class="form-control my-editor">{!! $enteteRecu ?? '' !!}</textarea>
+                  </div>
                 </div>
-              </br></br>
 
                 {{-- Groupe 2 --}}
                 <div class="row mb-4">
-                    <div class="col-md-6 mb-4">
-                        <label>Entête des Documents</label>
-                        <div class="quill-editor" data-name="entete_des_documents">{!! $enteteDoc ?? '' !!}</div>
-                        <input type="hidden" name="entete_des_documents">
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <label>Texte Fiche d’Engagement</label>
-                        <div class="quill-editor" data-name="texte_fiche_engagement">{!! $enteteEngage ?? '' !!}</div>
-                        <input type="hidden" name="texte_fiche_engagement">
-                    </div>
+                  <div class="col-md-6 mb-4">
+                    <label>Entête des Documents</label>
+                    <textarea name="entete_des_documents" class="form-control my-editor">{!! $enteteDoc ?? '' !!}</textarea>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <label>Texte Fiche d’Engagement</label>
+                    <textarea name="texte_fiche_engagement" class="form-control my-editor">{!! $enteteEngage ?? '' !!}</textarea>
+                  </div>
                 </div>
-                </br></br>
- 
+
                 {{-- Groupe 3 --}}
                 <div class="col-md-12 mb-4">
-                    <label>Entête des bulletins</label>
-                    <div class="quill-editor" data-name="entete_bulletins">{!! $entete ?? '' !!}</div>
-                    <input type="hidden" name="entete_bulletins">
-                </div> 
-
-                {{-- Case à cocher --}}
-                <div class="form-check mb-4">
-                    <input type="checkbox" name="save_as_model" class="form-check-input" id="save_as_model">
-                    <label class="form-check-label" for="save_as_model">Enregistrer comme modèle</label>
+                  <label>Entête des bulletins</label>
+                  <textarea name="entete_bulletins" class="form-control my-editor">{!! $entete ?? '' !!}</textarea>
                 </div>
 
-                {{-- Bouton --}}
+                {{-- Boutons --}}
                 <div class="d-flex justify-content-end mb-4">
-                    <button type="submit" class="btn btn-success">Enregistrer</button>
+                  <button type="submit" class="btn btn-success">Enregistrer</button>
+                  <button type="reset" class="btn btn-secondary">Annuler</button>
                 </div>
-                <br>
+              </form>
             </div>
 
-            <!-- Quill CDN -->
-            <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-            <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+            {{-- ✅ CKEditor --}}
+            <script src="https://cdn.ckeditor.com/4.25.1-lts/standard/ckeditor.js"></script>
             <script>
-              document.addEventListener("DOMContentLoaded", function () {
-                  const editors = document.querySelectorAll('.quill-editor');
-
-                  editors.forEach(editorDiv => {
-                      const name = editorDiv.dataset.name;
-                      const hiddenInput = document.querySelector(`input[name="${name}"]`);
-
-                      const quill = new Quill(editorDiv, {
-                          theme: 'snow',
-                          modules: {
-                              toolbar: [
-                                  [{ header: [1, 2, 3, false] }],
-                                  ['bold', 'italic', 'underline', 'strike'],
-                                  [{ list: 'ordered' }, { list: 'bullet' }],
-                                  ['link', 'clean']
-                              ]
-                          }
-                      });
-
-                      // Initialiser le contenu dans le champ caché
-                      hiddenInput.value = editorDiv.querySelector('.ql-editor').innerHTML;
-
-                      // Mettre à jour le champ caché lors de la modification
-                      quill.on('text-change', () => {
-                          hiddenInput.value = editorDiv.querySelector('.ql-editor').innerHTML;
-                      });
-                  });
+              document.querySelectorAll('textarea.my-editor').forEach((el) => {
+                CKEDITOR.replace(el, {
+                  language: 'fr',
+                  height: 300,
+                  toolbarGroups: [
+                    { name: 'clipboard', groups: ['clipboard', 'undo'] },
+                    { name: 'editing', groups: ['find', 'selection', 'spellchecker'] },
+                    { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
+                    { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align'] },
+                    { name: 'links' },
+                    { name: 'insert' },
+                    { name: 'styles' },
+                    { name: 'colors' },
+                    { name: 'tools' }
+                  ],
+                  removeButtons: '', // Garde tous les boutons utiles
+                });
               });
             </script>
 
+            
           </div>
 
         </form>
       </div>
 
-      <!-- Colonne des boutons à droite -->
-      {{-- <div class="col-md-2 d-flex flex-wrap gap-2 align-content-start mt-2">
-        <button class="btn btn-primary w-100">Enregistrer</button>
-        <button class="btn btn-primary w-100">Bouton 2</button>
-        <button class="btn btn-primary w-100">Bouton 3</button>
-        <button class="btn btn-primary w-100">Bouton 4</button>
-        <button class="btn btn-primary w-100">Bouton 5</button>
-        <button class="btn btn-primary w-100">Bouton 6</button>
-      </div> --}}
-
     </div>
   </div>
 </div>
+</br></br></br>
 
 <style>
   .btn-arrow {
@@ -640,10 +640,39 @@
     font-size: 17px !important;
     color: #b51818 !important;
   }
-
   .btn-arrow:hover {
     color: #b700ff !important;
   }
 </style>
+
+{{-- Scripts pour gestion du timeout du message et persistance de l'onglet actif --}}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Masquer le message flash après 30s
+    var flash = document.getElementById('flash-alert');
+    if (flash) {
+      setTimeout(function() {
+        flash.remove();
+      }, 30000);
+    }
+
+    // Récupération de l'onglet actif depuis sessionStorage
+    var activeTab = sessionStorage.getItem('activeTab');
+    if (activeTab) {
+      var trigger = document.querySelector('.nav-link[data-bs-target="' + activeTab + '"]');
+      if (trigger) {
+        new bootstrap.Tab(trigger).show();
+      }
+    }
+
+    // Sauvegarde de l'onglet actif à chaque changement
+    var tabs = document.querySelectorAll('.nav-link[data-bs-toggle="tab"]');
+    tabs.forEach(function(tab) {
+      tab.addEventListener('shown.bs.tab', function(e) {
+        sessionStorage.setItem('activeTab', e.target.getAttribute('data-bs-target'));
+      });
+    });
+  });
+</script>
 
 @endsection

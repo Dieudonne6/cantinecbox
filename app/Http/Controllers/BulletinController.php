@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Models\Eleve;
+use App\Models\Eleve; 
 use App\Models\Moiscontrat;
 use App\Models\Paramcontrat;
 use App\Models\Contrat;
@@ -2511,11 +2511,6 @@ class BulletinController extends Controller
 
 
 
-
-
-
-    // 
-
     public function importernote()
     {
         return view('pages.inscriptions.importenote');
@@ -2550,6 +2545,7 @@ class BulletinController extends Controller
                 $matricul = $row[0] ?? null;
                 $nom      = $row[1] ?? null;
                 $prenoms = $row[2] ?? null;
+               
                 if ($prenoms) {
                     // Nettoyer les espaces superflus et les caractères invisibles
                     $prenoms = trim($prenoms); // Enlever les espaces avant et après
@@ -2563,6 +2559,9 @@ class BulletinController extends Controller
                 $sexe     = isset($row[3]) ? ($row[3] === 'M' ? 1 : ($row[3] === 'F' ? 2 : null)) : null;
                 $statut   = isset($row[4]) ? ($row[4] === 'R' ? 1 : ($row[4] === 'N' ? 0 : null)) : null;
                 $classe   = $row[5] ?? null;
+                $lieunais = $row[6] ?? null;
+                $datenais = $row[7] ?? null;
+              
 
                 // Ignorer les lignes sans matricule
                 if (!$matricul) continue;
@@ -2578,6 +2577,8 @@ class BulletinController extends Controller
                     'SEXE'       => $sexe,
                     'STATUT'     => $statut,
                     'CODECLAS'   => $classe,
+                    'LIEUNAIS'   =>$lieunais,
+                    'DATENAIS' => $datenais,
                 ];
 
                 // Ajouter les valeurs uniques pour guid_matri, guid_classe, guid_red si ces colonnes existent
@@ -2636,4 +2637,26 @@ class BulletinController extends Controller
         }
         return response()->json(['success' => false, 'message' => 'Aucun PDF reçu'], 400);
     }
+
+
+    //Exportation vers le fichier excel
+
+    public function exporternote()
+    {
+        return view('pages.inscriptions.exporternote');
+    }
+
+
+   public function getEleves()
+{
+    $eleves = DB::table('eleve')
+        ->select('MATRICULEX', 'NOM', 'PRENOM', 'DATENAIS', 'LIEUNAIS', 'STATUT', 'SEXE', 'CODECLAS')
+        ->orderBy('CODECLAS')
+        ->get()
+        ->groupBy('CODECLAS'); // regroupement par CODECLAS
+
+    return view('pages.inscriptions.exporternoteexcel', compact('eleves'));
+}
+                                                                                                                                                                              
+
 }

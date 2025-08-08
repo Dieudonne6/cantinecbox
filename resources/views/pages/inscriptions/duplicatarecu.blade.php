@@ -50,6 +50,7 @@
                                     <thead>
                                         <tr>
                                             <th>N° reçu</th>
+                                            <th>Nom</th>
                                             <th>Date reçu</th>
                                             <th>Scolarité</th>
                                             <th>Arriéré</th>
@@ -67,6 +68,7 @@
                                           <tr>
                                             {{-- N° reçu --}}
                                             <td>{{ $facture->id }}</td>
+                                            <td>{{ $facture->nom }}</td>
                                       
                                             {{-- Date (sans l’heure) --}}
                                             <td>

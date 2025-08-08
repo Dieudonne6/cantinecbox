@@ -27,133 +27,228 @@
         </button>
         <br><br>
       </div>
-  <div>
-    <div class="card-body">
-      <h4 class="card-title">Configuration Imprimante</h4>
 
-        <div class="content-wrapper">
-            <div class="row">
+<style>
+    .print-dialog {
+        width: 500px;
+        margin: 30px auto;
+        border: 1px solid #ccc;
+        padding: 20px;
+        font-family: "Segoe UI", sans-serif;
+        background-color: #f3f3f3;
+    }
 
-            <!-- Formulaire -->
-            <div class="col-md-6 grid-margin stretch-card">
-                <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Configuration Imprimante</h4>
+    .group-box {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 15px;
+    }
 
-                    {{-- Affichage des messages --}}
-                    @if(session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                    @endif
+    .group-box legend {
+        font-size: 14px;
+        font-weight: bold;
+        width: auto;
+        padding: 0 5px;
+    }
 
-                    @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                        </ul>
-                    </div>
-                    @endif
+    .form-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
 
-                    {{-- <form method="POST" action="{{ route('imprimante.store') }}"> --}}
-                    @csrf
+    .form-row label {
+        width: 110px;
+        font-size: 13px;
+        margin-right: 5px;
+    }
 
-                    <div class="form-group">
-                        <label>Nom de l'imprimante</label>
-                        <input type="text" name="nom" class="form-control" placeholder="Nom ex: EPSON-TX300" required>
-                    </div>
+    .form-row .form-control, .form-row select {
+        flex: 1;
+        font-size: 13px;
+        height: 28px;
+    }
 
-                    <div class="form-group">
-                        <label>Type</label>
-                        <select name="type" class="form-control" required>
-                        <option value="Thermique">Thermique</option>
-                        <option value="Laser">Laser</option>
-                        <option value="Jet d'encre">Jet d'encre</option>
-                        </select>
-                    </div>
+    .readonly-field {
+        background-color: #e9ecef;
+    }
 
-                    <div class="form-group">
-                        <label>Port</label>
-                        <select name="port" class="form-control" required>
-                        <option value="USB">USB</option>
-                        <option value="Wi-Fi">Wi-Fi</option>
-                        <option value="Ethernet">Ethernet</option>
-                        </select>
-                    </div>
+    .radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 5px;
+    }
 
-                    <div class="form-group">
-                        <label>Définir comme imprimante par défaut ?</label><br>
-                        <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="defaut" value="1">
-                        <label class="form-check-label">Oui</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="defaut" value="0" checked>
-                        <label class="form-check-label">Non</label>
-                        </div>
-                    </div>
+    .bottom-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+    }
+</style>
 
-                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    {{-- </form> --}}
-                </div>
-                </div>
+<div class="print-dialog">
+    <form action="#" method="POST">
+        @csrf
+
+        {{-- Bloc Imprimante --}}
+         <fieldset class="group-box">
+            <legend>Imprimante</legend>
+
+            <div class="form-row">
+                <label for="printer_name">Nom :</label>
+                <select name="printer_name" id="printer_name" class="form-control">
+                    <option value="pdf" selected>Microsoft Print to PDF</option>
+                    <option value="canon">Canon LBP 2900</option>
+                    <option value="hp">HP OfficeJet Pro</option>
+                    <option value="epson">EPSON L3110</option>
+                </select>
             </div>
 
-            <!-- Liste des imprimantes -->
-            <div class="col-md-6 grid-margin stretch-card">
-                <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Imprimantes configurées</h4>
-
-                    {{-- @if($imprimantes->isEmpty()) --}}
-                    <p>Aucune imprimante configurée.</p>
-                    {{-- @else --}}
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th>Nom</th>
-                            <th>Type</th>
-                            <th>Port</th>
-                            <th>Défaut</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {{-- @foreach ($imprimantes as $imp)
-                            <tr>
-                            <td>{{ $imp->nom }}</td>
-                            <td>{{ $imp->type }}</td>
-                            <td>{{ $imp->port }}</td>
-                            <td>
-                                @if($imp->defaut)
-                                <span class="badge bg-success">Oui</span>
-                                @else
-                                Non
-                                @endif
-                            </td>
-                            <td>
-                                <form action="{{ route('imprimante.destroy', $imp->id) }}" method="POST" onsubmit="return confirm('Confirmer la suppression ?')">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-sm btn-danger" title="Supprimer">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                                </form>
-                            </td>
-                            </tr>
-                        @endforeach --}}
-                        </tbody>
-                    </table>
-                    {{-- @endif --}}
-                </div>
-                </div>
+            <div class="form-row">
+                <label>État :</label>
+                <input type="text" id="etat" class="form-control readonly-field" readonly>
             </div>
 
+            <div class="form-row">
+                <label>Type :</label>
+                <input type="text" id="type" class="form-control readonly-field" readonly>
             </div>
+
+            <div class="form-row">
+                <label>Emplacement :</label>
+                <input type="text" id="emplacement" class="form-control readonly-field" readonly>
+            </div>
+
+            <div class="form-row">
+                <label>Commentaire :</label>
+                <input type="text" id="commentaire" class="form-control readonly-field" readonly>
+            </div>
+
+            <button type="button" class="btn btn-secondary btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#printerPropertiesModal">
+                Propriétés...
+            </button>
+        </fieldset>
+
+        {{-- Papier et Orientation --}}
+        <div class="d-flex justify-content-between">
+            <fieldset class="group-box" style="width: 48%;">
+                <legend>Papier</legend>
+                <div class="form-row">
+                    <label for="paper_size">Taille :</label>
+                    <select name="paper_size" id="paper_size" class="form-control">
+                        <option selected>A4</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Source :</label>
+                    <input type="text" class="form-control readonly-field" readonly>
+                </div>
+            </fieldset>
+
+            <fieldset class="group-box" style="width: 48%;">
+                <legend>Orientation</legend>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="orientation" value="portrait" checked> Portrait
+                    </label>
+                    <label>
+                        <input type="radio" name="orientation" value="paysage"> Paysage
+                    </label>
+                </div>
+            </fieldset>
         </div>
 
-    </div>
+        <div class="bottom-buttons">
+            <button type="button" class="btn btn-secondary">Réseau...</button>
+            <div>
+                <button type="submit" class="btn btn-primary">OK</button>
+                <a href="{{ url()->previous() }}" class="btn btn-secondary">Annuler</a>
+            </div>
+        </div>
+    </form>
 </div>
+
+{{-- Modal des propriétés d’impression --}}
+<div class="modal fade" id="printerPropertiesModal" tabindex="-1" aria-labelledby="printerPropertiesLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="printerPropertiesLabel">Propriétés de l’imprimante</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Nom :</strong> <span id="modal_printer_name"></span></p>
+        <p><strong>Type :</strong> <span id="modal_printer_type"></span></p>
+        <p><strong>État :</strong> <span id="modal_printer_etat"></span></p>
+        <p><strong>Emplacement :</strong> <span id="modal_printer_emplacement"></span></p>
+        <p><strong>Commentaire :</strong> <span id="modal_printer_commentaire"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{-- Script --}}
+<script>
+    const printers = {
+        pdf: {
+            etat: 'Prêt',
+            type: 'Microsoft Print To PDF',
+            emplacement: 'PORTPROMPT:',
+            commentaire: ''
+        },
+        canon: {
+            etat: 'En veille',
+            type: 'Canon CAPT USB',
+            emplacement: 'USB001',
+            commentaire: 'Imprimante locale Canon'
+        },
+        hp: {
+            etat: 'Prêt',
+            type: 'HP Universal Print Driver',
+            emplacement: 'USB002',
+            commentaire: 'HP sur port USB'
+        },
+        epson: {
+            etat: 'Occupée',
+            type: 'Epson ESC/P-R',
+            emplacement: 'WIFI',
+            commentaire: 'Connexion réseau sans fil'
+        }
+    };
+
+    function updatePrinterFields(key) {
+        const selected = printers[key];
+        if (selected) {
+            document.getElementById('etat').value = selected.etat;
+            document.getElementById('type').value = selected.type;
+            document.getElementById('emplacement').value = selected.emplacement;
+            document.getElementById('commentaire').value = selected.commentaire;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const select = document.getElementById('printer_name');
+        updatePrinterFields(select.value);
+
+        select.addEventListener('change', function () {
+            updatePrinterFields(this.value);
+        });
+
+        document.querySelector('[data-bs-target="#printerPropertiesModal"]').addEventListener('click', function () {
+            const key = select.value;
+            const selected = printers[key];
+
+            document.getElementById('modal_printer_name').textContent = select.options[select.selectedIndex].text;
+            document.getElementById('modal_printer_type').textContent = selected.type;
+            document.getElementById('modal_printer_etat').textContent = selected.etat;
+            document.getElementById('modal_printer_emplacement').textContent = selected.emplacement;
+            document.getElementById('modal_printer_commentaire').textContent = selected.commentaire;
+        });
+    });
+</script>
 @endsection

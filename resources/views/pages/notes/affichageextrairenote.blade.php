@@ -82,7 +82,8 @@
                     <thead>
                         <tr>
                             <th>MATRICULE</th>
-                            <th>Nom et Prenom</th>
+                            <th>Nom</th>
+                            <th>Prenom</th>
                             <th>Moyenne Interro</th>
                             <th>DEV1</th>
                             <th>DEV2</th>
@@ -98,7 +99,8 @@
                             @endphp
                             <tr>
                                 <td>{{ $firstNote->eleve->MATRICULEX }}</td>
-                                <td>{{ $firstNote->eleve->NOM . ' ' . $firstNote->eleve->PRENOM }}</td>
+                                <td>{{ $firstNote->eleve->NOM }}</td>
+                                <td>{{ $firstNote->eleve->PRENOM }}</td>
                                 <td>{{ ($firstNote->MI == 21 || $firstNote->MI == -1) ? '**.**' : round($firstNote->MI,2) }}</td>
                                 <td>{{ ($firstNote->DEV1 == 21 || $firstNote->DEV1 == -1) ? '**.**' : $firstNote->DEV1 }}</td>
                                 <td>{{ ($firstNote->DEV2 == 21 || $firstNote->DEV2 == -1) ? '**.**' : $firstNote->DEV2 }}</td>

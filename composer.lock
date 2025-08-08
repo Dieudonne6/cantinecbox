@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03b7c2a77d3fbca28904b1635eea7fde",
+    "content-hash": "f3bb544334d45dab96c7de6ab96c7d32",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1656,6 +1656,59 @@
                 "source": "https://github.com/KnpLabs/snappy/tree/v1.5.1"
             },
             "time": "2025-01-06T16:53:26+00:00"
+        },
+        {
+            "name": "kwn/number-to-words",
+            "version": "2.12.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kwn/number-to-words.git",
+                "reference": "c4e0cea84574bc0077121ac6a2331c183d6d1cc0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kwn/number-to-words/zipball/c4e0cea84574bc0077121ac6a2331c183d6d1cc0",
+                "reference": "c4e0cea84574bc0077121ac6a2331c183d6d1cc0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.6",
+                "squizlabs/php_codesniffer": "^3.7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "NumberToWords\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Karol Wnuk",
+                    "email": "k.wnuk@ascetic.pl"
+                }
+            ],
+            "description": "Multi language standalone PHP number to words converter. Fully tested, open for extensions and new languages.",
+            "keywords": [
+                "currency",
+                "money",
+                "number",
+                "numbers",
+                "string",
+                "to",
+                "words"
+            ],
+            "support": {
+                "issues": "https://github.com/kwn/number-to-words/issues",
+                "source": "https://github.com/kwn/number-to-words/tree/2.12.0"
+            },
+            "time": "2025-07-01T20:49:04+00:00"
         },
         {
             "name": "laravel/framework",
@@ -3666,6 +3719,43 @@
                 }
             ],
             "time": "2024-07-20T21:41:07+00:00"
+        },
+        {
+            "name": "phprtflite/phprtflite",
+            "version": "v1.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phprtflite/PHPRtfLite.git",
+                "reference": "eef76d965fc7a0cb4c7342f229f67ad4793c61c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phprtflite/PHPRtfLite/zipball/eef76d965fc7a0cb4c7342f229f67ad4793c61c2",
+                "reference": "eef76d965fc7a0cb4c7342f229f67ad4793c61c2",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPRtfLite": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Steffen Zeidler",
+                    "email": "sigma_z@sigma-scripts.de"
+                }
+            ],
+            "description": "PHPRtfLite is an API enabling developers to create rtf documents with php.",
+            "support": {
+                "issues": "https://github.com/phprtflite/PHPRtfLite/issues",
+                "source": "https://github.com/phprtflite/PHPRtfLite/tree/v1.3.x"
+            },
+            "time": "2014-07-04T19:43:18+00:00"
         },
         {
             "name": "psr/clock",
