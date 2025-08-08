@@ -291,6 +291,30 @@ public function tables()
         return response($imageData)->header('Content-Type', $mimeType);
     }
 
+    public function showLogo($side)
+    {
+        $settings = DB::table('params2')->first();
+
+        if (!$settings) {
+            abort(404);
+        }
+
+        if ($side === 'left' && $settings->logoimage1) {
+            $imageData = $settings->logoimage1;
+        } elseif ($side === 'right' && $settings->LOGO1) {
+            $imageData = $settings->LOGO1;
+        } else {
+            abort(404);
+        }
+
+        // Détection automatique du mime-type
+        $finfo = finfo_open();
+        $mimeType = finfo_buffer($finfo, $imageData, FILEINFO_MIME_TYPE);
+        finfo_close($finfo);
+
+        return response($imageData)->header('Content-Type', $mimeType);
+    }
+
     public function updateIdentification(Request $request)
     {
         $request->validate([

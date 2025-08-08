@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('content')
+@section('content')                 
     <!-- Inclusion du CSS de DataTables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
