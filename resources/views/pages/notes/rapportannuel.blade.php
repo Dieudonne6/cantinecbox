@@ -574,8 +574,7 @@
                                 <tr style="background-color: #f2f2f2;">
                                     <th>Ordre Mérite</th>
                                     <th>Mat</th>
-                                    <th>Nom</th>
-                                    <th>Prénoms</th>
+                                    <th>Nom et Prénoms</th>
                                     <th>Sexe</th>
                                     <th>Red</th>
                                     <th>Moy1</th>
@@ -589,8 +588,7 @@
                                     <tr>
                                         <td>{{ $rapport->RANG }}</td>
                                         <td class="mat">{{ $rapport->MATRICULEX }}</td>
-                                        <td>{{ $rapport->NOM }}</td>
-                                        <td> {{ $rapport->PRENOM }}</td>
+                                        <td>{{ $rapport->NOM }} {{ $rapport->PRENOM }}</td>
                                         <td>{{ $rapport->SEXE == 1 ? 'M' : 'F' }}</td>
                                         <td>{{ $rapport->STATUT == 0 ? 'N' : 'R' }}</td>
                                         <td>{{ in_array(number_format($rapport->MOY1, 2), [21.0, -1.0]) ? '**' : number_format($rapport->MOY1, 2) }}

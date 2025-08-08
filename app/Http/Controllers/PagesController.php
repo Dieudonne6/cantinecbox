@@ -50,6 +50,9 @@ use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use DateTime;
 
+use RtfHtmlPhp\Document;
+use RtfHtmlPhp\Html\HtmlFormatter;
+
 class PagesController extends Controller
 {
   
@@ -518,10 +521,10 @@ class PagesController extends Controller
     if($account){
       if (Hash::check($request->password_usercontrat, $account->motdepasse)) {
         Session::put('account', $account);
-        $id_usercontrat = $account->id_usercontrat;
+        $id_usercontrat = $account->id;
         $image = $account->image;
         
-        $nom_user = $account->nomuser;
+        $nom_user = $account->login;
         Session::put('image', $image);
         
         $prenom_user = $account->prenomuser;
@@ -1990,6 +1993,20 @@ public function eleveparclasseessai() {
         $counters1 = substr_replace(preg_replace('/_/', '/', $counters, 1), ' ', -2, 0);
         // dd($counters1);
 
+        $rtfContent = Params2::first()->EnteteRecu;
+        dd($rtfContent);
+        $document = new Document($rtfContent);
+        $formatter = new HtmlFormatter();
+        $enteteNonStyle = $formatter->Format($document);
+        $entete = '
+        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+            <style>
+                p { margin: 0; padding: 0; line-height: 1.2; }
+                span { display: inline-block; }
+            </style>
+            ' . $enteteNonStyle . '
+        </div>
+        ';
 
         $facturePaie = DB::table('facturescolarit')
             ->where('counters', $counters1)
@@ -2004,7 +2021,7 @@ public function eleveparclasseessai() {
         $donneItem = json_decode($jsonItem);
         // dd($facturePaie);
 
-        return view('pages.Etats.pdfduplicatarecu', compact('nomecole', 'logo', 'facturePaie', 'donneItem'));
+        return view('pages.Etats.pdfduplicatarecu', compact('nomecole', 'logo', 'facturePaie', 'donneItem', 'entete'));
     }
   
 
@@ -4465,6 +4482,20 @@ $total = $decodedResponse['total'];
     
         $NOMETAB = $paramse->NOMETAB;
 
+        $rtfContent = Params2::first()->EnteteRecu;
+        $document = new Document($rtfContent);
+        $formatter = new HtmlFormatter();
+        $enteteNonStyle = $formatter->Format($document);
+        $entete = '
+        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+            <style>
+                p { margin: 0; padding: 0; line-height: 1.2; }
+                span { display: inline-block; }
+            </style>
+            ' . $enteteNonStyle . '
+        </div>
+        ';
+
     // dd($NOMETAB);
             // $id = $fileNameqrcode;
             // $qrcodesin = Qrcode::find($id);
@@ -4516,6 +4547,7 @@ return view('pages.inscriptions.pdfpaiementsco', [
   'ifuEcoleFacture' => $ifuEcoleFacture,
   'qrCodeString' => $qrCodeString,
   'qrcodecontent' => $qrcodecontent,
+  'entete' => $entete,
 
   // Informations sur l'élève
   'classeeleve' => $eleve->CODECLAS,

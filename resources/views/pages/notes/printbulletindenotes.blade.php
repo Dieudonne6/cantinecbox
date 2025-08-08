@@ -202,12 +202,12 @@
                                 <div class="d-flex">
                                     <h4 class="ml-2" style="margin-top: 5px; font-weight: 400; white-space: nowrap;">
                                         Redoublant (e) :
-                                        <input class="ml-2 disable" type="checkbox" name="redoublant" id="redoublant_oui"
-                                            readonly {{ $resultat['redoublant'] == 1 ? 'checked' : '' }}>
                                         <label for="redoublant_oui">OUI</label>
+                                        <input class="disable" type="checkbox" name="redoublant" id="redoublant_oui"
+                                            readonly {{ $resultat['redoublant'] == 1 ? 'checked' : '' }}>&nbsp;&nbsp;
+                                            <label for="redoublant_non">NON</label>
                                         <input class="disable" type="checkbox" name="redoublant" id="redoublant_non"
                                             readonly {{ $resultat['redoublant'] == 0 ? 'checked' : '' }}>
-                                        <label for="redoublant_non">NON</label>
                                         @if (isset($option['matricule']) && $option['matricule'])
                                             <label
                                                 style="margin-left: 10px; font-size:23px; white-space: nowrap; min-width: 200px;">Mat.
@@ -311,7 +311,7 @@
                                 @endphp
                                 @foreach ($resultat['matieres'] as $matiere)
                                     {{-- DEBUT ignorer la matiere si l'eleve n'a pas fait aucun des deux devoirs --}}
-                                    @php
+                                    {{-- @php
                                         $dev1Valid =
                                             isset($matiere['devoir1']) &&
                                             $matiere['devoir1'] != 21 &&
@@ -320,18 +320,19 @@
                                             isset($matiere['devoir2']) &&
                                             $matiere['devoir2'] != 21 &&
                                             $matiere['devoir2'] != -1;
-                                    @endphp
+                                    @endphp --}}
 
                                     {{-- Si la matière n'est pas "conduite" et qu'aucun des deux devoirs n'est valide, on passe à la suivante --}}
-                                    @if ($matiere['code_matiere'] != $request->input('conduite') && !$dev1Valid && !$dev2Valid)
+                                    {{-- @if ($matiere['code_matiere'] != $request->input('conduite') && !$dev1Valid && !$dev2Valid)
                                         @continue
-                                    @endif
+                                    @endif --}}
                                     {{-- FIN ignorer la matiere si l'eleve n'a pas fait aucun des deux devoirs --}}
 
 
                                     @php
                                         $i++;
                                         $moyenne_part = $matiere['moyenne_sur_20'];
+                                        
                                         if (
                                             $matiere['test'] != null &&
                                             isset($option['note_test']) &&
@@ -344,11 +345,15 @@
                                         if ($matiere['coefficient'] != -1) {
                                             if (!is_null($moyenne_sur_20)) {
                                                 // Si $moyenne_sur_20 existe, on calcule et on ajoute le coefficient
-                                                $moyenne_coeff = number_format(($moyenne_sur_20 * $matiere['coefficient']), 2);
-                                                $total_coefficients += $matiere['coefficient'];
+                                                if ($moyenne_sur_20 === 21) {
+                                                    $moyenne_coeff = 0;
+                                                } else {
+                                                    $moyenne_coeff = number_format($moyenne_sur_20 * $matiere['coefficient'], 2);
+                                                    $total_coefficients += $matiere['coefficient'];
+                                                }
                                             } else {
                                                 // Si $moyenne_sur_20 est null, on ne fait rien (ou on peut initialiser $moyenne_coeff à 0 ou null selon ce que vous souhaitez)
-                                                $moyenne_coeff = null;
+                                                $moyenne_coeff = 0;
                                             }
                                             // $moyenne_coeff = $moyenne_sur_20 * $matiere['coefficient'];
                                             // $total_coefficients += $matiere['coefficient'];
@@ -402,36 +407,86 @@
                                                     
                                                     var_dump($moyenne_sur_20)
                                                 @endphp --}}
-                                                    {{ 
+                                                    {{-- {{ 
                                                         isset($moyenne_sur_20) 
                                                             ? number_format($moyenne_sur_20, 2) 
                                                             : '**.**' 
-                                                    }}
+                                                    }} --}}
+
+                                                    {{ isset($moyenne_sur_20) && $moyenne_sur_20 != 21 ? number_format((float) $moyenne_sur_20, 2) : '**.**' }}
                                             </td>
                                             @if ($matiere['coefficient'] == -1 && $request->input('bonificationType') == 'integral')
-
-                                                <td>+ {{ isset($moyenne_coeff) ? number_format($moyenne_coeff, 2) : '**.**' }}</td>
+                                                
+                                                <td>
+                                                    @if (
+                                                        $matiere['code_matiere'] == $request->input('conduite') || $matiere['code_matiere'] == $request->input('eps')                        
+                                                        )
+                                                        {{ isset($moyenne_coeff) && $moyenne_sur_20 != 21 ? number_format((float) $moyenne_coeff, 2) : '**.**' }}
+                                                    @else
+                                                        + {{ isset($moyenne_coeff) && $moyenne_sur_20 != 21 ? number_format((float) $moyenne_coeff, 2) : '**.**' }}
+                                                    @endif
+                                                </td>
                                             @else
                                                 {{-- @php
                                                     
                                                     var_dump($moyenne_coeff)
                                                 @endphp --}}
-                                                <td>{{ isset($moyenne_coeff) ? number_format($moyenne_coeff, 2) : '**.**' }}</td>
-                                            @endif
+                                                {{-- <td>{{ isset($moyenne_coeff) ? number_format($moyenne_coeff, 2) : '**.**' }}</td> --}}
+                                                <td>
+                                                    @if (
+                                                        $matiere['code_matiere'] == $request->input('conduite') || $matiere['code_matiere'] == $request->input('eps')                        
+                                                        )
+                                                        {{ isset($moyenne_coeff) && $moyenne_coeff != 0 ? number_format((float) $moyenne_coeff, 2) : '**.**' }}
+                                                    @else
+                                                         {{ isset($moyenne_coeff) && $moyenne_coeff != 0 ? number_format((float) $moyenne_coeff, 2) : '**.**' }}
+                                                    @endif
+                                                </td>
+                                        @endif
                                         @endif
                                         @if (isset($option['note_test']) && $option['note_test'])
                                             {{-- <td></td>
                                             <td></td> --}}
-                                            <td>{{ number_format($moyenne_part, 2) ?? '**.**' }}</td>
-                                            <td>{{ $matiere['test'] ?? '**.**' }}</td>
+                                            {{-- <td>{{ number_format((float) $moyenne_part, 2) }}</td> --}}
+                                            <td>
+                                                @if (
+                                                $matiere['code_matiere'] == $request->input('conduite') || $matiere['code_matiere'] == $request->input('eps')
+                                                && $moyenne_part == 0
+                                                )
+                                                {{ $moyenne_part != 0 ? number_format((float) $moyenne_part, 2) : '**.**' }}
+                                                @else
+                                                {{ $moyenne_sur_20 != 21 ? number_format((float) $moyenne_part, 2) : '**.**' }}
+                                                @endif
+                                            </td>
+                                            {{-- <td>{{  $matiere['test'] ?? '**.**' }}</td> --}}
+                                            <td>
+                                           
+                                                {{ $matiere['test'] ?? '**.**' }}
+
+                                            </td>
                                             <td class="bold-text" style="font-weight: bold">
-                                            {{ isset($moyenne_sur_20) ? number_format($moyenne_sur_20, 2) : '**.**' }}
+                                                @if (
+                                                $matiere['code_matiere'] == $request->input('conduite') || $matiere['code_matiere'] == $request->input('eps')
+                                                && $moyenne_part == 0
+                                                )
+                                                {{ isset($moyenne_sur_20) ? number_format($moyenne_sur_20, 2) : '**.**' }}
+                                            @else
+                                                {{ isset($moyenne_sur_20) && $moyenne_sur_20 != 21 ? number_format($moyenne_sur_20, 2) : '**.**' }}
+                                            @endif
                                             </td>
                                                                                             {{-- @php
                                                     
                                                     var_dump($moyenne_coeff)
                                                 @endphp --}}
-                                            <td>{{ isset($moyenne_coeff) ? number_format($moyenne_coeff, 2) : '**.**' }}</td>
+                                            <td>
+                                            @if (
+                                                $matiere['code_matiere'] == $request->input('conduite') || $matiere['code_matiere'] == $request->input('eps')
+                                                && $moyenne_part == 0
+                                                )
+                                                {{ isset($moyenne_coeff) && $moyenne_part != 0 ? number_format((float) $moyenne_coeff, 2) : '**.**' }}
+                                            @else
+                                                {{ isset($moyenne_coeff) && $moyenne_sur_20 != 21 ? number_format((float) $moyenne_coeff, 2) : '**.**' }}
+                                            @endif
+                                            </td>
                                         @else
                                             {{-- <td>{{ number_format($matiere['plusFaibleMoyenne'], 2) ?? '**.**' }}</td> --}}
                                             <td>
@@ -478,7 +533,8 @@
                                             </td>
                                         @endif --}}
                                         @if (isset($option['appreciation_prof']))
-                                            <td style="text-align: left;">{{ $matiere['mentionProf'] }}</td>
+                                            <td style="text-align: left;">
+                                            {{ $matiere['moyenne_sur_20'] != 21 ? $matiere['mentionProf'] : 'Résultats médiocres' }}</td>
                                         @else
                                             <td></td>
                                         @endif
@@ -502,7 +558,8 @@
                                     @else
                                     <td colspan="4"></td>              
                                     @endif --}}
-                                    <td>{{ number_format($total_moyenne_coeffs, 2) }}</td>
+                                    {{-- <td>{{ number_format($total_moyenne_coeffs, 2) }}</td> --}}
+                                    <td>{{ $total_moyenne_coeffs != 0 ? number_format((float) $total_moyenne_coeffs, 2) : '**.**' }}</td>
                                     @if (isset($option['rang_matiere']) && $option['rang_matiere'])
                                         <td colspan="4"></td>
                                     @else
@@ -737,7 +794,7 @@
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;">
                                     </div>
                                     <input type="checkbox" class="disable" name="tableau_dhonneur" id="tableau_dhonneur"
-                                        readonly {{ $moyenne >= 12 && $mention_conseil ? 'checked' : '' }}>
+                                        readonly {{ $resultat['moyenneAnnuel'] >= 12 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
@@ -746,7 +803,7 @@
                                     </div>
                                     <input type="checkbox" class="disable" name="avertissement_travail"
                                         id="avertissement_travail" readonly
-                                        {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
+                                        {{ $resultat['moyenneAnnuel'] <= 8.5 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
@@ -763,7 +820,7 @@
                                     <div style="flex-grow: 1; border-bottom: 1px dotted #000; margin-left: 10px;">
                                     </div>
                                     <input type="checkbox" class="disable" name="blame_work" id="blame_work" readonly
-                                        {{ $moyenne <= 8.5 && $mention_conseil ? 'checked' : '' }}>
+                                        {{ $resultat['moyenneAnnuel'] <= 8.5 && $mention_conseil ? 'checked' : '' }}>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">

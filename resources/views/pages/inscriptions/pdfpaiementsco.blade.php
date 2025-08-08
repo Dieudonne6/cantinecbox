@@ -438,6 +438,10 @@
                         <div class="logo">
                             <img src="data:image/jpeg;base64,{{ base64_encode($logoUrl) }}" alt="Logo" class="logoimg">
                         </div>
+
+                    <div>
+                         {!! $entete !!}
+                    </div>
                     </div>
                     <div class="info">
                         <h4><strong>FACTURE DE PAIEMENT</strong></h4>
@@ -463,7 +467,7 @@
                                 <tr>
                                     <td>
                                         {{-- <p>Nom : {{ $NOMETAB }}</p> --}}
-                                        <p>Nom : CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</p>
+                                        {{-- <p>Nom : CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</p> --}}
                                         <p>IFU : {{ $ifuEcoleFacture }}</p>
                                         {{-- <p>RCCM :</p>
                                 <p>Adresse :</p>
@@ -480,7 +484,7 @@
                         <table id="customers4">
                             <thead>
                                 <tr>
-                                    <th>Informations du client</th>
+                                    <th style="text-align: center">Eleve</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -500,7 +504,8 @@
                 </div>
             </section>
 
-            <div class="table2">
+            <div class="tables-wrapper">
+            <div class="tableZ">
                 <table id="customers">
                     <thead>
                         <tr>
@@ -514,7 +519,7 @@
                         @foreach ($itemFacture as $item)
                             <tr>
                                 <td>{{ $item['name'] }} (E) </td>
-                                <td>{{ $item['price'] }}</td>
+                                <td style="text-align: end">{{ number_format($item['price'], 0, ',', ',') }}</td>
                                 {{-- <td>{{ $item['price'] }}</td> --}}
                             </tr>
                         @endforeach
@@ -523,7 +528,7 @@
                 </table>
             </div>
 
-
+            <div class="yes">
             <div class="table2 specifique">
                 <table id="customers">
                     <thead>
@@ -534,8 +539,8 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ $montanttotal }}</td>
-                            <td>{{ $montanttotal }}</td>
+                            <td>{{ number_format($montanttotal, 0, ',', ',') }}</td>
+                            <td>{{  number_format($montanttotal, 0, ',', ',') }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -567,7 +572,7 @@
                 <h3> Total : {{ $facture->montant_total }}</h3>
                 <hr  class="line2">
             </div>
-        </div> --}}
+            </div> --}}
 
             <div class="table3">
                 <table id="customers3">
@@ -590,17 +595,34 @@
                                 
                                 {{-- {{ $mode_paiement }} --}}
                             </td>
-                            <td>{{ $montanttotal }}</td>
+                            <td>{{ number_format($montanttotal, 0, ',', ',') }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
 
+
+            @php
+            use NumberToWords\NumberToWords;
+
+            // Crée le convertisseur
+            $numberToWords = new NumberToWords();
+            $transformer = $numberToWords->getNumberTransformer('fr');
+            $abs = abs($montanttotal);
+            $words = ucfirst(trim($transformer->toWords($abs)));
+
+            // Si négatif, on préfixe "moins"
+            if ($montanttotal < 0) {
+                $words = 'Moins ' . $words;
+            }
+        @endphp
 
             <p class="textmontant">Arrêtée, la présente facture à la somme de <span class="prix">
-                    {{ $montanttotal }}</span> FCFA.</p>
+                    {{ $words }} ({{ number_format($montanttotal, 0, ',', ',') }})</span> FCFA.</p>
             <br>
-            <div class="table2">
+            {{-- <div class="table2"> --}}
                 <div class="infomecef">
                     <div class="qcode">
                         <img src="data:image/jpeg;base64,{{ base64_encode($qrcodecontent) }}" alt="QR Code">
@@ -613,20 +635,18 @@
                     </div>
                 </div>
             </div>
-            <div class="bas">
+            {{-- <div class="bas">
                 <div class="logo1">
-                    {{-- <p><strong>{{ $NOMETAB }}</strong></p> --}}
                     <p><strong>CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</strong></p>
 
                 </div>
                 <div class="info1">
                     <p>Fait à Cotonou le, <strong>{{ $factureconfirm['dateTime'] }}</strong></p>
                 </div>
-                {{-- <p class="textremerciement"><i>Merci d'avoir choisi le {{ $NOMETAB }}</i></p> --}}
                 <p class="textremerciement"><i>Merci d'avoir choisi CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</i></p>
-            </div>
-        </div>
-    </div>
+            </div> --}}
+        {{-- </div> --}}
+    {{-- </div> --}}
     {{-- </body> --}}
     {{-- <script>
         function printInvoice() {
@@ -793,7 +813,7 @@
     }
 </script> --}}
 
-<script>
+{{-- <script>
     function printInvoice() {
         const invoice = document.querySelector('.invoice');
         const printWindow = window.open('', '', 'width=800,height=600');
@@ -845,7 +865,7 @@
 
             #customers4 th, #customers4 td { border: 1px solid #ddd; padding: 8px; text-align: left; }
             #customers4 th { background-color: #f2f2f2; }
-            
+
             .entete, .bas { border: 1px solid #ccc; font-size: 15px; background: #cccccc34; }
 
             .facture-container1, .facture-container2, .facture-container5 {
@@ -952,7 +972,185 @@
         printWindow.print();
         printWindow.close();
     }
+</script> --}}
+
+<script>
+    function printInvoice() {
+        const invoice = document.querySelector('.invoice');
+        const printWindow = window.open('', '', 'width=800,height=600');
+
+        printWindow.document.write('<html><head><title>Facture</title>');
+        printWindow.document.write('<style>');
+        printWindow.document.write(`
+            @media print {
+                @page {
+                    size: A5 paysage;
+                    margin: 5mm;
+                }
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-size: 10px;
+                }
+                .invoice {
+                    zoom: 0.6;
+                    width: 100%;
+                    height: auto;
+                    margin: 0 auto;
+                    padding: 0;
+                    overflow: hidden;
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                }
+                *, *::before, *::after {
+                    box-sizing: border-box;
+                }
+            }
+
+            body { font-family: Arial, sans-serif; font-size: 10px; }
+
+            .btn-arrow { display: none; }
+
+            p, td, th, li, h1, h2, h3, h4 {
+                font-size: 10px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            #customers, #customers2, #customers3, #customers8 { font-family: Arial, Helvetica, sans-serif; border-collapse: collapse; margin-left: 40px; margin-top: 2rem; }
+
+            #customers td, #customers th, #customers2 td, #customers2 th, #customers3 td, #customers3 th { border: 1px solid #ddd; padding: 8px; text-align: left; max-width: 200px; word-wrap: break-word; word-break: break-all; }
+            #customers tr:nth-child(even), #customers2 tr:nth-child(even), #customers3 tr:nth-child(even) { background-color: #f2f2f2; }
+            #customers tr:hover, #customers2 tr:hover, #customers3 tr:hover { background-color: #ddd; }
+            #customers th, #customers2 th, #customers3 th { padding-top: 12px; padding-bottom: 12px; background-color: #a5d5e9; color: black; }
+
+            #customers4 th, #customers4 td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            #customers4 th { background-color: #f2f2f2; }
+            
+            .entete, .bas { border: 1px solid #ccc; font-size: 15px; background: #cccccc34; }
+
+            .facture-container1, .facture-container2, .facture-container5 {
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+                margin: 0 0;
+            }
+
+            .info {
+                padding: 5px;
+            }
+
+            .logo img{
+                width: 90px;
+                height: 60px;
+            }
+
+            .qcode img{
+                width: 60px;
+                height: 60px;
+            }
+
+            .invoice {
+                background-color: #fff;
+                margin: 0 auto;
+                padding: 5px;
+            }
+
+            .entete, .bas {
+                font-size: 10px;
+                padding: 4px;
+            }
+
+
+
+            .cli, .entre {
+                width: 43% !important;
+                background: #aeadad35; 
+            }
+
+            .info {
+                width: 43% !important;
+            }
+
+            .infomecef {
+                width: 100%;
+                margin: 0px auto;
+                margin-left: 135px;
+                padding: 5px;
+            }
+
+            .mecef { margin-top: -3.4rem; margin-left: 4rem; font-size: 10px; padding: 2px; }
+
+            .prix {
+                font-weight: bold;
+                font-size: 11px;
+                text-align: center;
+            }
+
+            #customers, #customers2, #customers3, #customers4 {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 5px 0;
+            }
+
+            table, th, td {
+                border: 1px solid #ccc;
+                padding: 4px;
+                font-size: 10px;
+            }
+
+
+            .tables-wrapper {
+            display: flex;
+            align-items: flex-start;    
+            justify-content: space-between;
+            gap: 10px;                   
+            }
+
+            .table2 {
+            flex: 2;                    
+            max-width: 100%;
+            box-sizing: border-box;
+            }
+            .tableZ{
+                width : 50%;
+            }
+                    
+
+            .yes {
+            flex: 1; 
+                max-width: 50% !important;
+            }
+
+            
+
+        
+
+                    
+
+                    .bas {
+                        width: 45% !important;
+                        margin-top: -5rem;
+                        margin-left: 18rem;
+                    }
+
+                    th {
+                        background-color: #e0e0e0;
+                    }
+                `);
+                printWindow.document.write('</style>');
+                printWindow.document.write('</head><body>');
+                printWindow.document.write(invoice.innerHTML);
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+    }
 </script>
 
-
 @endsection
+
+
+

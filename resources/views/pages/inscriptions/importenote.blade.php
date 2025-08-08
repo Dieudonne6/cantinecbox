@@ -2,162 +2,249 @@
 
 @section('content')
 <div class="col-lg-12 grid-margin stretch-card">
-    <div class="card">
-        <!-- Bouton de retour -->
-        <div>
-            <style>
-                .btn-arrow {
-                    position: absolute;
-                    top: 0px;
-                    left: 0px;
-                    background-color: transparent !important;
-                    border: 1px !important;
-                    text-transform: uppercase !important;
-                    font-weight: bold !important;
-                    cursor: pointer !important;
-                    font-size: 17px !important;
-                    color: #b51818 !important;
-                }
-                .btn-arrow:hover {
-                    color: #b700ff !important;
-                }
-            </style>
-            <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
-                <i class="fas fa-arrow-left"></i> Retour
-            </button>
-            <br><br>
-        </div>
-        <div class="card-body">
-            <h5 class="mb-2">Importation des élèves</h5>
+  <div class="card">
+    <div>
+      <style>
+        .btn-arrow {
+          position: absolute; top: 0; left: 0;
+          background-color: transparent !important;
+          border: none !important;
+          text-transform: uppercase !important;
+          font-weight: bold !important;
+          cursor: pointer !important;
+          font-size: 17px !important;
+          color: #b51818 !important;
+        }
+        .btn-arrow:hover { color: #b700ff !important; }
+      </style>
 
-            <!-- Zone d'upload et boutons sur une même ligne -->
-            <div class="col-auto">
-                <div class="d-flex align-items-center">
-                    <input type="file" class="form-control me-2" id="fileInput" name="excelFile" accept=".xlsx, .xls, .csv" />
-                    <button class="btn btn-primary me-2" onclick="previewExcel()">Prévisualiser</button>
-                    <button class="btn btn-primary" onclick="importExcel()">Importer</button>
-                </div>
-            </div>
-
-            <!-- Section d'affichage du contenu du fichier Excel -->
-            <div class="mt-4" id="previewSection">
-                <table class="table table-bordered table-striped" id="excelTable"></table>
-            </div>
-
-            <!-- Section pour afficher d'éventuelles erreurs -->
-            <div id="errorSection" class="mt-4"></div>
-        </div>
+      <button type="button" class="btn btn-arrow" onclick="window.history.back();">
+        <i class="fas fa-arrow-left"></i> Retour
+      </button>
+      <br><br>
     </div>
+
+    <div class="card-body" id="cardBody">
+      <h5 class="mb-2">Importation des élèves</h5>
+
+      <!-- Zone d'erreur -->
+      <div id="errorSection" class="mt-4"></div>
+
+      <!-- Upload + boutons -->
+      <div class="col-auto">
+        <div class="d-flex align-items-center">
+          <input type="file" class="form-control me-2" id="fileInput" accept=".xlsx, .xls, .csv" />
+          <button id="btnPreview" class="btn btn-primary me-2">Prévisualiser</button>
+          <button id="btnImport"  class="btn btn-primary">Importer</button>
+        </div>
+      </div>
+
+      <!-- Preview table (scrollable) -->
+      <div class="table-responsive mt-4" id="previewSection" style="max-height:60vh; overflow:auto;">
+        <table class="table table-bordered table-striped" id="excelTable">
+          <!-- thead / tbody injectés par JS -->
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- Importer SheetJS via CDN (ou via npm et votre build) -->
+<!-- Barre de scroll horizontale fixe (sera déplacée dans <body> si besoin) -->
+<div id="hScroll" aria-hidden="true" style="display:none">
+  <div id="hScrollContent"></div>
+</div>
+
+<!-- SheetJS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <script>
-    // Fonction pour prévisualiser le contenu du fichier Excel en utilisant SheetJS
-    function previewExcel() {
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0];
+document.addEventListener('DOMContentLoaded', () => {
+  /* ---------- Elements ---------- */
+  const fileInput    = document.getElementById('fileInput');
+  const btnPreview   = document.getElementById('btnPreview');
+  const btnImport    = document.getElementById('btnImport');
+  const errorSection = document.getElementById('errorSection');
+  const previewSection = document.getElementById('previewSection'); // .table-responsive
+  const excelTable   = document.getElementById('excelTable');
 
+  // Fixed scrollbar elements
+  let hScroll = document.getElementById('hScroll');
+  let hScrollContent = document.getElementById('hScrollContent');
+
+  // If hScroll is not in body, move it so it remains fixed relative to viewport
+  if (hScroll && hScroll.parentNode !== document.body) {
+    document.body.appendChild(hScroll);
+  }
+
+  // Basic styling for the fixed scrollbar (you can adjust)
+  const style = document.createElement('style');
+  style.innerHTML = `
+    #hScroll {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      height: 18px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      background: rgba(0,0,0,0.03);
+      z-index: 99999;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      -webkit-overflow-scrolling: touch;
+    }
+    #hScroll::-webkit-scrollbar { height: 12px; }
+    #hScrollContent { height: 1px; }
+    .card-body.with-fixed-scroll { padding-bottom: 84px; } /* avoid overlap */
+  `;
+  document.head.appendChild(style);
+
+  /* ---------- Events binding ---------- */
+  btnPreview.addEventListener('click', previewExcel);
+  fileInput.addEventListener('change', previewExcel);
+  btnImport.addEventListener('click', importExcel);
+  window.addEventListener('resize', () => setTimeout(updateFixedScrollbarAlwaysVisible, 80));
+
+  // Sync flags to avoid circular updates
+  let syncingFromTable = false;
+  let syncingFromBar = false;
+
+  // When previewSection scrolls horizontally, update fixed bar
+  previewSection.addEventListener('scroll', () => {
+    if (syncingFromBar) return;
+    syncingFromTable = true;
+    hScroll.scrollLeft = previewSection.scrollLeft;
+    setTimeout(() => syncingFromTable = false, 10);
+  });
+
+  // When user scrolls the fixed bar, scroll the previewSection
+  hScroll.addEventListener('scroll', () => {
+    if (syncingFromTable) return;
+    syncingFromBar = true;
+    previewSection.scrollLeft = hScroll.scrollLeft;
+    setTimeout(() => syncingFromBar = false, 10);
+  });
+
+  /* ---------- Helper to show errors ---------- */
+  function buildErrorHtml(message, errors) {
+    let html = `<div class="alert alert-danger"><p>${message || 'Erreur'}</p>`;
+    if (Array.isArray(errors) && errors.length) {
+      html += '<ul class="mb-0">' + errors.map(e => `<li>${e}</li>`).join('') + '</ul>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  /* ---------- Preview (SheetJS -> table) ---------- */
+  function previewExcel() {
+    errorSection.innerHTML = '';
+    const file = fileInput.files[0];
     if (!file) {
-        alert("Veuillez sélectionner un fichier Excel.");
-        return;
+      errorSection.innerHTML = `<div class="alert alert-danger">Veuillez sélectionner un fichier Excel.</div>`;
+      return;
     }
 
     const reader = new FileReader();
     reader.readAsBinaryString(file);
- 
+
     reader.onload = function(e) {
-        const data = e.target.result;
-        const workbook = XLSX.read(data, { type: "binary" });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        
-        // Convertir la feuille en JSON, incluant les en-têtes
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        
-        // Extraire la première ligne (les en-têtes) pour identifier les colonnes
-        const headers = jsonData[0];
+      const wb = XLSX.read(e.target.result, { type: 'binary' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
 
-        // Parcourir les données et reformater les dates
-        const formattedData = jsonData.map((row, rowIndex) => {
-            return row.map((cell, colIndex) => {
-                // Si la cellule est un nombre (valeur Excel pour une date) et que ce n'est pas la colonne "Redoublant"
-                if (typeof cell === 'number' && headers[colIndex] !== "Redoublant") {
-                    return formatDateFromExcel(cell);
-                }
-                // Sinon, retourner la cellule telle quelle
-                return cell;
-            });
-        });
+      // Generate full HTML table with sheet_to_html
+      const fullHtml = XLSX.utils.sheet_to_html(ws, { editable: false });
 
-        // Convertir les données formatées en HTML
-        const html = jsonToHtmlTable(formattedData);
-        document.getElementById('excelTable').innerHTML = html;
+      // Parse and extract the table
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(fullHtml, 'text/html');
+      const generatedTable = doc.querySelector('table');
+
+      // Replace our table's thead/tbody
+      excelTable.querySelector('thead')?.remove();
+      excelTable.querySelector('tbody')?.remove();
+
+      if (generatedTable) {
+        const thead = generatedTable.querySelector('thead');
+        const tbody = generatedTable.querySelector('tbody');
+        if (thead) excelTable.appendChild(thead.cloneNode(true));
+        if (tbody) excelTable.appendChild(tbody.cloneNode(true));
+      } else {
+        excelTable.innerHTML = '<tbody><tr><td>Aucune donnée détectée</td></tr></tbody>';
+      }
+
+      // After DOM injection let the browser compute layout, then update fixed scrollbar
+      setTimeout(updateFixedScrollbarAlwaysVisible, 80);
     };
-}
+  }
 
-// Fonction pour reformater la date à partir d'une valeur Excel (nombre)
-function formatDateFromExcel(excelDate) {
-    const epoch = new Date(1900, 0, 1); // 1er janvier 1900 (date de départ Excel)
-    const date = new Date(epoch.getTime() + (excelDate - 2) * 86400000); // Correction du bug Excel en soustrayant 2
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Les mois commencent à 0
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-}
-
-// Fonction pour convertir un tableau JSON en HTML
-function jsonToHtmlTable(data) {
-    let html = '<table class="table table-bordered table-striped">';
-    data.forEach((row, rowIndex) => {
-        html += '<tr>';
-        row.forEach(cell => {
-            html += `<td>${cell}</td>`;
-        });
-        html += '</tr>';
-    });
-    html += '</table>';
-    return html;
-}
-
-
-
-
-    // Fonction pour importer le fichier via AJAX vers Laravel
-    function importExcel() {
-        const fileInput = document.getElementById('fileInput');
-        const file = fileInput.files[0];
-
-        if (!file) {
-            alert("Veuillez sélectionner un fichier Excel.");
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('excelFile', file);
-
-        fetch("{{ route('eleves.import') }}", {
-            method: "POST",
-            headers: {
-                'X-CSRF-TOKEN': "{{ csrf_token() }}"
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                alert(data.message);
-            } else {
-                document.getElementById('errorSection').innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
-            }
-        })
-        .catch(error => {
-            console.error("Erreur :", error);
-            console.info("");
-            document.getElementById('errorSection').innerHTML = `<div class="alert alert-danger">Erreur lors de l'importation.</div>`;
-        });
+  /* ---------- Import (fetch + error handling) ---------- */
+  function importExcel() {
+    errorSection.innerHTML = '';
+    if (!fileInput.files[0]) {
+      errorSection.innerHTML = `<div class="alert alert-danger">Veuillez sélectionner un fichier Excel.</div>`;
+      return;
     }
+
+    const formData = new FormData();
+    formData.append('excelFile', fileInput.files[0]);
+
+    fetch("{{ route('eleves.import') }}", {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+      },
+      body: formData
+    })
+    .then(res => res.json().then(payload => {
+      if (!res.ok) return Promise.reject(payload);
+      return payload;
+    }))
+    .then(data => {
+      if (data.success) {
+        errorSection.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+      } else {
+        errorSection.innerHTML = buildErrorHtml(data.message, data.errors);
+      }
+    })
+    .catch(err => {
+      // err may be JSON payload or unexpected
+      if (err && (err.message || err.errors)) {
+        errorSection.innerHTML = buildErrorHtml(err.message, err.errors);
+      } else {
+        console.error('Import error:', err);
+        errorSection.innerHTML = `<div class="alert alert-danger">Erreur lors de l'importation.</div>`;
+      }
+    });
+  }
+
+  /* ---------- Fixed scrollbar: always visible and synced ---------- */
+  function updateFixedScrollbarAlwaysVisible() {
+    // safety checks
+    if (!excelTable || !previewSection || !hScroll || !hScrollContent) {
+      return;
+    }
+
+    // compute widths
+    const tableScrollWidth = excelTable.scrollWidth || 0;
+    const containerWidth = previewSection.clientWidth || 0;
+
+    // Force minimal width slightly larger than container to ensure a thumb is present
+    const forcedWidth = Math.max(tableScrollWidth, containerWidth + 20);
+
+    hScrollContent.style.width = forcedWidth + 'px';
+    hScroll.style.display = 'block';
+    document.getElementById('cardBody')?.classList.add('with-fixed-scroll');
+
+    // sync positions
+    hScroll.scrollLeft = previewSection.scrollLeft;
+  }
+
+  // expose for manual calls if needed (e.g. after server-side modifications)
+  window.updateFixedScrollbarAlwaysVisible = updateFixedScrollbarAlwaysVisible;
+
+  // initial call in case table pre-exists
+  setTimeout(updateFixedScrollbarAlwaysVisible, 200);
+});
 </script>
 @endsection
-

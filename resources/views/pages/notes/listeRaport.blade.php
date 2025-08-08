@@ -118,8 +118,7 @@
                                                     <th scope="col">Statut</th>
                                                     <th scope="col">Mat</th>
                                                     <th scope="col">Rang</th>
-                                                    <th scope="col">Nom </th>
-                                                    <th scope="col">Prénom</th>
+                                                    <th scope="col">Nom et Prénoms</th>
                                                     <th scope="col">Redou</th>
                                                     <th scope="col">Moy1</th>
                                                     <th scope="col">Moy2</th>
@@ -133,8 +132,7 @@
                                                         <td>{{ $rapport->STATUTF }}</td>
                                                         <td class="mat">{{ $rapport->MATRICULEX }}</td>
                                                         <td>{{ $rapport->RANG }}</td>
-                                                        <td class="text-start">{{ $rapport->NOM }} </td>
-                                                        <td>{{ $rapport->PRENOM }}</td>
+                                                        <td class="text-start">{{ $rapport->NOM }} {{ $rapport->PRENOM }}</td>
                                                         <td>{{ $rapport->STATUT == 0 ? 'Nouveau' : 'Redouble' }}</td>
                                                         <td>{{ number_format($rapport->MOY1, 2) == 21 || number_format($rapport->MOY1, 2) == -1 ? '**' : number_format($rapport->MOY1, 2) }}</td>
                                                         <td>{{ number_format($rapport->MOY2, 2) == 21 || number_format($rapport->MOY2, 2) == -1 ? '**' : number_format($rapport->MOY2, 2) }}</td>

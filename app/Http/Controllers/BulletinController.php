@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Models\Eleve;
+use App\Models\Eleve; 
 use App\Models\Moiscontrat;
 use App\Models\Paramcontrat;
 use App\Models\Contrat;
@@ -60,6 +60,7 @@ use Illuminate\Support\Str;
 
 use App\Imports\ElevesImport;
 use App\Exports\NotesClasseMultiExport;
+use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
 use PDF;
 
@@ -835,6 +836,48 @@ class BulletinController extends Controller
     public function printimagefond(Request $request) {}
 
 
+    /**
+     * Retourne une chaîne style inline (font-family + font-size) en extrayant
+     * la police et la taille depuis le contenu RTF.
+     */
+    private function getStyleFromRtf(string $rtfContent): string
+    {
+        // Taille (first \fsN) -> N is half-points in RTF
+        $fontSizePx = 14; // fallback
+        if (preg_match('/\\\\fs(\d+)/', $rtfContent, $m)) {
+            $pt = ((int)$m[1]) / 2;            // points
+            $fontSizePx = round($pt * 1.333);  // approx px
+        }
+
+        // Police : chercher la fonttbl et la première police référencée (\fX)
+        $fontFamily = 'Arial, sans-serif';
+        // Récupère toutes les définitions de font dans le fonttbl
+        if (preg_match_all('/\\{\\\\f(\d+)\s+([^;\\}]+);\\}/i', $rtfContent, $fonts, PREG_SET_ORDER)) {
+            // récupérer l'index de la première occurrence \fX utilisée dans le document
+            if (preg_match('/\\\\f(\d+)/', $rtfContent, $m2)) {
+                $usedIndex = $m2[1];
+                foreach ($fonts as $f) {
+                    if ((string)$f[1] === (string)$usedIndex) {
+                        $fontFamily = trim($f[2]);
+                        // add fallback generic
+                        if (stripos($fontFamily, 'times') !== false) {
+                            $fontFamily .= ', "Times New Roman", serif';
+                        } else {
+                            $fontFamily .= ', Arial, sans-serif';
+                        }
+                        break;
+                    }
+                }
+            } else {
+                // sinon prends la première définition trouvée
+                $fontFamily = trim($fonts[0][2]) . ', Arial, sans-serif';
+            }
+        }
+
+        return "font-family: {$fontFamily}; font-size: {$fontSizePx}px;";
+    }
+
+
 
     public function printbulletindenotes(Request $request)
     {
@@ -895,20 +938,37 @@ class BulletinController extends Controller
         $rtfContent = Params2::first()->EnteteBull;
         // $entete = $this->extractTextFromRtf($rtfContent);
 
-        $rtfContent = Params2::first()->EnteteBull;
-        $document = new Document($rtfContent);
-        $formatter = new HtmlFormatter();
-        $enteteNonStyle = $formatter->Format($document);
-        $entete = '
-        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
-            <style>
-                p { margin: 0; padding: 0; line-height: 1.2; }
-                span { display: inline-block; }
-            </style>
-            ' . $enteteNonStyle . '
-        </div>
-        ';
+        // ancien code pour appliqué les style a lentete du bulletin
+
+        // $rtfContent = Params2::first()->EnteteBull;
+        // $document = new Document($rtfContent);
+        // $formatter = new HtmlFormatter();
+        // $enteteNonStyle = $formatter->Format($document);
+        // $entete = '
+        // <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+        //     <style>
+        //         p { margin: 0; padding: 0; line-height: 1.2; }
+        //         span { display: inline-block; }
+        //     </style>
+        //     ' . $enteteNonStyle . '
+        // </div>
+        // ';
         // dd($entete);
+
+        $rtfContent = Params2::first()->EnteteBull;
+    $document = new Document($rtfContent);
+    $formatter = new HtmlFormatter();
+    $enteteNonStyle = $formatter->Format($document);
+
+    // build inline style from rtf
+    $inlineStyle = $this->getStyleFromRtf($rtfContent);
+
+    $entete = '
+    <div style="text-align: center; line-height: 1.2; ' . $inlineStyle . '">
+        <style>p { margin:0; padding:0; line-height:1.2 } span { display:inline-block; }</style>
+        ' . $enteteNonStyle . '
+    </div>';
+
         $logo = $params2->logoimage;
 
         // Conversion des données en Base64
@@ -1722,6 +1782,14 @@ class BulletinController extends Controller
                         if ($noteSpeciale !== null) {
                             break; // On a trouvé une note valide, donc on peut sortir de la boucle
                         }
+
+                        if ($note->TEST < 21 && $note->TEST != null && $note->TEST != -1 && $note->TEST != 0) {
+                            $test = $note->TEST;
+                        } else {
+                            $test = null;
+                        }
+
+
                     }
 
                     $moyennesParClasseEtMatiere[$eleve->CODECLAS][$codeMatiere][] = [
@@ -1738,7 +1806,7 @@ class BulletinController extends Controller
                         'coefficient' => $notes->first()->COEF,
                         'moyenne_sur_20' => $noteSpeciale,
                         'moyenne_interro' => $noteSpeciale,
-                        'test' => $notes->first()->TEST,
+                        'test' => $test,
                         'moyenne_coeff' => $noteSpeciale * ($notes->first()->COEF),
                         'mentionProf' => $mentionMatSpecial, // Pas de mention pour la conduite ou EPS
                         'Typematiere' => 'CONDUITE', // Indication que c'est une matière conduite
@@ -1788,6 +1856,11 @@ class BulletinController extends Controller
                     $noteDEV2 = $notes->first()->DEV2 ?? null;
                     $noteDEV3 = $notes->first()->DEV3 ?? null;
 
+                    if ($notes->first()->TEST < 21 && $notes->first()->TEST != null && $notes->first()->TEST != -1 && $notes->first()->TEST != 0) {
+                        $test = $notes->first()->TEST;
+                    } else {
+                        $test = null;
+                    }
                     // Ajouter cette matière au résultat avec les informations de bonification et les notes individuelles
                     $resultatEleve['matieres'][] = [
                         'code_matiere' => $codeMatiere,
@@ -1796,7 +1869,7 @@ class BulletinController extends Controller
                         'devoir1' => $noteDEV1, // Note individuelle DEV1
                         'devoir2' => $noteDEV2, // Note individuelle DEV2
                         'devoir3' => $noteDEV3, // Note individuelle DEV3
-                        'test' => $notes->first()->TEST,
+                        'test' => $test,
                         'coefficient' => $notes->first()->COEF,
                         'moyenne_sur_20' => $moyenneEps,
                         'moyenne_coeff' => $moyenneEps * ($notes->first()->COEF),
@@ -1862,6 +1935,12 @@ class BulletinController extends Controller
                     $noteDEV2 = $notes->first()->DEV2 ?? null;
                     $noteDEV3 = $notes->first()->DEV3 ?? null;
 
+                    if ($notes->first()->TEST < 21 && $notes->first()->TEST != null && $notes->first()->TEST != -1 && $notes->first()->TEST != 0) {
+                        $test = $notes->first()->TEST;
+                    } else {
+                        $test = null;
+                    }
+
                     // Ajouter cette matière au résultat en tant que matière bonifiée avec notes individuelles
                     $resultatEleve['matieres'][] = [
                         'code_matiere' => $codeMatiere,
@@ -1871,7 +1950,7 @@ class BulletinController extends Controller
                         'devoir1' => $noteDEV1, // Note individuelle DEV1
                         'devoir2' => $noteDEV2, // Note individuelle DEV2
                         'devoir3' => $noteDEV3, // Note individuelle DEV3
-                        'test' => $notes->first()->TEST,
+                        'test' => $test,
                         'moyenne_sur_20' => $moyenneBonifiee,
                         'moyenne_intervalle' => intval($moyenneIntervalle),
                         'moyenne_coeff' => $moyenneBonifiee * (-1 * $notes->first()->COEF),
@@ -2210,7 +2289,7 @@ class BulletinController extends Controller
             }
         }
 
-        // dd($moyennesParClasseEtMatiere);
+        // dd($resultats);
 
 
         // $data = compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean', 'params2', 'logo', 'logoBase64', 'mimeType', 'interligne');
@@ -2525,91 +2604,356 @@ class BulletinController extends Controller
     }
 
 
-    public function import(Request $request)
+    // public function import(Request $request)
+    // {
+    //     if (!$request->hasFile('excelFile')) {
+    //         return response()->json(['success' => false, 'message' => 'Aucun fichier sélectionné.']);
+    //     }
+
+    //     $file = $request->file('excelFile');
+
+    //     try {
+    //         $spreadsheet = IOFactory::load($file);
+    //         $sheet = $spreadsheet->getActiveSheet();
+    //         $rows = $sheet->toArray();
+
+    //         if (count($rows) < 2) {
+    //             return response()->json(['success' => false, 'message' => 'Le fichier est vide ou mal formaté.']);
+    //         }
+
+    //         // Vider la table eleve
+    //         DB::table('eleve')->truncate();
+
+    //         $insertData = [];
+
+    //         foreach ($rows as $index => $row) {
+    //             if (($index === 0) || ($index === 1)) continue; // Ignorer la ligne des en-têtes
+
+    //             $matricul = $row[0] ?? null;
+    //             $nom      = $row[1] ?? null;
+    //             $prenoms = $row[2] ?? null;
+    //             if ($prenoms) {
+    //                 // Nettoyer les espaces superflus et les caractères invisibles
+    //                 $prenoms = trim($prenoms); // Enlever les espaces avant et après
+    //                 $prenoms = preg_replace('/[\x00-\x1F\x7F]/', '', $prenoms); // Enlever les caractères invisibles
+
+    //                 // Limiter la longueur à 500 caractères
+    //                 if (strlen($prenoms) > 500) {
+    //                     $prenoms = substr($prenoms, 0, 500);
+    //                 }
+    //             }
+    //             $sexe     = isset($row[3]) ? ($row[3] === 'M' ? 1 : ($row[3] === 'F' ? 2 : null)) : null;
+    //             $statut   = isset($row[4]) ? ($row[4] === 'R' ? 1 : ($row[4] === 'N' ? 0 : null)) : null;
+    //             $classe   = $row[5] ?? null;
+
+    //             // Ignorer les lignes sans matricule
+    //             if (!$matricul) continue;
+
+    //             // Vérifier si les colonnes existent dans la table `eleve`
+    //             $columns = DB::getSchemaBuilder()->getColumnListing('eleve');
+
+    //             // Préparer les données à insérer avec des UUID pour les colonnes guid_matri, guid_classe, guid_red
+    //             $insertRow = [
+    //                 'MATRICULEX' => $matricul,
+    //                 'NOM'        => $nom,
+    //                 'PRENOM'     => $prenoms,
+    //                 'SEXE'       => $sexe,
+    //                 'STATUT'     => $statut,
+    //                 'CODECLAS'   => $classe,
+    //             ];
+
+    //             // Ajouter les valeurs uniques pour guid_matri, guid_classe, guid_red si ces colonnes existent
+    //             if (in_array('guid_matri', $columns)) {
+    //                 $insertRow['guid_matri'] = Str::uuid();
+    //             }
+
+    //             if (in_array('guid_classe', $columns)) {
+    //                 $insertRow['guid_classe'] = Str::uuid();
+    //             }
+
+    //             if (in_array('guid_red', $columns)) {
+    //                 $insertRow['guid_red'] = Str::uuid();
+    //             }
+
+    //             $insertData[] = $insertRow;
+    //         }
+
+    //         if (!empty($insertData)) {
+    //             DB::table('eleve')->insert($insertData);
+    //         }
+
+    //         return response()->json(['success' => true, 'message' => 'Importation effectuée avec succès.']);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Erreur lors de l\'importation : ' . $e->getMessage()
+    //         ]);
+    //     }
+    // }
+
+
+
+
+// public function import(Request $request)
+// {
+//     // 1. Vérification du fichier
+//     if (!$request->hasFile('excelFile')) {
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'Aucun fichier sélectionné.'
+//         ]);
+//     }
+//     $file = $request->file('excelFile');
+
+//     try {
+//         // 2. Lecture du fichier
+//         $spreadsheet = IOFactory::load($file);
+//         $sheet       = $spreadsheet->getActiveSheet();
+//         $rows        = $sheet->toArray(null, true, false, true);
+
+//         // $rows est un tableau indexé par lettres de colonnes : ['A'=>'matricule', 'B'=>'nom', ...]
+
+//         if (count($rows) < 2) {
+//             return response()->json([
+//                 'success' => false,
+//                 'message' => 'Le fichier est vide ou ne contient que les en-têtes.'
+//             ]);
+//         }
+
+//         // 3. On vide la table (vérifiez bien le nom de votre table : 'eleve' ou 'eleves')
+//         DB::table('eleve')->truncate();
+
+//         $insertData = [];
+
+//         foreach ($rows as $rowIndex => $row) {
+//             // On ne garde pas la première ligne d'en-têtes
+//             if ($rowIndex === 1) {
+//                 // Vous pouvez ici valider que les clés $row['A'], $row['B'], ... correspondent bien à vos attentes
+//                 continue;
+//             }
+
+//             $matricule = trim($row['A'] ?? '');
+//             $nom       = trim($row['B'] ?? '');
+//             $prenoms   = trim($row['C'] ?? '');
+//             $sexe      = strtoupper(trim($row['D'] ?? ''));
+//             $statut    = strtoupper(trim($row['E'] ?? ''));
+//             $classe    = trim($row['F'] ?? '');
+//             $datenaisbrute    = trim($row['G'] ?? '');
+//             $lieunais    = trim($row['H'] ?? '');
+
+//             // Si pas de matricule, on ignore la ligne
+//             if ($matricule === '') {
+//                 continue;
+//             }
+
+//             // convertir la date
+//             if ($datenaisbrute !== null && $datenaisbrute !== '') {
+//                 // Si c'est un serial Excel (nombre), on convertit
+//                 if (is_numeric($datenaisbrute)) {
+//                     $dt = ExcelDate::excelToDateTimeObject((float) $datenaisbrute);
+//                 } else {
+//                     // En théorie on ne devrait jamais arriver ici puisque formattedData=false
+//                     // Mais au cas où, on tente quand même dd/mm/YYYY
+//                     $dt = \DateTime::createFromFormat('d/m/Y', $datenaisbrute);
+//                 }
+
+//                 if ($dt instanceof \DateTime) {
+//                     $dateNaiss = $dt->format('Y-m-d');
+//                 } else {
+//                     return response()->json([
+//                         'success' => false,
+//                         'message' => "Date invalide à la ligne ".($rowIndex+1).": “{$datenaisbrute}”."
+//                     ]);
+//                 }
+//             }
+
+//             // Conversion sexe/statut en int
+//             $sexeVal   = ($sexe === 'M' ? 1 : ($sexe === 'F' ? 2 : null));
+//             $statutVal = ($statut === 'R' ? 1 : ($statut === 'N' ? 0 : null));
+
+//             // Construire la ligne à insérer
+//             $rowToInsert = [
+//                 'MATRICULEX' => $matricule,
+//                 'NOM'        => $nom,
+//                 'PRENOM'     => $prenoms,
+//                 'SEXE'       => $sexeVal,
+//                 'STATUT'     => $statutVal,
+//                 'CODECLAS'   => $classe,
+//                 'DATENAIS'   => $dateNaiss,
+//                 'LIEUNAIS'   => $lieunais,
+//             ];
+
+//             // Ajout des UUID si les colonnes existent
+//             $columns = DB::getSchemaBuilder()->getColumnListing('eleve');
+//             if (in_array('guid_matri', $columns))  $rowToInsert['guid_matri']  = Str::uuid();
+//             if (in_array('guid_classe', $columns)) $rowToInsert['guid_classe'] = Str::uuid();
+//             if (in_array('guid_red', $columns))    $rowToInsert['guid_red']    = Str::uuid();
+
+//             $insertData[] = $rowToInsert;
+//         }
+
+//         // 4. Si aucune donnée à insérer, on renvoie une erreur
+//         if (empty($insertData)) {
+//             return response()->json([
+//                 'success' => false,
+//                 'message' => 'Aucune ligne valide trouvée dans le fichier. Vérifiez le format et les en-têtes.'
+//             ]);
+//         }
+
+//         // 5. Insertion en base
+//         DB::table('eleve')->insert($insertData);
+
+//         return response()->json([
+//             'success' => true,
+//             'message' => 'Importation effectuée avec succès (' . count($insertData) . ' élèves).'
+//         ]);
+//     } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+//         // Erreur de parsing
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'Erreur de lecture du fichier Excel : ' . $e->getMessage()
+//         ]);
+//     } catch (\Exception $e) {
+//         // Toute autre erreur
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'Erreur lors de l\'importation : ' . $e->getMessage()
+//         ]);
+//     }
+// }
+
+  public function import(Request $request)
     {
-        if (!$request->hasFile('excelFile')) {
-            return response()->json(['success' => false, 'message' => 'Aucun fichier sélectionné.']);
-        }
-
-        $file = $request->file('excelFile');
-
-        try {
-            $spreadsheet = IOFactory::load($file);
-            $sheet = $spreadsheet->getActiveSheet();
-            $rows = $sheet->toArray();
-
-            if (count($rows) < 2) {
-                return response()->json(['success' => false, 'message' => 'Le fichier est vide ou mal formaté.']);
-            }
-
-            // Vider la table eleve
-            DB::table('eleve')->truncate();
-
-            $insertData = [];
-
-            foreach ($rows as $index => $row) {
-                if (($index === 0) || ($index === 1)) continue; // Ignorer la ligne des en-têtes
-
-                $matricul = $row[0] ?? null;
-                $nom      = $row[1] ?? null;
-                $prenoms = $row[2] ?? null;
-                if ($prenoms) {
-                    // Nettoyer les espaces superflus et les caractères invisibles
-                    $prenoms = trim($prenoms); // Enlever les espaces avant et après
-                    $prenoms = preg_replace('/[\x00-\x1F\x7F]/', '', $prenoms); // Enlever les caractères invisibles
-
-                    // Limiter la longueur à 500 caractères
-                    if (strlen($prenoms) > 500) {
-                        $prenoms = substr($prenoms, 0, 500);
-                    }
-                }
-                $sexe     = isset($row[3]) ? ($row[3] === 'M' ? 1 : ($row[3] === 'F' ? 2 : null)) : null;
-                $statut   = isset($row[4]) ? ($row[4] === 'R' ? 1 : ($row[4] === 'N' ? 0 : null)) : null;
-                $classe   = $row[5] ?? null;
-
-                // Ignorer les lignes sans matricule
-                if (!$matricul) continue;
-
-                // Vérifier si les colonnes existent dans la table `eleve`
-                $columns = DB::getSchemaBuilder()->getColumnListing('eleve');
-
-                // Préparer les données à insérer avec des UUID pour les colonnes guid_matri, guid_classe, guid_red
-                $insertRow = [
-                    'MATRICULEX' => $matricul,
-                    'NOM'        => $nom,
-                    'PRENOM'     => $prenoms,
-                    'SEXE'       => $sexe,
-                    'STATUT'     => $statut,
-                    'CODECLAS'   => $classe,
-                ];
-
-                // Ajouter les valeurs uniques pour guid_matri, guid_classe, guid_red si ces colonnes existent
-                if (in_array('guid_matri', $columns)) {
-                    $insertRow['guid_matri'] = Str::uuid();
-                }
-
-                if (in_array('guid_classe', $columns)) {
-                    $insertRow['guid_classe'] = Str::uuid();
-                }
-
-                if (in_array('guid_red', $columns)) {
-                    $insertRow['guid_red'] = Str::uuid();
-                }
-
-                $insertData[] = $insertRow;
-            }
-
-            if (!empty($insertData)) {
-                DB::table('eleve')->insert($insertData);
-            }
-
-            return response()->json(['success' => true, 'message' => 'Importation effectuée avec succès.']);
-        } catch (\Exception $e) {
+        // 1) Vérification du fichier
+        if (! $request->hasFile('excelFile')) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors de l\'importation : ' . $e->getMessage()
+                'message' => 'Aucun fichier sélectionné.'
             ]);
         }
+        $file = $request->file('excelFile');
+
+        // 2) Chargement du classeur et lecture “raw” (formattedData=false)
+        $spreadsheet = IOFactory::load($file);
+        $sheet       = $spreadsheet->getActiveSheet();
+        $rows        = $sheet->toArray(
+            null,   // valeur par défaut
+            true,   // calculateFormulas
+            false,  // formattedData = false
+            true    // indexByColumn = true, on aura ['A'=>…, 'B'=>…]
+        );
+
+        // 3) Si moins de 2 lignes (seulement l’en-tête), on stoppe
+        if (count($rows) < 2) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Le fichier ne contient que les en-têtes ou est vide.'
+            ]);
+        }
+
+        // 4) Détection de tous les doublons de matricule
+        $linesByMatricule = [];
+        foreach ($rows as $idx => $row) {
+            if ($idx === 1) continue;  // on saute la ligne d’en-tête  
+            $matricule = trim($row['A'] ?? '');
+            if ($matricule === '') continue;
+            $linesByMatricule[$matricule][] = $idx;
+        }
+
+        // 5) Construction du tableau d’erreurs pour chaque matricule dupliqué
+        $errors = [];
+        foreach ($linesByMatricule as $matricule => $lines) {
+            if (count($lines) > 1) {
+                if (count($lines) === 2) {
+                    [$l1, $l2] = $lines;
+                    $errors[] = "Ligne {$l1} et {$l2} : matricule « {$matricule} » en double.";
+                } else {
+                    $last = array_pop($lines);
+                    $allButLast = implode(', ', $lines);
+                    $errors[] = "Ligne {$allButLast} et {$last} : matricule « {$matricule} » en double.";
+                }
+            }
+        }
+
+        // 6) Si on a détecté des doublons, on renvoie sans toucher à la BDD
+        if (! empty($errors)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Des doublons ont été trouvés dans le fichier.',
+                'errors'  => $errors
+            ]);
+        }
+
+        // 7) Pas de doublons → on prépare l’insertion
+        $insertData = [];
+        foreach ($rows as $idx => $row) {
+            if ($idx === 1) continue;
+
+            $matricule = trim($row['A'] ?? '');
+            if ($matricule === '') {
+                // on peut choisir d’ajouter une erreur ici…
+                continue;
+            }
+
+            // Lecture des autres colonnes
+            $nom     = trim($row['B'] ?? '');
+            $prenoms = trim($row['C'] ?? '');
+            $sexeRaw = strtoupper(trim($row['D'] ?? ''));
+            $statutRaw = strtoupper(trim($row['E'] ?? ''));
+            $classe  = trim($row['F'] ?? '');
+            $dateRaw = $row['G'] ?? '';
+            $lieu    = trim($row['H'] ?? '');
+
+            // Conversion du sexe/statut
+            $sexe   = ($sexeRaw === 'M' ? 1 : ($sexeRaw === 'F' ? 2 : null));
+            $statut = ($statutRaw === 'R' ? 1 : ($statutRaw === 'N' ? 0 : null));
+
+            // Conversion de la date Excel (serial ou texte d/m/Y)
+            $dateNaiss = null;
+            if ($dateRaw !== '' && $dateRaw !== null) {
+                if (is_numeric($dateRaw)) {
+                    $dt = ExcelDate::excelToDateTimeObject((float)$dateRaw);
+                } else {
+                    $dt = \DateTime::createFromFormat('d/m/Y', $dateRaw);
+                }
+                if (! $dt) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Date invalide à la ligne {$idx} : “{$dateRaw}”."
+                    ]);
+                }
+                $dateNaiss = $dt->format('Y-m-d');
+            }
+
+            // Construction du tableau pour l’insertion
+            $rowToInsert = [
+                'MATRICULEX' => $matricule,
+                'NOM'        => $nom,
+                'PRENOM'     => $prenoms,
+                'SEXE'       => $sexe,
+                'STATUT'     => $statut,
+                'CODECLAS'   => $classe,
+                'DATENAIS'   => $dateNaiss,
+                'LIEUNAIS'   => $lieu,
+            ];
+
+            // Génération d’UUID si les colonnes existent
+            $cols = DB::getSchemaBuilder()->getColumnListing('eleve');
+            if (in_array('guid_matri',  $cols)) $rowToInsert['guid_matri']  = Str::uuid();
+            if (in_array('guid_classe',$cols)) $rowToInsert['guid_classe'] = Str::uuid();
+            if (in_array('guid_red',    $cols)) $rowToInsert['guid_red']    = Str::uuid();
+
+            $insertData[] = $rowToInsert;
+        }
+
+        // 8) On vide la table et on insère tous les élèves d’un coup
+        DB::table('eleve')->truncate();
+        DB::table('eleve')->insert($insertData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Importation réussie de '.count($insertData).' élèves.'
+        ]);
     }
 
 
