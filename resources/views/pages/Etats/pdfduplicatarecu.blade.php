@@ -368,7 +368,10 @@
                 <div class="info">
                     <div class="logo">
                          <img src="data:image/jpeg;base64,{{ base64_encode($logo) }}" alt="Logo" class="logoimg">
-                        {{-- <p>CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</p> --}}
+                    </div>
+
+                    <div>
+                         {!! $entete !!}
                     </div>
                 </div>
                 <div class="info">
@@ -382,7 +385,7 @@
                         <h1><strong>FACTURE D'AVOIR</strong></h1>
                         <p>Ref. de fact. orig.: <strong> {{ $facturePaie->codemeceffacoriginale }} </strong></p>
                     @else
-                        <h1><strong>FACTURE DE VENTE</strong></h1>
+                        <h1><strong>FACTURE DE PAIEMENT</strong></h1>
                     @endif
 
                     <p><strong>Facture # {{ $facturePaie->id }} </strong></p>
@@ -412,7 +415,7 @@
                             <tr>
                                 <td>
                                     {{-- <p>Nom : {{ $nomecole }}</p> --}}
-                                    <p>Nom : C BOX</p>
+                                    {{-- <p>Nom : C BOX</p> --}}
                                     <p>IFU : {{ $facturePaie->ifuEcole }}</p>
                                     {{-- <p>RCCM :</p>
                                 <p>Adresse :</p>
@@ -429,7 +432,7 @@
                     <table id="customers4">
                         <thead>
                             <tr>
-                                <th>Eleve</th>
+                                <th style="text-align: center">Eleve</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -448,7 +451,7 @@
                 </div>
             </div>
         </section>
-    <div class="tables-wrapper">
+        <div class="tables-wrapper">
         <div class="tableZ">
             <table id="customers">
                 <thead>
@@ -531,7 +534,7 @@
                             @if (substr($typefa, -2) === 'FA')
                                 <td> - {{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
                             @else
-                                <td style="text-align: end">{{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
+                                <td>{{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
                             @endif
                         </tr>
                     </tbody>
@@ -563,9 +566,9 @@
             Arrêtée, la présente facture à la somme de
             <span class="prix">
                 @if (substr($typefa, -2) === 'FA')
-                    - {{ $words }} ({{ number_format($facturePaie->montant_total, 0, ',', ',') }})
+                    Moins {{ $words }} ({{ number_format($facturePaie->montant_total, 0, ',', ',') }})
                 @else
-                    {{ $words }} {{ number_format($facturePaie->montant_total, 0, ',', ',') }}
+                    {{ $words }} ({{ number_format($facturePaie->montant_total, 0, ',', ',') }})
                 @endif
             </span> FCFA.</p>
  
@@ -703,12 +706,13 @@
             }
 
             .infomecef {
-                width: 90%;
-                margin: 5px auto;
+                width: 100%;
+                margin: 0px auto;
+                margin-left: 135px;
                 padding: 5px;
             }
 
-            .mecef { margin-top: -3.8rem; margin-left: 4rem; font-size: 10px; padding: 2px; }
+            .mecef { margin-top: -3.4rem; margin-left: 4rem; font-size: 10px; padding: 2px; }
 
             .prix {
                 font-weight: bold;
@@ -730,52 +734,52 @@
 
 
             .tables-wrapper {
-    display: flex;
-    align-items: flex-start;    
-    justify-content: space-between;
-    gap: 10px;                   
-    }
+            display: flex;
+            align-items: flex-start;    
+            justify-content: space-between;
+            gap: 10px;                   
+            }
 
-    .table2 {
-    flex: 2;                    
-    max-width: 100%;
-    box-sizing: border-box;
-    }
-    .tableZ{
-        width : 50%;
-    }
-            
+            .table2 {
+            flex: 2;                    
+            max-width: 100%;
+            box-sizing: border-box;
+            }
+            .tableZ{
+                width : 50%;
+            }
+                    
 
-    .yes {
-    flex: 1; 
-        max-width: 50% !important;
-    }
-
-    
-
-   
+            .yes {
+            flex: 1; 
+                max-width: 50% !important;
+            }
 
             
 
-            .bas {
-                width: 45% !important;
-                margin-top: -5rem;
-                margin-left: 18rem;
-            }
+        
 
-            th {
-                background-color: #e0e0e0;
-            }
-        `);
-        printWindow.document.write('</style>');
-        printWindow.document.write('</head><body>');
-        printWindow.document.write(invoice.innerHTML);
-        printWindow.document.write('</body></html>');
-        printWindow.document.close();
+                    
 
-        printWindow.focus();
-        printWindow.print();
-        printWindow.close();
+                    .bas {
+                        width: 45% !important;
+                        margin-top: -5rem;
+                        margin-left: 18rem;
+                    }
+
+                    th {
+                        background-color: #e0e0e0;
+                    }
+                `);
+                printWindow.document.write('</style>');
+                printWindow.document.write('</head><body>');
+                printWindow.document.write(invoice.innerHTML);
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
     }
 </script>
 
