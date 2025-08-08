@@ -359,7 +359,7 @@ Route::post('/filtrereleveparmatiere', [EditionController::class, 'filtrerelevep
 
 // gestion des notes
 Route::get('/gestioncoefficient', [GestionNotesController::class, 'gestioncoefficient'])->name('gestioncoefficient');
-Route::put('/enregistrerCoefficient', [GestionNotesController::class, 'enregistrerCoefficient'])->name('enregistrerCoefficient');
+Route::post('/enregistrerCoefficient', [GestionNotesController::class, 'enregistrerCoefficient'])->name('enregistrerCoefficient');
 Route::get('/tabledesmatieres', [EditionController::class, 'tabledesmatieres'])->name('tabledesmatieres');
 
 Route::post('/tabledesmatieres', [EditionController::class, 'storetabledesmatieres'])->name('storetabledesmatieres');
@@ -486,6 +486,8 @@ Route::prefix('parametre')->group(function() {
          ->name('parametre.configimprimante');
     Route::get('changement-trimestre', [ParametreController::class, 'changementTrimestre'])
          ->name('parametre.changementtrimestre');
+     Route::post('changement-trimestre', [ParametreController::class, 'storePeriode'])
+          ->name('changement-periode');         
 });
 
 
