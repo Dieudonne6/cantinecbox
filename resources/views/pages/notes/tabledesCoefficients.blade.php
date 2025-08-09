@@ -64,17 +64,17 @@
             {{ Session::get('status')}}
             </div>
             @endif
-            <div class="table-responsive">
+            <div>
                 <form id="coefficientForm" method="POST" action="{{url('/enregistrerCoefficient')}}">
                     @csrf
-                    @method('PUT')
-                <div class="table-responsive">
+                    {{-- @method('PUT') --}}
+                <div class="table-responsive table-container">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th style="position: sticky; left: 0; background: white; z-index: 2;">Classe / Matière</th>
+                                <th class="sticky-header"{{-- style="position: sticky; left: 0; background: white; z-index: 2;" --}}>Classe / Matière</th>
                                 @foreach($listeMatieres as $matiere)
-                                    <th>{{ $matiere->LIBELMAT }}</th>
+                                    <th class="sticky-header">{{ $matiere->LIBELMAT }}</th>
                                 @endforeach
                             </tr>
                         </thead>
@@ -106,7 +106,7 @@
         </div>
     </div>
   </div>
-</div>
+</div><br>
 
 <style>
     .fondamentale {
@@ -115,6 +115,34 @@
     .selected {
         border: 2px solid blue; /* Optionnel : ajouter un contour à la cellule sélectionnée */
     }
+        /* Contrainte de hauteur et scroll interne */
+    .table-container {
+        max-height: 500px;       /* ajustez selon votre besoin */
+        overflow-y: auto;        /* scroll uniquement sur le conteneur */
+        position: relative;      /* permet aux sticky d’être relatifs à ce conteneur */
+    }
+
+    /* En-têtes toujours visibles */
+    .sticky-header {
+        position: sticky;
+        top: 0;
+        background: white;       /* ou la couleur de votre card */
+        z-index: 10;             /* au-dessus des cellules du corps */
+    }
+
+    /* Première colonne déjà en sticky */
+    .first-col {
+        position: sticky;
+        left: 0;
+        background: white;
+        z-index: 11;             /* un cran au-dessus pour éviter le recouvrement */
+    }
+
+    /* Éventuel style pour distinguer */
+    .sticky-header, .first-col {
+        /* padding, border… vous pouvez affiner ici */
+    }
+
 </style>
 
 <script>
@@ -212,53 +240,53 @@
 
         // Écouteur pour le bouton "Sauvegarder"
         document.getElementById('saveButton').addEventListener('click', function () {
-    const coefficients = {};
-    const inputs = document.querySelectorAll('.coefficient-input');
+            const coefficients = {};
+            const inputs = document.querySelectorAll('.coefficient-input');
 
-    console.log("Nombre d'inputs trouvés:", inputs.length);
-    
-    inputs.forEach(input => {
-        console.log("Input name:", input.name);
-        console.log("Input value:", input.value);
-
-        const classMatch = input.name.match(/coefficients\[(\w+)\]/);
-        const matiereMatch = input.name.match(/coefficients\[\w+\]\[(\d+)\]/);
-
-        if (classMatch && matiereMatch) {
-            const classId = classMatch[1];
-            const matiereId = matiereMatch[1];
-            let value = input.value.trim() !== "" ? input.value : ""; // Valeur par défaut si vide
+            console.log("Nombre d'inputs trouvés:", inputs.length);
             
-            // Vérifiez si l'input a la classe 'fondamentale' pour récupérer la couleur
-            const color = input.classList.contains('fondamentale') ? 'red' : 'default';
+            inputs.forEach(input => {
+                console.log("Input name:", input.name);
+                console.log("Input value:", input.value);
 
-            console.log("Valeur à sauvegarder pour l'input:", value); // Log pour débogage
+                const classMatch = input.name.match(/coefficients\[(\w+)\]/);
+                const matiereMatch = input.name.match(/coefficients\[\w+\]\[(\d+)\]/);
 
-            // Stockez les coefficients
-            if (!coefficients[classId]) {
-                coefficients[classId] = {};
+                if (classMatch && matiereMatch) {
+                    const classId = classMatch[1];
+                    const matiereId = matiereMatch[1];
+                    let value = input.value.trim() !== "" ? input.value : ""; // Valeur par défaut si vide
+                    
+                    // Vérifiez si l'input a la classe 'fondamentale' pour récupérer la couleur
+                    const color = input.classList.contains('fondamentale') ? 'red' : 'default';
+
+                    console.log("Valeur à sauvegarder pour l'input:", value); // Log pour débogage
+
+                    // Stockez les coefficients
+                    if (!coefficients[classId]) {
+                        coefficients[classId] = {};
+                    }
+                    coefficients[classId][matiereId] = { value, color }; // Stocke la valeur et la couleur
+                }
+            });
+
+            console.log("Coefficients à sauvegarder:", coefficients);
+
+            // Vérifiez si l'objet coefficients n'est pas vide avant la soumission
+            if (Object.keys(coefficients).length === 0) {
+                alert("Aucun coefficient à sauvegarder !");
+                return; // Sortir si aucun coefficient n'est trouvé
             }
-            coefficients[classId][matiereId] = { value, color }; // Stocke la valeur et la couleur
-        }
-    });
 
-    console.log("Coefficients à sauvegarder:", coefficients);
+            // Ajoutez les coefficients au formulaire avant la soumission
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'coefficients'; // Le nom doit correspondre à ce que votre contrôleur attend
+            hiddenInput.value = JSON.stringify(coefficients); // Sérialisez l'objet en JSON
 
-    // Vérifiez si l'objet coefficients n'est pas vide avant la soumission
-    if (Object.keys(coefficients).length === 0) {
-        alert("Aucun coefficient à sauvegarder !");
-        return; // Sortir si aucun coefficient n'est trouvé
-    }
-
-    // Ajoutez les coefficients au formulaire avant la soumission
-    const hiddenInput = document.createElement('input');
-    hiddenInput.type = 'hidden';
-    hiddenInput.name = 'coefficients'; // Le nom doit correspondre à ce que votre contrôleur attend
-    hiddenInput.value = JSON.stringify(coefficients); // Sérialisez l'objet en JSON
-
-    document.getElementById('coefficientForm').appendChild(hiddenInput);
-    document.getElementById('coefficientForm').submit(); // Soumettez le formulaire
-});
+            document.getElementById('coefficientForm').appendChild(hiddenInput);
+            document.getElementById('coefficientForm').submit(); // Soumettez le formulaire
+        });
 
 
     });
