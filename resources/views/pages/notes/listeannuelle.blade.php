@@ -10,7 +10,6 @@
                     .d-print-none { display: none !important; }
                      @page {
                                 size: landscape;
-                       
                             }
                     .bulletin { font-family: Arial, sans-serif; font-size: 20px !important;}
                     .azerty{
@@ -108,8 +107,7 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="width: 40px;">N°</th>
-                                                <th>Nom </th>
-                                                <th>Prenoms</th>
+                                                <th>Nom et Prenoms</th>
                                                 <th>N° Mle</th>
                                                 <th>Sexe</th>
                                                 <th>Stat</th>                                          
@@ -123,8 +121,7 @@
                                             @foreach ($eleves as $index => $eleve)
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
-                                                    <td class="azerty text-start">{{ $eleve->NOM }} </td>
-                                                    <td>{{ $eleve->PRENOM }}</td>
+                                                    <td class="azerty text-start">{{ $eleve->NOM }} {{ $eleve->PRENOM }} </td>
                                                     <td class="mat">{{ $eleve->MATRICULEX }}</td>
                                                     <td>
                                                         @if($eleve->SEXE == 1) M
@@ -262,3 +259,5 @@
         }
     </script>
 @endsection
+
+
