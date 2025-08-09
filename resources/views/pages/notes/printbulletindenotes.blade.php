@@ -29,33 +29,60 @@
         <div class="col-lg-12" style="margin-top: 0; padding-top: 0;">
             <div class="card-body" {{-- style="margin-top: 0; padding-top: 0;" --}}>
                 <div>
-                    <style> 
+                    <style>
+                        /* Boutons flottants (fixés dans la fenêtre) */
+                        /* .floating-action-left {
+                            position: fixed;
+                            top: 16px; /* ajuste si tu as une navbar 
+                            left: 16px;
+                            z-index: 9999;
+                        } */
+                    
+                        .floating-actions-right {
+                            position: fixed;
+                            top: 100px; /* ajuste si tu as une navbar */
+                            right: 16px;
+                            z-index: 9999;
+                            display: flex;
+                            gap: 8px;
+                            align-items: center;
+                        }
+                    
+                        /* Style du bouton retour (reprend ton style mais sans position:absolute) */
                         .btn-arrow {
-                            position: absolute;
-                            top: 0px;
-                            /* Ajustez la position verticale */
-                            left: 0px;
-                            /* Positionnez à gauche */
                             background-color: transparent !important;
-                            border: 1px !important;
+                            border: none !important;
                             text-transform: uppercase !important;
                             font-weight: bold !important;
                             cursor: pointer !important;
                             font-size: 17px !important;
-                            /* Taille de l'icône */
                             color: #b51818 !important;
-                            /* Couleur de l'icône */
+                            padding: .4rem .6rem;
                         }
-
+                    
                         .btn-arrow:hover {
                             color: #b700ff !important;
-                            /* Couleur au survol */
+                        }
+                    
+                        /* Ne pas afficher ces boutons dans la version imprimée */
+                        @media print {
+                            .floating-action-left,
+                            .floating-actions-right {
+                                display: none !important;
+                            }
                         }
                     </style>
-                    <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
-                        <i class="fas fa-arrow-left"></i> Retour
-                    </button>
-                    <button class="btn btn-primary" style="margin-left: 89%;" onclick="imprimerliste()">Imprimer</button>
+                    
+                    <div class="floating-action-left">
+                        <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
+                            <i class="fas fa-arrow-left"></i> Retour
+                        </button>
+                    </div>
+                    
+                    <div class="floating-actions-right">
+                        <button class="btn btn-primary" onclick="imprimerliste()">Imprimer</button>
+                    </div>
+                    
                 </div>
 
                 @php
@@ -104,7 +131,7 @@
                                     <div style="align-self: flex-start; margin-bottom: 5px;" class="ml-4">
                                         <img src="data:{{ $mimeType }};base64,{{ $logoBase64 }}" alt="Logo"
                                             style="width: 145px; height: 140px;">
-                                        {{-- style="max-height: 130px; width: auto;"> --}}
+                                        
                                     </div>
                                 @endif
 

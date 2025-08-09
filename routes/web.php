@@ -8,6 +8,7 @@ use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ConnexionDBController;
 use App\Http\Controllers\EleveController;
 use App\Http\Controllers\BulletinController;
+use App\Http\Controllers\Etat;
 use App\Http\Controllers\EtatController;
 use App\Http\Controllers\GestionclasseController;
 use App\Http\Controllers\ScolariteController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\ReleveparelevesController;
 use App\Http\Controllers\TableauController;
 use App\Http\Controllers\ParametreController;
 use App\Http\Controllers\RapportannuelController;
+use App\Http\Controllers\DuplicataController;
 
 
 /*
@@ -46,6 +48,8 @@ Route::get('/get-serie/{serieClass}', [PagesController::class, 'getSerie']);
 Route::get('/get-clas/{codeClass}', [PagesController::class, 'getClas']);
 // Route::get('/get-clasmat/{codeClass}', [PagesController::class, 'getClasmat']);
 
+Route::get('/listecontrat', [ClassesController::class, 'listecontrat'])->name('listecontrat');
+
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
 Route::get('/listedeseleves', [PagesController::class, 'listedeseleves'])->name('listedeseleves');
@@ -58,7 +62,7 @@ Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees']);
 Route::get('/', [PagesController::class, 'connexion']);
 Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
 Route::get('/listegeneraleeleve/{CODECLAS}', [ClassesController::class, 'listegeneraleeleve']);
-// Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'getElevesByClasse']);
+//Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'getElevesByClasse']);
 
 Route::get('/filterlisteselectiveeleve', [ClassesController::class, 'filterlisteselectiveeleve']);
 
@@ -84,6 +88,7 @@ Route::get('/listeavoirfacscolarit', [PagesController::class, 'listeavoirfacscol
 
 Route::get('/paiementcontrat/{CODECLAS}/{MATRICULE}', [ClassesController::class, 'paiementcontrat']);
 Route::post('/savepaiementcontrat', [ClassesController::class, 'savepaiementcontrat']);
+Route::post('/savepaiementetinscriptioncontrat', [ClassesController::class, 'savepaiementetinscriptioncontrat']);
 Route::get('/telechargerfacture', [ClassesController::class, 'telechargerfacture']);
 
 
@@ -145,6 +150,7 @@ Route::post('/connexions', [PagesController::class, 'connexions']);
 Route::post('/logins', [PagesController::class, 'logins']);
 
 Route::get('/inscription', [EleveController::class, 'inscription']);
+Route::get('/etat', [ClassesController::class, 'etat'])->name('etat');
 Route::get('/etatpaiement', [ClassesController::class, 'etatpaiement'])->name('etatpaiement');
 Route::post('/traitementetatpaiement', [ClassesController::class, 'traitementetatpaiement'])->name('traitementetatpaiement');
 Route::delete('/supprimercontrat', [ClassesController::class, 'supprimercontrat']);
@@ -359,7 +365,7 @@ Route::post('/filtrereleveparmatiere', [EditionController::class, 'filtrerelevep
 
 // gestion des notes
 Route::get('/gestioncoefficient', [GestionNotesController::class, 'gestioncoefficient'])->name('gestioncoefficient');
-Route::put('/enregistrerCoefficient', [GestionNotesController::class, 'enregistrerCoefficient'])->name('enregistrerCoefficient');
+Route::post('/enregistrerCoefficient', [GestionNotesController::class, 'enregistrerCoefficient'])->name('enregistrerCoefficient');
 Route::get('/tabledesmatieres', [EditionController::class, 'tabledesmatieres'])->name('tabledesmatieres');
 
 Route::post('/tabledesmatieres', [EditionController::class, 'storetabledesmatieres'])->name('storetabledesmatieres');
@@ -462,6 +468,12 @@ Route::get('/importernote', [BulletinController::class, 'importernote'])->name('
 // Route::post('/eleves/upload', [BulletinController::class, 'upload'])->name('eleves.upload');
 Route::post('/import', [BulletinController::class, 'import'])->name('eleves.import');
 
+Route::get('/exporternote', [BulletinController::class, 'exporternote'])->name('exporternote');
+
+Route::get('/exporter-eleves', [BulletinController::class, 'getEleves'])->name('exporter.eleves');
+
+
+
 Route::get('/statistiques', [TableauController::class, 'statistiques'])->name('statistiques');
 Route::post('/statistiques', [TableauController::class, 'statistiques'])->name('statistiques');
 
@@ -491,6 +503,38 @@ Route::prefix('parametre')->group(function() {
          ->name('parametre.configimprimante');
     Route::get('changement-trimestre', [ParametreController::class, 'changementTrimestre'])
          ->name('parametre.changementtrimestre');
+     Route::post('changement-trimestre', [ParametreController::class, 'storePeriode'])
+          ->name('changement-periode');         
 });
+
+
+Route::get('/factures', [ClassesController::class, 'factures']);
+Route::get('/factures/{id}', [ClassesController::class, 'show'])->name('factures.show');
+Route::get('/listeFacturesAvoir', [ClassesController::class, 'listeFacturesAvoir'])->name('listeFacturesAvoir');
+Route::match(['get', 'post'], '/listefacture', [ClassesController::class, 'listefacture'])->name('listefacture');
+Route::get('/listefacinscription', [ClassesController::class, 'listefactureinscription'])->name('listefacinscription');
+
+Route::get('/avoirfacturepaie/{codemecef}', [ClassesController::class, 'avoirfacturepaie'])->name('avoirfacturepaie');
+Route::post('/avoirfacture/{codemecef}', [ClassesController::class, 'avoirfacture'])->name('avoirfacture');
+
+Route::get('/avoirfacturepaiemodif/{codemecef}', [ClassesController::class, 'avoirfacturepaiemodif'])->name('avoirfacturepaiemodif');
+Route::post('/avoirfactureetmodification/{codemecef}', [ClassesController::class, 'avoirfactureetmodification'])->name('avoirfactureetmodification');
+
+Route::get('/avoirfactureinscri/{codemecef}', [ClassesController::class, 'avoirfactureinscri'])->name('avoirfactureinscri');
+Route::post('/avoirfactureinscription/{codemecef}', [ClassesController::class, 'avoirfactureinscription'])->name('avoirfactureinscription');
+
+
+
+Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);
+Route::get('/dowloadduplfac/{id}', [PagesController::class, 'dowloadduplfac']);
+Route::get('/duplicatafacture', [DuplicataController::class, 'showForm'])->name('duplicata.showForm');
+Route::post('/filterduplicata', [DuplicataController::class, 'filterduplicata'])->name('filterduplicata');
+Route::get('/pdfduplicatacontrat/{idcontrat}', [DuplicataController::class, 'pdfduplicatacontrat']);
+Route::get('/pdfduplicatapaie/{counters}', [DuplicataController::class, 'pdfduplicatapaie']);
+Route::get('/pdfduplicatainscription/{counters}', [DuplicataController::class, 'pdfduplicatainscription']);
+Route::get('/duplicatainscription2/{idcontrat}',[DuplicataController::class,'duplicatainscription2']);
+
+
+Route::get('/paiementeleve', [PagesController::class, 'paiementeleve']);
 
 

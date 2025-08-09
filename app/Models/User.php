@@ -14,6 +14,7 @@ class User extends Authenticatable
     protected $connection = 'mysql2';
     protected $table = 'users';
     public $timestamps = false;
+    protected $primaryKey = 'id';
     /**
      * The attributes that are mass assignable.
      *
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'login',
         'motdepasse',
     ];
+    
 
     /**
      * The attributes that should be hidden for serialization.

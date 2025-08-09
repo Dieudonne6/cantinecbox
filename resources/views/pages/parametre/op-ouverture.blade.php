@@ -18,16 +18,16 @@
     <div class="container text-center">
         <div class="row align-items-center">
             <div class="col">
-                <button class="btn btn-link text-danger btn-outline-danger fw-bold">Passer en classe supérieure</button>
+                <button class="btn btn-link text-danger btn-outline-secondary fw-bold">Passer en classe supérieure</button>
             </div>
             <div class="col">
-                <button class="btn btn-link text-danger btn-outline-danger fw-bold" >  Réinitialiser les classes</button>
+                <button class="btn btn-link text-danger btn-outline-secondary fw-bold" >  Réinitialiser les classes</button>
             </div>
             <div class="col">
-                <button class="btn btn-link text-danger btn-outline-danger fw-bold">Supprimer les sans classes</button>
+                <button class="btn btn-link text-danger btn-outline-secondary fw-bold">Supprimer les sans classes</button>
             </div>
              <div class="col">
-                <button class="btn btn-link text-danger btn-outline-danger fw-bold">Clôturer l'année</button>
+                <button class="btn btn-link text-danger btn-outline-secondary fw-bold">Clôturer l'année</button>
             </div>
 
         </div>

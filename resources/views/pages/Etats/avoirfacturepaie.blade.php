@@ -25,48 +25,47 @@
             <div class="card-body">
        <button class="btn btn-arrow" onclick="window.history.back();">
             <i class="fas fa-arrow-left"></i> Retour
-        </button>
+        </button></br>
 
-                                  {{-- erreur concernant le paiement --}}
-                                  @if($errors->any())
-                                  <div id="statusAlert" class="alert alert-danger">
-                                      <ul>
-                                          @foreach($errors->all() as $error)
-                                              <li>{{ $error }}</li>
-                                          @endforeach
-                                      </ul>
-                                  </div>
-                                  @endif
-                <h4 class="card-title" style="text-align: center">Paiement pour <strong>{{ $nomCompletEleveCon }}</strong></h4>
+        @if(Session::has('status'))
+            <div id="statusAlert" class="alert alert-succes btn-primary">
+            {{ Session::get('status')}}
+            </div></br>
+        @endif
 
-                <form action="{{url('/savepaiementcontrat')}}" method="POST">
+        @if(Session::has('erreur'))
+            <div id="statusAlert" class="alert alert-danger btn-primary">
+            {{ Session::get('erreur')}}
+            </div></br>
+        @endif
+                <h4 class="card-title" style="text-align: center">Annulation de la facture de paiement de <strong>{{ $factureOriginale->nom }}</strong></h4>
+
+                <form action="{{url('avoirfacture/'.$codemecef)}}" method="POST">
                     @csrf
-                    
-                    @if(Session::has('id_usercontrat'))
-                        <?php $id_usercontrat = Session::get('id_usercontrat'); ?>
+                    {{-- @if(Session::has('id_usercontrat'))
                         <input type="hidden" value="{{$id_usercontrat}}" name="id_usercontrat">
-                    @endif
+                    @endif --}}
                     <div class="col-md-8 mx-auto grid-margin stretch-card">
 
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Infos paiement</h4>
-                                <p class="card-description">
+                                <h4 class="card-title">Infos de la facture de vente</h4>
+                                {{-- <p class="card-description">
                                     Veuillez remplir les champs
-                                </p>
+                                </p> --}}
                                 <div class="form-group row">
                                     <div class="col">
-                                        <label>Date</label>
+                                        <label>Date de paiement</label>
                                         <div id="the-basics">
                                             <input class="typeaheads" type="datetime-local" id="date" name="date"
-                                                value="{{ date('Y-m-d\TH:i:s') }}">
+                                                value="{{ $factureOriginale->datepaiementcontrat }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <label>Montant Mensuel</label>
+                                        <label>Montant</label>
                                         <div id="bloodhound">
-                                            <input class="typeaheads" id="fraismensuelle" name="montantcontrat" type="text" value="{{ $fraismensuelle }}" >
-                                            <input class="typeaheads" id="fraismensuelle" name="montantcontratReel" type="hidden" value="{{ $fraismensuelle }}" >
+                                            <input class="typeaheads" id="fraismensuelle" name="montantcontrat" type="text" value="{{ $factureOriginale->montant_total }}" readonly>
+                                            {{-- <input class="typeaheads" id="fraismensuelle" name="montantcontratReel" type="hidden" value="{{ $fraismensuelle }}" > --}}
                                         </div>
                                     </div>
                                     {{-- <div class="col">
@@ -79,50 +78,18 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-md-8 mx-auto grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Mois impayés</h4>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                {{-- @php
-                                                    if (count($moisCorrespondants) <= 0) {
-                                                        $nommois = "l'eleve est a jour";
-                                                    }
-                                                @endphp --}}
-                                                {{-- @if (count($moisCorrespondants) <= 0)
-                                                    <h5>L'eleve est a jour</h5>
-                                                @else --}}
-                                                    {{-- <p>{{ $nommois }}</p> --}}
-                                                @foreach ($moisCorrespondants as $id_moiscontrat => $nom_moiscontrat)
-                                                <div class="form-check">
-                                                    <label class="form-check-label">
-                                                        <input type="checkbox" name="moiscontrat[]" class="form-check-input checkbox-mois"
-                                                        value="{{ $id_moiscontrat }}">
-                                                        {{ $nom_moiscontrat }}
-                                                    </label>
-                                                </div>
-                                                @endforeach
-                                                {{-- @endif --}}
-                                                    
-                                            </div>
-                                        </div>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8 mx-auto grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Coût total</h4>
+                                <h4 class="card-title">Entrer le codemef de la facture originale</h4>
                                 <div class="form-group">
                                     <div class="col">
                                         {{-- <p>Nombre de cases cochées : <span id="checked-count">0</span></p> --}}
-                                        <label>Montant Total</label>
+                                        <label for="codemecefEntrer">Codemecef Facture Originale</label>
                                         <div id="bloodhound">
-                                            <input class="typeaheads" id="fraistotal" name="montanttotal" type="number" value="0" readonly>
-                                            <p style="visibility: hidden"><span id="checked-count">0</span></p>
+                                            <input class="typeaheads" id="codemecefEntrer" name="inputCodemecef" type="text" >
+                                            {{-- <p style="visibility: hidden"><span id="checked-count">0</span></p> --}}
                                         </div>
 
                                     </div>
@@ -132,7 +99,7 @@
                     </div>
                     <div class="col-md-8 mx-auto grid-margin stretch-card mt-5 mb-5">
 
-                        <input type="submit" class="btn btn-primary mr-2" value="Enregistrer">
+                        <input type="submit" class="btn btn-primary mr-2" value="Confirmer">
                         <input type="reset" class="btn btn-light" value="Annuler">
                     </div>
                 </form>
@@ -177,7 +144,7 @@
     // Met à jour le montant total initial
     updateTotalAmount();
 });
-</script>
+  </script>
 
 
 

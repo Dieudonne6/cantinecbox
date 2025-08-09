@@ -7,6 +7,7 @@ use const RTF_UNICODE;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Params2;
+use App\Models\PeriodeSave;
 use Roundcube\Rtf\Html; 
 use RtfHtmlPhp\Document;
 use RtfHtmlPhp\Html\HtmlFormatter;
@@ -892,7 +893,34 @@ public function updateMessages(Request $request)
 
     public function changementTrimestre()
     {
-        return view('pages.parametre.changement-trimestre');
+        // récupère la période courante (ou null)
+        $current = PeriodeSave::where('key', 'active')->value('periode');
+        return view('pages.parametre.changement-trimestre', compact('current'));
+    }
+
+    public function storePeriode(Request $request)
+    {
+        $request->validate([
+            'periode' => 'required|string|max:255',
+            'action'  => 'nullable|string', // facultatif : "delete" si suppression
+        ]);
+
+        // si l'utilisateur a cliqué sur "Supprimé"
+        if ($request->input('action') === 'delete') {
+            PeriodeSave::where('key', 'active')->delete();
+            return redirect()->back()->with('success', "La période a été supprimée.");
+        }
+
+        // enregistrement ou mise à jour (upsert)
+        $periode = $request->input('periode');
+        // <!-- dd($periode); -->
+
+        $record = PeriodeSave::updateOrCreate(
+            ['key' => 'active'],
+            ['periode' => $periode]
+        );
+
+        return redirect()->back()->with('success', "Période enregistrée : {$record->periode}");
     }
     public function set(Request $request)
     {

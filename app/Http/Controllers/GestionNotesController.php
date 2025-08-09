@@ -42,6 +42,7 @@ class GestionNotesController extends Controller
     {
         // Récupération et décodage du JSON des coefficients
         $coefficients = json_decode($request->input('coefficients'), true);
+        // $coefficients = $request->input('coefficients');
     
         // Vérifier si les coefficients sont bien envoyés
         if (empty($coefficients)) {
@@ -66,10 +67,12 @@ class GestionNotesController extends Controller
                         // Mettre à jour chaque enregistrement existant
                         foreach ($clasmatRecords as $clasmat) {
                             if ($clasmat->COEF != $value || $clasmat->FONDAMENTALE != $isFondamentale) {
-                                $clasmat->update([
-                                    'COEF' => $value,
-                                    'FONDAMENTALE' => $isFondamentale
-                                ]);
+                                Clasmat::where('CODECLAS', $classId)
+                                      ->where('CODEMAT', $matiereId)
+                                      ->update([
+                                          'COEF' => $value,
+                                          'FONDAMENTALE' => $isFondamentale,
+                                      ]);
                             }
                         }
                     } else {
@@ -84,7 +87,7 @@ class GestionNotesController extends Controller
                 }
             }
         }
-    
+        // dd($coefficients);
         return redirect()->back()->with('status', 'Coefficients sauvegardés avec succès.');
     }
     

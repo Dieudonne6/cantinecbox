@@ -38,9 +38,9 @@
             {{ Session::get('erreur')}}
             </div></br>
         @endif
-                <h4 class="card-title" style="text-align: center">Annulation de la facture de paiement de <strong>{{ $factureOriginale->nom }}</strong></h4>
+                <h4 class="card-title" style="text-align: center">Annulation de la facture d'inscription de <strong>{{ $factureOriginale->nom }}</strong></h4>
 
-                <form action="{{url('avoirfacturescolarite/'.$codemecef)}}" method="POST">
+                <form action="{{url('avoirfactureinscription/'.$codemecef)}}" method="POST">
                     @csrf
                     {{-- @if(Session::has('id_usercontrat'))
                         <input type="hidden" value="{{$id_usercontrat}}" name="id_usercontrat">
@@ -58,13 +58,13 @@
                                         <label>Date de paiement</label>
                                         <div id="the-basics">
                                             <input class="typeaheads" type="datetime-local" id="date" name="date"
-                                                value="{{ $factureOriginale->dateHeure }}" readonly>
+                                                value="{{ $factureOriginale->datepaiementcontrat }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <label>Montant</label>
                                         <div id="bloodhound">
-                                            <input class="typeaheads" id="montantTotal" name="montantTotal" type="text" value="{{ $factureOriginale->montant_total }}" readonly>
+                                            <input class="typeaheads" id="fraismensuelle" name="montantcontrat" type="text" value="{{ $factureOriginale->montant_total }}" readonly>
                                             {{-- <input class="typeaheads" id="fraismensuelle" name="montantcontratReel" type="hidden" value="{{ $fraismensuelle }}" > --}}
                                         </div>
                                     </div>
@@ -110,3 +110,83 @@
     </div>
 @endsection
 
+<script>
+    // Attend que le document soit prêt
+    document.addEventListener("DOMContentLoaded", function() {
+    // Sélectionne tous les éléments avec la classe checkbox-mois
+    var checkboxes = document.querySelectorAll('.checkbox-mois');
+    var fraismensuelle = document.querySelector('#fraismensuelle');
+    var fraistotal = document.querySelector('#fraistotal');
+
+    // Fonction pour mettre à jour le montant total en fonction du nombre de cases cochées et du frais mensuel
+    function updateTotalAmount() {
+        var valeurInput = fraismensuelle.value;
+        var checkedCheckboxes = document.querySelectorAll('.checkbox-mois:checked');
+        var numberOfCheckedCheckboxes = checkedCheckboxes.length;
+        var montantTotal = numberOfCheckedCheckboxes * valeurInput;
+        fraistotal.value = montantTotal;
+    }
+
+    // Écoute les changements de valeur de l'élément fraismensuelle
+    fraismensuelle.addEventListener('input', function() {
+        // Met à jour le montant total lorsque la valeur du frais mensuel change
+        updateTotalAmount();
+    });
+
+    // Écoute les changements d'état des cases à cocher
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            // Met à jour le montant total lorsque le nombre de cases cochées change
+            updateTotalAmount();
+        });
+    });
+
+    // Met à jour le montant total initial
+    updateTotalAmount();
+});
+  </script>
+
+
+
+
+
+{{-- 
+    
+     // Attend que le document soit prêt
+document.addEventListener("DOMContentLoaded", function() {
+    // Sélectionne tous les éléments avec la classe checkbox-mois
+    var checkboxes = document.querySelectorAll('.checkbox-mois');
+    var fraismensuelle = document.querySelector('#fraismensuelle');
+    var fraistotal = document.querySelector('#fraistotal');
+    var reductionInput = document.getElementById('reduction');
+
+    // Ajouter un écouteur d'événement sur l'input de réduction
+    reductionInput.addEventListener('input', function() {
+        // Récupérer la valeur saisie dans l'input de réduction
+        var valuereduction = reductionInput.value;
+        // Mettre à jour le montant total en soustrayant la réduction
+        updateCheckedCount(valuereduction);
+    });
+
+    // Fonction pour mettre à jour le montant total en fonction du nombre de cases cochées et de la réduction
+    function updateCheckedCount(valuereduction) {
+        var checkedCheckboxes = document.querySelectorAll('.checkbox-mois:checked');
+        var numberOfCheckedCheckboxes = checkedCheckboxes.length;
+        var montantTotal = (numberOfCheckedCheckboxes * fraismensuelle.value) - valuereduction;
+        
+        // Mettre à jour le contenu de l'élément HTML affichant le montant total
+        fraistotal.value = montantTotal;
+    }
+
+    // Écoute les changements d'état des cases à cocher
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            // Met à jour le montant total
+            updateCheckedCount(reductionInput.value);
+        });
+    });
+
+    // Mettre à jour le montant total initial lors du chargement de la page
+    updateCheckedCount(reductionInput.value);
+});
+    --}}
