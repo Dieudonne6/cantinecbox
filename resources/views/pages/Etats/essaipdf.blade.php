@@ -228,7 +228,7 @@
 
             <div class="entreprise">
                 <p><i class="title">Ecole</i></p>
-                <p>IFU:<strong>0202380068074</strong></p>
+                <p>IFU:<strong> </strong></p>
                 <p>Ecole:<strong> complexe scolaire "le petit poucet" </strong></p>
             </div>
 
@@ -362,10 +362,10 @@ $totalTTC += $totalTTCItem;
         <div class="infomecef">
 
             <div class="qcode">
-                <div >
+                <div>
                     {{-- {{ $qrCodeString }} --}}
                     <img src="data:image/jpeg;base64,{{ base64_encode($qrcodecontent) }}" alt="qrcode">
-                    </div>
+                </div>
             </div>
 
             <div class="mecef">

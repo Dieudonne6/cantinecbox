@@ -1,42 +1,138 @@
-<script src="{{ asset('davidshimjs-qrcodejs-04f46c6/qrcode.js') }}"></script>
-
 <style>
     body {
         font-family: Arial, sans-serif;
     }
 
-    .invoice {
+    @media print {
+        .ko {
+            background-color: blue;
+        }
+
+    }
+
+    p {
+
+        font-size: 15px;
+    }
+
+
+
+
+    #mecef p {
+        font-size: 12px;
+    }
+
+
+    .page-break {
+        display: none;
+        /* Masquer les éléments de saut de page lors de l'impression */
+    }
+
+
+    .facture-container1 {
+        display: flex;
+        justify-content: space-between;
+        /* Optionnel : espace entre les blocs */
+        gap: 50px;
+        /* Optionnel : espace entre les blocs */
+        border-radius: 5px;
+        margin-left: 40px;
+        margin-right: 30px;
+        margin-top: -1.8rem;
+    }
+
+    .facture-container2 {
+        display: flex;
+        justify-content: space-between;
+        /* Optionnel : espace entre les blocs */
+        gap: 50px;
+        /* Optionnel : espace entre les blocs */
+        margin-left: 40px;
+        margin-right: 30px;
+    }
+
+    .facture-container5 {
+        display: flex;
+        justify-content: space-between;
+        /* Optionnel : espace entre les blocs */
+        gap: 50px;
+        /* Optionnel : espace entre les blocs */
+        margin-left: 0px;
+        margin-right: 40px;
+    }
+
+    .info {
+        flex: 1;
+        /* Les deux blocs auront la même largeur */
+        padding: 10px;
+        /* border: 1px solid #ddd; */
+        border-radius: 5px;
+    }
+
+    .table4 {
+        width: 600px;
+        /* Largeur fixe du conteneur */
+        overflow: auto;
+        /* Ajouter un défilement si nécessaire */
+    }
+
+    #customers4 {
         width: 100%;
-        /* margin: 20px auto; */
-        /* border: 1px solid #ccc; */
-        background-color: #fffff;
+        /* Largeur du tableau prend la largeur du conteneur */
+        border-collapse: collapse;
+        /* Fusionner les bordures */
+    }
+
+    #customers4 th,
+    #customers4 td {
+        border: 1px solid #ddd;
+        /* Bordure des cellules */
+        padding: 8px;
+        /* Espacement intérieur des cellules */
+        text-align: left;
+        /* Alignement du texte */
+    }
+
+    #customers4 th {
+        background-color: #f2f2f2;
+        /* Couleur de fond de l'en-tête */
+    }
+
+    #customers4 td p {
+        margin: 0;
+        /* Supprimer les marges des paragraphes */
+    }
+
+
+    .invoice {
+        /* width: 100%; */
+        background-color: #ffff;
         padding: 0;
-        /* height: 100% */
+        page-break-before: always;
     }
 
     .entete {
-        /* margin:20px  auto; */
         border: 1px solid #ccc;
         font-size: 15px;
         background: #cccccc34;
     }
 
-    .logo {
+    /* .logo {
         margin-left: 20px;
         margin-top: 20px;
         width: 300px;
         height: 300px;
-    }
+    } */
 
     .logoimg {
-        width: 25%;
-        margin-top: -1rem;
+        width: 50%;
+        margin-top: 1rem;
     }
 
-    .info {
+    /* .info {
         margin-left: 26rem;
         margin-top: -20rem;
-    }
+    } */
 
     .bas {
         margin-top: 20px;
@@ -47,9 +143,7 @@
 
     .titre {
         margin: 20px auto;
-        /* border: 1px solid #ccc; */
         font-size: 15px;
-        /* background: #ccc; */
     }
 
     h2 {
@@ -67,36 +161,29 @@
         text-align: center;
     }
 
-
-
-    /* .info{
-                            float: left;
-                        } */
-
     .entreprise {
         margin-left: 40px;
         border: 1px solid black;
         background: #aeadad35;
         width: 14rem;
+        height: 9rem;
         text-align: center;
         margin-top: 2rem;
-
     }
 
-
     .client {
-        margin-top: -8.4rem;
+        margin-top: -9.4rem;
         margin-left: 28rem;
         border: 1px solid black;
         width: 14rem;
+        height: 9rem;
         text-align: center;
-
     }
 
     .infomecef {
         border: 1px solid black;
         width: 80%;
-        margin: 40px auto;
+        margin: 20px auto;
         padding: 30px;
     }
 
@@ -107,7 +194,7 @@
     }
 
     .mecef {
-        margin-top: -7.8rem;
+        margin-top: -9rem;
         margin-left: 15rem;
         font-size: 10px;
         padding: 2px 2px;
@@ -120,13 +207,10 @@
 
     .textremerciement {
         margin-left: 18px;
-        /* text-align: center; */
         margin-top: 6px;
-
     }
 
     .logo1 {
-        margin-top: 10px;
         margin-left: 18px;
     }
 
@@ -135,17 +219,26 @@
         margin-left: 28.5rem;
     }
 
-
     .prix {
-        /* background: rgb(27, 27, 27); */
         font-weight: bold;
         color: black;
         font-size: 16px;
         text-align: center;
-        padding: 6px 6px
-            /* background-size: 50px */
-            /* height: 50px;
-                            width: 50px; */
+        padding: 6px 6px;
+    }
+
+    @media print {
+
+        /* .ko {
+            background-color: red !important;
+        } */
+        @page {
+            size: portrait;
+        }
+
+        /* #customers3 th {
+            color: #a5d5e9;
+        } */
     }
 
     #customers {
@@ -153,16 +246,84 @@
         border-collapse: collapse;
         width: 90%;
         margin-left: 40px;
-        margin-top: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    #customers2 {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 150%;
+        margin-left: 40px;
+
+        margin-top: 2rem;
+    }
+
+    #customers8 {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 20%;
+        margin-right: 0px;
+
+        margin-top: 2rem;
+    }
+
+    #customers3 {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 90%;
+        margin-left: 40px;
+        margin-top: 2rem;
     }
 
     #customers td,
     #customers th {
         border: 1px solid #ddd;
         padding: 8px;
+        text-align: left;
+        max-width: 200px;
+        /* Taille maximale des colonnes */
+        word-wrap: break-word;
+        /* Permet de couper les mots et de passer à la ligne */
+        word-break: break-all;
+        /* Casse les mots plus longs que la taille de la colonne */
     }
 
+    #customers2 td,
+    #customers2 th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        max-width: 200px;
+        /* Taille maximale des colonnes */
+        word-wrap: break-word;
+        /* Permet de couper les mots et de passer à la ligne */
+        word-break: break-all;
+        /* Casse les mots plus longs que la taille de la colonne */
+    }
+
+    #customers3 td,
+    #customers3 th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        max-width: 200px;
+        /* Taille maximale des colonnes */
+        word-wrap: break-word;
+        /* Permet de couper les mots et de passer à la ligne */
+        word-break: break-all;
+        /* Casse les mots plus longs que la taille de la colonne */
+    }
+
+
     #customers tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #customers2 tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #customers3 tr:nth-child(even) {
         background-color: #f2f2f2;
     }
 
@@ -170,16 +331,42 @@
         background-color: #ddd;
     }
 
+    #customers2 tr:hover {
+        background-color: #ddd;
+    }
+
+    #customers3 tr:hover {
+        background-color: #ddd;
+    }
+
     #customers th {
         padding-top: 12px;
         padding-bottom: 12px;
-        text-align: left;
-        background-color: #04AA6D;
+        background-color: #a5d5e9;
+        color: black;
+    }
+
+    #customers2 th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        background-color: #a5d5e9;
+        color: black;
+    }
+
+    #customers3 th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        background-color: #a5d5e9;
         color: black;
     }
 
     .table2 {
-        margin-top: 20px;
+        margin-top: -0.5rem;
+
+    }
+
+    .table3 {
+        margin-top: -0.5rem;
     }
 
     .telecharger {
@@ -191,239 +378,195 @@
     }
 </style>
 
-<body onload="window.print();">
-    {{-- <a class="telecharger btn btn-success" href="{{ route('merci') }}">Telecharger</a> --}}
+
+<body onload="window.print()">
+    {{-- <a class="telecharger btn btn-success" href="{{ url('/facturenormalise/' . $nomcompleteleve) }}" target="_blank">Imprimer</a> --}}
+
     <div class="invoice">
-        <div class="entete">
-            <div class="logo">
-                @if($logoUrl)
-                <img src="data:image/jpeg;base64,{{ base64_encode($logoUrl) }}" alt="Logo" class="logoimg">
-                @else
-                    <p>Aucun logo disponible.</p>
-                @endif                
-                {{-- <img src="" alt=""> --}}
+
+        <section>
+
+
+            <div class="facture-container1">
+                <div class="info">
+                    <div class="logo">
+                       {{-- <img src="data:image/jpeg;base64,{{ base64_encode($logoUrl) }}" alt="Logo" class="logoimg"> --}}
+                       <p>C BOX</p>
+                    </div>
+                </div>
+                <div class="info">
+                    <h1><strong>FACTURE DE VENTE</strong></h1>
+                    <p><strong>Facture # {{ $reffacture }} </strong></p>
+                    <p>Date : {{ $dateTime }}
+                    <p>Vendeur : C BOX</p>
+                    {{-- <p>Réference fact. originale :</p> --}}
+                </div>
             </div>
+        </section>
 
-            <div class="info">
-                <p>Facture de Paiement </p>
-                <p>Reference:<strong>{{ $reffacture }}</strong></p>
+        <section>
+            <div class="facture-container2">
+                <div class="table4">
+                    <table id="customers4">
+                        <thead>
+                            <tr>
+                                <th>Informations de l'établissement</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {{-- <p>Nom : {{ $NOMETAB }}</p> --}}
+                                    <p>Nom : C BOX</p>
+                                    <p>IFU : {{ $ifuEcoleFacture }}</p>
+                                    {{-- <p>RCCM :</p>
+                                <p>Adresse :</p>
+                                <p>Contact :</p> --}}
+                                    <p>VMCF : {{ $nim }}</p>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table4">
+                    <table id="customers4">
+                        <thead>
+                            <tr>
+                                <th>Informations du client</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <p>Nom : {{ $nomcompleteleve }}</p>
+                                    <p>Classe : {{ $classeeleve }}</p>
+                                    <p>IFU : </p>
+                                    {{-- <p>Adresse :</p> --}}
+                                    {{-- <p>Contact :</p> --}}
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-
-        <div class="titre">
-
-            <div class="entreprise">
-                <p><i class="title">Ecole</i></p>
-                <p>IFU:<strong>0202380068074</strong></p>
-                <p>Ecole:<strong> complexe scolaire "le petit poucet" </strong></p>
-            </div>
-
-
-
-            <div class="client">
-                <p><i class="title">Eleve</i></p>
-                {{-- <p>IFU:<strong> {{ $facturedetaille['ifu'] }}</strong></p> --}}
-                <p>Nom eleve : <strong>{{ $nomcompleteleve }}</strong></p>
-                <p>Classe eleve : <strong>{{ $classeeleve }}</strong></p>
-            </div>
-
-        </div>
-
-
-
-
-
-        {{-- <h2>code mecef {{ $factureconfirm['codeMECeFDGI'] }} </h2>
-        <h2>Facture</h2>
-        <ul>
-            <li><strong>IFU:</strong> {{ $facturedetaille['ifu'] }}</li>
-            <li><strong>Type:</strong> {{ $facturedetaille['type'] }}</li>
-        </ul> --}}
-
-        <div class="tableau">
-            <table id="customers">
-                <thead>
-                    <tr>
-                        <th scope="col">Designation</th>
-                        {{-- <th scope="col">Prix unitaire</th> --}}
-                        {{-- <th scope="col">Quantite</th> --}}
-                        <th scope="col">Montant HT</th>
-                        <th scope="col">tva</th>
-                        <th scope="col">Mois</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @php
-                        $totalHT = 0;
-                        $totalTTC = 0;
-                    @endphp
-
-                    @foreach ($facturedetaille['items'] as $item)
-                    @php
-                    // Définition du taux de TVA initial
-                    $tauxTVA = 0;
-                
-                    // Vérification de la valeur de taxGroup
-                    if ($item['taxGroup'] == 'B') {
-                        // Si taxGroup est 'B', appliquer le taux de TVA 18%
-                        $tauxTVA = 0.18;
-                    } elseif ($item['taxGroup'] == 'A') {
-                        // Si taxGroup est 'A', appliquer le taux de TVA 1%
-                        $tauxTVA = 0.01;
-                    }
-                
-                    // Calcul du montant de TVA
-                    $tva = $item['price'] * $tauxTVA;
-                
-                    // Calcul du montant TTC pour chaque article en ajoutant la TVA
-                    $totalTTCItem = $item['price'] + $tva;
-                
-                    // Ajout du montant TTC de l'article au total TTC
-                    $totalTTC += $totalTTCItem;
-                
-                    // Ajout du montant HT de l'article au total HT
-                    $totalHT += $item['price'];
-                @endphp
-                        <tr>
-                            <td>
-                                {{ $item['name'] }}
-                            </td>
-
-
-                            <td>
-                                {{ $item['price'] }}
-                            </td>
-
-                            <td>
-                                {{ $tva }}
-                            </td>
-
-                            <td>
-                                {{ $toutmoiscontrat }}
-                            </td>
-
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-        </div>
+        </section>
 
         <div class="table2">
             <table id="customers">
                 <thead>
                     <tr>
-                        <th scope="col">Groupe tax</th>
-                        <th scope="col">Montant total HT</th>
-                        <th scope="col">Net a Payer</th>
+                        <th>Désignation</th>
+                        {{-- <th>Montant HT</th> --}}
+                        <th>Montant </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($itemFacture as $item => $chaquemois)
+                        <tr>
+                            <td>{{ $chaquemois['name'] }} (E) </td>
+                            {{-- <td>{{ $chaquemois['price'] }}</td> --}}
+                            <td>{{ $chaquemois['price'] }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="table2">
+            <table id="customers">
+                <thead>
+                    <tr>
+                        <th scope="col">Total </th>
+                        <th scope="col">REGIME TPS [E]</th>
 
                     </tr>
                 </thead>
                 <tbody>
-
                     <tr>
-                        <td>
-                            B-TAX
-                        </td>
-
-                        <td>
-                            {{ $totalHT }}
-                        </td>
-
-                        <td>
-                            {{ $totalTTC }}
-                        </td>
-
+                        <td>{{ $montanttotal }}</td>
+                        <td>{{ $montanttotal }}</td>
 
                     </tr>
                 </tbody>
             </table>
-
         </div>
-        <p class="textmontant">Arretée, la presente facture a la somme de <span
-                class="prix">{{ $totalTTC }}</span> FCFA .</p>
 
-        {{-- <h2>Operator: {{ $facturedetaille['operator']['name'] }}</h2> --}}
+        {{-- <div class="facture-container5">
+            <div class="table2">
+                <table id="customers2">
+                    <thead>
+                        <tr>
+                            <th>Groupe</th>
+                            <th>Total</th>
+                            <th>Imposable</th>
+                            <th>Impôt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>A - EXHONERER</td>
+                            <td>{{ $facture->montant_total }}</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="customers8" class="table2">
+                <hr class="line">
+                <h3> Total : {{ $facture->montant_total }}</h3>
+                <hr  class="line2">
+            </div>
+        </div> --}}
 
-        <div class="infomecef">
+        <div class="table3">
+            <table id="customers3">
+                <thead>
+                    <tr>
+                        <th>Type de paiement</th>
+                        <th>Payé</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ESPECE</td>
+                        <td>{{ $montanttotal }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-            <div class="qcode">
-                <div >
 
-                <img src="data:image/jpeg;base64,{{ base64_encode($qrcodecontent) }}" alt="qrcode">
-
-
-                    {{-- <img src="{{ asset('qrcode/codeqr.png') }}" alt="Code QR" /> --}}
+        <p class="textmontant">Arrêtée, la présente facture à la somme de <span class="prix">
+                {{ $montanttotal }}</span> FCFA.</p>
+        <br>
+        <div class="table2">
+            <div class="infomecef">
+                <div class="qcode">
+                    <img src="data:image/jpeg;base64,{{ base64_encode($qrcodecontent) }}" alt="QR Code">
+                </div>
+                <div id="mecef" class="mecef">
+                    <p><strong>Code MECeF/DGI:</strong> {{ $factureconfirm['codeMECeFDGI'] }}</p>
+                    <p><strong>MECeF NIM:</strong> {{ $factureconfirm['nim'] }}</p>
+                    <p><strong>MECeF Compteur:</strong> {{ $factureconfirm['counters'] }}</p>
+                    <p><strong>MECeF Heure:</strong> {{ $factureconfirm['dateTime'] }}</p>
                 </div>
             </div>
-
-            <div class="mecef">
-                <p><strong>Code MECeF/DGI:</strong> {{ $factureconfirm['codeMECeFDGI'] }}</p>
-                <p><strong>MECeF NIM:</strong> {{ $factureconfirm['nim'] }}</p>
-                <p><strong>MECeF Compteur:</strong> {{ $factureconfirm['counters'] }}</p>
-                <p><strong>MECeF Heure:</strong> {{ $factureconfirm['dateTime'] }}</p>
-            </div>
         </div>
-
         <div class="bas">
             <div class="logo1">
-                <p><strong> complexe scolaire petit poucet </strong> </p>
-                {{-- <p><strong> {{ $nometab }} </strong> </p> --}}
-                {{-- <img src="" alt=""> --}}
+                {{-- <p><strong>{{ $NOMETAB }}</strong></p> --}}
+                <p><strong> C BOX</strong></p>
             </div>
-
             <div class="info1">
-                <p>Fait a cotonou le , <strong>{{ $factureconfirm['dateTime'] }} </strong></p>
-                {{-- <p>Fait a {{ $villeetab }} le , <strong>{{ $factureconfirm['dateTime'] }} </strong></p> --}}
-                {{-- <p>Reference 909090909090   </p> --}}
+                <p>Fait à Cotonou le, <strong>{{ $factureconfirm['dateTime'] }}</strong></p>
             </div>
-            <p class="textremerciement"><i>Merci d'avoir choisi le complexe scolaire petiti poucet. </i> </p>
-            {{-- <p class="textremerciement"><i>Merci d'avoir choisi le {{ $nometab }}. </i> </p> --}}
-
+            {{-- <p class="textremerciement"><i>Merci d'avoir choisi le {{ $NOMETAB }}</i></p> --}}
+            <p class="textremerciement"><i>Merci d'avoir choisi C BOX</i></p>
         </div>
     </div>
-
-    {{-- <a class="telecharger btn btn-success" href="{{ url('telechargerfacture') }}">Imprimer</a> --}}
-    {{-- <a class="telecharger btn btn-success" onclick="printContent()" href="{{ url('/facturenormalise') }}">Imprimer</a> --}}
-    {{-- <button onclick="window.print()">Imprimer</button> --}}
-    {{-- <button onclick="printContent()">Imprimer</button> --}}
-
-
-    {{-- <h2> Merci pour votre confiance votre facture a ete generer et vous serras envoyer lors dee la livraison de votre commande</h2> --}}
-    {{-- {{ dd($factureconfirm) }} --}}
-    {{-- 
-    <h2>qr code {{ $factureconfirm['qrCode'] }} </h2>
-    <h2>code mecef {{ $factureconfirm['codeMECeFDGI'] }} </h2>
-
-    <h2>IFU: {{ $facturedetaille['ifu'] }}</h2>
-    <h2>Type: {{ $facturedetaille['type'] }}</h2>
-    
-    <h3>Items:</h3>
-    <ul>
-        @foreach ($facturedetaille['items'] as $item)
-            <li>
-                <strong>Name:</strong> {{ $item['name'] }},
-                <strong>Price:</strong> {{ $item['price'] }},
-                <strong>Quantity:</strong> {{ $item['quantity'] }},
-                <strong>Tax Group:</strong> {{ $item['taxGroup'] }}
-            </li>
-        @endforeach
-    </ul>
-    
-    <h2>Operator: {{ $facturedetaille['operator']['name'] }}</h2> --}}
-
-    {{-- 
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="{{asset('assets/css/bootstrap.min.js')}}"></script> --}}
-    {{-- <script>
-        // Obtenez la chaîne du QR code depuis le serveur
-        var qrCodeStrings = "{{ $qrCodeString }}";
-
-        // Générez le QR code et affichez-le dans le conteneur avec l'ID "qrcode"
-        var qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: qrCodeStrings,
-            width: 100,
-            height: 100
-        });
-    </script> --}}
+</body>

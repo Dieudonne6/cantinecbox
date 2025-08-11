@@ -179,7 +179,7 @@ public function saisirnotefilter(Request $request)
 
   public function enregistrerNotes(Request $request)
   {
-    set_time_limit(0); 
+    set_time_limit(200); 
     // Valider les données entrantes
     $validatedData = $request->validate([
       'periode' => 'required|integer',
@@ -253,7 +253,7 @@ public function saisirnotefilter(Request $request)
 
   public function deleteNote(Request $request)
     {
-      set_time_limit(0); 
+      set_time_limit(200); 
       // dd('yoyoyoyoy');
         $classe  = $request->input('CODECLAS');
         $matiere = $request->input('CODEMAT');

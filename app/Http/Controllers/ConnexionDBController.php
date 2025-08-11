@@ -6,12 +6,13 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use App\Http\Requests\ConnexionBDRequest;
 
 use Illuminate\Support\Facades\File;
 class ConnexionDBController extends Controller
 {
     
-    public function connexion(Request $request){
+    public function connexion(ConnexionBDRequest $request){
         $nameserveur = $request->input('nameserveur');
         $namebase = $request->input('namebase');
         $user = $request->input('user');

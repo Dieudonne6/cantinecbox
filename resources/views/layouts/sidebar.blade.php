@@ -2,22 +2,21 @@
   <nav class="sidebar sidebar-offcanvas" id="sidebar" style="max-width: 255px;">
     <ul class="nav">
       @php
-      $routesAccueil = [
-        'Acceuil', 'inscrireeleve', 'modifiereleve', 'paiementeleve', 'majpaiementeleve', 'echeancier', 
-        'profil', 'pagedetail',
-      ]; 
-      $routesClass = ['tabledesclasses', 'enrclasse', 'modifierclasse'];
-      $routesFacture = ['facturesclasses', 'detailfacturesclasses'];
-      $routesEditions = [
-        'editions', 'listedeseleves', 'listedesclasses', 'listeselectiveeleve', 'eleveparclasse',
-        'certificatsolarite', 'etatdelacaisse', 'enquetesstatistiques', 'situationfinanciereglobale',
-        'etatdesrecouvrements', 'arriereconstate', 'journaldetailleaveccomposante', 'journaldetaillesanscomposante'
-      ];
+        $routesAccueil = [
+          'Acceuil', 'inscrireeleve', 'modifiereleve', 'paiementeleve', 'majpaiementeleve', 'echeancier', 
+          'profil', 'pagedetail',
+        ]; 
+        $routesClass = ['tabledesclasses', 'enrclasse', 'modifierclasse'];
+        $routesFacture = ['facturesclasses', 'detailfacturesclasses'];
+        $routesEditions = [
+          'editions', 'listedeseleves', 'listedesclasses', 'listeselectiveeleve', 'eleveparclasse',
+          'certificatsolarite', 'etatdelacaisse', 'enquetesstatistiques', 'situationfinanciereglobale',
+          'etatdesrecouvrements', 'arriereconstate', 'journaldetailleaveccomposante', 'journaldetaillesanscomposante'
+        ];
 
-      $activeExtractRoutesInsc = ['importernote', 'import'];
+        $activeExtractRoutesInsc = ['importernote', 'import'];
 
       @endphp 
-
       <!-- Bloc Inscriptions & disciplines -->
       <li class="nav-item"> 
         <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="{{ in_array(request()->route()->getName(), $routesAccueil) ? 'true' : 'false' }}" aria-controls="ui-basic">
@@ -117,7 +116,7 @@
                                 </a>
                               </li> --}}
                               <li>
-                                <a class="nav-link {{ request()->is('Exporter') ? 'active' : '' }}" href="#">
+                                <a class="nav-link  {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'active' : '' }}" href="{{ route('exporternote') }}">
                                   Exporter
                                 </a>
                               </li>
@@ -134,38 +133,37 @@
       </li>
 
       @php
-      $routeparams = [
-        'repartitionclassesparoperateur',
-        'tabledesmatieres',
-        'gestioncoefficient',
-      ];
-      $routesmanip = [
-        'saisirnote',
-        'enregistrer_notes',
-      ];
-      $routeSecurite = [
-        'verrouillage',
-      ];
-      $routenew = [
-        'bulletindenotes', 'attestationdemerite', 'printbulletindenotes', 'tableaudenotes', 'filtertableaunotes', 
-      ];
-      $routeseditions2 = [
-        'editions2',
-        'fichedenotesvierge',
-        'relevesparmatiere',
-        'relevespareleves',
-        'recapitulatifdenotes',
-        'tableauanalytiqueparmatiere',
-        'resultatsparpromotion',
-        'listedesmeritants',
-      ];
+        $routeparams = [
+          'repartitionclassesparoperateur',
+          'tabledesmatieres',
+          'gestioncoefficient',
+        ];
+        $routesmanip = [
+          'saisirnote',
+          'enregistrer_notes',
+        ];
+        $routeSecurite = [
+          'verrouillage',
+        ];
+        $routenew = [
+          'bulletindenotes', 'attestationdemerite', 'printbulletindenotes', 'tableaudenotes', 'filtertableaunotes', 
+        ];
+        $routeseditions2 = [
+          'editions2',
+          'fichedenotesvierge',
+          'relevesparmatiere',
+          'relevespareleves',
+          'recapitulatifdenotes',
+          'tableauanalytiqueparmatiere',
+          'resultatsparpromotion',
+          'listedesmeritants',
+        ];
 
-      $activeExtractRoutes = ['extrairenote', 'extractnote'];
+        $activeExtractRoutes = ['extrairenote', 'extractnote'];
 
-      $activeResultatRoutes = ['listeparmerite', 'imprimer.liste.merite'];
+        $activeResultatRoutes = ['listeparmerite', 'imprimer.liste.merite'];
 
       @endphp
-
       <!-- Bloc Gestion des notes -->
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" aria-expanded="{{ in_array(request()->route()->getName(), $routeparams) || in_array(request()->route()->getName(), $routesmanip) || in_array(request()->route()->getName(), $routeSecurite) ? 'true' : 'false' }}"
@@ -291,6 +289,100 @@
           </ul>
         </div>
       </li>
+      <!-- Bloc Cantine -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-toggle="collapse" href="#Cantine"
+           aria-expanded="false" aria-controls="Cantine">
+          <i class="typcn typcn-document-text menu-icon"></i>
+          <span class="menu-title-wrapper">
+            <span class="menu-title">Cantine</span>
+          </span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="Cantine">
+          <ul class="nav flex-column sub-menu">
+  
+            <!-- Liste des Contrats -->
+            <li class="nav-item">
+              @php
+                $routesClass = ['listecontrat', 'paiementcontrat', 'eleve'];
+              @endphp
+              <a class="nav-link {{ in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}"
+                 href="{{ route('listecontrat') }}">
+                <span class="menu-title-wrapper">
+                  <span class="menu-title">Liste des Contrats</span>
+                </span>
+              </a>
+            </li>
+  
+            <!-- Etats -->
+            <li class="nav-item">
+              @php
+                $routesEtat = ['etat', 'traitementetatpaiement', 'filteretat'];
+              @endphp
+              <a class="nav-link {{ in_array(request()->route()->getName(), $routesEtat) ? 'active' : '' }}"
+                 href="{{ route('etat') }}">
+                <span class="menu-title-wrapper">
+                  <span class="menu-title">Etats</span>
+                </span>
+              </a>
+            </li>
+  
+            <!-- Mise à jour des Paiements -->
+            <li class="nav-item">
+              @php
+                $routesAvoirFacPaiement = ['listefacture', 'avoirfacturepaie', 'avoirfacture', 'listefacinscription','avoirfactureinscription', 'avoirfactureinscri'];
+              @endphp
+              <a class="nav-link {{ in_array(request()->route()->getName(), $routesAvoirFacPaiement) ? 'active' : '' }}"
+                 href="{{ url('/listefacture') }}">
+                <span class="menu-title-wrapper">
+                  <span class="menu-title n">Mise à jour des Paiements/Inscriptions</span>
+                </span>
+              </a>
+            </li>
+
+            <!-- Liste des Factures d'avoir  -->
+            <li class="nav-item">
+              @php
+                $routesListeFacturesAvoir = ['listeFacturesAvoir'];
+              @endphp
+              <a class="nav-link {{ in_array(request()->route()->getName(), $routesListeFacturesAvoir) ? 'active' : '' }}"
+                href="{{ url('/listeFacturesAvoir') }}">
+                <span class="menu-title-wrapper">
+                  <span class="menu-title n">Liste des Factures d'avoir</span>
+                </span>
+              </a>
+            </li>
+  
+            <!-- Mise à jour des Inscriptions -->
+            {{-- <li class="nav-item">
+              @php
+                $routesAvoirFacInscription = [
+                  'listefacinscription',
+                  'avoirfactureinscription',
+                  'avoirfactureinscri',
+                ];
+              @endphp
+              <a class="nav-link {{ in_array(request()->route()->getName(), $routesAvoirFacInscription) ? 'active' : '' }}"
+                 href="{{ url('/listefacinscription') }}">
+                <span class="menu-title-wrapper">
+                  <span class="menu-title">Mise à jour des Inscriptions</span>
+                </span>
+              </a>
+            </li>--}}
+
+            <!-- Duplicata facture -->
+            <li class="nav-item">
+              <a class="nav-link {{ request()->is('duplicatafacture') || request()->is('filterduplicata') ? 'active' : '' }}"
+                 href="{{ url('/duplicatafacture') }}">
+                <span class="menu-title-wrapper">
+                  <span class="menu-title">Duplicata facture</span>
+                </span>
+              </a>
+            </li> 
+          </ul>
+        </div>
+      </li>
 
       <!-- Lien vers Paramètres -->
       <li class="nav-item">
@@ -361,8 +453,6 @@
           </ul>
         </div>
       </li>
-
-
     </ul>
   </nav>
 </div>

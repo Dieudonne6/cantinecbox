@@ -504,10 +504,14 @@
                         <tr>
                             <th>Désignation</th>
                             {{-- <th>Montant HT</th> --}}
-                            <th>Montant</th>
+                            <th>Montant </th>
                         </tr>
                     </thead>
                     <tbody>
+                        {{-- <tr>
+                            <td>Inscription</td>
+                            <td>{{$montantinscription}}</td>
+                        </tr> --}}
                         @foreach ($itemFacture as $item => $chaquemois)
                             <tr>
                                 <td>{{ $chaquemois['name'] }} (E) </td>
@@ -525,9 +529,8 @@
                 <table id="customers">
                     <thead>
                         <tr>
-                            <th scope="col">Total </th>
+                            <th scope="col">Total</th>
                             <th scope="col">REGIME TPS [E]</th>
-
                         </tr>
                     </thead>
                     <tbody>

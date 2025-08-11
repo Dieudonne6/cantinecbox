@@ -520,6 +520,8 @@ class PagesController extends Controller
     
     if($account){
       if (Hash::check($request->password_usercontrat, $account->motdepasse)) {
+
+
         Session::put('account', $account);
         $id_usercontrat = $account->id;
         $image = $account->image;
@@ -531,17 +533,16 @@ class PagesController extends Controller
         Session::put('id_usercontrat', $id_usercontrat);
         Session::put('nom_user', $nom_user);
         Session::put('prenom_user', $prenom_user);
+        
         return redirect("vitrine");
       } else{
         return back()->with('status', 'Mot de passe ou email incorrecte');
         
       }
     } else {
-      return back()->with('status', 'Mot de passe ou email incorrecte');
-      
+        return back()->with('status', 'Mot de passe ou email incorrecte');
     }
-    
-  }
+}
   public function logout(Request $request)
   {
     Auth::logout();
@@ -611,11 +612,14 @@ class PagesController extends Controller
   public function vitrine(){
     if(Session::has('account')){
       $totaleleve = Eleve::count();
-      // $totalcantineinscritactif = Contrat::where('statut_contrat', 1)->count();
-      // $totalcantineinscritinactif = Contrat::where('statut_contrat', 0)->count();
+      $totalcantineinscritactif = Contrat::where('statut_contrat', 1)->count();
+       $totalcantineinscritinactif = Contrat::where('statut_contrat', 0)->count();
       
       // dd($totalcantineinscritactif);
-      return view('pages.vitrine')->with('totaleleve', $totaleleve);
+      return view('pages.vitrine')
+            ->with('totaleleve', $totaleleve)
+            ->with('totalcantineinscritactif', $totalcantineinscritactif)
+            ->with('totalcantineinscritinactif', $totalcantineinscritinactif);
     }return redirect('/');
   }
   public function paramsfacture(){
@@ -3585,9 +3589,9 @@ public function eleveparclasseessai() {
                         $qrcodecontent = $result->getString();
 
 
-                        // $InfoUtilisateurConnecter =  User::where('id', $id_usercontrat)->first();
-                        // $idUserCont =  $InfoUtilisateurConnecter->id;
-                        // $idUserContInt = intval($idUserCont);
+                         $InfoUtilisateurConnecter =  User::where('id', $id_usercontrat)->first();
+                         $idUserCont =  $InfoUtilisateurConnecter->id;
+                         $idUserContInt = intval($idUserCont);
 
                        
 
@@ -3638,7 +3642,10 @@ public function eleveparclasseessai() {
                           'nim' => $nim,                                   // Identifiant NIM
                           'dateTime' => $dateTime,                         // Date et heure
                           'NUMRECU' => $nouvNUMRECU,                         
-                          'mode_paiement' => $request->input('mode_paiement')
+                          'mode_paiement' => $request->input('mode_paiement'),
+                           'InfoUtilisateurConnecter'=> $InfoUtilisateurConnecter,
+                            'idUserCont'=> $idUserCont,
+                            'idUserContInt'=> $idUserContInt
                         ]);
 
                         // Ajouter les données liées à l'élève
@@ -3694,6 +3701,9 @@ public function eleveparclasseessai() {
                             // Données supplémentaires si nécessaires
                             'montanttotal' => $total,
                             'datepaiementcontrat' => $datepaiementcontrat ?? null,
+                            'InfoUtilisateurConnecter'=> $InfoUtilisateurConnecter,
+                            'idUserCont'=> $idUserCont,
+                            'idUserContInt'=> $idUserContInt,
                           ]);
 
 

@@ -131,7 +131,7 @@
                                     <div style="align-self: flex-start; margin-bottom: 5px;" class="ml-4">
                                         <img src="data:{{ $mimeType }};base64,{{ $logoBase64 }}" alt="Logo"
                                             style="width: 145px; height: 140px;">
-                                        {{-- style="max-height: 130px; width: auto;"> --}}
+                                        
                                     </div>
                                 @endif
 
