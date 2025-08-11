@@ -482,8 +482,8 @@
                             <div class="row"
                                 style="border: 1px solid #844fc1 !important; border-radius: 4px !important; background-color: #844fc1; color: #fff;">
                                 <div class="form-group d-flex align-items-center" style="margin-top: 10px !important;">
-                                    <label for="periode">Période</label>
-                                    <select class="form-select" id="periode" name="periode"
+                                    <label for="periode">Période </label>
+                                    {{-- <select class="form-select" id="periode" name="periode"
                                         style="margin-left: 20px !important;">
                                         <option value="">Sélectionner une période</option>
                                         <option value="1" selected>1ère période</option>
@@ -495,6 +495,18 @@
                                         <option value="7">7ème période</option>
                                         <option value="8">8ème période</option>
                                         <option value="9">9ème période</option>
+                                    </select> --}}
+                                    <select name="periode" class="form-select" id="periode" style="margin-left: 20px !important;" required>
+                                        <option value="">Sélectionner une période</option>
+                                        @for ($i = 1; $i <= 7; $i++)
+                                          <option value="{{ $i }}" {{ (old('periode', $current) == (string)$i) ? 'selected' : '' }}>
+                                            @if($i == 1)
+                                                {{ $i }}ère période
+                                            @else
+                                                {{ $i }}ème période
+                                            @endif
+                                          </option>
+                                        @endfor
                                     </select>
                                 </div>
                                 <br>

@@ -61,13 +61,27 @@
           </div>
         
           <div class="col-5 align-items-center">
-                  <select class="js-example-basic-multiple custom-select-width w-auto" id="periode" name="periode" style="margin-left: 20px !important;">
+                  {{-- <select class="js-example-basic-multiple custom-select-width w-auto" id="periode" name="periode" style="margin-left: 20px !important;">
                     <option value="" selected>Sélectionner une période</option>
                     <option value="1">1ère période</option>
                     <option value="2">2ème période</option>
                     <option value="3">3ème période</option>
                     <option value="4">Annuel</option>
-                  </select>
+                  </select> --}}
+
+                  <select class="js-example-basic-multiple custom-select-width w-auto" id="periode" name="periode" style="margin-left: 20px !important;">
+                    <option value="">Sélectionner une période</option>
+                    @for ($i = 1; $i <= 3; $i++)
+                      <option value="{{ $i }}" {{ (old('periode', $current) == (string)$i) ? 'selected' : '' }}>
+                        @if($i == 1)
+                            {{ $i }}ère période
+                        @else
+                            {{ $i }}ème période
+                        @endif
+                      </option>
+                    @endfor
+                      <option value="4">Annuel</option>
+                </select>
           </div>        
         
           <div class="col-2">

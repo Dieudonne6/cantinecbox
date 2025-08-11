@@ -12,6 +12,7 @@ use App\Models\Classes;
 use App\Models\Params2;
 use App\Models\Paramcontrat;
 use App\Models\Eleve;
+use App\Models\PeriodeSave;
 
 class ListemeriteController extends Controller
 {
@@ -22,7 +23,8 @@ class ListemeriteController extends Controller
         $classes = Classes::withCount(['eleves' => function ($query) {
             $query->where('CODECLAS', '!=', '');
           }])->get();
-        return view ('pages.notes.listeparmerite', compact( 'classesg', 'promotions', 'classes'));
+        $current = PeriodeSave::where('key', 'active')->value('periode');
+        return view ('pages.notes.listeparmerite', compact( 'classesg', 'promotions', 'classes', 'current'));
     }
 
 /*     public function getClassesByGroupe($type)

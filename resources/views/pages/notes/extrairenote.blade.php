@@ -152,12 +152,25 @@
             <!-- Choix de la période -->
             <div class="col-md-4">
                 <label for="periode">Période</label>
-                <select class="form-control" id="periode" name="periode" required>
+                {{-- <select class="form-control" id="periode" name="periode" required>
                     <option value="">Sélectionnez une période</option>
                     <option value="1" {{ (isset($periode) && $periode == '1') ? 'selected' : '' }}>1ère période</option>
                     <option value="2" {{ (isset($periode) && $periode == '2') ? 'selected' : '' }}>2ème période</option>
                     <option value="3" {{ (isset($periode) && $periode == '3') ? 'selected' : '' }}>3ème période</option>
-                </select>
+                </select> --}}
+
+                <select class="form-control" id="periode" name="periode" required>
+                  <option value="">Sélectionnez une période</option>
+                  @for ($i = 1; $i <= 3; $i++)
+                    <option value="{{ $i }}" {{ (old('periode', $current) == (string)$i) ? 'selected' : '' }}>
+                      @if($i == 1)
+                          {{ $i }}ère période
+                      @else
+                          {{ $i }}ème période
+                      @endif
+                    </option>
+                  @endfor
+              </select>
             </div>
         </div>
 
