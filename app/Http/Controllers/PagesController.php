@@ -1998,7 +1998,7 @@ public function eleveparclasseessai() {
         // dd($counters1);
 
         $rtfContent = Params2::first()->EnteteRecu;
-        dd($rtfContent);
+        // dd($rtfContent);
         $document = new Document($rtfContent);
         $formatter = new HtmlFormatter();
         $enteteNonStyle = $formatter->Format($document);
@@ -2708,7 +2708,7 @@ public function eleveparclasseessai() {
           //           // "address"=> "string"
           //       ],
           //       "operator" => [
-          //           "name" => " C BOX"
+          //           "name" => " CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
           //       ],
           //       "payment" => [
           //           [

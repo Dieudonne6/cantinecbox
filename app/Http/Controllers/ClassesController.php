@@ -40,6 +40,9 @@ use Endroid\QrCode\Writer\PngWriter;
 use DateTime;
 use Carbon\Carbon;
 
+use RtfHtmlPhp\Document;
+use RtfHtmlPhp\Html\HtmlFormatter;
+
 // /momo/
 
 // use Endroid\QrCode\Response\QrCodeResponse;
@@ -612,7 +615,20 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
     // $nometab = $parametreetab->NOMETAB;
     // $villeetab = $parametreetab->VILLE;
 
-    
+            $rtfContent = Params2::first()->EnteteRecu;
+        // dd($rtfContent);
+        $document = new Document($rtfContent);
+        $formatter = new HtmlFormatter();
+        $enteteNonStyle = $formatter->Format($document);
+        $entete = '
+        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+            <style>
+                p { margin: 0; padding: 0; line-height: 1.2; }
+                span { display: inline-block; }
+            </style>
+            ' . $enteteNonStyle . '
+        </div>
+        ';
 
 
     // dd($classeeleve);
@@ -769,7 +785,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
                     // "address"=> "string"
                 ],
                 "operator" => [
-                    "name" => " C BOX"
+                    "name" => " CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
                 ],
                 "payment" => [
                     [
@@ -1391,7 +1407,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
                                     // "address"=> "string"
                                 ],
                                 "operator" => [
-                                    "name" => " C BOX"
+                                    "name" => " CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
                                 ],
                                 "payment" => [
                                     [
@@ -1854,7 +1870,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
                                     // "address"=> "string"
                                 ],
                                 "operator" => [
-                                    "name" => " C BOX"
+                                    "name" => " CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
                                 ],
                                 "payment" => [
                                     [
@@ -2032,6 +2048,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
          $facturenormalise->datepaiementcontrat = $datepaiementcontrat;
          $facturenormalise->qrcode = $qrcodecontent;
          $facturenormalise->statut = 0;
+         $facturenormalise->typefac = $typefac;
      
          $facturenormalise->save();
 
@@ -2193,7 +2210,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
                                     // "address"=> "string"
                                 ],
                                 "operator" => [
-                                    "name" => " C BOX"
+                                    "name" => " CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
                                 ],
                                 "payment" => [
                                     [
@@ -2371,6 +2388,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
          $facturenormalise->datepaiementcontrat = $datepaiementcontrat;
          $facturenormalise->qrcode = $qrcodecontent;
          $facturenormalise->statut = 0;
+         $facturenormalise->typefac = $typefac;
      
          $facturenormalise->save();
 
@@ -2454,7 +2472,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
                     // "address"=> "string"
                 ],
                 "operator" => [
-                    "name" => " C BOX"
+                    "name" => " CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
                 ],
                 "payment" => [
                     [
@@ -2745,6 +2763,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
                     $facturenormalise->datepaiementcontrat = $datepaiementcontratNouveau;
                     $facturenormalise->qrcode = $qrcodecontent;
                     $facturenormalise->statut = 1;
+                    $facturenormalise->typefac = $typefac;
                     // $facturenormalise->type = "FC";
         
                     $facturenormalise->save();
@@ -2949,7 +2968,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
 
                         ],
                         "operator" => [
-                            "name" => " C BOX"
+                            "name" => " CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
                         ],
                         "payment" => [
                             [
@@ -3255,6 +3274,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
                         $facturenormalise->datepaiementcontrat = $datepaiementcontrat;
                         $facturenormalise->qrcode = $qrcodecontent;
                         $facturenormalise->statut = 1;
+                        $facturenormalise->typefac = $typefac;
                         // $facturenormalise->type = "FC";
             
                         $facturenormalise->save();
@@ -3400,7 +3420,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
                                 // "address"=> "string"
                             ],
                             "operator" => [
-                                "name" => " C BOX"
+                                "name" => " CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
                             ],
                             "payment" => [
                                 [
@@ -3732,6 +3752,21 @@ public function show($id)
 
                 $logoUrl = $paramse ? $paramse->logoimage: null;
                 $NOMETAB = $paramse->NOMETAB; 
+
+                        $rtfContent = Params2::first()->EnteteRecu;
+        // dd($rtfContent);
+        $document = new Document($rtfContent);
+        $formatter = new HtmlFormatter();
+        $enteteNonStyle = $formatter->Format($document);
+        $entete = '
+        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+            <style>
+                p { margin: 0; padding: 0; line-height: 1.2; }
+                span { display: inline-block; }
+            </style>
+            ' . $enteteNonStyle . '
+        </div>
+        ';
                 // dd($NOMETAB);
                 // $villeetab = Session::get('villeetab');
                 // $nometab = Session::get('nometab');
@@ -3805,6 +3840,7 @@ public function show($id)
             'itemFacture' => $itemFacture,
             'montanttotal' => $montanttotal,
             'TOTALTVA' => $TOTALTVA,
+            'entete' => $entete,
             'totalHTArrondi' => $totalHTArrondi,
 
             // 'nometab' => $nometab,
@@ -4217,7 +4253,7 @@ public function show($id)
                                     // "address"=> "string"
                                 ],
                                 "operator" => [
-                                    "name" => " C BOX"
+                                    "name" => " CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
                                 ],
                                 "payment" => [
                                     [
@@ -4735,7 +4771,7 @@ public function savepaiementetinscriptioncontrat(Request $request) {
                     // "address"=> "string"
                 ],
                 "operator" => [
-                    "name" => " C BOX"
+                    "name" => " CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
                 ],
                 "payment" => [
                     [

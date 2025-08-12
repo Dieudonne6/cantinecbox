@@ -498,7 +498,7 @@
                                     </select> --}}
                                     <select name="periode" class="form-select" id="periode" style="margin-left: 20px !important;" required>
                                         <option value="">Sélectionner une période</option>
-                                        @for ($i = 1; $i <= 7; $i++)
+                                        @for ($i = 1; $i <= 5; $i++)
                                           <option value="{{ $i }}" {{ (old('periode', $current) == (string)$i) ? 'selected' : '' }}>
                                             @if($i == 1)
                                                 {{ $i }}ère période

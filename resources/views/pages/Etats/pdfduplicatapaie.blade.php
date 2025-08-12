@@ -7,20 +7,27 @@
         .ko {
             background-color: blue;
         }
+
     }
 
     p {
+
         font-size: 15px;
     }
+
+
+
 
     #mecef p {
         font-size: 12px;
     }
 
+
     .page-break {
         display: none;
         /* Masquer les éléments de saut de page lors de l'impression */
     }
+
 
     .facture-container1 {
         display: flex;
@@ -110,12 +117,22 @@
         background: #cccccc34;
     }
 
-
+    /* .logo {
+        margin-left: 20px;
+        margin-top: 20px;
+        width: 300px;
+        height: 300px;
+    } */
 
     .logoimg {
         width: 50%;
         margin-top: 1rem;
     }
+
+    /* .info {
+        margin-left: 26rem;
+        margin-top: -20rem;
+    } */
 
     .bas {
         margin-top: 20px;
@@ -212,6 +229,9 @@
 
     @media print {
 
+        /* .ko {
+            background-color: red !important;
+        } */
         @page {
             size: portrait;
         }
@@ -367,7 +387,8 @@
             <div class="facture-container1">
                 <div class="info">
                     <div class="logo">
-                         <img src="data:image/jpeg;base64,{{ base64_encode($logo) }}" alt="Logo" class="logoimg">
+                       {{--   <img src="data:image/jpeg;base64,{{ base64_encode($logo) }}" alt="Logo" class="logoimg"> --}}
+                        <p>CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</p>
                     </div>
 
                     <div>
@@ -396,7 +417,7 @@
                                 ? \Carbon\Carbon::createFromFormat('d/m/Y H:i:s', $facturePaie->datepaiementcontrat)->format('d/m/Y')
                                 : 'Format de date non supporté') }}
                     </p>
-                    <p>Vendeur : C BOX</p>
+                    <p>Vendeur : CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</p>
                     {{-- <p>Réference fact. originale :</p> --}}
                 </div>
             </div>
@@ -415,7 +436,7 @@
                             <tr>
                                 <td>
                                     {{-- <p>Nom : {{ $nomecole }}</p> --}}
-                                    {{-- <p>Nom : C BOX</p> --}}
+                                    {{-- <p>Nom : CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</p> --}}
                                     <p>IFU : {{ $facturePaie->ifuEcole }}</p>
                                     {{-- <p>RCCM :</p>
                                 <p>Adresse :</p>
@@ -451,6 +472,7 @@
                 </div>
             </div>
         </section>
+
         <div class="tables-wrapper">
         <div class="tableZ">
             <table id="customers">
@@ -467,7 +489,7 @@
                             <tr>
                                 <td>{{ $chaquemois->name }} (E) </td>
                                 {{-- <td> - {{ $chaquemois->price }}</td> --}}
-                            <td style="text-align: end"> - {{ number_format($chaquemois->price, 0, ',', ',') }}</td>
+                                <td style="text-align: end"> - {{ number_format($chaquemois->price, 0, ',', ',') }}</td>
                             </tr>
                         @endforeach
                     @else
@@ -483,70 +505,89 @@
                 </tbody>
             </table>
         </div>
+
+
         <div class="yes">
-        {{-- <div class="right-column"> --}}
-            <div class="table2 specifique">
-                <table id="customers" >
-                    <thead>
+        <div class="table2 specifique">
+            <table id="customers">
+                <thead>
+                    <tr>
+                        <th scope="col">Total </th>
+                        <th scope="col">REGIME TPS [E]</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (substr($typefa, -2) === 'FA')
                         <tr>
-                            <th class="jojo">Total </th>
-                            <th class="test">REGIME TPS [E]</th>
+                            <td> - {{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
+                            <td> - {{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
 
                         </tr>
-                    </thead>
-                        <tbody>
-                        @if (substr($typefa, -2) === 'FA')
-                            <tr>
-                            <td>- {{ number_format($facturePaie->montant_total, 0, ',', ',') }} </td>
-                            <td>- {{ number_format($facturePaie->montant_total, 0, ',', ',') }} </td>
-                            </tr>
-                        @else
-                            <tr>
+                    @else
+                        <tr>
                             <td>{{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
                             <td>{{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
-                            </tr>
-                        @endif
-                        </tbody>
-                </table>
-            </div>
 
-            <div class="table3">
-                <table id="customers3">
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+        </div>
+
+        {{-- <div class="facture-container5">
+            <div class="table2">
+                <table id="customers2">
                     <thead>
                         <tr>
-                            <th>Type de paiement</th>
-                            <th>Payé</th>
+                            <th>Groupe</th>
+                            <th>Total</th>
+                            <th>Imposable</th>
+                            <th>Impôt</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                                <td>
-                                    @if ($facturePaie->mode_paiement == 1)
-                                        ESPECES
-                                    @elseif($facturePaie->mode_paiement == 2)
-                                        CHEQUES
-                                    @else
-                                        AUTRE
-                                    @endif
-                                    
-                                    {{-- {{ $mode_paiement }} --}}
-                                </td>
-                            @if (substr($typefa, -2) === 'FA')
-                                <td> - {{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
-                            @else
-                                <td>{{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
-                            @endif
+                            <td>A - EXHONERER</td>
+                            <td>{{ $facture->montant_total }}</td>
+                            <td>-</td>
+                            <td>-</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <div id="customers8" class="table2">
+                <hr class="line">
+                <h3> Total : {{ $facture->montant_total }}</h3>
+                <hr  class="line2">
+            </div>
+        </div> --}}
+
+        <div class="table3">
+            <table id="customers3">
+                <thead>
+                    <tr>
+                        <th>Type de paiement</th>
+                        <th>Payé</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ESPECE</td>
+                        @if (substr($typefa, -2) === 'FA')
+                            <td> - {{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
+                        @else
+                            <td>{{ number_format($facturePaie->montant_total, 0, ',', ',') }}</td>
+                        @endif
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+    </div>
 
-        
-    {{-- </div> --}}
 
-        @php
+            @php
             use NumberToWords\NumberToWords;
 
             // Crée le convertisseur
@@ -559,29 +600,16 @@
             if ($facturePaie->montant_total < 0) {
                 $words = 'Moins ' . $words;
             }
-        @endphp
+            @endphp
 
-    
-        <p class="textmontant">
-            Arrêtée, la présente facture à la somme de
-            <span class="prix">
+        <p class="textmontant">Arrêtée, la présente facture à la somme de <span class="prix">
                 @if (substr($typefa, -2) === 'FA')
-                    Moins {{ $words }} ({{ number_format($facturePaie->montant_total, 0, ',', ',') }})
+                    Moins {{ $words }} {{ number_format($facturePaie->montant_total, 0, ',', ',') }}
                 @else
-                    {{ $words }} ({{ number_format($facturePaie->montant_total, 0, ',', ',') }})
+                  {{ $words }}  {{ number_format($facturePaie->montant_total, 0, ',', ',') }}
                 @endif
             </span> FCFA.</p>
- 
-        </p>
-        {{-- <p class="textmontant">Arrêtée, la présente facture à la somme de <span class="prix">
-                @if (substr($typefa, -2) === 'FA')
-                    - {{ number_format($facturePaie->montant_total, 0, ',', ',') }}
-                @else
-                    {{ number_format($facturePaie->montant_total, 0, ',', ',') }}
-                @endif
-            </span> FCFA.</p> --}}
         <br>
-        <div>
             <div class="infomecef">
                 <div class="qcode">
                     <img src="data:image/jpeg;base64,{{ base64_encode($facturePaie->qrcode) }}" alt="QR Code">
@@ -593,7 +621,6 @@
                     <p><strong>MECeF Heure:</strong> {{ $facturePaie->dateHeure }}</p>
                 </div>
             </div>
-        </div>
         {{-- <div class="bas">
             <div class="logo1">
                 <p><strong> CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</strong></p>
@@ -603,8 +630,9 @@
             </div>
             <p class="textremerciement"><i>Merci d'avoir choisi CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</i></p>
         </div> --}}
-    
+    </div>
 </body>
+
 
 
 <script>
@@ -782,8 +810,6 @@
                 printWindow.close();
     }
 </script>
-
-
 
 
 {{-- 
