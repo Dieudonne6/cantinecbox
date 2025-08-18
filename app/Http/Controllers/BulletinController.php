@@ -3030,7 +3030,7 @@ class BulletinController extends Controller
             'success' => true,
             'message' => 'Importation réussie de '.count($insertData).' élèves.'
         ]);
-    }
+    }}
 
 
 
