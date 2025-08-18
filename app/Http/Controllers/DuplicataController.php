@@ -12,6 +12,9 @@ use App\Models\Params2;
 use App\Models\Facturenormaliseinscription;
 use Illuminate\Support\Facades\Validator;
 
+use RtfHtmlPhp\Document;
+use RtfHtmlPhp\Html\HtmlFormatter;
+
 class DuplicataController extends Controller
 {      
     // Afficher le formulaire avec les données nécessaires
@@ -114,6 +117,21 @@ class DuplicataController extends Controller
             ->where('counters', $counters1)
             ->first();
 
+                    $rtfContent = Params2::first()->EnteteRecu;
+        // dd($rtfContent);
+        $document = new Document($rtfContent);
+        $formatter = new HtmlFormatter();
+        $enteteNonStyle = $formatter->Format($document);
+        $entete = '
+        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+            <style>
+                p { margin: 0; padding: 0; line-height: 1.2; }
+                span { display: inline-block; }
+            </style>
+            ' . $enteteNonStyle . '
+        </div>
+        ';
+
             // dd($facturePaie);
 
         $infoecole = DB::table('params2')->first();
@@ -123,7 +141,7 @@ class DuplicataController extends Controller
         $donneItem = json_decode($jsonItem);
         // dd($facturePaie);
 
-        return view('pages.Etats.pdfduplicatapaie', compact('nomecole', 'logo', 'facturePaie', 'donneItem'));
+        return view('pages.Etats.pdfduplicatapaie', compact('nomecole', 'logo', 'facturePaie', 'donneItem', 'entete'));
     }
 
     public function pdfduplicatainscription($counters)
@@ -136,6 +154,20 @@ class DuplicataController extends Controller
             ->where('counters', $counters1)
             ->first();
 
+                    $rtfContent = Params2::first()->EnteteRecu;
+        // dd($rtfContent);
+        $document = new Document($rtfContent);
+        $formatter = new HtmlFormatter();
+        $enteteNonStyle = $formatter->Format($document);
+        $entete = '
+        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+            <style>
+                p { margin: 0; padding: 0; line-height: 1.2; }
+                span { display: inline-block; }
+            </style>
+            ' . $enteteNonStyle . '
+        </div>
+        ';
             // dd($facturePaie);
 
         $infoecole = DB::table('params2')->first();
@@ -145,7 +177,7 @@ class DuplicataController extends Controller
         // $donneItem = json_decode($jsonItem);
         // dd($facturePaie);
 
-        return view('pages.Etats.pdfduplicatainscription', compact('nomecole', 'logo', 'facturePaie'));
+        return view('pages.Etats.pdfduplicatainscription', compact('nomecole', 'logo', 'facturePaie', 'entete'));
     }
 
     public function duplicatainscription2()

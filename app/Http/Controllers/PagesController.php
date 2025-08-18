@@ -533,6 +533,7 @@ class PagesController extends Controller
         Session::put('id_usercontrat', $id_usercontrat);
         Session::put('nom_user', $nom_user);
         Session::put('prenom_user', $prenom_user);
+        
         return redirect("vitrine");
       } else{
         return back()->with('status', 'Mot de passe ou email incorrecte');
@@ -1997,7 +1998,7 @@ public function eleveparclasseessai() {
         // dd($counters1);
 
         $rtfContent = Params2::first()->EnteteRecu;
-        dd($rtfContent);
+        // dd($rtfContent);
         $document = new Document($rtfContent);
         $formatter = new HtmlFormatter();
         $enteteNonStyle = $formatter->Format($document);
@@ -2707,7 +2708,7 @@ public function eleveparclasseessai() {
           //           // "address"=> "string"
           //       ],
           //       "operator" => [
-          //           "name" => " C BOX"
+          //           "name" => " CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)"
           //       ],
           //       "payment" => [
           //           [

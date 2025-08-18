@@ -8,7 +8,7 @@ use App\Models\Matieres;
 use App\Models\Eleve;
 use App\Models\Paramcontrat;
 use App\Models\Params2;
-
+use App\Models\PeriodeSave;
 use App\Models\Notes;
 use App\Models\Trimencours;
 use App\Models\Eleves;
@@ -132,7 +132,8 @@ class EditionController2 extends Controller
         $params = Params2::first();
         $eleves = []; // Tableau vide initial
         $notes = []; // Tableau vide initial
-        return view('pages.notes.listedesmeritants', compact('classes', 'promotions', 'matieres', 'eleves', 'notes', 'params'));
+        $current = PeriodeSave::where('key', 'active')->value('periode');
+        return view('pages.notes.listedesmeritants', compact('classes', 'promotions', 'matieres', 'eleves', 'notes', 'params', 'current'));
     }
 
     public function searchMeritants(Request $request)

@@ -69,14 +69,25 @@
       </div>
       
       <div class="col-md-3 mb-3">
-        <select class="js-example-basic-multiple w-100" id="tableSelect5" onchange="redirectWithSelection()">
+        {{-- <select class="js-example-basic-multiple w-100" id="tableSelect5" onchange="redirectWithSelection()">
           @for ($i = 1; $i <= 9; $i++)
           <option value="{{ $i }}" 
           {{ request()->query('periode') == $i ? 'selected' : '' }}>
           {{ $i }}ème Période
         </option>
         @endfor
-      </select>
+        </select> --}}
+        <select class="js-example-basic-multiple w-100" id="tableSelect5" onchange="redirectWithSelection()">
+          @for ($i = 1; $i <= 9; $i++)
+            <option value="{{ $i }}" {{ (old('periode', $current) == (string)$i) ? 'selected' : '' }}>
+              @if($i == 1)
+                  {{ $i }}ère période
+              @else
+                  {{ $i }}ème période
+              @endif
+            </option>
+          @endfor
+        </select>
     </div>
     
     <div class="col-md-2 mb-3">

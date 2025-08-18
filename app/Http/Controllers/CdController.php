@@ -9,7 +9,7 @@ use App\Models\Matieres;
 use App\Models\Clasmat;
 use App\Models\Params2;
 use App\Models\ParamContrat;
-
+use App\Models\PeriodeSave;
 use App\Models\Groupeclasse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -71,10 +71,11 @@ class CdController extends Controller
   // }
   public function saisirnote(Request $request)
   {
+    $current = PeriodeSave::where('key', 'active')->value('periode');
     $classes = Classe::all();
     $classe = $request->input('classe', 'CE1A');
     $matiere = $request->input('matiere', 1);
-    $periode = $request->input('periode', 1);
+    $periode = $request->input('periode');
     $matieres = Matieres::all();
     $gclasses = Groupeclasse::all();
 
@@ -122,10 +123,11 @@ class CdController extends Controller
       'notes.TEST',
       'notes.MS1'
     )->orderBy('NOM')->get();
-    return view('pages.notes.saisirnote', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere', 'getClasmat'));
+    return view('pages.notes.saisirnote', compact('classes', 'eleves', 'gclasses', 'matieres', 'classe', 'matiere', 'getClasmat', 'current'));
   }
 public function saisirnotefilter(Request $request)
 {
+    // $current = PeriodeSave::where('key', 'active')->value('periode');
     $classes   = Classe::all();
     $classe    = $request->input('classe');
     $matiere   = $request->input('matiere');

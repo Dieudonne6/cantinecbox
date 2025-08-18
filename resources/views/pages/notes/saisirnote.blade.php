@@ -71,7 +71,7 @@
 
                                         <!-- Select pour la période -->
                                         <div class="col-md-8 mb-3">
-                                            <select class="form-select select2 w-100 mt-2" id="periodSelect"
+                                            {{-- <select class="form-select select2 w-100 mt-2" id="periodSelect"
                                                 onchange="redirectWithSelection()" aria-label="Choisir une période">
                                                 <option value="" selected>Période</option>
                                                 <option value="1">1ère Période</option>
@@ -82,7 +82,19 @@
                                                 <option value="6">6ème Période</option>
                                                 <option value="7">7ème Période</option>
                                                 <option value="8">8ème Période</option>
-                                                <option value="9">9ème Période</option> --}}
+                                                <option value="9">9ème Période</option> 
+                                            </select> --}}
+                                            <select class="form-select select2 w-100 mt-2" id="periodSelect" onchange="redirectWithSelection()" aria-label="Choisir une période">
+                                                <option value="">Choisir une période</option>
+                                                @for ($i = 1; $i <= 9; $i++)
+                                                  <option value="{{ $i }}" {{ (old('periode', $current) == (string)$i) ? 'selected' : '' }}>
+                                                    @if($i == 1)
+                                                        {{ $i }}ère période
+                                                    @else
+                                                        {{ $i }}ème période
+                                                    @endif
+                                                  </option>
+                                                @endfor
                                             </select>
                                         </div>
 

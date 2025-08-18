@@ -38,6 +38,7 @@ use App\Models\Notes;
 use App\Models\Clasmat;
 use App\Models\Imgbulletin;
 use App\Models\DecisionConfiguration;
+use App\Models\PeriodeSave;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Carbon\Carbon;
@@ -109,6 +110,7 @@ class BulletinController extends Controller
         $eleves = Eleve::all();
         $params2 = Params2::first();
         $typean = $params2->TYPEAN;
+        $current = PeriodeSave::where('key', 'active')->value('periode');
 
         // 1) On met en session tout ce qu'il faut reprendre après configurerDecisions()
         session()->put('bulletinInit', compact(
@@ -117,10 +119,11 @@ class BulletinController extends Controller
             'promotions',
             'matieres',
             'eleves',
+            'current',
             'typean'
         ));
 
-        return view('pages.notes.bulletindenotes', compact('classes', 'promotions', 'eleves', 'matieres', 'typean', 'classesg'));
+        return view('pages.notes.bulletindenotes', compact('classes', 'promotions', 'eleves', 'matieres', 'typean', 'classesg', 'current'));
     }
 
     public function configurerDecisions(Request $request)
@@ -2368,12 +2371,13 @@ class BulletinController extends Controller
 
         $classes = Classes::get();
         $matieres = Matieres::get();
+        $current = PeriodeSave::where('key', 'active')->value('periode');
 
         return view('pages.notes.extrairenote', [
             'classes' => $classes,
             'matieres' => $matieres,
             'selectedClasse' => request('classe'),
-            'periode' => request('periode'),
+            'current' => $current,
         ]);
         // return view('pages.notes.extrairenote', compact('classes', 'matieres' ));
     }
@@ -3030,7 +3034,8 @@ class BulletinController extends Controller
             'success' => true,
             'message' => 'Importation réussie de '.count($insertData).' élèves.'
         ]);
-    }}
+    }
+}
 
 
 

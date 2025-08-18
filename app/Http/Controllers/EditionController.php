@@ -14,6 +14,7 @@ use App\Models\Classe;
 use App\Models\Clasmat;
 use App\Models\Typeenseigne;
 use App\Models\Paramcontrat;
+use App\Models\PeriodeSave;
 
 use Illuminate\Support\Facades\Schema;
 
@@ -299,6 +300,7 @@ class EditionController extends Controller
     session(['intervals' => $intervals]);
 
     $classe = Classe::all();
+    $current = PeriodeSave::where('key', 'active')->value('periode');
     // Récupérer la classe, la période et le type d'évaluation sélectionnés
     $selectedClass = $request->input('classe', 'CE1A');
     $selectedPeriod = $request->input('periode', 1);
@@ -360,7 +362,7 @@ class EditionController extends Controller
       }
     }
 
-    return view('pages.notes.filtertableaunotes', compact('selectedPeriod', 'selectedClass', 'classe', 'matieres', 'eleves', 'notes', 'selectedEvaluation', 'moyennes', 'moyenneCounts', 'intervals'));
+    return view('pages.notes.filtertableaunotes', compact('selectedPeriod', 'selectedClass', 'classe', 'matieres', 'eleves', 'notes', 'selectedEvaluation', 'moyennes', 'moyenneCounts', 'intervals', 'current'));
   }
   public function filtertablenotes(Request $request)
   {

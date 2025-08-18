@@ -434,7 +434,7 @@
                     <div class="info">
                         <div class="logo">
                             {{-- <img src="data:image/jpeg;base64,{{ base64_encode($logoUrl) }}" alt="Logo" class="logoimg">  --}}
-                            <p>C BOX</p>
+                            <p>CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</p>
                         </div>
                     </div>
                     <div class="info">
@@ -442,7 +442,7 @@
                         <p><strong>Facture # {{ $reffacture }} </strong></p>
                         <p>Date : {{ $dateTime }}
                         </p>
-                        <p>Vendeur : C BOX</p>
+                        <p>Vendeur : CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</p>
                         {{-- <p>Réference fact. originale :</p> --}}
                     </div>
                 </div>
@@ -461,7 +461,7 @@
                                 <tr>
                                     <td>
                                         {{-- <p>Nom : {{ $NOMETAB }}</p> --}}
-                                        <p>Nom : C BOX</p>
+                                        <p>Nom : CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</p>
                                         <p>IFU : {{ $ifuEcoleFacture }}</p>
                                         {{-- <p>RCCM :</p>
                                 <p>Adresse :</p>
@@ -604,14 +604,14 @@
             <div class="bas">
                 <div class="logo1">
                     {{-- <p><strong>{{ $NOMETAB }}</strong></p> --}}
-                    <p><strong> C BOX</strong></p>
+                    <p><strong> CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</strong></p>
 
                 </div>
                 <div class="info1">
                     <p>Fait à Cotonou le, <strong>{{ $factureconfirm['dateTime'] }}</strong></p>
                 </div>
                 {{-- <p class="textremerciement"><i>Merci d'avoir choisi le {{ $NOMETAB }}</i></p> --}}
-                <p class="textremerciement"><i>Merci d'avoir choisi C BOX</i></p>
+                <p class="textremerciement"><i>Merci d'avoir choisi CRYSTAL SERVICE INFO (TONY ABAMAN FIRMIN)</i></p>
             </div>
         </div>
     </div>

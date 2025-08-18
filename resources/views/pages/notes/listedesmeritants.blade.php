@@ -144,7 +144,7 @@
                         <div class="form-group">
                             <div class="d-flex align-items-center">
                                 <label for="periode" class="me-2"><strong>Période / Semestre</strong></label>
-                                <select class="form-control form-control-sm w-auto" id="periode">
+                                {{-- <select class="form-control form-control-sm w-auto" id="periode">
                                     <option value="1">Période 1</option>
                                     <option value="2">Période 2</option>
                                     <option value="3">Période 3</option>
@@ -155,6 +155,18 @@
                                     <option value="8">Période 8</option>
                                     <option value="9">Période 9</option>
                                     <option value="AN">Annuel</option>
+                                </select> --}}
+                                <select class="form-control form-control-sm w-auto" id="periode">
+                                    @for ($i = 1; $i <= 9; $i++)
+                                      <option value="{{ $i }}" {{ (old('periode', $current) == (string)$i) ? 'selected' : '' }}>
+                                        @if($i == 1)
+                                            {{ $i }}ère période
+                                        @else
+                                            {{ $i }}ème période
+                                        @endif
+                                      </option>
+                                      @endfor
+                                      <option value="AN">Annuel</option>
                                 </select>
                             </div>
                         </div>
