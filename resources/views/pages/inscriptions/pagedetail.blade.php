@@ -37,7 +37,7 @@
         </div>
         <nav>
             <div class="nav nav-tabs" id="nav-tab{{ $eleve->MATRICULE }}" role="tablist" style="font-size: 14px;">
-                @foreach (['Infor' => 'Informations générales', 'Detail' => 'Détail des notes', 'Deta' => 'Détails des paiements', 'finan' => 'Informations financières', 'Emploi' => 'Emploi du temps', 'Position' => 'Position Enseignants', 'Situation' => 'Situation selon Echéancier', 'Autre' => 'Autre Situation'] as $key => $label)
+                @foreach (['Infor' => ' ', 'Detail' => 'Détail des notes', 'Deta' => 'Détails des paiements', 'finan' => 'Informations financières', 'Emploi' => 'Emploi du temps', 'Position' => 'Position Enseignants', 'Situation' => 'Situation selon Echéancier', 'Autre' => 'Autre Situation'] as $key => $label)
                 {{-- @foreach (['Infor' => 'Informations générales', ] as $key => $label) --}}
                     <button class="nav-link{{ $loop->first ? ' active' : '' }}"
                         id="nav-{{ $key }}-tab{{ $eleve->MATRICULE }}" data-bs-toggle="tab"
@@ -126,7 +126,7 @@
                             <tbody class="text-center">
                                 @foreach ($eleve->notes as $note)
                                     <tr>
-                                        <td class="fw-bold">{{ $note->CODEMAT }}</td>
+                                        <td class="fw-bold">{{ $note->matiere->LIBELMAT }}</td>
                                         <td>{{ ($note->MI == -1 || $note->MI == 21) ? '***' : $note->MI }}</td>
                                         <td>{{ ($note->DEV1 == -1 || $note->DEV1 == 21) ? '***' : $note->DEV1 }}</td>
                                         <td>{{ ($note->DEV2 == -1 || $note->DEV2 == 21) ? '***' : $note->DEV2 }}</td>

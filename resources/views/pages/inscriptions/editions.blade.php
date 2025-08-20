@@ -102,7 +102,22 @@
       <button><a href="{{ url('/etatdesdroits') }}"><i class="fas fa-file-signature"></i> État des droits constatés par classe</a></button>
       <button><a href="{{ url('/situationfinanceclasse') }}"><i class="fas fa-calendar-alt"></i> Situation financière selon l'échéancier</a></button>
       <button><a href="{{ url('/retardpaiementclasse') }}"><i class="fas fa-exclamation-circle"></i> Liste des retards de paiement</a></button>
-      <button><a href="{{ url('/lettresderelance') }}"><i class="fas fa-envelope"></i> Lettres de relance</a></button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fas fa-envelope"></i> Lettres de relance</button>
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">           
+            <div class="modal-body">
+              <br>
+              <p class="text-center">Cette option est implémenté dans Situation financière selon échéancier.</p>
+            </div>
+            <div class="modal-footer d-flex justify-content-between" >
+                <a href="{{ url('/situationfinanceclasse') }}" class="btn btn-secondary text-white" style="margin-left: 4rem;">Cliquer pour y accéder</a>
+                <a href="#" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-right: 5rem;">Fermer</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
       <button><a href="{{ url('/situationfinanciereglobale') }}"><i class="fas fa-balance-scale"></i> Situation financière globale</a></button>
       <button><a href="{{ url('/listedesreductions') }}"><i class="fas fa-percentage"></i> Liste des réductions accordées</a></button>
       <button class="profil-btn" type="button" id="" class="" data-bs-toggle="modal" data-bs-target="#exampleModal2"><i class="fas fa-id-card"></i> Liste des élèves par profil</button>
