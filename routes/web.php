@@ -153,7 +153,7 @@ Route::get('/inscription', [EleveController::class, 'inscription']);
 Route::get('/etat', [ClassesController::class, 'etat'])->name('etat');
 Route::get('/etatpaiement', [ClassesController::class, 'etatpaiement'])->name('etatpaiement');
 Route::post('/traitementetatpaiement', [ClassesController::class, 'traitementetatpaiement'])->name('traitementetatpaiement');
-Route::delete('/supprimercontrat', [ClassesController::class, 'supprimercontrat']);
+Route::post('/supprimercontrat', [ClassesController::class, 'supprimercontrat']);
 Route::delete('/supprimerpaiement/{id_paiementcontrat}', [ClassesController::class, 'supprimerpaiement']);
 Route::get('/etatpaiement1', [ClassesController::class, 'etatpaiement1']);
 Route::get('/essaipdf', [ClassesController::class, 'essaipdf']);

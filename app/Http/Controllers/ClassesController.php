@@ -89,8 +89,7 @@ class ClassesController extends Controller
 
     // page liste de tout les contrat disponible 
 
-    public function listecontrat() 
-    {
+    public function listecontrat() {
             $elev = Eleve::get();
             $pramcontrat = Paramcontrat::first();
         // Récupérer les matricules des élèves dont le statut de contrat est égal à 1
@@ -179,8 +178,8 @@ class ClassesController extends Controller
             }
 
              // Réorganiser les mois selon l'ordre défini
-            $moisCorrespondants = [];
-            foreach ($order as $mois) {
+             $moisCorrespondants = [];
+             foreach ($order as $mois) {
                  foreach ($moisAvecMontants as $id => $info) {
                      if ($info['nom'] === $mois) {
                          $moisCorrespondants[$id] = $info['nom'];
@@ -3359,7 +3358,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
 
 
 
-    public function avoirfactureinscription($codemecef){
+    public function avoirfactureinscription(Request $request, $codemecef){
 
         // dd('code correct');
         $codemecefEntrer = $request->input('inputCodemecef');
@@ -3377,7 +3376,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
         $nomcompleteleve = $factureoriginale->nom;
         // $moisConcatenes = $factureoriginale->moispayes;
         $matriculeeleve = $factureoriginale->MATRICULE;
-        // $idcontratEleve = $factureoriginale->idcontrat;
+        $idcontratEleve = $factureoriginale->idcontrat;
         $classeeleve = $factureoriginale->classe;
         // $montantparmois = $factureoriginale->montant_par_mois;
         $datepaiementcontrat = $factureoriginale->datepaiementcontrat;
@@ -3611,7 +3610,7 @@ public function savepaiementcontrat(PaiementCantineRequest $request) {
                                  $facturenormaliseinscription->dateHeure = $dateTime;
                                  $facturenormaliseinscription->ifuEcole = $ifuEcoleFacture;
                                  $facturenormaliseinscription->MATRICULE = $matriculeeleve;
-                                 // $facturenormalise->idcontrat = $idcontratEleve;
+                                 $facturenormaliseinscription->idcontrat = $idcontratEleve;
                                  // $facturenormalise->moispayes = $moisConcatenes;
                                  $facturenormaliseinscription->TOTALHT = $TOTALHT;
                                  $facturenormaliseinscription->TOTALTVA = $TOTALTVA;
@@ -4434,33 +4433,8 @@ public function show($id)
             
                 $NOMETAB = $paramse->NOMETAB;
 
-                // dd($reffacture);
 
-                            // ENREGISTREMENT DE LA FACTURE
-                    $facturenormaliseinscription = new Facturenormaliseinscription();
-                    $facturenormaliseinscription->id = $reffacture;
-                    $facturenormaliseinscription->codemecef = $codemecef;
-                    $facturenormaliseinscription->counters = $counters;
-                    $facturenormaliseinscription->nim = $nim;
-                    $facturenormaliseinscription->dateHeure = $dateTime;
-                    $facturenormaliseinscription->ifuEcole = $ifuEcoleFacture;
-                    $facturenormaliseinscription->MATRICULE = $eleveId;
-                    // $facturenormalise->idcontrat = $idcontratEleve;
-                    // $facturenormalise->moispayes = $moisConcatenes;
-                    $facturenormaliseinscription->TOTALHT = $totalHTArrondi;
-                    $facturenormaliseinscription->TOTALTVA = $TOTALTVA;
-                    $facturenormaliseinscription->classe = $classes;
-                    $facturenormaliseinscription->nom = $nameClient;
-                    $facturenormaliseinscription->designation = $nameItemFacture;
-                    $facturenormaliseinscription->montant_total = $prixTotalItemFacture;
-                    $facturenormaliseinscription->datepaiementcontrat = $dateContrat;
-                    $facturenormaliseinscription->qrcode = $qrcodecontent;
-                    $facturenormaliseinscription->statut = 1;
-                    
-                    $facturenormaliseinscription->save();
-                    // dd($facturenormaliseinscription);
-
-                    $nouveauContrat = new Contrat();
+                                    $nouveauContrat = new Contrat();
                         $nouveauContrat->eleve_contrat = $eleveId;
                         $nouveauContrat->cout_contrat = $montant;
                         $nouveauContrat->id_usercontrat = $id_usercontratInt;
@@ -4471,6 +4445,35 @@ public function show($id)
 
                         // Récupérer l'ID du contrat récemment créé
                         $idContratNouv = $nouveauContrat->id_contrat;
+                        // dd($idContratNouv);
+
+                // dd($reffacture);
+
+                            // ENREGISTREMENT DE LA FACTURE
+            $facturenormaliseinscription = new Facturenormaliseinscription();
+            $facturenormaliseinscription->id = $reffacture;
+            $facturenormaliseinscription->codemecef = $codemecef;
+            $facturenormaliseinscription->counters = $counters;
+            $facturenormaliseinscription->nim = $nim;
+            $facturenormaliseinscription->dateHeure = $dateTime;
+            $facturenormaliseinscription->ifuEcole = $ifuEcoleFacture;
+            $facturenormaliseinscription->MATRICULE = $eleveId;
+            $facturenormaliseinscription->idcontrat = $idContratNouv;
+            // $facturenormalise->moispayes = $moisConcatenes;
+            $facturenormaliseinscription->TOTALHT = $totalHTArrondi;
+            $facturenormaliseinscription->TOTALTVA = $TOTALTVA;
+            $facturenormaliseinscription->classe = $classes;
+            $facturenormaliseinscription->nom = $nameClient;
+            $facturenormaliseinscription->designation = $nameItemFacture;
+            $facturenormaliseinscription->montant_total = $prixTotalItemFacture;
+            $facturenormaliseinscription->datepaiementcontrat = $dateContrat;
+            $facturenormaliseinscription->qrcode = $qrcodecontent;
+            $facturenormaliseinscription->statut = 1;
+            
+            $facturenormaliseinscription->save();
+            // dd($facturenormaliseinscription);
+
+
 
                         $infoParamContrat = Paramcontrat::first();
                         $debutAnneeEnCours = $infoParamContrat->anneencours_paramcontrat;
@@ -4495,38 +4498,38 @@ public function show($id)
                         $nouveauPaiementcontrat->save();
                         // dd($dateContrt);
 
-                        Session::put('factureconfirm', $decodedResponseConfirmation);
-                        Session::put('fileNameqrcode', $fileNameqrcode);
-                        Session::put('facturedetaille', $facturedetaille);
-                        Session::put('reffacture', $reffacture);
-                        Session::put('classeeleve', $classes);
-                        Session::put('nomcompleteleve', $nameClient);
-                        // Session::put('toutmoiscontrat', $toutmoiscontrat);
-                        Session::put('nameItemFacture', $nameItemFacture);
-                        Session::put('prixTotalItemFacture', $prixTotalItemFacture);
-                        Session::put('quantityItemFacture', $quantityItemFacture);
-                        Session::put('taxGroupItemFacture', $taxGroupItemFacture);
-                        Session::put('ifuEcoleFacture', $ifuEcoleFacture);
-                        Session::put('qrCodeString', $qrCodeString);
-                        Session::put('itemFacture', $itemFacture);
-                        Session::put('montanttotal', $montant);
-                        Session::put('totalHTArrondi', $totalHTArrondi);
-                        Session::put('TOTALTVA', $TOTALTVA);
-                        Session::put('montantmoiscontrat', $montant);
-                        Session::put('qrcodecontent', $qrcodecontent);
-                        Session::put('NOMETAB', $NOMETAB);
-                        Session::put('nim', $nim);
-                        Session::put('datepaiementcontrat', $dateContrat);
-                        Session::put('dateTime', $dateTime);
+            Session::put('factureconfirm', $decodedResponseConfirmation);
+            Session::put('fileNameqrcode', $fileNameqrcode);
+            Session::put('facturedetaille', $facturedetaille);
+            Session::put('reffacture', $reffacture);
+            Session::put('classeeleve', $classes);
+            Session::put('nomcompleteleve', $nameClient);
+            // Session::put('toutmoiscontrat', $toutmoiscontrat);
+            Session::put('nameItemFacture', $nameItemFacture);
+            Session::put('prixTotalItemFacture', $prixTotalItemFacture);
+            Session::put('quantityItemFacture', $quantityItemFacture);
+            Session::put('taxGroupItemFacture', $taxGroupItemFacture);
+            Session::put('ifuEcoleFacture', $ifuEcoleFacture);
+            Session::put('qrCodeString', $qrCodeString);
+            Session::put('itemFacture', $itemFacture);
+            Session::put('montanttotal', $montant);
+            Session::put('totalHTArrondi', $totalHTArrondi);
+            Session::put('TOTALTVA', $TOTALTVA);
+            Session::put('montantmoiscontrat', $montant);
+            Session::put('qrcodecontent', $qrcodecontent);
+            Session::put('NOMETAB', $NOMETAB);
+            Session::put('nim', $nim);
+            Session::put('datepaiementcontrat', $dateContrat);
+            Session::put('dateTime', $dateTime);
 
-                        // return view('pages.Etats.pdfinscription')
-                        //             ->with('amount', $montant)
-                        //             ->with('classe', $classes )
-                        //             ->with('logoUrl', $logoUrl )
-                        //             ->with('dateContrat', $dateContrat)
-                        //             ->with('nometab', $nometab)
-                        //             ->with('ifu', $ifu)
-                        //             ->with('elevyo', $elevyo);
+            // return view('pages.Etats.pdfinscription')
+            //             ->with('amount', $montant)
+            //             ->with('classe', $classes )
+            //             ->with('logoUrl', $logoUrl )
+            //             ->with('dateContrat', $dateContrat)
+            //             ->with('nometab', $nometab)
+            //             ->with('ifu', $ifu)
+            //             ->with('elevyo', $elevyo);
 
                         return view('pages.Etats.pdfinscription', [
                             'factureconfirm' => $decodedResponseConfirmation,
@@ -5281,101 +5284,209 @@ public function savepaiementetinscriptioncontrat(Request $request) {
                 
 
    
-     public function traitementetatpaiement(Request $request)
-    {
-        set_time_limit(300); // Autorise jusqu'à 5 minutes si besoin
+    //  public function traitementetatpaiement(Request $request)
+    // {
+    //     set_time_limit(300); // Autorise jusqu'à 5 minutes si besoin
 
-        $debut = $request->input('debut');
-        $fin = $request->input('fin');
+    //     $debut = $request->input('debut');
+    //     $fin = $request->input('fin');
 
-        // Préchargement des données nécessaires pour éviter les requêtes dans la boucle
-        $contrats = Contrat::all()->keyBy('id_contrat');
-        $eleves = Eleve::all()->keyBy('MATRICULE');
-        $moisList = Moiscontrat::all()->keyBy('id_moiscontrat');
-        $user = Auth::user();
-    //   dd($user);
-        $paiementsAvecEleves = collect([]);
+    //     // Préchargement des données nécessaires pour éviter les requêtes dans la boucle
+    //     $contrats = Contrat::all()->keyBy('id_contrat');
+    //     $eleves = Eleve::all()->keyBy('MATRICULE');
+    //     $moisList = Moiscontrat::all()->keyBy('id_moiscontrat');
+    //     // $user = session()->get('nom_user');
+    //     // $user = Auth::user();
+    //     // dd($user);
+    //     $paiementsAvecEleves = collect([]);
 
-        // Traitement par chunk pour éviter la surcharge mémoire
-        Paiementcontrat::whereBetween('date_paiementcontrat', [$debut, $fin])
-            ->where('statut_paiementcontrat', '=', 1)
-            ->where('montant_paiementcontrat', '>', 1)
-            ->chunk(100, function ($paiements) use (
-                &$paiementsAvecEleves, 
-                $contrats, 
-                $eleves, 
-                $moisList, 
-                $user,
-            ) {
+    //     // Traitement par chunk pour éviter la surcharge mémoire
+    //     Paiementcontrat::whereBetween('date_paiementcontrat', [$debut, $fin])
+    //         ->where('statut_paiementcontrat', '=', 1)
+    //         ->where('montant_paiementcontrat', '>', 1)
+    //         ->chunk(100, function ($paiements) use (
+    //             &$paiementsAvecEleves, 
+    //             $contrats, 
+    //             $eleves, 
+    //             $moisList, 
+    //         ) {
+    //             foreach ($paiements as $paiement) {
+    //                 if ($paiement->mois_paiementcontrat == 13 && $paiement->montant_paiementcontrat == 0) {
+    //                     continue;
+    //                 }
+
+    //                 $contrat = $contrats->get($paiement->id_contrat);
+    //                 if (!$contrat) continue;
+
+    //                 $eleve = $eleves->get($contrat->eleve_contrat);
+    //                 if (!$eleve) continue;
+
+    //                 $moisContrat = $moisList->get($paiement->mois_paiementcontrat);
+    //                 $datePaiement = \Carbon\Carbon::parse($paiement->date_paiementcontrat)->format('Y-m-d');
+
+    //                 // Vérifier si un paiement pour cet élève à cette date existe déjà
+    //                 $existingPaiementIndex = $paiementsAvecEleves->search(function ($item) use ($eleve, $datePaiement) {
+    //                     return $item['nomcomplet_eleve'] === $eleve->NOM . ' ' . $eleve->PRENOM &&
+    //                         $item['date_paiement'] === $datePaiement;
+    //                 });
+
+    //                 if ($existingPaiementIndex !== false) {
+    //                     // Paiement déjà existant : mise à jour
+    //                     $updatedPaiement = $paiementsAvecEleves->get($existingPaiementIndex);
+    //                     $updatedPaiement['mois'] .= ', ' . ($moisContrat ? $moisContrat->nom_moiscontrat : 'Mois inconnu');
+    //                     $updatedPaiement['montant'] += $paiement->montant_paiementcontrat;
+    //                     $paiementsAvecEleves->put($existingPaiementIndex, $updatedPaiement);
+    //                 } else {
+    //                     // Nouveau paiement : ajout
+    //                         $InfoUtilisateurConnecter =  User::where('id', $paiement->id_usercontrat)->first();
+    //                         // $idUserCont =  $InfoUtilisateurConnecter->id;
+                 
+    //                     $paiementsAvecEleves->push([
+
+
+    //                         'user' => $InfoUtilisateurConnecter->login,
+    //                         'id_contrat' => $paiement->id_contrat,
+    //                         'nomcomplet_eleve' => $eleve->NOM . ' ' . $eleve->PRENOM,
+    //                         'classe_eleve' => $eleve->CODECLAS,
+    //                         'id_paiementcontrat' => $paiement->id_paiementcontrat,
+    //                         'date_paiement' => $paiement->date_paiementcontrat,
+    //                         'montant' => $paiement->montant_paiementcontrat,
+    //                         'mois' => $moisContrat ? $moisContrat->nom_moiscontrat : 'Mois inconnu',
+    //                         'reference' => $paiement->reference_paiementcontrat,
+    //                     ]);
+    //                 }
+    //             }
+    //         });
+
+    //     // Mise en forme des dates
+    //     $dateObjdebut = DateTime::createFromFormat('Y-m-d', $debut);
+    //     $dateObjfin = DateTime::createFromFormat('Y-m-d', $fin);
+    //     $dateFormateedebut = $dateObjdebut->format('d/m/Y');
+    //     $dateFormateefin = $dateObjfin->format('d/m/Y');
+
+    //     // Stocker les résultats en session
+    //     Session::put('paiementsAvecEleves', $paiementsAvecEleves);
+    //     Session::put('dateFormateedebut', $dateFormateedebut);
+    //     Session::put('dateFormateefin', $dateFormateefin);
+
+    //     // Redirection avec ou sans résultats
+    //     if ($paiementsAvecEleves->isEmpty()) {
+    //         return redirect('etat')
+    //             ->with('status', 'Aucun paiement trouvé pour la période spécifiée.')
+    //             ->with('paiementsAvecEleves', $paiementsAvecEleves);
+    //     } else {
+    //         return view('pages.etatpaiement1')
+    //             ->with('paiementsAvecEleves', $paiementsAvecEleves)
+    //             ->with('dateFormateedebut', $dateFormateedebut)
+    //             ->with('dateFormateefin', $dateFormateefin);
+    //     }
+    // }
+
+
+                public function traitementetatpaiement(Request $request){
+
+                set_time_limit(300); // Autorise jusqu'à 5 minutes si besoin
+
+                $debut = $request->input('debut');
+                $fin = $request->input('fin');
+
+                // dd($debut);
+            
+                // Récupérer les paiements entre les dates spécifiées
+                // $paiements = Paiementcontrat::whereBetween('date_paiementcontrat', [$debut, $fin])->where('statut_paiementcontrat', operator: '=', 1)->get();
+                $paiements = Paiementcontrat::whereBetween('date_paiementcontrat', [$debut, $fin])
+                ->where('statut_paiementcontrat', '=', 1)
+                ->where('montant_paiementcontrat', '>', 1)
+                ->get();
+            
+                // Collection pour stocker les informations de paiement avec les noms d'élève
+                $paiementsAvecEleves = collect([]);
+            
+                // dd($paiements);
+                // Itérer sur chaque paiement
                 foreach ($paiements as $paiement) {
                     if ($paiement->mois_paiementcontrat == 13 && $paiement->montant_paiementcontrat == 0) {
-                        continue;
+                        continue; // Saute cet enregistrement
                     }
+                    // Récupérer l'id_contrat de ce paiement
+                    $idContrat = $paiement->id_contrat;
+            
+                    // Récupérer le matricule de l'élève à partir de la table Contrat
+                    $contrat = Contrat::find($idContrat);
 
-                    $contrat = $contrats->get($paiement->id_contrat);
-                    if (!$contrat) continue;
+                    if ($contrat) {
+                        $matriculeEleve = $contrat->eleve_contrat;
+                        $iduser = $contrat->id_usercontrat;
 
-                    $eleve = $eleves->get($contrat->eleve_contrat);
-                    if (!$eleve) continue;
+                        // dd($iduser);
+                        // Récupérer le nom de l'élève à partir de la table Eleve
+                        $eleve = Eleve::where('MATRICULE', $matriculeEleve)->first();
+                        $users = User::where('id', '=', $iduser)->first();
+                        // dd($users->login);
 
-                    $moisContrat = $moisList->get($paiement->mois_paiementcontrat);
-                    $datePaiement = \Carbon\Carbon::parse($paiement->date_paiementcontrat)->format('Y-m-d');
+                        if ($eleve) {
+                            $moisContrat = Moiscontrat::where('id_moiscontrat', $paiement->mois_paiementcontrat)->first();
 
-                    // Vérifier si un paiement pour cet élève à cette date existe déjà
-                    $existingPaiementIndex = $paiementsAvecEleves->search(function ($item) use ($eleve, $datePaiement) {
-                        return $item['nomcomplet_eleve'] === $eleve->NOM . ' ' . $eleve->PRENOM &&
-                            $item['date_paiement'] === $datePaiement;
-                    });
+                            // Chercher si cet élève a déjà des paiements enregistrés pour cette date et cette référence
+                            $existingPaiementIndex = $paiementsAvecEleves->search(function ($item) use ($eleve, $paiement) {
+                                $datePaiement = \Carbon\Carbon::parse($paiement->date_paiementcontrat)->format('Y-m-d');
+                                return $item['nomcomplet_eleve'] === $eleve->NOM . ' ' . $eleve->PRENOM &&
+                                       $item['date_paiement'] === $datePaiement;
+                            });
+            
+                            if ($existingPaiementIndex !== false) {
+                            // Si un paiement existe déjà pour cet élève à cette date et cette référence, on met à jour les mois et la somme des montants
+                            $updatedPaiement = $paiementsAvecEleves->get($existingPaiementIndex);
+                            $updatedPaiement['mois'] .= ', ' . ($moisContrat ? $moisContrat->nom_moiscontrat : 'Mois inconnu');
+                            $updatedPaiement['montant'] += $paiement->montant_paiementcontrat;
 
-                    if ($existingPaiementIndex !== false) {
-                        // Paiement déjà existant : mise à jour
-                        $updatedPaiement = $paiementsAvecEleves->get($existingPaiementIndex);
-                        $updatedPaiement['mois'] .= ', ' . ($moisContrat ? $moisContrat->nom_moiscontrat : 'Mois inconnu');
-                        $updatedPaiement['montant'] += $paiement->montant_paiementcontrat;
-                        $paiementsAvecEleves->put($existingPaiementIndex, $updatedPaiement);
-                    } else {
-                        // Nouveau paiement : ajout
-                 
-                        $paiementsAvecEleves->push([
-                            
-                            'user' => $user->login,
-                            'id_contrat' => $paiement->id_contrat,
-                            'nomcomplet_eleve' => $eleve->NOM . ' ' . $eleve->PRENOM,
-                            'classe_eleve' => $eleve->CODECLAS,
-                            'id_paiementcontrat' => $paiement->id_paiementcontrat,
-                            'date_paiement' => $paiement->date_paiementcontrat,
-                            'montant' => $paiement->montant_paiementcontrat,
-                            'mois' => $moisContrat ? $moisContrat->nom_moiscontrat : 'Mois inconnu',
-                            'reference' => $paiement->reference_paiementcontrat,
-                        ]);
+                            // Remplacer l'ancien élément avec l'élément mis à jour
+                            $paiementsAvecEleves->put($existingPaiementIndex, $updatedPaiement);
+                            } else {
+            
+                            // Ajouter les informations de paiement avec le nom de l'élève à la collection
+                            $paiementsAvecEleves->push([
+                                // dd($users->login),
+                                'user' => $users->login,
+                                'id_contrat' => $idContrat,
+                                'nomcomplet_eleve' => $eleve->NOM .' '. $eleve->PRENOM,
+                                'classe_eleve' => $eleve->CODECLAS,
+                                'id_paiementcontrat' => $paiement->id_paiementcontrat,
+                                'date_paiement' => $paiement->date_paiementcontrat,
+                                'montant' => $paiement->montant_paiementcontrat,
+                                'mois' => $moisContrat ? $moisContrat->nom_moiscontrat : 'Mois inconnu',
+                                'reference' => $paiement->reference_paiementcontrat,
+                                // Ajoutez d'autres informations de paiement si nécessaire
+                            ]);
+                        }
+                    }
                     }
                 }
-            });
+            
+                // dd($paiementsAvecEleves);
+                // Convertir la date en objet DateTime
+                $dateObjdebut = DateTime::createFromFormat('Y-m-d', $debut);
+                $dateObjfin = DateTime::createFromFormat('Y-m-d', $fin);
 
-        // Mise en forme des dates
-        $dateObjdebut = DateTime::createFromFormat('Y-m-d', $debut);
-        $dateObjfin = DateTime::createFromFormat('Y-m-d', $fin);
-        $dateFormateedebut = $dateObjdebut->format('d/m/Y');
-        $dateFormateefin = $dateObjfin->format('d/m/Y');
+                // Formatter la date selon le format JJ/MM/AAAA
+                $dateFormateedebut = $dateObjdebut->format('d/m/Y');
+                $dateFormateefin = $dateObjfin->format('d/m/Y');
 
-        // Stocker les résultats en session
-        Session::put('paiementsAvecEleves', $paiementsAvecEleves);
-        Session::put('dateFormateedebut', $dateFormateedebut);
-        Session::put('dateFormateefin', $dateFormateefin);
+                // Vérifiez si des paiements ont été trouvés
+                Session::put('paiementsAvecEleves', $paiementsAvecEleves);
+                Session::put('dateFormateedebut', $dateFormateedebut);
+                Session::put('dateFormateefin', $dateFormateefin);
 
-        // Redirection avec ou sans résultats
-        if ($paiementsAvecEleves->isEmpty()) {
-            return redirect('etat')
-                ->with('status', 'Aucun paiement trouvé pour la période spécifiée.')
-                ->with('paiementsAvecEleves', $paiementsAvecEleves);
-        } else {
-            return view('pages.etatpaiement1')
-                ->with('paiementsAvecEleves', $paiementsAvecEleves)
-                ->with('dateFormateedebut', $dateFormateedebut)
-                ->with('dateFormateefin', $dateFormateefin);
-        }
-    }
+                if ($paiementsAvecEleves->isEmpty()) {
+                    // Aucun paiement trouvé pour les dates spécifiées
+                    return redirect('etat')->with('status', 'Aucun paiement trouvé pour la periode spécifiées.')->with('paiementsAvecEleves', $paiementsAvecEleves);
+                } else {
+                    // Afficher les résultats avec les noms des élèves
+                    return view('pages.etatpaiement1')->with('paiementsAvecEleves', $paiementsAvecEleves)->with('dateFormateedebut', $dateFormateedebut)->with('dateFormateefin', $dateFormateefin);
+                }
 
+
+            }
 
 
     public function etatpaiement1 (){
@@ -5502,5 +5613,7 @@ public function savepaiementetinscriptioncontrat(Request $request) {
   
 
         // fin facture normalisee pour tous les paiements de l'annee 2023_2024                     
-                            
+                         
+        
+
 }

@@ -751,6 +751,8 @@
                         {{-- <script src="https://cdn.ckeditor.com/4.25.1-lts/standard/ckeditor.js"></script> --}}
                         {{-- <script src="https://cdn.ckeditor.com/4.25.1-lts/full/ckeditor.js"></script> --}}
 
+
+
                         <script>
                             document.querySelectorAll('textarea.my-editor').forEach((el) => {
                                 CKEDITOR.replace(el, {

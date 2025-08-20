@@ -53,12 +53,12 @@ class DuplicataController extends Controller
         // Vérification et récupération des données en fonction du type de facture
         if ($factureType) {
             if ($factureType === 'facturenormalises') {
-                $facture = Facturenormalise::where('MATRICULE', $idEleve)->get();
+                $facture = Facturenormalise::where('MATRICULE', $idEleve)->where('statut', 1)->get();
                 if ($facture->isEmpty()) {
                     $message = 'Aucune facture de paiement trouvée pour l\'élève sélectionné.';
                 }
             } elseif ($factureType === 'contrat') {
-                $contrat = Facturenormaliseinscription::where('MATRICULE', $idEleve)->get();
+                $contrat = Facturenormaliseinscription::where('MATRICULE', $idEleve)->where('statut', 1)->get();
                 // dd($contrat);
                 if ($contrat->isEmpty()) {
                     $message = 'Aucun contrat trouvé pour l\'élève sélectionné.';

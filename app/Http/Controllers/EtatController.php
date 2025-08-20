@@ -30,6 +30,50 @@ class EtatController extends Controller
         }return redirect('/');
     }
     
+    // public function filteretat(Request $request){
+    //     $anne = Paramcontrat::distinct()->pluck('anneencours_paramcontrat'); 
+    //     $class = Classes::get();
+    //     $query = Eleve::query();
+    //     $annee = $request->annee;
+    //     $classe = $request->classe;
+        
+    //     // Filtrer par année
+    //     if ($request->has('annee')) {
+    //         $query->whereHas('contrats', function($q) use ($request) {
+    //             $q->whereHas('paiements', function($q) use ($request) {
+    //                 $q->where('anne_paiementcontrat', $request->annee);
+    //             });
+    //         });
+    //     }
+        
+    //     // Filtrer par classe
+    //     if ($request->has('classe')) {
+    //         $query->where('CODECLAS', $request->classe);
+    //     }
+        
+    //     // Récupérer les mois de contrat
+    //     $moisContrat = Moiscontrat::all();
+        
+    //     // Exécuter la requête
+    //     $eleves = $query->with(['contrats' => function($query) use ($request) {
+    //         $query->with(['paiements' => function($query) use ($request) {
+    //             if ($request->has('annee')) {
+    //                 $query->where('anne_paiementcontrat', $request->annee);
+    //             }
+    //         }]);
+    //     }])->get();
+    //    Session::put('eleves', $eleves);
+    //    Session::put('moisContrat', $moisContrat);
+    //    Session::put('anne', $anne);
+    //    Session::put('class', $class);
+    //     //    dd($anne);
+    //     // Ajouter 1 à l'année
+    //     $anneesuivant = $annee + 1;
+    //     // Passer les données à la vue
+    //     return view('pages.etat.filteretat')->with('eleves', $eleves)->with('moisContrat', $moisContrat)->with('anne', $anne)->with('class', $class)->with('annee', $annee)->with('classe', $classe)->with('anneesuivant', $anneesuivant);
+    // }
+
+    
     public function filteretat(Request $request){
         $anne = Paramcontrat::distinct()->pluck('anneencours_paramcontrat'); 
         $class = Classes::get();
@@ -41,32 +85,34 @@ class EtatController extends Controller
         if ($request->has('annee')) {
             $query->whereHas('contrats', function($q) use ($request) {
                 $q->whereHas('paiements', function($q) use ($request) {
-                    $q->where('anne_paiementcontrat', $request->annee);
+                    $q->where('anne_paiementcontrat', $request->annee)
+                      ->where('statut_paiementcontrat', 1);
                 });
             });
         }
         
         // Filtrer par classe
-        if ($request->has('classe')) {
+        if ($request->has('classe') && $request->classe !== 'TOUTES') {
             $query->where('CODECLAS', $request->classe);
         }
         
         // Récupérer les mois de contrat
         $moisContrat = Moiscontrat::all();
         
-        // Exécuter la requête
+         // Exécuter la requête
         $eleves = $query->with(['contrats' => function($query) use ($request) {
             $query->with(['paiements' => function($query) use ($request) {
                 if ($request->has('annee')) {
-                    $query->where('anne_paiementcontrat', $request->annee);
+                    $query->where('anne_paiementcontrat', $request->annee)
+                    ->where('statut_paiementcontrat', 1);
                 }
             }]);
         }])->get();
-       Session::put('eleves', $eleves);
-       Session::put('moisContrat', $moisContrat);
-       Session::put('anne', $anne);
-       Session::put('class', $class);
-    //    dd($anne);
+        Session::put('eleves', $eleves);
+        Session::put('moisContrat', $moisContrat);
+        Session::put('anne', $anne);
+        Session::put('class', $class);
+        //    dd($anne);
         // Ajouter 1 à l'année
         $anneesuivant = $annee + 1;
         // Passer les données à la vue

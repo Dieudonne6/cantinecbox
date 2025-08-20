@@ -10,7 +10,7 @@ class Facturenormaliseinscription extends Model
     use HasFactory;
     protected $table = 'facturenormaliseinscription';
 
-    protected $fillable = ['id', 'codemecef', 'counters', 'nim', 'dateHeure', 'ifuEcole' , 'MATRICULE', 'TOTALHT', 'TOTALTVA', 'classe' , 'nom', 'designation', 'datepaiementcontrat',  'qrcode' , 'statut' ,   'montant_total'];
+    protected $fillable = ['id', 'codemecef', 'counters', 'nim', 'dateHeure', 'ifuEcole' , 'MATRICULE', 'TOTALHT', 'TOTALTVA', 'classe' , 'nom', 'designation', 'datepaiementcontrat',  'qrcode' , 'statut' ,   'montant_total', 'idcontrat'];
     public $timestamps = false;
 
 
