@@ -90,7 +90,7 @@
             <div class="container">
                 <button><a href="{{ url('/editions2/fichedenotesvierge') }}"><i class="fas fa-list"></i> Fiches de notes vierges</a></button>
                 <button><a href="{{ url('/editions2/relevesparmatiere') }}"><i class="fas fa-list"></i> Relevés par matières</a></button>
-                <button><a href="{{ url('/editions2/relevespareleves') }}"><i class="fas fa-list"></i> Relevés par élève</a></button>
+               {{-- <button><a href="{{ url('/editions2/relevespareleves') }}"><i class="fas fa-list"></i> Relevés par élève</a></button>--}}
                 <button><a href="{{ url('/tableaudenotes') }}"><i class="fas fa-certificate"></i>Récapitulatifs de note</a></button>
                 <button class="profil-btn" type="button" id="" class="" data-bs-toggle="modal" data-bs-target="#exampleModal2"><i class="fas fa-id-card"></i> Tableau analytique par matière</button>
                 <button><a href="{{ url('/editions2/resultatsparpromotion') }}"><i class="fas fa-chart-bar"></i> Résultats  par promotion</a></button>

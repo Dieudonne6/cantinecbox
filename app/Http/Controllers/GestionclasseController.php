@@ -1123,66 +1123,66 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
     }
   }
 
-  public function pagedetail($MATRICULE)
-{
-    // Récupérer les informations de l'élève
-    $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
-    
-    // Si l'élève n'est pas trouvé, rediriger ou gérer l'erreur
-    if (!$eleve) {
-        return redirect()->back()->with('error', 'Élève non trouvé');
-    }
+    public function pagedetail($MATRICULE)
+        {
+            // Récupérer les informations de l'élève
+            $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
+            
+            // Si l'élève n'est pas trouvé, rediriger ou gérer l'erreur
+            if (!$eleve) {
+                return redirect()->back()->with('error', 'Élève non trouvé');
+            }
 
-    // Récupérer les données associées
-    $allClass = Classes::all();
-    $serie = Serie::get();
-    $promotion = Promo::all();
-    $typeenseigne = Typeenseigne::get();
-    $typeclah = Typeclasse::get();
-    $libelles = Params2::first();
-    $echeancee = Echeance::where('MATRICULE', $eleve->MATRICULE)->get();
-    $scolarite = Scolarite::where('MATRICULE', $eleve->MATRICULE)->get();      
+            // Récupérer les données associées
+            $allClass = Classes::all();
+            $serie = Serie::get();
+            $promotion = Promo::all();
+            $typeenseigne = Typeenseigne::get();
+            $typeclah = Typeclasse::get();
+            $libelles = Params2::first();
+            $echeancee = Echeance::where('MATRICULE', $eleve->MATRICULE)->get();
+            $scolarite = Scolarite::where('MATRICULE', $eleve->MATRICULE)->get();      
 
-    // Calcul des sommes pour les différentes catégories de frais
-    $sums = Scolarite::where('MATRICULE', $MATRICULE)
-        ->whereIn('AUTREF', [1, 2, 3, 4, 5, 6])
-        ->get()
-        ->groupBy('AUTREF')
-        ->map(function ($group) {
-            return $group->sum('MONTANT');
-        });
+            // Calcul des sommes pour les différentes catégories de frais
+            $sums = Scolarite::where('MATRICULE', $MATRICULE)
+                ->whereIn('AUTREF', [1, 2, 3, 4, 5, 6])
+                ->get()
+                ->groupBy('AUTREF')
+                ->map(function ($group) {
+                    return $group->sum('MONTANT');
+                });
 
-    // Assigner les sommes ou définir à 0 si aucun résultat
-    $sommeScolarité = $sums->get(1, 0);
-    $sommeArriéré = $sums->get(2, 0);
-    $sommeFrais1 = $sums->get(3, 0);
-    $sommeFrais2 = $sums->get(4, 0);
-    $sommeFrais3 = $sums->get(5, 0);
-    $sommeFrais4 = $sums->get(6, 0);
+            // Assigner les sommes ou définir à 0 si aucun résultat
+            $sommeScolarité = $sums->get(1, 0);
+            $sommeArriéré = $sums->get(2, 0);
+            $sommeFrais1 = $sums->get(3, 0);
+            $sommeFrais2 = $sums->get(4, 0);
+            $sommeFrais3 = $sums->get(5, 0);
+            $sommeFrais4 = $sums->get(6, 0);
 
-    // Récupération de la valeur typeclasse pour l'élève
-    $typeclasse = $eleve->typeclasse;
+            // Récupération de la valeur typeclasse pour l'élève
+            $typeclasse = $eleve->typeclasse;
 
-    // Calcul de la somme totale en fonction de typeclasse
-    if ($typeclasse == 1) {
-        $sommeTotale = Scolarite::where('MATRICULE', $MATRICULE)
-            ->whereIn('AUTREF', [1, 2])
-            ->sum('MONTANT');
-    } else {
-        $sommeTotale = Scolarite::where('MATRICULE', $MATRICULE)
-            ->whereIn('AUTREF', [1, 2, 3, 4, 5, 6])
-            ->sum('MONTANT');
-    }
+            // Calcul de la somme totale en fonction de typeclasse
+            if ($typeclasse == 1) {
+                $sommeTotale = Scolarite::where('MATRICULE', $MATRICULE)
+                    ->whereIn('AUTREF', [1, 2])
+                    ->sum('MONTANT');
+            } else {
+                $sommeTotale = Scolarite::where('MATRICULE', $MATRICULE)
+                    ->whereIn('AUTREF', [1, 2, 3, 4, 5, 6])
+                    ->sum('MONTANT');
+            }
 
-    // Retourner la vue avec les données compactées
-    return view('pages.inscriptions.pagedetail', compact(
-        'sommeScolarité', 'sommeArriéré', 'sommeFrais1', 
-        'sommeFrais2', 'sommeFrais3', 'sommeFrais4', 
-        'eleve', 'allClass', 'serie', 'promotion', 
-        'typeclah', 'typeenseigne', 'libelles', 'echeancee',
-        'sommeTotale'
-    ));
-}
+            // Retourner la vue avec les données compactées
+            return view('pages.inscriptions.pagedetail', compact(
+                'sommeScolarité', 'sommeArriéré', 'sommeFrais1', 
+                'sommeFrais2', 'sommeFrais3', 'sommeFrais4', 
+                'eleve', 'allClass', 'serie', 'promotion', 
+                'typeclah', 'typeenseigne', 'libelles', 'echeancee',
+                'sommeTotale'
+            ));
+        }
 
   
   

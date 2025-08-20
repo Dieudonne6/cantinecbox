@@ -2819,7 +2819,7 @@ class BulletinController extends Controller
 // }
 
   public function import(Request $request)
-    {
+{
         if (!$request->hasFile('excelFile')) {
             return response()->json(['success' => false, 'message' => 'Aucun fichier sélectionné.']);
         }

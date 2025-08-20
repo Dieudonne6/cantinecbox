@@ -54,7 +54,6 @@
                     </thead>
                     <tbody>
                         @foreach ($eleves as $classe => $groupe)
-                           
                             @foreach ($groupe as $eleve)
                                 <tr>
                                     <td class="mat">{{ $eleve->MATRICULEX }}</td>
@@ -68,11 +67,15 @@
                                 </tr>
                             @endforeach
 
-                            <!-- 3 lignes vides après chaque groupe -->
-                            <tr><td colspan="7">&nbsp;</td></tr>
-                            <tr><td colspan="7">&nbsp;</td></tr>
-                            <tr><td colspan="7">&nbsp;</td></tr>
+                            {{-- Ligne espace visuel --}}
+                            <tr style="border:none; mso-height-source:userset; height:30px;">
+                                <td colspan="8" style="border:none;">&nbsp;</td>
+                            </tr>
+                             <tr style="border:none; mso-height-source:userset; height:30px;">
+                                <td colspan="8" style="border:none;">&nbsp;</td>
+                            </tr>
                         @endforeach
+
                     </tbody>
                 </table>
             </div>

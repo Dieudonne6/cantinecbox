@@ -16,6 +16,9 @@ use App\Models\Echeance;
 use App\Models\Reduction;
 use App\Models\Paramcontrat;
 
+use Illuminate\Support\Str;
+
+
 class ScolariteController extends Controller
 {
     //
@@ -159,12 +162,7 @@ class ScolariteController extends Controller
                   }
 
 
-                // $chaqueEleve->APAYER = $request->input('APAYER2');
-                // $chaqueEleve->FRAIS1 = $request->input('FRAIS1_A');
-                // $chaqueEleve->FRAIS2 = $request->input('FRAIS2_A');
-                // $chaqueEleve->FRAIS3 = $request->input('FRAIS3_A');
-                // $chaqueEleve->FRAIS4 = $request->input('FRAIS4_A');
-                // $chaqueEleve->save();
+               
             } elseif (($chaqueEleve->STATUTG == 1)) {
                 $nApayer = $request->input('APAYER');
                 $nfrais1 = $request->input('FRAIS1');
@@ -189,12 +187,6 @@ class ScolariteController extends Controller
                     $chaqueEleve->ARRIERE = $narriere - $infoReduction->Reduction_fixe_arriere;
                     $chaqueEleve->save();
                   }
-                // $chaqueEleve->APAYER = $request->input('APAYER');
-                // $chaqueEleve->FRAIS1 = $request->input('FRAIS1');
-                // $chaqueEleve->FRAIS2 = $request->input('FRAIS2');
-                // $chaqueEleve->FRAIS3 = $request->input('FRAIS3');
-                // $chaqueEleve->FRAIS4 = $request->input('FRAIS4');
-                // $chaqueEleve->save();
 
             }
 
@@ -204,28 +196,6 @@ class ScolariteController extends Controller
         // NOUVELLE BOUCLE SUR LES ELEVES DE CETTE CLASSE POUR POUVOIR ENREGISTRER LES DONNE DANS ECHEANCE
 
         $listeEleveDeLaClasses1 = Eleve::where('CODECLAS', $CODECLAS)->get();
-
-        // Parcourir chaque élève de la classe
-        // foreach ($listeEleveDeLaClasses1 as $eleve) {
-        //     // Récupérer les informations de réduction de l'élève (si applicable)
-        //     $reduction = $eleve->CodeReduction; // Adaptez le nom de la colonne si nécessaire
-        //     $infoReduction = Reduction::where('CodeReduction', $reduction)->first();
-        //     dd($infoReduction);
-        //     // Calculer le montant de l'échéance en tenant compte de la réduction
-        //     $montantTotal = 1000; // Exemple de montant total
-        //     $montantApresReduction = $montantTotal - ($montantTotal * $reduction / 100);
-
-        //     // Insérer les données dans la table echeance
-        //     DB::table('echeance')->insert([
-        //         'MATRICULE' => $eleve->MATRICULE,
-        //         'NOM' => $eleve->NOM,
-        //         'CODECLAS' => $CODECLAS,
-        //         'MONTANT' => $montantApresReduction,
-        //         'DATEOP' => Carbon::now(), // Date actuelle pour l'opération
-        //         'FRACTION' => 1, // Exemple de fraction, ajustez si nécessaire
-        //         'DATEECHEANCE' => Carbon::now()->addMonths(1), // Exemple de date d'échéance, ajustez selon vos besoins
-        //     ]);
-        // }
 
 
         foreach ($listeEleveDeLaClasses1 as $eleve) {
@@ -263,6 +233,7 @@ class ScolariteController extends Controller
                         $montantAPayer = 0; // Mettre 0 pour les autres lignes
                       }
                   Echeance::create([
+                     'guid' => (string) Str::uuid(),
                       'MATRICULE' => $eleve->MATRICULE,
                       'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
                       'APAYER' => $total * $echeanceData['pourcentage_nouveau'],
@@ -289,6 +260,7 @@ class ScolariteController extends Controller
                         $montantAPayer = 0; // Mettre 0 pour les autres lignes
                       }                  
                       Echeance::create([
+                         'guid' => (string) Str::uuid(),
                       'MATRICULE' => $eleve->MATRICULE,
                       'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
                       'APAYER' => $total * $echeanceData['pourcentage_nouveau'],
@@ -315,6 +287,7 @@ class ScolariteController extends Controller
                       $montantAPayer = 0; // Mettre 0 pour les autres lignes
                     }                  
                     Echeance::create([
+                       'guid' => (string) Str::uuid(),
                       'MATRICULE' => $eleve->MATRICULE,
                       'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
                       'APAYER' => $total * $echeanceData['pourcentage_ancien'],
@@ -341,6 +314,7 @@ class ScolariteController extends Controller
                       $montantAPayer = 0; // Mettre 0 pour les autres lignes
                     }                  
                     Echeance::create([
+                      'guid' => (string) Str::uuid(),
                       'MATRICULE' => $eleve->MATRICULE,
                       'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
                       'APAYER' => $total * $echeanceData['pourcentage_ancien'],
@@ -353,111 +327,6 @@ class ScolariteController extends Controller
             }
 
         }
-
-
-
-    // foreach ($listeEleveDeLaClasses1 as $eleve) {
-    //     // GESTION DE ECHEANCE POUR LES ELEVES DE LA CLASSE
-
-    //     // dd($eleve->MATRICULE);
-    //     $echeances = Echeance::where('MATRICULE', $eleve->MATRICULE)->get();
-    //     $reduc = $eleve->CodeReduction;
-    //     $eleveClasse = $eleve->CODECLAS;
-    //     $infoReduc = Reduction::where('CodeReduction', $reduc)->first();
-    //     $typemode = $infoReduc->mode;
-    //     $frais1 = $eleve->FRAIS1;
-    //     $frais2 = $eleve->FRAIS2;
-    //     $frais3 = $eleve->FRAIS3;
-    //     $frais4 = $eleve->FRAIS4;
-    //     $sco = $eleve->APAYER;
-    //     $arriere = $eleve->ARRIERE;
-    //     $typeecheanc = $request->input('flexRadioDefault');
-    //     $typeecheance = intval($typeecheanc);
-    //     $modifiecheancc = Echeancec::where('CODECLAS', $eleveClasse)->orderBy('NUMERO', 'desc')->get();
-    //     $type = $eleve->STATUTG;
-    //     $typeduree = $request->input('nbEcheances');
-    //     // dd($reduc);
-
-
-    //     // Vous pouvez ensuite utiliser $echeances pour chaque élève
-    //       if ($reduc == 0) {
-    //         foreach ($modifiecheancc as $echeancc) {
-    //             // Traitez ou affichez les données d'échéances ici
-    //             if ($type == 1) {
-    //               $montant = $echeancc->APAYER; // Utiliser la colonne APAYER si type est 1
-    //             } else {
-    //               $montant = $echeancc->APAYER2; // Utiliser la colonne APAYER2 si type est 2
-    //             }
-    //             Echeance::where('NUMERO', $echeancc->NUMERO)
-    //             ->update(['APAYER' => $montant]);
-
-    //         }
-    //       }
-    //       else {
-    //         // dd($typeecheance);
-    //         if($typeecheance == 2){
-    //           $total = $sco + $frais1 + $frais2+ $frais3 + $frais4 + $arriere;
-    //           if($typemode == 2) {
-    //             $montantecheance = $total / $typeduree;
-    //             // dd($montantecheance);
-    //             // Mettre à jour toutes les échéances avec ce montant
-    //             foreach ($echeances as $echeance) {
-    //               // Mettre à jour la colonne APAYER avec le montant calculé
-    //               Echeance::where('NUMERO', $echeance->NUMERO)
-    //               ->update(['APAYER' => $montantecheance]);
-    //             }            
-    //           } else {
-    //             foreach ($modifiecheancc as $echeance) {
-    //               $montant_a_payer = ($type == 1) ? $echeance->APAYER : $echeance->APAYER2;
-
-    //               if ($montant_a_payer <= $total) {
-    //                   $total -= $montant_a_payer;
-    //                   Echeance::where('NUMERO', $echeance->NUMERO)
-    //                       ->update(['APAYER' => 0]);
-    //               } else {
-    //                   Echeance::where('NUMERO', $echeance->NUMERO)
-    //                       ->update(['APAYER' => $montant_a_payer - $total]);
-    //                   $total = 0; // Stopper une fois que le total est atteint
-    //                   break;
-    //               }
-    //             }
-    //           }
-    //         } else {
-    //             // dd($typemode);
-    //           if($typemode == 2) {
-    //             $montantecheance = $sco / $typeduree;
-    //             dd($montantecheance);
-    //             // Mettre à jour toutes les échéances avec ce montant
-                
-    //             foreach ($echeances as $echeance) {
-    //               // Mettre à jour la colonne APAYER avec le montant calculé
-    //               Echeance::where('NUMERO', $echeance->NUMERO)
-    //               ->update(['APAYER' => $montantecheance]);
-    //             }            
-    //           } else {
-    //             // dd($type);
-    //               foreach ($modifiecheancc as $echeance) {
-    //                 $montant_a_payer = ($type == 1) ? $echeance->APAYER : $echeance->APAYER2;
-    //                 dd($sco);
-    //                 if ($montant_a_payer <= $sco) {
-    //                     $sco -= $montant_a_payer;
-    //                     Echeance::where('NUMERO', $echeance->NUMERO)
-    //                         ->update(['APAYER' => 0]);
-    //                 } else {
-    //                     Echeance::where('NUMERO', $echeance->NUMERO)
-    //                         ->update(['APAYER' => $montant_a_payer - $sco]);
-    //                     $sco = 0; // Stopper une fois que le total est atteint
-    //                     break;
-    //                 }
-    //               }
-    //           }
-    //         }
-    //       }
-
-    //           // Echeance::where('NUMERO', 1)
-    //           //  ->update(['ARRIERE' => $arriere]);
-
-    // }
 
     return back()->with('status', 'enregistrement effectuer avec succes');
 

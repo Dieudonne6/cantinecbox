@@ -166,14 +166,28 @@
                         </div>
                         <div class="col-md-4">
                           <label for="departement">Département</label>
-                          <select class="js-example-basic-multiple w-100" id="departement" name="departement" value="{{ $modifieleve->CODEDEPT }}">
-                            @foreach ($allDepartement as $departement)
-                            <option value="{{ $departement->CODEDEPT }}">{{ $departement->LIBELDEP }}</option>
-                            @endforeach
-                            {{-- <option value="littoral">Littoral</option>
-                            <option value="italie">Italie</option>
-                            <option value="russie">Russie</option>
-                            <option value="royaume-uni">Royaume-Uni</option> --}}
+                          <select class="js-example-basic-multiple w-100" id="departement" name="departement" >
+                           <select class="js-example-basic-multiple w-100" id="departement" name="departement">
+                                <option value=""></option>
+                            </select>
+
+                            <script>
+                            const departements = [
+                              "Alibori","Atacora","Atlantique","Borgou",
+                              "Collines","Couffo","Donga","Littoral",
+                              "Mono","Ouémé","Plateau","Zou"
+                            ];
+
+                            let select = document.getElementById("departement");
+                            departements.forEach(dep => {
+                              let opt = document.createElement("option");
+                              opt.value = dep;
+                              opt.textContent = dep;
+                              select.appendChild(opt);
+                            });
+                            </script>
+
+                           
                           </select>
                         </div>
                       </div>

@@ -46,4 +46,6 @@ class Notes extends Model
     {
         return $this->belongsTo(Matiere::class, 'CODEMAT', 'CODEMAT');
     }
+
+     
 }

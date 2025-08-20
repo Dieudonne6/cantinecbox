@@ -120,8 +120,15 @@ class EditionController2 extends Controller
 
     public function resultatsparpromotion()
     {
+        $classes = Classes::all();
+        $promotions = Promo::all();
+        $matieres = Matieres::all();
+        $params = Params2::first();
+        $eleves = []; // Tableau vide initial
+        $notes = []; // Tableau vide initial
+        $current = PeriodeSave::where('key', 'active')->value('periode');
 
-        return view('pages.notes.resultatsparpromotion');
+        return view('pages.notes.resultatsparpromotion', compact('classes', 'promotions', 'matieres', 'eleves', 'notes', 'params', 'current'));
     }
 
     public function listedesmeritants()

@@ -1178,16 +1178,26 @@ public function sfinanceclassespecifique($classeCode) {
       $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
           ->whereIn('CODECLAS', $CODECLASArray)
           ->select(
-              'MATRICULE', 
-              'NOM', 
-              'PRENOM', 
-              'CODECLAS', 
-              DB::raw('FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 as total_frais'), // Somme des colonnes frais1, frais2 et frais3
-              DB::raw('APAYER + FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 + ARRIERE as total_tous'), // Somme des colonnes frais1, frais2 et frais3
-              DB::raw('COUNT(*) as effectif'), 
-          )
-          ->orderBy('NOM', 'asc')
-          ->groupBy('MATRICULE')
+                'MATRICULE', 
+                'NOM', 
+                'PRENOM', 
+                'CODECLAS', 
+                DB::raw('FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 as total_frais'),
+                DB::raw('APAYER + FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 + ARRIERE as total_tous')
+            )
+            ->orderBy('NOM', 'asc')
+            ->groupBy(
+                'MATRICULE',
+                'NOM',
+                'PRENOM',
+                'CODECLAS',
+                'FRAIS1',
+                'FRAIS2',
+                'FRAIS3',
+                'FRAIS4',
+                'APAYER',
+                'ARRIERE'
+            )
           ->get()
           ->keyBy('MATRICULE');
 
@@ -1266,83 +1276,83 @@ public function sfinanceclassespecifique($classeCode) {
   ->get()
   ->groupBy('MATRICULE');
 
-// dd($donneEcheanceEleve1);
-// donne echeance
-$donneeScolariteEleve1 = Scolarite::whereIn('MATRICULE',  $contratValideMatricules)
-  ->select(
-      'MATRICULE', // Groupe par élève
-      DB::raw('SUM(CASE WHEN VALIDE = 1 AND AUTREF = 1 THEN MONTANT ELSE 0 END) as total_scolarite'), // Somme conditionnelle
-      DB::raw('SUM(CASE WHEN VALIDE = 1 THEN MONTANT ELSE 0 END) as total_all'), // Somme conditionnelle
+  // dd($donneEcheanceEleve1);
+  // donne echeance
+  $donneeScolariteEleve1 = Scolarite::whereIn('MATRICULE',  $contratValideMatricules)
+    ->select(
+        'MATRICULE', // Groupe par élève
+        DB::raw('SUM(CASE WHEN VALIDE = 1 AND AUTREF = 1 THEN MONTANT ELSE 0 END) as total_scolarite'), // Somme conditionnelle
+        DB::raw('SUM(CASE WHEN VALIDE = 1 THEN MONTANT ELSE 0 END) as total_all'), // Somme conditionnelle
 
-  )
-  ->groupBy('MATRICULE') // Grouper les résultats par matricule d'élève
-  ->get()
-  ->keyBy('MATRICULE');
+    )
+    ->groupBy('MATRICULE') // Grouper les résultats par matricule d'élève
+    ->get()
+    ->keyBy('MATRICULE');
 
-  $donneRelance = [];
+    $donneRelance = [];
 
-  foreach ($filterEleves as $matricule => $filterEleve) {
+    foreach ($filterEleves as $matricule => $filterEleve) {
 
-      $infoparamcontrat = Paramcontrat::first();
-      $anneencours = $infoparamcontrat->anneencours_paramcontrat;
-      $annesuivante = $anneencours + 1;
-      $annescolaire = $anneencours.'-'.$annesuivante;
+        $infoparamcontrat = Paramcontrat::first();
+        $anneencours = $infoparamcontrat->anneencours_paramcontrat;
+        $annesuivante = $anneencours + 1;
+        $annescolaire = $anneencours.'-'.$annesuivante;
 
-      // Vérifier le typeecheancier de la classe de l'élève
-      $infoClasseConcerne = Classes::where('CODECLAS', $filterEleve->CODECLAS)->first();
-      $typeecheancier = $infoClasseConcerne->TYPEECHEANCIER;
-  
-      // Initialiser le montant total payé pour cet élève
-      $montantPayer = 0;
-  
-      // Si c'est le premier passage, initialise `montantPayer` à la valeur correcte
-      if ($typeecheancier == 1) {
-          $montantPayer = $donneeScolariteEleve1[$matricule]->total_scolarite ?? 0; // Utiliser la colonne total_scolarite
-      } elseif ($typeecheancier == 2) {
-          $montantPayer = $donneeScolariteEleve1[$matricule]->total_all ?? 0; // Utiliser la colonne total_all
-      }
-  
-      // Récupérer toutes les lignes d'échéance pour cet élève
-      $echeances = $donneEcheanceEleve1[$matricule] ?? collect(); // Collection d'échéances
-      // dd($echeances);
-      // Boucle à travers chaque échéance de cet élève
-      foreach ($echeances as $echeance) {
-          $montantAPayer = $echeance->APAYER ?? 0; // Montant à payer de la colonne APAYER
-  
-          // Si l'élève a payé plus que l'échéance à payer
-          if ($montantPayer >= $montantAPayer) {
-              $resteAPayer = 0; // Il a déjà payé ou payé en excès pour cette échéance
-              $montantPayer -= $montantAPayer; // Déduire le montant dû de son paiement total
-          } else {
-              // Si l'élève n'a pas assez payé pour couvrir l'échéance
-              $resteAPayer = $montantAPayer - $montantPayer; // Ce qui reste à payer
-              $montantPayer = 0; // Il n'a plus de crédit après cette échéance
-          }
-  
-          // Ajouter les données dans le tableau final
-          $donneRelance[$matricule][] = [
-              'MATRICULE' => $matricule,
-              'NOM' => $filterEleve->NOM,
-              'PRENOM' => $filterEleve->PRENOM,
-              'CODECLAS' => $filterEleve->CODECLAS,
-              'date_echeance' => $echeance->DATEOP ?? null,
-              'montant_a_payer' => $montantAPayer,
-              'montant_payer' => $montantAPayer - $resteAPayer, // Ce qu'il a effectivement payé pour cette échéance
-              'reste_a_payer' => $resteAPayer, // Ce qui reste à payer pour cette échéance
-              'annescolaire' => $annescolaire, // Ce qui reste à payer pour cette échéance
-          ];
-      }
-  }
+        // Vérifier le typeecheancier de la classe de l'élève
+        $infoClasseConcerne = Classes::where('CODECLAS', $filterEleve->CODECLAS)->first();
+        $typeecheancier = $infoClasseConcerne->TYPEECHEANCIER;
+    
+        // Initialiser le montant total payé pour cet élève
+        $montantPayer = 0;
+    
+        // Si c'est le premier passage, initialise `montantPayer` à la valeur correcte
+        if ($typeecheancier == 1) {
+            $montantPayer = $donneeScolariteEleve1[$matricule]->total_scolarite ?? 0; // Utiliser la colonne total_scolarite
+        } elseif ($typeecheancier == 2) {
+            $montantPayer = $donneeScolariteEleve1[$matricule]->total_all ?? 0; // Utiliser la colonne total_all
+        }
+    
+        // Récupérer toutes les lignes d'échéance pour cet élève
+        $echeances = $donneEcheanceEleve1[$matricule] ?? collect(); // Collection d'échéances
+        // dd($echeances);
+        // Boucle à travers chaque échéance de cet élève
+        foreach ($echeances as $echeance) {
+            $montantAPayer = $echeance->APAYER ?? 0; // Montant à payer de la colonne APAYER
+    
+            // Si l'élève a payé plus que l'échéance à payer
+            if ($montantPayer >= $montantAPayer) {
+                $resteAPayer = 0; // Il a déjà payé ou payé en excès pour cette échéance
+                $montantPayer -= $montantAPayer; // Déduire le montant dû de son paiement total
+            } else {
+                // Si l'élève n'a pas assez payé pour couvrir l'échéance
+                $resteAPayer = $montantAPayer - $montantPayer; // Ce qui reste à payer
+                $montantPayer = 0; // Il n'a plus de crédit après cette échéance
+            }
+    
+            // Ajouter les données dans le tableau final
+            $donneRelance[$matricule][] = [
+                'MATRICULE' => $matricule,
+                'NOM' => $filterEleve->NOM,
+                'PRENOM' => $filterEleve->PRENOM,
+                'CODECLAS' => $filterEleve->CODECLAS,
+                'date_echeance' => $echeance->DATEOP ?? null,
+                'montant_a_payer' => $montantAPayer,
+                'montant_payer' => $montantAPayer - $resteAPayer, // Ce qu'il a effectivement payé pour cette échéance
+                'reste_a_payer' => $resteAPayer, // Ce qui reste à payer pour cette échéance
+                'annescolaire' => $annescolaire, // Ce qui reste à payer pour cette échéance
+            ];
+        }
+    }
 
-  // dd($donneRelance);
+    // dd($donneRelance);
 
 
-  return view ('pages.inscriptions.situationfinanceclasse1')
-    ->with('classes', $classes)
-    ->with('donneSituationFinanciereGroupe', $donneSituationFinanciereGroupe)
-    ->with('resultatParClasse', $resultatParClasse)
-    ->with('donneRelance', $donneRelance)
-    ->with('classeCode', $classeCode);
+    return view ('pages.inscriptions.situationfinanceclasse1')
+      ->with('classes', $classes)
+      ->with('donneSituationFinanciereGroupe', $donneSituationFinanciereGroupe)
+      ->with('resultatParClasse', $resultatParClasse)
+      ->with('donneRelance', $donneRelance)
+      ->with('classeCode', $classeCode);
 }
 
 
@@ -1981,7 +1991,8 @@ public function eleveparclasseessai() {
     //  $factures = FactureScolarit::all();
       $factures = DB::table('facturescolarit')
         ->whereRaw("RIGHT(counters, 2) = 'FV'")
-        ->get();;
+        ->where('statut', '1')
+        ->get();
 
 //     $uneFacture = FactureScolarit::all();
 //     dd($uneFacture->toArray());
@@ -2375,6 +2386,21 @@ public function eleveparclasseessai() {
         $id_usercontrat = Session::get('id_usercontrat');
         $codemecefEntrer = $request->input('inputCodemecef');
         $typeFormulaire = $request->input('typeFormulaire');
+
+        $rtfContent = Params2::first()->EnteteRecu;
+        // dd($rtfContent);
+        $document = new Document($rtfContent);
+        $formatter = new HtmlFormatter();
+        $enteteNonStyle = $formatter->Format($document);
+        $entete = '
+        <div style="text-align: center; font-size: 1.5em; line-height: 1.2;">
+            <style>
+                p { margin: 0; padding: 0; line-height: 1.2; }
+                span { display: inline-block; }
+            </style>
+            ' . $enteteNonStyle . '
+        </div>
+        ';
       if ($codemecefEntrer == $codemecef) {
             // dd('codemecef correct');
             $infoparam = Params2::first();
@@ -3692,6 +3718,7 @@ public function eleveparclasseessai() {
                             'NOMETAB' => $NOMETAB,
                             'nim' => $nim,
                             'dateTime' => $dateTime,
+                            'entete' => $entete,
 
                             // Optionnel : logo de l'école (si disponible)
                             'logoUrl' => $logoUrl ?? null,

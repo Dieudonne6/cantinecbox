@@ -159,7 +159,7 @@
                 <div class="col-6">
                     <h5>Tableau de l'échéancier de paiement</h5>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" value="1" id="flexRadioDefault1" checked>
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" value="1" id="flexRadioDefault1">
                         <label class="form-check-label" for="flexRadioDefault1">
                             L'échéancier prend en compte les frais de scolarité seulement
                         </label>
@@ -196,9 +196,7 @@
                                 <p class="ml-2">Mois <span class="ml-3"> >= 7 pour exprimer en jours</span></p>
                             </div>
                         </div>
-                    </div>
-
-                    
+                    </div>    
                     
                     <div class="table-responsive" style="overflow: auto;">
                         <table class="table table-striped" style="font-size: 10px;" id="echeancierTable">
@@ -229,9 +227,6 @@
                         </table>
                     </div>
 
-
-
-
                 </div>
 
             </div><br>
@@ -257,7 +252,6 @@
                             <tfoot>
                                 <tr>
                                     <th>Total</th>
-
                                     <th ></th>
                                     <th id="totalMontantNouveauEleve"></th>
                                 </tr>
@@ -324,10 +318,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-
 
         </div>
     </div>
@@ -640,16 +630,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // const montantNouveauUtilise = parseFloat(document.getElementById('montantNouveauUtilise').value) || 0;
 
         // Vérifier si les montants correspondent pour les nouveaux élèves
-        if (totalMontantNouveauTableau !== montantNouveauUtilise) {
-            showModalMessage('Le total des montants dans le tableau des nouveaux élèves ne correspond pas au montant des nouveaux à utiliser.');
-            return; // Ne pas soumettre le formulaire
-        }
+        // if (totalMontantNouveauTableau !== montantNouveauUtilise) {
+        //     showModalMessage('Le total des montants dans le tableau des nouveaux élèves ne correspond pas au montant des nouveaux à utiliser.');
+        //     return; // Ne pas soumettre le formulaire
+        // }
 
         // Vérifier si les montants correspondent pour les anciens élèves
-        if (totalMontantAncienTableau !== montantAncienUtilise) {
-            showModalMessage('Le total des montants dans le tableau des anciens élèves ne correspond pas au montant des anciens à utiliser.');
-            return; // Ne pas soumettre le formulaire
-        }
+        // if (totalMontantAncienTableau !== montantAncienUtilise) {
+        //     showModalMessage('Le total des montants dans le tableau des anciens élèves ne correspond pas au montant des anciens à utiliser.');
+        //     return; // Ne pas soumettre le formulaire
+        // }
 
         // Vérifier si les champs requis sont remplis
         const nbEcheances = document.getElementById('nbEcheances').value.trim();

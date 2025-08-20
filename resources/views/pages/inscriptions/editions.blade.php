@@ -94,15 +94,34 @@
       <button><a href="{{ url('/eleveparclasse') }}"><i class="fas fa-list"></i> Liste des eleves par classes</a></button>
       <button data-bs-toggle="modal" data-bs-target="#modalregistre"><a href="#"><i class="fas fa-list"></i> Registre des eleves</a></button>
       <button><a href="{{ url('/certificatsolarite') }}"><i class="fas fa-certificate"></i> Certificats de scolarité</a></button>
-      <button><a href="{{ url('/attestationsdescolarite') }}"><i class="fas fa-file-alt"></i> Attestations de scolarité</a></button>
-      <button><a href="{{ url('/enquetesstatistiques') }}"><i class="fas fa-chart-bar"></i> Enquêtes statistiques</a></button>
-      <button><a href="{{ url('/etatdelacaisse') }}"><i class="fas fa-cash-register"></i> État de la caisse</a></button>
-      <button><a href="{{ url('/pointderecouvrement') }}"><i class="fas fa-chalkboard-teacher"></i> Point de recouvrement par enseignement</a></button>
+      {{-- <button><a href="{{ url('/attestationsdescolarite') }}"><i class="fas fa-file-alt"></i> Attestations de scolarité</a></button> --}}
+      <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#renovationModal"><i class="fas fa-file-alt"></i> Attestations de scolarité</button>
+      {{-- <button><a href="{{ url('/enquetesstatistiques') }}"><i class="fas fa-chart-bar"></i> Enquêtes statistiques</a></button> --}}
+      <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#renovationModal"><i class="fas fa-chart-bar"></i> Enquêtes statistiques</button>
+      {{-- <button><a href="{{ url('/etatdelacaisse') }}"><i class="fas fa-cash-register"></i> État de la caisse</a></button> --}}
+      <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#renovationModal"><i class="fas fa-cash-register"></i> État de la caisse</button>
+      {{-- <button><a href="{{ url('/pointderecouvrement') }}"><i class="fas fa-chalkboard-teacher"></i> Point de recouvrement par enseignement</a></button> --}}
+      <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#renovationModal"><i class="fas fa-chalkboard-teacher"></i> Point de recouvrement par enseignement</button>
       <button><a href="{{ url('/etatdesrecouvrements') }}"><i class="fas fa-file-invoice-dollar"></i> État des recouvrements</a></button>
       <button><a href="{{ url('/etatdesdroits') }}"><i class="fas fa-file-signature"></i> État des droits constatés par classe</a></button>
       <button><a href="{{ url('/situationfinanceclasse') }}"><i class="fas fa-calendar-alt"></i> Situation financière selon l'échéancier</a></button>
       <button><a href="{{ url('/retardpaiementclasse') }}"><i class="fas fa-exclamation-circle"></i> Liste des retards de paiement</a></button>
-      <button><a href="{{ url('/lettresderelance') }}"><i class="fas fa-envelope"></i> Lettres de relance</a></button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fas fa-envelope"></i> Lettres de relance</button>
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">           
+            <div class="modal-body">
+              <br>
+              <p class="text-center">Cette option est implémenté dans Situation financière selon échéancier.</p>
+            </div>
+            <div class="modal-footer d-flex justify-content-between" >
+                <a href="{{ url('/situationfinanceclasse') }}" class="btn btn-secondary text-white" style="margin-left: 4rem;">Cliquer pour y accéder</a>
+                <a href="#" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-right: 5rem;">Fermer</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
       <button><a href="{{ url('/situationfinanciereglobale') }}"><i class="fas fa-balance-scale"></i> Situation financière globale</a></button>
       <button><a href="{{ url('/listedesreductions') }}"><i class="fas fa-percentage"></i> Liste des réductions accordées</a></button>
       <button class="profil-btn" type="button" id="" class="" data-bs-toggle="modal" data-bs-target="#exampleModal2"><i class="fas fa-id-card"></i> Liste des élèves par profil</button>
@@ -520,6 +539,23 @@
       }
       
     </script>
-    
-    @endsection
+
+  <!-- Modal de rénovation -->
+  <div class="modal fade" id="renovationModal" tabindex="-1" aria-labelledby="renovationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+        </div>
+        <div class="modal-body">
+          <p class="fs-5 fw-bold text-danger"> Module en cours de rénovation </p>
+          <p class="text-muted">Veuillez réessayer plus tard.</p>
+        </div>
+        <div class="modal-footer" style="justify-content: center;">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+@endsection
     

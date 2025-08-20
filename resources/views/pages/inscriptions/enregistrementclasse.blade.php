@@ -28,30 +28,29 @@
 </style>
 
 
-
 <div class="container">
-  <div class="col-12">
-    @if(Session::has('status'))
-      <div id="statusAlert" class="alert alert-succes btn-primary">
-      {{ Session::get('status')}}
-      </div>
-    @endif
-    @if($errors->any())
-    <div id="statusAlert" class="alert alert-danger">
-        <ul>
-          @foreach($errors->all() as $error)
-            <li>{{ $error }}</li>
-          @endforeach
-        </ul>
-    </div>
-    @endif
+      <div class="col-12">
+              @if(Session::has('status'))
+                <div id="statusAlert" class="alert alert-succes btn-primary">
+                {{ Session::get('status')}}
+                </div>
+              @endif
+              @if($errors->any())
+              <div id="statusAlert" class="alert alert-danger">
+                  <ul>
+                    @foreach($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                    @endforeach
+                  </ul>
+              </div>
+              @endif
 
-    @if(Session::has('error'))
-    <div id="statusAlert" class="alert alert-danger">
-      {{ Session::get('error')}}
-    </div>
-    @endif
-    <div class="card">
+              @if(Session::has('error'))
+              <div id="statusAlert" class="alert alert-danger">
+                {{ Session::get('error')}}
+              </div>
+              @endif
+             <div class="card">
       <div>
         <style>
             .btn-arrow {
@@ -186,7 +185,8 @@
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donnefinanciere">Données financières (Factures)</button>
             </div>
           </div>
-        <br>
+      
+          <br>
       </div>
     </div>
   </div>
@@ -993,16 +993,16 @@ function genererEcheancier() {
     // const montantNouveauUtilise = parseFloat(document.getElementById('montantNouveauUtilise').value) || 0;
 
     // Vérifier si les montants correspondent pour les nouveaux élèves
-    if (totalMontantNouveauTableau !== montantNouveauUtilise) {
-        showModalMessage('Le total des montants dans le tableau des nouveaux élèves ne correspond pas au montant des nouveaux à utiliser.');
-        return; // Ne pas soumettre le formulaire
-    }
+    // if (totalMontantNouveauTableau !== montantNouveauUtilise) {
+    //     showModalMessage('Le total des montants dans le tableau des nouveaux élèves ne correspond pas au montant des nouveaux à utiliser.');
+    //     return; // Ne pas soumettre le formulaire
+    // }
 
     // Vérifier si les montants correspondent pour les anciens élèves
-    if (totalMontantAncienTableau !== montantAncienUtilise) {
-        showModalMessage('Le total des montants dans le tableau des anciens élèves ne correspond pas au montant des anciens à utiliser.');
-        return; // Ne pas soumettre le formulaire
-    }
+    // if (totalMontantAncienTableau !== montantAncienUtilise) {
+    //     showModalMessage('Le total des montants dans le tableau des anciens élèves ne correspond pas au montant des anciens à utiliser.');
+    //     return; // Ne pas soumettre le formulaire
+    // }
 
         // Vérifier si les champs requis sont remplis
         const nbEcheances = document.getElementById('nbEcheances').value.trim();

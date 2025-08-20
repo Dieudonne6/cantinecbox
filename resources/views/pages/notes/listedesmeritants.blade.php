@@ -26,7 +26,7 @@
                     <i class="fas fa-arrow-left"></i> Retour
                 </button>
                 <br><br>
-            </div>
+            </div> 
             <div class="card-header">
                 <h4 class="mb-0">Liste des méritants</h4>
             </div>
