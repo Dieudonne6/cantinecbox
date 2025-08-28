@@ -39,7 +39,7 @@
 				<div class="form-group row">
 					{{csrf_field()}}
 					<div class="col-3">
-						<select class="js-example-basic-multiple w-100"  name="classe"  data-placeholder="Toutes les classes">         
+						<select class="js-example-basic-multiple w-100"  name="classe"  data-placeholder="Classes">         
 							<option value="">Choix des classes</option>
 							@foreach ($classe as $classes)
 							<option value="{{$classes->CODECLAS}}">{{$classes->CODECLAS}}</option>
@@ -47,11 +47,19 @@
 						</select>
 					</div>
 					<div class="col-3">
-						<select class="js-example-basic-multiple w-100" name="matiere"  data-placeholder="Toutes les matieres">         
-							<option value="">Choix des classes</option>
+						<select class="js-example-basic-multiple w-100" name="matiere"  data-placeholder="Matieres">         
+							<option value="">Choix de la classes</option>
 							@foreach ( $matieres as $matiere)
 							<option value="{{$matiere->CODEMAT}}">{{$matiere->LIBELMAT}}</option>
 							@endforeach
+						</select>
+					</div>
+					<div class="col-3">
+						<select class="js-example-basic-multiple w-100" name="periode"  data-placeholder="Periodes">         
+							<option value="">Choix de la periode</option>
+							<option value="1">1 ere periode</option>
+							<option value="2">2 eme periode</option>
+							<option value="3">3 eme periode</option>
 						</select>
 					</div>
 					<div class="col-3">

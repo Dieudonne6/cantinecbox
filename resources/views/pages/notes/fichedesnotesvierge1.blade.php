@@ -1,35 +1,50 @@
 @extends('layouts.master')
 @section('content')
     <style>
-            .fiche-header {
-        /* text-align: center; */
-        margin-bottom: 20px;
-    }
-    .fiche-header h2 {
-        font-size: 18px;
-        margin-bottom: 10px;
-        text-transform: uppercase;
-    }
-    .fiche-header p {
-        margin: 1rem 0;
-        font-size: 14px;
-        
-    }
-    
+        .fiche-header {
+            /* text-align: center; */
+            margin-bottom: 20px;
+        }
+
+        .fiche-header h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .fiche-header p {
+            margin: 1rem 0;
+            font-size: 14px;
+
+        }
+
         @media print {
 
-            body * { visibility: hidden !important; }
-                .print-table, .print-table * { visibility: visible !important; }
-                .print-table { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; }
+            body * {
+                visibility: hidden !important;
+            }
 
-           
+            .print-table,
+            .print-table * {
+                visibility: visible !important;
+            }
+
+            .print-table {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+            }
+
+
             /* Masquer le premier tableau lors de l'impression */
             .main-table {
                 display: none !important;
             }
+
             /* .main-table {
-                display: none !important;
-            } */
+                    display: none !important;
+                } */
 
             /* Afficher le deuxième tableau uniquement lors de l'impression */
 
@@ -39,8 +54,8 @@
             }
 
             /* .d-print-block {
-                display: block !important;
-            } */
+                    display: block !important;
+                } */
         }
 
         /* Par défaut, le deuxième tableau est masqué */
@@ -66,7 +81,7 @@
                             color: #b51818 !important;
                             /* Couleur de l'icône */
                         }
-                
+
                         .btn-arrow:hover {
                             color: #b700ff !important;
                             /* Couleur au survol */
@@ -74,9 +89,9 @@
                     </style>
                     <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
                         <i class="fas fa-arrow-left"></i> Retour
-                    </button>   
+                    </button>
                     <br>
-                    <br>                                   
+                    <br>
                 </div>
                 <div class="card-body">
                     <h4 class="card-title">Edition des fiches de note vierges</h4>
@@ -164,81 +179,88 @@
 
                     <!-- Tableau imprimé uniquement -->
                     <div id="contenu">
-                    <div class="table table-responsive table-bordered print-table">
-                        @foreach ($elevesGroupes as $classeCode => $eleves)
+                        <div class="table table-responsive table-bordered print-table">
+                            @foreach ($elevesGroupes as $classeCode => $eleves)
+                                <!-- En-tête de la fiche de notes pour chaque classe -->
+                                <div class="fiche-header">
+                                    <h2 style="text-align: center;">FICHE DE NOTES</h2>
+                                    <p><strong>Classe :</strong> {{ $classeCode }}</p>
+                                    <p><strong>Semestre/Trimestre
+                                            :</strong>....................................................</p>
+                                    <p><strong>Matière :</strong> ....................................................</p>
+                                    <p><strong>Coef :</strong> ....................................................</p>
+                                    <p><strong>Professeur :</strong> ....................................................
+                                    </p>
+                                    <p><strong>Annee scolaire :</strong>{{ $annescolaire }}</p>
+                                    {{-- <p style="margin-left: 50rem; margin-top: -1.5rem;"><strong></strong></p> --}}
+                                </div>
 
-                            <!-- En-tête de la fiche de notes pour chaque classe -->
-                            <div class="fiche-header">
-                                <h2 style="text-align: center;">FICHE DE NOTES</h2>
-                                <p><strong>Classe :</strong> {{ $classeCode }}</p>
-                                <p><strong>Semestre/Trimestre :</strong>....................................................</p>
-                                <p><strong>Matière :</strong> ....................................................</p>
-                                <p><strong>Coef :</strong> ....................................................</p>
-                                <p><strong>Professeur :</strong> ....................................................</p>
-                                <p><strong>Anne scolaire :</strong>{{ $annescolaire }}</p>
-                                {{-- <p style="margin-left: 50rem; margin-top: -1.5rem;"><strong></strong></p> --}}
-                            </div>
-
-                            <!-- Tableau des élèves de la classe -->
-                            {{-- <h4>Liste des élèves de la classe {{ $classeCode }}</h4> --}}
-                            <table id="tableClasse_{{ $classeCode }}">
-                                <thead>
-                                    <tr>
-                                        <th rowspan="2">No</th>
-                                        <th rowspan="2">Matricule</th>
-                                        <th rowspan="2">Sexe</th>
-                                        <th rowspan="2">Nom et Prenoms</th>
-                                        <th colspan="5" style="text-align: center">INTERROGATIONS</th>
-                                        <th colspan="3" style="text-align: center">DEVOIR</th>
-                                        <th rowspan="2">Test/compo</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Int 1</th>
-                                        <th>Int 2</th>
-                                        <th>Int 3</th>
-                                        <th>Int 4</th>
-                                        <th> MI </th>
-                                        <th>Dev 1</th>
-                                        <th>Dev 2</th>
-                                        <th>Dev 3</th>
-                                       
-                                        {{-- <th>Reste</th> --}}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($eleves as $index => $eleve)
+                                <!-- Tableau des élèves de la classe -->
+                                {{-- <h4>Liste des élèves de la classe {{ $classeCode }}</h4> --}}
+                                <table id="tableClasse_{{ $classeCode }}">
+                                    <thead>
                                         <tr>
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>{{ $eleve->MATRICULEX }}</td>
-                                            <td>{{ $eleve->SEXE == 1 ? 'M' : 'F' }}</td>
-                                            <td>{{ $eleve->NOM }} {{ $eleve->PRENOM }}</td>
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
-                                            {{-- <td>
+                                            <th rowspan="2">No</th>
+                                            <th rowspan="2">Matricule</th>
+                                            <th rowspan="2">Sexe</th>
+                                            <th rowspan="2">Stat</th>
+                                            <th rowspan="2">Nom et Prenoms</th>
+                                            <th colspan="5" style="text-align: center">INTERROGATIONS</th>
+                                            <th colspan="3" style="text-align: center">DEVOIR</th>
+                                            @if ($typean == 2)
+                                                <th rowspan="2">Test/compo</th>
+                                            @endif
+                                        </tr>
+                                        <tr>
+                                            <th>Int 1</th>
+                                            <th>Int 2</th>
+                                            <th>Int 3</th>
+                                            <th>Int 4</th>
+                                            <th> MI </th>
+                                            <th>Dev 1</th>
+                                            <th>Dev 2</th>
+                                            <th>Dev 3</th>
+
+                                            {{-- <th>Reste</th> --}}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($eleves as $index => $eleve)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $eleve->MATRICULEX }}</td>
+                                                <td style="text-align: center;">{{ $eleve->SEXE == 1 ? 'M' : 'F' }}</td>
+                                                <td style="text-align: center;">{{ $eleve->STATUT == 1 ? 'R' : '' }}</td>
+                                                <td>{{ $eleve->NOM }} {{ $eleve->PRENOM }}</td>
+                                                <td> </td>
+                                                <td> </td>
+                                                <td> </td>
+                                                <td> </td>
+                                                <td> </td>
+                                                <td> </td>
+                                                <td> </td>
+                                                <td> </td>
+                                                @if ($typean == 2)
+                                                    <td> </td>
+                                                @endif
+                                                {{-- <td>
                                                 <input type="checkbox" {{ $eleve->statutG == 1 ? 'checked' : '' }}
                                                     disabled >
                                             </td> --}}
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
 
                                 <!-- Ajouter une autre rupture de page avant la classe suivante -->
                                 <div class="page-break"></div>
-                        @endforeach
-                    </div>
+                            @endforeach
+                        </div>
                     </div>
 
                 </div>
             </div>
-    </div>
+        </div>
 
         {{-- <script>
             document.getElementById('printBtn').addEventListener('click', function() {
@@ -268,24 +290,24 @@
 
 
         <script>
-function imprimerPage() {
-    let originalTitle = document.title;
-    document.title = 'Fiches de note vierges';
-    
-    let titreEtat = document.getElementById('titreEtat').value;
-    
-    // Utiliser un titre par défaut si le champ est vide
-    if (!titreEtat) {
-        titreEtat = 'Fiches de note vierges';
-    }
+            function imprimerPage() {
+                let originalTitle = document.title;
+                document.title = 'Fiches de note vierges';
 
-    // Récupérer le contenu à imprimer (le tableau dans la div avec id "contenu")
-    let contenuImpression = document.getElementById('contenu').innerHTML;
+                let titreEtat = document.getElementById('titreEtat').value;
 
-    // Créer une nouvelle fenêtre pour l'impression
-    let printWindow = window.open('', '', 'height=700,width=1600');
+                // Utiliser un titre par défaut si le champ est vide
+                if (!titreEtat) {
+                    titreEtat = 'Fiches de note vierges';
+                }
 
-    printWindow.document.write(`
+                // Récupérer le contenu à imprimer (le tableau dans la div avec id "contenu")
+                let contenuImpression = document.getElementById('contenu').innerHTML;
+
+                // Créer une nouvelle fenêtre pour l'impression
+                let printWindow = window.open('', '', 'height=700,width=1600');
+
+                printWindow.document.write(`
         <html>
         <head>
             <title>${titreEtat}</title>
@@ -344,24 +366,21 @@ function imprimerPage() {
         </html>
     `);
 
-    // Attendre que le contenu soit chargé, puis imprimer
-    printWindow.document.close();
-    printWindow.focus();
+                // Attendre que le contenu soit chargé, puis imprimer
+                printWindow.document.close();
+                printWindow.focus();
 
-    printWindow.onload = function () {
-        printWindow.print();
-    };
+                printWindow.onload = function() {
+                    printWindow.print();
+                };
 
-    // Fermer la fenêtre après l'impression
-    printWindow.addEventListener('afterprint', function () {
-        printWindow.close();
-    });
+                // Fermer la fenêtre après l'impression
+                printWindow.addEventListener('afterprint', function() {
+                    printWindow.close();
+                });
 
-    // Restaurer le titre de la page après impression
-    document.title = originalTitle;
-}
+                // Restaurer le titre de la page après impression
+                document.title = originalTitle;
+            }
         </script>
     @endsection
-
-
-

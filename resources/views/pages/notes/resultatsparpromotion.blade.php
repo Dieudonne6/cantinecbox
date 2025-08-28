@@ -29,6 +29,7 @@
             </div>
             <div class="card-header">
                 <h4 class="mb-0">Résultat par Promotion</h4>
+                <input id="annescolaire" type="hidden" value="{{ $annescolaire }}" >
             </div>
             <div class="card-body">
                 <!-- Sélection du filtre -->
@@ -493,7 +494,9 @@
             const exclusionText = conduiteMin ? `Exclure conduite < ${conduiteMin}` : "Aucune exclusion";
 
             // Exemple d'année scolaire fixe (vous pouvez la rendre dynamique)
-            const anneeScolaire = "2022-2023";
+            const anneeScolaire = document.getElementById('annescolaire').value;
+
+            // const anneeScolaire = "2022-2023";
 
             // Récupération du semestre/période (pour l'affichage "Semestre : 1", etc.)
             const periodeSelect = document.getElementById('periode');
