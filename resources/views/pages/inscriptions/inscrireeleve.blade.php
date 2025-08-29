@@ -156,16 +156,13 @@
                           <input type="date" id="date-inscription" name="dateInscription" class="form-control" value="{{ old('dateInscription') }}">
                         </div>
                         <div class="col-md-4">
-                          <label for="departement">Département</label>
-                          <select class="js-example-basic-multiple w-100" id="departement" name="departement" >
-                            @foreach ($allDepartement as $departement)
-                            <option value="{{ $departement->CODEDEPT }}" {{ old('departement') == $departement->CODEDEPT ? 'selected' : '' }}>{{ $departement->LIBELDEP }}</option>
-                            @endforeach
-                            {{-- <option value="littoral">Littoral</option>
-                            <option value="italie">Italie</option>
-                            <option value="russie">Russie</option>
-                            <option value="royaume-uni">Royaume-Uni</option> --}}
-                          </select>
+                            <label for="departement">Département</label>
+                            <select class="js-example-basic-multiple w-100" id="departement" name="departement">
+                                <option value=""></option>
+                                @foreach($departements as $dep)
+                                    <option value="{{ $dep->CODEDEPT }}">{{ $dep->LIBELDEP }}</option>
+                                @endforeach
+                            </select>
                         </div>
                       </div>
                       

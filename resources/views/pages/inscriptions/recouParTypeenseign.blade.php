@@ -12,7 +12,7 @@
     $dateFinFormat = Carbon::parse($dateFinString);
 @endphp
 
-<div class="main-panel-10">
+<div class="main-panel-10"> 
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div>
@@ -46,7 +46,6 @@
                 <br>                                     
             </div>
             <div class="card-body">
-                <h4 class="card-title">Situation des recouvrements</h4>
                 <div class="row mb-3">
                     <div class="col-3 mt-4">
                         <button type="button" class="btn-sm btn-primary" onclick="impimerRecouvrement()">Imprimer</button>

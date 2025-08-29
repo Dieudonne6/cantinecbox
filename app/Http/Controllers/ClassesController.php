@@ -243,29 +243,114 @@ class ClassesController extends Controller
         return view('pages.filterEleve')->with("filterEleve", $filterEleves)->with('classe', $classes)->with('eleve', $eleves)->with('fraiscontrats', $fraiscontrat);
     }
 
-        public function listegeneraleeleve($CODECLAS)
+    //     public function listegeneraleeleve($CODECLAS)
+    // {
+    //     // Diviser les classes par des virgules
+    //     $CODECLASArray = explode(',', $CODECLAS);
+    //     $eleves = Eleve::orderBy('NOM', 'asc')->get();
+    //     $classesAExclure = ['NON', 'DELETE'];
+    //     $classes = Classes::whereNotIn('CODECLAS', $classesAExclure)->get();
+    //     $fraiscontrat = Paramcontrat::first();
+    //     $contratValideMatricules = Contrat::where('statut_contrat', 1)->pluck('eleve_contrat');
+
+    //     // Filtrer les élèves en fonction des classes sélectionnées
+    //     $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+    //         ->whereIn('CODECLAS', $CODECLASArray)
+    //         ->orderBy('NOM', 'asc')
+    //         ->get();
+    //     Session::put('fraiscontrats', $fraiscontrat);
+    //     Session::put('fill', $filterEleves);
+    //     return view('pages.listegeneraleeleve')
+    //         ->with("filterEleve", $filterEleves)
+    //         ->with('classe', $classes)
+    //         ->with('eleve', $eleves)
+    //         ->with('fraiscontrats', $fraiscontrat);
+    // }
+
+    public function listegeneraleeleve($CODECLAS)
     {
         // Diviser les classes par des virgules
         $CODECLASArray = explode(',', $CODECLAS);
+
+        // Récupérer tous les élèves
         $eleves = Eleve::orderBy('NOM', 'asc')->get();
+
+        // Exclure certaines classes non valides
         $classesAExclure = ['NON', 'DELETE'];
         $classes = Classes::whereNotIn('CODECLAS', $classesAExclure)->get();
-        $fraiscontrat = Paramcontrat::first();
-        $contratValideMatricules = Contrat::where('statut_contrat', 1)->pluck('eleve_contrat');
 
-        // Filtrer les élèves en fonction des classes sélectionnées
-        $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
-            ->whereIn('CODECLAS', $CODECLASArray)
+        // Filtrer uniquement par classes sélectionnées
+        $filterEleves = Eleve::whereIn('CODECLAS', $CODECLASArray)
+            ->orderBy('CODECLAS', 'asc') // regroupe par classe
             ->orderBy('NOM', 'asc')
             ->get();
-        Session::put('fraiscontrats', $fraiscontrat);
-        Session::put('fill', $filterEleves);
+
+        // Envoi à la vue
         return view('pages.listegeneraleeleve')
             ->with("filterEleve", $filterEleves)
             ->with('classe', $classes)
-            ->with('eleve', $eleves)
-            ->with('fraiscontrats', $fraiscontrat);
+            ->with('eleve', $eleves);
     }
+
+    // public function filterlisteselectiveeleve(Request $request)
+    // {
+    //     // Récupérer les classes, sexe et âge depuis les paramètres GET
+    //     $CODECLASArray = $request->input('classes');
+    //     $sexe = $request->input('sexe');
+    //     $minAge = $request->input('minAge', null); // Null si non sélectionné
+    //     $maxAge = $request->input('maxAge', null); // Null si non sélectionné
+
+    //     if ($CODECLASArray === 'all' || empty($CODECLASArray)) {
+    //         $CODECLASArray = Classes::pluck('CODECLAS')->toArray(); // Récupérer toutes les classes
+    //     } else {
+    //         $CODECLASArray = explode(',', $CODECLASArray);
+    //     }
+    //     // Calculer l'âge minimum et maximum des élèves dans la base de données
+    //     $currentYear = now()->year;
+
+    //     $minBirthDate = Eleve::min('DATENAIS');
+    //     $maxBirthDate = Eleve::max('DATENAIS');
+
+    //     $minAgeFromDB = $currentYear - date('Y', strtotime($maxBirthDate)); // Plus jeune élève
+    //     $maxAgeFromDB = $currentYear - date('Y', strtotime($minBirthDate)); // Plus vieux élève
+
+    //     // Si l'âge n'est pas spécifié, utiliser les valeurs par défaut
+    //     $minAge = $minAge ?: $minAgeFromDB;
+    //     $maxAge = $maxAge ?: $maxAgeFromDB;
+
+    //     // Récupérer les contrats valides
+    //     $contratValideMatricules = Contrat::where('statut_contrat', 1)->pluck('eleve_contrat');
+
+    //     // Filtrer les élèves en fonction des critères
+    //     $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+    //         ->whereIn('CODECLAS', $CODECLASArray)
+    //         ->when($sexe, function ($query, $sexe) {
+    //             return $query->where('SEXE', $sexe); // Filtrer par sexe si sélectionné
+    //         })
+    //         ->whereBetween('DATENAIS', [
+    //             ($currentYear - $maxAge) . '-01-01',
+    //             ($currentYear - $minAge) . '-12-31'
+    //         ]) // Filtrer par âge
+    //         ->orderBy('NOM', 'asc')
+    //         ->get();
+
+    //     $fraiscontrat = Paramcontrat::first();
+    //     $classesAExclure = ['NON', 'DELETE'];
+    //     $classes = Classes::whereNotIn('CODECLAS', $classesAExclure)->get();
+    //     $eleves = Eleve::orderBy('NOM', 'asc')->get();
+
+    //     Session::put('fraiscontrats', $fraiscontrat);
+    //     Session::put('fill', $filterEleves);
+
+    //     // Passer les âges minimum et maximum à la vue
+    //     return view('pages.filterlisteselectiveeleve')
+    //         ->with('filterEleve', $filterEleves)
+    //         ->with('classe', $classes)
+    //         ->with('eleve', $eleves)
+    //         ->with('minAgeFromDB', $minAgeFromDB)
+    //         ->with('maxAgeFromDB', $maxAgeFromDB)
+    //         ->with('fraiscontrats', $fraiscontrat);
+    // }
 
     public function filterlisteselectiveeleve(Request $request)
     {
@@ -275,11 +360,13 @@ class ClassesController extends Controller
         $minAge = $request->input('minAge', null); // Null si non sélectionné
         $maxAge = $request->input('maxAge', null); // Null si non sélectionné
 
+        // Gestion des classes
         if ($CODECLASArray === 'all' || empty($CODECLASArray)) {
             $CODECLASArray = Classes::pluck('CODECLAS')->toArray(); // Récupérer toutes les classes
         } else {
             $CODECLASArray = explode(',', $CODECLASArray);
         }
+
         // Calculer l'âge minimum et maximum des élèves dans la base de données
         $currentYear = now()->year;
 
@@ -293,12 +380,8 @@ class ClassesController extends Controller
         $minAge = $minAge ?: $minAgeFromDB;
         $maxAge = $maxAge ?: $maxAgeFromDB;
 
-        // Récupérer les contrats valides
-        $contratValideMatricules = Contrat::where('statut_contrat', 1)->pluck('eleve_contrat');
-
         // Filtrer les élèves en fonction des critères
-        $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
-            ->whereIn('CODECLAS', $CODECLASArray)
+        $filterEleves = Eleve::whereIn('CODECLAS', $CODECLASArray)
             ->when($sexe, function ($query, $sexe) {
                 return $query->where('SEXE', $sexe); // Filtrer par sexe si sélectionné
             })
@@ -306,26 +389,26 @@ class ClassesController extends Controller
                 ($currentYear - $maxAge) . '-01-01',
                 ($currentYear - $minAge) . '-12-31'
             ]) // Filtrer par âge
+            ->orderBy('CODECLAS', 'asc') // regroupe par classe
             ->orderBy('NOM', 'asc')
             ->get();
 
-        $fraiscontrat = Paramcontrat::first();
+        // Charger les classes et tous les élèves
         $classesAExclure = ['NON', 'DELETE'];
         $classes = Classes::whereNotIn('CODECLAS', $classesAExclure)->get();
         $eleves = Eleve::orderBy('NOM', 'asc')->get();
 
-        Session::put('fraiscontrats', $fraiscontrat);
         Session::put('fill', $filterEleves);
 
-        // Passer les âges minimum et maximum à la vue
+        // Passer les données à la vue
         return view('pages.filterlisteselectiveeleve')
             ->with('filterEleve', $filterEleves)
             ->with('classe', $classes)
             ->with('eleve', $eleves)
             ->with('minAgeFromDB', $minAgeFromDB)
-            ->with('maxAgeFromDB', $maxAgeFromDB)
-            ->with('fraiscontrats', $fraiscontrat);
+            ->with('maxAgeFromDB', $maxAgeFromDB);
     }
+
 
     public function paiementcontrat(Request $request, $CODECLAS, $MATRICULE)
     {

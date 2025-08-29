@@ -34,6 +34,7 @@ use App\Models\Deleve;
 use App\Models\Clasmat;
 use App\Models\Facturenormalise;
 use App\Models\Facturescolarit;
+use App\Models\Dept;
 
 use App\Models\Eleve_pont;
 use Illuminate\Support\Facades\DB;
@@ -759,7 +760,7 @@ class PagesController extends Controller
     
     // Récupérer le dernier matricule existant
     $lastMatricule = Eleve::orderBy('MATRICULE', 'desc')->pluck('MATRICULE')->first();
-    
+    $departements = Dept::all();
     // Générer le nouveau matricule
     if ($lastMatricule) {
       // En supposant que le matricule est de type numérique
@@ -777,7 +778,7 @@ class PagesController extends Controller
     $allDepartement = Departement::all();
     $archive = Elevea::get();
     
-    return view('pages.inscriptions.inscrireeleve', compact('allClasse', 'allReduction', 'allDepartement', 'newMatricule', 'archive'));
+    return view('pages.inscriptions.inscrireeleve', compact('allClasse', 'allReduction', 'departements', 'newMatricule', 'archive'));
     // return view('pages.inscriptions.inscrireeleve')->with('archive', $archive);
   } 
   
@@ -970,6 +971,83 @@ class PagesController extends Controller
 
 
 
+  // public function eleveparclassespecifique($classeCode)
+  // {
+  //     $CODECLASArray = explode(',', $classeCode);
+
+  //     $eleves = Eleve::orderBy('NOM', 'asc')->get();
+  //     $classesAExclure = ['NON', 'DELETE'];
+
+  //     $classes = Classes::whereNotIn('CODECLAS', $classesAExclure)->get();
+  //     $fraiscontrat = Paramcontrat::first(); 
+
+  //     $contratValideMatricules = Contrat::where('statut_contrat', 1)->pluck('eleve_contrat');
+
+  //     // Filtrer les élèves en fonction des classes sélectionnées
+  //     $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+  //         ->whereIn('CODECLAS', $CODECLASArray)
+  //         // ->select('MATRICULE', 'NOM', 'PRENOM', 'CODECLAS')
+  //         ->orderBy('NOM', 'asc')
+  //         // ->groupBy('CODECLAS')
+  //         ->get();
+  //         // Requête pour récupérer les élèves avec l'effectif total, le nombre de filles et le nombre de garçons par classe
+  //         $statistiquesClasses = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+  //         ->whereIn('CODECLAS', $CODECLASArray)
+  //         ->select(
+  //             'CODECLAS',
+  //             // Effectif total
+  //             DB::raw('COUNT(*) as total'),
+  //             // Nombre de garçons
+  //             DB::raw('SUM(CASE WHEN SEXE = 1 THEN 1 ELSE 0 END) as total_garcons'),
+  //             // Nombre de filles
+  //             DB::raw('SUM(CASE WHEN SEXE = 2 THEN 1 ELSE 0 END) as total_filles'),
+  //             // Nombre de redoublants
+  //             DB::raw('SUM(CASE WHEN STATUT = 1 THEN 1 ELSE 0 END) as total_redoublants'),
+  //             // Nombre de redoublants garçons
+  //             DB::raw('SUM(CASE WHEN STATUT = 1 AND SEXE = 1 THEN 1 ELSE 0 END) as total_garcons_redoublants'),
+  //             // Nombre de redoublants filles
+  //             DB::raw('SUM(CASE WHEN STATUT = 1 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_redoublants'),
+  //             // Nouveaux ou transférés (statutG = 1 pour nouveaux, statutG = 3 pour transférés)
+  //             DB::raw('SUM(CASE WHEN statutG = 1 THEN 1 ELSE 0 END) as total_nouveaux'),
+  //             DB::raw('SUM(CASE WHEN statutG = 1 AND SEXE = 1 THEN 1 ELSE 0 END) as total_garcons_nouveaux'),
+  //             DB::raw('SUM(CASE WHEN statutG = 1 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_nouveaux'),
+  //             DB::raw('SUM(CASE WHEN statutG = 3 THEN 1 ELSE 0 END) as total_transferes'),
+  //             DB::raw('SUM(CASE WHEN statutG = 3 AND SEXE = 1 THEN 1 ELSE 0 END) as total_garcons_transferes'),
+  //             DB::raw('SUM(CASE WHEN statutG = 3 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_transferes'),
+  //             // Anciens (statutG = 2)
+  //             DB::raw('SUM(CASE WHEN statutG = 2 THEN 1 ELSE 0 END) as total_anciens'),
+  //             DB::raw('SUM(CASE WHEN statutG = 2 AND SEXE = 1 THEN 1 ELSE 0 END) as total_garcons_anciens'),
+  //             DB::raw('SUM(CASE WHEN statutG = 2 AND SEXE = 2 THEN 1 ELSE 0 END) as total_filles_anciens')
+  //         )
+  //         ->groupBy('CODECLAS')
+  //         ->get();
+  //         // requette pour recuperer le nombre d'eleve par codereduction
+  //         $reductionsParClasse = DB::table('eleve')
+  //         ->join('reduction', 'eleve.CodeReduction', '=', 'reduction.CodeReduction') // Liaison avec la table des réductions
+  //         ->whereIn('eleve.MATRICULE', $contratValideMatricules)
+  //         ->whereIn('eleve.CODECLAS', $CODECLASArray)
+  //         ->select(
+  //             'eleve.CODECLAS', 
+  //             'reduction.libelleReduction', // Nom de la réduction
+  //             DB::raw('COUNT(*) as total') // Nombre d'élèves ayant cette réduction
+  //         )
+  //         ->groupBy('eleve.CODECLAS', 'reduction.libelleReduction')
+  //         ->get();
+  //         // requette pour grouper les eleve par classe
+  //         $elevesGroupes = $filterEleves->groupBy('CODECLAS');
+
+
+
+  //     return view('pages.inscriptions.eleveparclasse1')
+  //         ->with("filterEleve", $filterEleves)
+  //         ->with('classe', $classes)
+  //         ->with('eleve', $eleves)
+  //         ->with('elevesGroupes', $elevesGroupes)
+  //         ->with('statistiquesClasses', $statistiquesClasses)
+  //         ->with('reductionsParClasse', $reductionsParClasse)
+  //         ->with('fraiscontrats', $fraiscontrat);
+  // }
+
 public function eleveparclassespecifique($classeCode)
 {
     $CODECLASArray = explode(',', $classeCode);
@@ -978,20 +1056,16 @@ public function eleveparclassespecifique($classeCode)
     $classesAExclure = ['NON', 'DELETE'];
 
     $classes = Classes::whereNotIn('CODECLAS', $classesAExclure)->get();
-    $fraiscontrat = Paramcontrat::first(); 
-
-    $contratValideMatricules = Contrat::where('statut_contrat', 1)->pluck('eleve_contrat');
 
     // Filtrer les élèves en fonction des classes sélectionnées
-    $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+    $filterEleves = Eleve::whereIn('CODECLAS', $CODECLASArray)
         ->whereIn('CODECLAS', $CODECLASArray)
         // ->select('MATRICULE', 'NOM', 'PRENOM', 'CODECLAS')
         ->orderBy('NOM', 'asc')
         // ->groupBy('CODECLAS')
         ->get();
         // Requête pour récupérer les élèves avec l'effectif total, le nombre de filles et le nombre de garçons par classe
-        $statistiquesClasses = Eleve::whereIn('MATRICULE', $contratValideMatricules)
-        ->whereIn('CODECLAS', $CODECLASArray)
+        $statistiquesClasses = Eleve::whereIn('CODECLAS', $CODECLASArray)
         ->select(
             'CODECLAS',
             // Effectif total
@@ -1023,7 +1097,6 @@ public function eleveparclassespecifique($classeCode)
         // requette pour recuperer le nombre d'eleve par codereduction
         $reductionsParClasse = DB::table('eleve')
         ->join('reduction', 'eleve.CodeReduction', '=', 'reduction.CodeReduction') // Liaison avec la table des réductions
-        ->whereIn('eleve.MATRICULE', $contratValideMatricules)
         ->whereIn('eleve.CODECLAS', $CODECLASArray)
         ->select(
             'eleve.CODECLAS', 
@@ -1043,8 +1116,7 @@ public function eleveparclassespecifique($classeCode)
         ->with('eleve', $eleves)
         ->with('elevesGroupes', $elevesGroupes)
         ->with('statistiquesClasses', $statistiquesClasses)
-        ->with('reductionsParClasse', $reductionsParClasse)
-        ->with('fraiscontrats', $fraiscontrat);
+        ->with('reductionsParClasse', $reductionsParClasse);
 }
 
 public function retardpaiementclasse(){
@@ -1251,7 +1323,15 @@ public function sfinanceclassespecifique($classeCode) {
 
   // Calcul de l'effectif et de la somme total_du_hors_echeancier par classe
   $resultatParClasse = $donneSituationFinanciereGroupe->map(function ($eleves, $classe) {
-    $recouvrement = ($eleves->sum('total_du_hors_echeancier') - $eleves->sum('total_tous_scolarite')) / $eleves->sum('total_du_hors_echeancier');
+    $total_du = $eleves->sum('total_du_hors_echeancier'); 
+    $total_scolarite = $eleves->sum('total_tous_scolarite');
+
+    if ($total_du > 0) {
+        $recouvrement = ($total_du - $total_scolarite) / $total_du;
+    } else {
+        $recouvrement = 0; // ou null, selon ce que tu veux afficher
+    }
+
     $pourcentageRecouvrement = round((1 - $recouvrement) * 100 , 2);
 
     return [
@@ -1841,6 +1921,7 @@ public function eleveparclasseessai() {
   
   public function modifiereleve($MATRICULE){
     // Récupérer le dernier matricule existant
+    $departements = Dept::all();
     $Matricule = Eleve::find($MATRICULE);
     $allClasse = Classes::all();
     $allReduction = Reduction::all();
@@ -1848,7 +1929,7 @@ public function eleveparclasseessai() {
     $archive = Elevea::get();
     $alleleve = Eleveplus::where('MATRICULE', $MATRICULE)->first();
     $modifieleve = Eleve::where('MATRICULE', $MATRICULE)->first();
-    return view('pages.inscriptions.modifiereleve', compact('allClasse', 'allReduction', 'allDepartement', 'archive', 'alleleve', 'Matricule', 'modifieleve'));
+    return view('pages.inscriptions.modifiereleve', compact('allClasse', 'allReduction', 'allDepartement', 'archive', 'alleleve', 'Matricule', 'modifieleve', 'departements'));
   }
   
   public function typesclasses(){
@@ -4827,7 +4908,7 @@ return view('pages.inscriptions.pdfpaiementsco', [
                       ->get();
     $eleve = Eleve::select('MATRICULE')->get();
     return view('pages.inscriptions.etatdesarrieres', compact('archive', 'delevea', 'eleve'));
-}
+  }
 
 
 
