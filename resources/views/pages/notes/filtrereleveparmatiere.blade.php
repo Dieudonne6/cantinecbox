@@ -62,8 +62,11 @@
                         <div class="d-none titles">
                             <h3 style="text-transform: uppercase; margin-bottom: 1rem; text-align: center">Releves de notes
                             </h3>
+                            <h5>{{ $nomEtab }} </h5>
                             <p>Classe : {{ $classe }} </p>
                             <p>Matiere : {{ $matiere }} </p>
+                            <p> {{ $typean == 2 ? 'Trimestre' : 'Semestre' }}: {{ $periode }} </p>
+                            <p>Annee-scolaire : {{ $annescolaire }} </p>
                         </div>
 
                         {{-- Définition de la fonction d'aide pour filtrer les notes --}}
@@ -87,14 +90,18 @@
                                         {{-- <th rowspan="2">MatriculeX</th> --}}
                                         <th rowspan="2">Nom</th>
                                         <th rowspan="2">Prenom</th>
-                                        <th colspan="4">Interrogations</th>
+                                        <th colspan="5">Interrogations</th>
                                         <th colspan="3">Devoirs</th>
-                                        <th rowspan="2">TEST</th>
+                                        @if ($typean == 2)
+                                            <th rowspan="2">TEST</th>
+                                        @endif
+                                        <th rowspan="2">MS</th>
                                     </tr>
                                     <tr>
                                         <th>Int1</th>
                                         <th>Int2</th>
                                         <th>Int3</th>
+                                        <th>Int4</th>
                                         <th>MI</th>
                                         <th>Dev1</th>
                                         <th>Dev2</th>
@@ -114,11 +121,15 @@
                                             <td>{{ filtrerNote($note->INT1) }}</td>
                                             <td>{{ filtrerNote($note->INT2) }}</td>
                                             <td>{{ filtrerNote($note->INT3) }}</td>
+                                            <td>{{ filtrerNote($note->INT4) }}</td>
                                             <td>{{ filtrerNote($note->MI) }}</td>
                                             <td>{{ filtrerNote($note->DEV1) }}</td>
                                             <td>{{ filtrerNote($note->DEV2) }}</td>
                                             <td>{{ filtrerNote($note->DEV3) }}</td>
-                                            <td>{{ filtrerNote($note->TEST) }}</td>
+                                            @if ($typean == 2)
+                                                <td>{{ filtrerNote($note->TEST) }}</td>
+                                            @endif
+                                            <td>{{ filtrerNote($note->MS1) }}</td>
                                         </tr>
                                         @php
                                             $count++;

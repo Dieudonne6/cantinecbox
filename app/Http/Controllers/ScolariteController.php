@@ -48,9 +48,11 @@ class ScolariteController extends Controller
 
         $donneClasse = Classe::where('CODECLAS', $CODECLAS)->first();
         $donneLibelle = Params2::first();
+
+        $donneEcheancc = DB::table('echeancc')->where('CODECLAS', $CODECLAS)->get();
         
-        // dd($donneClasse);
-        return view('pages.inscriptions.factureclassesdetail', compact('CODECLAS', 'donneClasse', 'donneLibelle'));
+        // dd($donneEcheancc);
+        return view('pages.inscriptions.factureclassesdetail', compact('CODECLAS', 'donneClasse', 'donneLibelle', 'donneEcheancc'));
     }
 
     public function detailfacclasse (Request $request, $CODECLAS ) {

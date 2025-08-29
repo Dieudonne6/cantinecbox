@@ -177,19 +177,32 @@ class EditionController extends Controller
   {
     $classe = $request->classe;
     $matiere = $request->matiere;
-    // dd($classe);
+    $periode = $request->periode;
+
+    $infoparamcontrat = Paramcontrat::first();
+    $infoparam2 = Params2::first();
+    $anneencours = $infoparamcontrat->anneencours_paramcontrat;
+    $annesuivante = $anneencours + 1;
+    $annescolaire = $anneencours . '-' . $annesuivante;
+    $nomEtab = $infoparam2->NOMETAB;
+    $typean = $infoparam2->TYPEAN;
+    // dd($matiere);
     $notes = Notes::join('eleve', 'notes.MATRICULE', '=', 'eleve.MATRICULE')
-      ->select('notes.MATRICULE', 'eleve.MATRICULEX', 'eleve.nom', 'eleve.prenom', 'notes.INT1', 'notes.INT2', 'notes.INT3', 'notes.INT4', 'notes.MI', 'notes.DEV1', 'notes.DEV2', 'notes.DEV3')
+      ->select('notes.MATRICULE', 'eleve.MATRICULEX', 'eleve.nom', 'eleve.prenom', 'notes.INT1', 'notes.INT2', 'notes.INT3', 'notes.INT4', 'notes.MI', 'notes.DEV1', 'notes.DEV2', 'notes.DEV3', 'notes.TEST', 'notes.MS1')
       ->when($classe, function ($q) use ($classe) {
         return $q->where('notes.CODECLAS', $classe);
       })
       ->when($matiere, function ($q) use ($matiere) {
         return $q->where('notes.CODEMAT', $matiere);
       })
+      ->when($periode, function ($q) use ($periode) {
+        return $q->where('notes.SEMESTRE', $periode);
+      })
+      ->orderBy('eleve.nom', 'asc')
       ->get();
     $matiere = Matieres::where('CODEMAT', $matiere)->first();
     $matiere = $matiere['LIBELMAT'];
-    return view('pages.notes.filtrereleveparmatiere', compact('notes', 'classe', 'matiere'));
+    return view('pages.notes.filtrereleveparmatiere', compact('notes', 'classe', 'matiere','annescolaire','nomEtab','typean','periode'));
   }
   public function storetabledesmatieres(Request $request)
   {

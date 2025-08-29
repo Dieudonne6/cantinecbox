@@ -274,9 +274,9 @@
                                                     <li><a class="dropdown-item"
                                                             href="{{ url('/paiementeleve/' . $eleve->MATRICULE) }}">Paiement</a>
                                                     </li>
-                                                    <li><a class="dropdown-item"
+                                                    {{-- <li><a class="dropdown-item"
                                                             href="{{ url('/majpaiementeleve/' . $eleve->MATRICULE) }}">Maj
-                                                            Paie</a></li>
+                                                            Paie</a></li> --}}
                                                     <li><a class="dropdown-item"
                                                             href="/profil/{{ $eleve->MATRICULE }}">Profil</a></li>
                                                     <li><a class="dropdown-item"
