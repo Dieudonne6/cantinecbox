@@ -3769,17 +3769,29 @@ public function eleveparclasseessai() {
   }
   
   public function recalculereffectifs() {
-    $eleves = Eleve::with('classe', 'serie')->get();
+    //$eleves = Eleve::with('classe', 'serie')->get();
+    $eleves = Eleve::all();
     $promotions = Promo::all();
     $series = Serie::all();
-    $effectifsParClasse = $eleves->groupBy('CODECLAS')->map(function($groupe) {
+
+     // On récupère uniquement les codes des classes
+    $classes = Classes::pluck('CODECLAS');
+
+    // Préparation des effectifs par classe
+    $effectifsParClasse = $classes->mapWithKeys(function ($codeClasse) {
+        // Récupération de tous les élèves de cette classe
+        $elevesClasse = Eleve::where('CODECLAS', $codeClasse);
+
         return [
-            'total' => $groupe->count(),
-            'garcons' => $groupe->where('SEXE', 1)->count(),
-            'filles' => $groupe->where('SEXE', 2)->count(),
-            'redoublants' => $groupe->where('STATUTG', 1)->count(),
+            $codeClasse => [
+                'total'        => $elevesClasse->count(),
+                'garcons'      => $elevesClasse->where('SEXE', 1)->count(),
+                'filles'       => $elevesClasse->where('SEXE', 2)->count(),
+                'redoublants'  => $elevesClasse->where('STATUTG', 1)->count(),
+            ]
         ];
     });
+    //dd($effectifsParClasse);
     $effectifsParPromotion = $promotions->mapWithKeys(function($promo) use ($eleves) {
         $classes = Classes::where('CODEPROMO', $promo->CODEPROMO)->pluck('CODECLAS'); 
         $elevesPromo = $eleves->whereIn('CODECLAS', $classes);
@@ -3795,17 +3807,17 @@ public function eleveparclasseessai() {
     });
     
     $effectifsParSerie = $series->mapWithKeys(function($serie) use ($eleves) {
-      $elevesSerie = $eleves->where('SERIE', $serie->SERIE);
+    $elevesSerie = $eleves->where('SERIE', $serie->SERIE);
 
       return [
-          $serie->SERIE => [ // Assurez-vous que 'name' est le bon attribut pour le nom de la série
+          $serie->SERIE => [ 
               'totalClasses' => $elevesSerie->pluck('CODECLAS')->unique()->count(),
               'total' => $elevesSerie->count(),
               'garcons' => $elevesSerie->where('SEXE', 1)->count(),
               'filles' => $elevesSerie->where('SEXE', 2)->count(),
           ],
       ];
-  });
+    });
     
     $effectifsAlphabetiques = [];
     foreach ($eleves as $eleve) {

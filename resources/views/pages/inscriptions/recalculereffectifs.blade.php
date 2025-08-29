@@ -45,11 +45,11 @@
                         <option value="table4">Effectif alphabétique</option>
                     </select>
                 </div>
-                <div class="col-3" style="margin-top: 18px; margin-left: 500px;">
+                <!-- <div class="col-3" style="margin-top: 18px; margin-left: 500px;">
                     <div class="">
                         <button type="submit" class="btn btn-primary">Recalculer effectifs</button>
                     </div>
-                </div>
+                </div> -->
             </div>
             
             <div id="table1" class="table-container">
@@ -114,7 +114,7 @@
                         </tr>
                     </thead>
                     <tbody class="table-body">
-                        @php
+                        @php 
                             $totalPromotions = 0;
                             $totalEffectifPromotion = 0;
                             $totalFillesPromotion = 0;

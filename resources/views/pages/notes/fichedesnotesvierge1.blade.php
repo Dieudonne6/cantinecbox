@@ -120,8 +120,9 @@
                         </div>
 
                         <div class="col-3 mt-4">
-                            {{-- <button class="btn-sm btn-primary" id="printBtn">Imprimer</button> --}}
+                            
                             <button type="button" class="btn-sm btn-primary" onclick="imprimerPage()">Imprimer</button>
+                            <button class="btn-sm btn-primary" type="button" onclick="exportToExcel()">Exporter</button>
                         </div>
                     </div>
 
@@ -228,7 +229,7 @@
                                         @foreach ($eleves as $index => $eleve)
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
-                                                <td>{{ $eleve->MATRICULEX }}</td>
+                                                <td class="mat">{{ $eleve->MATRICULEX }}</td>
                                                 <td style="text-align: center;">{{ $eleve->SEXE == 1 ? 'M' : 'F' }}</td>
                                                 <td style="text-align: center;">{{ $eleve->STATUT == 1 ? 'R' : '' }}</td>
                                                 <td>{{ $eleve->NOM }} {{ $eleve->PRENOM }}</td>
@@ -262,32 +263,6 @@
             </div>
         </div>
 
-        {{-- <script>
-            document.getElementById('printBtn').addEventListener('click', function() {
-                const titre = document.getElementById('titreEtat').value;
-
-                // Insérer le titre dans un élément caché pour l'impression
-                const titreImpression = document.createElement('div');
-                titreImpression.id = 'printTitre';
-                titreImpression.innerHTML = `<h2>${titre}</h2>`;
-                document.body.appendChild(titreImpression);
-
-                // Rendre les tableaux par classe visibles pour l'impression
-                const printTables = document.querySelectorAll('.print-table');
-                printTables.forEach(table => table.classList.remove('d-none'));
-
-                // Lancer l'impression
-                window.print();
-
-                // Masquer à nouveau les tableaux après impression
-                printTables.forEach(table => table.classList.add('d-none'));
-
-                // Supprimer l'élément du titre après impression
-                document.body.removeChild(titreImpression);
-            });
-        </script> --}}
-
-
 
         <script>
             function imprimerPage() {
@@ -308,63 +283,63 @@
                 let printWindow = window.open('', '', 'height=700,width=1600');
 
                 printWindow.document.write(`
-        <html>
-        <head>
-            <title>${titreEtat}</title>
-            <style>
-                @page { size: landscape; }
-                @media print {
-                    /* Style général pour l'impression */
-                    body {
-                        font-family: Arial, sans-serif;
-                        font-size: 15px;
-                    }
-                    table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        page-break-inside: auto;
-                        border: 1px solid #000;
-                    }
-                    table th, table td {
-                        font-size: 13px;
-                        padding: 5px;
-                        border: 1px solid #000;
-                    }
-                    tr {
-                        page-break-inside: avoid;
-                        page-break-after: auto;
-                    }
-                    tbody tr:nth-child(even) {
-                        background-color: #f1f3f5;
-                    }
-                    tbody tr:nth-child(odd) {
-                        background-color: #fff;
-                    }
-                    .effred{
-                        display: flex;
-                        margin-bottom: 2rem;
-                    }
-                    .col1{
-                        width: 38%;
-                        margin-left: 2rem;
-                    }
-                    .col2{
-                        width: 38%;
-                        margin-left: 12rem;
-                    }
+            <html>
+            <head>
+                <title>${titreEtat}</title>
+                <style>
+                    @page { size: landscape; }
+                    @media print {
+                        /* Style général pour l'impression */
+                        body {
+                            font-family: Arial, sans-serif;
+                            font-size: 15px;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            page-break-inside: auto;
+                            border: 1px solid #000;
+                        }
+                        table th, table td {
+                            font-size: 13px;
+                            padding: 5px;
+                            border: 1px solid #000;
+                        }
+                        tr {
+                            page-break-inside: avoid;
+                            page-break-after: auto;
+                        }
+                        tbody tr:nth-child(even) {
+                            background-color: #f1f3f5;
+                        }
+                        tbody tr:nth-child(odd) {
+                            background-color: #fff;
+                        }
+                        .effred{
+                            display: flex;
+                            margin-bottom: 2rem;
+                        }
+                        .col1{
+                            width: 38%;
+                            margin-left: 2rem;
+                        }
+                        .col2{
+                            width: 38%;
+                            margin-left: 12rem;
+                        }
 
-                    .page-break {
-                        page-break-before: always;
+                        .page-break {
+                            page-break-before: always;
+                        }
                     }
-                }
-            </style>
-        </head>
-        <body>
-            <h1 style="font-size: 20px; text-align: center; text-transform: uppercase;">${titreEtat}</h1>
-            ${contenuImpression}
-        </body>
-        </html>
-    `);
+                </style>
+            </head>
+            <body>
+                <h1 style="font-size: 20px; text-align: center; text-transform: uppercase;">${titreEtat}</h1>
+                ${contenuImpression}
+            </body>
+            </html>
+            `);
 
                 // Attendre que le contenu soit chargé, puis imprimer
                 printWindow.document.close();
@@ -381,6 +356,76 @@
 
                 // Restaurer le titre de la page après impression
                 document.title = originalTitle;
+            }
+
+
+
+            function exportToExcel() {
+        
+
+                const contentElement = document.getElementById('contenu');
+              
+                if (!contentElement) {
+                    alert('Aucune fiche à exporter. Veuillez d\'abord créer la fiche.');
+                    return;
+                }
+
+               
+                // Cloner le contenu pour ne pas modifier l'original
+                const clone = contentElement.cloneNode(true);
+
+
+                // style Excel plus propre
+                const style = `
+                    <style>
+                        table {
+                            border-collapse: collapse;
+                            width: 100%;
+                        }
+                        th, td {
+                            border: 1px solid black;
+                            padding: 5px;
+                            text-align: center;
+                            font-size: 20px;
+                            line-height: 1.5rem;
+                        }
+                        th {
+                            font-weight: bold;
+                        }
+                        td {
+                            text-align: center;
+                        }
+                        td.mat {
+                            mso-number-format:"0";
+                        }
+                    </style>
+                `;
+
+                // Construire le HTML complet pour Excel
+                const html = `
+                    <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                        xmlns:x="urn:schemas-microsoft-com:office:excel"
+                        xmlns="http://www.w3.org/TR/REC-html40">
+                    <head>
+                        <meta charset="UTF-8">
+                        ${style}
+                    </head>
+                    <body>
+                       
+                        ${clone.innerHTML}
+                    </body>
+                    </html>
+                `;
+
+                const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `fiche_de_notes_vierge.xls`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
             }
         </script>
     @endsection

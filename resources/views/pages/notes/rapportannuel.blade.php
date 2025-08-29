@@ -40,7 +40,7 @@
             </div>
 
             <div class="card-body">
-
+ 
                 <div class="row">
                     <div class="col-md-9">
                         <div class="row mb-3 align-items-center">
@@ -220,7 +220,7 @@
                             <button id="btnToggle" class="btn btn-outline-primary btn-sm fw-bold ">Afficher/ignorer</button>
                             
                             
-                            <form method="POST" action="{{ route('classe.delete') }}">
+                            <form method="POST" action="{{ route('classe.delete') }}"> 
                                 @csrf
                                 <input type="hidden" name="classe_selectionne" id="classeCR"
                                     value="{{ old('classe_selectionne') }}">
