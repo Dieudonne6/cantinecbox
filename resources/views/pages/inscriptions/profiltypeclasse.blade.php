@@ -2,143 +2,140 @@
 @section('content')
 <style>
     .table-container {
-        /* overflow-x: auto; */
         margin-bottom: 20px;
-        display: block; /* Assurez-vous que le conteneur est un bloc */
+        display: block;
     }
-    /*     table {
+    table {
         width: 100%;
-        min-width: 12px;
         border-collapse: collapse;
         table-layout: fixed;
-    } */
+    }
     th, td {
         border: 1px solid black;
         padding: 8px;
         text-align: left;
         white-space: nowrap;
     }
-    .reduction-header {
-        text-align: center;
-        font-weight: bold;
-    }
-    .footer {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        z-index: 10; /* Assurer que le footer soit au-dessus des autres éléments */
-    }
+    .reduction-profile { display: none; }
 
     /* Styles individuels pour chaque colonne */
     .col-small { width: 80px; }
     .col-medium { width: 120px; }
     .col-large { width: 200px; }
     .col-xlarge { width: 250px; }
-    .col-nom { width: 150px; } /* Nouvelle classe pour Nom */
-    .col-code-groupe { width: 100px; } /* Nouvelle classe pour Code Groupe */
-    .col-statut { width: 80px; } /* Nouvelle classe pour Statut */
+    .col-nom { width: 150px; }
+    .col-code-groupe { width: 100px; }
+    .col-statut { width: 80px; }
 
-    /* Styles pour l'impression */
+    /* Bouton retour */
+    .btn-arrow {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background-color: transparent !important;
+        border: 1px !important;
+        text-transform: uppercase !important;
+        font-weight: bold !important;
+        cursor: pointer !important;
+        font-size: 17px !important;
+        color: #b51818 !important;
+    }
+    .btn-arrow:hover { color: #b700ff !important; }
+
+    /* Styles pour impression */
     @media print {
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            color: #000;
+        }
         .reduction-profile {
             page-break-before: always;
+            margin-bottom: 20px;
         }
-    }
-    
-    .reduction-profile {
-        display: none;
-        transition: all 0.3s ease;
+        .reduction-profile h5 {
+            text-align: center;
+            font-size: 16pt;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 8px;
+            text-align: left;
+            white-space: nowrap;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
     }
 </style>
 
-<body>
 <div class="main-content">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
-            <div>
-                <style>
-                    .btn-arrow {
-                        position: absolute;
-                        top: 0px;
-                        /* Ajustez la position verticale */
-                        left: 0px;
-                        /* Positionnez à gauche */
-                        background-color: transparent !important;
-                        border: 1px !important;
-                        text-transform: uppercase !important;
-                        font-weight: bold !important;
-                        cursor: pointer !important;
-                        font-size: 17px !important;
-                        /* Taille de l'icône */
-                        color: #b51818 !important;
-                        /* Couleur de l'icône */
-                    }
-            
-                    .btn-arrow:hover {
-                        color: #b700ff !important;
-                        /* Couleur au survol */
-                    }
-                </style>
-                <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
-                    <i class="fas fa-arrow-left"></i> Retour
-                </button>
-                <br>
-                <br>                                     
-            </div>
+            <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
+                <i class="fas fa-arrow-left"></i> Retour
+            </button>
             <div class="card-body">
                 <h1 class="text-center">Liste des élèves par profils</h1>
                 <h4>Groupe: {{ $typeclasse->where('TYPECLASSE', $typeClasse)->first()->LibelleType }}</h4>
+
                 <div class="form-group row">
                     <div class="col-9">
-                        <select class="js-example-basic-multiple w-100" multiple="multiple" id="champ" name="CODECLAS[]" data-placeholder="Sélectionnez une réduction">         
-                          <option value=""></option>
-                          @foreach ($reductions as $reduction)
-                          <option value="{{$reduction->CodeReduction}}">{{$reduction->LibelleReduction}}</option>
-                          @endforeach
+                        <select class="js-example-basic-multiple w-100" multiple="multiple" id="champ" name="CODECLAS[]" data-placeholder="Sélectionnez une réduction">
+                            <option value=""></option>
+                            @foreach ($reductions as $reduction)
+                                <option value="{{ $reduction->CodeReduction }}">{{ $reduction->LibelleReduction }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-3">
                         <button class="btn btn-primary w-100" id="applySelectionBtn">Appliquer la sélection</button>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <div class="col-12">
                         <button class="btn btn-secondary" id="printBtn">Imprimer</button>
                     </div>
                 </div>
-                @foreach ($reductions as $reduction)
-                <br></br>
-                
-                    <div class="reduction-profile" style="display: none; {{ $loop->first ? '' : 'page-break-before: always;' }}" data-reduction="{{ $reduction->CodeReduction }}">
-                        <h5>Profil de réduction: {{ $reduction->LibelleReduction }}</h5>
-                        <div {{-- class="table-container" --}}>
-                            <table style="width: 100%; min-width: 12px; border-collapse: collapse; table-layout: fixed;">
 
+                @foreach ($reductions as $reduction)
+                    <div class="reduction-profile" data-reduction="{{ $reduction->CodeReduction }}">
+                        <h5 class="text-center" style="margin-bottom:15px; text-transform: uppercase;">
+                            Profil de réduction: {{ $reduction->LibelleReduction }}
+                        </h5>
+                        <div class="table-container">
+                            <table>
                                 <thead>
-                                    <th style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap; width: 50px;">N°</th>
-                                    <th style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap; width: 100px;">Nom</th>
-                                    <th style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap; width: 150px;">Prénoms</th>
-                                    <th style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap; width: 80px;">Code Groupe</th>
-                                    <th style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap; width: 80px;">Statut</th>
+                                    <tr>
+                                        <th class="col-small">N°</th>
+                                        <th class="col-nom">Nom</th>
+                                        <th class="col-large">Prénoms</th>
+                                        <th class="col-code-groupe">Code Groupe</th>
+                                        <th class="col-statut">Statut</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if(isset($elevesParReduction[$reduction->CodeReduction]) && count($elevesParReduction[$reduction->CodeReduction]) > 0)
                                         @foreach ($elevesParReduction[$reduction->CodeReduction] as $eleve)
                                             <tr>
-                                                <td style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">{{ $loop->iteration }}</td>
-                                                <td style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">{{ $eleve->NOM }}</td>
-                                                <td style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">{{ $eleve->PRENOM }}</td>
-                                                <td style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">{{ $eleve->CODECLAS }}</td>
-                                                <td style="border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;">
-                                                    @if ($eleve->STATUTG == 1)
-                                                        Nouveau
-                                                    @elseif ($eleve->STATUTG == 2)
-                                                        Ancien
-                                                    @elseif ($eleve->STATUTG == 3)
-                                                        Transféré
-                                                    @else
-                                                        Inconnu
+                                                <td class="col-small">{{ $loop->iteration }}</td>
+                                                <td class="col-nom">{{ $eleve->NOM }}</td>
+                                                <td class="col-large">{{ $eleve->PRENOM }}</td>
+                                                <td class="col-code-groupe">{{ $eleve->CODECLAS }}</td>
+                                                <td class="col-statut">
+                                                    @if ($eleve->STATUTG == 1) Nouveau
+                                                    @elseif ($eleve->STATUTG == 2) Ancien
+                                                    @elseif ($eleve->STATUTG == 3) Transféré
+                                                    @else Inconnu
                                                     @endif
                                                 </td>
                                             </tr>
@@ -157,57 +154,49 @@
         </div>
     </div>
 </div>
-</body>
 
-<!-- Include jQuery -->
+<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Include Select2 CSS and JS -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialiser Select2
-        $('.js-example-basic-multiple').select2();
-        
-        const selectElement = document.querySelector('select[name="CODECLAS[]"]');
-        const submitBtn = document.getElementById('applySelectionBtn'); // Utilisez le nouvel ID
-        const printBtn = document.getElementById('printBtn'); // Bouton d'impression
+document.addEventListener('DOMContentLoaded', function() {
+    $('.js-example-basic-multiple').select2();
 
-        // Gérer le clic sur le bouton "Appliquer la sélection"
-        submitBtn.addEventListener('click', function(event) {
-            event.preventDefault(); // Empêcher le comportement par défaut du bouton
-            
-            const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value);
-            
-            // Parcourir tous les profils et afficher/cacher en fonction de la sélection
-            document.querySelectorAll('.reduction-profile').forEach(profile => {
-                if (selectedValues.includes(profile.dataset.reduction)) {
-                    profile.style.display = 'block'; // Afficher si la réduction est sélectionnée
-                } else {
-                    profile.style.display = 'none'; // Cacher si la réduction ne correspond pas
-                }
-            });
-        });
+    const selectElement = document.querySelector('select[name="CODECLAS[]"]');
+    const submitBtn = document.getElementById('applySelectionBtn');
+    const printBtn = document.getElementById('printBtn');
 
-        // Gérer le clic sur le bouton "Imprimer"
-        printBtn.addEventListener('click', function() {
-            // Masquer les boutons et le champ de sélection
-            document.querySelector('.form-group').style.display = 'none'; // Masquer le groupe de formulaire
-            document.querySelectorAll('.btn').forEach(btn => btn.style.display = 'none'); // Masquer tous les boutons
-                        
-            var content = document.querySelector('.card').innerHTML; // Sélectionne le contenu de la classe card
-            var originalContent = document.body.innerHTML; // Sauvegarde le contenu complet de la page
-
-            document.body.innerHTML = content; // Remplace tout le contenu par la section sélectionnée
-            window.print(); // Lance l'impression
-
-            document.body.innerHTML = originalContent; // Restaure le contenu original après impression
-            document.querySelector('.form-group').style.display = 'block'; // Masquer le groupe de formulaire
-            document.querySelectorAll('.btn').forEach(btn => btn.style.display = 'block');
+    submitBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value);
+        document.querySelectorAll('.reduction-profile').forEach(profile => {
+            profile.style.display = selectedValues.includes(profile.dataset.reduction) ? 'block' : 'none';
         });
     });
-</script>
 
+    printBtn.addEventListener('click', function() {
+        const visibleProfiles = Array.from(document.querySelectorAll('.reduction-profile'))
+            .filter(profile => profile.style.display !== 'none')
+            .map(profile => profile.innerHTML)
+            .join('<div style="page-break-after: always;"></div>');
+
+        if (!visibleProfiles) {
+            alert('Veuillez sélectionner au moins une réduction à imprimer.');
+            return;
+        }
+
+        const printWindow = window.open('', '', 'height=600,width=800');
+        printWindow.document.write('<html><head><title>Impression</title>');
+        printWindow.document.write('<style>body { font-family: Arial, sans-serif; font-size: 12pt; } table { width: 100%; border-collapse: collapse; margin-bottom: 20px; } th, td { border: 1px solid #333; padding: 8px; text-align: left; white-space: nowrap; } th { background-color: #f0f0f0; font-weight: bold; }</style>');
+        printWindow.document.write(`<h2 style="text-align:center;">État des droits constatés - Groupe: {{ $typeclasse->where("TYPECLASSE", $typeClasse)->first()->LibelleType }}</h2><hr>`);
+        printWindow.document.write('<body>');
+        printWindow.document.write(visibleProfiles);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    });
+});
+</script>
 @endsection

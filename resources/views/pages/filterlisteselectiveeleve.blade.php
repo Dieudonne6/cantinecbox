@@ -48,10 +48,10 @@
         <div class="form-group row">
           <div class="col-2">
             <select class="js-example-basic-multiple w-100" multiple="multiple" name="classes[]" data-placeholder="Toutes les classes">         
-              @foreach ($eleve as $eleves)
-                <option value="{{$eleves->CODECLAS}}" 
-                  {{ in_array($eleves->CODECLAS, request()->input('classes', [])) ? 'selected' : '' }}>
-                  {{$eleves->CODECLAS}}
+              @foreach ($classe as $classeItem)
+                <option value="{{ $classeItem->CODECLAS }}" 
+                  {{ in_array($classeItem->CODECLAS, request()->input('classes', [])) ? 'selected' : '' }}>
+                  {{ $classeItem->CODECLAS }}
                 </option>
               @endforeach
             </select>

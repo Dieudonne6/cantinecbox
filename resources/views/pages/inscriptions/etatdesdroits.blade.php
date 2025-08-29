@@ -67,7 +67,7 @@
                                         <label for="option6">{{$params->LIBELF4}}</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" id="option7" name="choixPlage" value="Scolarité + Arrièrés + {{ $params->LIBELF1 }} + {{ $params->LIBELF2 }} + {{ $params->LIBELF3 }} + {{ $params->LIBELF4 }}">
+                                        <input type="radio" id="option7" name="choixPlage" value="Tout">
                                         <label for="option7">Tout</label>
                                     </div>
                                 </form>     

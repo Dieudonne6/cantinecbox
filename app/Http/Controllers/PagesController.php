@@ -190,6 +190,7 @@ class PagesController extends Controller
     $allClasse = Classes::all();
     return view('pages.inscriptions.listeselectiveeleve', compact('allClasse','minAgeFromDB','maxAgeFromDB'));
   }
+  
   public function frais(){
     $param = Paramcontrat::first();
     return view('pages.frais', ['param' => $param]);
@@ -553,62 +554,73 @@ class PagesController extends Controller
     return redirect('/');
   }
   
-  public function etatdesdroits(Request $request) {
+public function etatdesdroits(Request $request) {
     $classe = Classes::all();
     $params = Params2::first();
     $selectedClasses = $request->input('selectedClasses', []);
-    $eleves = collect(); // Initialise la variable $eleves par défaut à une collection vide
-  
-    if ($request->ajax()) { // Vérifie si la requête est une requête AJAX
+    $eleves = collect(); // Par défaut, collection vide
+
+    if ($request->ajax()) {
         if (!empty($selectedClasses)) {
-            // Récupérer les élèves en fonction des classes sélectionnées
+            // Récupérer les élèves pour les classes sélectionnées
             $eleves = Eleve::whereIn('CODECLAS', $selectedClasses)->get();
-  
-            // Vérifiez si des élèves ont été trouvés
+
             if ($eleves->isEmpty()) {
                 return response()->json(['message' => 'Aucun élève trouvé pour les classes sélectionnées.'], 404);
             }
-  
-            // Récupérer les montants pour chaque élève
+
             $choixPlage = $request->input('choixPlage');
+
             $eleves->transform(function ($eleve) use ($choixPlage, $params) {
+                // Mapping choixPlage → code AUTREF
+                $autrefMapping = [
+                    'Scolarité' => 1,
+                    'Arrièrés'  => 2,
+                    $params->LIBELF1 => 3,
+                    $params->LIBELF2 => 4,
+                    $params->LIBELF3 => 5,
+                    $params->LIBELF4 => 6,
+                ];
+
+                // Déterminer le montant à payer
+                if ($choixPlage === 'Scolarité') {
+                    $apayer = $eleve->APAYER;
+                } elseif ($choixPlage === 'Arrièrés') {
+                    $apayer = $eleve->ARRIERE;
+                } elseif (in_array($choixPlage, [$params->LIBELF1, $params->LIBELF2, $params->LIBELF3, $params->LIBELF4])) {
+                    $apayer = $eleve->{'FRAIS' . array_search($choixPlage, [
+                        $params->LIBELF1, $params->LIBELF2, $params->LIBELF3, $params->LIBELF4
+                    ]) + 1};
+                } elseif ($choixPlage === 'Tout') {
+                    $apayer = $eleve->APAYER + $eleve->ARRIERE + $eleve->FRAIS1 + $eleve->FRAIS2 + $eleve->FRAIS3 + $eleve->FRAIS4;
+                } else {
+                    $apayer = 0;
+                }
+
+                // Récupérer les montants versés
                 if ($choixPlage === 'Tout') {
-                    // Récupérer tous les montants sans filtrer par AUTREF
                     $montants = Scolarite::where('MATRICULE', $eleve->MATRICULE)->get();
                 } else {
-                    // Récupérer les montants filtrés par AUTREF
-                    $autrefMapping = [
-                        'Scolarité' => 1,
-                        'Arrièrés' => 2,
-                        $params->LIBELF1 => 3,
-                        $params->LIBELF2 => 4,
-                        $params->LIBELF3 => 5,
-                        $params->LIBELF4 => 6,
-                    ];
                     $montants = Scolarite::where('MATRICULE', $eleve->MATRICULE)
                         ->where('AUTREF', $autrefMapping[$choixPlage] ?? null)
                         ->get();
                 }
-  
-                // Ajouter les montants à l'élève
+
                 $eleve->montants = $montants;
-  
+                $eleve->APAYER = $apayer;
+
                 return $eleve;
             });
+
+            return response()->json(['eleves' => $eleves]);
         } else {
             return response()->json(['message' => 'Aucune classe sélectionnée.'], 400);
         }
-  
-        // Retourner les données en JSON pour les requêtes AJAX
-        return response()->json([
-            'eleves' => $eleves
-        ]);
     }
-  
-    // Retourner la vue normalement pour les autres requêtes
+
+    // Vue normale
     return view('pages.inscriptions.etatdesdroits', compact('classe', 'params', 'eleves'));
-  }  
-  
+}
 
   public function vitrine(){
     if(Session::has('account')){
