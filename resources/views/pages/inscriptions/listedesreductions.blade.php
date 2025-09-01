@@ -225,6 +225,20 @@
         filtrerClasse();
 
         $('#classe-select').on('change', function() {
+            var selectedOptions = $(this).val() || [];
+
+            if (selectedOptions.includes('all')) {
+                // Si "Tout sélectionner" est choisi → on garde uniquement "all"
+                $(this).val(['all']).trigger('change.select2');
+            } else {
+                // Sinon → on enlève "all" si présent
+                var index = selectedOptions.indexOf('all');
+                if (index > -1) {
+                    selectedOptions.splice(index, 1);
+                    $(this).val(selectedOptions).trigger('change.select2');
+                }
+            }
+
             filtrerClasse();
         });
     });
@@ -250,4 +264,5 @@
         });
     }
 </script>
+
 @endsection
