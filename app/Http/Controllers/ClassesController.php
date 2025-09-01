@@ -352,62 +352,66 @@ class ClassesController extends Controller
     //         ->with('fraiscontrats', $fraiscontrat);
     // }
 
-    public function filterlisteselectiveeleve(Request $request)
-    {
-        // Récupérer les classes, sexe et âge depuis les paramètres GET
-        $CODECLASArray = $request->input('classes');
-        $sexe = $request->input('sexe');
-        $minAge = $request->input('minAge', null); // Null si non sélectionné
-        $maxAge = $request->input('maxAge', null); // Null si non sélectionné
+public function filterlisteselectiveeleve(Request $request)
+{
+    // Récupérer les classes, sexe et âge depuis les paramètres GET
+    $CODECLASArray = $request->input('classes'); 
+    $sexe = $request->input('sexe');
+    $minAge = $request->input('minAge', null); 
+    $maxAge = $request->input('maxAge', null); 
+    $ignoreYear = $request->boolean('ignoreYear'); // Checkbox cochée ou non
 
-        // Gestion des classes
-        if ($CODECLASArray === 'all' || empty($CODECLASArray)) {
-            $CODECLASArray = Classes::pluck('CODECLAS')->toArray(); // Récupérer toutes les classes
-        } else {
-            $CODECLASArray = explode(',', $CODECLASArray);
-        }
-
-        // Calculer l'âge minimum et maximum des élèves dans la base de données
-        $currentYear = now()->year;
-
-        $minBirthDate = Eleve::min('DATENAIS');
-        $maxBirthDate = Eleve::max('DATENAIS');
-
-        $minAgeFromDB = $currentYear - date('Y', strtotime($maxBirthDate)); // Plus jeune élève
-        $maxAgeFromDB = $currentYear - date('Y', strtotime($minBirthDate)); // Plus vieux élève
-
-        // Si l'âge n'est pas spécifié, utiliser les valeurs par défaut
-        $minAge = $minAge ?: $minAgeFromDB;
-        $maxAge = $maxAge ?: $maxAgeFromDB;
-
-        // Filtrer les élèves en fonction des critères
-        $filterEleves = Eleve::whereIn('CODECLAS', $CODECLASArray)
-            ->when($sexe, function ($query, $sexe) {
-                return $query->where('SEXE', $sexe); // Filtrer par sexe si sélectionné
-            })
-            ->whereBetween('DATENAIS', [
-                ($currentYear - $maxAge) . '-01-01',
-                ($currentYear - $minAge) . '-12-31'
-            ]) // Filtrer par âge
-            ->orderBy('CODECLAS', 'asc') // regroupe par classe
-            ->orderBy('NOM', 'asc')
-            ->get();
-
-        // Charger les classes et tous les élèves
-        $classesAExclure = ['NON', 'DELETE'];
-        $classes = Classes::whereNotIn('CODECLAS', $classesAExclure)->get();
-        $eleves = Eleve::orderBy('NOM', 'asc')->get();
-
-        Session::put('fill', $filterEleves);
-
-        // Passer les données à la vue
-        return view('pages.filterlisteselectiveeleve')
-            ->with('filterEleve', $filterEleves)
-            ->with('classe', $classes)
-            ->with('eleve', $eleves)
-            ->with('minAgeFromDB', $minAgeFromDB)
-            ->with('maxAgeFromDB', $maxAgeFromDB);
+    // Gestion des classes
+    if ($CODECLASArray === 'all' || empty($CODECLASArray)) {
+        $CODECLASArray = Classes::pluck('CODECLAS')->toArray(); 
     }
+
+    // Calculer l'âge minimum et maximum des élèves dans la base de données
+    $currentYear = now()->year;
+
+    $minBirthDate = Eleve::min('DATENAIS');
+    $maxBirthDate = Eleve::max('DATENAIS');
+
+    $minAgeFromDB = $currentYear - date('Y', strtotime($maxBirthDate)); // Plus jeune élève
+    $maxAgeFromDB = $currentYear - date('Y', strtotime($minBirthDate)); // Plus vieux élève
+
+    // Si l'âge n'est pas spécifié, utiliser les valeurs par défaut
+    $minAge = $minAge ?: $minAgeFromDB;
+    $maxAge = $maxAge ?: $maxAgeFromDB;
+
+    // Construire la requête de filtrage
+    $query = Eleve::whereIn('CODECLAS', $CODECLASArray)
+        ->when($sexe, function ($query, $sexe) {
+            return $query->where('SEXE', $sexe);
+        });
+
+    // Appliquer le filtre d’âge seulement si la case n’est PAS cochée
+    if (!$ignoreYear) {
+        $query->whereBetween('DATENAIS', [
+            ($currentYear - $maxAge) . '-01-01',
+            ($currentYear - $minAge) . '-12-31'
+        ]);
+    }
+
+    $filterEleves = $query
+        ->orderBy('CODECLAS', 'asc')
+        ->orderBy('NOM', 'asc')
+        ->get();
+
+    // Charger les classes et tous les élèves
+    $classesAExclure = ['NON', 'DELETE'];
+    $classes = Classes::whereNotIn('CODECLAS', $classesAExclure)->get();
+    $eleves = Eleve::orderBy('NOM', 'asc')->get();
+
+    Session::put('fill', $filterEleves);
+
+    return view('pages.filterlisteselectiveeleve')
+        ->with('filterEleve', $filterEleves)
+        ->with('classe', $classes)
+        ->with('eleve', $eleves)
+        ->with('minAgeFromDB', $minAgeFromDB)
+        ->with('maxAgeFromDB', $maxAgeFromDB);
+}
 
 
     public function paiementcontrat(Request $request, $CODECLAS, $MATRICULE)

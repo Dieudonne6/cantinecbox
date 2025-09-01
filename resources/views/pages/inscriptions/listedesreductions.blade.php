@@ -101,9 +101,15 @@
                     <div id="contenu">
                         @foreach ($classes as $classe)
                             @php
+                                // Filtrer les élèves de la classe qui ont une réduction
                                 $elevesAvecReduction = $eleves->where('CODECLAS', $classe->CODECLAS)
-                                                              ->where('CodeReduction', '!=', 0);
+                                                            ->where('CodeReduction', '!=', 0);
+
+                                // Récupération des montants de la classe
+                                $classeData = $classes->firstWhere('CODECLAS', $classe->CODECLAS);
+                                $montantInitialClasse = $classeData->APAYER + $classeData->FRAIS1 + $classeData->FRAIS2 + $classeData->FRAIS3 + $classeData->FRAIS4;
                             @endphp
+
                             @if ($elevesAvecReduction->isNotEmpty())
                                 <div class="classe-table" data-classe="{{ $classe->CODECLAS }}">
                                     <h5>{{ $classe->CODECLAS }}</h5>
@@ -133,32 +139,50 @@
                                                         // Récupération de la réduction de l'élève
                                                         $reduction = $reductions->firstWhere('CodeReduction', $eleve->CodeReduction);
 
-                                                        // Récupération des valeurs de réduction depuis la réduction
+                                                        // Récupération des pourcentages
                                                         $pourcentagescolarite = $reduction ? $reduction->Reduction_scolarite : 0;
-                                                        $pourcentagearriere = $reduction ? $reduction->Reduction_arriere : 0;
-                                                        $pourcentagefrais1 = $reduction ? $reduction->Reduction_frais1 : 0;
-                                                        $pourcentagefrais2 = $reduction ? $reduction->Reduction_frais2 : 0;
-                                                        $pourcentagefrais3 = $reduction ? $reduction->Reduction_frais3 : 0;
-                                                        $pourcentagefrais4 = $reduction ? $reduction->Reduction_frais4 : 0;
+                                                        $pourcentagearriere    = $reduction ? $reduction->Reduction_arriere : 0;
+                                                        $pourcentagefrais1     = $reduction ? $reduction->Reduction_frais1 : 0;
+                                                        $pourcentagefrais2     = $reduction ? $reduction->Reduction_frais2 : 0;
+                                                        $pourcentagefrais3     = $reduction ? $reduction->Reduction_frais3 : 0;
+                                                        $pourcentagefrais4     = $reduction ? $reduction->Reduction_frais4 : 0;
 
-                                                        // Calcul des réductions individuelles
-                                                        $reductionScolarite = ($eleve->APAYER * $pourcentagescolarite) / 100;
-                                                        $reductionArriere = ($eleve->ARRIERE * $pourcentagearriere) / 100;
-                                                        $reductionFrais1 = ($eleve->FRAIS1 * $pourcentagefrais1) / 100;
-                                                        $reductionFrais2 = ($eleve->FRAIS2 * $pourcentagefrais2) / 100;
-                                                        $reductionFrais3 = ($eleve->FRAIS3 * $pourcentagefrais3) / 100;
-                                                        $reductionFrais4 = ($eleve->FRAIS4 * $pourcentagefrais4) / 100;
+                                                        // Calcul des montants réduits en fonction du type (pourcentage ou valeur fixe)
+                                                        $reductionScolarite = $pourcentagescolarite > 1 
+                                                            ? $pourcentagescolarite 
+                                                            : ($classeData->APAYER * $pourcentagescolarite);
 
-                                                        // Total de la réduction
+                                                        $reductionArriere = $pourcentagearriere > 1
+                                                            ? $pourcentagearriere
+                                                            : (($classeData->ARRIERE ?? 0) * $pourcentagearriere);
+
+                                                        $reductionFrais1 = $pourcentagefrais1 > 1
+                                                            ? $pourcentagefrais1
+                                                            : ($classeData->FRAIS1 * $pourcentagefrais1);
+
+                                                        $reductionFrais2 = $pourcentagefrais2 > 1
+                                                            ? $pourcentagefrais2
+                                                            : ($classeData->FRAIS2 * $pourcentagefrais2);
+
+                                                        $reductionFrais3 = $pourcentagefrais3 > 1
+                                                            ? $pourcentagefrais3
+                                                            : ($classeData->FRAIS3 * $pourcentagefrais3);
+
+                                                        $reductionFrais4 = $pourcentagefrais4 > 1
+                                                            ? $pourcentagefrais4
+                                                            : ($classeData->FRAIS4 * $pourcentagefrais4);
+
+
+                                                        // Total réduction
                                                         $totalReduction = $reductionScolarite + $reductionArriere + $reductionFrais1 + $reductionFrais2 + $reductionFrais3 + $reductionFrais4;
 
                                                         // Net à payer
-                                                        $netAPayer = $eleve->APAYER - $totalReduction;
+                                                        $netAPayer = $montantInitialClasse - $totalReduction;
                                                     @endphp
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $eleve->NOM }} {{ $eleve->PRENOM }}</td>
-                                                        <td>{{ number_format($eleve->APAYER, 2) }}</td>
+                                                        <td>{{ number_format($montantInitialClasse, 2) }}</td>
                                                         <td>{{ number_format($reductionScolarite, 2) }}</td>
                                                         <td>{{ number_format($reductionArriere, 2) }}</td>
                                                         <td>{{ number_format($reductionFrais1, 2) }}</td>
@@ -175,6 +199,7 @@
                                 </div>
                             @endif
                         @endforeach
+
                         <style>
                             #print-button {
                                 position: relative;
