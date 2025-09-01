@@ -44,7 +44,7 @@
                 </div>
                 <div class="card-body">
                     <h4 class="card-title" id="title"><strong>Situation financière selon échéancier a la date du {{ \Carbon\Carbon::now()->format('d/m/Y') }} </strong> </h4>
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <div class="col-3">
                             <label for="" style="margin-top: 2px">Classe</label>
                             <select class="js-example-basic-multiple w-100" multiple="multiple" name="classeCode[]">
@@ -54,16 +54,13 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-5 mt-4">
+                        <div class="col-8 mt-4">
                             <button class="btn-sm btn-primary" id="submitBtnSFE">Appliquer la sélection</button>
                             <button type="button" class="btn-sm btn-success ml-3" onclick="imprimerPage()">Imprimer</button>
                             <button type="button" class="btn-sm btn-secondary ml-3" onclick="imprimerPageRelance()">Relance</button>
+                            <button type="button" class="btn-sm btn-primary ml-3" onclick="exportToExcel()">Exporter vers Excel</button>
                         </div>
-
-                        
-
-
-                        
+                      
                         {{-- <div class="col-2 mt-4">
                             <button type="button" class="btn-sm btn-primary" onclick="imprimerPage()">Relance</button>
                         </div> --}}
@@ -475,6 +472,73 @@
             // Restaurer le titre de la page après impression
             document.title = titre;
         }
+
+        function exportToExcel() {
+            const contentElement = document.getElementById('contenu');
+            
+            if (!contentElement) {
+                alert('Aucune liste à exporter. Veuillez d\'abord créer la liste.');
+                return;
+            }
+
+            
+            // Cloner le contenu pour ne pas modifier l'original
+            const clone = contentElement.cloneNode(true);
+
+
+            // style Excel plus propre
+            const style = `
+                <style>
+                    table {
+                        border-collapse: collapse;
+                        width: 100%;
+                    }
+                    th, td {
+                        border: 1px solid black;
+                        padding: 5px;
+                        text-align: center;
+                        font-size: 20px;
+                        line-height: 1.5rem;
+                    }
+                    th {
+                        font-weight: bold;
+                    }
+                    td {
+                        text-align: center;
+                    }
+                    td.mat {
+                        mso-number-format:"0";
+                    }
+                </style>
+            `;
+
+            // Construire le HTML complet pour Excel
+            const html = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                    xmlns:x="urn:schemas-microsoft-com:office:excel"
+                    xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <meta charset="UTF-8">
+                    ${style}
+                </head>
+                <body>
+                    
+                    ${clone.innerHTML}
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `situation_financiere.xls`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
 
     </script>
 

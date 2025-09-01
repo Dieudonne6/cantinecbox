@@ -230,7 +230,7 @@ function injectTableStyles () {
             }, 1000);
         }
 
-        function exportToExcel() {
+function exportToExcel() {
     // ----------------------------
     // 1. Récupération des infos globales
     // ----------------------------

@@ -1,3 +1,4 @@
+
 @extends('layouts.master')
 @section('content')
 {{-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> --}}
@@ -34,14 +35,17 @@
         <div class="col-3">
           <button  class="btn btn-primary" id="submitBtn">Appliquer la sélection</button>
         </div>
-        <div class="col-4">
-          <input type="text" id="titreEtat" class="form-control p-2" name="" value="" placeholder="Entrez titre de l'état">
+        <div class="col-2">
+          <input type="text" id="titreEtat" class="form-control p-2" name="" value="" placeholder="Titre de l'état">
         </div>
         
         <div class="col-2">
           <button onclick="imprimerPage()" type="button" class="btn btn-primary">
-            Imprimer Liste
+            Imprimer 
           </button>
+        </div>
+        <div class="col-2 text-center">
+            <button class="btn-sm btn-primary" type="button" onclick="exportToExcel()">Exporter</button>
         </div>
       </div>
       <div class="table-responsive mb-4">
@@ -239,6 +243,50 @@
     }, 100);
 }
 
+
+function exportToExcel() {
+    // Sélectionner la table
+    let table = document.querySelector("#myTab"); 
+    if (!table) {
+        alert("Aucune donnée à exporter !");
+        return;
+    }
+
+    // Récupérer toutes les classes affichées dans le tableau
+    let classes = Array.from(table.querySelectorAll("tbody tr"))
+        .map(row => row.querySelector("td:nth-child(5)")?.textContent.trim()) // Colonne "CLASSE"
+        .filter(classe => classe && classe !== "");
+
+    // Si plusieurs classes, on met "toutes_classes"
+    let classeNom = "classes";
+    if (classes.length === 1) {
+        classeNom = classes[0];
+    } else if (classes.length > 1) {
+        // Vérifie si tous les élèves ont la même classe
+        const uniqueClasses = [...new Set(classes)];
+        if (uniqueClasses.length === 1) {
+            classeNom = uniqueClasses[0];
+        }
+    }
+
+    // Créer le fichier Excel avec XLSX
+    let workbook = XLSX.utils.book_new();
+    let worksheet = XLSX.utils.table_to_sheet(table);
+
+    // Ajouter la feuille au fichier
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Liste des élèves");
+
+    // Générer le nom du fichier dynamique
+    let fileName = `liste_des_eleves_${classeNom}.xlsx`;
+
+    // Sauvegarder le fichier
+    XLSX.writeFile(workbook, fileName);
+}
+
+
+
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     @endsection
     

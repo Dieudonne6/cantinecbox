@@ -1,6 +1,7 @@
-repartitionclassesparoperateur
+@extends('layouts.master')
+@section('content')
 <div class="d-flex justify-content-center align-items-center">
-    <div class="card col-md-10">
+    <div class="card col-md-12">
         <div class="card-body">
             <div>
                 <style>
@@ -31,6 +32,9 @@ repartitionclassesparoperateur
                 </button>
                 <br>
                 <br>                                     
+            </div>
+            <div class="col-12 mt-2 d-flex justify-content-end">
+                <button class="btn btn-primary noprint" onclick="imprimerliste()">Imprimer</button>
             </div>
             <h4 class="card-title">Situation des recouvrements des opérateurs</h4>
             <h4>Période du {{ $dateDebut }} au {{ $dateFin }}</h4>
@@ -64,9 +68,6 @@ repartitionclassesparoperateur
                 </tbody>
             </table>
             <br>
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-primary noprint" onclick="imprimerliste()">Imprimer</button>
-            </div>
         </div>
     </div>
 </div>

@@ -88,6 +88,7 @@
                     </div>
                 </div>
                 <button type="button" class="btn btn-primary justify-content-md-end" id="print-btn">Imprimer</button>
+                <button type="button" class="btn btn-primary justify-content-md-end" id="excel-btn">Exporter vers Excel</button>
                 <div id="result-table" style="display:none;">
                     <!-- Le tableau généré sera inséré ici -->
                 </div>
@@ -116,148 +117,178 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const selectElement = document.getElementById('class-select');
-    const applyButton = document.getElementById('apply-selection');
-    const resultTable = document.getElementById('result-table');
-    const printButton = document.getElementById('print-btn');
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectElement = document.getElementById('class-select');
+        const applyButton = document.getElementById('apply-selection');
+        const resultTable = document.getElementById('result-table');
+        const printButton = document.getElementById('print-btn');
+        const excelButton = document.getElementById('excel-btn');
 
-    applyButton.addEventListener('click', function(event) {
-        event.preventDefault(); // Empêche le rechargement de la page
+        applyButton.addEventListener('click', function(event) {
+            event.preventDefault(); 
 
-        const selectedClasses = Array.from(selectElement.selectedOptions).map(option => option.value);
-        const selectedPlage = document.querySelector('input[name="choixPlage"]:checked')?.value;
+            const selectedClasses = Array.from(selectElement.selectedOptions).map(option => option.value);
+            const selectedPlage = document.querySelector('input[name="choixPlage"]:checked')?.value;
 
-        if (!selectedClasses.length || !selectedPlage) {
-            displayMessage('Veuillez sélectionner une classe et une plage.');
-            return;
-        }
-
-        // Effectuer une requête AJAX pour récupérer les données des élèves
-        fetch(`{{ route('etatdesdroits') }}?${new URLSearchParams({ 'selectedClasses[]': selectedClasses, choixPlage: selectedPlage })}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest' // Indiquer que c'est une requête AJAX
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => {
-                    throw new Error(err.message || 'Erreur lors de la récupération des données.');
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (!data || !data.eleves || data.eleves.length === 0) {
-                displayMessage('Aucune donnée trouvée pour les classes sélectionnées.');
-                resultTable.innerHTML = ''; // Réinitialiser le tableau
-                resultTable.style.display = 'none'; // Masquer le tableau
+            if (!selectedClasses.length || !selectedPlage) {
+                displayMessage('Veuillez sélectionner une classe et une plage.');
                 return;
             }
 
-            resultTable.innerHTML = ''; // Réinitialiser le tableau
+            fetch(`{{ route('etatdesdroits') }}?${new URLSearchParams({ 'selectedClasses[]': selectedClasses, choixPlage: selectedPlage })}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.message || 'Erreur lors de la récupération des données.');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data || !data.eleves || data.eleves.length === 0) {
+                    displayMessage('Aucune donnée trouvée pour les classes sélectionnées.');
+                    resultTable.innerHTML = '';
+                    resultTable.style.display = 'none';
+                    return;
+                }
 
-            // Créer un tableau pour chaque classe sélectionnée
-            selectedClasses.forEach(classe => {
-                const elevesClasse = data.eleves.filter(eleve => eleve.CODECLAS === classe);
-                if (elevesClasse.length === 0) return;
+                resultTable.innerHTML = '';
 
-                const table = document.createElement('div');
-                table.innerHTML = `
-                <br>
-                    <h4>Classe : ${classe}</h4>
-                    <h5>Objet de la recette : ${selectedPlage}</h5>
-                    <table>
-                        <tr>
-                            <th rowspan="2">N°</th>
-                            <th rowspan="2">NOM & PRENOMS</th>
-                            <th rowspan="2">A PAYER</th>
-                            <th colspan="6">MONTANT PAYE - VERSEMENTS</th>
-                            <th rowspan="2">TOTAL PAYE</th>
-                            <th rowspan="2">RESTE A PAYER</th>
-                            <th rowspan="2">OBSE</th>
-                        </tr>
-                        <tr class="sub-header">
-                            <th>VERS1</th>
-                            <th>VERS2</th>
-                            <th>VERS3</th>
-                            <th>VERS4</th>
-                            <th>VERS5</th>
-                            <th>VERS6</th>
-                        </tr>
-                        ${elevesClasse.map((eleve, index) => {
-                            const montants = eleve.montants || [];
-                            const totalPaye = montants.reduce((acc, curr) => acc + (curr.MONTANT || 0), 0);
-                            const resteAPayer = eleve.APAYER - totalPaye; // Calculer la différence entre APAYER et totalPaye
-                            return `
+                selectedClasses.forEach(classe => {
+                    const elevesClasse = data.eleves.filter(eleve => eleve.CODECLAS === classe);
+                    if (elevesClasse.length === 0) return;
+
+                    const table = document.createElement('div');
+                    table.innerHTML = `
+                    <br>
+                        <h4>Classe : ${classe}</h4>
+                        <h5>Objet de la recette : ${selectedPlage}</h5>
+                        <table>
                             <tr>
-                                <td>${index + 1}</td>
-                                <td>${eleve.NOM} ${eleve.PRENOM}</td>
-                                <td>${eleve.APAYER}</td>
-                                ${[...Array(6)].map((_, i) => {
-                                    // Récupérer le montant correspondant à chaque versement
-                                    const montant = eleve.montants && eleve.montants[i] ? eleve.montants[i].MONTANT : 0;
-                                    return `<td>${montant}</td>`;
-                                }).join('')}
-                                <td>${totalPaye}</td>
-                                <td>${resteAPayer}</td> <!-- Utiliser la nouvelle variable resteAPayer -->
+                                <th rowspan="2">N°</th>
+                                <th rowspan="2">NOM & PRENOMS</th>
+                                <th rowspan="2">A PAYER</th>
+                                <th colspan="6">MONTANT PAYE - VERSEMENTS</th>
+                                <th rowspan="2">TOTAL PAYE</th>
+                                <th rowspan="2">RESTE A PAYER</th>
+                                <th rowspan="2">OBSE</th>
+                            </tr>
+                            <tr class="sub-header">
+                                <th>VERS1</th>
+                                <th>VERS2</th>
+                                <th>VERS3</th>
+                                <th>VERS4</th>
+                                <th>VERS5</th>
+                                <th>VERS6</th>
+                            </tr>
+                            ${elevesClasse.map((eleve, index) => {
+                                const montants = eleve.montants || [];
+                                const totalPaye = montants.reduce((acc, curr) => acc + (curr.MONTANT || 0), 0);
+                                const resteAPayer = eleve.APAYER - totalPaye;
+                                return `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${eleve.NOM} ${eleve.PRENOM}</td>
+                                    <td>${eleve.APAYER}</td>
+                                    ${[...Array(6)].map((_, i) => {
+                                        const montant = eleve.montants && eleve.montants[i] ? eleve.montants[i].MONTANT : 0;
+                                        return `<td>${montant}</td>`;
+                                    }).join('')}
+                                    <td>${totalPaye}</td>
+                                    <td>${resteAPayer}</td>
+                                    <td></td>
+                                </tr>`;
+                            }).join('')}
+                            <tr>
+                                <td colspan="2"><strong>Total</strong></td>
+                                <td><strong>${elevesClasse.reduce((acc, eleve) => acc + eleve.APAYER, 0)}</strong></td>
+                                <td colspan="6"></td>
+                                <td><strong>${elevesClasse.reduce((acc, eleve) => {
+                                    const montants = eleve.montants || [];
+                                    return acc + montants.reduce((sum, curr) => sum + (curr.MONTANT || 0), 0);
+                                }, 0)}</strong></td>
+                                <td><strong>${elevesClasse.reduce((acc, eleve) => {
+                                    const montants = eleve.montants || [];
+                                    const totalPaye = montants.reduce((sum, curr) => sum + (curr.MONTANT || 0), 0);
+                                    return acc + (eleve.APAYER - totalPaye);
+                                }, 0)}</strong></td>
                                 <td></td>
-                            </tr>`;
-                        }).join('')}
-                        <tr>
-                            <td colspan="2"><strong>Total</strong></td>
-                            <td><strong>${elevesClasse.reduce((acc, eleve) => acc + eleve.APAYER, 0)}</strong></td>
-                            <td colspan="6"></td>
-                            <td><strong>${elevesClasse.reduce((acc, eleve) => {
-                                const montants = eleve.montants || [];
-                                return acc + montants.reduce((sum, curr) => sum + (curr.MONTANT || 0), 0);
-                            }, 0)}</strong></td>
-                            <td><strong>${elevesClasse.reduce((acc, eleve) => {
-                                const montants = eleve.montants || [];
-                                const totalPaye = montants.reduce((sum, curr) => sum + (curr.MONTANT || 0), 0);
-                                return acc + (eleve.APAYER - totalPaye);
-                            }, 0)}</strong></td>
-                            <td></td>
-                        </tr>
-                    </table>
-                    <br><br>
-                `;
-                resultTable.appendChild(table);
+                            </tr>
+                        </table>
+                        <br><br>
+                    `;
+                    resultTable.appendChild(table);
+                });
+                resultTable.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des données :', error);
+                displayMessage('Une erreur s\'est produite : ' + error.message);
             });
-            resultTable.style.display = 'block';
-        })
-        .catch(error => {
-            console.error('Erreur lors de la récupération des données :', error);
-            displayMessage('Une erreur s\'est produite lors de la récupération des données : ' + error.message);
         });
-    });
 
-    // Fonction d'impression
-    printButton.addEventListener('click', function() {
-        const printContent = resultTable.innerHTML; // Récupérer le contenu du tableau
-        const printWindow = window.open('', '', 'height=600,width=800'); // Ouvrir une nouvelle fenêtre
-        printWindow.document.write('<html><head><title>Impression</title>');
-        printWindow.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ddd; padding: 8px; text-align: center; } th { background-color: #f2f2f2; }</style>'); // Styles pour l'impression
-        printWindow.document.write('<h2 style="text-align: center;">État des droits constatés par classe</h2>');
-        printWindow.document.write('</head><body>');
-        printWindow.document.write(printContent); // Insérer le contenu du tableau
-        printWindow.document.write('</body></html>');
-        printWindow.document.close(); // Fermer le document
-        printWindow.print(); // Lancer l'impression
-    });
+        // Fonction d'impression
+        printButton.addEventListener('click', function() {
+            const printContent = resultTable.innerHTML;
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>Impression</title>');
+            printWindow.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ddd; padding: 8px; text-align: center; } th { background-color: #f2f2f2; }</style>');
+            printWindow.document.write('<h2 style="text-align: center;">État des droits constatés par classe</h2>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(printContent);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        });
 
-    // Fonction pour afficher les messages
-    function displayMessage(message) {
-        const messageContainer = document.createElement('div');
-        messageContainer.className = 'alert alert-warning';
-        messageContainer.textContent = message;
-        document.body.prepend(messageContainer);
-
-        setTimeout(() => {
-            messageContainer.remove();
-        }, 5000);
-    }
-});
-</script>
         
+            // Fonction d'exportation vers Excel (UTF-8 avec BOM pour les accents)
+            excelButton.addEventListener('click', function() {
+                const selectedPlage = document.querySelector('input[name="choixPlage"]:checked')?.value;
+                const selectedClasse = selectElement.value;
+
+                if (!selectedPlage || !selectedClasse) {
+                    displayMessage('Veuillez sélectionner une classe et une plage avant d\'exporter.');
+                    return;
+                }
+
+                // Récupération du contenu HTML du tableau
+                const tableHTML = resultTable.innerHTML;
+
+                // Ajout du BOM UTF-8 pour gérer les accents
+                const blob = new Blob(
+                    ["\uFEFF" + tableHTML],
+                    { type: "application/vnd.ms-excel;charset=utf-8" }
+                );
+
+                // Définition du nom du fichier : Plage_Classe.xls
+                const fileName = `${selectedPlage}_${selectedClasse}.xls`;
+
+                // Création du lien de téléchargement
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+
+
+        // Fonction pour afficher les messages
+        function displayMessage(message) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'alert alert-warning';
+            messageContainer.textContent = message;
+            document.body.prepend(messageContainer);
+
+            setTimeout(() => {
+                messageContainer.remove();
+            }, 5000);
+        }
+    });
+</script>
 @endsection
