@@ -57,7 +57,7 @@
             </select>
           </div>
 
-          <div class="col-3">
+          <div class="col-2">
             <select class="js-example-basic-multiple w-100" name="sexe" id="sexeSelect">
               <option value="">Sélectionner le Sexe</option>    
               <option value="2" {{ request('sexe') == 2 ? 'selected' : '' }}>Fille</option>
@@ -65,7 +65,7 @@
             </select>
           </div>
 
-          <div class="col-4">
+          <div class="col-3">
             <div class="d-flex mb-2 align-items-center">
               <label>Âge compris entre</label>
               <input type="text" class="mx-2 text-right" 
@@ -95,8 +95,12 @@
 
           <div class="col-2">
             <button onclick="imprimerPage()" type="button" class="btn btn-primary">
-              Imprimer Liste
+              Imprimer
             </button>
+            
+          </div>
+           <div class="col-2">          
+             <button type="button" class="btn btn-primary " onclick="exportToExcel()">Exporter vers Excel</button>
           </div>
         </div>
       </form>
@@ -150,12 +154,104 @@
 
       <!-- Script pour l'impression -->
       <script>
+
         function imprimerPage() {
-          let originalTitle = document.title;
-          document.title = `Liste des élèves`;
+          // Récupérer le tableau
+          const table = document.getElementById('myTable');
+          if (!table) {
+              alert("Aucune table trouvée !");
+              return;
+          }
+
+          // Sauvegarder le contenu original de la page
+          const originalContent = document.body.innerHTML;
+
+          // Créer un contenu temporaire pour l'impression
+          document.body.innerHTML = `
+              <div style="text-align:center; margin-bottom:15px;">
+                  <h2>Liste sélective des élèves</h2>
+              </div>
+              ${table.outerHTML}
+          `;
+
+          // Lancer l’impression
           window.print();
-          document.title = originalTitle;
+
+          // Restaurer le contenu original
+          document.body.innerHTML = originalContent;
+
+          // Recharger les scripts JS nécessaires (optionnel si bug DataTables)
+          location.reload();
         }
+
+        function exportToExcel() {
+          const table = $('#myTable').DataTable();
+
+          // Afficher toutes les lignes pour l'export
+          table.page.len(-1).draw();
+
+          const contentElement = document.getElementById('myTable');
+          if (!contentElement) {
+              alert("Aucune table trouvée !");
+              return;
+          }
+
+          // Cloner le tableau complet
+          const clone = contentElement.cloneNode(true);
+
+          // Remettre la pagination à 10 après l'export
+          table.page.len(10).draw();
+
+          // Ajouter des styles propres pour Excel
+          const style = `
+              <style>
+                  table {
+                      border-collapse: collapse;
+                      width: 100%;
+                  }
+                  th, td {
+                      border: 1px solid black;
+                      padding: 5px;
+                      text-align: center;
+                      font-size: 14px;
+                  }
+                  th {
+                      font-weight: bold;
+                      background-color: #f2f2f2;
+                  }
+                  td.mat {
+                      mso-number-format:"0";
+                  }
+              </style>
+          `;
+
+          // Créer le contenu HTML pour Excel
+          const html = `
+              <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                    xmlns:x="urn:schemas-microsoft-com:office:excel"
+                    xmlns="http://www.w3.org/TR/REC-html40">
+              <head>
+                  <meta charset="UTF-8">
+                  ${style}
+              </head>
+              <body>
+                  ${clone.outerHTML}
+              </body>
+              </html>
+          `;
+
+          // Créer un fichier Excel et le télécharger
+          const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `liste_selective_eleves.xls`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
+
       </script>
 
     </div>
