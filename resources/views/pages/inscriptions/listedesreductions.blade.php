@@ -1,3 +1,4 @@
+
 @extends('layouts.master')
 @section('content')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
@@ -46,7 +47,7 @@
             margin: 20mm; /* Ajustez les marges si nécessaire */
         }
     }
-    </style>
+</style>
 
 <div class="main-content">
     <div class="col-lg-12 grid-margin stretch-card">
@@ -87,6 +88,10 @@
                     <button type="button" class="btn btn-primary" id="print-button" onclick="imprimerliste()">
                         Imprimer
                     </button>
+                    <button type="button" class="btn btn-primary" onclick="exportToExcel()">
+                        Exporter vers Excel
+                    </button>
+
                 </div>
                 <div class="container-fluid">
                     <div class="form-group">
@@ -225,6 +230,20 @@
         filtrerClasse();
 
         $('#classe-select').on('change', function() {
+            var selectedOptions = $(this).val() || [];
+
+            if (selectedOptions.includes('all')) {
+                // Si "Tout sélectionner" est choisi → on garde uniquement "all"
+                $(this).val(['all']).trigger('change.select2');
+            } else {
+                // Sinon → on enlève "all" si présent
+                var index = selectedOptions.indexOf('all');
+                if (index > -1) {
+                    selectedOptions.splice(index, 1);
+                    $(this).val(selectedOptions).trigger('change.select2');
+                }
+            }
+
             filtrerClasse();
         });
     });
@@ -249,5 +268,74 @@
             }
         });
     }
+
+    // Fonction pour exporter vers Excel
+    function exportToExcel() {
+        const contentElement = document.getElementById('contenu');
+
+        if (!contentElement) {
+            alert("Aucune liste à exporter. Veuillez d'abord créer la liste.");
+            return;
+        }
+
+        // Cloner le contenu pour éviter les modifications
+        const clone = contentElement.cloneNode(true);
+
+        // Supprimer les boutons et champs inutiles dans l'export
+        const buttons = clone.querySelectorAll('button, .form-group, select');
+        buttons.forEach(el => el.remove());
+
+        // Définir les styles pour Excel
+        const style = `
+            <style>
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                th, td {
+                    border: 1px solid black;
+                    padding: 5px;
+                    text-align: center;
+                    font-size: 14px;
+                    line-height: 1.5rem;
+                }
+                th {
+                    font-weight: bold;
+                    background-color: #f2f2f2;
+                }
+                td.mat {
+                    mso-number-format:"0";
+                }
+            </style>
+        `;
+
+        // Construire le HTML pour Excel
+        const html = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                xmlns:x="urn:schemas-microsoft-com:office:excel"
+                xmlns="http://www.w3.org/TR/REC-html40">
+            <head>
+                <meta charset="UTF-8">
+                ${style}
+            </head>
+            <body>
+                ${clone.innerHTML}
+            </body>
+            </html>
+        `;
+
+        // Créer le fichier Excel
+        const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reductions_eleves.xls`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
 </script>
+
 @endsection

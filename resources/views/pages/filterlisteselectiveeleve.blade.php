@@ -93,14 +93,14 @@
             <button class="btn btn-primary" type="submit">Filtrer</button>
           </div>
 
-          <div class="col-2">
+          <div class="col-2" style="margin-left: 1rem;">
             <button onclick="imprimerPage()" type="button" class="btn btn-primary">
               Imprimer
             </button>
             
           </div>
-           <div class="col-2">          
-             <button type="button" class="btn btn-primary " onclick="exportToExcel()">Exporter vers Excel</button>
+           <div class="col-1">          
+             <button type="button" class="btn btn-primary " onclick="exportToExcel()">Exporter</button>
           </div>
         </div>
       </form>

@@ -87,13 +87,13 @@
             </div>
           </div>
 
-          <div class="col-1">
+          <div class="col-1" >
             <button class="btn btn-primary" type="submit">Filtrer</button>
           </div>
 
-          <div class="col-2">
+          <div class="col-1" style="margin-left: 1rem;">
             <button onclick="imprimerPage()" type="button" class="btn btn-primary">
-              Imprimer Liste
+              Imprimer
             </button>
           </div>
         </div>
