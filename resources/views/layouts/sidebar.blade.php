@@ -47,36 +47,6 @@
                 </ul>
               </div>
             </li>
-            <!-- Bloc Scolarité -->
-            <li class="nav-item">
-              <a class="nav-link {{ request()->is('creerprofil') || request()->is('paramcomposantes') || request()->is('paiementdesnoninscrits') || request()->is('duplicatarecu') || in_array(request()->route()->getName(), $routesFacture) ? 'active' : '' }}"
-                 data-bs-toggle="collapse" href="#scolarite" aria-expanded="{{ request()->is('creerprofil') || request()->is('paramcomposantes') || request()->is('paiementdesnoninscrits') || request()->is('duplicatarecu') || in_array(request()->route()->getName(), $routesFacture) ? 'true' : 'false' }}"
-                 aria-controls="scolarite">
-                Scolarité
-                <i class="menu-arrow"></i>
-              </a>
-              <div class="collapse {{ request()->is('creerprofil') || request()->is('paramcomposantes') || request()->is('paiementdesnoninscrits') || request()->is('duplicatarecu') || request()->is('listefacturescolarite') || in_array(request()->route()->getName(), $routesFacture) ? 'show' : '' }}" id="scolarite" data-bs-parent="#ui-basic">
-                <ul class="nav sub-menu">
-                  <li><a class="nav-link {{ request()->is('creerprofil') ? 'active' : '' }}" href="{{ url('/creerprofil') }}">Créer profils</a></li>
-                  <li><a class="nav-link {{ request()->is('paramcomposantes') ? 'active' : '' }}" href="{{ url('/paramcomposantes') }}"><span class="ab">Paramétrage composantes</span></a></li>
-                  <li><a class="nav-link {{ in_array(request()->route()->getName(), $routesFacture) ? 'active' : '' }}" href="{{ route('facturesclasses') }}">Factures classes</a></li>
-                  {{-- <li><a class="nav-link {{ request()->is('paiementdesnoninscrits') ? 'active' : '' }}" href="{{ url('/paiementdesnoninscrits') }}">Paiement des non inscrits</a></li> --}}
-                  <li><a class="nav-link {{ request()->is('duplicatarecu') ? 'active' : '' }}" href="{{ url('/duplicatarecu') }}">Duplicata</a></li>
-                  <!-- Mise à jour des Paiements pour scolarite-->
-                  <li>
-                    @php
-                      $routesAvoirFacPaiementScolarit = ['listefacturescolarite', 'avoirfacturepaiescolarite', 'avoirfacturescolarite'];
-                    @endphp
-                    <a class="nav-link {{ in_array(request()->route()->getName(), $routesAvoirFacPaiementScolarit) ? 'active' : '' }}"
-                      href="{{ url('/listefacturescolarite') }}">
-                      <span class="menu-title-wrapper">
-                        <span class="menu-title n">Mise à jour des Paiements</span>
-                      </span>
-                    </a>
-                  </li>                
-                </ul>
-              </div>
-            </li>
             <!-- Recalculer effectifs -->
             <li class="nav-item">
               <a class="nav-link {{ request()->is('recalculereffectif') ? 'active' : '' }}" href="{{ url('/recalculereffectifs') }}">
@@ -102,36 +72,72 @@
               </a>
             </li>
 
-                        <!-- Bloc Extraction -->
-                        <li class="nav-item">
-                          <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'active' : '' }}" data-bs-toggle="collapse" href="#extract" aria-expanded="{{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'true' : 'false' }}" aria-controls="extract">
-                            Extraction
-                            <i class="menu-arrow"></i>
-                          </a>
-                          <div class="collapse {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'show' : '' }}" id="extract" data-bs-parent="#form-elements">
-                            <ul class="nav sub-menu">
-                              {{-- <li>
-                                <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutes) ? 'active' : '' }}" href="{{ route('extrairenote') }}">
-                                  Exporter vers EducMaster
-                                </a>
-                              </li> --}}
-                              <li>
-                                <a class="nav-link  {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'active' : '' }}" href="{{ route('exporternote') }}">
-                                  Exporter
-                                </a>
-                              </li>
-                              <li>
-                                <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'active' : '' }}" href="{{ route('importernote') }}">
-                                  Importer
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </li>
+            <!-- Bloc Extraction -->
+            <li class="nav-item">
+              <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'active' : '' }}" data-bs-toggle="collapse" href="#extract" aria-expanded="{{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'true' : 'false' }}" aria-controls="extract">
+                Extraction
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'show' : '' }}" id="extract" data-bs-parent="#form-elements">
+                <ul class="nav sub-menu">
+                  {{-- <li>
+                    <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutes) ? 'active' : '' }}" href="{{ route('extrairenote') }}">
+                      Exporter vers EducMaster
+                    </a>
+                  </li> --}}
+                  <li>
+                    <a class="nav-link  {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'active' : '' }}" href="{{ route('exporternote') }}">
+                      Exporter
+                    </a>
+                  </li>
+                  <li>
+                    <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'active' : '' }}" href="{{ route('importernote') }}">
+                      Importer
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
           </ul>
         </div>
       </li>
 
+      <!-- Bloc Scolarité -->
+      <li class="nav-item">
+        <a class="nav-link"
+            data-bs-toggle="collapse" href="#scolarite" aria-expanded="{{ request()->is('creerprofil') || request()->is('paramcomposantes') || request()->is('paiementdesnoninscrits') || request()->is('duplicatarecu') || in_array(request()->route()->getName(), $routesFacture) ? 'true' : 'false' }}"
+            aria-controls="scolarite"> <i class="typcn typcn-film menu-icon"></i>
+            <span class="menu-title">Scolarité</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse {{ request()->is('creerprofil') || request()->is('editionscolarite') || request()->is('paramcomposantes') || request()->is('paiementdesnoninscrits') || request()->is('duplicatarecu') || request()->is('listefacturescolarite') || in_array(request()->route()->getName(), $routesFacture) ? 'show' : '' }}" id="scolarite" data-bs-parent="#ui-basic">
+          <ul class="nav sub-menu">
+
+            <li><a class="nav-link {{ request()->is('creerprofil') ? 'active' : '' }}" href="{{ url('/creerprofil') }}">Créer profils</a></li>
+            <li><a class="nav-link {{ request()->is('paramcomposantes') ? 'active' : '' }}" href="{{ url('/paramcomposantes') }}"><span class="ab">Paramétrage composantes</span></a></li>
+            <li><a class="nav-link {{ in_array(request()->route()->getName(), $routesFacture) ? 'active' : '' }}" href="{{ route('facturesclasses') }}">Factures classes</a></li>
+            {{-- <li><a class="nav-link {{ request()->is('paiementdesnoninscrits') ? 'active' : '' }}" href="{{ url('/paiementdesnoninscrits') }}">Paiement des non inscrits</a></li> --}}
+            <li><a class="nav-link {{ request()->is('duplicatarecu') ? 'active' : '' }}" href="{{ url('/duplicatarecu') }}">Duplicata</a></li>
+            <!-- Mise à jour des Paiements pour scolarite-->
+            <li>
+              @php
+                $routesAvoirFacPaiementScolarit = ['listefacturescolarite', 'avoirfacturepaiescolarite', 'avoirfacturescolarite'];
+              @endphp
+              <a class="nav-link {{ in_array(request()->route()->getName(), $routesAvoirFacPaiementScolarit) ? 'active' : '' }}"
+                href="{{ url('/listefacturescolarite') }}">
+                <span class="menu-title-wrapper">
+                  <span class="menu-title n">Mise à jour des Paiements</span>
+                </span>
+              </a>
+            </li> 
+            <li>
+              <a class="nav-link {{ request()->is('editionscolarite') ? 'active' : '' }}" href="{{ url('/editionscolarite') }}">
+                Éditions
+              </a>
+            </li>               
+          </ul>
+        </div>
+      </li>
       @php
         $routeparams = [
           'repartitionclassesparoperateur',
@@ -169,7 +175,7 @@
         <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" aria-expanded="{{ in_array(request()->route()->getName(), $routeparams) || in_array(request()->route()->getName(), $routesmanip) || in_array(request()->route()->getName(), $routeSecurite) ? 'true' : 'false' }}"
           aria-controls="form-elements">
           <i class="typcn typcn-film menu-icon"></i>
-          <span class="menu-title">Gestion des notes</span>
+          <span class="menu-title">Notes et Bulletin</span>
           <i class="menu-arrow"></i>
         </a>
         <div class="collapse {{ in_array(request()->route()->getName(), $routeparams) || in_array(request()->route()->getName(), $routesmanip) || in_array(request()->route()->getName(), $routeSecurite) ? 'show' : '' }}" id="form-elements" data-bs-parent="#parent-accordion">
@@ -395,7 +401,8 @@
             'parametre.bornes',
             'parametre.opouverture',
             'parametre.configimprimante',
-            'parametre.changementtrimestre'
+            'parametre.changementtrimestre',
+            'password.show'
           ) ? 'true' : 'false' }}"
           aria-controls="parametreSubmenu">
           <i class="typcn typcn-globe-outline menu-icon"></i>
@@ -409,7 +416,8 @@
             'parametre.bornes',
             'parametre.opouverture',
             'parametre.configimprimante',
-            'parametre.changementtrimestre'
+            'parametre.changementtrimestre',
+            'password.show'
           ) ? 'show' : '' }}"
           id="parametreSubmenu"
           data-bs-parent="#parent-accordion">
@@ -448,6 +456,12 @@
               <a class="nav-link {{ request()->routeIs('parametre.changementtrimestre') ? 'active' : '' }}"
                 href="{{ route('parametre.changementtrimestre') }}">
                 Changement de trimestre
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {{ request()->routeIs('password.show') ? 'active' : '' }}"
+                href="{{ route('password.show') }}">
+                Modifier le mot de passe
               </a>
             </li>
           </ul>
