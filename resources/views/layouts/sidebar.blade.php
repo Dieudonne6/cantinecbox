@@ -401,7 +401,8 @@
             'parametre.bornes',
             'parametre.opouverture',
             'parametre.configimprimante',
-            'parametre.changementtrimestre'
+            'parametre.changementtrimestre',
+            'password.show'
           ) ? 'true' : 'false' }}"
           aria-controls="parametreSubmenu">
           <i class="typcn typcn-globe-outline menu-icon"></i>
@@ -415,7 +416,8 @@
             'parametre.bornes',
             'parametre.opouverture',
             'parametre.configimprimante',
-            'parametre.changementtrimestre'
+            'parametre.changementtrimestre',
+            'password.show'
           ) ? 'show' : '' }}"
           id="parametreSubmenu"
           data-bs-parent="#parent-accordion">
@@ -454,6 +456,12 @@
               <a class="nav-link {{ request()->routeIs('parametre.changementtrimestre') ? 'active' : '' }}"
                 href="{{ route('parametre.changementtrimestre') }}">
                 Changement de trimestre
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {{ request()->routeIs('password.show') ? 'active' : '' }}"
+                href="{{ route('password.show') }}">
+                Modifier le mot de passe
               </a>
             </li>
           </ul>
