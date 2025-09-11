@@ -29,7 +29,7 @@
 			<button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
 				<i class="fas fa-arrow-left"></i> Retour
 			</button>   
-			<br>
+			<br> 
 			<br>                                   
 		</div>
 		<div class="card-body">

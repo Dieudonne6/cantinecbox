@@ -46,7 +46,7 @@
   <br>                                     
 </div>
 <div class="row">
-  <div class="col-lg-3">
+  <div class="col-12 mt-2 d-flex justify-content-end">
     <button id="" class="btn btn-primary" onclick="imprimerArriereConstat()"> Imprimer</button>
     
   </div>

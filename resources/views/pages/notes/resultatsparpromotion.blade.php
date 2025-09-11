@@ -171,7 +171,16 @@
                                 <div class="col-md-6 mb-1">
                                     <button class="btn btn-secondary btn-sm"
                                         onclick="printFilteredTable()">Imprimer</button>
+                                   
                                 </div>
+
+                            </div>
+                            <div class="row">
+                                
+                                <div class="col-md-12 text-center">
+                                    <button class="btn-sm btn-primary" type="button" onclick="exportToExcel()">Exporter</button>
+                                </div>
+                                
                             </div>
                         </div>
 
@@ -184,15 +193,6 @@
                             </div>
                         </div>
 
-
-                        <!-- Filtre sur la conduite -->
-                        {{-- <div class="form-group">
-                            <label for="conduite_min"><strong>Exclure conduite inférieure à</strong></label>
-                            <input type="number" step="0.01" class="form-control form-control-sm" id="conduite_min"
-                                placeholder="0.00">
-                        </div> --}}
-
-                       
                     </div>
 
                     <!-- Colonne de droite : Tableau des résultats -->
@@ -699,5 +699,88 @@
 
             newWin.document.close();
         }
+
+
+
+        function exportToExcel() {
+    // Déterminer quel tableau est visible
+    const elevesTable = document.getElementById('elevesTable');
+    const notesTable = document.getElementById('notesTable');
+    let contentElement = null;
+
+    if (notesTable.style.display === 'table') {
+        contentElement = notesTable;
+    } else if (elevesTable.style.display === 'table') {
+        contentElement = elevesTable;
+    } else {
+        alert('Aucun rapport à exporter. Veuillez d\'abord lancer une recherche.');
+        return;
+    }
+
+    // Cloner le tableau pour ne pas modifier l'original
+    const clone = contentElement.cloneNode(true);
+
+    // Style Excel
+    const style = `
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+            th, td {
+                border: 1px solid black;
+                padding: 5px;
+                text-align: center;
+                font-size: 13px;
+                line-height: 1.4rem;
+            }
+            th {
+                font-weight: bold;
+                background-color: #f2f2f2;
+            }
+            td {
+                text-align: center;
+            }
+            td.mat {
+                mso-number-format:"0";
+            }
+        </style>
+    `;
+
+    // Construire le HTML pour Excel
+    const html = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office"
+              xmlns:x="urn:schemas-microsoft-com:office:excel"
+              xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+            <meta charset="UTF-8">
+            ${style}
+        </head>
+        <body>
+            ${clone.outerHTML}
+        </body>
+        </html>
+    `;
+
+    // Génération du fichier Excel
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+
+    // Récupération des infos pour le nom du fichier
+    const classe = document.getElementById('additionalInfo').value || 'Toutes_Classes';
+    const matiere = document.getElementById('matiere').selectedOptions[0].text || 'Moyenne_Generale';
+    const periode = document.getElementById('periode').value;
+    const periodeNom = (periode === 'AN') ? 'Annuel' : `Periode_${periode}`;
+
+    a.download = `resultats_${classe}_${matiere}_${periodeNom}.xls`;
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
     </script>
 @endsection

@@ -1,3 +1,4 @@
+
 @extends('layouts.master')
 @section('content')
     <style>
@@ -55,14 +56,15 @@
                 <div class="form-group row">
                     <div class="col-3">
                         <button class="btn btn-primary" onclick="printNote()">Imprimer</button>
+                         <button class="btn-sm btn-primary" type="button" onclick="exportToExcel()">Exporter</button>
                     </div>
                 </div>
                 <div class="row grid-margin stretch-card">
                     <div class="col-lg-12 mx-auto " id="printNot">
-                        <div class="d-none titles">
+                        <div class="titles">
                             <h3 style="text-transform: uppercase; margin-bottom: 1rem; text-align: center">Releves de notes
                             </h3>
-                            <h5>{{ $nomEtab }} </h5>
+                           {{-- <h5>{{ $nomEtab }} </h5>--}}
                             <p>Classe : {{ $classe }} </p>
                             <p>Matiere : {{ $matiere }} </p>
                             <p> {{ $typean == 2 ? 'Trimestre' : 'Semestre' }}: {{ $periode }} </p>
@@ -115,7 +117,7 @@
                                     @foreach ($notes as $note)
                                         <tr>
                                             {{-- <td>{{ $count }}</td> --}}
-                                            <td>{{ $note->MATRICULEX ?? '****' }}</td>
+                                            <td class="mat">{{ $note->MATRICULEX ?? '****' }}</td>
                                             <td style="text-align: left;">{{ $note->nom ?? '****' }}</td>
                                             <td style="text-align: left;">{{ $note->prenom ?? '****' }}</td>
                                             <td>{{ filtrerNote($note->INT1) }}</td>
@@ -182,5 +184,83 @@
                 document.body.innerHTML = originalContent; // Restaurer le contenu original
             }, 1000);
         }
-    </script>
+
+
+
+    function exportToExcel() {
+        const contentElement = document.getElementById('printNot');
+        
+        if (!contentElement) {
+            alert('Aucun relevé à exporter. Veuillez d\'abord le créer.');
+            return;
+        }
+
+        // Cloner le contenu pour ne pas modifier l'original
+        const clone = contentElement.cloneNode(true);
+
+        // style Excel plus propre
+        const style = `
+            <style>
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                th, td {
+                    border: 1px solid black;
+                    padding: 5px;
+                    text-align: center;
+                    font-size: 20px;
+                    line-height: 1.5rem;
+                }
+                th {
+                    font-weight: bold;
+                }
+                td {
+                    text-align: center;
+                }
+                td.mat {
+                    mso-number-format:"0";
+                }
+            </style>
+        `;
+
+        // Construire le HTML complet pour Excel
+        const html = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                xmlns:x="urn:schemas-microsoft-com:office:excel"
+                xmlns="http://www.w3.org/TR/REC-html40">
+            <head>
+                <meta charset="UTF-8">
+                ${style}
+            </head>
+            <body>
+                ${clone.innerHTML}
+            </body>
+            </html>
+        `;
+
+        // 🔹 Construire le nom du fichier dynamiquement depuis Blade
+        let classe = "{{ $classe }}";
+        let matiere = "{{ $matiere }}";
+        let periodeType = "{{ $typean == 2 ? 'Trimestre' : 'Semestre' }}";
+        let periode = "{{ $periode }}";
+
+        // Nettoyer pour éviter espaces/accents non supportés
+        let filename = `Releve_${classe}_${matiere}_${periodeType}_${periode}.xls`
+            .replace(/\s+/g, "_")      // remplace espaces par _
+            .replace(/[^\w\-]+/g, ""); // supprime caractères spéciaux
+
+        const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+   
+   </script>
 @endsection

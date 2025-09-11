@@ -993,7 +993,7 @@ function genererEcheancier() {
     // const montantNouveauUtilise = parseFloat(document.getElementById('montantNouveauUtilise').value) || 0;
 
     // Vérifier si les montants correspondent pour les nouveaux élèves
-    // if (totalMontantNouveauTableau !== montantNouveauUtilise) {
+    // if (totalMontantNouveauTableau !== montantNouveauUtilise) { 
     //     showModalMessage('Le total des montants dans le tableau des nouveaux élèves ne correspond pas au montant des nouveaux à utiliser.');
     //     return; // Ne pas soumettre le formulaire
     // }

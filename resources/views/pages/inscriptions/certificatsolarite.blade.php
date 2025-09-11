@@ -76,6 +76,7 @@
             <input type="hidden" name="matricules" id="matricules">
       
             <button type="submit" class="btn btn-primary btn-sm">Imprimer</button>
+             
           </form>
         </div>
       </div>
@@ -139,6 +140,6 @@
       }
     });
   });
-</script>
 
+</script>
 @endsection

@@ -165,31 +165,18 @@
                           <input type="date" id="date-inscription" name="dateInscription" class="form-control" value="{{ $modifieleve->DATEINS }}">
                         </div>
                         <div class="col-md-4">
-                          <label for="departement">Département</label>
-                          <select class="js-example-basic-multiple w-100" id="departement" name="departement" >
-                           <select class="js-example-basic-multiple w-100" id="departement" name="departement">
-                                <option value=""></option>
-                            </select>
+    <label for="departement">Département</label>
+    <select class="js-example-basic-multiple w-100" id="departement" name="departement">
+        <option value=""></option>
+        @foreach($departements as $dep)
+            <option value="{{ $dep->CODEDEPT }}" 
+                {{ $modifieleve->CODEDEPT == $dep->CODEDEPT ? 'selected' : '' }}>
+                {{ $dep->LIBELDEP }}
+            </option>
+        @endforeach
+    </select>
+</div>
 
-                            <script>
-                            const departements = [
-                              "Alibori","Atacora","Atlantique","Borgou",
-                              "Collines","Couffo","Donga","Littoral",
-                              "Mono","Ouémé","Plateau","Zou"
-                            ];
-
-                            let select = document.getElementById("departement");
-                            departements.forEach(dep => {
-                              let opt = document.createElement("option");
-                              opt.value = dep;
-                              opt.textContent = dep;
-                              select.appendChild(opt);
-                            });
-                            </script>
-
-                           
-                          </select>
-                        </div>
                       </div>
                       
                       <!-- Section Détails Additionnels -->

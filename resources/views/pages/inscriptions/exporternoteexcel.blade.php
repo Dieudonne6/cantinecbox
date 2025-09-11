@@ -53,30 +53,56 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $classePrecedente = null;
+                        @endphp
+
                         @foreach ($eleves as $classe => $groupe)
                             @foreach ($groupe as $eleve)
+
+                                {{-- Si la classe change, insérer une ligne d'espace  --}}
+                                @if($classePrecedente !== null && $classePrecedente !== $eleve->CODECLAS)
+                                    <tr>
+                                        <td style="border-top:none; border-bottom:none; height:15px;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-top:none; border-bottom:none; height:15px;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                        <td style="border-top:none; border-bottom:none;"></td>
+                                    </tr>
+                                @endif
+
                                 <tr>
                                     <td class="mat">{{ $eleve->MATRICULEX }}</td>
                                     <td>{{ $eleve->NOM }}</td>
                                     <td>{{ $eleve->PRENOM }}</td>
                                     <td>{{ $eleve->SEXE == 1 ? 'M' : 'F' }}</td>
-                                    <td>{{ $eleve->STATUT == 0 ? 'N' : 'R' }}</td> 
-                                    <td>{{ $eleve->CODECLAS}}</td>
+                                    <td>{{ $eleve->STATUT == 0 ? 'N' : 'R' }}</td>
+                                    <td>{{ $eleve->CODECLAS }}</td>
                                     <td>{{ $eleve->DATENAIS }}</td>
-                                    <td>{{ $eleve->LIEUNAIS }}</td>   
+                                    <td>{{ $eleve->LIEUNAIS }}</td>
                                 </tr>
+
+                                @php
+                                    $classePrecedente = $eleve->CODECLAS;
+                                @endphp
+
                             @endforeach
-
-                            {{-- Ligne espace visuel --}}
-                            <tr style="border:none; mso-height-source:userset; height:30px;">
-                                <td colspan="8" style="border:none;">&nbsp;</td>
-                            </tr>
-                             <tr style="border:none; mso-height-source:userset; height:30px;">
-                                <td colspan="8" style="border:none;">&nbsp;</td>
-                            </tr>
                         @endforeach
-
                     </tbody>
+
                 </table>
             </div>
 

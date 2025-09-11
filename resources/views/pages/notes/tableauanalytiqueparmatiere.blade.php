@@ -105,6 +105,7 @@
             <div class="container" >
                 <div class="d-flex justify-content-between">
                     <button class="btn btn-primary" onclick="imprimerliste()">Imprimer</button>
+                    <button class="btn btn-primary btn-sm fw-bold " type="button" onclick="exportToExcel()" >Exporter vers Excel</button>
                 </div>
                 <div class="col-lg-12 mx-auto " id="printNot">
 
@@ -228,5 +229,109 @@ function injectTableStyles () {
                 document.body.innerHTML = originalContent; // Restaurer le contenu original
             }, 1000);
         }
+
+function exportToExcel() {
+    // ----------------------------
+    // 1. Récupération des infos globales
+    // ----------------------------
+    const ecole = @json($nomEtab); // Nom de l'établissement
+    const periode = @json($periodeParDefaut);
+    const anneeScolaire = @json($annescolaire);
+    const typeAn = @json($typean) == 2 ? "Trimestre" : "Semestre";
+    const dateExport = new Date().toLocaleDateString('fr-FR');
+
+    // ----------------------------
+    // 2. Récupération de la zone à exporter
+    // ----------------------------
+    const printZone = document.getElementById('printNot');
+    if (!printZone) {
+        alert("Aucune donnée à exporter !");
+        return;
+    }
+
+    // ----------------------------
+    // 3. Cloner le contenu pour éviter de le modifier
+    // ----------------------------
+    const contentCopy = printZone.cloneNode(true);
+
+    // Supprimer les boutons ou éléments inutiles
+    contentCopy.querySelectorAll("button").forEach(btn => btn.remove());
+
+    // ----------------------------
+    // 4. Styles Excel
+    // ----------------------------
+    const style = `
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            h3, h5, p {
+                text-align: center;
+                margin: 5px 0;
+            }
+            .header {
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 25px;
+            }
+            th, td {
+                border: 1px solid black;
+                padding: 6px;
+                text-align: center;
+                font-size: 13px;
+            }
+            th {
+                font-weight: bold;
+                background-color: #f2f2f2;
+            }
+        </style>
+    `;
+
+    // ----------------------------
+    // 5. Construction du HTML à exporter
+    // ----------------------------
+    const html = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office"
+              xmlns:x="urn:schemas-microsoft-com:office:excel"
+              xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+            <meta charset="UTF-8">
+            ${style}
+        </head>
+        <body>
+            <div class="header">
+                <h2>${ecole}</h2>
+                <h3>Statistiques par Matière</h3>
+                <p>
+                    ${typeAn} : ${periode} | Année scolaire : ${anneeScolaire} <br>
+                    Exporté le ${dateExport}
+                </p>
+            </div>
+            ${contentCopy.innerHTML}
+        </body>
+        </html>
+    `;
+
+    // ----------------------------
+    // 6. Création et téléchargement du fichier Excel
+    // ----------------------------
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+
+    // Nom du fichier dynamique
+    a.download = `Statistiques_Matieres_${anneeScolaire}_${dateExport}.xls`;
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
 </script>
 @endsection

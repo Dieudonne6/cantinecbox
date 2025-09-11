@@ -64,7 +64,7 @@ Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
 Route::get('/listegeneraleeleve/{CODECLAS}', [ClassesController::class, 'listegeneraleeleve']);
 //Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'getElevesByClasse']);
 
-Route::get('/filterlisteselectiveeleve', [ClassesController::class, 'filterlisteselectiveeleve']);
+Route::get('/filterlisteselectiveeleve', [ClassesController::class, 'filterlisteselectiveeleve'])->name('filterlisteselectiveeleve');
 
 // Route::get('/eleve/{CODECLAS}', 'EleveController@getElevesByClasse');
 Route::post('/traiter', [ClassesController::class, 'traiter']);

@@ -41,7 +41,8 @@
             <h4 class="card-title">Situation financière globale</h4>
             <div class="row gy-3">
               <div class="demo-inline-spacing">
-                <button type="button" class="btn btn-primary" id="printBtn" onclick="imprimerPage();">Imprimer</button>    
+                <button type="button" class="btn btn-primary" id="printBtn" onclick="imprimerPage();">Imprimer</button> 
+                 <button type="button" class="btn-sm btn-primary ml-3" onclick="exportToExcel()">Exporter vers Excel</button>   
               </div>
             </div>
           </div>
@@ -210,5 +211,73 @@
       document.body.removeChild(printDiv);
       document.head.removeChild(style);
     }
-  </script>
+
+    function exportToExcel() {
+      const table = $('#myTable').DataTable();
+
+      // Désactiver la pagination pour avoir toutes les lignes visibles
+      table.page.len(-1).draw();
+
+      const contentElement = document.getElementById('myTable');
+
+      if (!contentElement) {
+          alert("Aucune liste à exporter. Veuillez d'abord créer la liste.");
+          return;
+      }
+
+      const clone = contentElement.cloneNode(true);
+
+      // Remettre la pagination à 10 après l'export
+      table.page.len(10).draw();
+
+      const style = `
+          <style>
+              table {
+                  border-collapse: collapse;
+                  width: 100%;
+              }
+              th, td {
+                  border: 1px solid black;
+                  padding: 5px;
+                  text-align: center;
+                  font-size: 14px;
+                  line-height: 1.5rem;
+              }
+              th {
+                  font-weight: bold;
+                  background-color: #f2f2f2;
+              }
+              td.mat {
+                  mso-number-format:"0";
+              }
+          </style>
+      `;
+
+      const html = `
+          <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                xmlns:x="urn:schemas-microsoft-com:office:excel"
+                xmlns="http://www.w3.org/TR/REC-html40">
+          <head>
+              <meta charset="UTF-8">
+              ${style}
+          </head>
+          <body>
+              ${clone.outerHTML}
+          </body>
+          </html>
+      `;
+
+      const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `situation_financiere_globale.xls`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+
+</script>
 @endsection

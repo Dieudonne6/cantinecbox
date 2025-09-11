@@ -34,7 +34,7 @@
                     <br>                                   
                 </div>
                 <div class="card-body">
-                    <h4 class="card-title">Edition des fiches de note vierges</h4>
+                    <h4 class="card-title">Edition des fiches de note vierges </h4>
                     <div class="row mb-3">
                         <div class="col-3">
                             <label for="" style="margin-top: 2px">Classe</label>

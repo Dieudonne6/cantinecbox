@@ -29,7 +29,7 @@
                     }
                 </style>
                 <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
-                    <i class="fas fa-arrow-left"></i> Retour
+                    <i class="fas fa-arrow-left"></i> Retour 
                 </button>
                 <br>
                 <br>                                     
@@ -52,25 +52,24 @@
             <h4 class="text-center">Sélectionner l'état que vous souhaitez imprimer</h4>
             <br>
                 @csrf
-                <div class="row justify-content-center">
-                    <div class="col-md-6 grid-margin stretch-card">
+                <div class="justify-content-center">
+                    <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <div class="form-group row mt-1">
-                                    <div class="col-12 ">
-                                        <label for="groupe" class="col-form-label">Choisir un groupe</label>
-                                        <label for="typeclasse" class="col-form-label" style="margin-left: 11rem">Types de classe</label>
-                                        
+                                <div class="form-group col-md-12 row mt-1">
+                                    <div class="col-md-6">
+                                        <label for="groupe" >Choisir un groupe</label>
+                                        <select  id="groupe" name="groupe" aria-label="Small select example" >
+                                            @foreach ($groupeclasse as $groupe)
+                                                <option value="{{ $groupe->LibelleGroupe }}">{{ $groupe->LibelleGroupe }}</option>
+                                            @endforeach
+                                        </select>                                        
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-md-6">
+                                        <label for="typeclasse" >Types de classe</label>
                                         <select id="typeclasse" name="typeclasse" aria-label="Small select example" >
                                             @foreach ($typeclasse as $type)
                                                 <option value="{{ $type->TYPECLASSE }}">{{ $type->LibelleType }}</option>
-                                            @endforeach
-                                        </select>
-                                        <select  id="groupe" name="groupe" aria-label="Small select example" style=" margin-left: 10rem;">
-                                            @foreach ($groupeclasse as $groupe)
-                                                <option value="{{ $groupe->LibelleGroupe }}">{{ $groupe->LibelleGroupe }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -88,13 +87,21 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="radio-inline">
+                        
+                            <div class="card-body col-md-12 row">
+                                <div class="row col-md-8">
+                                    <div class="radio-inline">
+                                        <input type="radio" id="option4" name="choixPlage" value="option4">
+                                        <label for="option4" style="font-size: 14px; font-weight: bold">Journal détaillé des recouvrements avec précision des composantes</label>
+                                        <h6 style="font-size: 14px; margin-left: 20px">Liste des élèves ayant payé par jour et par composante</h6>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" id="option5" name="choixPlage" value="option5">
+                                        <label for="option5" style="font-size: 14px; font-weight: bold">Journal détaillé des recouvrements sans précision des composantes</label>
+                                        <h6 style="font-size: 14px; margin-left: 20px">Liste des élèves ayant payé par jour sans précision des composantes</h6>
+                                    </div>
+                                </div>
+                                <div class="radio-inline col-md-4">
                                     <select class="form-select mb-2" name="typeenseign" id="typeenseign">
                                         <option selected>Sélectionner un enseignement</option>
                                         @foreach ($typeenseign as $type)
@@ -103,23 +110,8 @@
                                     </select>
                                 </div>
                                 <br>
-                                <div class="radio-inline">
-                                    <input type="radio" id="option4" name="choixPlage" value="option4">
-                                    <label for="option4" style="font-size: 14px; font-weight: bold">Journal détaillé des recouvrements avec précision des composantes</label>
-                                    <h6 style="font-size: 14px; margin-left: 20px">Liste des élèves ayant payé par jour et par composante</h6>
-                                </div>
-                                <div class="radio-inline">
-                                    <input type="radio" id="option5" name="choixPlage" value="option5">
-                                    <label for="option5" style="font-size: 14px; font-weight: bold">Journal détaillé des recouvrements sans précision des composantes</label>
-                                    <h6 style="font-size: 14px; margin-left: 20px">Liste des élèves ayant payé par jour sans précision des composantes</h6>
-                                </div>
-                                <br>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 grid-margin stretch-card">
-                        <div class="card">
+                        
                             <div class="card-body">
                                 <div class="radio-inline">
                                     <input type="radio" id="option6" name="choixPlage" value="option6">
@@ -234,6 +226,6 @@
     
 </style>
 
-Route::get('/recouvrementGenParPeriode/{datedebut}/{datefin}/{typeclasse}/{groupe}', [PagesController::class, 'recouvrementGenParPeriode'])->name('recouvrementgeneral');
+{{-- Route::get('/recouvrementGenParPeriode/{datedebut}/{datefin}/{typeclasse}/{groupe}', [PagesController::class, 'recouvrementGenParPeriode'])->name('recouvrementgeneral'); --}}
 
 @endsection

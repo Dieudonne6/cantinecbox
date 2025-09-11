@@ -230,6 +230,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
           <a type="button" id="btnImprimerregistre" class="btn btn-primary">Imprimer</a>
+                 
         </div>
       </div>
     </div>
@@ -536,8 +537,7 @@
           window.print();
           document.body.innerHTML = originalContent;
         }, 1000);
-      }
-      
+      } 
     </script>
 
   <!-- Modal de rénovation -->
@@ -556,6 +556,7 @@
       </div>
     </div>
   </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 @endsection
     

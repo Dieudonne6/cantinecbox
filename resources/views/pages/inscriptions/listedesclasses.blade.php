@@ -48,9 +48,10 @@
                 <div class="card-body">
                     <div class="d-grid gap-2 d-md-flex justify-content-between" style="margin-top: 20px; margin-bottom: 40px;"> <!-- Ajout d'un margin-bottom pour espacer le bouton du footer -->
                         <h2>Liste des classes</h2>
-                        <button type="button" class="btn btn-primary btn-lg btn-print" onclick="imprimerliste()"> <!-- Ajout de la classe btn-lg pour agrandir le bouton -->
+                        <button type="button" class="btn btn-primary btn-lg btn-print" onclick="imprimerliste()" style="margin-"> <!-- Ajout de la classe btn-lg pour agrandir le bouton -->
                             Imprimer
-                        </button>
+                        </button>                       
+                        <button class="btn-sm btn-primary" type="button" onclick="exportToExcel()">Exporter vers Excel</button>                          
                     </div>
                     <div class="container-fluid d-flex align-items-center justify-content-center">
                         <div id="contenu">
@@ -166,3 +167,72 @@
         }
     }
 </style>
+
+<script>
+      function exportToExcel() {
+        const contentElement = document.getElementById('contenu');
+        
+        if (!contentElement) {
+            alert('Aucune liste à exporter. Veuillez d\'abord créer la liste.');
+            return;
+        }
+
+        
+        // Cloner le contenu pour ne pas modifier l'original
+        const clone = contentElement.cloneNode(true);
+
+
+        // style Excel plus propre
+        const style = `
+            <style>
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                th, td {
+                    border: 1px solid black;
+                    padding: 5px;
+                    text-align: center;
+                    font-size: 20px;
+                    line-height: 1.5rem;
+                }
+                th {
+                    font-weight: bold;
+                }
+                td {
+                    text-align: center;
+                }
+                td.mat {
+                    mso-number-format:"0";
+                }
+            </style>
+        `;
+
+        // Construire le HTML complet pour Excel
+        const html = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                xmlns:x="urn:schemas-microsoft-com:office:excel"
+                xmlns="http://www.w3.org/TR/REC-html40">
+            <head>
+                <meta charset="UTF-8">
+                ${style}
+            </head>
+            <body>
+                
+                ${clone.innerHTML}
+            </body>
+            </html>
+        `;
+
+        const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `liste_des_classes.xls`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+</script>

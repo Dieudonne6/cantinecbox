@@ -130,6 +130,13 @@
                                         onclick="printFilteredTable()">Imprimer</button>
                                 </div>
                             </div>
+                             <div class="row">
+                                
+                                <div class="col-md-12 text-center">
+                                    <button class="btn-sm btn-primary" type="button" onclick="exportToExcel()">Exporter</button>
+                                </div>
+                                
+                            </div>
                         </div>
 
                         <!-- Nombre de méritants -->
@@ -704,5 +711,178 @@
 
             newWin.document.close();
         }
+
+
+
+
+        function exportToExcel() {
+    // ----------------------------
+    // 1. Récupération des données
+    // ----------------------------
+    const ecole = @json($params->NOMETAB); // Nom de l'établissement
+    const dateExport = new Date().toLocaleDateString('fr-FR');
+    const titre = "Liste des méritants";
+
+    // Récupération du nombre de méritants
+    const nombre = document.getElementById('nombre').value || 10;
+    const topMeritants = `${nombre} premiers`;
+
+    // Filtre sélectionné
+    const filtreInput = document.querySelector('input[name="filtre"]:checked');
+    const filtreSelectionne = filtreInput ? filtreInput.value : 'tout';
+    let filtreText = "";
+    switch (filtreSelectionne) {
+        case 'classe':
+            filtreText = "Par classe";
+            break;
+        case 'promotion':
+            filtreText = "Par promotion";
+            break;
+        case 'cycle':
+            filtreText = "Par cycle";
+            break;
+        default:
+            filtreText = "Tout l'établissement";
+    }
+
+    // Matière
+    const matiereSelect = document.getElementById('matiere');
+    let matiereValue = matiereSelect.value;
+    let matiereLabel = (matiereValue === 'moyenne_generale') ? 
+        "Moyenne générale" : 
+        (matiereSelect.options[matiereSelect.selectedIndex]?.text || "Moyenne générale");
+
+    // Sexe
+    const sexeSelect = document.getElementById('sexe');
+    const sexeValue = sexeSelect.value;
+    const sexeLabel = sexeValue === "1" ? "Garçons" : sexeValue === "2" ? "Filles" : "Aucune";
+
+    // Année scolaire
+    const anneeScolaire = document.getElementById('annescolaire').value;
+
+    // Période / Semestre
+    const periodeSelect = document.getElementById('periode');
+    const periodeValue = periodeSelect.value;
+    const semestreLabel = (periodeValue === 'AN') ? "Annuel" : `Période ${periodeValue}`;
+
+    // ----------------------------
+    // 2. Déterminer quel tableau exporter
+    // ----------------------------
+    const elevesTable = document.getElementById('elevesTable');
+    const notesTable = document.getElementById('notesTable');
+    let tableToUse = (notesTable.style.display === 'table') ? notesTable : elevesTable;
+
+    // Vérifier s'il y a des données
+    const tbody = tableToUse.querySelector('tbody');
+    if (!tbody || tbody.rows.length === 0) {
+        alert("Aucune donnée à exporter !");
+        return;
+    }
+
+    // Cloner le tableau pour éviter de le modifier
+    const tableCopy = tableToUse.cloneNode(true);
+
+    // Vérifier si une seule classe → supprimer colonne "Classe"
+    const additionalInfo = document.getElementById('additionalInfo').value;
+    const isOneClass = !additionalInfo.includes(',');
+    if (isOneClass) {
+        const headers = tableCopy.querySelectorAll('th');
+        const rows = tableCopy.querySelectorAll('tr');
+        let classeIndex = -1;
+
+        headers.forEach((header, index) => {
+            if (header.textContent.trim() === 'Classe') {
+                classeIndex = index;
+            }
+        });
+
+        if (classeIndex !== -1) {
+            rows.forEach(row => {
+                if (row.cells.length > classeIndex) {
+                    row.cells[classeIndex].remove();
+                }
+            });
+        }
+    }
+
+    // ----------------------------
+    // 3. Style Excel
+    // ----------------------------
+    const style = `
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            h2, h3 {
+                text-align: center;
+                margin: 5px 0;
+            }
+            .header {
+                margin-bottom: 15px;
+                text-align: center;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+            th, td {
+                border: 1px solid black;
+                padding: 6px;
+                text-align: center;
+                font-size: 13px;
+            }
+            th {
+                font-weight: bold;
+                background-color: #f2f2f2;
+            }
+        </style>
+    `;
+
+    // ----------------------------
+    // 4. Construction du contenu Excel
+    // ----------------------------
+    const html = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office"
+              xmlns:x="urn:schemas-microsoft-com:office:excel"
+              xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+            <meta charset="UTF-8">
+            ${style}
+        </head>
+        <body>
+            <div class="header">
+                <h2>${ecole}</h2>
+                <h3>${titre} — ${topMeritants}</h3>
+                <p>
+                    Classe : ${additionalInfo || "Toutes"} | 
+                    Matière : ${matiereLabel} | 
+                    Période : ${semestreLabel} | 
+                    Sexe : ${sexeLabel} | 
+                    Année scolaire : ${anneeScolaire} <br>
+                    Filtre : ${filtreText} | Exporté le ${dateExport}
+                </p>
+            </div>
+            ${tableCopy.outerHTML}
+        </body>
+        </html>
+    `;
+
+    // ----------------------------
+    // 5. Exporter en Excel
+    // ----------------------------
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+
+    // Nom dynamique du fichier Excel
+    a.download = `Meritants_${matiereLabel.replace(/\s+/g, '_')}_${semestreLabel}_${dateExport}.xls`;
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
     </script>
 @endsection
