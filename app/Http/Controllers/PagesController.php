@@ -554,6 +554,61 @@ class PagesController extends Controller
     return redirect('/');
   }
   
+  // Afficher le formulaire de changement de mot de passe
+  public function showChangePasswordForm()
+  {
+      // Vérifier si l'utilisateur est connecté via la session
+      $account = Session::get('account');
+      if (!$account) {
+          return redirect('/'); // adapte si tu as un nom de route pour la page de connexion
+      }
+
+      return view('pages.parametre.change_password', ['account' => $account]);
+  }
+
+  // Traiter la mise à jour du mot de passe
+  public function updatePassword(Request $request)
+  {
+      $account = Session::get('account');
+      if (!$account) {
+          return redirect('/');
+      }
+
+      // Validation
+      $request->validate([
+          'current_password' => 'required|string',
+          'new_password' => 'required|string|confirmed', // use field new_password_confirmation for confirmation
+      ], [
+          'new_password.confirmed' => "La confirmation du nouveau mot de passe ne correspond pas.",
+      ]);
+
+      // Vérifier le mot de passe actuel
+      if (!Hash::check($request->current_password, $account->motdepasse)) {
+          return back()->withErrors(['current_password' => 'Le mot de passe actuel est incorrect.'])->withInput();
+      }
+
+      // Mettre à jour le mot de passe
+      $user = User::find($account->id);
+      if (!$user) {
+          // en cas d'incohérence
+          Session::flush();
+          return redirect('/')->with('status', "Erreur : compte introuvable. Connectez-vous à nouveau.");
+      }
+
+      $user->motdepasse = Hash::make($request->new_password);
+      $user->save();
+
+      // Déconnexion : effacer la session
+      Session::forget('account');
+      Session::forget('id_usercontrat');
+      Session::forget('nom_user');
+      Session::forget('prenom_user');
+      Session::forget('image');
+      // ou Session::flush(); // si tu veux tout vider
+
+      // Rediriger vers la page de connexion avec message
+      return redirect('/')->with('status', 'Mot de passe modifié avec succès. Veuillez vous reconnecter.');
+  }
 public function etatdesdroits(Request $request) {
     $classe = Classes::all();
     $params = Params2::first();
@@ -4063,7 +4118,7 @@ public function filterEtatDeLaCaisse(Request $request) {
     //     }
     //     return redirect('/');
     // }
-
+ 
     public function paiementeleve($matricule)
     {
         if (Session::has('account')) {

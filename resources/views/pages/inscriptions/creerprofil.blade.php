@@ -37,6 +37,37 @@
                                 color: #b700ff !important;
                                 /* Couleur au survol */
                             }
+
+
+                            /* Styles pour tous les champs input */
+                            .form-control {
+                                border: 2px solid #ced4da;   /* bordure plus épaisse */
+                                border-radius: 0.3rem;       /* coins arrondis */
+                                padding: 0.5rem 0.75rem;
+                                background-color: #f9f9f9;   /* fond léger */
+                                transition: all 0.3s ease;
+                            }
+
+                            /* Effet au focus */
+                            .form-control:focus {
+                                border-color: #007bff;       /* bordure bleue */
+                                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                                background-color: #fff;
+                            }
+                            /* Pour le select */
+                            .form-select {
+                                border: 2px solid #ced4da;
+                                border-radius: 0.5rem;
+                                background-color: #f9f9f9;
+                                transition: all 0.3s ease;
+                            }
+
+                            .form-select:focus {
+                                border-color: #007bff;
+                                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                                background-color: #fff;
+                            }
+
                         </style>
                         <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
                             <i class="fas fa-arrow-left"></i> Retour
@@ -86,15 +117,18 @@
                                                         <input type="text" class="form-control" id="exampleInputUsername2" name="LibelleReduction" placeholder="" required>
                                                     </div>
                                                     </div>
-                                                    <div class="form-group row">
-                                                        <label for="reductionType" class="col-sm-8 col-form-label">Type de réduction</label>
-                                                        <div class="col-sm-12 mb-2">
-                                                            <select class="js-example-basic-multiple w-50" id="reductionType" name="reductionType" required>
+                                                   <div class="form-group row align-items-center">
+                                                        <div class="col-auto">
+                                                            <label for="reductionType" class="col-form-label mb-0">Type de réduction</label>
+                                                        </div>
+                                                        <div class="col-auto" style="margin-left: 3rem;">
+                                                            <select class="js-example-basic-multiple form-select" id="reductionType" name="reductionType" required>
                                                                 <option value="1">Réduction par pourcentage</option>
                                                                 <option value="2">Réduction fixe</option>
                                                             </select>
-                                                        </div>
+                                                        </div>                                                     
                                                     </div>
+
                                                     <div class="form-group row">
                                                         <label for="exampleInputUsername2" class="col-sm-8 col-form-label">Réduction accordée sur scolarité</label>
                                                         <div class="col-sm-4">

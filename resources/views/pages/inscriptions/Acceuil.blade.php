@@ -71,27 +71,26 @@
                         </form> --}}
 
                         <div>
-                            <table id="tableau-effectifs" class="table">
+                            <table id="Tab" class="table table-bordered table-striped text-center align-middle shadow-sm rounded">
                                 <tbody>
-                                    <tr>
-                                        <td class="bouton" style="font-weight: 600">Eff.Total</td>
-                                        <td id="total" >{{ $totalEleves }}</td>
-                                        <td class="bouton" style="font-weight: 600">Filles</td>
+                                    <tr class="table-primary">
+                                        <td class="fw-bold">Eff. Total</td>
+                                        <td id="total">{{ $totalEleves }}</td>
+                                        <td class="fw-bold">Filles</td>
                                         <td id="filles">{{ $filles }}</td>
-                                        <td class="bouton" style="font-weight: 600">Garçons</td>
+                                        <td class="fw-bold">Garçons</td>
                                         <td id="garcons">{{ $garcons }}</td>
                                     </tr>
-                                    <tr>
-                                        <td class="bouton" style="font-weight: 600">Eff.Red</td>
-                                        <td id="total-red" >{{ $totalRedoublants }}</td>
-                                        <td class="bouton" style="font-weight: 600">Red.Filles</td>
+                                    <tr class="table-light">
+                                        <td class="fw-bold">Eff. Red.</td>
+                                        <td id="total-red">{{ $totalRedoublants }}</td>
+                                        <td class="fw-bold">Red. Filles</td>
                                         <td id="filles-red">{{ $fillesRedoublantes }}</td>
-                                        <td class="bouton" style="font-weight: 600">Red.Garçons</td>
+                                        <td class="fw-bold">Red. Garçons</td>
                                         <td id="garcons-red">{{ $garconsRedoublants }}</td>
                                     </tr>
                                 </tbody>
-                            </table><br><br>
-                            
+                            </table>
                         </div>
                     </div>
                     <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
@@ -187,11 +186,17 @@
                 <!-- Your recalculating script -->
                 {{--  --}}
                 <div id="contenu">
-                    <div class="table-responsive mb-4">
-                        <table id="myTab" class="table table-bordered">
-                            <thead>
+                    <!-- 🔎 Barre de recherche -->
+                    <div class="mb-3 mt-3 d-flex justify-content-end align-items-center gap-2">
+                        <label for="tableSearch" class="fw-bold mb-0">Recherche :</label>
+                        <input type="text" id="tableSearch" class="form-control w-auto" placeholder="Rechercher un élève...">
+                    </div>
+
+                    <div class="table-responsive mb-4" style="max-height: 500px; overflow-y: auto;">
+                        <table id="Tab" class="table table-bordered table-hover table-striped align-middle text-center">
+                            <thead class="table-primary sticky-top">
                                 <tr>
-                                    <th class="ml-6">Matricule</th>
+                                    <th>Matricule</th>
                                     <th>Nom & Prénoms</th>
                                     <th>Classe</th>
                                     <th>Sexe</th>
@@ -204,7 +209,7 @@
                                     <th class="d-none">Cycle</th>
                                     <th>Red.</th>
                                     <th>Date nai</th>
-                                    <th>Lieunais</th>
+                                    <th>Lieu nais</th>
                                     <th class="hide-printe">Action</th>
                                 </tr>
                             </thead>
@@ -213,9 +218,9 @@
                                 @foreach ($eleves as $eleve)
                                     <tr>
                                         <td>{{ $eleve->MATRICULEX }}</td>
-                                        <td>{{ $eleve->NOM }} {{ $eleve->PRENOM }}</td>
-                                        <td data-classe="{{ $eleve->CODECLAS }}">{{ $eleve->CODECLAS }}</td>
-                                        <td data-sexe="{{ $eleve->SEXE }}">
+                                        <td class="text-start fw-bold">{{ $eleve->NOM }} {{ $eleve->PRENOM }}</td>
+                                        <td>{{ $eleve->CODECLAS }}</td>
+                                        <td>
                                             @if ($eleve->SEXE == 1)
                                                 M
                                             @elseif($eleve->SEXE == 2)
@@ -224,99 +229,88 @@
                                                 Non spécifié
                                             @endif
                                         </td>
-                                        {{-- <td class="" data-promi="{{ $eleve->classe->promo->CODEPROMO }}">{{ $eleve->classe->promo->LIBELPROMO }}</td> --}}
-                                        <td class="d-none" data-cycle="{{ $eleve->classe->CYCLE }}">
-                                            {{ $eleve->classe->CYCLE }}</td>
-                                        <td class="d-none"
-                                            data-promo="{{ $eleve->classe && $eleve->classe->promo ? $eleve->classe->promo->CODEPROMO : '' }}">
-                                        </td>
-                                        <td class="d-none" data-category="{{ $eleve->STATUTG }}"></td>
-                                        <td class="d-none" data-statut="{{ $eleve->STATUT }}"></td>
-                                        <td class="d-none" data-serie="{{ $eleve->SERIE }}"></td>
-                                        <td class="d-none" data-typeenseign="{{ $eleve->TYPEENSEIGN }}"></td>
-                                        <td class="d-none" data-typeclasse="{{ $eleve->TYPECLASSE }}"></td>
 
-                                        <td class="checkboxes-select" style="width: 24px;">
-                                            <input type="checkbox" class="form-check-input-center"
-                                                {{ $eleve->STATUT ? 'checked' : '' }}>
+                                        <td class="d-none">{{ $eleve->classe->CYCLE ?? '' }}</td>
+                                        <td class="d-none">{{ $eleve->classe->promo->CODEPROMO ?? '' }}</td>
+                                        <td class="d-none">{{ $eleve->STATUTG }}</td>
+                                        <td class="d-none">{{ $eleve->STATUT }}</td>
+                                        <td class="d-none">{{ $eleve->SERIE }}</td>
+                                        <td class="d-none">{{ $eleve->TYPEENSEIGN }}</td>
+                                        <td class="d-none">{{ $eleve->TYPECLASSE }}</td>
+
+                                        <td>
+                                            <input type="checkbox" class="form-check-input" {{ $eleve->STATUT ? 'checked' : '' }}>
                                         </td>
+
                                         @php
                                             $dateNaissance = $eleve->DATENAIS;
                                             $dateFormatted = $dateNaissance
                                                 ? \Carbon\Carbon::parse($dateNaissance)->format('d/m/Y')
                                                 : '';
                                         @endphp
-
                                         <td>{{ $dateFormatted }}</td>
                                         <td>{{ $eleve->LIEUNAIS }}</td>
+
                                         <td class="hide-printe">
-                                            <div class="d-flex align-items-center">
-                                                <a href="/pagedetail/{{ $eleve->MATRICULE }}"
-                                                    class= "btn btn-primary p-2 btn-sm mr-2">Voir plus</a>
-                                                <button class="btn btn-primary p-2 btn-sm dropdown" type="button"
-                                                    id="dropdownMenuSizeButton3" data-toggle="dropdown"
-                                                    aria-haspopup="true" aria-expanded="false">
-                                                    <i class="typcn typcn-th-list btn-icon-append"></i>
-                                                </button>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
-                                                    <li>
-                                                        <button class="dropdown-item delete-eleve"
-                                                            data-matricule="{{ $eleve->MATRICULE }}"
-                                                            data-nom="{{ $eleve->NOM }}"
-                                                            data-prenom="{{ $eleve->PRENOM }}" data-bs-toggle="modal"
-                                                            data-bs-target="#deleteModal">
-                                                            Supprimer
-                                                        </button>
-                                                    </li>
-                                                    <li><a class="dropdown-item"
-                                                            href="/modifiereleve/{{ $eleve->MATRICULE }}">Modifier</a>
-                                                    </li>
-                                                    <li><a class="dropdown-item"
-                                                            href="{{ url('/paiementeleve/' . $eleve->MATRICULE) }}">Paiement</a>
-                                                    </li>
-                                                    {{-- <li><a class="dropdown-item"
-                                                            href="{{ url('/majpaiementeleve/' . $eleve->MATRICULE) }}">Maj
-                                                            Paie</a></li> --}}
-                                                    <li><a class="dropdown-item"
-                                                            href="/profil/{{ $eleve->MATRICULE }}">Profil</a></li>
-                                                    <li><a class="dropdown-item"
-                                                            href="/echeancier/{{ $eleve->MATRICULE }}">Echéance</a>
-                                                    </li>
-                                                    {{--  <li><a class="dropdown-item" href="#">Cursus</a></li> --}}
-                                                </ul>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <a href="/pagedetail/{{ $eleve->MATRICULE }}" class="btn btn-sm btn-primary">Voir plus</a>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-secondary dropdown-toggle"
+                                                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        Options
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <button class="dropdown-item delete-eleve"
+                                                                data-matricule="{{ $eleve->MATRICULE }}"
+                                                                data-nom="{{ $eleve->NOM }}"
+                                                                data-prenom="{{ $eleve->PRENOM }}"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#deleteModal">
+                                                                Supprimer
+                                                            </button>
+                                                        </li>
+                                                        <li><a class="dropdown-item" href="/modifiereleve/{{ $eleve->MATRICULE }}">Modifier</a></li>
+                                                        <li><a class="dropdown-item" href="{{ url('/paiementeleve/' . $eleve->MATRICULE) }}">Paiement</a></li>
+                                                        <li><a class="dropdown-item" href="/profil/{{ $eleve->MATRICULE }}">Profil</a></li>
+                                                        <li><a class="dropdown-item" href="/echeancier/{{ $eleve->MATRICULE }}">Échéance</a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                        <div id="noResultsMessage" class="alert alert-success btn-primary my-2" style="display: none;">
+
+                        <!-- message si aucun résultat -->
+                        <div id="noResultsMessage" class="alert alert-warning my-2" style="display: none;">
                             Aucun résultat trouvé.
                         </div>
                     </div>
-                    <script>
-                        $(document).ready(function() {
-                            $('select[name="classe"]').on('change', function() {
-                                var selectedClass = $(this).val();
-
-                                $.ajax({
-                                    url: '{{ route('Acceuil') }}',
-                                    type: 'GET',
-                                    data: {
-                                        classe: selectedClass
-                                    },
-                                    success: function(response) {
-                                        // Supposons que votre réponse contienne le tableau HTML généré
-                                        $('#tableContainer').html(response);
-                                    },
-                                    error: function() {
-                                        alert('Une erreur est survenue lors de la récupération des élèves.');
-                                    }
-                                });
-                            });
-                        });
-                    </script>
                 </div>
+
+                <!-- Script recherche -->
+                <script>
+                    document.getElementById("tableSearch").addEventListener("keyup", function () {
+                        let value = this.value.toLowerCase();
+                        let rows = document.querySelectorAll("#Tab tbody tr");
+                        let found = false;
+
+                        rows.forEach(row => {
+                            let text = row.innerText.toLowerCase();
+                            if (text.indexOf(value) > -1) {
+                                row.style.display = "";
+                                found = true;
+                            } else {
+                                row.style.display = "none";
+                            }
+                        });
+
+                        document.getElementById("noResultsMessage").style.display = found ? "none" : "block";
+                    });
+                </script>
+
             </div>
         </div>
     </div>

@@ -930,10 +930,10 @@ class PagesController extends Controller
     {
         return view('pages.inscriptions.paiementdesnoninscrits');
     }
-
+    
     public function paiementeleve($matricule)
     {
-        if (Session::has('account')) {
+        if (Session::has('account')) { 
             // Retrieve the student details
             $eleve = Eleve::where('MATRICULE', $matricule)->first();
             $scolarite = Scolarite::where('MATRICULE', $matricule)->get();
@@ -950,7 +950,6 @@ class PagesController extends Controller
             $totalLibelle2 = Scolarite::where('MATRICULE', $matricule)->where('AUTREF', '4')->sum('MONTANT');
 
             $totalLibelle3 = Scolarite::where('MATRICULE', $matricule)->where('AUTREF', '5')->sum('MONTANT');
-
             // Pass the totals along with other data to the view
             return view('pages.inscriptions.Paiement', compact('eleve', 'scolarite', 'libelle', 'totalArriere', 'totalScolarite', 'totalLibelle1', 'totalLibelle2', 'totalLibelle3'));
         }

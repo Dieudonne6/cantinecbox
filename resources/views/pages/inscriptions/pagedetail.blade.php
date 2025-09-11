@@ -175,52 +175,49 @@
                                     composantes</label>
                             </div>
                             <a href="votre-lien-ici" style="text-decoration: none;">
-                                <button type="button" class="btn btn-primary btn-icon-text-center p-2">
-                                    <i class="typcn typcn-upload btn-icon-prepend"></i>Imprimer
-                                    récapitulatif des paiements
+                                <button type="button" class="btn btn-primary btn-icon-text-center p-2" onclick="printPayments()">
+                                    <i class="typcn typcn-upload btn-icon-prepend"></i>Imprimer récapitulatif des paiements
                                 </button>
+
                             </a>
                         </div>
-                        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                            <table class="table table-hover">
+                        <div id="printArea" class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                            <table  id="paymentsTable" class="table table-hover">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th scope="col">n°Reçu</th>
+                                        <th scope="col">N reçu</th>
                                         <th scope="col">Date</th>
                                         <th scope="col">Montant</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>130</td>
-                                        <td>05/06/2024</td>
-                                        <td>190 000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>130</td>
-                                        <td>05/06/2024</td>
-                                        <td>190 000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>130</td>
-                                        <td>05/06/2024</td>
-                                        <td>190 000</td>
-                                    </tr>
+                                    @foreach ($scolarite as $item)
+                                        <tr>
+                                          {{--  <td>{{ $item->NUMERO }}</td>--}}
+                                          <td></td>
+                                            <td>{{ \Carbon\Carbon::parse($item->DATEOP)->format('d-m-Y') }}</td>
+                                            <td>{{ number_format($item->MONTANT, 0, ',', ' ') }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                                 <tfoot class="tfoot-dark">
                                     <tr>
                                         <td colspan="2" class="table-active">Somme</td>
-                                        <td>190 000</td>
+                                        <td>{{ number_format($scolarite->sum('MONTANT'), 0, ',', ' ') }}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="table-active">Reste à Payer</td>
-                                        <td>1 900</td>
+                                       {{-- <td>
+                                            {{ number_format(($eleve->APAYER ?? 0) - $scolarite->sum('MONTANT'), 0, ',', ' ') }}
+                                        </td>--}}
+                                        <td></td>
                                     </tr>
                                 </tfoot>
                             </table>
                         </div>
+
                     </div>
-                    <div class="card-body">
+                    {{--<div class="card-body">
                         <h6 class="card-title text-center">Réduction Montants dus</h6>
                         <table class="table">
                             <tbody style=" width: 50%;">
@@ -244,7 +241,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div>--}}
                 </div>
             </div>
             <!--  -->
@@ -597,4 +594,30 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function printPayments() {
+            var printContents = document.getElementById('printArea').innerHTML;
+
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+
+            // Optionnel : ajouter un style directement pour l'impression
+            var style = document.createElement('style');
+            style.innerHTML = `
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+                th { background-color: #343a40; color: #fff; }
+                tfoot tr td { font-weight: bold; }
+            `;
+            document.head.appendChild(style);
+
+            window.print();
+
+            document.body.innerHTML = originalContents; // Restaure la page
+            location.reload(); // Recharge pour réinitialiser tous les scripts
+        }
+    </script>
+
 @endsection
+ 
