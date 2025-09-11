@@ -1806,7 +1806,7 @@ class BulletinController extends Controller
                         'coefficient' => $notes->first()->COEF,
                         'moyenne_sur_20' => $noteSpeciale,
                         'moyenne_interro' => $noteSpeciale,
-                        'test' => $test,
+                        'test' => null,
                         'moyenne_coeff' => $noteSpeciale * ($notes->first()->COEF),
                         'mentionProf' => $mentionMatSpecial, // Pas de mention pour la conduite ou EPS
                         'Typematiere' => 'CONDUITE', // Indication que c'est une matière conduite
