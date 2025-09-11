@@ -426,7 +426,11 @@ Route::get('/exportMultiple', [BulletinController::class, 'exportMulti'])->name(
 Route::get('/getmatieres/{codeclasse}', [BulletinController::class, 'getMatieresParClasse']);
 Route::get('/export-notes-multi', [BulletinController::class, 'exportMultiExcel'])->name('notes.exportMultiExcel');
 
+// Afficher le formulaire de changement de mot de passe (accessible seulement si connecté)
+Route::get('/profile/password', [PagesController::class, 'showChangePasswordForm'])->name('password.show');
 
+// Traiter la mise à jour du mot de passe
+Route::post('/profile/password', [PagesController::class, 'updatePassword'])->name('password.update');
 
 
 Route::get('/listeparmerite',[ListemeriteController::class, 'acceuil'])->name('listeparmerite');
