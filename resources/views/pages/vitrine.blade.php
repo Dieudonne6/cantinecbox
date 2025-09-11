@@ -36,7 +36,7 @@
           <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
             <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
               <div>
-                <p class="mb-2 text-md-center text-lg-left" _msttexthash="175812" _msthash="163">Total d'inscriptions</p>
+                <p class="mb-2 text-md-center text-lg-left" _msttexthash="175812" _msthash="163">Total inscriptions cantine</p>
                <h1 class="mb-0" _msttexthash="37804" _msthash="164">{{$totalcantineinscritactif}}</h1>
               </div>
               <i class="typcn typcn-user-add icon-xl text-secondary"></i>
