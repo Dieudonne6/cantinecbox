@@ -241,6 +241,8 @@ Route::get('/editions2/resultatsparpromotion', [EditionController2::class, 'resu
 Route::get('/editions2/listedesmeritants', [EditionController2::class, 'listedesmeritants'])->name('pages.notes.listedesmeritants');
 Route::post('/search-meritants', [EditionController2::class, 'searchMeritants']);
 
+//Edition de scolarité
+Route::get('/editionscolarite', [EditionController::class, 'editionscolarite'])->name('editionscolarite');
 
 Route::get('/journalderecouvrement', [EditionController::class, 'journal'])->name('journal');
 
