@@ -77,34 +77,83 @@ class GestionclasseController extends Controller
         return response()->json($classes);
     }
 
+    // public function ajouterClasse(Request $request, $libelle)
+    // {
+    //     try {
+
+
+    //         $classCode = $request->input('classCode');
+
+    //         // Vérifiez si la classe existe déjà pour le groupe
+    //         $existing = Classesgroupeclass::where('LibelleGroupe', $libelle)
+    //                                       ->where('CODECLAS', $classCode)
+    //                                       ->exists();
+
+    //         if ($existing) {
+    //             return response()->json(['error' => 'Cette classe est déjà associée à ce groupe.'], 409);
+    //         }
+
+    //         // Ajoutez la classe au groupe
+    //         $classeGroupeClass = new Classesgroupeclass();
+    //         $classeGroupeClass->LibelleGroupe = $libelle;
+    //         $classeGroupeClass->CODECLAS = $classCode;
+    //         $classeGroupeClass->save();
+
+    //         return response()->json(['message' => 'Classe ajoutée avec succès']);
+    //     } catch (\Exception $e) {
+    //         \Log::error($e->getMessage());
+    //         return response()->json(['message' => 'Erreur interne du serveur'], 500);
+    //     }
+    // }
+
     public function ajouterClasse(Request $request, $libelle)
-    {
-        try {
+{
+    try {
+        // attendre un tableau sous la clé "classCodes"
+        $classCodes = $request->input('classCodes');
 
+        if (!is_array($classCodes) || empty($classCodes)) {
+            return response()->json(['message' => 'Aucune classe sélectionnée'], 400);
+        }
 
-            $classCode = $request->input('classCode');
+        $added = [];
+        $skipped = [];
 
-            // Vérifiez si la classe existe déjà pour le groupe
-            $existing = Classesgroupeclass::where('LibelleGroupe', $libelle)
-                                          ->where('CODECLAS', $classCode)
-                                          ->exists();
+        foreach ($classCodes as $code) {
+            $code = trim($code);
+            if ($code === '') continue;
 
-            if ($existing) {
-                return response()->json(['error' => 'Cette classe est déjà associée à ce groupe.'], 409);
+            $exists = Classesgroupeclass::where('LibelleGroupe', $libelle)
+                                        ->where('CODECLAS', $code)
+                                        ->exists();
+            if ($exists) {
+                $skipped[] = $code;
+                continue;
             }
 
-            // Ajoutez la classe au groupe
-            $classeGroupeClass = new Classesgroupeclass();
-            $classeGroupeClass->LibelleGroupe = $libelle;
-            $classeGroupeClass->CODECLAS = $classCode;
-            $classeGroupeClass->save();
+            // création — attention au fillable si tu utilises create()
+            $row = new Classesgroupeclass();
+            $row->LibelleGroupe = $libelle;
+            $row->CODECLAS = $code;
+            $row->save();
 
-            return response()->json(['message' => 'Classe ajoutée avec succès']);
-        } catch (\Exception $e) {
-            \Log::error($e->getMessage());
-            return response()->json(['message' => 'Erreur interne du serveur'], 500);
+            $added[] = $code;
         }
+
+        // status 200 si au moins un ajouté, 409 si aucun ajouté (tout doublon)
+        $status = count($added) ? 200 : 409;
+
+        return response()->json([
+            'message' => 'Traitement terminé',
+            'added' => $added,
+            'skipped' => $skipped
+        ], $status);
+    } catch (\Exception $e) {
+        \Log::error('ajouterClasse error: '.$e->getMessage());
+        return response()->json(['message' => 'Erreur interne du serveur'], 500);
     }
+}
+
 
 
     public function supprimerClasse(Request $request, $libelle, $id)
@@ -415,11 +464,34 @@ public function imprimereleveAbsence($MATRICULE)
     // $pdf = PDF::loadView('pages.eleves.impression_fautes', compact('eleve', 'fautes'));
     // return $pdf->download('fautes_eleve_'.$eleve->nom.'.pdf');
 }
-    public function series(Request $request)
-    {
-        $series = Serie::get();
-        return view('pages.inscriptions.series')->with('series', $series);
-    }
+    // public function series(Request $request)
+    // {
+    //     // $series = Serie::orderby('CYCLE', 'desc')->get();
+    //     $series = Serie::orderByRaw('CAST(CYCLE AS UNSIGNED) ASC')->get()->groupBy('CYCLE');
+    //     return view('pages.inscriptions.series')->with('series', $series);
+    // }
+
+
+public function series(Request $request)
+{
+    // On trie d'abord par CYCLE (numériquement), puis par SERIE.
+    $series = Serie::orderByRaw('CAST(CYCLE AS UNSIGNED) ASC')
+                   ->orderBy('SERIE')
+                   ->get()
+                   // grouper par CYCLE en tant qu'entier (clés 0,1,2...)
+                   ->groupBy(function($item) {
+                        return (int) $item->CYCLE;
+                   })
+                   // assurer que les clés (cycles) sont triées asc
+                   ->sortKeys()
+                   // trier chaque groupe par SERIE et réindexer les collections
+                   ->map(function($group) {
+                        return $group->sortBy('SERIE')->values();
+                   });
+
+    return view('pages.inscriptions.series', compact('series'));
+}
+
 
     public function saveserie(inscriptionEleveRequest $request)
     {

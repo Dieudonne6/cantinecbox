@@ -129,10 +129,11 @@
                 <div class="card">
                     <div class="row mt-3">
                         <div class="form-group w-50 mb-6">
-                            <input type="hidden" id="groupeLibelle" name="groupeLibelle" value="">
-                            <select class="js-example-basic-multiple w-100 select2-hidden-accessible" id="classSelect" name="classes" tabindex="-1" aria-hidden="true">
+                            <input type="hidden" id="groupeLibelle" name="groupeLibelle" value="" >
+                            <select class="js-example-basic-multiple w-100 select2-hidden-accessible form-control" id="classSelect" tabindex="-1" aria-hidden="true"  multiple="multiple" name="classeCode[]" style="background-color:#6b2c80 !important; color:#fff !important; border:1px solid #5a1e66 !important;">
                                 <option value="">Sélectionner la classe</option>
                             </select>
+                            
                         </div>
                         <div class="form-group w-50 mb-6">
                             <button type="button" id="ajouterClasse" class="btn btn-primary" onclick="ajouterClasse()">Ajouter une classe</button>
@@ -309,87 +310,217 @@ function openModal(button) {
         .catch(error => console.error('Error:', error));
 }
 
+// function ajouterClasse() {
+//     var select = document.getElementById('classSelect');
+//     var classCode = select ? select.value : null;
+//     var modalTitle = document.getElementById('modifgroupTitle');
+//     var groupeLibelle = modalTitle ? modalTitle.textContent.replace('Modifier le groupe : ', '').trim() : null;
+
+//     if (!classCode) {
+//         showAlert('Veuillez sélectionner une classe.', function() {
+//             var modal = document.getElementById('modifgroup');
+//             var myModal = bootstrap.Modal.getInstance(modal);
+//             if (myModal) {
+//                 myModal.show(); // Réouvrir le modal
+//             }
+//         });
+//         return;
+//     }
+
+//     var csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+//     if (!csrfTokenMeta) {
+//         console.error('Le token CSRF est manquant.');
+//         showAlert('Le token CSRF est manquant.', function() {
+//             var modal = document.getElementById('modifgroup');
+//             var myModal = bootstrap.Modal.getInstance(modal);
+//             if (myModal) {
+//                 myModal.show(); // Réouvrir le modal
+//             }
+//         });
+//         return;
+//     }
+
+//     var csrfToken = csrfTokenMeta.getAttribute('content');
+
+//     fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes`, {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'X-CSRF-TOKEN': csrfToken
+//         },
+//         body: JSON.stringify({ classCode: classCode })
+//     })
+//     .then(response => {
+//         if (response.status === 409) {
+//             return response.json().then(data => {
+//                 showAlert(data.error, function() {
+//                     var modal = document.getElementById('modifgroup');
+//                     var myModal = bootstrap.Modal.getInstance(modal);
+//                     if (myModal) {
+//                         myModal.show(); // Réouvrir le modal
+//                     }
+//                 });
+//                 throw new Error(data.error);
+//             });
+//         }
+
+//         if (!response.ok) {
+//             return response.json().then(data => {
+//                 throw new Error(data.message || 'Erreur lors de l\'ajout de la classe.');
+//             });
+//         }
+//         return response.json();
+//     })
+//     .then(data => {
+//         showAlert('Classe ajoutée avec succès !', function() {
+//             // Fermer le modal
+//             var modal = document.getElementById('modifgroup');
+//             var myModal = bootstrap.Modal.getInstance(modal);
+//             if (myModal) {
+//                 myModal.hide(); // Fermer le modal
+//             }
+
+//             // Assurez-vous que le modal est complètement caché avant de réouvrir
+//             setTimeout(function() {
+//                 // Recharger et réouvrir le modal avec les données du groupe
+//                 openModal(document.querySelector('a[data-libelle="' + groupeLibelle + '"]'));
+//             }, 500); // Ajuster le délai si nécessaire
+//         });
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//     });
+// }
+
 function ajouterClasse() {
     var select = document.getElementById('classSelect');
-    var classCode = select ? select.value : null;
-    var modalTitle = document.getElementById('modifgroupTitle');
+    // Récupérer toutes les options sélectionnées
+    var selected = Array.from(select.options)
+                        .filter(opt => opt.selected)
+                        .map(opt => opt.value)
+                        .map(v => v.trim())
+                        .filter(v => v.length > 0);
+
+    // Récupérer le libellé du groupe depuis l'input caché (plus fiable que le titre)
+    var groupeLibelleInput = document.getElementById('groupeLibelle');
+        var modalTitle = document.getElementById('modifgroupTitle');
+
     var groupeLibelle = modalTitle ? modalTitle.textContent.replace('Modifier le groupe : ', '').trim() : null;
 
-    if (!classCode) {
-        showAlert('Veuillez sélectionner une classe.', function() {
+    if (!selected.length) {
+        showAlert('Veuillez sélectionner au moins une classe.', function() {
             var modal = document.getElementById('modifgroup');
             var myModal = bootstrap.Modal.getInstance(modal);
-            if (myModal) {
-                myModal.show(); // Réouvrir le modal
-            }
+            if (myModal) myModal.show();
         });
+        return;
+    }
+
+    if (!groupeLibelle) {
+        console.error('Libellé du groupe introuvable.');
+        showAlert('Libellé du groupe introuvable.', function() {});
         return;
     }
 
     var csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
     if (!csrfTokenMeta) {
         console.error('Le token CSRF est manquant.');
-        showAlert('Le token CSRF est manquant.', function() {
-            var modal = document.getElementById('modifgroup');
-            var myModal = bootstrap.Modal.getInstance(modal);
-            if (myModal) {
-                myModal.show(); // Réouvrir le modal
-            }
-        });
+        showAlert('Le token CSRF est manquant.', function() {});
         return;
     }
-
     var csrfToken = csrfTokenMeta.getAttribute('content');
 
-    fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes`, {
+    // Désactiver le bouton pendant la requête (optionnel)
+    var btn = document.getElementById('ajouterClasse');
+    if (btn) btn.disabled = true;
+
+    fetch('/groupes/' + encodeURIComponent(groupeLibelle) + '/classes', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken
         },
-        body: JSON.stringify({ classCode: classCode })
+        body: JSON.stringify({ classCodes: selected })
     })
-    .then(response => {
-        if (response.status === 409) {
-            return response.json().then(data => {
-                showAlert(data.error, function() {
-                    var modal = document.getElementById('modifgroup');
-                    var myModal = bootstrap.Modal.getInstance(modal);
-                    if (myModal) {
-                        myModal.show(); // Réouvrir le modal
-                    }
-                });
-                throw new Error(data.error);
-            });
-        }
-
-        if (!response.ok) {
-            return response.json().then(data => {
-                throw new Error(data.message || 'Erreur lors de l\'ajout de la classe.');
-            });
-        }
-        return response.json();
-    })
-    .then(data => {
-        showAlert('Classe ajoutée avec succès !', function() {
-            // Fermer le modal
-            var modal = document.getElementById('modifgroup');
-            var myModal = bootstrap.Modal.getInstance(modal);
-            if (myModal) {
-                myModal.hide(); // Fermer le modal
+    .then(response => response.json().then(body => ({ status: response.status, body })))
+    .then(({ status, body }) => {
+        if (status === 409 || (body && body.skipped && body.skipped.length && (!body.added || !body.added.length))) {
+            // Tous ou certains étaient des doublons
+            var msg = '';
+            if (body.added && body.added.length) {
+                msg += 'Ajouté : ' + body.added.join(', ') + '. ';
             }
+            if (body.skipped && body.skipped.length) {
+                msg += 'Déjà présent(s) : ' + body.skipped.join(', ') + '.';
+            }
+            showAlert(msg, function() {
+                var modal = document.getElementById('modifgroup');
+                var myModal = bootstrap.Modal.getInstance(modal);
+                if (myModal) myModal.show();
+            });
+        } else if (status >= 200 && status < 300) {
+            var added = body.added || [];
+            var skipped = body.skipped || [];
 
-            // Assurez-vous que le modal est complètement caché avant de réouvrir
-            setTimeout(function() {
-                // Recharger et réouvrir le modal avec les données du groupe
-                openModal(document.querySelector('a[data-libelle="' + groupeLibelle + '"]'));
-            }, 500); // Ajuster le délai si nécessaire
-        });
+            var msg = '';
+            if (added.length) msg += 'Ajouté(s) : ' + added.join(', ') + '. ';
+            if (skipped.length) msg += 'Ignoré(s) (existants) : ' + skipped.join(', ') + '.';
+
+            showAlert(msg || 'Opération terminée.', function() {
+                // Mettre à jour la table côté client : ajouter les lignes pour les éléments ajoutés
+                added.forEach(function(code) {
+                    appendClassRow(code);
+                });
+
+                // Maintenir le modal ouvert (ou le fermer selon ton UX)
+                var modal = document.getElementById('modifgroup');
+                var myModal = bootstrap.Modal.getInstance(modal);
+                if (myModal) myModal.hide();
+
+                 // Assurez-vous que le modal est complètement caché avant de réouvrir
+                setTimeout(function() {
+                    // Recharger et réouvrir le modal avec les données du groupe
+                    openModal(document.querySelector('a[data-libelle="' + groupeLibelle + '"]'));
+                }, 500); // Ajuster le délai si nécessaire
+
+            });
+        } else {
+            showAlert(body.message || 'Erreur serveur', function(){});
+        }
     })
     .catch(error => {
         console.error('Error:', error);
+        showAlert('Erreur réseau ou serveur.', function(){});
+    })
+    .finally(() => {
+        if (btn) btn.disabled = false;
     });
 }
+
+// exemple simple : ajoute une ligne à la table d'affichage des classes du groupe
+function appendClassRow(code) {
+    var tbody = document.getElementById('classTableBody');
+    if (!tbody) return;
+
+    // créer éléments (adapter selon l'HTML voulu)
+    var tr = document.createElement('tr');
+    var tdClasse = document.createElement('td');
+    tdClasse.textContent = code;
+    var tdActions = document.createElement('td');
+
+    // bouton supprimer côté client (tu peux le brancher sur un endpoint de suppression)
+    var btnSuppr = document.createElement('button');
+    btnSuppr.className = 'btn btn-danger btn-sm';
+    btnSuppr.type = 'button';
+    btnSuppr.textContent = 'Supprimer';
+    // btnSuppr.onclick = function() { /* appeler suppression */ };
+
+    tdActions.appendChild(btnSuppr);
+    tr.appendChild(tdClasse);
+    tr.appendChild(tdActions);
+    tbody.appendChild(tr);
+}
+
 // }
 
 
