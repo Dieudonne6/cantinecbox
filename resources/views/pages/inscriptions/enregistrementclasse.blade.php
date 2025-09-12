@@ -117,6 +117,7 @@
                   <option value="{{$typecla->TYPECLASSE}}">{{$typecla->LibelleType}}</option>
                 @endforeach
               </select>
+              <select name="" class="col-sm-3 col-form-label" id=""></select>
             </div>
           </div>          
           <div class="form-group row mb-0">
@@ -184,8 +185,7 @@
             <div class="col-auto">
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donnefinanciere">Données financières (Factures)</button>
             </div>
-          </div>
-      
+          </div>      
           <br>
       </div>
     </div>
