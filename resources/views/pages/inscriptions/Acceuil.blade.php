@@ -187,13 +187,13 @@
                 {{--  --}}
                 <div id="contenu">
                     <!-- 🔎 Barre de recherche -->
-                    <div class="mb-3 mt-3 d-flex justify-content-end align-items-center gap-2">
+                    {{-- <div class="mb-3 mt-3 d-flex justify-content-end align-items-center gap-2">
                         <label for="tableSearch" class="fw-bold mb-0">Recherche :</label>
                         <input type="text" id="tableSearch" class="form-control w-auto" placeholder="Rechercher un élève...">
-                    </div>
+                    </div> --}}
 
                     <div class="table-responsive mb-4" style="max-height: 500px; overflow-y: auto;">
-                        <table id="Tab" class="table table-bordered table-hover table-striped align-middle text-center">
+                        <table id="myTab" class="table table-bordered table-hover table-striped align-middle text-center">
                             <thead class="table-primary sticky-top">
                                 <tr>
                                     <th>Matricule</th>

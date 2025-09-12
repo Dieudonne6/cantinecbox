@@ -1,6 +1,15 @@
 @extends('layouts.master')
 @section('content')
-
+<style>
+.my-select2-style ,
+.my-select2-style  {
+  background-color: #6b2c80 !important;
+  color: #fff !important;
+  border-color: #5a235f !important;
+}
+.my-select2-style .select2-selection__placeholder { color: rgba(255,255,255,0.8); }
+.my-select2-style .select2-selection__rendered { color: #fff; }
+</style>
 <div class="main-panel-10">
     <div class="container d-flex justify-content-center">
         <div class="card w-100">
@@ -214,6 +223,20 @@
       </div>
     </div>
 </div>
+
+
+<script>
+$(document).ready(function(){
+  // initialise Select2
+  $('#classSelect').select2({
+    placeholder: "Sélectionner la classe"
+  });
+
+  // récupère le container généré et lui ajoute une classe personnalisée
+  var $container = $('#classSelect').data('select2').$container;
+  $container.addClass('my-select2-style');
+});
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
