@@ -174,6 +174,7 @@
                                 <label class="form-check-label" for="checkDetails">Détail des
                                     composantes</label>
                             </div>
+                            
                             <a href="votre-lien-ici" style="text-decoration: none;">
                                 <button type="button" class="btn btn-primary btn-icon-text-center p-2" onclick="printPayments()">
                                     <i class="typcn typcn-upload btn-icon-prepend"></i>Imprimer récapitulatif des paiements
@@ -183,6 +184,7 @@
                         </div>
                         <div id="printArea" class="table-responsive" style="max-height: 300px; overflow-y: auto;">
                             <table  id="paymentsTable" class="table table-hover">
+                                <p>Elève: {{$eleve->NOM}}  {{$eleve->PRENOM}}</p>
                                 <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">N reçu</th>
@@ -207,9 +209,9 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="table-active">Reste à Payer</td>
-                                       {{-- <td>
-                                            {{ number_format(($eleve->APAYER ?? 0) - $scolarite->sum('MONTANT'), 0, ',', ' ') }}
-                                        </td>--}}
+                                        <td> 
+                                            {{ number_format(($eleve->ARRIERE + $eleve->FRAIS1 + $eleve->FRAIS2 + $eleve->FRAIS3 + $eleve->FRAIS4 + $eleve->APAYER) - $scolarite->sum('MONTANT'), 0, ',', ' ') }}
+                                        </td>
                                         <td></td>
                                     </tr>
                                 </tfoot>
@@ -249,41 +251,47 @@
                 aria-labelledby="nav-finan-tab{{ $eleve->MATRICULE }}" tabindex="0">
                 <div class="accordion-body col-md-12 mx-auto">
                     <div class="table-responsive mt-2">
-                        <table class="table table-striped table-hover">
+                            <a href="votre-lien-ici" style="text-decoration: none; display: flex; justify-content: end;">
+                                <button type="button" class="btn btn-primary btn-icon-text-center p-2 m-2" onclick="printInfoFinancire()">
+                                    <i class="typcn typcn-upload btn-icon-prepend"></i>Imprimer récapitulatif des paiements
+                                </button>
+                            </a>
+                        <table class="table table-striped table-hover" id="info_finance">
+                            <p>Elève: {{ $eleve->NOM }} {{ $eleve->PRENOM }} </p>
                             <tbody>
                                 <tr>
-                                    <th scope="row" class="text-start">Scolarités perçus le 23/05/24
+                                    <th scope="row" class="text-start">Scolarités déjà perçus
                                     </th>
-                                    <td class="text-end">0</td>
+                                    <td class="text-end">{{ number_format($sommeScolarité, 0, ',', ' ') }}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row" class="text-start">Arrièrés perçus le 23/05/24</th>
-                                    <td class="text-end">0</td>
+                                    <th scope="row" class="text-start">Arrièrés déjà perçus </th>
+                                    <td class="text-end">{{ number_format($sommeArriéré, 0, ',', ' ') }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="text-start">Total</th>
-                                    <td class="text-end">0</td>
+                                    <td class="text-end">{{ number_format(($sommeScolarité + $sommeArriéré), 0, ',', ' ') }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="text-start">Total recettes à ce jour</th>
-                                    <td class="text-end">57 575 500</td>
+                                    <td class="text-end"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="text-start">Versé à la banque</th>
-                                    <td class="text-end">0</td>
+                                    <td class="text-end"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="text-start">Recettes attendues ce jour</th>
-                                    <td class="text-end">0</td>
+                                    <td class="text-end"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="text-start">Recettes attendues cette semaine
                                     </th>
-                                    <td class="text-end">0</td>
+                                    <td class="text-end"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="text-start">Recettes attendues ce mois</th>
-                                    <td class="text-end">0</td>
+                                    <td class="text-end"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -616,6 +624,28 @@
 
             document.body.innerHTML = originalContents; // Restaure la page
             location.reload(); // Recharge pour réinitialiser tous les scripts
+        }
+    
+        function printInfoFinancire() {
+            // Récupérer la section à imprimer
+            var printContents = document.getElementById("info_finance").outerHTML;
+
+            var eleveInfo = document.querySelector("#info_finance").previousElementSibling.outerHTML;
+
+            // Ouvrir une nouvelle fenêtre pour l'impression
+            var originalContents = document.body.innerHTML;
+            var printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>Récapitulatif des paiements</title>');
+            printWindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write('<h3 class="text-center mb-3">Récapitulatif des paiements</h3>');
+            printWindow.document.write(eleveInfo);
+            printWindow.document.write(printContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+
+            // Lancer l'impression
+            printWindow.print();
         }
     </script>
 

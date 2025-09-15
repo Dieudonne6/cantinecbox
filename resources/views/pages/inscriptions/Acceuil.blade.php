@@ -71,26 +71,27 @@
                         </form> --}}
 
                         <div>
-                            <table id="Tab" class="table table-bordered table-striped text-center align-middle shadow-sm rounded">
+                            <table id="tableau-effectifs" class="table table-bordered table-striped text-center align-middle shadow-sm rounded">
                                 <tbody>
                                     <tr class="table-primary">
-                                        <td class="fw-bold">Eff. Total</td>
-                                        <td id="total">{{ $totalEleves }}</td>
-                                        <td class="fw-bold">Filles</td>
+                                        <td class="bouton" style="font-weight: 600">Eff.Total</td>
+                                        <td id="total" >{{ $totalEleves }}</td>
+                                        <td class="bouton" style="font-weight: 600">Filles</td>
                                         <td id="filles">{{ $filles }}</td>
-                                        <td class="fw-bold">Garçons</td>
+                                        <td class="bouton" style="font-weight: 600">Garçons</td>
                                         <td id="garcons">{{ $garcons }}</td>
                                     </tr>
-                                    <tr class="table-light">
-                                        <td class="fw-bold">Eff. Red.</td>
-                                        <td id="total-red">{{ $totalRedoublants }}</td>
-                                        <td class="fw-bold">Red. Filles</td>
+                                    <tr class="table-light" >
+                                        <td class="bouton" style="font-weight: 600">Eff.Red</td>
+                                        <td id="total-red" >{{ $totalRedoublants }}</td>
+                                        <td class="bouton" style="font-weight: 600">Red.Filles</td>
                                         <td id="filles-red">{{ $fillesRedoublantes }}</td>
-                                        <td class="fw-bold">Red. Garçons</td>
+                                        <td class="bouton" style="font-weight: 600">Red.Garçons</td>
                                         <td id="garcons-red">{{ $garconsRedoublants }}</td>
                                     </tr>
                                 </tbody>
-                            </table>
+                            </table><br><br>
+                            
                         </div>
                     </div>
                     <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
@@ -186,17 +187,11 @@
                 <!-- Your recalculating script -->
                 {{--  --}}
                 <div id="contenu">
-                    <!-- 🔎 Barre de recherche -->
-                    {{-- <div class="mb-3 mt-3 d-flex justify-content-end align-items-center gap-2">
-                        <label for="tableSearch" class="fw-bold mb-0">Recherche :</label>
-                        <input type="text" id="tableSearch" class="form-control w-auto" placeholder="Rechercher un élève...">
-                    </div> --}}
-
-                    <div class="table-responsive mb-4" style="max-height: 500px; overflow-y: auto;">
+                    <div class="table-responsive mb-4">
                         <table id="myTab" class="table table-bordered table-hover table-striped align-middle text-center">
-                            <thead class="table-primary sticky-top">
+                            <thead class="table-primary sticky-top" >
                                 <tr>
-                                    <th>Matricule</th>
+                                    <th class="ml-6">Matricule</th>
                                     <th>Nom & Prénoms</th>
                                     <th>Classe</th>
                                     <th>Sexe</th>
@@ -209,7 +204,7 @@
                                     <th class="d-none">Cycle</th>
                                     <th>Red.</th>
                                     <th>Date nai</th>
-                                    <th>Lieu nais</th>
+                                    <th>Lieunais</th>
                                     <th class="hide-printe">Action</th>
                                 </tr>
                             </thead>
@@ -218,9 +213,9 @@
                                 @foreach ($eleves as $eleve)
                                     <tr>
                                         <td>{{ $eleve->MATRICULEX }}</td>
-                                        <td class="text-start fw-bold">{{ $eleve->NOM }} {{ $eleve->PRENOM }}</td>
-                                        <td>{{ $eleve->CODECLAS }}</td>
-                                        <td>
+                                        <td>{{ $eleve->NOM }} {{ $eleve->PRENOM }}</td>
+                                        <td data-classe="{{ $eleve->CODECLAS }}">{{ $eleve->CODECLAS }}</td>
+                                        <td data-sexe="{{ $eleve->SEXE }}">
                                             @if ($eleve->SEXE == 1)
                                                 M
                                             @elseif($eleve->SEXE == 2)
@@ -229,88 +224,99 @@
                                                 Non spécifié
                                             @endif
                                         </td>
-
-                                        <td class="d-none">{{ $eleve->classe->CYCLE ?? '' }}</td>
-                                        <td class="d-none">{{ $eleve->classe->promo->CODEPROMO ?? '' }}</td>
-                                        <td class="d-none">{{ $eleve->STATUTG }}</td>
-                                        <td class="d-none">{{ $eleve->STATUT }}</td>
-                                        <td class="d-none">{{ $eleve->SERIE }}</td>
-                                        <td class="d-none">{{ $eleve->TYPEENSEIGN }}</td>
-                                        <td class="d-none">{{ $eleve->TYPECLASSE }}</td>
-
-                                        <td>
-                                            <input type="checkbox" class="form-check-input" {{ $eleve->STATUT ? 'checked' : '' }}>
+                                        {{-- <td class="" data-promi="{{ $eleve->classe->promo->CODEPROMO }}">{{ $eleve->classe->promo->LIBELPROMO }}</td> --}}
+                                        <td class="d-none" data-cycle="{{ $eleve->classe->CYCLE }}">
+                                            {{ $eleve->classe->CYCLE }}</td>
+                                        <td class="d-none"
+                                            data-promo="{{ $eleve->classe && $eleve->classe->promo ? $eleve->classe->promo->CODEPROMO : '' }}">
                                         </td>
+                                        <td class="d-none" data-category="{{ $eleve->STATUTG }}"></td>
+                                        <td class="d-none" data-statut="{{ $eleve->STATUT }}"></td>
+                                        <td class="d-none" data-serie="{{ $eleve->SERIE }}"></td>
+                                        <td class="d-none" data-typeenseign="{{ $eleve->TYPEENSEIGN }}"></td>
+                                        <td class="d-none" data-typeclasse="{{ $eleve->TYPECLASSE }}"></td>
 
+                                        <td class="checkboxes-select" style="width: 24px;">
+                                            <input type="checkbox" class="form-check-input-center"
+                                                {{ $eleve->STATUT ? 'checked' : '' }}>
+                                        </td>
                                         @php
                                             $dateNaissance = $eleve->DATENAIS;
                                             $dateFormatted = $dateNaissance
                                                 ? \Carbon\Carbon::parse($dateNaissance)->format('d/m/Y')
                                                 : '';
                                         @endphp
+
                                         <td>{{ $dateFormatted }}</td>
                                         <td>{{ $eleve->LIEUNAIS }}</td>
-
                                         <td class="hide-printe">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <a href="/pagedetail/{{ $eleve->MATRICULE }}" class="btn btn-sm btn-primary">Voir plus</a>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-sm btn-secondary dropdown-toggle"
-                                                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        Options
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li>
-                                                            <button class="dropdown-item delete-eleve"
-                                                                data-matricule="{{ $eleve->MATRICULE }}"
-                                                                data-nom="{{ $eleve->NOM }}"
-                                                                data-prenom="{{ $eleve->PRENOM }}"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#deleteModal">
-                                                                Supprimer
-                                                            </button>
-                                                        </li>
-                                                        <li><a class="dropdown-item" href="/modifiereleve/{{ $eleve->MATRICULE }}">Modifier</a></li>
-                                                        <li><a class="dropdown-item" href="{{ url('/paiementeleve/' . $eleve->MATRICULE) }}">Paiement</a></li>
-                                                        <li><a class="dropdown-item" href="/profil/{{ $eleve->MATRICULE }}">Profil</a></li>
-                                                        <li><a class="dropdown-item" href="/echeancier/{{ $eleve->MATRICULE }}">Échéance</a></li>
-                                                    </ul>
-                                                </div>
+                                            <div class="d-flex align-items-center">
+                                                <a href="/pagedetail/{{ $eleve->MATRICULE }}"
+                                                    class= "btn btn-primary p-2 btn-sm mr-2">Voir plus</a>
+                                                <button class="btn btn-primary p-2 btn-sm dropdown" type="button"
+                                                    id="dropdownMenuSizeButton3" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false">
+                                                    <i class="typcn typcn-th-list btn-icon-append"></i>
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
+                                                    <li>
+                                                        <button class="dropdown-item delete-eleve"
+                                                            data-matricule="{{ $eleve->MATRICULE }}"
+                                                            data-nom="{{ $eleve->NOM }}"
+                                                            data-prenom="{{ $eleve->PRENOM }}" data-bs-toggle="modal"
+                                                            data-bs-target="#deleteModal">
+                                                            Supprimer
+                                                        </button>
+                                                    </li>
+                                                    <li><a class="dropdown-item"
+                                                            href="/modifiereleve/{{ $eleve->MATRICULE }}">Modifier</a>
+                                                    </li>
+                                                    <li><a class="dropdown-item"
+                                                            href="{{ url('/paiementeleve/' . $eleve->MATRICULE) }}">Paiement</a>
+                                                    </li>
+                                                    {{-- <li><a class="dropdown-item"
+                                                            href="{{ url('/majpaiementeleve/' . $eleve->MATRICULE) }}">Maj
+                                                            Paie</a></li> --}}
+                                                    <li><a class="dropdown-item"
+                                                            href="/profil/{{ $eleve->MATRICULE }}">Profil</a></li>
+                                                    <li><a class="dropdown-item"
+                                                            href="/echeancier/{{ $eleve->MATRICULE }}">Echéance</a>
+                                                    </li>
+                                                    {{--  <li><a class="dropdown-item" href="#">Cursus</a></li> --}}
+                                                </ul>
                                             </div>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-
-                        <!-- message si aucun résultat -->
-                        <div id="noResultsMessage" class="alert alert-warning my-2" style="display: none;">
+                        <div id="noResultsMessage" class="alert alert-success btn-primary my-2" style="display: none;">
                             Aucun résultat trouvé.
                         </div>
                     </div>
-                </div>
+                    <script>
+                        $(document).ready(function() {
+                            $('select[name="classe"]').on('change', function() {
+                                var selectedClass = $(this).val();
 
-                <!-- Script recherche -->
-                <script>
-                    document.getElementById("tableSearch").addEventListener("keyup", function () {
-                        let value = this.value.toLowerCase();
-                        let rows = document.querySelectorAll("#Tab tbody tr");
-                        let found = false;
-
-                        rows.forEach(row => {
-                            let text = row.innerText.toLowerCase();
-                            if (text.indexOf(value) > -1) {
-                                row.style.display = "";
-                                found = true;
-                            } else {
-                                row.style.display = "none";
-                            }
+                                $.ajax({
+                                    url: '{{ route('Acceuil') }}',
+                                    type: 'GET',
+                                    data: {
+                                        classe: selectedClass
+                                    },
+                                    success: function(response) {
+                                        // Supposons que votre réponse contienne le tableau HTML généré
+                                        $('#tableContainer').html(response);
+                                    },
+                                    error: function() {
+                                        alert('Une erreur est survenue lors de la récupération des élèves.');
+                                    }
+                                });
+                            });
                         });
-
-                        document.getElementById("noResultsMessage").style.display = found ? "none" : "block";
-                    });
-                </script>
-
+                    </script>
+                </div>
             </div>
         </div>
     </div>
@@ -414,42 +420,42 @@
                 // Appliquer des styles pour l'impression
                 let style = document.createElement('style');
                 style.innerHTML = `@page { size: landscape; }
-            @media print {
-                body * { visibility: hidden; }
-                #printDiv, #printDiv * { visibility: visible; }
-                #printDiv { position: absolute; top: 0; left: 0; width: 100%; }
-                .dt-end, .dt-start, .hide-printe, .offcanvas { display: none !important; }
-                table th {
-                    font-weight: bold !important;
-                    font-size: 12px !important;
-                }
-                table th, table td {
-                    font-size: 10px;
-                    margin: 0 !important;
-                    padding: 0 !important;
-                    border-collapse: collapse !important;
-                }
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    page-break-inside: auto;
-                }
-                tr {
-                    page-break-inside: avoid;
-                    page-break-after: auto;
-                }
-                tfoot {
-                    display: table-row-group;
-                    page-break-inside: avoid;
-                }
-                tbody tr:nth-child(even) {
-                    background-color: #f1f3f5;
-                }
-                tbody tr:nth-child(odd) {
-                    background-color: #ffffff;
-                }
-            }
-        `;
+                    @media print {
+                        body * { visibility: hidden; }
+                        #printDiv, #printDiv * { visibility: visible; }
+                        #printDiv { position: absolute; top: 0; left: 0; width: 100%; }
+                        .dt-end, .dt-start, .hide-printe, .offcanvas { display: none !important; }
+                        table th {
+                            font-weight: bold !important;
+                            font-size: 12px !important;
+                        }
+                        table th, table td {
+                            font-size: 10px;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            border-collapse: collapse !important;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            page-break-inside: auto;
+                        }
+                        tr {
+                            page-break-inside: avoid;
+                            page-break-after: auto;
+                        }
+                        tfoot {
+                            display: table-row-group;
+                            page-break-inside: avoid;
+                        }
+                        tbody tr:nth-child(even) {
+                            background-color: #f1f3f5;
+                        }
+                        tbody tr:nth-child(odd) {
+                            background-color: #ffffff;
+                        }
+                    }
+                `;
                 document.head.appendChild(style);
                 document.body.appendChild(printDiv);
                 printDiv.setAttribute("id", "printDiv");
@@ -460,12 +466,18 @@
         }
         $(document).ready(function() {
             var table = $('#myTab').DataTable({
-                columnDefs: [{
+                columnDefs: [
+                    {
                         targets: [4, 5, 6, 7, 8, 9, 10, 11],
                         visible: false,
                         searchable: false
-                    } // Cache ces colonnes
+                    }
                 ],
+                "pageLength": 100, // affichage par défaut
+                "lengthMenu": [100, 200, 300, 400, 500], // options du menu déroulant
+                "scrollY": "500px",   // scroll vertical avec hauteur fixe
+                "scrollX": true,      // scroll horizontal
+                "scrollCollapse": true, // réduit la hauteur si moins de lignes
                 "language": {
                     "sProcessing": "Traitement en cours...",
                     "sSearch": "Rechercher&nbsp;:",
@@ -473,7 +485,6 @@
                     "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
                     "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrées",
                     "sInfoFiltered": "(filtré à partir de _MAX_ entrées au total)",
-                    "sInfoPostFix": "",
                     "sLoadingRecords": "Chargement en cours...",
                     "sZeroRecords": "Aucun résultat trouvé",
                     "sEmptyTable": "Aucune donnée disponible dans le tableau",
@@ -487,8 +498,10 @@
                     }
                 },
                 paging: true,
-                ordering: true
+                ordering: true,
+                fixedHeader: true // pour garder l'en-tête visible
             });
+
 
             function filterTableByClass() {
                 var selectedClasse = $('#filterClasse').val();
@@ -517,7 +530,6 @@
                         var rowTypeclas = row.find('td[data-typeclasse]').data('typeclasse');
                         var rowPromo = row.find('td[data-promo]').data('promo');
                         var rowCycle = row.find('td[data-cycle]').data('cycle');
-
                         var showRow = true;
 
                         if (selectedClasse !== "" && selectedClasse !== "Toute la classe" &&
