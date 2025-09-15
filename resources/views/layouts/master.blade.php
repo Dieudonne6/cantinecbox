@@ -260,6 +260,8 @@ align-items: center;  */
 
     <script src="{{ asset('assets/dataTables.js') }}"></script>
 
+    
+
                  
 
 
