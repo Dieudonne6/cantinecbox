@@ -564,7 +564,7 @@ class PagesController extends Controller
 
 
         
-        return redirect("vitrine" , compact('months','monthlyTotals','lastTransactions'));
+        return redirect("vitrine");
       } else{
         return back()->with('status', 'Mot de passe ou identifiant incorrecte');
         
