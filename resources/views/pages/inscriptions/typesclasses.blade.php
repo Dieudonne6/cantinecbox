@@ -141,14 +141,19 @@
                   <td>{{$allclass->TYPECLASSE}}</td>
                   <td>{{$allclass->LibelleType}}</td>
                   <td>
+                            {{-- n'affiche les boutons (et modals) que si ce n'est pas l'un des 5 premiers éléments --}}
+                  @if($loop->iteration > 5)
+
                     <div class="">
+
                       <button type="button" class="btn btn-primary p-2 btn-sm"
                       data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo $allclass->idtype; ?>">
                       Modifier
                     </button>
+                    <button type="button" class="btn btn-danger p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModaldelete<?php echo $allclass->idtype; ?>">Supprimer</button> 
+                   @endif
                    
                     <!-- Modal -->
-                    <button type="button" class="btn btn-danger p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModaldelete<?php echo $allclass->idtype; ?>">Supprimer</button> 
                     <div class="modal fade" id="exampleModaldelete<?php echo $allclass->idtype; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                       <div class="modal-dialog">
                         <div class="modal-content">

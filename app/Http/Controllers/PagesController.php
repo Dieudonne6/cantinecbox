@@ -654,9 +654,12 @@ public function etatdesdroits(Request $request) {
 
                 // Récupérer les montants versés
                 if ($choixPlage === 'Tout') {
-                    $montants = Scolarite::where('MATRICULE', $eleve->MATRICULE)->get();
+                    $montants = Scolarite::where('MATRICULE', $eleve->MATRICULE)
+                    ->where('VALIDE', '1')
+                    ->get();
                 } else {
                     $montants = Scolarite::where('MATRICULE', $eleve->MATRICULE)
+                        ->where('VALIDE', '1')
                         ->where('AUTREF', $autrefMapping[$choixPlage] ?? null)
                         ->get();
                 }

@@ -71,9 +71,9 @@
                         </form> --}}
 
                         <div>
-                            <table id="tableau-effectifs" class="table">
+                            <table id="tableau-effectifs" class="table table-bordered table-striped text-center align-middle shadow-sm rounded">
                                 <tbody>
-                                    <tr>
+                                    <tr class="table-primary">
                                         <td class="bouton" style="font-weight: 600">Eff.Total</td>
                                         <td id="total" >{{ $totalEleves }}</td>
                                         <td class="bouton" style="font-weight: 600">Filles</td>
@@ -81,7 +81,7 @@
                                         <td class="bouton" style="font-weight: 600">Garçons</td>
                                         <td id="garcons">{{ $garcons }}</td>
                                     </tr>
-                                    <tr>
+                                    <tr class="table-light" >
                                         <td class="bouton" style="font-weight: 600">Eff.Red</td>
                                         <td id="total-red" >{{ $totalRedoublants }}</td>
                                         <td class="bouton" style="font-weight: 600">Red.Filles</td>
@@ -188,8 +188,8 @@
                 {{--  --}}
                 <div id="contenu">
                     <div class="table-responsive mb-4">
-                        <table id="myTab" class="table table-bordered">
-                            <thead>
+                        <table id="myTab" class="table table-bordered table-hover table-striped align-middle text-center">
+                            <thead class="table-primary sticky-top" >
                                 <tr>
                                     <th class="ml-6">Matricule</th>
                                     <th>Nom & Prénoms</th>
@@ -420,42 +420,42 @@
                 // Appliquer des styles pour l'impression
                 let style = document.createElement('style');
                 style.innerHTML = `@page { size: landscape; }
-            @media print {
-                body * { visibility: hidden; }
-                #printDiv, #printDiv * { visibility: visible; }
-                #printDiv { position: absolute; top: 0; left: 0; width: 100%; }
-                .dt-end, .dt-start, .hide-printe, .offcanvas { display: none !important; }
-                table th {
-                    font-weight: bold !important;
-                    font-size: 12px !important;
-                }
-                table th, table td {
-                    font-size: 10px;
-                    margin: 0 !important;
-                    padding: 0 !important;
-                    border-collapse: collapse !important;
-                }
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    page-break-inside: auto;
-                }
-                tr {
-                    page-break-inside: avoid;
-                    page-break-after: auto;
-                }
-                tfoot {
-                    display: table-row-group;
-                    page-break-inside: avoid;
-                }
-                tbody tr:nth-child(even) {
-                    background-color: #f1f3f5;
-                }
-                tbody tr:nth-child(odd) {
-                    background-color: #ffffff;
-                }
-            }
-        `;
+                    @media print {
+                        body * { visibility: hidden; }
+                        #printDiv, #printDiv * { visibility: visible; }
+                        #printDiv { position: absolute; top: 0; left: 0; width: 100%; }
+                        .dt-end, .dt-start, .hide-printe, .offcanvas { display: none !important; }
+                        table th {
+                            font-weight: bold !important;
+                            font-size: 12px !important;
+                        }
+                        table th, table td {
+                            font-size: 10px;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            border-collapse: collapse !important;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            page-break-inside: auto;
+                        }
+                        tr {
+                            page-break-inside: avoid;
+                            page-break-after: auto;
+                        }
+                        tfoot {
+                            display: table-row-group;
+                            page-break-inside: avoid;
+                        }
+                        tbody tr:nth-child(even) {
+                            background-color: #f1f3f5;
+                        }
+                        tbody tr:nth-child(odd) {
+                            background-color: #ffffff;
+                        }
+                    }
+                `;
                 document.head.appendChild(style);
                 document.body.appendChild(printDiv);
                 printDiv.setAttribute("id", "printDiv");
@@ -466,12 +466,18 @@
         }
         $(document).ready(function() {
             var table = $('#myTab').DataTable({
-                columnDefs: [{
+                columnDefs: [
+                    {
                         targets: [4, 5, 6, 7, 8, 9, 10, 11],
                         visible: false,
                         searchable: false
-                    } // Cache ces colonnes
+                    }
                 ],
+                "pageLength": 100, // affichage par défaut
+                "lengthMenu": [100, 200, 300, 400, 500], // options du menu déroulant
+                "scrollY": "500px",   // scroll vertical avec hauteur fixe
+                "scrollX": true,      // scroll horizontal
+                "scrollCollapse": true, // réduit la hauteur si moins de lignes
                 "language": {
                     "sProcessing": "Traitement en cours...",
                     "sSearch": "Rechercher&nbsp;:",
@@ -479,7 +485,6 @@
                     "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
                     "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrées",
                     "sInfoFiltered": "(filtré à partir de _MAX_ entrées au total)",
-                    "sInfoPostFix": "",
                     "sLoadingRecords": "Chargement en cours...",
                     "sZeroRecords": "Aucun résultat trouvé",
                     "sEmptyTable": "Aucune donnée disponible dans le tableau",
@@ -493,8 +498,10 @@
                     }
                 },
                 paging: true,
-                ordering: true
+                ordering: true,
+                fixedHeader: true // pour garder l'en-tête visible
             });
+
 
             function filterTableByClass() {
                 var selectedClasse = $('#filterClasse').val();
