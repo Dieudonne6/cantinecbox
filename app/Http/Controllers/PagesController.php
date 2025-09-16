@@ -740,7 +740,12 @@ public function etatdesdroits(Request $request) {
         // Dernières transactions (affichage dans la colonne de droite)
         $lastTransactions = Scolarite::orderBy('DATEOP', 'desc')->limit(7)->get();
 
+        $exclusions = Eleve::whereNotNull('MAN')->where('MAN', '<', 5)->count();
+        $redoublants = Eleve::whereNotNull('MAN')->where('MAN', '>=', 5)->where('MAN', '<', 10)->count();
+        $passants = Eleve::whereNotNull('MAN')->where('MAN', '>=', 10)->count();
 
+        // si tu veux total
+        $total = $exclusions + $redoublants + $passants;
       // dd($totalcantineinscritactif);
       return view('pages.vitrine')
             ->with('totaleleve', $totaleleve)
@@ -748,7 +753,11 @@ public function etatdesdroits(Request $request) {
             ->with('totalcantineinscritinactif', $totalcantineinscritinactif)
             ->with('months', $months)
             ->with('lastTransactions', $lastTransactions)
-            ->with('monthlyTotals', $monthlyTotals);
+            ->with('monthlyTotals', $monthlyTotals)
+            ->with('exclusions', $exclusions)
+            ->with('redoublants', $redoublants)
+            ->with('passants', $passants)
+            ->with('total', $total);
     }return redirect('/');
   }
   public function paramsfacture(){
