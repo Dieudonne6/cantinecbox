@@ -530,7 +530,6 @@
                         var rowTypeclas = row.find('td[data-typeclasse]').data('typeclasse');
                         var rowPromo = row.find('td[data-promo]').data('promo');
                         var rowCycle = row.find('td[data-cycle]').data('cycle');
-
                         var showRow = true;
 
                         if (selectedClasse !== "" && selectedClasse !== "Toute la classe" &&

@@ -535,14 +535,42 @@ class PagesController extends Controller
         Session::put('id_usercontrat', $id_usercontrat);
         Session::put('nom_user', $nom_user);
         Session::put('prenom_user', $prenom_user);
+
+
+                $year = now()->year;
+
+        // Labels en français pour les 12 mois
+        $months = [
+            'Janvier','Février','Mars','Avril','Mai','Juin',
+            'Juillet','Août','Septembre','Octobre','Novembre','Décembre'
+        ];
+
+        // Somme des montants par mois pour l'année en cours
+        $raw = Scolarite::selectRaw('MONTH(DATEOP) as month, SUM(MONTANT) as total')
+            ->where('VALIDE', 1)
+            ->whereYear('DATEOP', $year)
+            ->groupBy('month')
+            ->pluck('total','month') // cle = month (1..12), value = total
+            ->toArray();
+
+        // Normaliser en tableau 12 éléments (index 0 => Janvier)
+        $monthlyTotals = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $monthlyTotals[] = isset($raw[$m]) ? (float) $raw[$m] : 0;
+        }
+
+        // Dernières transactions (affichage dans la colonne de droite)
+        $lastTransactions = Scolarite::orderBy('DATEOP', 'desc')->limit(7)->get();
+
+
         
         return redirect("vitrine");
       } else{
-        return back()->with('status', 'Mot de passe ou email incorrecte');
+        return back()->with('status', 'Mot de passe ou identifiant incorrecte');
         
       }
     } else {
-        return back()->with('status', 'Mot de passe ou email incorrecte');
+        return back()->with('status', 'Mot de passe ou identifiant incorrecte');
     }
 }
   public function logout(Request $request)
@@ -686,11 +714,41 @@ public function etatdesdroits(Request $request) {
       $totalcantineinscritactif = Contrat::where('statut_contrat', 1)->count();
        $totalcantineinscritinactif = Contrat::where('statut_contrat', 0)->count();
       
+               $year = now()->year;
+
+
+       // Labels en français pour les 12 mois
+        $months = [
+            'Janvier','Février','Mars','Avril','Mai','Juin',
+            'Juillet','Août','Septembre','Octobre','Novembre','Décembre'
+        ];
+
+        // Somme des montants par mois pour l'année en cours
+        $raw = Scolarite::selectRaw('MONTH(DATEOP) as month, SUM(MONTANT) as total')
+            ->where('VALIDE', 1)
+            ->whereYear('DATEOP', $year)
+            ->groupBy('month')
+            ->pluck('total','month') // cle = month (1..12), value = total
+            ->toArray();
+
+        // Normaliser en tableau 12 éléments (index 0 => Janvier)
+        $monthlyTotals = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $monthlyTotals[] = isset($raw[$m]) ? (float) $raw[$m] : 0;
+        }
+
+        // Dernières transactions (affichage dans la colonne de droite)
+        $lastTransactions = Scolarite::orderBy('DATEOP', 'desc')->limit(7)->get();
+
+
       // dd($totalcantineinscritactif);
       return view('pages.vitrine')
             ->with('totaleleve', $totaleleve)
             ->with('totalcantineinscritactif', $totalcantineinscritactif)
-            ->with('totalcantineinscritinactif', $totalcantineinscritinactif);
+            ->with('totalcantineinscritinactif', $totalcantineinscritinactif)
+            ->with('months', $months)
+            ->with('lastTransactions', $lastTransactions)
+            ->with('monthlyTotals', $monthlyTotals);
     }return redirect('/');
   }
   public function paramsfacture(){
