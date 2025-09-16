@@ -25,7 +25,6 @@ use App\Http\Controllers\TableauController;
 use App\Http\Controllers\ParametreController;
 use App\Http\Controllers\RapportannuelController;
 use App\Http\Controllers\DuplicataController;
-use App\Http\Controllers\statsController;
 
 /*
 |--------------------------------------------------------------------------

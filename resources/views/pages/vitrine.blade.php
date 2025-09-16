@@ -36,7 +36,7 @@
           <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
             <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
               <div>
-                <p class="mb-2 text-md-center text-lg-left" _msttexthash="175812" _msthash="163">Total d'inscriptions</p>
+                <p class="mb-2 text-md-center text-lg-left" _msttexthash="175812" _msthash="163">Total inscriptions cantine</p>
                <h1 class="mb-0" _msttexthash="37804" _msthash="164">{{$totalcantineinscritactif}}</h1>
               </div>
               <i class="typcn typcn-user-add icon-xl text-secondary"></i>
@@ -63,118 +63,195 @@
       <div class="row">
         <div class="col-md-4">
           <div class="card flex-fill">
+            <div class="card-header">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <div class="page-title">Performance <br> Académique</div>
+                </div>
+              </div>
+            </div>
             <div class="card-body">
               <div id="chart-perf"></div>
-        
-              <div class="performance-metrics mt-3">
-                <div>Passants : <strong id="passants-count">{{ $passants }}</strong></div>
-                <div>Redoublants : <strong id="redoublants-count">{{ $redoublants }}</strong></div>
-                <div>Exclusions : <strong id="exclusions-count">{{ $exclusions }}</strong></div>
-                <div>Total enregistré : <strong id="total-count">{{ $total }}</strong></div>
-              </div>
             </div>
           </div>
           <!-- Script JavaScript pour configurer et afficher le graphique -->
           <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  // données passées depuis le contrôleur (sécurisées)
-  var passants = @json($passants);
-  var redoublants = @json($redoublants);
-  var exclusions = @json($exclusions);
-
-  var options = {
-    chart: {
-      type: 'donut', // tu peux mettre 'bar' ou 'pie' si tu préfères
-      height: 350
-    },
-    series: [passants, redoublants, exclusions],
-    labels: ['Passants (MAN >= 10)', 'Redoublants (5 ≤ MAN < 10)', 'Exclusions (MAN < 5)'],
-    legend: { position: 'bottom' },
-    tooltip: {
-      y: {
-        formatter: function(val) { return val + " élèves"; }
-      }
-    }
-  };
-
-  var chart = new ApexCharts(document.querySelector("#chart-perf"), options);
-  chart.render();
-});
-</script>
+          <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            var passants = @json($passants);
+            var redoublants = @json($redoublants);
+            var exclusions = @json($exclusions);
+            var abandons = @json($abandons);
+          
+            var series = [passants, redoublants, exclusions, abandons];
+            var labels = ['Passants', 'Redoublants', 'Exclusions', 'Abandons'];
+          
+            var options = {
+              chart: {
+                type: 'donut',
+                height: 350,
+                toolbar: { show: false }
+              },
+              series: series,
+              labels: labels,
+              colors: [
+                '#1f77b4', // passants - bleu
+                '#ff7f0e', // redoublants - orange
+                '#2ca02c', // exclusions - vert
+                '#d62728'  // abandons - rouge
+              ],
+              stroke: {
+                show: true,
+                width: 1,
+                colors: ['#ffffff'] // séparation entre tranches
+              },
+              plotOptions: {
+                pie: {
+                  expandOnClick: true, // cliqué/hover = met en avant
+                  offsetY: 0,
+                  donut: {
+                    size: '58%',
+                    labels: {
+                      show: true,
+                      name: { show: true, fontSize: '14px', offsetY: -6 },
+                      value: { show: true, fontSize: '18px', offsetY: 6,
+                        formatter: function(val) { return val; } // valeur brute
+                      },
+                      total: {
+                        show: true,
+                        label: 'Total',
+                        formatter: function(w) {
+                          return w.globals.seriesTotals.reduce((a,b) => a + b, 0);
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              dataLabels: {
+                enabled: true,
+                formatter: function(val, opts) {
+                  // val = pourcentage arrondi fourni par Apex, opts donne les détails
+                  var seriesIndex = opts.seriesIndex;
+                  var total = opts.w.globals.seriesTotals.reduce((a,b) => a + b, 0);
+                  var value = opts.w.globals.series[seriesIndex];
+                  var percent = total === 0 ? 0 : (value/total*100);
+                  // N'affiche le label sur la tranche que si >= 3% (ajuste ce seuil si tu veux)
+                  if (percent < 3) return '';
+                  return percent.toFixed(1) + '%';
+                },
+                dropShadow: { enabled: false }
+              },
+              states: {
+                hover: {
+                  filter: {
+                    type: 'darken',
+                    value: 0.12
+                  }
+                }
+              },
+              legend: {
+                show: true,
+                position: 'bottom',
+                formatter: function(seriesName, opts) {
+                  var idx = opts.seriesIndex;
+                  var total = opts.w.globals.seriesTotals.reduce((a,b) => a + b, 0);
+                  var val = opts.w.globals.series[idx];
+                  var percent = total === 0 ? 0 : (val / total * 100);
+                  return seriesName + " — " + val + " (" + percent.toFixed(1) + "%)";
+                }
+              },
+              tooltip: {
+                y: {
+                  formatter: function(val) { return val + " élèves"; }
+                }
+              }
+            };
+          
+            var chart = new ApexCharts(document.querySelector("#chart-perf"), options);
+            chart.render();
+          });
+          </script>
+          
         </div>
         
         
 
         <div class="col-md-8  stretch-card">
           <div class="row">
-            <div class="col-md-8">
-              <div class="col-md-12 stretch-card">
-                  <div class="card">
-                      <div class="card-body">
-                          <div class="chartjs-size-monitor">
-                              <div class="chartjs-size-monitor-expand">
-                                  <div class=""></div>
-                              </div>
-                              <div class="chartjs-size-monitor-shrink">
-                                  <div class=""></div>
-                              </div>
-                          </div>
-                          <div class="d-flex justify-content-between align-items-start flex-wrap">
-                              <div>
-                                  <p class="mb-3" _msttexthash="497549" _msthash="117">Recouvrement</p>
-                              </div>
-                              <div class="col text-right">
-                                  <button class="btn btn-light" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      <i class="fas fa-ellipsis-h"></i>
-                                  </button>
-                                  <div class="dropdown-menu dropdown-menu-right">
-                                      <a class="dropdown-item" href="#">Recouvrement mensuels</a>
-                                      <div class="dropdown-divider"></div>
-                                      <a class="dropdown-item" href="#">Comparaison taux de recouvrement</a>
-                                      <div class="dropdown-divider"></div>
-                                      <a class="dropdown-item" href="#">Comparaison chiffre d'affaire</a>
-                                  </div>
-                              </div>
-                          </div>
-                          <canvas id="income-chart" width="456" height="228" style="display: block; width: 456px; height: 228px;" class="chartjs-render-monitor"></canvas>
-                      </div>
-                  </div>
+<div class="col-md-8">
+      <div class="col-md-12 stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start flex-wrap">
+              <div>
+                <p class="mb-3">Recouvrement yoyoyoyoyyooy</p>
               </div>
-              <script>
-                  // Supposons que Chart.js soit déjà inclus dans le projet
-                  var ctx = document.getElementById('income-chart').getContext('2d');
-                  var incomeChart = new Chart(ctx, {
-                      type: 'pie', // ou 'bar', 'pie', etc.
-                      data: {
-                          labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'], // Labels des mois
-                          datasets: [
-                              {
-                                  label: 'Taux de recouvrement',
-                                  backgroundColor: '#a43cda',
-                                  borderColor: '#ffffff',
-                                  borderWidth: 2.5,
-                                  data: [85, 90, 75, 80, 95, 70, 65, 60, 78, 88, 92, 85] // Exemples de taux de recouvrement mensuels
-                              },
-                          ]
-                      },
-                      options: {
-                          responsive: true,
-                          legend: {
-                              display: true,
-                              position: 'top',
-                          },
-                          scales: {
-                              y: {
-                                  beginAtZero: true,
-                                  max: 100 // Taux de recouvrement en pourcentage
-                              }
-                          }
-                      }
-                  });
-              </script>
+              <div class="col text-right">
+                {{-- <button class="btn btn-light" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-h"></i>
+                </button> --}}
+                {{-- <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" href="#">Recouvrements mensuels</a>
+                </div> --}}
+              </div>
             </div>
+
+            <canvas id="income-chart" style="width:100%; height:280px;"></canvas>
+          </div>
+        </div>
+      </div>
+
+      {{-- dépendances JS (si pas déjà incluses dans ton layout) --}}
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+      <script>
+        // Données passées depuis le contrôleur
+        const monthLabels = @json($months);
+        const monthlyTotals = @json($monthlyTotals);
+
+        // palette simple (12 couleurs) — tu peux personnaliser
+        const bgColors = [
+          '#a43cda','#6c5ce7','#00b894','#0984e3','#fdcb6e','#e17055',
+          '#00cec9','#fab1a0','#74b9ff','#55efc4','#ffeaa7','#fd79a8'
+        ];
+
+        const ctx = document.getElementById('income-chart').getContext('2d');
+        const incomeChart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: monthLabels,
+            datasets: [{
+              label: 'Recouvrement',
+              data: monthlyTotals,
+              backgroundColor: bgColors,
+              borderColor: '#ffffff',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top'
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const value = context.raw;
+                    return context.label + ': ' + new Intl.NumberFormat().format(value) + ' XAF';
+                  }
+                }
+              }
+            }
+          }
+        });
+      </script>
+    </div>
           
             <div class="card col-md-4">
               <div class="template-demo mt-2">
@@ -208,6 +285,8 @@ document.addEventListener("DOMContentLoaded", function() {
           </div> 
         </div>
 
+
+        
       </div>
     </div>
   </div>
@@ -223,7 +302,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             <div class="col-6"> 
               
-                  {{-- <div class="container">
+                  <div class="container">
                       <!-- Autres sections de ta page -->
               
                       <!-- Ajout de la nouvelle carte -->
@@ -285,7 +364,7 @@ document.addEventListener("DOMContentLoaded", function() {
                           }
                       });
                       </script>
-                  </div> --}}
+                  </div>
                   
                   <div class="container">
                     <div class="card">
@@ -336,6 +415,12 @@ document.addEventListener("DOMContentLoaded", function() {
                               
                       </div>
                       <!-- Script pour initialiser le graphique -->
+
+                         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+                      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+                      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+                      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
                       <script>
                           var ctx = document.getElementById('sales-chart-c').getContext('2d');
                           var salesChart = new Chart(ctx, {
@@ -389,6 +474,11 @@ document.addEventListener("DOMContentLoaded", function() {
                       <div id="chart2"></div>
                   </div>
               </div>
+
+                    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+                      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+                      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+                      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
               <!-- Script JavaScript pour configurer et afficher le graphique -->
               <script>
                   document.addEventListener("DOMContentLoaded", function (event) {

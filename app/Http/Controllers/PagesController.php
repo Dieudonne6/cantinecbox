@@ -32,6 +32,7 @@ use App\Models\Journal;
 use App\Models\Chapitre;
 use App\Models\Deleve;
 use App\Models\Clasmat;
+use App\Models\DecisionConfigAnnuel;
 use App\Models\Facturenormalise;
 use App\Models\Facturescolarit;
 use App\Models\Dept;
@@ -740,12 +741,30 @@ public function etatdesdroits(Request $request) {
         // Dernières transactions (affichage dans la colonne de droite)
         $lastTransactions = Scolarite::orderBy('DATEOP', 'desc')->limit(7)->get();
 
-        $exclusions = Eleve::whereNotNull('MAN')->where('MAN', '<', 5)->count();
-        $redoublants = Eleve::whereNotNull('MAN')->where('MAN', '>=', 5)->where('MAN', '<', 10)->count();
-        $passants = Eleve::whereNotNull('MAN')->where('MAN', '>=', 10)->count();
 
-        // si tu veux total
-        $total = $exclusions + $redoublants + $passants;
+$sentinels = [21, -1];
+
+$abandons = Eleve::whereNull('MAN')
+    ->orWhereIn('MAN', $sentinels)
+    ->count();
+
+$exclusions = Eleve::whereNotNull('MAN')
+    ->whereNotIn('MAN', $sentinels)      // <-- important
+    ->where('MAN', '<', 6)
+    ->count();
+
+$redoublants = Eleve::whereNotNull('MAN')
+    ->whereNotIn('MAN', $sentinels)
+    ->where('MAN', '>=', 6)
+    ->where('MAN', '<', 10)
+    ->count();
+
+$passants = Eleve::whereNotNull('MAN')
+    ->whereNotIn('MAN', $sentinels)
+    ->where('MAN', '>=', 10)
+    ->where('MAN', '<', 21)
+    ->count();
+
       // dd($totalcantineinscritactif);
       return view('pages.vitrine')
             ->with('totaleleve', $totaleleve)
@@ -757,7 +776,7 @@ public function etatdesdroits(Request $request) {
             ->with('exclusions', $exclusions)
             ->with('redoublants', $redoublants)
             ->with('passants', $passants)
-            ->with('total', $total);
+            ->with('abandons', $abandons);
     }return redirect('/');
   }
   public function paramsfacture(){
