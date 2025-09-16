@@ -176,7 +176,7 @@
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-start flex-wrap">
               <div>
-                <p class="mb-3">Recouvrement</p>
+                <p class="mb-3">Recouvrement yoyoyoyoyyooy</p>
               </div>
               <div class="col text-right">
                 {{-- <button class="btn btn-light" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
