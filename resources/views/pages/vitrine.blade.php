@@ -12,17 +12,17 @@
 
         /* Assure la même hauteur et un bon alignement */
 .btn-icon-text {
-  min-height: 72px;       /* hauteur identique pour tous */
+  min-height: 92px;       /* hauteur identique pour tous */
   padding: 12px 16px;
-  text-align: left;
-  display: flex;
+  text-align: center;
+  /* display: flex; */
   align-items: center;
 }
 
 /* Taille et espacement des icônes */
 .btn-icon-text .typcn {
   font-size: 24px;
-  width: 40px;            /* espace réservé pour icône */
+  width: 20px;            /* espace réservé pour icône */
   text-align: center;
 }
 
