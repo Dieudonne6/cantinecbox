@@ -105,7 +105,7 @@ Route::get('/hsuppression', [PagesController::class, 'hsuppression']);
 Route::get('/changetrimestre', [PagesController::class, 'changetrimestre']);
 Route::get('/confimpression', [PagesController::class, 'confimpression']);
 
-Route::get('/Acceuil', [PagesController::class, 'Acceuil'])->name('lolo');
+Route::get('/Acceuil', [PagesController::class, 'Acceuil'])->name('accueil');
 Route::get('/modifiereleve/{MATRICULE}', [PagesController::class, 'modifiereleve'])->name('modifiereleve');
 Route::put('/modifieeleve/{MATRICULE}', [PagesController::class, 'modifieeleve']);
 Route::put('/modifieleve/{MATRICULE}', [PagesController::class, 'modifieleve']);
