@@ -10,42 +10,36 @@
             /* Change the text color to white */
         }
 
-
         /* Assure la même hauteur et un bon alignement */
-        .btn-icon-text {
-            min-height: 92px;
-            /* hauteur identique pour tous */
-            padding: 12px 16px;
-            text-align: center;
-            /* display: flex; */
-            align-items: center;
-        }
+.btn-icon-text {
+  min-height: 72px;       /* hauteur identique pour tous */
+  padding: 12px 16px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
 
-        /* Taille et espacement des icônes */
-        .btn-icon-text .typcn {
-            font-size: 24px;
-            width: 20px;
-            /* espace réservé pour icône */
-            text-align: center;
-        }
+/* Taille et espacement des icônes */
+.btn-icon-text .typcn {
+  font-size: 24px;
+  width: 40px;            /* espace réservé pour icône */
+  text-align: center;
+}
 
-        /* Evite que le texte ne dépasse trop */
-        .btn-icon-text .text-left {
-            flex: 1;
-        }
+/* Evite que le texte ne dépasse trop */
+.btn-icon-text .text-left {
+  flex: 1;
+}
 
-        /* Optionnel: améliorer l'aspect sur petits écrans */
-        @media (max-width: 576px) {
-            .btn-icon-text {
-                min-height: 64px;
-                padding: 10px;
-            }
+/* Optionnel: améliorer l'aspect sur petits écrans */
+@media (max-width: 576px) {
+  .btn-icon-text {
+    min-height: 64px;
+    padding: 10px;
+  }
+  .btn-icon-text .typcn { font-size: 20px; width: 36px; }
+}
 
-            .btn-icon-text .typcn {
-                font-size: 20px;
-                width: 36px;
-            }
-        }
     </style>
 
     <script src="{{ asset('js/chart.js') }}"></script>
@@ -54,7 +48,7 @@
     <div class="main-panel-10">
 
 
-        <div class="container">
+        <div class="container" style="margin-bottom: 5rem;">
 
             <div class="row">
                 <div class="col-md-4 grid-margin stretch-card">
@@ -139,106 +133,126 @@
                                     <div class="col-auto">
                                         <div class="page-title">Performance <br> Académique</div>
                                     </div>
-                                    <div class="col text-right">
-                                        <button class="btn btn-light" type="button" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-h"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="#">Taux de redoublement</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Taux d'exclusion</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Réussite par types d'examen</a>
-                                        </div>
-                                        {{-- <canvas id="income-chart" width="456" height="228" style="display: block; width: 456px; height: 228px;" class="chartjs-render-monitor"></canvas> --}}
-
-                                    </div>
                                 </div>
                             </div>
                             <div class="card-body">
-                                <div id="chart1"></div>
-                                <div class="performance-metrics">
-                                    <div>Taux de passage: <span id="pass-rate">85%</span></div>
-                                    <div>Taux de redoublement: <span id="repeat-rate">10%</span></div>
-                                    <div>Taux d'exclusion académique: <span id="exclusion-rate">5%</span></div>
-                                    <div>Taux de passage en classe supérieure: <span id="promotion-rate">90%</span></div>
-                                </div>
+                                <div id="chart-perf"></div>
                             </div>
                         </div>
                         <!-- Script JavaScript pour configurer et afficher le graphique -->
+                        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
                         <script>
-                            document.addEventListener("DOMContentLoaded", function(event) {
-                                // Données de l'exemple
+                            document.addEventListener("DOMContentLoaded", function() {
+                                var passants = @json($passants);
+                                var redoublants = @json($redoublants);
+                                var exclusions = @json($exclusions);
+                                var abandons = @json($abandons);
+
+                                var series = [passants, redoublants, exclusions, abandons];
+                                var labels = ['Passants', 'Redoublants', 'Exclusions', 'Abandons'];
+
                                 var options = {
-                                    series: [{
-                                        name: 'Notes',
-                                        data: [30, 40, 45, 50, 49, 60, 70, 91, 125]
-                                    }],
                                     chart: {
-                                        type: 'line',
+                                        type: 'donut',
                                         height: 350,
                                         toolbar: {
                                             show: false
                                         }
                                     },
-                                    plotOptions: {
-                                        bar: {
-                                            horizontal: false,
-                                            columnWidth: '55%',
-                                            endingShape: 'rounded'
-                                        },
-                                    },
-                                    dataLabels: {
-                                        enabled: false
-                                    },
+                                    series: series,
+                                    labels: labels,
+                                    colors: [
+                                        '#1f77b4', // passants - bleu
+                                        '#ff7f0e', // redoublants - orange
+                                        '#2ca02c', // exclusions - vert
+                                        '#d62728' // abandons - rouge
+                                    ],
                                     stroke: {
                                         show: true,
-                                        width: 2,
-                                        colors: ['red']
+                                        width: 1,
+                                        colors: ['#ffffff'] // séparation entre tranches
                                     },
-                                    xaxis: {
-                                        categories: ['Maths', 'Physique', 'Chimie', 'Biologie', 'Histoire', 'Géographie', 'Anglais',
-                                            'Français', 'Arts'
-                                        ]
-                                    },
-                                    yaxis: {
-                                        title: {
-                                            text: 'Notes'
+                                    plotOptions: {
+                                        pie: {
+                                            expandOnClick: true, // cliqué/hover = met en avant
+                                            offsetY: 0,
+                                            donut: {
+                                                size: '58%',
+                                                labels: {
+                                                    show: true,
+                                                    name: {
+                                                        show: true,
+                                                        fontSize: '14px',
+                                                        offsetY: -6
+                                                    },
+                                                    value: {
+                                                        show: true,
+                                                        fontSize: '18px',
+                                                        offsetY: 6,
+                                                        formatter: function(val) {
+                                                            return val;
+                                                        } // valeur brute
+                                                    },
+                                                    total: {
+                                                        show: true,
+                                                        label: 'Total',
+                                                        formatter: function(w) {
+                                                            return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     },
-                                    fill: {
-                                        opacity: 1
+                                    dataLabels: {
+                                        enabled: true,
+                                        formatter: function(val, opts) {
+                                            // val = pourcentage arrondi fourni par Apex, opts donne les détails
+                                            var seriesIndex = opts.seriesIndex;
+                                            var total = opts.w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                            var value = opts.w.globals.series[seriesIndex];
+                                            var percent = total === 0 ? 0 : (value / total * 100);
+                                            // N'affiche le label sur la tranche que si >= 3% (ajuste ce seuil si tu veux)
+                                            if (percent < 3) return '';
+                                            return percent.toFixed(1) + '%';
+                                        },
+                                        dropShadow: {
+                                            enabled: false
+                                        }
+                                    },
+                                    states: {
+                                        hover: {
+                                            filter: {
+                                                type: 'darken',
+                                                value: 0.12
+                                            }
+                                        }
+                                    },
+                                    legend: {
+                                        show: true,
+                                        position: 'bottom',
+                                        formatter: function(seriesName, opts) {
+                                            var idx = opts.seriesIndex;
+                                            var total = opts.w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                            var val = opts.w.globals.series[idx];
+                                            var percent = total === 0 ? 0 : (val / total * 100);
+                                            return seriesName + " — " + val + " (" + percent.toFixed(1) + "%)";
+                                        }
                                     },
                                     tooltip: {
                                         y: {
                                             formatter: function(val) {
-                                                return val + " points"
+                                                return val + " élèves";
                                             }
                                         }
                                     }
                                 };
 
-                                // Initialiser le graphique avec les options
-                                var chart = new ApexCharts(document.querySelector("#chart1"), options);
-
-                                // Afficher le graphique
+                                var chart = new ApexCharts(document.querySelector("#chart-perf"), options);
                                 chart.render();
-
-                                // Exemple de données de taux
-                                var passRate = 85;
-                                var repeatRate = 10;
-                                var exclusionRate = 5;
-                                var promotionRate = 90; // Taux de passage en classe supérieure
-
-                                // Mettre à jour les taux affichés
-                                document.getElementById('pass-rate').textContent = passRate + '%';
-                                document.getElementById('repeat-rate').textContent = repeatRate + '%';
-                                document.getElementById('exclusion-rate').textContent = exclusionRate + '%';
-                                document.getElementById('promotion-rate').textContent = promotionRate +
-                                '%'; // Mise à jour du taux de passage en classe supérieure
                             });
                         </script>
+
                     </div>
 
 
@@ -319,36 +333,6 @@
                                 </script>
                             </div>
 
-                            {{-- <div class="card col-md-4">
-              <div class="template-demo mt-2">
-                <button class="btn btn-outline-dark btn-icon-text">
-                  <i class="typcn typcn-trash btn-icon-prepend"></i>
-                  <span class="d-inline-block text-center">
-                    <small class="font-weight-light d-block" _msttexthash="663078" _msthash="191">Inscription & Discipline </small><font _mstmutation="1" _msttexthash="2223429" _msthash="192"> Liste des Eleves </font></span>
-                </button><br><br>
-                <button class="btn btn-outline-dark btn-icon-text ">
-                  <i class="typcn typcn-edit btn-icon-prepend"></i>
-                  <span class="d-inline-block text-center">
-                    <small class="font-weight-light d-block" _msttexthash="283049" _msthash="193">Scolarité </small><font _mstmutation="1" _msttexthash="152841" _msthash="194">
-                    Mise a jour des paiements
-                  </font></span>
-                </button><br><br>
-                           
-                <button class="btn btn-outline-dark btn-icon-text">
-                  <i class="typcn typcn-user-delete btn-icon-prepend"></i>
-                  <span class="d-inline-block text-center">
-                    <small class="font-weight-light d-block" _msttexthash="663078" _msthash="191">Notes et Bulletin </small><font _mstmutation="1" _msttexthash="2223429" _msthash="192"> Tableau de Notes </font></span>
-                </button><br><br>
-                <button class="btn btn-outline-dark btn-icon-text">
-                  <i class="typcn typcn-user btn-icon-prepend"></i>
-                  <span class="d-inline-block text-center">
-                    <small class="font-weight-light d-block" _msttexthash="283049" _msthash="193">Notes et Bulletin </small><font _mstmutation="1" _msttexthash="152841" _msthash="194">
-                    Raport Annuels
-                  </font></span>
-                </button><br><br> 
-              </div>
-            </div> --}}
-
                             <div class="card col-md-4">
                                 <div class="card-body template-demo mt-2">
 
@@ -390,7 +374,6 @@
 
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
