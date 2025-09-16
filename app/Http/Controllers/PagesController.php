@@ -1411,7 +1411,7 @@ public function sfinanceclassespecifique($classeCode) {
                 'PRENOM', 
                 'CODECLAS', 
                 DB::raw('FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 as total_frais'),
-                DB::raw('APAYER + FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 + ARRIERE as total_tous')
+                DB::raw('FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 + ARRIERE as total_tous')
             )
             ->orderBy('NOM', 'asc')
             ->groupBy(
