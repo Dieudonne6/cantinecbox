@@ -390,6 +390,48 @@
         </div>
       </li>
 
+      <!-- Bloc Gestion du Personnel -->
+      <li class="nav-item"> 
+        <a class="nav-link" data-bs-toggle="collapse" href="#menuPersonnel" 
+          aria-expanded="false" aria-controls="menuPersonnel">
+          <i class="typcn typcn-document-text menu-icon"></i>
+          <span class="menu-title">Gestion du Personnel</span>
+          <i class="menu-arrow"></i>
+        </a>
+        
+        <div class="collapse" id="menuPersonnel" data-bs-parent="#parent-accordion">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+              <a class="nav-link {{ request()->is('updatePersonnel')  || in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}" 
+                data-bs-toggle="collapse" href="#classes" 
+                aria-expanded="{{ request()->is('updatePersonnel') || in_array(request()->route()->getName(), $routesClass) ? 'true' : 'false' }}" 
+                aria-controls="classes">
+                Régistre Enseignants
+                <i class="menu-arrow"></i>
+              </a>
+              
+              <div class="collapse {{ request()->is('updatePersonnel') || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'show' : '' }}" 
+                  id="classes" data-bs-parent="#menuPersonnel">
+                <ul class="nav sub-menu">
+                  <li>
+                    <a class="nav-link {{ request()->is('addAgent') ? 'active' : '' }}" 
+                      href="{{ url('/addAgent') }}">
+                      Type d'agent
+                    </a>
+                  </li>
+                  <li>
+                    <a class="nav-link {{ request()->is('updatePersonnel') ? 'active' : '' }}" 
+                      href="{{ url('/updatePersonnel') }}">
+                      Mise à jour du Personnel
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+
       <!-- Lien vers Paramètres -->
       <li class="nav-item">
         <a class="nav-link collapsed"
