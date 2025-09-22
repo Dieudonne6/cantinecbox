@@ -32,6 +32,7 @@ use App\Models\Journal;
 use App\Models\Chapitre;
 use App\Models\Deleve;
 use App\Models\Clasmat;
+use App\Models\DecisionConfigAnnuel;
 use App\Models\Facturenormalise;
 use App\Models\Facturescolarit;
 use App\Models\Dept;
@@ -535,14 +536,42 @@ class PagesController extends Controller
         Session::put('id_usercontrat', $id_usercontrat);
         Session::put('nom_user', $nom_user);
         Session::put('prenom_user', $prenom_user);
+
+
+                $year = now()->year;
+
+        // Labels en français pour les 12 mois
+        $months = [
+            'Janvier','Février','Mars','Avril','Mai','Juin',
+            'Juillet','Août','Septembre','Octobre','Novembre','Décembre'
+        ];
+
+        // Somme des montants par mois pour l'année en cours
+        $raw = Scolarite::selectRaw('MONTH(DATEOP) as month, SUM(MONTANT) as total')
+            ->where('VALIDE', 1)
+            ->whereYear('DATEOP', $year)
+            ->groupBy('month')
+            ->pluck('total','month') // cle = month (1..12), value = total
+            ->toArray();
+
+        // Normaliser en tableau 12 éléments (index 0 => Janvier)
+        $monthlyTotals = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $monthlyTotals[] = isset($raw[$m]) ? (float) $raw[$m] : 0;
+        }
+
+        // Dernières transactions (affichage dans la colonne de droite)
+        $lastTransactions = Scolarite::orderBy('DATEOP', 'desc')->limit(7)->get();
+
+
         
         return redirect("vitrine");
       } else{
-        return back()->with('status', 'Mot de passe ou email incorrecte');
+        return back()->with('status', 'Mot de passe ou identifiant incorrecte');
         
       }
     } else {
-        return back()->with('status', 'Mot de passe ou email incorrecte');
+        return back()->with('status', 'Mot de passe ou identifiant incorrecte');
     }
 }
   public function logout(Request $request)
@@ -686,11 +715,68 @@ public function etatdesdroits(Request $request) {
       $totalcantineinscritactif = Contrat::where('statut_contrat', 1)->count();
        $totalcantineinscritinactif = Contrat::where('statut_contrat', 0)->count();
       
+               $year = now()->year;
+
+
+       // Labels en français pour les 12 mois
+        $months = [
+            'Janvier','Février','Mars','Avril','Mai','Juin',
+            'Juillet','Août','Septembre','Octobre','Novembre','Décembre'
+        ];
+
+        // Somme des montants par mois pour l'année en cours
+        $raw = Scolarite::selectRaw('MONTH(DATEOP) as month, SUM(MONTANT) as total')
+            ->where('VALIDE', 1)
+            ->whereYear('DATEOP', $year)
+            ->groupBy('month')
+            ->pluck('total','month') // cle = month (1..12), value = total
+            ->toArray();
+
+        // Normaliser en tableau 12 éléments (index 0 => Janvier)
+        $monthlyTotals = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $monthlyTotals[] = isset($raw[$m]) ? (float) $raw[$m] : 0;
+        }
+
+        // Dernières transactions (affichage dans la colonne de droite)
+        $lastTransactions = Scolarite::orderBy('DATEOP', 'desc')->limit(7)->get();
+
+
+$sentinels = [21, -1];
+
+$abandons = Eleve::whereNull('MAN')
+    ->orWhereIn('MAN', $sentinels)
+    ->count();
+
+$exclusions = Eleve::whereNotNull('MAN')
+    ->whereNotIn('MAN', $sentinels)      // <-- important
+    ->where('MAN', '<', 6)
+    ->count();
+
+$redoublants = Eleve::whereNotNull('MAN')
+    ->whereNotIn('MAN', $sentinels)
+    ->where('MAN', '>=', 6)
+    ->where('MAN', '<', 10)
+    ->count();
+
+$passants = Eleve::whereNotNull('MAN')
+    ->whereNotIn('MAN', $sentinels)
+    ->where('MAN', '>=', 10)
+    ->where('MAN', '<', 21)
+    ->count();
+
       // dd($totalcantineinscritactif);
       return view('pages.vitrine')
             ->with('totaleleve', $totaleleve)
             ->with('totalcantineinscritactif', $totalcantineinscritactif)
-            ->with('totalcantineinscritinactif', $totalcantineinscritinactif);
+            ->with('totalcantineinscritinactif', $totalcantineinscritinactif)
+            ->with('months', $months)
+            ->with('lastTransactions', $lastTransactions)
+            ->with('monthlyTotals', $monthlyTotals)
+            ->with('exclusions', $exclusions)
+            ->with('redoublants', $redoublants)
+            ->with('passants', $passants)
+            ->with('abandons', $abandons);
     }return redirect('/');
   }
   public function paramsfacture(){
@@ -1325,7 +1411,7 @@ public function sfinanceclassespecifique($classeCode) {
                 'PRENOM', 
                 'CODECLAS', 
                 DB::raw('FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 as total_frais'),
-                DB::raw('APAYER + FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 + ARRIERE as total_tous')
+                DB::raw('FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 + ARRIERE as total_tous')
             )
             ->orderBy('NOM', 'asc')
             ->groupBy(

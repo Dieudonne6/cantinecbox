@@ -160,106 +160,106 @@
     }
 
     // sales-chart-a start
-    if ($("#sales-chart-a").length) {
-      var areaData = {
-        labels: ["AA", "AB", "AC", "AD", "AE", "AF", "AG", "AI", "AJ", "AK"],
-        datasets: [
-          {
-            data: [30, 38, 20, 30, 25, 35, 19, 23,19, 27],
-            backgroundColor: [
-              '#003c7c'
-            ],
-            borderColor: [
-              '#003c7c'
-            ],
-            borderWidth: 1,
-            fill: 'origin',
-            label: "Sales"
-          },
-          {
-            data: [62, 58, 40, 52, 58, 55, 52, 62, 55, 60],
-            backgroundColor: [
-              '#2981d7'
-            ],
-            borderColor: [
-              '#2981d7'
-            ],
-            borderWidth: 1,
-            fill: 'origin',
-            label: "Orders"
-          },
-          {
-            data: [73, 70, 82, 70, 90, 97, 71, 98, 88, 98],
-            backgroundColor: [
-              '#cfdced'
-            ],
-            borderColor: [
-              '#cfdced'
-            ],
-            borderWidth: 1,
-            fill: 'origin',
-            label: "Revenue"
-          }
-        ]
-      };
-      var areaOptions = {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: {
-          filler: {
-            propagate: false
-          }
-        },
-        scales: {
-          xAxes: [{
-            display: false,
-            ticks: {
-              display: true
-            },
-            gridLines: {
-              display: false,
-              drawBorder: false,
-              color: 'transparent',
-              zeroLineColor: '#eeeeee'
-            }
-          }],
-          yAxes: [{
-            display: false,
-            ticks: {
-              display: true,
-              autoSkip: false,
-              maxRotation: 0,
-              stepSize: 100,
-              min: 0,
-              max: 100
-            },
-            gridLines: {
-              drawBorder: false
-            }
-          }]
-        },
-        legend: {
-          display: false
-        },
-        tooltips: {
-          enabled: true
-        },
-        elements: {
-          line: {
-            tension: .35
-          },
-          point: {
-            radius: 0
-          }
-        }
-      }
-      var salesChartACanvas = $("#sales-chart-a").get(0).getContext("2d");
-      var salesChartA = new Chart(salesChartACanvas, {
-        type: 'line',
-        data: areaData,
-        options: areaOptions
-      });
-    }
+    // if ($("#sales-chart-a").length) {
+    //   var areaData = {
+    //     labels: ["AA", "AB", "AC", "AD", "AE", "AF", "AG", "AI", "AJ", "AK"],
+    //     datasets: [
+    //       {
+    //         data: [30, 38, 20, 30, 25, 35, 19, 23,19, 27],
+    //         backgroundColor: [
+    //           '#003c7c'
+    //         ],
+    //         borderColor: [
+    //           '#003c7c'
+    //         ],
+    //         borderWidth: 1,
+    //         fill: 'origin',
+    //         label: "Sales"
+    //       },
+    //       {
+    //         data: [62, 58, 40, 52, 58, 55, 52, 62, 55, 60],
+    //         backgroundColor: [
+    //           '#2981d7'
+    //         ],
+    //         borderColor: [
+    //           '#2981d7'
+    //         ],
+    //         borderWidth: 1,
+    //         fill: 'origin',
+    //         label: "Orders"
+    //       },
+    //       {
+    //         data: [73, 70, 82, 70, 90, 97, 71, 98, 88, 98],
+    //         backgroundColor: [
+    //           '#cfdced'
+    //         ],
+    //         borderColor: [
+    //           '#cfdced'
+    //         ],
+    //         borderWidth: 1,
+    //         fill: 'origin',
+    //         label: "Revenue"
+    //       }
+    //     ]
+    //   };
+    //   var areaOptions = {
+    //     responsive: true,
+    //     maintainAspectRatio: true,
+    //     plugins: {
+    //       filler: {
+    //         propagate: false
+    //       }
+    //     },
+    //     scales: {
+    //       xAxes: [{
+    //         display: false,
+    //         ticks: {
+    //           display: true
+    //         },
+    //         gridLines: {
+    //           display: false,
+    //           drawBorder: false,
+    //           color: 'transparent',
+    //           zeroLineColor: '#eeeeee'
+    //         }
+    //       }],
+    //       yAxes: [{
+    //         display: false,
+    //         ticks: {
+    //           display: true,
+    //           autoSkip: false,
+    //           maxRotation: 0,
+    //           stepSize: 100,
+    //           min: 0,
+    //           max: 100
+    //         },
+    //         gridLines: {
+    //           drawBorder: false
+    //         }
+    //       }]
+    //     },
+    //     legend: {
+    //       display: false
+    //     },
+    //     tooltips: {
+    //       enabled: true
+    //     },
+    //     elements: {
+    //       line: {
+    //         tension: .35
+    //       },
+    //       point: {
+    //         radius: 0
+    //       }
+    //     }
+    //   }
+    //   var salesChartACanvas = $("#sales-chart-a").get(0).getContext("2d");
+    //   var salesChartA = new Chart(salesChartACanvas, {
+    //     type: 'line',
+    //     data: areaData,
+    //     options: areaOptions
+    //   });
+    // }
     // sales-chart-a end
 
         // sales-chart-a-dark start

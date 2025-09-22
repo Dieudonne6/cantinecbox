@@ -174,7 +174,11 @@
                                             <td>{{ number_format($eleve['reste_arriere'], 0, ',', ' ') }}</td>
                                             <td>{{ number_format($eleve['reste_autre_frais'], 0, ',', ' ') }}</td>
                                             <td>{{ number_format($eleve['total_du_hors_echeancier'], 0, ',', ' ') }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($eleve['derniere_date_scolarite'])->format('d/m/Y')  }}</td>
+                                            <td>
+                                                {{ $eleve['derniere_date_scolarite'] 
+                                                    ? \Carbon\Carbon::parse($eleve['derniere_date_scolarite'])->format('d/m/Y') 
+                                                    : '' }}
+                                            </td>                                            
                                             <td>
                                                 @if ($eleve['reste_echeance'] == 0 && $eleve['reste_arriere'] == 0 && $eleve['reste_autre_frais'] == 0)
                                                     À jour

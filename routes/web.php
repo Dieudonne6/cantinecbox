@@ -106,7 +106,7 @@ Route::get('/hsuppression', [PagesController::class, 'hsuppression']);
 Route::get('/changetrimestre', [PagesController::class, 'changetrimestre']);
 Route::get('/confimpression', [PagesController::class, 'confimpression']);
 
-Route::get('/Acceuil', [PagesController::class, 'Acceuil'])->name('lolo');
+Route::get('/Acceuil', [PagesController::class, 'Acceuil'])->name('accueil');
 Route::get('/modifiereleve/{MATRICULE}', [PagesController::class, 'modifiereleve'])->name('modifiereleve');
 Route::put('/modifieeleve/{MATRICULE}', [PagesController::class, 'modifieeleve']);
 Route::put('/modifieleve/{MATRICULE}', [PagesController::class, 'modifieleve']);
@@ -435,6 +435,7 @@ Route::get('/profile/password', [PagesController::class, 'showChangePasswordForm
 // Traiter la mise à jour du mot de passe
 Route::post('/profile/password', [PagesController::class, 'updatePassword'])->name('password.update');
 
+// Route::get('/vitrine', [statsController::class, 'performanceAcademique']);
 
 Route::get('/listeparmerite',[ListemeriteController::class, 'acceuil'])->name('listeparmerite');
 Route::get('/imprimer-liste-merite', [ListemeriteController::class, 'imprimerListeMerite'])->name('imprimer.liste.merite');
