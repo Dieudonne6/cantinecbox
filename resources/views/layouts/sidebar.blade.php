@@ -402,9 +402,9 @@
         <div class="collapse" id="menuPersonnel" data-bs-parent="#parent-accordion">
           <ul class="nav flex-column sub-menu">
             <li class="nav-item">
-              <a class="nav-link {{ request()->is('updatePersonnel')  || in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}" 
+              <a class="nav-link {{ request()->is('updatePersonnel')  || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}" 
                 data-bs-toggle="collapse" href="#classes" 
-                aria-expanded="{{ request()->is('updatePersonnel') || in_array(request()->route()->getName(), $routesClass) ? 'true' : 'false' }}" 
+                aria-expanded="{{ request()->is('updatePersonnel') || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'true' : 'false' }}" 
                 aria-controls="classes">
                 Régistre Enseignants
                 <i class="menu-arrow"></i>
