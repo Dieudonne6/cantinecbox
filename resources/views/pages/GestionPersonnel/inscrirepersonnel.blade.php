@@ -266,6 +266,7 @@
                                 <button type="reset" class="btn btn-outline-secondary px-4 py-2 rounded-pill shadow-sm">
                                     <i class="bi bi-x-circle me-1"></i> Annuler
                                 </button>
+                                <br><br><br>
                             </div>
                         </form>
 
