@@ -3,19 +3,93 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\DB;
+use App\Models\TypeAgent;
 
 class GestionPersonnelController extends Controller
 {
-    //Création de profil pour personnel
+
+     //Création de profil pour personnel
     public function UpdatePersonnel(Request $request){  
         return view('pages.GestionPersonnel.UpdatePersonnel');
     }
 
-    //Ajout d'agent
-     public function AddAgent(Request $request){  
-        return view('pages.GestionPersonnel.addAgent');
+    // Page avec tableau
+    public function AddAgent()
+    {
+        // On récupère tous les types d’agents
+        $agents = TypeAgent::all();
+        return view('pages.GestionPersonnel.addAgent', compact('agents'));
     }
-}
 
+    // Ajouter un type d’agent
+     public function storeTypeAgent(Request $request)
+    {
+        $agent = TypeAgent::create([
+            'LibelTypeAgent' => $request->libelle,
+            'Quota' => $request->quota,
+        ]);
+
+        return response()->json([
+            'LibelTypeAgent' => $agent->LibelTypeAgent,
+            'Quota' => $agent->Quota,
+        ]);
+    }
+
+
+    // Supprimer par libellé (fonctionnera sans id)
+    public function deleteByLibelle($libelle)
+    {
+        // Récupérer l'ordre des libellés pour connaître la position (0..)
+        $libelles = TypeAgent::pluck('LibelTypeAgent')->toArray();
+        $pos = array_search(urldecode($libelle), $libelles, true);
+
+        // Empêcher suppression des 4 premiers (même règle que côté frontend)
+        if ($pos !== false && $pos < 4) {
+            return response()->json(['error' => 'Impossible de supprimer ce type'], 403);
+        }
+
+        // Supprimer via query builder (ne dépend pas du primary key)
+        $deleted = TypeAgent::where('LibelTypeAgent', urldecode($libelle))->delete();
+
+        if ($deleted) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => 'Type introuvable'], 404);
+    }
+
+    // Mettre à jour par libellé (fonctionnera sans id)
+    public function updateByLibelle(Request $request, $libelle)
+    {
+        // Décode et vérifie position
+        $decoded = urldecode($libelle);
+        $libelles = TypeAgent::pluck('LibelTypeAgent')->toArray();
+        $pos = array_search($decoded, $libelles, true);
+
+        if ($pos !== false && $pos < 4) {
+            return response()->json(['error' => 'Impossible de modifier ce type'], 403);
+        }
+
+        // Update via query builder
+        $newLib = $request->input('libelle', $decoded);
+        $newQuota = $request->input('quota', null);
+
+        $affected = TypeAgent::where('LibelTypeAgent', $decoded)
+                    ->update([
+                        'LibelTypeAgent' => $newLib,
+                        'Quota' => $newQuota
+                    ]);
+
+        if ($affected) {
+            return response()->json([
+                'LibelTypeAgent' => $newLib,
+                'Quota' => $newQuota,
+            ]);
+        }
+
+        return response()->json(['error' => 'Type introuvable'], 404);
+    }
+
+
+
+}
