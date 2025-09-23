@@ -546,7 +546,25 @@ Route::get('/duplicatainscription2/{idcontrat}',[DuplicataController::class,'dup
 Route::get('/paiementeleve', [PagesController::class, 'paiementeleve']);
 
 
-// Routes pour le menu Gestion du Personnel
+
+
+// Routes pour le menu Gestion du Personnel******************************************************************************************************
 Route::get('/updatePersonnel', [GestionPersonnelController::class, 'UpdatePersonnel']);
-Route::get('/addAgent', [GestionPersonnelController::class, 'AddAgent']);
+
+
+Route::get('/addAgent', [GestionPersonnelController::class, 'AddAgent']);// store déjà présent
+Route::post('/typeagent/store', [GestionPersonnelController::class, 'storeTypeAgent'])->name('typeagent.store');
+// suppression / mise à jour via le libellé (URL encode)
+Route::delete('/typeagent/libelle/{libelle}', [GestionPersonnelController::class, 'deleteByLibelle'])->name('typeagent.deleteByLibelle');
+Route::put('/typeagent/libelle/{libelle}', [GestionPersonnelController::class, 'updateByLibelle'])->name('typeagent.updateByLibelle');
+
+//Route pour la création de prime
+Route::post('/prime/store', [InscrirepersonnelController::class, 'storePrime'])->name('prime.store');
+
+//Rioute pour la création de nouveaux profils
+Route::post('/profils', [InscrirepersonnelController::class, 'store'])->name('profils.store');
+
+//Rioute pour la création de nouveaux profils
+Route::post('/agents/store', [InscrirepersonnelController::class, 'storeargent'])->name('agents.store');
+
 Route::get('/inscrirepersonnel', [InscrirepersonnelController::class, 'index']);
