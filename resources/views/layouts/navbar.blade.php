@@ -30,8 +30,8 @@
         @endif 
       </a>   
       <ul class="dropdown-menu text-small" data-popper-placement="bottom-end" style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(0.5px, 34px, 0px);">
-        {{-- <li><a class="dropdown-item" href="#">Profile</a></li> --}}
-        {{-- <li><hr class="dropdown-divider"></li> --}}
+        <li><a class="dropdown-item" href="{{ route('profile.show') }}">Modifier Profile</a></li>
+        <li><a class="dropdown-item" href="{{ route('password.show') }}">Modifier le mot de passe </a></li>
         <li>
           <form action="{{ route('logout') }}" method="POST">
             @csrf

@@ -266,7 +266,9 @@ class PagesController extends Controller
   }
   
   public function Acceuil(){
-    return view('pages.inscriptions.Acceuil');
+            $classes = Classes::where('TYPECLASSE', 1)->get();
+
+    return view('pages.inscriptions.Acceuil')->with('classe', $classes);
     
   }
   public function listedesretardsdepaiement(){
@@ -638,6 +640,64 @@ class PagesController extends Controller
       // Rediriger vers la page de connexion avec message
       return redirect('/')->with('status', 'Mot de passe modifié avec succès. Veuillez vous reconnecter.');
   }
+
+
+
+  // Afficher le formulaire de changement du profile
+  public function showChangeProfileForm()
+  {
+      // Vérifier si l'utilisateur est connecté via la session
+      $account = Session::get('account');
+      if (!$account) {
+          return redirect('/'); // adapte si tu as un nom de route pour la page de connexion
+      }
+
+      return view('pages.parametre.updateprofile', ['account' => $account]);
+  }
+
+  // Traiter la mise à jour du profile
+  public function updateProfile(Request $request)
+  {
+      $account = Session::get('account');
+      if (!$account) {
+          return redirect('/');
+      }
+
+      // Validation
+      $request->validate([
+          'login' => 'required|string',
+          'nom' => 'nullable|string', 
+          'prenom' => "nullable|string",
+      ]);
+
+
+      // Mettre à jour le profile
+      $user = User::find($account->id);
+      if (!$user) {
+          // en cas d'incohérence
+          Session::flush();
+          return redirect('/')->with('status', "Erreur : compte introuvable. Connectez-vous à nouveau.");
+      }
+
+      $user->login = $request->login;
+      $user->nomuser = $request->nom;
+      $user->prenomuser = $request->prenom;
+      $user->save();
+
+      Session::put('account', $user);
+      // Déconnexion : effacer la session
+      // Session::forget('account');
+      // Session::forget('id_usercontrat');
+      // Session::forget('nom_user');
+      // Session::forget('prenom_user');
+      // Session::forget('image');
+      // ou Session::flush(); // si tu veux tout vider
+
+      // Rediriger vers la page de connexion avec message
+      return redirect('/vitrine')->with('status', 'Profile modifié avec succès.');
+  }
+
+
 public function etatdesdroits(Request $request) {
     $classe = Classes::all();
     $params = Params2::first();
