@@ -90,6 +90,12 @@ class GestionPersonnelController extends Controller
         return response()->json(['error' => 'Type introuvable'], 404);
     }
 
+    public function confTauxH() {
+
+
+        return view('pages.GestionPersonnel.confTauxH');
+    }
+
 
 
 }
