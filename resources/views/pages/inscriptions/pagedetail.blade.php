@@ -95,7 +95,7 @@
                             </div>
                             <div class="col-md-3 d-flex align-items-center mt-4">
                                 <input type="checkbox" class="form-check-input me-2" id="statutRedoublant{{ $eleve->MATRICULE }}"
-                                    name="statutRedoublant" {{ $eleve->STATUT == 1 ? 'checked' : '' }} readonly>
+                                    name="statutRedoublant" {{ $eleve->STATUT == 1 ? 'checked' : '' }} onclick="return false;">
                                 <label class="form-check-label" for="statutRedoublant{{ $eleve->MATRICULE }}">🔄 Redoublant</label>
                             </div>
                         </div>
