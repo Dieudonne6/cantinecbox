@@ -10,7 +10,7 @@ class Agent extends Model
     use HasFactory;
 
     protected $table = 'agent';
-
+    protected $primaryKey = 'MATRICULE';
     public $timestamps = false;
 
     protected $fillable = [
@@ -82,4 +82,6 @@ class Agent extends Model
         'SiTE',
         'anneeacademique',
     ];
+
+  
 }

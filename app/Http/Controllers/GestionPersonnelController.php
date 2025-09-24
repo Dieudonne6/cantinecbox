@@ -4,13 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TypeAgent;
+use App\Models\Agent;
+use App\Models\Matieres;
+use App\Models\Profmat;
+
+use Illuminate\Pagination\Paginator;
 
 class GestionPersonnelController extends Controller
 {
 
      //Création de profil pour personnel
-    public function UpdatePersonnel(Request $request){  
-        return view('pages.GestionPersonnel.UpdatePersonnel');
+    public function UpdatePersonnel(Request $request){ 
+        $agents = Agent::all();
+        $matieres = Matieres::all();
+        $codemat = Profmat::all();
+
+        return view('pages.GestionPersonnel.UpdatePersonnel', compact('agents', 'matieres', 'codemat'));
     }
 
     // Page avec tableau
@@ -88,6 +97,12 @@ class GestionPersonnelController extends Controller
         }
 
         return response()->json(['error' => 'Type introuvable'], 404);
+    }
+
+    public function confTauxH() {
+
+
+        return view('pages.GestionPersonnel.confTauxH');
     }
 
 

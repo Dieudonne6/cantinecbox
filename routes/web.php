@@ -575,3 +575,5 @@ Route::post('/profils', [InscrirepersonnelController::class, 'store'])->name('pr
 Route::post('/agents/store', [InscrirepersonnelController::class, 'storeargent'])->name('agents.store');
 
 Route::get('/inscrirepersonnel', [InscrirepersonnelController::class, 'index']);
+
+Route::get('/confTauxH', [GestionPersonnelController::class, 'confTauxH']);

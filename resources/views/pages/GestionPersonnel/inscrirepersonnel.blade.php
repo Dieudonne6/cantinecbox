@@ -57,10 +57,17 @@
 
                         <form action="{{ route('agents.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
-
-                            {{-- Ligne matricule, IFU, CNSS --}}
                             <div class="row g-3 mb-3">
-                                <div class="col-md-3 form-floating">
+                                <div class="col-md-6 form-floating">
+                                    <select name="LibelTypeAgent" class="form-select rounded-3" id="principal_classe">
+                                        <option value="">Sélectionné le type</option>
+                                        @foreach($agents as $agent)
+                                            <option value="{{ $agent->LibelTypeAgent }}">{{ $agent->LibelTypeAgent  }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label for="principal_classe">Type d'agent</label>                                  
+                                </div>
+                                <div class="col-md-4 form-floating">
                                     <input type="text" name="matricule" class="form-control rounded-3" placeholder=" " readonly>
                                     <label>Matricule</label>
                                 </div>
@@ -70,11 +77,14 @@
                                         <label for="auto" class="form-check-label">Auto</label>
                                     </div>
                                 </div>
-                                <div class="col-md-3 form-floating">
+                            </div>
+                            {{-- Ligne , IFU, CNSS --}}
+                            <div class="row g-3 mb-3">                               
+                                <div class="col-md-6 form-floating">
                                     <input type="text" name="ifu" class="form-control rounded-3" placeholder=" ">
                                     <label>IFU</label>
                                 </div>
-                                <div class="col-md-3 form-floating">
+                                <div class="col-md-6 form-floating">
                                     <input type="text" name="cnss" class="form-control rounded-3" placeholder=" ">
                                     <label>CNSS</label>
                                 </div>
@@ -118,7 +128,9 @@
                                     <select name="matrimoniale" class="form-select rounded-3" placeholder=" ">
                                         <option value=""></option>
                                         <option value="1">Célibataire</option>
-                                        <option value="0">Marié</option>
+                                        <option value="2">Marié</option>
+                                        <option value="3">Divorcé</option>
+                                        <option value="4">Veuf</option>
                                     </select>
                                     <label>Situation matrimoniale</label>
                                 </div>
@@ -514,7 +526,7 @@
     </script>
 
     
-    <script>
+    <script> 
         document.addEventListener('DOMContentLoaded', function () {
             // Remplir automatiquement Code et Libellé selon Nom Court
             document.addEventListener('change', function(e) {
@@ -526,8 +538,9 @@
                 }
             });
 
-            // Ajouter une nouvelle ligne
+            // Gestion ajout / suppression lignes
             document.addEventListener('click', function(e) {
+                // Ajouter
                 if (e.target.classList.contains('addRow')) {
                     let table = document.querySelector('#matiereTable tbody');
                     let newRow = table.rows[0].cloneNode(true);
@@ -537,16 +550,22 @@
                     newRow.querySelector('.libelle').value = '';
                     newRow.querySelector('.nomcourt').selectedIndex = 0;
 
-                    // bouton changer + en -
-                    newRow.querySelector('.addRow').classList.replace('btn-success', 'btn-danger');
-                    newRow.querySelector('.addRow').textContent = '-';
+                    // bouton transformer en -
+                    let btn = newRow.querySelector('.addRow');
+                    btn.classList.remove('btn-success', 'addRow');
+                    btn.classList.add('btn-danger', 'removeRow');
+                    btn.textContent = '-';
 
                     table.appendChild(newRow);
-                } else if (e.target.classList.contains('btn-danger')) {
+                }
+
+                // Supprimer
+                if (e.target.classList.contains('removeRow')) {
                     e.target.closest('tr').remove();
                 }
             });
         });
     </script>
+
  
 @endsection
