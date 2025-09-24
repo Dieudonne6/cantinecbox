@@ -502,12 +502,12 @@
                 Changement de trimestre
               </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a class="nav-link {{ request()->routeIs('password.show') ? 'active' : '' }}"
                 href="{{ route('password.show') }}">
                 Modifier le mot de passe
               </a>
-            </li>
+            </li> --}}
           </ul>
         </div>
       </li>

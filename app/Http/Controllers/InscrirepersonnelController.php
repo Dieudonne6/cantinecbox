@@ -8,7 +8,10 @@ use App\Models\Classesgroupeclass;
 use App\Models\Matieres;
 use App\Models\Profil;
 use App\Models\Agent;
+use App\Models\TypeAgent;
+use App\Models\Profmat;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
@@ -22,8 +25,9 @@ class InscrirepersonnelController extends Controller
         $matieres = Matieres::all();
         $primes = Tprime::all();
         $profils = Profil::all();
+        $agents = TypeAgent::all();
 
-        return view('pages.GestionPersonnel.inscrirepersonnel' , compact('classes', 'matieres', 'primes', 'profils'));
+        return view('pages.GestionPersonnel.inscrirepersonnel' , compact('classes', 'matieres', 'primes', 'profils', 'agents'));
     }
 
    
@@ -106,103 +110,79 @@ class InscrirepersonnelController extends Controller
     // Fonction pour la création d'un agent
     
     public function storeargent(Request $request)
-{
-    // Validation
-    $request->validate([
-        'nom' => 'required|string|max:255',
-        'prenom' => 'required|string|max:255',
-        'date_naissance' => 'required|date',
-        'lieu' => 'required|string|max:255',
-        'sexe' => 'required|integer',
-        'nb_enfants' => 'nullable|integer|min:0',
-        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        'date_entree' => 'nullable|date',
-        'poste_occupe' => 'nullable|string|max:255',
-        'grade' => 'nullable|string|max:255',
-        'diplome_academique' => 'nullable|string|max:255',
-        'diplome_professionnel' => 'nullable|string|max:255',
-        'profil' => 'nullable|integer',
-        'cycle' => 'nullable|integer',
-        'banque' => 'nullable|string|max:255',
-        'cnss' => 'nullable|string|max:255',
-        'ifu' => 'nullable|string|max:255',
-        'telephone' => 'nullable|string|max:255',
-    ]);
+    {
+        // Validation
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'date_naissance' => 'required|date',
+            'lieu' => 'required|string|max:255',
+            'sexe' => 'required|integer',
+            'nb_enfants' => 'nullable|integer|min:0',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'date_entree' => 'nullable|date',
+            'poste_occupe' => 'nullable|string|max:255',
+            'grade' => 'nullable|string|max:255',
+            'diplome_academique' => 'nullable|string|max:255',
+            'diplome_professionnel' => 'nullable|string|max:255',
+            'profil' => 'nullable|integer',
+            'cycle' => 'nullable|integer',
+            'banque' => 'nullable|string|max:255',
+            'cnss' => 'nullable|string|max:255',
+            'ifu' => 'nullable|string|max:255',
+            'telephone' => 'nullable|string|max:255',
+            'LibelTypeAgent' => 'nullable|string|max:255',
+            'principal_classe' => 'nullable|string|max:20',
+        ]);
 
-    // Gestion de la photo
-    $photoPath = $request->hasFile('photo') ? $request->file('photo')->store('photos_agents', 'public') : null;
+        // Gestion de la photo
+        $photoPath = $request->hasFile('photo') 
+            ? $request->file('photo')->store('photos_agents', 'public') 
+            : null;
 
-    // Création de l'agent
-    $agent = Agent::create([
-        'NOM' => $request->nom,
-        'PRENOM' => $request->prenom,
-        'DATENAIS' => $request->date_naissance,
-        'LIEUNAIS' => $request->lieu ?? ' ',
-        'NATION' => $request->nationalite ?? ' ',
-        'SEXE' => (int) ($request->sexe ?? 0),
-        'SITMAT' => (int) ($request->matrimoniale ?? -1),
-        'PROVENANCE' => ' ',
-        'CODEDEPT' => ' ',
-        'POSITMILIT' => ' ',
-        'NBENF' => (int) ($request->nb_enfants ?? 0),
-        'DIPLOMEAC' => $request->diplome_academique ?? ' ',
-        'DIPLOMEPRO' => $request->diplome_professionnel ?? ' ',
-        'DATEDEP' => null,
-        'DATEENT' => $request->date_entree ?? null,
-        'DATEENTADM' => null,
-        'DATEFONC' => null,
-        'DATENOM' => null,
-        'REFNOM' => ' ',
-        'DATETITU' => null,
-        'REFTITU' => ' ',
-        'GRADE' => $request->grade ?? ' ',
-        'INDICER' => ' ',
-        'INDICEP' => ' ',
-        'NOTE' => ' ',
-        'POSTE' => $request->poste_occupe ?? ' ',
-        'FONCTIONP' => ' ',
-        'ADRPERS' => ' ',
-        'ADRVAC' => ' ',
-        'CONJOINT' => ' ',
-        'LIEUCONJOINT' => ' ',
-        'PREVENIR' => ' ',
-        'RAISONINT' => ' ',
-        'DATEDEBINT' => null,
-        'ADRPREV' => ' ',
-        'DATEFININT' => null,
-        'CODECLAS' => ' ',
-        'SIGNEP' => ' ',
-        'TYPEAGENT' => ' ',
-        'DATERET' => null,
-        'TAUXHORAIRE' => 0,
-        'SELET' => 0,
-        'CYCLES' => (int) ($request->cycle ?? 0),
-        'FONCTIONS' => ' ',
-        'SALBASE' => 0,
-        'TAUXHS' => 0,
-        'NBHEURE' => 0,
-        'PHOTO' => $photoPath,
-        'PriseEnchargeEtat' => 0,
-        'CHAPITRE' => ' ',
-        'TAUXHORAIRE2' => 0,
-        'NUMCNSS' => $request->cnss ?? ' ',
-        'Numeroprofil' => (int) ($request->profil ?? 0),
-        'LibelTypeAgent' => ' ',
-        'NbHeuredu' => 0,
-        'Enseignant' => $request->poste_occupe === 'Enseignant' ? 1 : 0,
-        'CBanque' => $request->banque ?? ' ',
-        'NCompteBanque' => $request->n_compte_banque ?? ' ',
-        'IFU' => $request->ifu ?? ' ',
-        'CompteAvance' => ' ',
-        'ChapitreAvance' => ' ',
-        'TelAgent' => $request->telephone ?? ' ',
-        'guid' => Str::uuid(),
-        'SiTE' => ' ',
-        'anneeacademique' => ' ',
-    ]);
+        // Création de l'agent
+        $agent = Agent::create([
+            'NOM' => $request->nom,
+            'PRENOM' => $request->prenom,
+            'DATENAIS' => $request->date_naissance,
+            'LIEUNAIS' => $request->lieu ?? ' ',
+            'NATION' => $request->nationalite ?? ' ',
+            'SEXE' => (int) ($request->sexe ?? 0),
+            'SITMAT' => (int) ($request->matrimoniale ?? -1),
+            'NBENF' => (int) ($request->nb_enfants ?? 0),
+            'DIPLOMEAC' => $request->diplome_academique ?? ' ',
+            'DIPLOMEPRO' => $request->diplome_professionnel ?? ' ',
+            'DATEENT' => $request->date_entree ?? null,
+            'GRADE' => $request->grade ?? ' ',
+            'POSTE' => $request->poste_occupe ?? ' ',
+            'CODECLAS' => $request->principal_classe ?? ' ',   
+            'CYCLES' => (int) ($request->cycle ?? 0),
+            'PHOTO' => $photoPath,
+            'NUMCNSS' => $request->cnss ?? ' ',
+            'Numeroprofil' => (int) ($request->profil ?? 0),
+            'LibelTypeAgent' => $request->LibelTypeAgent ?? ' ', 
+            'Enseignant' => $request->poste_occupe === 'Enseignant' ? 1 : 0,
+            'CBanque' => $request->banque ?? ' ',
+            'IFU' => $request->ifu ?? ' ',
+            'TelAgent' => $request->telephone ?? ' ',
+            'guid' => Str::uuid(),
+        ]);
+        $last = Agent::latest('MATRICULE')->first();
+        //dd($last);
+        if ($request->has('code')) {    
+        foreach ($request->code as $code) {
+            if (!empty($code)) {
+                Profmat::create([
+                    'CODEMAT' => $code,
+                    'MATRICULE' => $agent->MATRICULE, 
+                ]);
+            }
+        }
+    }
 
-    return redirect()->back()->with('success', 'Agent enregistré avec succès !');
-}
+        return redirect()->back()->with('success', 'Agent enregistré avec succès !');
+    }
+
 
 }
 

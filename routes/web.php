@@ -62,6 +62,7 @@ Route::get('/classes', [ClassesController::class, 'classe']);
 Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees']);
 Route::get('/', [PagesController::class, 'connexion']);
 Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
+Route::get('/filteraccueil/{CODECLAS}', [GestionclasseController::class, 'filteraccueil']);
 Route::get('/listegeneraleeleve/{CODECLAS}', [ClassesController::class, 'listegeneraleeleve']);
 //Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'getElevesByClasse']);
 
@@ -434,6 +435,12 @@ Route::get('/profile/password', [PagesController::class, 'showChangePasswordForm
 
 // Traiter la mise à jour du mot de passe
 Route::post('/profile/password', [PagesController::class, 'updatePassword'])->name('password.update');
+
+// Afficher le formulaire de modifictaion du profil (accessible seulement si connecté)
+Route::get('/profile/update', [PagesController::class, 'showChangeProfileForm'])->name('profile.show');
+
+// Traiter la mise à jour du profil
+Route::post('/profile/update', [PagesController::class, 'updateProfile'])->name('profile.update');
 
 // Route::get('/vitrine', [statsController::class, 'performanceAcademique']);
 

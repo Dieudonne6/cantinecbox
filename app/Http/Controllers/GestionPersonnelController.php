@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TypeAgent;
+use App\Models\Agent;
 
 class GestionPersonnelController extends Controller
 {
 
      //Création de profil pour personnel
-    public function UpdatePersonnel(Request $request){  
-        return view('pages.GestionPersonnel.UpdatePersonnel');
+    public function UpdatePersonnel(Request $request){ 
+          $agents = Agent::paginate(10);
+        return view('pages.GestionPersonnel.UpdatePersonnel', compact('agents'));
     }
 
     // Page avec tableau
