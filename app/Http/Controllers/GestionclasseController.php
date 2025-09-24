@@ -909,7 +909,7 @@ public function filteraccueil($CODECLAS) {
     $garconsRedoublants = $eleves->where('SEXE', 1)->where('STATUT', 1)->count();
 
 
-        return view('pages.inscriptions.filteraccueil', compact(
+        return view('pages.inscriptions.filterAccueil', compact(
         'eleves', 'allClass', 'serie', 'promotion', 'typeclah', 'typeenseigne',
         'totalEleves', 'filles', 'garcons', 'totalRedoublants', 'fillesRedoublantes', 'garconsRedoublants'
     ));
