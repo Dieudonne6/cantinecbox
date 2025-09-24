@@ -170,6 +170,101 @@
         $activeResultatRoutes = ['listeparmerite', 'imprimer.liste.merite'];
 
       @endphp
+        <!-- Bloc Cantine -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-toggle="collapse" href="#Cantine"
+           aria-expanded="false" aria-controls="Cantine">
+          <i class="typcn typcn-document-text menu-icon"></i>
+          <span class="menu-title-wrapper">
+            <span class="menu-title">Cantine</span>
+          </span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="Cantine">
+          <ul class="nav flex-column sub-menu">
+  
+            <!-- Liste des Contrats -->
+            <li class="nav-item">
+              @php
+                $routesClass = ['listecontrat', 'paiementcontrat', 'eleve'];
+              @endphp
+              <a class="nav-link {{ in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}"
+                 href="{{ route('listecontrat') }}">
+                <span class="menu-title-wrapper">
+                  <span class="menu-title">Liste des Contrats</span>
+                </span>
+              </a>
+            </li>
+  
+            <!-- Etats -->
+            <li class="nav-item">
+              @php
+                $routesEtat = ['etat', 'traitementetatpaiement', 'filteretat'];
+              @endphp
+              <a class="nav-link {{ in_array(request()->route()->getName(), $routesEtat) ? 'active' : '' }}"
+                 href="{{ route('etat') }}">
+                <span class="menu-title-wrapper">
+                  <span class="menu-title">Etats</span>
+                </span>
+              </a>
+            </li>
+  
+            <!-- Mise à jour des Paiements -->
+            <li class="nav-item">
+              @php
+                $routesAvoirFacPaiement = ['listefacture', 'avoirfacturepaie', 'avoirfacture', 'listefacinscription','avoirfactureinscription', 'avoirfactureinscri'];
+              @endphp
+              <a class="nav-link {{ in_array(request()->route()->getName(), $routesAvoirFacPaiement) ? 'active' : '' }}"
+                 href="{{ url('/listefacture') }}">
+                <span class="menu-title-wrapper">
+                  <span class="menu-title n">Mise à jour des Paiements/Inscriptions</span>
+                </span>
+              </a>
+            </li>
+
+            <!-- Liste des Factures d'avoir  -->
+            <li class="nav-item">
+              @php
+                $routesListeFacturesAvoir = ['listeFacturesAvoir'];
+              @endphp
+              <a class="nav-link {{ in_array(request()->route()->getName(), $routesListeFacturesAvoir) ? 'active' : '' }}"
+                href="{{ url('/listeFacturesAvoir') }}">
+                <span class="menu-title-wrapper">
+                  <span class="menu-title n">Liste des Factures d'avoir</span>
+                </span>
+              </a>
+            </li>
+  
+            <!-- Mise à jour des Inscriptions -->
+            {{-- <li class="nav-item">
+              @php
+                $routesAvoirFacInscription = [
+                  'listefacinscription',
+                  'avoirfactureinscription',
+                  'avoirfactureinscri',
+                ];
+              @endphp
+              <a class="nav-link {{ in_array(request()->route()->getName(), $routesAvoirFacInscription) ? 'active' : '' }}"
+                 href="{{ url('/listefacinscription') }}">
+                <span class="menu-title-wrapper">
+                  <span class="menu-title">Mise à jour des Inscriptions</span>
+                </span>
+              </a>
+            </li>--}}
+
+            <!-- Duplicata facture -->
+            <li class="nav-item">
+              <a class="nav-link {{ request()->is('duplicatafacture') || request()->is('filterduplicata') ? 'active' : '' }}"
+                 href="{{ url('/duplicatafacture') }}">
+                <span class="menu-title-wrapper">
+                  <span class="menu-title">Duplicata facture</span>
+                </span>
+              </a>
+            </li> 
+          </ul>
+        </div>
+      </li>
+       
       <!-- Bloc Gestion des notes -->
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" aria-expanded="{{ in_array(request()->route()->getName(), $routeparams) || in_array(request()->route()->getName(), $routesmanip) || in_array(request()->route()->getName(), $routeSecurite) ? 'true' : 'false' }}"
@@ -295,97 +390,46 @@
           </ul>
         </div>
       </li>
-      <!-- Bloc Cantine -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-toggle="collapse" href="#Cantine"
-           aria-expanded="false" aria-controls="Cantine">
+    
+
+      <!-- Bloc Gestion du Personnel -->
+      <li class="nav-item"> 
+        <a class="nav-link" data-bs-toggle="collapse" href="#menuPersonnel" 
+          aria-expanded="false" aria-controls="menuPersonnel">
           <i class="typcn typcn-document-text menu-icon"></i>
-          <span class="menu-title-wrapper">
-            <span class="menu-title">Cantine</span>
-          </span>
+          <span class="menu-title">Gestion du Personnel</span>
           <i class="menu-arrow"></i>
         </a>
-        <div class="collapse" id="Cantine">
+        
+        <div class="collapse" id="menuPersonnel" data-bs-parent="#parent-accordion">
           <ul class="nav flex-column sub-menu">
-  
-            <!-- Liste des Contrats -->
             <li class="nav-item">
-              @php
-                $routesClass = ['listecontrat', 'paiementcontrat', 'eleve'];
-              @endphp
-              <a class="nav-link {{ in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}"
-                 href="{{ route('listecontrat') }}">
-                <span class="menu-title-wrapper">
-                  <span class="menu-title">Liste des Contrats</span>
-                </span>
+              <a class="nav-link {{ request()->is('updatePersonnel')  || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}" 
+                data-bs-toggle="collapse" href="#classes" 
+                aria-expanded="{{ request()->is('updatePersonnel') || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'true' : 'false' }}" 
+                aria-controls="classes">
+                Régistre Enseignants
+                <i class="menu-arrow"></i>
               </a>
+              
+              <div class="collapse {{ request()->is('updatePersonnel') || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'show' : '' }}" 
+                  id="classes" data-bs-parent="#menuPersonnel">
+                <ul class="nav sub-menu">
+                  <li>
+                    <a class="nav-link {{ request()->is('addAgent') ? 'active' : '' }}" 
+                      href="{{ url('/addAgent') }}">
+                      Type d'agent
+                    </a>
+                  </li>
+                  <li>
+                    <a class="nav-link {{ request()->is('updatePersonnel') ? 'active' : '' }}" 
+                      href="{{ url('/updatePersonnel') }}">
+                      Mise à jour du Personnel
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </li>
-  
-            <!-- Etats -->
-            <li class="nav-item">
-              @php
-                $routesEtat = ['etat', 'traitementetatpaiement', 'filteretat'];
-              @endphp
-              <a class="nav-link {{ in_array(request()->route()->getName(), $routesEtat) ? 'active' : '' }}"
-                 href="{{ route('etat') }}">
-                <span class="menu-title-wrapper">
-                  <span class="menu-title">Etats</span>
-                </span>
-              </a>
-            </li>
-  
-            <!-- Mise à jour des Paiements -->
-            <li class="nav-item">
-              @php
-                $routesAvoirFacPaiement = ['listefacture', 'avoirfacturepaie', 'avoirfacture', 'listefacinscription','avoirfactureinscription', 'avoirfactureinscri'];
-              @endphp
-              <a class="nav-link {{ in_array(request()->route()->getName(), $routesAvoirFacPaiement) ? 'active' : '' }}"
-                 href="{{ url('/listefacture') }}">
-                <span class="menu-title-wrapper">
-                  <span class="menu-title n">Mise à jour des Paiements/Inscriptions</span>
-                </span>
-              </a>
-            </li>
-
-            <!-- Liste des Factures d'avoir  -->
-            <li class="nav-item">
-              @php
-                $routesListeFacturesAvoir = ['listeFacturesAvoir'];
-              @endphp
-              <a class="nav-link {{ in_array(request()->route()->getName(), $routesListeFacturesAvoir) ? 'active' : '' }}"
-                href="{{ url('/listeFacturesAvoir') }}">
-                <span class="menu-title-wrapper">
-                  <span class="menu-title n">Liste des Factures d'avoir</span>
-                </span>
-              </a>
-            </li>
-  
-            <!-- Mise à jour des Inscriptions -->
-            {{-- <li class="nav-item">
-              @php
-                $routesAvoirFacInscription = [
-                  'listefacinscription',
-                  'avoirfactureinscription',
-                  'avoirfactureinscri',
-                ];
-              @endphp
-              <a class="nav-link {{ in_array(request()->route()->getName(), $routesAvoirFacInscription) ? 'active' : '' }}"
-                 href="{{ url('/listefacinscription') }}">
-                <span class="menu-title-wrapper">
-                  <span class="menu-title">Mise à jour des Inscriptions</span>
-                </span>
-              </a>
-            </li>--}}
-
-            <!-- Duplicata facture -->
-            <li class="nav-item">
-              <a class="nav-link {{ request()->is('duplicatafacture') || request()->is('filterduplicata') ? 'active' : '' }}"
-                 href="{{ url('/duplicatafacture') }}">
-                <span class="menu-title-wrapper">
-                  <span class="menu-title">Duplicata facture</span>
-                </span>
-              </a>
-            </li> 
           </ul>
         </div>
       </li>

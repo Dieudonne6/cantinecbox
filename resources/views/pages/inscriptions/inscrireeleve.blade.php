@@ -81,7 +81,7 @@
                           <option value="{{ $classe->CODECLAS }}">{{ $classe->CODECLAS }}</option>
                           @endforeach
                         </select>
-                      </div>
+                      </div> 
                     </div>
                     <div class="form-group row mt-3">
                       <label for="numero-ordre" class="col-sm-2 col-form-label">Numéro d'ordre</label>
