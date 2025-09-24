@@ -890,6 +890,33 @@ public function indexEleves()
     ));
 }
 
+
+public function filteraccueil($CODECLAS) {
+        $allClass = Classes::all();
+    $serie = Serie::get();
+    $promotion = Promo::all();
+    $typeenseigne = Typeenseigne::get();
+    $typeclah = Typeclasse::get();
+
+        $eleves = Eleve::where('CODECLAS', $CODECLAS)->with('notes')->orderBy('nom', 'asc')->get();
+
+            // Calcul des effectifs
+    $totalEleves = $eleves->count();
+    $filles = $eleves->where('SEXE', 2)->count();
+    $garcons = $eleves->where('SEXE', 1)->count();
+    $totalRedoublants = $eleves->where('STATUT', 1)->count();
+    $fillesRedoublantes = $eleves->where('SEXE', 2)->where('STATUT', 1)->count();
+    $garconsRedoublants = $eleves->where('SEXE', 1)->where('STATUT', 1)->count();
+
+
+        return view('pages.inscriptions.filteraccueil', compact(
+        'eleves', 'allClass', 'serie', 'promotion', 'typeclah', 'typeenseigne',
+        'totalEleves', 'filles', 'garcons', 'totalRedoublants', 'fillesRedoublantes', 'garconsRedoublants'
+    ));
+
+
+}
+
   //   return view('pages.inscriptions.groupes');
   // } 
 
