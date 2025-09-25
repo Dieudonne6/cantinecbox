@@ -141,11 +141,10 @@
 
             <!-- Bloc Scolarité -->
             <li class="nav-item">
-                <a class="nav-link collapse" data-toggle="collapse" href="#scolarite" aria-expanded="false"
-                    aria-controls="scolarite"> <i class="typcn typcn-film menu-icon"></i>
-                    <span class="menu-title-wrapper">
+                <a class="nav-link" data-toggle="collapse" href="#scolarite" aria-expanded="false"
+                    aria-controls="scolarite"> 
+                    <i class="typcn typcn-film menu-icon"></i>
                         <span class="menu-title">Scolarité</span>
-                    </span>
                     <i class="menu-arrow"></i>
                 </a>
                 <div class="collapse" id="scolarite">
