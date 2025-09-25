@@ -81,11 +81,11 @@
                             {{-- Ligne , IFU, CNSS --}}
                             <div class="row g-3 mb-3">                               
                                 <div class="col-md-6 form-floating">
-                                    <input type="text" name="ifu" class="form-control rounded-3" placeholder=" ">
+                                    <input type="text" name="ifu" class="form-control rounded-3" placeholder=" " required>
                                     <label>IFU</label>
                                 </div>
                                 <div class="col-md-6 form-floating">
-                                    <input type="text" name="cnss" class="form-control rounded-3" placeholder=" ">
+                                    <input type="text" name="cnss" class="form-control rounded-3" placeholder=" " required>
                                     <label>CNSS</label>
                                 </div>
                             </div>
@@ -93,19 +93,19 @@
                             {{-- Nom, Prénom, Date naissance, Lieu --}}
                             <div class="row g-3 mb-3">
                                 <div class="col-md-3 form-floating">
-                                    <input type="text" name="nom" class="form-control rounded-3" placeholder=" ">
+                                    <input type="text" name="nom" class="form-control rounded-3" placeholder=" " required>
                                     <label>Nom</label>
                                 </div>
                                 <div class="col-md-3 form-floating">
-                                    <input type="text" name="prenom" class="form-control rounded-3" placeholder=" ">
+                                    <input type="text" name="prenom" class="form-control rounded-3" placeholder=" " required>
                                     <label>Prénom</label>
                                 </div>
                                 <div class="col-md-3 form-floating">
-                                    <input type="date" name="date_naissance" class="form-control rounded-3" placeholder=" ">
+                                    <input type="date" name="date_naissance" class="form-control rounded-3" placeholder=" " required>
                                     <label>Date de naissance</label>
                                 </div>
                                 <div class="col-md-3 form-floating">
-                                    <input type="text" name="lieu" class="form-control rounded-3" placeholder=" ">
+                                    <input type="text" name="lieu" class="form-control rounded-3" placeholder=" " required>
                                     <label>Lieu</label>
                                 </div>
                             </div>
@@ -113,11 +113,11 @@
                             {{-- Nationalité, Sexe, Situation matrimoniale --}}
                             <div class="row g-3 mb-3">
                                 <div class="col-md-3 form-floating">
-                                    <input type="text" name="nationalite" class="form-control rounded-3" placeholder=" ">
+                                    <input type="text" name="nationalite" class="form-control rounded-3" placeholder=" " required>
                                     <label>Nationalité</label>
                                 </div>
                                 <div class="col-md-3 form-floating">
-                                    <select name="sexe" class="form-select rounded-3" placeholder=" ">
+                                    <select name="sexe" class="form-select rounded-3" placeholder=" " required>
                                         <option value=""></option>
                                         <option value="0">Masculin</option>
                                         <option value="1">Féminin</option>
@@ -125,7 +125,7 @@
                                     <label>Sexe</label>
                                 </div>
                                 <div class="col-md-3 form-floating">
-                                    <select name="matrimoniale" class="form-select rounded-3" placeholder=" ">
+                                    <select name="matrimoniale" class="form-select rounded-3" placeholder=" " required>
                                         <option value=""></option>
                                         <option value="1">Célibataire</option>
                                         <option value="2">Marié</option>
@@ -135,7 +135,7 @@
                                     <label>Situation matrimoniale</label>
                                 </div>
                                 <div class="col-md-3 form-floating">
-                                    <input type="number" name="nb_enfants" class="form-control rounded-3" min="0" placeholder=" ">
+                                    <input type="number" name="nb_enfants" class="form-control rounded-3" min="0" placeholder=" " required>
                                     <label>Nombre d’enfants</label>
                                 </div>
                             </div>
@@ -143,7 +143,7 @@
                             {{-- Poste occupé, Grade, Date entrée, Téléphone --}}
                             <div class="row g-3 mb-3">
                                 <div class="col-md-3 form-floating">
-                                    <select id="poste_occupe" name="poste_occupe" class="form-select rounded-3" placeholder=" ">
+                                    <select id="poste_occupe" name="poste_occupe" class="form-select rounded-3" placeholder=" " required>
                                         <option value=""></option>
                                         <option value="Enseignant">Enseignant</option>
                                         <option value="Autres">Autres</option>
@@ -151,15 +151,15 @@
                                     <label>Poste Occupé</label>
                                 </div>
                                 <div class="col-md-3 form-floating">
-                                    <input type="text" name="grade" class="form-control rounded-3" placeholder=" ">
+                                    <input type="text" name="grade" class="form-control rounded-3" placeholder=" " required>
                                     <label>Grade</label>
                                 </div>
                                 <div class="col-md-3 form-floating">
-                                    <input type="date" name="date_entree" class="form-control rounded-3" placeholder=" ">
+                                    <input type="date" name="date_entree" class="form-control rounded-3" placeholder=" " required>
                                     <label>Date d'entrée en service</label>
                                 </div>
                                 <div class="col-md-3 form-floating">
-                                    <input type="text" name="telephone" class="form-control rounded-3" placeholder=" ">
+                                    <input type="text" name="telephone" class="form-control rounded-3" placeholder=" " required>
                                     <label>Téléphone</label>
                                 </div>
                             </div>
@@ -167,11 +167,11 @@
                             {{-- Diplômes et photo --}}
                             <div class="row g-3 mb-3">
                                 <div class="col-md-4 form-floating">
-                                    <input type="text" name="diplome_academique" class="form-control rounded-3" placeholder=" ">
+                                    <input type="text" name="diplome_academique" class="form-control rounded-3" placeholder=" " required>
                                     <label>Diplôme Académique</label>
                                 </div>
                                 <div class="col-md-4 form-floating">
-                                    <input type="text" name="diplome_professionnel" class="form-control rounded-3" placeholder=" ">
+                                    <input type="text" name="diplome_professionnel" class="form-control rounded-3" placeholder=" " required>
                                     <label>Diplôme Professionnel</label>
                                 </div>
                                 <div class="col-md-4 form-floating">

@@ -26,6 +26,7 @@ class InscrirepersonnelController extends Controller
         $primes = Tprime::all();
         $profils = Profil::all();
         $agents = TypeAgent::all();
+       
 
         return view('pages.GestionPersonnel.inscrirepersonnel' , compact('classes', 'matieres', 'primes', 'profils', 'agents'));
     }

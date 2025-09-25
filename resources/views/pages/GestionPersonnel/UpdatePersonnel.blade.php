@@ -132,8 +132,95 @@
         </div>
     </div>
 
+    <!-- Modal de suppression -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Supprimer l'agent</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteText"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Supprimer</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        //POur l'affichage des matières en fonction de l'opérateur saisie*******************************************************************************************************
+        $(document).ready(function() {
+            // Quand on clique sur une ligne du tableau agent
+            $('#myTab tbody tr').on('click', function() {
+                let matricule = $(this).find('td:first').text().trim();
+
+                // Appel AJAX
+                $.get('/get-matieres/' + matricule, function(data) {
+                    let tbody = $('#matiereTable tbody');
+                    tbody.empty(); // Vide l'ancien contenu
+
+                    if (data.length === 0) {
+                        tbody.append('<tr><td colspan="4">Aucune matière trouvée</td></tr>');
+                    } else {
+                        data.forEach(matiere => {
+                            tbody.append(`
+                                <tr>
+                                    <td>${matiere.CODEMAT}</td>
+                                    <td>${matiere.NOMCOURT}</td>
+                                    <td>${matiere.LIBELMAT}</td>
+                                    <td><button type="button" class="btn btn-sm btn-success">Modifier</button></td>
+                                </tr>
+                            `);
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        // Script pour la suppression
+        $(document).ready(function() {
+            let matriculeToDelete;
+
+            // Quand on clique sur "Supprimer" dans le menu
+            $('.delete-eleve').on('click', function() {
+                matriculeToDelete = $(this).data('matricule');
+                let nom = $(this).data('nom');
+                let prenom = $(this).data('prenom');
+                $('#deleteText').text("Voulez-vous vraiment supprimer l'agent " + prenom + " " + nom + " ?");
+            });
+
+            // Quand on confirme la suppression
+            $('#confirmDelete').on('click', function() {
+                $.ajax({
+                    url: '/agents/' + matriculeToDelete,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Supprimer la ligne du tableau
+                            $('#myTab tbody tr').filter(function() {
+                                return $(this).find('td:first').text().trim() == matriculeToDelete;
+                            }).remove();
+
+                            $('#deleteModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
 
    
 @endsection
