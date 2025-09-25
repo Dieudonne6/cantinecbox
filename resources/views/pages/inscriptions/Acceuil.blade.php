@@ -65,9 +65,9 @@
                     }
 
 
-                    /* .d-flex, .loader-demo-box, .layouts-preview-main-wrapper .layouts-preview-wrapper .preview-item a .item-title, .navbar .navbar-menu-wrapper .navbar-nav, .navbar .navbar-menu-wrapper .navbar-nav .nav-item, .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .navbar-dropdown .dropdown-item {
+                    .d-flex, .loader-demo-box, .layouts-preview-main-wrapper .layouts-preview-wrapper .preview-item a .item-title, .navbar .navbar-menu-wrapper .navbar-nav, .navbar .navbar-menu-wrapper .navbar-nav .nav-item, .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .navbar-dropdown .dropdown-item {
                             display: center !important;
-                        } */
+                        }
 
                     /* .d-flex12 {
                             display: block !important;
@@ -310,7 +310,7 @@
                                         <td>{{ $dateFormatted }}</td>
                                         <td>{{ $eleve->LIEUNAIS }}</td>
                                         <td class="hide-printe">
-                                            <div class="d-flex align-items-center">
+                                            <div class="align-items-center">
                                                 <a href="/pagedetail/{{ $eleve->MATRICULE }}"
                                                     class= "btn btn-primary p-2 btn-sm mr-2">Voir plus</a>
                                                 <button class="btn btn-primary p-2 btn-sm dropdown" type="button"
