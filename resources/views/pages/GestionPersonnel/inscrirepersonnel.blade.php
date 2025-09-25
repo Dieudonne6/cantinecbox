@@ -60,7 +60,7 @@
                             <div class="row g-3 mb-3">
                                 <div class="col-md-6 form-floating">
                                     <select name="LibelTypeAgent" class="form-select rounded-3" id="principal_classe">
-                                        <option value="">Sélectionné le type</option>
+                                        <option value=""></option>
                                         @foreach($agents as $agent)
                                             <option value="{{ $agent->LibelTypeAgent }}">{{ $agent->LibelTypeAgent  }}</option>
                                         @endforeach
@@ -499,7 +499,6 @@
                                 <small class="text-muted">(Sur quelle base appliquer la partie variable)</small>
                             </div>
                         </div>
-
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-success">Valider</button>
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>

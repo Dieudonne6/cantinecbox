@@ -27,6 +27,52 @@
                         color: #b700ff !important;
                         /* Couleur au survol */
                     }
+
+                    /* assure que l'en-tête prend bien 100% de la largeur du conteneur scroll */
+                    .dataTables_scrollHeadInner table {
+                        width: 100% !important;
+                    }
+
+                    /* Centre les en-têtes visibles dans le thead principal */
+                    #myTab thead th {
+                        text-align: center !important;
+                        vertical-align: middle !important;
+                    }
+
+                    /* Couvre les en-têtes clonés / conteneurs créés par DataTables (scroll / fixedHeader) */
+                    .dataTables_scrollHeadInner table thead th,
+                    table.dataTable thead th,
+                    .fixedHeader-floating thead th {
+                        text-align: center !important;
+                        vertical-align: middle !important;
+                    }
+
+                    /* Optionnel : si tu veux centrer le contenu et les icônes de tri en utilisant flexbox */
+                    #myTab thead th {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        gap: .4rem;
+                        /* espace entre texte et icône si nécessaire */
+                    }
+
+
+                    table.dataTable th.dt-type-numeric,
+                    table.dataTable th.dt-type-date,
+                    table.dataTable td.dt-type-numeric,
+                    table.dataTable td.dt-type-date {
+                        text-align: center !important;
+                    }
+
+
+                    .d-flex, .loader-demo-box, .layouts-preview-main-wrapper .layouts-preview-wrapper .preview-item a .item-title, .navbar .navbar-menu-wrapper .navbar-nav, .navbar .navbar-menu-wrapper .navbar-nav .nav-item, .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .navbar-dropdown .dropdown-item {
+                            display: center !important;
+                        }
+
+                    /* .d-flex12 {
+                            display: block !important;
+                            align-items: center !important;
+                        } */
                 </style>
                 <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
                     <i class="fas fa-arrow-left"></i> Retour
@@ -83,19 +129,20 @@
                         </form> --}}
 
                         <div>
-                            <table id="tableau-effectifs" class="table table-bordered table-striped text-center align-middle shadow-sm rounded">
+                            <table id="tableau-effectifs"
+                                class="table table-bordered table-striped text-center align-middle shadow-sm rounded">
                                 <tbody>
                                     <tr class="table-primary">
                                         <td class="bouton" style="font-weight: 600">Eff.Total</td>
-                                        <td id="total" >{{ $totalEleves }}</td>
+                                        <td id="total">{{ $totalEleves }}</td>
                                         <td class="bouton" style="font-weight: 600">Filles</td>
                                         <td id="filles">{{ $filles }}</td>
                                         <td class="bouton" style="font-weight: 600">Garçons</td>
                                         <td id="garcons">{{ $garcons }}</td>
                                     </tr>
-                                    <tr class="table-light" >
+                                    <tr class="table-light">
                                         <td class="bouton" style="font-weight: 600">Eff.Red</td>
-                                        <td id="total-red" >{{ $totalRedoublants }}</td>
+                                        <td id="total-red">{{ $totalRedoublants }}</td>
                                         <td class="bouton" style="font-weight: 600">Red.Filles</td>
                                         <td id="filles-red">{{ $fillesRedoublantes }}</td>
                                         <td class="bouton" style="font-weight: 600">Red.Garçons</td>
@@ -103,7 +150,7 @@
                                     </tr>
                                 </tbody>
                             </table><br><br>
-                            
+
                         </div>
                     </div>
                     <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
@@ -200,8 +247,9 @@
                 {{--  --}}
                 <div id="contenu">
                     <div class="table-responsive mb-4">
-                        <table id="myTab" class="table table-bordered table-hover table-striped align-middle text-center">
-                            <thead class="table-primary sticky-top" >
+                        <table id="myTab"
+                            class="table table-bordered table-hover table-striped align-middle text-center">
+                            <thead class="table-primary sticky-top">
                                 <tr>
                                     <th class="ml-6">Matricule</th>
                                     <th>Nom & Prénoms</th>
@@ -262,7 +310,7 @@
                                         <td>{{ $dateFormatted }}</td>
                                         <td>{{ $eleve->LIEUNAIS }}</td>
                                         <td class="hide-printe">
-                                            <div class="d-flex align-items-center">
+                                            <div class="align-items-center">
                                                 <a href="/pagedetail/{{ $eleve->MATRICULE }}"
                                                     class= "btn btn-primary p-2 btn-sm mr-2">Voir plus</a>
                                                 <button class="btn btn-primary p-2 btn-sm dropdown" type="button"
@@ -478,18 +526,29 @@
         }
         $(document).ready(function() {
             var table = $('#myTab').DataTable({
-                columnDefs: [
-                    {
+                columnDefs: [{
                         targets: [4, 5, 6, 7, 8, 9, 10, 11],
                         visible: false,
                         searchable: false
+                    },
+                    // centrer la 1ère colonne (index 0)
+                    {
+                        targets: [0],
+                        className: 'dt-center'
+                    },
+                    // centrer la colonne Actions (dernier index : -1)
+                    {
+                        targets: [-1],
+                        className: 'dt-center'
                     }
                 ],
                 "pageLength": 100, // affichage par défaut
                 "lengthMenu": [100, 200, 300, 400, 500], // options du menu déroulant
-                "scrollY": "500px",   // scroll vertical avec hauteur fixe
-                "scrollX": true,      // scroll horizontal
+                "scrollY": "500px", // scroll vertical avec hauteur fixe
+                "scrollX": true, // scroll horizontal
                 "scrollCollapse": true, // réduit la hauteur si moins de lignes
+                responsive: true, // active l'extension responsive (si chargée)
+                autoWidth: false,
                 "language": {
                     "sProcessing": "Traitement en cours...",
                     "sSearch": "Rechercher&nbsp;:",
@@ -512,6 +571,15 @@
                 paging: true,
                 ordering: true,
                 fixedHeader: true // pour garder l'en-tête visible
+            });
+
+            // Ajuste immédiatement (utile pour aligner header/body après render)
+            table.columns.adjust().draw();
+
+            // Ré-ajuste au redimensionnement de la fenêtre
+            $(window).on('resize', function() {
+                // small throttle si tu veux (mais ici on garde simple)
+                table.columns.adjust().draw();
             });
 
 
