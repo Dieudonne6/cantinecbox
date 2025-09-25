@@ -55,7 +55,7 @@
                                 data-bs-toggle="collapse" href="#classes"
                                 aria-expanded="{{ request()->is('typesclasses') || request()->is('series') || request()->is('promotions') || request()->is('groupes') || in_array(request()->route()->getName(), $routesClass) ? 'true' : 'false' }}"
                                 aria-controls="classes">
-                                Gestion des classes
+                                <div> Gestion des <br> classes</div>
                                 <i class="menu-arrow"></i>
                             </a>
                             <div class="collapse {{ request()->is('typesclasses') || request()->is('series') || request()->is('promotions') || request()->is('groupes') || in_array(request()->route()->getName(), $routesClass) ? 'show' : '' }}"
@@ -112,14 +112,11 @@
                                 Extraction
                                 <i class="menu-arrow"></i>
                             </a>
+
+                            <!-- ici : data-bs-parent passé de "#form-elements" à "#ui-basic" -->
                             <div class="collapse {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'show' : '' }}"
-                                id="extract" data-bs-parent="#form-elements">
+                                id="extract" data-bs-parent="#ui-basic">
                                 <ul class="nav sub-menu">
-                                    {{-- <li>
-                    <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutes) ? 'active' : '' }}" href="{{ route('extrairenote') }}">
-                      Exporter vers EducMaster
-                    </a>
-                  </li> --}}
                                     <li>
                                         <a class="nav-link  {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'active' : '' }}"
                                             href="{{ route('exporternote') }}">
@@ -135,19 +132,20 @@
                                 </ul>
                             </div>
                         </li>
+
                     </ul>
                 </div>
             </li>
 
             <!-- Bloc Scolarité -->
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#scolarite" aria-expanded="false"
-                    aria-controls="scolarite"> 
+                <a class="nav-link" data-bs-toggle="collapse" href="#scolarite" aria-expanded="false"
+                    aria-controls="scolarite">
                     <i class="typcn typcn-film menu-icon"></i>
-                        <span class="menu-title">Scolarité</span>
+                    <span class="menu-title">Scolarité</span>
                     <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse" id="scolarite">
+                <div class="collapse" data-bs-parent="#parent-accordion" id="scolarite">
                     <ul class="nav flex-column sub-menu">
 
                         <li><a class="nav-link {{ request()->is('creerprofil') ? 'active' : '' }}"
@@ -216,7 +214,7 @@
             @endphp
             <!-- Bloc Cantine -->
             <li class="nav-item">
-                <a class="nav-link collapsed" data-toggle="collapse" href="#Cantine" aria-expanded="false"
+                <a class="nav-link collapsed" data-bs-toggle="collapse" href="#Cantine" aria-expanded="false"
                     aria-controls="Cantine">
                     <i class="typcn typcn-document-text menu-icon"></i>
                     <span class="menu-title-wrapper">
@@ -224,7 +222,7 @@
                     </span>
                     <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse" id="Cantine" style="margin-left: 2rem !important">
+                <div class="collapse" data-bs-parent="#parent-accordion" id="Cantine" style="margin-left: 2rem !important">
                     <ul class="nav flex-column sub-menu">
 
                         <!-- Liste des Contrats -->
@@ -488,7 +486,7 @@
                 <a class="nav-link" data-bs-toggle="collapse" href="#menuPersonnel" aria-expanded="false"
                     aria-controls="menuPersonnel">
                     <i class="typcn typcn-document-text menu-icon"></i>
-                    <span class="menu-title">Ressources Humaines</span>
+                    <span class="menu-title">Ressources <br> Humaines</span>
                     <i class="menu-arrow"></i>
                 </a>
 
@@ -532,7 +530,7 @@
                 <a class="nav-link" data-bs-toggle="collapse" href="#RessourceMaterielle" aria-expanded="false"
                     aria-controls="RessourceMaterielle">
                     <i class="typcn typcn-document-text menu-icon"></i>
-                    <span class="menu-title">Ressources Materielles</span>
+                    <span class="menu-title">Ressources <br> Materielles</span>
                     <i class="menu-arrow"></i>
                 </a>
 
@@ -579,8 +577,7 @@
                             </a>
                             <div class="collapse " id="params" data-bs-parent="#form-elements">
                                 <ul class="nav sub-menu">
-                                    <li><a class="nav-link "
-                                            href="#"><span
+                                    <li><a class="nav-link " href="#"><span
                                                 class="ab">Parametrage</span></a></li>
                                     {{-- <li><a class="nav-link {{ request()->is('Table des matières') ? 'active' : '' }}" href="{{ url('/tabledesmatieres') }}">Table des matières</a></li>
                   <li><a class="nav-link {{ request()->is('Table des coefficients') ? 'active' : '' }}" href="{{ url('/gestioncoefficient') }}">Table des coefficients</a></li> --}}
@@ -597,13 +594,10 @@
                             </a>
                             <div class="collapse" id="executionBudget" data-bs-parent="#form-elements">
                                 <ul class="nav sub-menu">
-                                    <li><a class="nav-link"
-                                            href="#"><span
-                                                class="ab">Execution</span></a></li>
-                                    <li><a class="nav-link"
-                                            href="#">Op Bancaire</a></li>
-                                    <li><a class="nav-link"
-                                            href="#">Valider le
+                                    <li><a class="nav-link" href="#"><span class="ab">Execution</span></a>
+                                    </li>
+                                    <li><a class="nav-link" href="#">Op Bancaire</a></li>
+                                    <li><a class="nav-link" href="#">Valider le
                                             Brouillard</a></li>
                                 </ul>
                             </div>
@@ -619,49 +613,43 @@
                             </a>
                             <div class="collapse" id="previsionBudgetaire" data-bs-parent="#form-elements">
                                 <ul class="nav sub-menu">
-                                    <li><a class="nav-link"
-                                            href="#"><span
-                                                class="ab">Plan Comptable</span></a></li>
-                                    <li><a class="nav-link"
-                                            href="#">Mise en Place</a></li>
-                                    <li><a class="nav-link"
-                                            href="#">Décision Modificatives</a></li>
+                                    <li><a class="nav-link" href="#"><span class="ab">Plan
+                                                Comptable</span></a></li>
+                                    <li><a class="nav-link" href="#">Mise en Place</a></li>
+                                    <li><a class="nav-link" href="#">Décision Modificatives</a></li>
                                 </ul>
                             </div>
                         </li>
 
                         <!-- Bloc Edition -->
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="collapse" href="#Edition"
-                                aria-expanded="" aria-controls="Edition">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#Edition" aria-expanded=""
+                                aria-controls="Edition">
                                 Edition
                                 <i class="menu-arrow"></i>
                             </a>
                             <div class="collapse" id="Edition" data-bs-parent="#form-elements">
                                 <ul class="nav sub-menu">
-                                    <li><a class="nav-link"
-                                            href="#"><span
-                                                class="ab">Suivi des Operations par Compte</span></a></li>
-                                    <li><a class="nav-link"
-                                            href="#">Editions</a></li>
+                                    <li><a class="nav-link" href="#"><span class="ab">Suivi des Operations
+                                                par Compte</span></a></li>
+                                    <li><a class="nav-link" href="#">Editions</a></li>
 
                                 </ul>
                             </div>
                         </li>
 
-                        
+
                         <!-- Bloc Extraction -->
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="collapse" href="#Extraction"
-                                aria-expanded="" aria-controls="Extraction">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#Extraction" aria-expanded=""
+                                aria-controls="Extraction">
                                 Extraction
                                 <i class="menu-arrow"></i>
                             </a>
                             <div class="collapse" id="Extraction" data-bs-parent="#form-elements">
                                 <ul class="nav sub-menu">
-                                    <li><a class="nav-link"
-                                            href="#"><span
-                                                class="ab">Exporter</span></a></li>
+                                    <li><a class="nav-link" href="#"><span class="ab">Exporter</span></a>
+                                    </li>
 
                                 </ul>
                             </div>
@@ -669,18 +657,16 @@
 
                         <!-- Bloc Integrité -->
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="collapse" href="#Integrité"
-                                aria-expanded="" aria-controls="Integrité">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#Integrité" aria-expanded=""
+                                aria-controls="Integrité">
                                 Integrité
                                 <i class="menu-arrow"></i>
                             </a>
                             <div class="collapse" id="Integrité" data-bs-parent="#form-elements">
                                 <ul class="nav sub-menu">
-                                    <li><a class="nav-link"
-                                            href="#"><span
+                                    <li><a class="nav-link" href="#"><span
                                                 class="ab">Verouillage/Deverouillage</span></a></li>
-                                    <li><a class="nav-link"
-                                            href="#">Cloture de mois</a></li>
+                                    <li><a class="nav-link" href="#">Cloture de mois</a></li>
 
                                 </ul>
                             </div>
@@ -775,6 +761,11 @@
     .nav-link:hover .ab {
         animation: scroll-left 5s linear infinite;
     }
+
+    .ab:hover {
+        animation: scroll-left 5s linear infinite;
+    }
+
 
     @keyframes scroll-left {
         0% {
