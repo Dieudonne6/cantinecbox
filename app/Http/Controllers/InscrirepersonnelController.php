@@ -10,8 +10,11 @@ use App\Models\Profil;
 use App\Models\Agent;
 use App\Models\TypeAgent;
 use App\Models\Profmat;
+use App\Models\Users;
+use App\Models\Usercontrat;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
@@ -109,39 +112,111 @@ class InscrirepersonnelController extends Controller
 
     // Fonction pour la création d'un agent
     
+    // public function storeargent(Request $request)
+    // {
+    //     // Validation
+    //     $request->validate([
+    //         'nom' => 'required|string|max:255',
+    //         'prenom' => 'required|string|max:255',
+    //         'date_naissance' => 'required|date',
+    //         'lieu' => 'required|string|max:255',
+    //         'sexe' => 'required|integer',
+    //         'nb_enfants' => 'nullable|integer|min:0',
+    //         'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //         'date_entree' => 'nullable|date',
+    //         'poste_occupe' => 'nullable|string|max:255',
+    //         'grade' => 'nullable|string|max:255',
+    //         'diplome_academique' => 'nullable|string|max:255',
+    //         'diplome_professionnel' => 'nullable|string|max:255',
+    //         'profil' => 'nullable|integer',
+    //         'cycle' => 'nullable|integer',
+    //         'banque' => 'nullable|string|max:255',
+    //         'cnss' => 'nullable|string|max:255',
+    //         'ifu' => 'nullable|string|max:255',
+    //         'telephone' => 'nullable|string|max:255',
+    //         'LibelTypeAgent' => 'nullable|string|max:255',
+    //         'principal_classe' => 'nullable|string|max:20',
+    //     ]);
+
+    //     // Gestion de la photo
+    //     $photoPath = $request->hasFile('photo') 
+    //         ? $request->file('photo')->store('photos_agents', 'public') 
+    //         : null;
+
+    //     // Création de l'agent
+    //     $agent = Agent::create([
+    //         'NOM' => $request->nom,
+    //         'PRENOM' => $request->prenom,
+    //         'DATENAIS' => $request->date_naissance,
+    //         'LIEUNAIS' => $request->lieu ?? ' ',
+    //         'NATION' => $request->nationalite ?? ' ',
+    //         'SEXE' => (int) ($request->sexe ?? 0),
+    //         'SITMAT' => (int) ($request->matrimoniale ?? -1),
+    //         'NBENF' => (int) ($request->nb_enfants ?? 0),
+    //         'DIPLOMEAC' => $request->diplome_academique ?? ' ',
+    //         'DIPLOMEPRO' => $request->diplome_professionnel ?? ' ',
+    //         'DATEENT' => $request->date_entree ?? null,
+    //         'GRADE' => $request->grade ?? ' ',
+    //         'POSTE' => $request->poste_occupe ?? ' ',
+    //         'CODECLAS' => $request->principal_classe ?? ' ',   
+    //         'CYCLES' => (int) ($request->cycle ?? 0),
+    //         'PHOTO' => $photoPath,
+    //         'NUMCNSS' => $request->cnss ?? ' ',
+    //         'Numeroprofil' => (int) ($request->profil ?? 0),
+    //         'LibelTypeAgent' => $request->LibelTypeAgent ?? ' ', 
+    //         'Enseignant' => $request->poste_occupe === 'Enseignant' ? 1 : 0,
+    //         'CBanque' => $request->banque ?? ' ',
+    //         'IFU' => $request->ifu ?? ' ',
+    //         'TelAgent' => $request->telephone ?? ' ',
+    //         'guid' => Str::uuid(),
+    //     ]);
+
+    //     // Création automatique du compte utilisateur
+    //     Users::create([
+    //         'nomgroupe'       => $request->LibelTypeAgent ?? ' ',
+    //         'login'           => $agent->NOM, // identifiant basé sur matricule
+    //         'nomuser'         => $agent->NOM,
+    //         'prenomuser'      => $agent->PRENOM,
+    //         'administrateur'  => ($request->profil == 'Admin') ? 1 : 0,
+    //         'motdepasse'      => Hash::make('1234'), // mot de passe par défaut
+    //         'user_actif'      => 1,
+    //         'date_desactivation' => null,
+    //         'date_change_mp'  => now(), // date de création initiale
+    //         'frequence_mp'    => 90, // ex: changement obligatoire tous les 90 jours
+    //         'saisir_mp'       => 1,  // doit saisir mot de passe à la première connexion
+    //     ]);
+
+    //     $last = Agent::latest('MATRICULE')->first();
+    //     //dd($last);
+    //     if ($request->has('code')) {    
+    //     foreach ($request->code as $code) {
+    //         if (!empty($code)) {
+    //             Profmat::create([
+    //                 'CODEMAT' => $code,
+    //                 'MATRICULE' => $agent->MATRICULE, 
+    //             ]);
+    //         }
+    //     }
+    // }
+
+    //     return redirect()->back()->with('success', 'Agent enregistré avec succès !');
+    // }
+
     public function storeargent(Request $request)
     {
-        // Validation
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'date_naissance' => 'required|date',
-            'lieu' => 'required|string|max:255',
-            'sexe' => 'required|integer',
-            'nb_enfants' => 'nullable|integer|min:0',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'date_entree' => 'nullable|date',
-            'poste_occupe' => 'nullable|string|max:255',
-            'grade' => 'nullable|string|max:255',
-            'diplome_academique' => 'nullable|string|max:255',
-            'diplome_professionnel' => 'nullable|string|max:255',
-            'profil' => 'nullable|integer',
-            'cycle' => 'nullable|integer',
-            'banque' => 'nullable|string|max:255',
-            'cnss' => 'nullable|string|max:255',
-            'ifu' => 'nullable|string|max:255',
-            'telephone' => 'nullable|string|max:255',
-            'LibelTypeAgent' => 'nullable|string|max:255',
-            'principal_classe' => 'nullable|string|max:20',
-        ]);
+        // Génération du matricule
+        $last = Agent::latest('MATRICULE')->first();
+        $num = $last ? intval(substr($last->MATRICULE, -4)) + 1 : 1;
+        $matricule = 'MAT' . date('Y') . '-' . str_pad($num, 4, '0', STR_PAD_LEFT);
 
-        // Gestion de la photo
+        // Photo
         $photoPath = $request->hasFile('photo') 
             ? $request->file('photo')->store('photos_agents', 'public') 
             : null;
 
-        // Création de l'agent
+        // Création de l’agent
         $agent = Agent::create([
+            'MATRICULE' => $matricule,
             'NOM' => $request->nom,
             'PRENOM' => $request->prenom,
             'DATENAIS' => $request->date_naissance,
@@ -167,20 +242,44 @@ class InscrirepersonnelController extends Controller
             'TelAgent' => $request->telephone ?? ' ',
             'guid' => Str::uuid(),
         ]);
-        $last = Agent::latest('MATRICULE')->first();
-        //dd($last);
-        if ($request->has('code')) {    
-        foreach ($request->code as $code) {
-            if (!empty($code)) {
-                Profmat::create([
-                    'CODEMAT' => $code,
-                    'MATRICULE' => $agent->MATRICULE, 
-                ]);
+
+        // Création automatique du compte utilisateur
+        Users::create([
+            'nomgroupe'       => $request->poste_occupe ?? ' ',
+            'login'           => $matricule, // identifiant basé sur matricule
+            'nomuser'         => $request->nom,
+            'prenomuser'      => $request->prenom,
+            'administrateur'  => ($request->profil == 'Admin') ? 1 : 0,
+            'motdepasse'      => Hash::make('password123'), // mot de passe par défaut
+            'user_actif'      => 1,
+            'date_desactivation' => null,
+            'date_change_mp'  => now(), // date de création initiale
+            'frequence_mp'    => 90, // ex: changement obligatoire tous les 90 jours
+            'saisir_mp'       => 1,  // doit saisir mot de passe à la première connexion
+        ]);
+
+        // Création utilisateur (table usercontrat)
+        Usercontrat::create([
+            'nom_usercontrat'     => $request->nom,
+            'prenom_usercontrat'  => $request->prenom,
+            'login_usercontrat'   => $matricule,
+            'password_usercontrat'=> Hash::make('password123'),
+            'statut_usercontrat'  => 1,
+        ]);
+
+        // Attribution des matières si enseignant
+        if ($request->has('code')) {
+            foreach ($request->code as $code) {
+                if (!empty($code)) {
+                    Profmat::create([
+                        'CODEMAT' => $code,
+                        'MATRICULE' => $agent->MATRICULE, 
+                    ]);
+                }
             }
         }
-    }
 
-        return redirect()->back()->with('success', 'Agent enregistré avec succès !');
+        return redirect()->back()->with('success', "Agent enregistré avec succès ! Matricule : $matricule et utilisateur créé.");
     }
 
 
