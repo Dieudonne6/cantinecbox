@@ -14,6 +14,7 @@ use App\Models\Users;
 use App\Models\Usercontrat;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -23,15 +24,100 @@ use Illuminate\Http\Request;
 
 class InscrirepersonnelController extends Controller
 {
-     public function index(Request $request){  
+    //  public function index(Request $request){  
+    //     $classes = Classesgroupeclass::all();
+    //     $matieres = Matieres::all();
+    //     $primes = Tprime::all();
+    //     $profils = Profil::all();
+    //     $agents = TypeAgent::all();
+       
+
+    //     return view('pages.GestionPersonnel.inscrirepersonnel' , compact('classes', 'matieres', 'primes', 'profils', 'agents'));
+    // }
+
+    public function index(Request $request, $matricule = null)
+    {
         $classes = Classesgroupeclass::all();
         $matieres = Matieres::all();
         $primes = Tprime::all();
         $profils = Profil::all();
         $agents = TypeAgent::all();
 
-        return view('pages.GestionPersonnel.inscrirepersonnel' , compact('classes', 'matieres', 'primes', 'profils', 'agents'));
+        $agentData = null;
+        $selectedCodes = [];
+
+        if ($matricule) {
+            $agentData = Agent::where('MATRICULE', $matricule)->first();
+            if ($agentData) {
+                $selectedCodes = Profmat::where('MATRICULE', $matricule)->pluck('CODEMAT')->toArray();
+            }
+        }
+
+        return view('pages.GestionPersonnel.inscrirepersonnel',
+            compact('classes','matieres','primes','profils','agents','agentData','selectedCodes'));
     }
+
+
+    public function updateargent(Request $request, $matricule)
+    {
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $agent = Agent::where('MATRICULE', $matricule)->firstOrFail();
+
+        // Gérer upload photo (remplacer ancienne si nouvel upload)
+        if ($request->hasFile('photo')) {
+            if ($agent->PHOTO) Storage::disk('public')->delete($agent->PHOTO);
+            $photoPath = $request->file('photo')->store('photos_agents', 'public');
+        } else {
+            $photoPath = $agent->PHOTO;
+        }
+
+        $agent->update([
+            'NOM' => $request->nom,
+            'PRENOM' => $request->prenom,
+            'DATENAIS' => $request->date_naissance,
+            'LIEUNAIS' => $request->lieu ?? ' ',
+            'NATION' => $request->nationalite ?? ' ',
+            'SEXE' => (int) ($request->sexe ?? 0),
+            'SITMAT' => (int) ($request->matrimoniale ?? -1),
+            'NBENF' => (int) ($request->nb_enfants ?? 0),
+            'DIPLOMEAC' => $request->diplome_academique ?? ' ',
+            'DIPLOMEPRO' => $request->diplome_professionnel ?? ' ',
+            'DATEENT' => $request->date_entree ?? null,
+            'GRADE' => $request->grade ?? ' ',
+            'POSTE' => $request->poste_occupe ?? ' ',
+            'CODECLAS' => $request->principal_classe ?? ' ',
+            'CYCLES' => (int) ($request->cycle ?? 0),
+            'PHOTO' => $photoPath,
+            'NUMCNSS' => $request->cnss ?? ' ',
+            'Numeroprofil' => (int) ($request->profil ?? 0),
+            'LibelTypeAgent' => $request->LibelTypeAgent ?? ' ',
+            'Enseignant' => $request->poste_occupe === 'Enseignant' ? 1 : 0,
+            'CBanque' => $request->banque ?? ' ',
+            'IFU' => $request->ifu ?? ' ',
+            'TelAgent' => $request->telephone ?? ' ',
+        ]);
+
+        // Mettre à jour Profmat : supprimer anciens puis insérer nouveaux si fournis
+        Profmat::where('MATRICULE', $matricule)->delete();
+        if ($request->has('code')) {
+            foreach ($request->code as $code) {
+                if (!empty($code)) {
+                    Profmat::create([
+                        'CODEMAT' => $code,
+                        'MATRICULE' => $matricule,
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('inscrirepersonnel.index', $matricule)
+                        ->with('success', 'Agent mis à jour avec succès !');
+    }
+
 
    
      // Fonction pour la création de prime
@@ -210,9 +296,22 @@ class InscrirepersonnelController extends Controller
         $matricule = 'MAT' . date('Y') . '-' . str_pad($num, 4, '0', STR_PAD_LEFT);
 
         // Photo
-        $photoPath = $request->hasFile('photo') 
-            ? $request->file('photo')->store('photos_agents', 'public') 
-            : null;
+       $photoPath = $request->hasFile('photo') 
+        ? $request->file('photo')->store('photos_agents', 'public') 
+        : 'default.png';
+
+        if ($request->has('auto')) {
+            // Mode automatique
+            $last = Agent::latest('MATRICULE')->first();
+            $num = $last ? intval(substr($last->MATRICULE, -4)) + 1 : 1;
+            $matricule = 'MAT' . date('Y') . '-' . str_pad($num, 4, '0', STR_PAD_LEFT);
+        } else {
+            // Mode manuel (on prend la valeur de l’input)
+            $request->validate([
+                'matricule' => 'required|string|max:50|unique:agent,MATRICULE',
+            ]);
+            $matricule = $request->matricule;
+        }
 
         // Création de l’agent
         $agent = Agent::create([
@@ -250,7 +349,7 @@ class InscrirepersonnelController extends Controller
             'nomuser'         => $request->nom,
             'prenomuser'      => $request->prenom,
             'administrateur'  => ($request->profil == 'Admin') ? 1 : 0,
-            'motdepasse'      => Hash::make('password123'), // mot de passe par défaut
+            'motdepasse'      => Hash::make('1234'), // mot de passe par défaut
             'user_actif'      => 1,
             'date_desactivation' => null,
             'date_change_mp'  => now(), // date de création initiale
@@ -263,7 +362,7 @@ class InscrirepersonnelController extends Controller
             'nom_usercontrat'     => $request->nom,
             'prenom_usercontrat'  => $request->prenom,
             'login_usercontrat'   => $matricule,
-            'password_usercontrat'=> Hash::make('password123'),
+            'password_usercontrat'=> Hash::make('1234'),
             'statut_usercontrat'  => 1,
         ]);
 
@@ -281,7 +380,6 @@ class InscrirepersonnelController extends Controller
 
         return redirect()->back()->with('success', "Agent enregistré avec succès ! Matricule : $matricule et utilisateur créé.");
     }
-
 
 }
 

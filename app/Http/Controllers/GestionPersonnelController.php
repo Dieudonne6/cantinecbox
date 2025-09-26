@@ -13,7 +13,7 @@ use Illuminate\Pagination\Paginator;
 class GestionPersonnelController extends Controller
 {
 
-     //Création de profil pour personnel
+     //Création de profil pour personnel ***************************************************************************************
     public function UpdatePersonnel(Request $request){ 
         $agents = Agent::all();
         $matieres = Matieres::all();
@@ -22,15 +22,15 @@ class GestionPersonnelController extends Controller
         return view('pages.GestionPersonnel.UpdatePersonnel', compact('agents', 'matieres', 'codemat'));
     }
 
-    // Page avec tableau
+    // Page avec tableau*********************************************************************************************************
     public function AddAgent()
     {
         // On récupère tous les types d’agents
         $agents = TypeAgent::all();
-        return view('pages.GestionPersonnel.addAgent', compact('agents'));
+        return view('pages.GestionPersonnel.AddAgent', compact('agents'));
     }
 
-    // Ajouter un type d’agent
+    // Ajouter un type d’agent*************************************************************************************************
      public function storeTypeAgent(Request $request)
     {
         $agent = TypeAgent::create([
@@ -45,7 +45,7 @@ class GestionPersonnelController extends Controller
     }
 
 
-    // Supprimer par libellé (fonctionnera sans id)
+    // Supprimer par libellé (fonctionnera sans id)***********************************************************************************
     public function deleteByLibelle($libelle)
     {
         // Récupérer l'ordre des libellés pour connaître la position (0..)
@@ -67,7 +67,7 @@ class GestionPersonnelController extends Controller
         return response()->json(['error' => 'Type introuvable'], 404);
     }
 
-    // Mettre à jour par libellé (fonctionnera sans id)
+    // Mettre à jour par libellé (fonctionnera sans id)*******************************************************************************
     public function updateByLibelle(Request $request, $libelle)
     {
         // Décode et vérifie position
@@ -101,9 +101,32 @@ class GestionPersonnelController extends Controller
 
     public function confTauxH() {
 
-
         return view('pages.GestionPersonnel.confTauxH');
     }
+
+     // Affichage des matières en fonctions des opérateurs***************************************************************************
+    public function getMatieres($matricule)
+    {
+        // Récupère tous les CODEMAT liés au matricule
+        $codes = Profmat::where('MATRICULE', $matricule)->pluck('CODEMAT');
+
+        // Va chercher les matières correspondantes
+        $matieres = Matieres::whereIn('CODEMAT', $codes)->get(['CODEMAT','NOMCOURT','LIBELMAT']);
+
+        return response()->json($matieres);
+    }
+
+    //Fonction pour la suppression d'agent**************************************************************************************************
+    public function destroy($matricule)
+    {
+        $agent = Agent::where('MATRICULE', $matricule)->first();
+        if ($agent) {
+            $agent->delete();
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 404);
+    }
+
 
 
 

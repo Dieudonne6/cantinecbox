@@ -14,7 +14,8 @@ class Agent extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'NOM ',
+        'MATRICULE',
+        'NOM',
         'PRENOM',
         'DATENAIS',
         'LIEUNAIS',

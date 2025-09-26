@@ -560,8 +560,9 @@ Route::get('/paiementeleve', [PagesController::class, 'paiementeleve']);
 Route::get('/updatePersonnel', [GestionPersonnelController::class, 'UpdatePersonnel']);
 
 
-Route::get('/addAgent', [GestionPersonnelController::class, 'AddAgent']);// store déjà présent
+Route::get('/addAgent', [GestionPersonnelController::class, 'AddAgent']);
 Route::post('/typeagent/store', [GestionPersonnelController::class, 'storeTypeAgent'])->name('typeagent.store');
+
 // suppression / mise à jour via le libellé (URL encode)
 Route::delete('/typeagent/libelle/{libelle}', [GestionPersonnelController::class, 'deleteByLibelle'])->name('typeagent.deleteByLibelle');
 Route::put('/typeagent/libelle/{libelle}', [GestionPersonnelController::class, 'updateByLibelle'])->name('typeagent.updateByLibelle');
@@ -569,11 +570,12 @@ Route::put('/typeagent/libelle/{libelle}', [GestionPersonnelController::class, '
 //Route pour la création de prime
 Route::post('/prime/store', [InscrirepersonnelController::class, 'storePrime'])->name('prime.store');
 
-//Rioute pour la création de nouveaux profils
+//Route pour la création de nouveaux profils
 Route::post('/profils', [InscrirepersonnelController::class, 'store'])->name('profils.store');
 
-//Rioute pour la création de nouveaux profils
+//Route pour la création de nouveaux profils
 Route::post('/agents/store', [InscrirepersonnelController::class, 'storeargent'])->name('agents.store');
+
 
 Route::get('/inscrirepersonnel', [InscrirepersonnelController::class, 'index']);
 
@@ -586,3 +588,24 @@ Route::get('/confTauxH', [GestionPersonnelController::class, 'confTauxH']);
 Route::get('/rubriquesalaire', [BulletinPaieController::class, 'rubriquesalaire'])->name('rubriquesalaire');
 Route::post('/enregistrerrubriquesalaire', [BulletinPaieController::class, 'enregistrerrubriquesalaire'])->name('enregistrerrubriquesalaire');
 Route::post('/supprimerrubrique', [BulletinPaieController::class, 'supprimerrubrique'])->name('supprimerrubrique');
+//Route pour l'affichage des matières
+Route::get('/get-matieres/{matricule}', [GestionPersonnelController::class, 'getMatieres']);
+
+//Route pour la suppression d'     agent
+Route::delete('/agents/{matricule}', [GestionPersonnelController::class, 'destroy'])->name('agents.destroy');
+
+// route pour la modification
+
+Route::get('/inscrirepersonnel/{matricule?}', [InscrirepersonnelController::class, 'index'])
+    ->name('inscrirepersonnel.index');
+
+Route::post('/agents', [InscrirepersonnelController::class, 'storeargent'])
+    ->name('agents.store');
+
+Route::put('/agents/{matricule}', [InscrirepersonnelController::class, 'updateargent'])
+    ->name('agents.update');
+
+// Optionnel : si tu veux conserver le lien /modifieragent/...
+Route::get('/modifieragent/{matricule}', function($matricule){
+    return redirect()->route('inscrirepersonnel.index', ['matricule' => $matricule]);
+});

@@ -55,194 +55,222 @@
                             <i class="bi bi-person-badge-fill me-2"></i> Enrégistrement d'un agent
                         </h3>
 
-                        <form action="{{ route('agents.store') }}" method="POST" enctype="multipart/form-data">
+                        @if(isset($agentData))
+                            <form action="{{ route('agents.update', $agentData->MATRICULE) }}" method="POST" enctype="multipart/form-data">
+                                @method('PUT')
+                            @else
+                            <form action="{{ route('agents.store') }}" method="POST" enctype="multipart/form-data">
+                        @endif
                             @csrf
-                            <div class="row g-3 mb-3">
-                                <div class="col-md-6 form-floating">
-                                    <select name="LibelTypeAgent" class="form-select rounded-3" id="principal_classe">
-                                        <option value=""></option>
-                                        @foreach($agents as $agent)
-                                            <option value="{{ $agent->LibelTypeAgent }}">{{ $agent->LibelTypeAgent  }}</option>
-                                        @endforeach
-                                    </select>
-                                    <label for="principal_classe">Type d'agent</label>                                  
-                                </div>
-                                <div class="col-md-4 form-floating">
-                                    <input type="text" name="matricule" class="form-control rounded-3" placeholder=" " readonly>
-                                    <label>Matricule</label>
-                                </div>
-                                <div class="col-md-2 d-flex align-items-center">
-                                    <div class="form-check mt-3">
-                                        <input type="checkbox" class="form-check-input" id="auto" name="auto" checked>
-                                        <label for="auto" class="form-check-label">Auto</label>
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6 form-floating">
+                                        <select name="LibelTypeAgent" class="form-select rounded-3">
+                                            <option value=""></option>
+                                            @foreach($agents as $agent)
+                                                <option value="{{ $agent->LibelTypeAgent }}"
+                                                    {{ old('LibelTypeAgent', $agentData->LibelTypeAgent ?? '') == $agent->LibelTypeAgent ? 'selected' : '' }}>
+                                                    {{ $agent->LibelTypeAgent }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <label>Type d'agent</label>                                  
+                                    </div>
+                                    <div class="col-md-4 form-floating">
+                                        <input type="text" name="matricule" id="matricule" class="form-control rounded-3"
+                                            value="{{ old('matricule', $agentData->MATRICULE ?? '') }}"
+                                            @if(isset($agentData)) data-edit="1" readonly @endif>
+                                        <label>Matricule</label>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-center">
+                                        <div class="form-check mt-3">
+                                            <input type="checkbox" class="form-check-input" id="auto" name="auto" checked>
+                                            <label for="auto" class="form-check-label">Auto</label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            {{-- Ligne , IFU, CNSS --}}
-                            <div class="row g-3 mb-3">                               
-                                <div class="col-md-6 form-floating">
-                                    <input type="text" name="ifu" class="form-control rounded-3" placeholder=" ">
-                                    <label>IFU</label>
-                                </div>
-                                <div class="col-md-6 form-floating">
-                                    <input type="text" name="cnss" class="form-control rounded-3" placeholder=" ">
-                                    <label>CNSS</label>
-                                </div>
-                            </div>
 
-                            {{-- Nom, Prénom, Date naissance, Lieu --}}
-                            <div class="row g-3 mb-3">
-                                <div class="col-md-3 form-floating">
-                                    <input type="text" name="nom" class="form-control rounded-3" placeholder=" ">
-                                    <label>Nom</label>
+                                {{-- IFU / CNSS --}}
+                                <div class="row g-3 mb-3">                               
+                                    <div class="col-md-6 form-floating">
+                                        <input type="text" name="ifu" class="form-control rounded-3"
+                                            value="{{ old('ifu', $agentData->IFU ?? '') }}" required>
+                                        <label>IFU</label>
+                                    </div>
+                                    <div class="col-md-6 form-floating">
+                                        <input type="text" name="cnss" class="form-control rounded-3"
+                                            value="{{ old('cnss', $agentData->NUMCNSS ?? '') }}" required>
+                                        <label>CNSS</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-3 form-floating">
-                                    <input type="text" name="prenom" class="form-control rounded-3" placeholder=" ">
-                                    <label>Prénom</label>
-                                </div>
-                                <div class="col-md-3 form-floating">
-                                    <input type="date" name="date_naissance" class="form-control rounded-3" placeholder=" ">
-                                    <label>Date de naissance</label>
-                                </div>
-                                <div class="col-md-3 form-floating">
-                                    <input type="text" name="lieu" class="form-control rounded-3" placeholder=" ">
-                                    <label>Lieu</label>
-                                </div>
-                            </div>
 
-                            {{-- Nationalité, Sexe, Situation matrimoniale --}}
-                            <div class="row g-3 mb-3">
-                                <div class="col-md-3 form-floating">
-                                    <input type="text" name="nationalite" class="form-control rounded-3" placeholder=" ">
-                                    <label>Nationalité</label>
+                                {{-- Nom / Prénom / Date naissance / Lieu --}}
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-3 form-floating">
+                                        <input type="text" name="nom" class="form-control rounded-3"
+                                            value="{{ old('nom', $agentData->NOM ?? '') }}" required>
+                                        <label>Nom</label>
+                                    </div>
+                                    <div class="col-md-3 form-floating">
+                                        <input type="text" name="prenom" class="form-control rounded-3"
+                                            value="{{ old('prenom', $agentData->PRENOM ?? '') }}" required>
+                                        <label>Prénom</label>
+                                    </div>
+                                    <div class="col-md-3 form-floating">
+                                        <input type="date" name="date_naissance" class="form-control rounded-3"
+                                            value="{{ old('date_naissance', $agentData->DATENAIS ?? '') }}" required>
+                                        <label>Date de naissance</label>
+                                    </div>
+                                    <div class="col-md-3 form-floating">
+                                        <input type="text" name="lieu" class="form-control rounded-3"
+                                            value="{{ old('lieu', $agentData->LIEUNAIS ?? '') }}" required>
+                                        <label>Lieu</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-3 form-floating">
-                                    <select name="sexe" class="form-select rounded-3" placeholder=" ">
-                                        <option value=""></option>
-                                        <option value="0">Masculin</option>
-                                        <option value="1">Féminin</option>
-                                    </select>
-                                    <label>Sexe</label>
-                                </div>
-                                <div class="col-md-3 form-floating">
-                                    <select name="matrimoniale" class="form-select rounded-3" placeholder=" ">
-                                        <option value=""></option>
-                                        <option value="1">Célibataire</option>
-                                        <option value="2">Marié</option>
-                                        <option value="3">Divorcé</option>
-                                        <option value="4">Veuf</option>
-                                    </select>
-                                    <label>Situation matrimoniale</label>
-                                </div>
-                                <div class="col-md-3 form-floating">
-                                    <input type="number" name="nb_enfants" class="form-control rounded-3" min="0" placeholder=" ">
-                                    <label>Nombre d’enfants</label>
-                                </div>
-                            </div>
 
-                            {{-- Poste occupé, Grade, Date entrée, Téléphone --}}
-                            <div class="row g-3 mb-3">
-                                <div class="col-md-3 form-floating">
-                                    <select id="poste_occupe" name="poste_occupe" class="form-select rounded-3" placeholder=" ">
-                                        <option value=""></option>
-                                        <option value="Enseignant">Enseignant</option>
-                                        <option value="Autres">Autres</option>
-                                    </select>
-                                    <label>Poste Occupé</label>
+                                {{-- Nationalité / Sexe / Matrimoniale / Nb enfants --}}
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-3 form-floating">
+                                        <input type="text" name="nationalite" class="form-control rounded-3"
+                                            value="{{ old('nationalite', $agentData->NATION ?? '') }}" required>
+                                        <label>Nationalité</label>
+                                    </div>
+                                    <div class="col-md-3 form-floating">
+                                        <select name="sexe" class="form-select rounded-3" required>
+                                            <option value=""></option>
+                                            <option value="0" {{ old('sexe', $agentData->SEXE ?? '') == "0" ? 'selected' : '' }}>Masculin</option>
+                                            <option value="1" {{ old('sexe', $agentData->SEXE ?? '') == "1" ? 'selected' : '' }}>Féminin</option>
+                                        </select>
+                                        <label>Sexe</label>
+                                    </div>
+                                    <div class="col-md-3 form-floating">
+                                        <select name="matrimoniale" class="form-select rounded-3" required>
+                                            <option value=""></option>
+                                            <option value="1" {{ old('matrimoniale', $agentData->MATRIMONIALE ?? '') == "1" ? 'selected' : '' }}>Célibataire</option>
+                                            <option value="2" {{ old('matrimoniale', $agentData->MATRIMONIALE ?? '') == "2" ? 'selected' : '' }}>Marié</option>
+                                            <option value="3" {{ old('matrimoniale', $agentData->MATRIMONIALE ?? '') == "3" ? 'selected' : '' }}>Divorcé</option>
+                                            <option value="4" {{ old('matrimoniale', $agentData->MATRIMONIALE ?? '') == "4" ? 'selected' : '' }}>Veuf</option>
+                                        </select>
+                                        <label>Situation matrimoniale</label>
+                                    </div>
+                                    <div class="col-md-3 form-floating">
+                                        <input type="number" name="nb_enfants" class="form-control rounded-3"
+                                            value="{{ old('nb_enfants', $agentData->NBENF ?? '') }}" min="0" required>
+                                        <label>Nombre d’enfants</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-3 form-floating">
-                                    <input type="text" name="grade" class="form-control rounded-3" placeholder=" ">
-                                    <label>Grade</label>
-                                </div>
-                                <div class="col-md-3 form-floating">
-                                    <input type="date" name="date_entree" class="form-control rounded-3" placeholder=" ">
-                                    <label>Date d'entrée en service</label>
-                                </div>
-                                <div class="col-md-3 form-floating">
-                                    <input type="text" name="telephone" class="form-control rounded-3" placeholder=" ">
-                                    <label>Téléphone</label>
-                                </div>
-                            </div>
 
-                            {{-- Diplômes et photo --}}
-                            <div class="row g-3 mb-3">
-                                <div class="col-md-4 form-floating">
-                                    <input type="text" name="diplome_academique" class="form-control rounded-3" placeholder=" ">
-                                    <label>Diplôme Académique</label>
+                                {{-- Poste / Grade / Date entrée / Téléphone --}}
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-3 form-floating">
+                                        <select id="poste_occupe" name="poste_occupe" class="form-select rounded-3" required>
+                                            <option value=""></option>
+                                            <option value="Enseignant" {{ old('poste_occupe', $agentData->POSTE ?? '') == "Enseignant" ? 'selected' : '' }}>Enseignant</option>
+                                            <option value="Autres" {{ old('poste_occupe', $agentData->POSTE ?? '') == "Autres" ? 'selected' : '' }}>Autres</option>
+                                        </select>
+                                        <label>Poste Occupé</label>
+                                    </div>
+                                    <div class="col-md-3 form-floating">
+                                        <input type="text" name="grade" class="form-control rounded-3"
+                                            value="{{ old('grade', $agentData->GRADE ?? '') }}" required>
+                                        <label>Grade</label>
+                                    </div>
+                                    <div class="col-md-3 form-floating">
+                                        <input type="date" name="date_entree" class="form-control rounded-3"
+                                            value="{{ old('date_entree', $agentData->DATEENT ?? '') }}" required>
+                                        <label>Date d'entrée en service</label>
+                                    </div>
+                                    <div class="col-md-3 form-floating">
+                                        <input type="text" name="telephone" class="form-control rounded-3"
+                                            value="{{ old('telephone', $agentData->TelAgent ?? '') }}" required>
+                                        <label>Téléphone</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-4 form-floating">
-                                    <input type="text" name="diplome_professionnel" class="form-control rounded-3" placeholder=" ">
-                                    <label>Diplôme Professionnel</label>
-                                </div>
-                                <div class="col-md-4 form-floating">
-                                    <input type="file" name="photo" class="form-control rounded-3" accept="image/*">
-                                    <label for="photo">Photo</label>
-                                </div>
-                            </div>
 
-                            {{-- Bloc responsabilités --}}
-                            <hr class="my-4">
-                            <div id="responsabilites" style="display:none;">
-                                <h5 class="fw-bold text-secondary mb-3">Responsabilités au niveau de l’établissement</h5>
+                                {{-- Diplômes et photo --}}
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-4 form-floating">
+                                        <input type="text" name="diplome_academique" class="form-control rounded-3"
+                                            value="{{ old('diplome_academique', $agentData->DIPLOMEAC ?? '') }}" required>
+                                        <label>Diplôme Académique</label>
+                                    </div>
+                                    <div class="col-md-4 form-floating">
+                                        <input type="text" name="diplome_professionnel" class="form-control rounded-3"
+                                            value="{{ old('diplome_professionnel', $agentData->DIPLOMEPRO ?? '') }}" required>
+                                        <label>Diplôme Professionnel</label>
+                                    </div>
+                                    <div class="col-md-4 form-floating">
+                                        <input type="file" name="photo" class="form-control rounded-3" accept="image/*">
+                                        <label for="photo">Photo</label>
+                                    </div>
+                                </div>
 
+                                {{-- Bloc responsabilités (matières déjà préremplies plus bas) --}}
+                                <div id="responsabilites" style="display:none;">
+                                <hr class="my-4">
+                                <h5 class="fw-bold text-secondary mb-3">Responsabilités (Matières)</h5>
+
+                                {{-- Classe principale et Cycle --}}
                                 <div class="row g-3 mb-3">
                                     <div class="col-md-4 form-floating">
                                         <select name="principal_classe" class="form-select rounded-3" id="principal_classe">
-                                            <option value="">Sélectionné la classe</option>
+                                            <option value="">Sélectionner la classe</option>
                                             @foreach($classes as $classe)
-                                                <option value="{{ $classe->CODECLAS }}">{{ $classe->CODECLAS }}</option>
+                                                <option value="{{ $classe->CODECLAS }}"
+                                                    {{ old('principal_classe', $agentData->CODECLAS ?? '') == $classe->CODECLAS ? 'selected' : '' }}>
+                                                    {{ $classe->CODECLAS }}
+                                                </option>
                                             @endforeach
                                         </select>
                                         <label for="principal_classe">Principal de la classe</label>
                                     </div>
 
                                     <div class="col-md-4 form-floating">
-                                        <select name="cycle" class="form-select rounded-3" placeholder=" ">
+                                        <select name="cycle" class="form-select rounded-3">
                                             <option value=""></option>
-                                            <option value="1">Cycle 1</option>
-                                            <option value="2">Cycle 2</option>
-                                            <option value="0">Cycle 1 & 2</option>
+                                            <option value="1" {{ old('cycle', $agentData->CYCLES ?? '') == 1 ? 'selected' : '' }}>Cycle 1</option>
+                                            <option value="2" {{ old('cycle', $agentData->CYCLES ?? '') == 2 ? 'selected' : '' }}>Cycle 2</option>
+                                            <option value="0" {{ old('cycle', $agentData->CYCLES ?? '') == 0 ? 'selected' : '' }}>Cycle 1 & 2</option>
                                         </select>
                                         <label>Cycle tenu</label>
                                     </div>
                                 </div>
 
-                                {{-- Matières enseignées --}}
-                                <div class="mb-3">
-                                    <label class="fw-semibold">Matières enseignées</label>
-                                    <table class="table table-bordered table-hover align-middle text-center shadow-sm" id="matiereTable">
-                                        <thead class="table-primary">
-                                            <tr>
-                                                <th>Code</th>
-                                                <th>Nom Court</th>
-                                                <th>Libellé Matière</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><input type="text" name="code[]" class="form-control rounded-3 code" readonly></td>
-                                                <td>
-                                                    <select name="nomcourt[]" class="form-select rounded-3 nomcourt">
-                                                        <option value="">-- Sélectionner --</option>
-                                                        @foreach($matieres as $matiere)
-                                                            <option value="{{ $matiere->NOMCOURT }}" 
-                                                                    data-code="{{ $matiere->CODEMAT }}" 
-                                                                    data-libel="{{ $matiere->LIBELMAT }}">
-                                                                {{ $matiere->NOMCOURT }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </td>
-                                                <td><input type="text" name="libelle_matiere[]" class="form-control rounded-3 libelle" readonly></td>
-                                                <td><button type="button" class="btn btn-sm btn-success addRow">+</button></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                {{-- Tableau des matières --}}
+                                <table class="table table-bordered" id="matiereTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Libellé</th>
+                                            <th>Nom court</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="text" name="code[]" class="form-control code" readonly></td>
+                                            <td><input type="text" name="libelle[]" class="form-control libelle" readonly></td>
+                                            <td>
+                                                <select name="nomcourt[]" class="form-select nomcourt">
+                                                    <option value="">-- Choisir --</option>
+                                                    @foreach($matieres as $matiere)
+                                                        <option value="{{ $matiere->NOMCOURT }}" 
+                                                                data-code="{{ $matiere->CODEMAT }}" 
+                                                                data-libel="{{ $matiere->LIBELMAT }}"
+                                                                {{ in_array($matiere->CODEMAT, $selectedCodes ?? []) ? 'selected' : '' }}>
+                                                            {{ $matiere->NOMCOURT }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-success addRow">+</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
 
-                            {{-- Données sur la rémunération --}}
+                            {{-- Rémunération --}}
                             <hr class="my-4">
                             <h5 class="fw-bold text-secondary mb-3">Données sur la rémunération</h5>
                             <div class="row g-3 mb-3">
@@ -250,13 +278,17 @@
                                     <select name="profil" class="form-select rounded-3" id="profil" required>
                                         <option value="">--  --</option>
                                         @foreach($profils as $profil)
-                                            <option value="{{ $profil->Numeroprofil }}">{{ $profil->NomProfil }}</option>
+                                            <option value="{{ $profil->Numeroprofil }}"
+                                                {{ old('profil', $agentData->PROFIL ?? '') == $profil->Numeroprofil ? 'selected' : '' }}>
+                                                {{ $profil->NomProfil }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     <label for="profil">Profil</label>
                                 </div>
                                 <div class="col-md-3 form-floating">
-                                    <input type="text" name="banque" class="form-control rounded-3" >
+                                    <input type="text" name="banque" class="form-control rounded-3"
+                                        value="{{ old('banque', $agentData->CBanque ?? '') }}">
                                     <label>Domiciliation (banque)</label>
                                 </div>
                                 <div class="col-md-3 form-floating">
@@ -281,11 +313,9 @@
                                 <br><br><br>
                             </div>
                         </form>
-
                     </div>
                 </div>
-            </div>
-          
+            </div>        
         </div>
     </div>
 
@@ -513,16 +543,76 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).ready(function(){
-            $('#poste_occupe').on('change', function() {
-                if($(this).val() === 'Enseignant') {
-                    $('#responsabilites').show();
+        document.addEventListener("DOMContentLoaded", function () {
+            const auto = document.getElementById("auto");
+            const matricule = document.getElementById("matricule");
+
+            function toggleMatricule() {
+                if (auto.checked) {
+                    matricule.setAttribute("readonly", true);
+
+                    // ⚠️ On efface seulement si on est en création (pas d'agentData)
+                    if (!matricule.dataset.edit) {
+                        matricule.value = ""; 
+                    }
                 } else {
-                    $('#responsabilites').hide();
+                    matricule.removeAttribute("readonly");
                 }
+            }
+
+            auto.addEventListener("change", toggleMatricule);
+            toggleMatricule();
+        });
+
+    </script>
+
+    
+
+   <script>
+        $(function(){
+            // afficher responsibilities si poste = Enseignant au chargement
+            function toggleResp() {
+                if ($('#poste_occupe').val() === 'Enseignant') $('#responsabilites').show();
+                else $('#responsabilites').hide();
+            }
+            toggleResp();
+            $('#poste_occupe').on('change', toggleResp);
+
+            // remplir code/libel quand on change nomcourt
+            $(document).on('change', '.nomcourt', function(){
+                var $sel = $(this);
+                var code = $sel.find('option:selected').data('code') || '';
+                var libel = $sel.find('option:selected').data('libel') || '';
+                var $tr = $sel.closest('tr');
+                $tr.find('.code').val(code);
+                $tr.find('.libelle').val(libel);
+            });
+
+            // si on a déjà des selects sélectionnés (édition), déclencher change pour remplir les champs
+            $('.nomcourt').each(function(){ $(this).trigger('change'); });
+
+            // add row
+            $(document).on('click', '.addRow', function(){
+                var $tr = $(this).closest('tr');
+                var $clone = $tr.clone();
+                // nettoyer valeurs
+                $clone.find('input').val('');
+                $clone.find('select').val('');
+                // transformer bouton + en - pour suppression
+                $clone.find('.addRow')
+                    .removeClass('btn-success addRow')
+                    .addClass('btn-danger removeRow')
+                    .text('-');
+                $tr.after($clone);
+            });
+
+            // remove row
+            $(document).on('click', '.removeRow', function(){
+                $(this).closest('tr').remove();
             });
         });
     </script>
+
 
     
     <script> 
@@ -537,32 +627,32 @@
                 }
             });
 
-            // Gestion ajout / suppression lignes
-            document.addEventListener('click', function(e) {
-                // Ajouter
-                if (e.target.classList.contains('addRow')) {
-                    let table = document.querySelector('#matiereTable tbody');
-                    let newRow = table.rows[0].cloneNode(true);
+            // // Gestion ajout / suppression lignes
+            // document.addEventListener('click', function(e) {
+            //     // Ajouter
+            //     if (e.target.classList.contains('addRow')) {
+            //         let table = document.querySelector('#matiereTable tbody');
+            //         let newRow = table.rows[0].cloneNode(true);
 
-                    // vider les champs
-                    newRow.querySelector('.code').value = '';
-                    newRow.querySelector('.libelle').value = '';
-                    newRow.querySelector('.nomcourt').selectedIndex = 0;
+            //         // vider les champs
+            //         newRow.querySelector('.code').value = '';
+            //         newRow.querySelector('.libelle').value = '';
+            //         newRow.querySelector('.nomcourt').selectedIndex = 0;
 
-                    // bouton transformer en -
-                    let btn = newRow.querySelector('.addRow');
-                    btn.classList.remove('btn-success', 'addRow');
-                    btn.classList.add('btn-danger', 'removeRow');
-                    btn.textContent = '-';
+            //         // bouton transformer en -
+            //         let btn = newRow.querySelector('.addRow');
+            //         btn.classList.remove('btn-success', 'addRow');
+            //         btn.classList.add('btn-danger', 'removeRow');
+            //         btn.textContent = '-';
 
-                    table.appendChild(newRow);
-                }
+            //         table.appendChild(newRow);
+            //     }
 
-                // Supprimer
-                if (e.target.classList.contains('removeRow')) {
-                    e.target.closest('tr').remove();
-                }
-            });
+            //     // Supprimer
+            //     if (e.target.classList.contains('removeRow')) {
+            //         e.target.closest('tr').remove();
+            //     }
+            // });
         });
     </script>
 
