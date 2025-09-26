@@ -27,7 +27,7 @@ class GestionPersonnelController extends Controller
     {
         // On récupère tous les types d’agents
         $agents = TypeAgent::all();
-        return view('pages.GestionPersonnel.addAgent', compact('agents'));
+        return view('pages.GestionPersonnel.AddAgent', compact('agents'));
     }
 
     // Ajouter un type d’agent*************************************************************************************************

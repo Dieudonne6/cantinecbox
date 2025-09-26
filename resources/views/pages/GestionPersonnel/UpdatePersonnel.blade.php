@@ -89,9 +89,9 @@
                                                         Supprimer
                                                     </button>
                                                 </li>
-                                                <li><a class="dropdown-item" href="/modifieragent/{{ $agent->MATRICULE }}">Modifier</a></li>
+                                                <li><a class="dropdown-item" href="{{ url('/inscrirepersonnel/'.$agent->MATRICULE) }}">Modifier</a></li>
+
                                                 <li><a class="dropdown-item" href="">Position</a></li>
-                                                <li><a class="dropdown-item" href="">Liste des classes</a></li>
                                             </ul>
                                         </div>
                                     </td>
@@ -114,7 +114,7 @@
                                 <th>Code</th>
                                 <th>Nom Court</th>
                                 <th>Libellé Matière</th>
-                                <th>Action</th>
+                              {{--  <th>Action</th>--}}
                             </tr>
                         </thead>
                         <tbody>
@@ -122,7 +122,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td><button type="button" class="btn btn-sm btn-success">Modifier</button></td>
+                                {{--<td><button type="button" class="btn btn-sm btn-success">Modifier</button></td>--}}
                             </tr>
                         </tbody>
                     </table>
@@ -175,7 +175,7 @@
                                     <td>${matiere.CODEMAT}</td>
                                     <td>${matiere.NOMCOURT}</td>
                                     <td>${matiere.LIBELMAT}</td>
-                                    <td><button type="button" class="btn btn-sm btn-success">Modifier</button></td>
+                                    {{--<td><button type="button" class="btn btn-sm btn-success">Modifier</button></td>--}}
                                 </tr>
                             `);
                         });

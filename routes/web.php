@@ -586,3 +586,19 @@ Route::get('/get-matieres/{matricule}', [GestionPersonnelController::class, 'get
 
 //Route pour la suppression d'     agent
 Route::delete('/agents/{matricule}', [GestionPersonnelController::class, 'destroy'])->name('agents.destroy');
+
+// route pour la modification
+
+Route::get('/inscrirepersonnel/{matricule?}', [InscrirepersonnelController::class, 'index'])
+    ->name('inscrirepersonnel.index');
+
+Route::post('/agents', [InscrirepersonnelController::class, 'storeargent'])
+    ->name('agents.store');
+
+Route::put('/agents/{matricule}', [InscrirepersonnelController::class, 'updateargent'])
+    ->name('agents.update');
+
+// Optionnel : si tu veux conserver le lien /modifieragent/...
+Route::get('/modifieragent/{matricule}', function($matricule){
+    return redirect()->route('inscrirepersonnel.index', ['matricule' => $matricule]);
+});
