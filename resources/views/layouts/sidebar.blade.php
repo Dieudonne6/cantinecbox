@@ -222,7 +222,8 @@
                     </span>
                     <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse" data-bs-parent="#parent-accordion" id="Cantine" style="margin-left: 2rem !important">
+                <div class="collapse" data-bs-parent="#parent-accordion" id="Cantine"
+                    style="margin-left: 2rem !important">
                     <ul class="nav flex-column sub-menu">
 
                         <!-- Liste des Contrats -->
@@ -520,6 +521,74 @@
                                 </ul>
                             </div>
                         </li>
+
+                        {{-- Bloc Bulletin de paie --}}
+                        <li class="nav-item">
+                            <a class="nav-link"
+                                data-bs-toggle="collapse" href="#classes"
+                                aria-expanded=""
+                                aria-controls="classes">
+                                Bulletins de Paie
+                                <i class="menu-arrow"></i>
+                            </a>
+
+                            <div class="collapse"
+                                id="classes" data-bs-parent="#menuPersonnel">
+                                <ul class="nav sub-menu">
+                                    <li>
+                                        <a class="nav-link"
+                                            href="#">
+                                            Rubriques Salaire
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link"
+                                            href="#">
+                                            Creer Profils
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link"
+                                            href="#">
+                                            Taux horaires
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link"
+                                            href="#">
+                                            Avance sur salaire
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link"
+                                            href="#">
+                                            Bulletins et Etats
+                                        </a>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                                data-bs-toggle="collapse" href="#classes"
+                                aria-expanded=""
+                                aria-controls="classes">
+                                Edition
+                                {{-- <i class="menu-arrow"></i> --}}
+                            </a>
+
+                        </li>
+
+
+
+                        {{-- <ul class="nav sub-menu"> --}}
+
+                        {{-- </ul> --}}
+
+
                     </ul>
                 </div>
             </li>

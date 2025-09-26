@@ -27,6 +27,7 @@ use App\Http\Controllers\RapportannuelController;
 use App\Http\Controllers\DuplicataController;
 use App\Http\Controllers\GestionPersonnelController;
 use App\Http\Controllers\InscrirepersonnelController;
+use App\Http\Controllers\BulletinPaieController;
 
 /*
 |--------------------------------------------------------------------------
@@ -577,3 +578,11 @@ Route::post('/agents/store', [InscrirepersonnelController::class, 'storeargent']
 Route::get('/inscrirepersonnel', [InscrirepersonnelController::class, 'index']);
 
 Route::get('/confTauxH', [GestionPersonnelController::class, 'confTauxH']);
+
+
+// Route pour bulletin de paie
+
+// --------------------Rubrique Salaire -------------------------
+Route::get('/rubriquesalaire', [BulletinPaieController::class, 'rubriquesalaire'])->name('rubriquesalaire');
+Route::post('/enregistrerrubriquesalaire', [BulletinPaieController::class, 'enregistrerrubriquesalaire'])->name('enregistrerrubriquesalaire');
+Route::post('/supprimerrubrique', [BulletinPaieController::class, 'supprimerrubrique'])->name('supprimerrubrique');
