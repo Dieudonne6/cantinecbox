@@ -593,3 +593,8 @@ updateTotalAmount();
 {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 {{-- <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script> --}}
 
+
+
+{{-- Erreur lors de l'enregistrement : SQLSTATE[22003]: Numeric value out of range: 1264 Out of range value for column 'NbHeuresDu' at row 1 (Connection: mysql, SQL: insert into `profils` (`NomProfil`, `SalaireBase`, `NbHeuresDu`, `TypeImpot`, `TauxHeureSupUnique`, `TauxHeureSupC2`, `CalculerCnss`) values (dede, 123468, 1200, I, 13, 12, 1))
+Erreur lors de l'enregistrement : SQLSTATE[22003]: Numeric value out of range: 1264 Out of range value for column 'NbHeuresDu' at row 1 (Connection: mysql, SQL: insert into `profils` (`NomProfil`, `SalaireBase`, `NbHeuresDu`, `TypeImpot`, `TauxHeureSupUnique`, `TauxHeureSupC2`, `CalculerCnss`) values (dede, 12345, 1234567, I, 2345, 132456789, 1))
+Erreur lors de l'enregistrement : SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicata du champ '0' pour la clef 'profils.Numeroprofil' (Connection: mysql, SQL: insert into `profils` (`NomProfil`, `SalaireBase`, `NbHeuresDu`, `TypeImpot`, `TauxHeureSupUnique`, `TauxHeureSupC2`, `CalculerCnss`) values (dede, 112233, 130, I, 140, 140, 1)) --}}

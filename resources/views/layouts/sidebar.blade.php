@@ -32,6 +32,7 @@
 
                 $activeExtractRoutesInsc = ['importernote', 'import'];
 
+                $routesbulletindePaie = ['rubriquesalaire', 'profilsagents'];
             @endphp
             <!-- Bloc Inscriptions & disciplines -->
             <li class="nav-item">
@@ -496,15 +497,15 @@
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('updatePersonnel') || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}"
-                                data-bs-toggle="collapse" href="#classes"
+                                data-bs-toggle="collapse" href="#registre"
                                 aria-expanded="{{ request()->is('updatePersonnel') || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'true' : 'false' }}"
-                                aria-controls="classes">
+                                aria-controls="registre">
                                 Régistre Enseignants
                                 <i class="menu-arrow"></i>
                             </a>
 
                             <div class="collapse {{ request()->is('updatePersonnel') || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'show' : '' }}"
-                                id="classes" data-bs-parent="#menuPersonnel">
+                                id="registre" data-bs-parent="#menuPersonnel">
                                 <ul class="nav sub-menu">
                                     <li>
                                         <a class="nav-link {{ request()->is('addAgent') ? 'active' : '' }}"
@@ -524,26 +525,26 @@
 
                         {{-- Bloc Bulletin de paie --}}
                         <li class="nav-item">
-                            <a class="nav-link"
-                                data-bs-toggle="collapse" href="#classes"
+                            <a class="nav-link {{ in_array(request()->route()->getName(), $routesbulletindePaie) ? 'active' : '' }}"
+                                data-bs-toggle="collapse" href="#bulletinpaie"
                                 aria-expanded=""
-                                aria-controls="classes">
+                                aria-controls="bulletinpaie">
                                 Bulletins de Paie
                                 <i class="menu-arrow"></i>
                             </a>
 
                             <div class="collapse"
-                                id="classes" data-bs-parent="#menuPersonnel">
+                                id="bulletinpaie" data-bs-parent="#menuPersonnel">
                                 <ul class="nav sub-menu">
                                     <li>
                                         <a class="nav-link"
-                                            href="#">
+                                            href="{{ url('/rubriquesalaire') }}">
                                             Rubriques Salaire
                                         </a>
                                     </li>
                                     <li>
                                         <a class="nav-link"
-                                            href="#">
+                                            href="{{ url('/profilsagents') }}">
                                             Creer Profils
                                         </a>
                                     </li>
@@ -573,9 +574,9 @@
 
                         <li class="nav-item">
                             <a class="nav-link"
-                                data-bs-toggle="collapse" href="#classes"
+                                data-bs-toggle="collapse" href="#editionrh"
                                 aria-expanded=""
-                                aria-controls="classes">
+                                aria-controls="editionrh">
                                 Edition
                                 {{-- <i class="menu-arrow"></i> --}}
                             </a>

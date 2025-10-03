@@ -588,10 +588,24 @@ Route::get('/confTauxH', [GestionPersonnelController::class, 'confTauxH']);
 Route::get('/rubriquesalaire', [BulletinPaieController::class, 'rubriquesalaire'])->name('rubriquesalaire');
 Route::post('/enregistrerrubriquesalaire', [BulletinPaieController::class, 'enregistrerrubriquesalaire'])->name('enregistrerrubriquesalaire');
 Route::post('/supprimerrubrique', [BulletinPaieController::class, 'supprimerrubrique'])->name('supprimerrubrique');
+Route::put('/modifierubrique/{code}', [BulletinPaieController::class, 'update'])->name('rubrique.update');
+
+// --------------------Profils agents -------------------------
+Route::get('/profilsagents', [BulletinPaieController::class, 'profilsagents'])->name('profilsagents');
+Route::post('/enregistrerprofilagents', [BulletinPaieController::class, 'enregistrerProfilAgents'])->name('enregistrerprofilagents');
+Route::put('modifierprofil/{id}', [BulletinPaieController::class, 'modifierProfil'])->name('modifierProfil');
+Route::post('supprimerprofil', [BulletinPaieController::class, 'supprimerProfil'])->name('supprimerProfil');
+Route::get('/profils/{numero}/primes', [BulletinPaieController::class, 'getPrimes'])
+    ->name('profils.primes');
+    // route pour récupérer les agents liés à un profil (retour JSON)
+Route::get('profils/{numero}/agents', [BulletinPaieController::class, 'getAgents'])
+    ->whereNumber('numero')
+    ->name('profils.agents');
+
 //Route pour l'affichage des matières
 Route::get('/get-matieres/{matricule}', [GestionPersonnelController::class, 'getMatieres']);
 
-//Route pour la suppression d'     agent
+//Route pour la suppression d'agent
 Route::delete('/agents/{matricule}', [GestionPersonnelController::class, 'destroy'])->name('agents.destroy');
 
 // route pour la modification

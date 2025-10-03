@@ -22,7 +22,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
                                 aria-label="Close"></button>
                         </div>
-                        <div class="offcanvas-body">
+                        {{-- <div class="offcanvas-body">
                             <p><strong> 1-Sélectionner une classe:</strong> Affiche uniquement la liste des élèves de la
                                 classe ayant un contrat. </p>
                             <p><strong> 2-Possibilité de rechercher un élève.</strong>
@@ -38,7 +38,7 @@
                                 <strong>Annuler:</strong> Réinitialise les informations entrées.
                             </p>
                             <p><strong>5-Suspendre:</strong> Suspend le contrat. </p>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 @if (Session::has('status'))
@@ -110,8 +110,23 @@
                                         {{ $rubrique->BASEVARIABLE }}
                                     </td>
                                     <td>
-                                        <a href='/paiementcontrat/{{ $rubrique->CODEPR }}'
-                                            class='btn btn-primary w-40'>Modifier</a>
+                                        {{-- <a href='/paiementcontrat/{{ $rubrique->CODEPR }}'
+                                            class='btn btn-primary w-40'>Modifier</a> --}}
+
+                                            <!-- bouton Modifier : remplit le modal via data-attributes -->
+                                            <button type="button"
+                                                    class="btn btn-primary btn-edit"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editRubriqueModal"
+                                                    data-code="{{ $rubrique->CODEPR }}"
+                                                    data-libel="{{ e($rubrique->LIBELPR) }}"
+                                                    data-type="{{ $rubrique->TYPEPR }}"
+                                                    data-montantfixe="{{ $rubrique->MONTANTFIXE }}"
+                                                    data-montantvar="{{ $rubrique->MONTANTVAR }}"
+                                                    data-base="{{ $rubrique->BASEVARIABLE }}">
+                                            Modifier
+                                            </button>
+
                                         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                             data-bs-target="#exampleModal-{{ $rubrique->CODEPR }}" >Supprimer</button>
                                         <!-- Modal -->
@@ -261,113 +276,131 @@
         </div>
     </div>
       
-    <!-- Modal de confirmation -->
-    {{-- <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Cet éleve est déja inscrit .Cependant sont inscription a été suspendu.Désirez vous réactiver cette
-                    souscription?
-                </div>
-                <div class="modal-footer" >
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
-                    <button type="button" class="btn btn-primary" id="confirmYesBtn">Oui</button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
-    {{-- <div class="modal fade" id="exampleInscrire" tabindex="-1" aria-labelledby="exampleInscrireLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title fs-3" id="exampleModalLabel">Inscription Mensuelle</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Mois a payer</h4>
-                            <form>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" class="form-check-input">
-                                                    Janvier
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" class="form-check-input" checked>
-                                                    Février
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" class="form-check-input">
-                                                    Mars
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" class="form-check-input" checked>
-                                                    Avril
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" class="form-check-input">
-                                                    Juillet
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" class="form-check-input">
-                                                    Août
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary">Enregister</button>
-                </div>
-            </div>
+
+    {{-- modal pour le Edit --}}
+
+    <!-- Modal d'édition (unique) -->
+<div class="modal fade" id="editRubriqueModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="editRubriqueForm" method="POST" action="">
+        @csrf
+        @method('PUT') {{-- on supposera une route RESTful pour update --}}
+        <div class="modal-header">
+          <h5 class="modal-title">Modifier la rubrique</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
         </div>
-    </div> --}}
+
+        <div class="modal-body">
+          <div class="mb-2">
+            <label for="editCode" class="form-label"><strong>Code Rubrique</strong></label>
+            <input type="text" id="editCode" name="codepr" class="form-control" readonly>
+          </div>
+
+          <div class="mb-2">
+            <label for="editLibel" class="form-label"><strong>Intitulé Rubrique</strong></label>
+            <input type="text" id="editLibel" name="libelpr" class="form-control" required maxlength="50">
+          </div>
+
+          <div class="row">
+            <div class="col-6 mb-2">
+              <label for="editType" class="form-label"><strong>Type</strong></label>
+              <select id="editType" name="type" class="js-example-basic-multiple form-control w-100" required>
+                <option value="P">PRIME IMPOSABLE</option>
+                <option value="I">PRIME NON IMPOSABLE</option>
+                <option value="R">RETENUE</option>
+              </select>
+            </div>
+
+            <div class="col-6 mb-2">
+              <label for="editMontantFixe" class="form-label"><strong>Montant Fixe</strong></label>
+              <input type="number" id="editMontantFixe" name="montantfixe" class="form-control" min="0" required>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6 mb-2">
+              <label for="editMontantVar" class="form-label"><strong>% Montant Variable</strong></label>
+              <input type="number" id="editMontantVar" name="montantvar" class="form-control" min="0" step="0.01" required>
+            </div>
+
+            <div class="col-6 mb-2">
+              <label for="editBaseVar" class="form-label"><strong>Base Variable</strong></label>
+              <select id="editBaseVar" name="basevariable" class="js-example-basic-multiple form-control w-100" required>
+                <option value="">AUCUNE</option>
+                <option value="SB">SALAIRE BASE</option>
+                <option value="ST">SALAIRE BRUT</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var editModalEl = document.getElementById('editRubriqueModal');
+
+  editModalEl.addEventListener('show.bs.modal', function (event) {
+    // button qui a déclenché le modal
+    var button = event.relatedTarget;
+
+    var code = button.getAttribute('data-code') || '';
+    var libel = button.getAttribute('data-libel') || '';
+    var type = button.getAttribute('data-type') || '';
+    var montantFixe = button.getAttribute('data-montantfixe') || '';
+    var montantVar = button.getAttribute('data-montantvar') || '';
+    var baseVar = button.getAttribute('data-base') || '';
+
+    // remplir les champs du modal
+    document.getElementById('editCode').value = code;
+    document.getElementById('editLibel').value = libel;
+    document.getElementById('editType').value = type;
+    document.getElementById('editMontantFixe').value = montantFixe;
+    document.getElementById('editMontantVar').value = montantVar;
+    document.getElementById('editBaseVar').value = baseVar;
+
+    // positionner dynamiquement l'action du formulaire
+    var form = document.getElementById('editRubriqueForm');
+
+    // Exemple d'URL : '/modifierubrique/{code}' -> adapte selon ta route
+    // si tu utilises une route nommée Laravel, tu peux construire côté JS en baseURL + ...
+    form.action = '/modifierubrique/' + encodeURIComponent(code);
+  });
+
+  // (optionnel) reset du formulaire quand modal caché
+  editModalEl.addEventListener('hidden.bs.modal', function () {
+    document.getElementById('editRubriqueForm').reset();
+  });
+
+  // --- Correction mineure: répare la réinitialisation du modal "nouveaucontrat" existant
+  var nouveau = document.getElementById('nouveaucontrat');
+  if (nouveau) {
+    nouveau.addEventListener('hidden.bs.modal', function() {
+      var form = document.getElementById('modalForm');
+      if (form) form.reset();
+      form?.querySelectorAll('.form-control')?.forEach(input => input.value = '');
+    });
+  }
+});
+</script>
 
 
 <script>
-    // $(document).ready(function() {
-    //     $('#nouveaucontrat').on('hidden.bs.modal', function () {
-    //         // Réinitialiser les champs du formulaire
-    //         $('#myModalForm')[0].reset();
 
-    //         // Réinitialiser les selects
-    //         $('#myModalForm select').each(function() {
-    //             $(this).prop('selectedIndex', 0);
-    //         });
-    //     });
-    // });
 
     document.addEventListener('DOMContentLoaded', function() {
         var myModal = new bootstrap.Modal(document.getElementById('nouveaucontrat'));
