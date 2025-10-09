@@ -28,6 +28,7 @@ use App\Http\Controllers\DuplicataController;
 use App\Http\Controllers\GestionPersonnelController;
 use App\Http\Controllers\InscrirepersonnelController;
 use App\Http\Controllers\BulletinPaieController;
+use App\Http\Controllers\EmploidutempsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -623,3 +624,6 @@ Route::put('/agents/{matricule}', [InscrirepersonnelController::class, 'updatear
 Route::get('/modifieragent/{matricule}', function($matricule){
     return redirect()->route('inscrirepersonnel.index', ['matricule' => $matricule]);
 });
+
+Route::get('/configsalles', [EmploidutempsController::class, 'configsalles'])->name('configsalles');
+Route::post('/gestion-salles/assign', [EmploidutempsController::class, 'assignClassesToSalles'])->name('gestion.salles.assign');
