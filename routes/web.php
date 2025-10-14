@@ -578,7 +578,7 @@ Route::post('/agents/store', [InscrirepersonnelController::class, 'storeargent']
 
 Route::get('/inscrirepersonnel', [InscrirepersonnelController::class, 'index']);
 
-Route::get('/confTauxH', [GestionPersonnelController::class, 'confTauxH']);
+Route::get('/confTauxH', [GestionPersonnelController::class, 'confTauxH'])->name('confTauxH');
 
 
 //Route pour l'affichage des matières
@@ -586,6 +586,15 @@ Route::get('/get-matieres/{matricule}', [GestionPersonnelController::class, 'get
 
 //Route pour la suppression d'     agent
 Route::delete('/agents/{matricule}', [GestionPersonnelController::class, 'destroy'])->name('agents.destroy');
+
+
+//route pour l'enrégistrement des taux horaires dans configuration
+Route::put('/profils/updateNormales', [GestionPersonnelController::class, 'updateNormales'])->name('profils.updateNormales');
+Route::put('/profils/updateSup', [GestionPersonnelController::class, 'updateSup'])->name('profils.updateSup');
+
+//route pour l'enrégistrement de la disponibilité
+Route::post('/dispo/storeDispo', [InscrirepersonnelController::class, 'storeDispo'])->name('dispo.storeDispo');
+
 
 // route pour la modification
 

@@ -34,7 +34,20 @@
                 <br>
                 <br>
             </div>
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                </div>
 
+                <script>
+                    // Optionnel : fermer automatiquement après 3 secondes
+                    setTimeout(() => {
+                        const alert = document.querySelector('.alert');
+                        if(alert) alert.remove();
+                    }, 3000);
+                </script>
+            @endif
             <div class="card-body">
                 <div class="row">
                     <div class="col d-flex justify-content-between align-items-center">
@@ -90,8 +103,20 @@
                                                     </button>
                                                 </li>
                                                 <li><a class="dropdown-item" href="{{ url('/inscrirepersonnel/'.$agent->MATRICULE) }}">Modifier</a></li>
-
-                                                <li><a class="dropdown-item" href="">Position</a></li>
+                                                <li>
+                                                    <button class="dropdown-item"
+                                                        data-matricule="{{ $agent->MATRICULE }}" 
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#disponibiliteModal">
+                                                        Disponibilité
+                                                    </button>
+                                                </li>                                              
+                                                <li>
+                                                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#positionModal">
+                                                        Position
+                                                    </button>
+                                                </li>
+                                                <li><a class="dropdown-item" href="">Imprimer Emploi</a></li>
                                             </ul>
                                         </div>
                                     </td>
@@ -150,6 +175,135 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal pour la Disponibilité -->
+    <div class="modal fade" id="disponibiliteModal" tabindex="-1" aria-labelledby="disponibiliteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title fw-bold" style="color:white;">Disponibilité des profs</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="formDispo" method="POST" action="{{ route('dispo.storeDispo') }}">
+                    @csrf
+                    <input type="hidden" name="MATRICULE" id="matricule_agent">
+
+                    <div class="row text-center">
+                        @foreach (['LUNDI','MARDI','MERCREDI','JEUDI','VENDREDI','SAMEDI'] as $index => $jour)
+                            <div class="col-md-2 border p-2">
+                                <h6 class="bg-white text-dark fw-bold p-1 rounded">{{ $jour }}</h6>
+                                <button type="button" class="btn btn-secondary btn-sm mb-2 w-100">TOUS</button>
+                                @for ($h = 7; $h <= 19; $h++)
+                                    <div class="form-check">
+                                        <input class="form-check-input" 
+                                            type="checkbox" 
+                                            name="dispo[{{ $index+1 }}][]" 
+                                            value="{{ $h }}">
+                                        <label class="form-check-label">{{ $h }} H</label>
+                                    </div>
+                                @endfor
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary">VALIDER</button>
+                    </div>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale pour position -->
+    <div class="modal fade" id="positionModal" tabindex="-1" aria-labelledby="positionLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold">Position du professeur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                    <label class="form-label fw-bold">Nom</label>
+                    <input type="text" class="form-control" value="">
+                    </div>
+                    <div class="col-md-3">
+                    <label class="form-label fw-bold">Prénom</label>
+                    <input type="text" class="form-control" value="">
+                    </div>
+                    <div class="col-md-3">
+                    <label class="form-label fw-bold">Sexe</label>
+                    <select class="form-select">
+                        <option>Masculin</option>
+                        <option>Féminin</option>
+                    </select>
+                    </div>
+                    <div class="col-md-3">
+                    <label class="form-label fw-bold">Cycles</label>
+                    <select class="form-select">
+                        <option>Cycle 1</option>
+                        <option>Cycle 2</option>
+                    </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                    <label class="form-label fw-bold">Jour</label>
+                    <select class="form-select">
+                        <option>Lun</option><option>Mar</option><option>Mer</option>
+                        <option>Jeu</option><option>Ven</option><option>Sam</option>
+                    </select>
+                    </div>
+                    <div class="col-md-3">
+                    <label class="form-label fw-bold">Heure</label>
+                    <select class="form-select">
+                        @for ($h = 7; $h <= 19; $h++)
+                        <option>{{ str_pad($h, 2, '0', STR_PAD_LEFT) }}H</option>
+                        @endfor
+                    </select>
+                    </div>
+                    <div class="col-md-2">
+                    <label class="form-label fw-bold">Durée</label>
+                    <input type="number" class="form-control" min="1" value="1">
+                    </div>
+                </div>
+
+                <table class="table table-bordered align-middle text-center"> 
+                    <thead class="table-secondary">
+                    <tr>
+                        <th>Classes</th>
+                        <th>Salles</th>
+                        <th>Matière</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @for ($i = 0; $i < 5; $i++)
+                    <tr>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+                    @endfor
+                    </tbody>
+                </table>
+
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary">VALIDER</button>
+                </div>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -221,6 +375,24 @@
         });
     </script>
 
+    <script>
+        //script pour cocher automatiquement toutes les cases pour la disponibilité
+        document.querySelectorAll('.btn-secondary').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const parent = btn.closest('.col-md-2');
+                const checkboxes = parent.querySelectorAll('input[type=checkbox]');
+                const allChecked = Array.from(checkboxes).every(c => c.checked);
+
+                checkboxes.forEach(c => c.checked = !allChecked);
+            });
+        });
+
+        $(document).on('click', '[data-bs-target="#disponibiliteModal"]', function() {
+            let matricule = $(this).data('matricule');
+            $('#matricule_agent').val(matricule);
+        });
+
+</script>
 
    
 @endsection

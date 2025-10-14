@@ -12,6 +12,7 @@ use App\Models\TypeAgent;
 use App\Models\Profmat;
 use App\Models\Users;
 use App\Models\Usercontrat;
+use App\Models\Dispos;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -381,6 +382,23 @@ class InscrirepersonnelController extends Controller
         return redirect()->back()->with('success', "Agent enregistré avec succès ! Matricule : $matricule et utilisateur créé.");
     }
 
+    //fonction pour l'enrégistremenrt de disponibilité
+    public function storeDispo(Request $request)
+        {
+            $matricule = $request->MATRICULE;
+
+            foreach ($request->dispo ?? [] as $jour => $heures) {
+                foreach ($heures as $h) {
+                    Dispos::create([
+                        'JOUR' => $jour,
+                        'HEURE' => $h,
+                        'MATRICULE' => $matricule,
+                    ]);
+                }
+            }
+
+            return back()->with('success', 'Disponibilités enregistrées');
+        }
 }
 
 

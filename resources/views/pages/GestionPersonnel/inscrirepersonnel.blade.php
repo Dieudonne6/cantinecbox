@@ -297,7 +297,7 @@
                                     </a>
                                 </div>
                                 <div class="col-md-3 form-floating">
-                                    <a class="btn btn-primary btn-sm" href="">
+                                    <a class="btn btn-primary btn-sm" href="{{ route('confTauxH')}}">
                                         Configuration
                                     </a>
                                 </div>
@@ -323,7 +323,7 @@
 
     {{-- Modal pour nouveaux profil--}}
     <div class="modal fade " id="profilModal" tabindex="-1" aria-labelledby="profilModalLabel" aria-hidden="false" style="width: 50%; background-color: white; margin-left: 25%;">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content rounded-3 shadow-lg">
             <div class="modal-header bg-secondary text-white">
                 <h5 class="modal-title fw-bold" id="profilModalLabel">Créer un profil</h5>
@@ -367,7 +367,7 @@
 
                     {{-- Case à cocher --}}
                     <div class="form-check ">
-                        <input type="checkbox" class="form-check-input" name="CalculerCnss" id="calcul_cnss" value="1">
+                        <input type="checkbox" class="form-check-input" name="CalculerCnss" id="calcul_cnss" value="1" style="margin-left: 0.8rem;">
                         <label class="form-check-label fw-semibold" for="calcul_cnss" >Calculer CNSS</label>
                     </div>
 
