@@ -12,11 +12,8 @@ use App\Models\TypeAgent;
 use App\Models\Profmat;
 use App\Models\Users;
 use App\Models\Usercontrat;
-<<<<<<< Updated upstream
 use App\Models\Dispos;
-=======
 use App\Models\Groupe;
->>>>>>> Stashed changes
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
