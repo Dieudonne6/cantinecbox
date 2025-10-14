@@ -39,40 +39,54 @@
                         vertical-align: middle !important;
                     }
 
-                    /* Couvre les en-têtes clonés / conteneurs créés par DataTables (scroll / fixedHeader) */
-                    .dataTables_scrollHeadInner table thead th,
+
                     table.dataTable thead th,
-                    .fixedHeader-floating thead th {
-                        text-align: center !important;
-                        vertical-align: middle !important;
+                    table.dataTable thead td,
+                    table.dataTable tfoot th,
+                    table.dataTable tfoot td {
+                        text-align: left !important;
                     }
-
-                    /* Optionnel : si tu veux centrer le contenu et les icônes de tri en utilisant flexbox */
-                    #myTab thead th {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        gap: .4rem;
-                        /* espace entre texte et icône si nécessaire */
-                    }
-
 
                     table.dataTable th.dt-type-numeric,
                     table.dataTable th.dt-type-date,
                     table.dataTable td.dt-type-numeric,
                     table.dataTable td.dt-type-date {
-                        text-align: center !important;
+                        text-align: left !important;
                     }
 
+                    /* Couvre les en-têtes clonés / conteneurs créés par DataTables (scroll / fixedHeader) */
+                    /* .dataTables_scrollHeadInner table thead th,
+                        table.dataTable thead th,
+                        .fixedHeader-floating thead th {
+                            text-align: center !important;
+                            vertical-align: middle !important;
+                        } */
 
-                    .d-flex, .loader-demo-box, .layouts-preview-main-wrapper .layouts-preview-wrapper .preview-item a .item-title, .navbar .navbar-menu-wrapper .navbar-nav, .navbar .navbar-menu-wrapper .navbar-nav .nav-item, .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .navbar-dropdown .dropdown-item {
-                            display: center !important;
-                        }
+                    /* Optionnel : si tu veux centrer le contenu et les icônes de tri en utilisant flexbox */
+                    /* #myTab thead th {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            gap: .4rem;
+                        } */
+
+
+                    /* table.dataTable th.dt-type-numeric,
+                        table.dataTable th.dt-type-date,
+                        table.dataTable td.dt-type-numeric,
+                        table.dataTable td.dt-type-date {
+                            text-align: center !important;
+                        } */
+
+
+                    /* .d-flex, .loader-demo-box, .layouts-preview-main-wrapper .layouts-preview-wrapper .preview-item a .item-title, .navbar .navbar-menu-wrapper .navbar-nav, .navbar .navbar-menu-wrapper .navbar-nav .nav-item, .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .navbar-dropdown .dropdown-item {
+                                display: center !important;
+                            } */
 
                     /* .d-flex12 {
-                            display: block !important;
-                            align-items: center !important;
-                        } */
+                                display: block !important;
+                                align-items: center !important;
+                            } */
                 </style>
                 <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
                     <i class="fas fa-arrow-left"></i> Retour
@@ -247,12 +261,12 @@
                 {{--  --}}
                 <div id="contenu">
                     <div class="table-responsive mb-4">
-                        <table id="myTab"
-                            class="table table-bordered table-hover table-striped align-middle text-center">
+                        <table id="myTab" class="table">
                             <thead class="table-primary sticky-top">
                                 <tr>
-                                    <th class="ml-6">Matricule</th>
-                                    <th>Nom & Prénoms</th>
+                                    <th>Matricule</th>
+                                    <th>Nom</th>
+                                    <th>Prénoms</th>
                                     <th>Classe</th>
                                     <th>Sexe</th>
                                     <th class="d-none"></th>
@@ -265,7 +279,7 @@
                                     <th>Red.</th>
                                     <th>Date nai</th>
                                     <th>Lieunais</th>
-                                    <th class="hide-printe">Action</th>
+                                    <th class="hide-printe" style="text-align: center !important">Action</th>
                                 </tr>
                             </thead>
 
@@ -273,7 +287,8 @@
                                 @foreach ($eleves as $eleve)
                                     <tr>
                                         <td>{{ $eleve->MATRICULEX }}</td>
-                                        <td>{{ $eleve->NOM }} {{ $eleve->PRENOM }}</td>
+                                        <td>{{ $eleve->NOM }}</td>
+                                        <td>{{ $eleve->PRENOM }}</td>
                                         <td data-classe="{{ $eleve->CODECLAS }}">{{ $eleve->CODECLAS }}</td>
                                         <td data-sexe="{{ $eleve->SEXE }}">
                                             @if ($eleve->SEXE == 1)
@@ -298,7 +313,7 @@
 
                                         <td class="checkboxes-select" style="width: 24px;">
                                             <input type="checkbox" class="form-check-input-center"
-                                                {{ $eleve->STATUT ? 'checked' : '' }}>
+                                                {{ $eleve->STATUT ? 'checked' : '' }} onclick="return false;">
                                         </td>
                                         @php
                                             $dateNaissance = $eleve->DATENAIS;
@@ -532,10 +547,10 @@
                         searchable: false
                     },
                     // centrer la 1ère colonne (index 0)
-                    {
-                        targets: [0],
-                        className: 'dt-center'
-                    },
+                    // {
+                    //     targets: [0],
+                    //     className: 'dt-center'
+                    // },
                     // centrer la colonne Actions (dernier index : -1)
                     {
                         targets: [-1],

@@ -32,6 +32,7 @@
 
                 $activeExtractRoutesInsc = ['importernote', 'import'];
 
+                $routesbulletindePaie = ['rubriquesalaire', 'profilsagents'];
             @endphp
             <!-- Bloc Inscriptions & disciplines -->
             <li class="nav-item">
@@ -222,7 +223,8 @@
                     </span>
                     <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse" data-bs-parent="#parent-accordion" id="Cantine" style="margin-left: 2rem !important">
+                <div class="collapse" data-bs-parent="#parent-accordion" id="Cantine"
+                    style="margin-left: 2rem !important">
                     <ul class="nav flex-column sub-menu">
 
                         <!-- Liste des Contrats -->
@@ -481,48 +483,122 @@
             </li>
 
 
-            <!-- Bloc Ressources Humaines -->
+<!-- Bloc Ressources Humaines -->
+<li class="nav-item">
+    <a class="nav-link" data-bs-toggle="collapse" href="#menuPersonnel" aria-expanded="false" aria-controls="menuPersonnel">
+        <i class="typcn typcn-document-text menu-icon"></i>
+        <span class="menu-title">Ressources <br> Humaines</span>
+        <i class="menu-arrow"></i>
+    </a>
+
+    <div class="collapse" id="menuPersonnel" data-bs-parent="#parent-accordion" style="margin-left: 2rem !important;">
+        <ul class="nav flex-column sub-menu">
+
+            <!-- Sous-menu : Registre Enseignants -->
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#menuPersonnel" aria-expanded="false"
-                    aria-controls="menuPersonnel">
-                    <i class="typcn typcn-document-text menu-icon"></i>
-                    <span class="menu-title">Ressources <br> Humaines</span>
+                <a class="nav-link {{ request()->is('updatePersonnel') || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}"
+                    data-bs-toggle="collapse" href="#registreEnseignants"
+                    aria-expanded="{{ request()->is('updatePersonnel') || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'true' : 'false' }}"
+                    aria-controls="registreEnseignants">
+                    Registre Enseignants
                     <i class="menu-arrow"></i>
                 </a>
 
-                <div class="collapse" id="menuPersonnel" data-bs-parent="#parent-accordion"
-                    style="margin-left: 2rem !important">
+                <div class="collapse {{ request()->is('updatePersonnel') || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'show' : '' }}"
+                    id="registreEnseignants" data-bs-parent="#menuPersonnel">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->is('updatePersonnel') || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}"
-                                data-bs-toggle="collapse" href="#classes"
-                                aria-expanded="{{ request()->is('updatePersonnel') || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'true' : 'false' }}"
-                                aria-controls="classes">
-                                Régistre Enseignants
-                                <i class="menu-arrow"></i>
+                        <li>
+                            <a class="nav-link {{ request()->is('addAgent') ? 'active' : '' }}" href="{{ url('/addAgent') }}">
+                                Type d'agent
                             </a>
-
-                            <div class="collapse {{ request()->is('updatePersonnel') || request()->is('addAgent') || in_array(request()->route()->getName(), $routesClass) ? 'show' : '' }}"
-                                id="classes" data-bs-parent="#menuPersonnel">
-                                <ul class="nav sub-menu">
-                                    <li>
-                                        <a class="nav-link {{ request()->is('addAgent') ? 'active' : '' }}"
-                                            href="{{ url('/addAgent') }}">
-                                            Type d'agent
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link {{ request()->is('updatePersonnel') ? 'active' : '' }}"
-                                            href="{{ url('/updatePersonnel') }}">
-                                            Mise à jour du Personnel
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                        </li>
+                        <li>
+                            <a class="nav-link {{ request()->is('updatePersonnel') ? 'active' : '' }}" href="{{ url('/updatePersonnel') }}">
+                                Mise à jour du Personnel
+                            </a>
                         </li>
                     </ul>
                 </div>
             </li>
+
+            <!-- Sous-menu : Bulletins de Paie -->
+            <li class="nav-item">
+                <a class="nav-link {{ in_array(request()->route()->getName(), $routesbulletindePaie) ? 'active' : '' }}"
+                    data-bs-toggle="collapse" href="#bulletinsPaie"
+                    aria-expanded="{{ in_array(request()->route()->getName(), $routesbulletindePaie) ? 'true' : 'false' }}"
+                    aria-controls="bulletinsPaie">
+                    Bulletins de Paie
+                    <i class="menu-arrow"></i>
+                </a>
+
+                <div class="collapse {{ in_array(request()->route()->getName(), $routesbulletindePaie) ? 'show' : '' }}" id="bulletinsPaie" data-bs-parent="#menuPersonnel">
+                    <ul class="nav flex-column sub-menu">
+                        <li><a class="nav-link" href="{{ url('/rubriquesalaire') }}">Rubriques Salaire</a></li>
+                        <li><a class="nav-link" href="{{ url('/profilsagents') }}">Créer Profils</a></li>
+                        <li><a class="nav-link" href="#">Taux horaires</a></li>
+                        <li><a class="nav-link" href="#">Avance sur salaire</a></li>
+                        <li><a class="nav-link" href="#">Bulletins et États</a></li>
+                    </ul>
+                </div>
+            </li>
+
+<!-- Sous-menu : Emploi du Temps -->
+<li class="nav-item">
+    <a class="nav-link {{ request()->is('creeremploitemps') || request()->is('consulteremploitemps') || in_array(request()->route()->getName(), ['modifieremploitemps', 'miseajouremploitemps']) ? 'active' : '' }}"
+        data-bs-toggle="collapse" href="#emploiDuTemps"
+        aria-expanded="{{ request()->is('creeremploitemps') || request()->is('consulteremploitemps') || in_array(request()->route()->getName(), ['modifieremploitemps', 'miseajouremploitemps']) ? 'true' : 'false' }}"
+        aria-controls="emploiDuTemps">
+        <i class="typcn typcn-calendar-outline menu-icon"></i>
+        Emploi du Temps
+        <i class="menu-arrow"></i>
+    </a>
+
+    <div class="collapse {{ request()->is('creeremploitemps') || request()->is('consulteremploitemps') || in_array(request()->route()->getName(), ['modifieremploitemps', 'miseajouremploitemps']) ? 'show' : '' }}"
+        id="emploiDuTemps" data-bs-parent="#menuPersonnel">
+        <ul class="nav flex-column sub-menu">
+
+            <!-- Premier sous-menu : Créer Emploi du Temps -->
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#creerSousMenu" aria-expanded="false" aria-controls="creerSousMenu">
+                    Configurer
+                    <i class="menu-arrow"></i>
+                </a>
+
+                <div class="collapse" id="creerSousMenu" data-bs-parent="#emploiDuTemps">
+                    <ul class="nav flex-column sub-menu">
+                        <li><a class="nav-link" href="{{ route('configsalles') }}">Configurer Salles</a></li>
+                        <li><a class="nav-link" href="#">Affecter un enseignant</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Deuxième sous-menu : Consulter Emploi du Temps -->
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('consulteremploitemps') ? 'active' : '' }}" href="#">
+                    Consulter Emploi du Temps
+                </a>
+            </li>
+
+            <!-- Troisième sous-menu : Mise à jour / Modification -->
+            <li class="nav-item">
+                <a class="nav-link {{ in_array(request()->route()->getName(), ['modifieremploitemps', 'miseajouremploitemps']) ? 'active' : '' }}" href="#">
+                    Mise à jour / Modification
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</li>
+
+
+            <!-- Sous-menu : Édition -->
+            <li class="nav-item">
+                <a class="nav-link" href="#editionrh">Édition</a>
+            </li>
+
+        </ul>
+    </div>
+</li>
 
 
             <!-- Bloc Ressources Materielles -->
