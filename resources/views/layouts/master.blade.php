@@ -230,6 +230,12 @@ align-items: center;  */
                     set_time_limit(0);
                 @endphp
                 
+                {{-- @if(isset($pagePermission) && !empty($pagePermission['isReadOnly']) && $pagePermission['isReadOnly'])
+                <div class="alert alert-warning py-2 px-3 mb-2">
+                    Mode lecture seule: vous ne pouvez pas modifier cette page.
+                </div>
+                @endif --}}
+
                 @yield('content')
                 @include('layouts.footer')
             </div>
@@ -840,11 +846,80 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 
-{{-- script ddddd --}}
+{{-- Mode lecture seule --}}
+@if(!empty($pagePermission['isReadOnly']) && $pagePermission['isReadOnly'])
+    <style>
+        .readonly-mode [data-manage-only],
+        .readonly-mode .manage-only {
+            display: none !important;
+        }
+        .readonly-mode input:not([type="search"]):not([type="text"]):not([data-allow-readonly]),
+        .readonly-mode select:not(.js-example-basic-multiple):not([data-allow-readonly]),
+        .readonly-mode textarea:not([data-allow-readonly]) {
+            pointer-events: none !important;
+            opacity: 0.6 !important;
+        }
+        .readonly-mode button[type="submit"]:not([data-allow-readonly]),
+        .readonly-mode input[type="submit"]:not([data-allow-readonly]) {
+            pointer-events: none !important;
+            opacity: 0.6 !important;
+        }
+        /* Permettre les actions critiques */
+        .readonly-mode .logout-btn,
+        .readonly-mode [data-allow-readonly],
+        .readonly-mode .navbar-nav,
+        .readonly-mode .dropdown-toggle,
+        .readonly-mode .dropdown-menu {
+            pointer-events: auto !important;
+            opacity: 1 !important;
+        }
+    </style>
 
+    <script>
+        window.pagePermission = @json($pagePermission ?? null);
+        (function(){
+            document.addEventListener('DOMContentLoaded', function() {
+                // Ajouter la classe globale
+                document.documentElement.classList.add('readonly-mode');
+                document.body.classList.add('readonly-mode');
 
+                // Intercepter la soumission des formulaires mutatifs
+                document.addEventListener('submit', function(e){
+                    const form = e.target;
+                    if (!(form instanceof HTMLFormElement)) return;
+                    
+                    // Permettre les actions critiques (déconnexion, navigation, etc.)
+                    if (form.classList.contains('logout-form') || 
+                        form.hasAttribute('data-allow-readonly') ||
+                        form.action.includes('logout') ||
+                        form.action.includes('deconnexion')) {
+                        return true; // Permettre la soumission
+                    }
+                    
+                    const method = (form.getAttribute('method') || 'get').toLowerCase();
+                    const spoofEl = form.querySelector('input[name="_method"]');
+                    const spoof = spoofEl ? spoofEl.value.toLowerCase() : null;
+                    const effectiveMethod = (spoof || method);
+                    
+                    // if (effectiveMethod !== 'get') {
+                    //     e.preventDefault();
+                    //     alert('Mode lecture seule: vous ne pouvez pas effectuer cette action.');
+                    //     return false;
+                    // }
+                }, true);
 
-
+                // Désactiver les éléments de gestion
+                document.querySelectorAll('[data-manage-only], .manage-only').forEach(el => {
+                    el.style.display = 'none';
+                });
+            });
+        })();
+    </script>
+@else
+    <script>
+        window.pagePermission = @json($pagePermission ?? null);
+    </script>
+@endif
 
 
 </body>

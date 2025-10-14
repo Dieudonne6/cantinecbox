@@ -11,34 +11,34 @@
         }
 
         /* Assure la même hauteur et un bon alignement */
-.btn-icon-text {
-  min-height: 92px;       /* hauteur identique pour tous */
-  padding: 12px 16px;
-  text-align: center;
-  /* display: flex; */
-  align-items: center;
-}
+        .btn-icon-text {
+        min-height: 92px;       /* hauteur identique pour tous */
+        padding: 12px 16px;
+        text-align: center;
+        /* display: flex; */
+        align-items: center;
+        }
 
-/* Taille et espacement des icônes */
-.btn-icon-text .typcn {
-  font-size: 24px;
-  width: 20px;            /* espace réservé pour icône */
-  text-align: center;
-}
+        /* Taille et espacement des icônes */
+        .btn-icon-text .typcn {
+        font-size: 24px;
+        width: 20px;            /* espace réservé pour icône */
+        text-align: center;
+        }
 
-/* Evite que le texte ne dépasse trop */
-.btn-icon-text .text-left {
-  flex: 1;
-}
+        /* Evite que le texte ne dépasse trop */
+        .btn-icon-text .text-left {
+        flex: 1;
+        }
 
-/* Optionnel: améliorer l'aspect sur petits écrans */
-@media (max-width: 576px) {
-  .btn-icon-text {
-    min-height: 64px;
-    padding: 10px;
-  }
-  .btn-icon-text .typcn { font-size: 20px; width: 36px; }
-}
+        /* Optionnel: améliorer l'aspect sur petits écrans */
+        @media (max-width: 576px) {
+        .btn-icon-text {
+            min-height: 64px;
+            padding: 10px;
+        }
+        .btn-icon-text .typcn { font-size: 20px; width: 36px; }
+        }
 
     </style>
 
@@ -336,42 +336,61 @@
                             <div class="card col-md-4">
                                 <div class="card-body template-demo mt-2">
 
+                                    @canAccess('Acceuil')
                                     <a href="{{ url('/Acceuil') }}"
                                         class="btn btn-outline-dark btn-block btn-icon-text d-flex align-items-center">
                                         <i class="typcn typcn-th-list mr-3" aria-hidden="true"></i>
                                         <div class="text-left">
                                             <small class="font-weight-light d-block">Inscription & Discipline</small>
                                             <span class="font-weight-bold">Liste des élèves</span>
+                                            @canOnlyView('Acceuil')
+                                                <small class="text-muted">(Lecture seule)</small>
+                                            @endcanOnlyView
                                         </div>
                                     </a>
+                                    @endcanAccess
 
+                                    @canAccess('listefacturescolarite')
                                     <a href="{{ route('listefacturescolarite') }}"
                                         class="btn btn-outline-dark btn-block btn-icon-text d-flex align-items-center mt-3">
                                         <i class="typcn typcn-credit-card mr-3" aria-hidden="true"></i>
                                         <div class="text-left">
                                             <small class="font-weight-light d-block">Scolarité</small>
                                             <span class="font-weight-bold">Mise à jour des paiements</span>
+                                            @canOnlyView('listefacturescolarite')
+                                                <small class="text-muted">(Lecture seule)</small>
+                                            @endcanOnlyView
                                         </div>
                                     </a>
+                                    @endcanAccess
 
+                                    @canAccess('tableaudenotes')
                                     <a href="{{ route('tableaudenotes') }}"
                                         class="btn btn-outline-dark btn-block btn-icon-text d-flex align-items-center mt-3">
                                         <i class="typcn typcn-chart-bar mr-3" aria-hidden="true"></i>
                                         <div class="text-left">
                                             <small class="font-weight-light d-block">Notes et Bulletin</small>
                                             <span class="font-weight-bold">Tableau de Notes</span>
+                                            @canOnlyView('tableaudenotes')
+                                                <small class="text-muted">(Lecture seule)</small>
+                                            @endcanOnlyView
                                         </div>
                                     </a>
+                                    @endcanAccess
 
+                                    @canAccess('rapportannuel')
                                     <a href="{{ route('rapportannuel') }}"
                                         class="btn btn-outline-dark btn-block btn-icon-text d-flex align-items-center mt-3">
                                         <i class="typcn typcn-document-text mr-3" aria-hidden="true"></i>
                                         <div class="text-left">
                                             <small class="font-weight-light d-block">Notes et Bulletin</small>
                                             <span class="font-weight-bold">Rapports Annuels</span>
+                                            @canOnlyView('rapportannuel')
+                                                <small class="text-muted">(Lecture seule)</small>
+                                            @endcanOnlyView
                                         </div>
                                     </a>
-
+                                    @endcanAccess
                                 </div>
                             </div>
                         </div>

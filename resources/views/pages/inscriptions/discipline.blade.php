@@ -236,42 +236,43 @@
                                                     <td>{{ $eleve->PRENOM }}</td>
                                                     <td>{{ $eleve->CODECLAS }}</td>
                                                     <td>
-                                                        <!-- Modal pour voir les fautes -->
-                                                        <button type="button" class="btn btn-secondary btn-sm me-2"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalVoirFautes-{{ $eleve->MATRICULE }}">
-                                                            Voir Plus
-                                                        </button>
-
-                                                        <!-- Bouton pour ajouter une faute -->
-                                                        <button type="button" class="btn btn-primary btn-sm me-2"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalAjouterFaute-{{ $eleve->MATRICULE }}">
-                                                            Ajouter faute
-                                                        </button>
-
-                                                        <!-- Groupe de boutons Imprimer avec menu déroulant -->
-                                                        <div class="btn-group">
-                                                            <button type="button"
-                                                                class="btn btn-secondary btn-sm dropdown-toggle"
-                                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                                Imprimer
+                                                        @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                                                            <!-- Modal pour voir les fautes -->
+                                                            <button type="button" class="btn btn-secondary btn-sm me-2"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#modalVoirFautes-{{ $eleve->MATRICULE }}">
+                                                                Voir Plus
                                                             </button>
-                                                            <ul class="dropdown-menu">
-                                                                <li>
-                                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="ouvrirModalImpression('{{ route('pages.etat.imprimer_fautes', $eleve->MATRICULE) }}')">
-                                                                        Imprimer les fautes
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="dropdown-item"
-                                                                        href="javascript:void(0);" onclick="ouvrirModalImpression1('{{ route('pages.etat.imprimer_absences', $eleve->MATRICULE) }}')">
-                                                                        Imprimer les absences
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
 
+                                                            <!-- Bouton pour ajouter une faute -->
+                                                            <button type="button" class="btn btn-primary btn-sm me-2"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#modalAjouterFaute-{{ $eleve->MATRICULE }}">
+                                                                Ajouter faute
+                                                            </button>
+
+                                                            <!-- Groupe de boutons Imprimer avec menu déroulant -->
+                                                            <div class="btn-group">
+                                                                <button type="button"
+                                                                    class="btn btn-secondary btn-sm dropdown-toggle"
+                                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    Imprimer
+                                                                </button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li>
+                                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="ouvrirModalImpression('{{ route('pages.etat.imprimer_fautes', $eleve->MATRICULE) }}')">
+                                                                            Imprimer les fautes
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a class="dropdown-item"
+                                                                            href="javascript:void(0);" onclick="ouvrirModalImpression1('{{ route('pages.etat.imprimer_absences', $eleve->MATRICULE) }}')">
+                                                                            Imprimer les absences
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        @endif
 
                                                
 
@@ -606,9 +607,10 @@
                                     <div
                                         style="display: flex; align-items: center; justify-content: space-between; margin: 10px;">
                                         <h4 style="margin: 0;">Liste des fautes</h4>
-                                        <a href="{{ route('pages.etat.imprimerfaute') }}"
-                                            class="btn btn-primary">Imprimer les Fautes</a>
-
+                                        @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                                            <a href="{{ route('pages.etat.imprimerfaute') }}"
+                                                class="btn btn-primary">Imprimer les Fautes</a>
+                                        @endif
                                     </div>
 
                                     <table class="table table-striped" id="myTable">
@@ -639,8 +641,10 @@
                                     <div
                                         style="display: flex; align-items: center; justify-content: space-between; margin: 10px;">
                                         <h4 style="margin: 0;">Liste des absences</h4>
-                                        <a href="{{ route('pages.etat.imprimerabsence') }}"
-                                            class="btn btn-primary">Imprimer les Absences</a>
+                                        @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                                            <a href="{{ route('pages.etat.imprimerabsence') }}"
+                                                class="btn btn-primary">Imprimer les Absences</a>
+                                        @endif
                                     </div>
                                     <table class="table table-striped" id="myTable">
                                         <thead>
@@ -680,11 +684,13 @@
                     <div class="d-flex align-items-start">
                         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
                             aria-orientation="vertical">
-                            <button class="nav-link" id="v-pills-home-tab" data-bs-toggle="pill"
-                                data-bs-target="#v-pills-home" type="button" role="tab"
-                                aria-controls="v-pills-home" aria-selected="true">Table des
-                                fautes/Sanction
-                            </button>
+                            @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                                <button class="nav-link" id="v-pills-home-tab" data-bs-toggle="pill"
+                                    data-bs-target="#v-pills-home" type="button" role="tab"
+                                    aria-controls="v-pills-home" aria-selected="true">Table des
+                                    fautes/Sanction
+                                </button>
+                            @endif
                         </div>
                         <div class="tab-content" id="v-pills-tabContent">
                             <div class="tab-pane fade" id="v-pills-home" role="tabpanel"
@@ -709,28 +715,30 @@
                                                 <td>{{ $tfaute->Sanction_en_heure }}</td>
                                                 <td>{{ $tfaute->Sanction_en_points }}</td>
                                                 <td>
-                                                    <!-- Bouton Modifier -->
-                                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                                    data-bs-target="#editFauteModal"
-                                                    data-id="{{ $tfaute->idTFautes }}"
-                                                    data-libelfaute="{{ $tfaute->LibelFaute }}"
-                                                    data-sanctionindicative="{{ $tfaute->Sanction_Indicative }}"
-                                                    data-sanctionheure="{{ $tfaute->Sanction_en_heure }}"
-                                                    data-sanctionpoints="{{ $tfaute->Sanction_en_points }}"
-                                                    data-absence="{{ $tfaute->Absence_ }}">
-                                                    <i class="bi bi-pencil-fill"></i> Modifier
-                                                    </button>
-
-                                                    <!-- Bouton Supprimer -->
-                                                    <form method="POST"
-                                                        action="{{ route('faute.destroy', $tfaute->idTFautes) }}"
-                                                        style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm">
-                                                            <i class="bi bi-trash-fill"></i> Supprimer
+                                                    @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                                                        <!-- Bouton Modifier -->
+                                                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#editFauteModal"
+                                                        data-id="{{ $tfaute->idTFautes }}"
+                                                        data-libelfaute="{{ $tfaute->LibelFaute }}"
+                                                        data-sanctionindicative="{{ $tfaute->Sanction_Indicative }}"
+                                                        data-sanctionheure="{{ $tfaute->Sanction_en_heure }}"
+                                                        data-sanctionpoints="{{ $tfaute->Sanction_en_points }}"
+                                                        data-absence="{{ $tfaute->Absence_ }}">
+                                                        <i class="bi bi-pencil-fill"></i> Modifier
                                                         </button>
-                                                    </form>
+
+                                                        <!-- Bouton Supprimer -->
+                                                        <form method="POST"
+                                                            action="{{ route('faute.destroy', $tfaute->idTFautes) }}"
+                                                            style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                                <i class="bi bi-trash-fill"></i> Supprimer
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 </td>
 
 
@@ -912,145 +920,145 @@
             </div>
 
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var editFauteModal = document.getElementById('editFauteModal');
-    editFauteModal.addEventListener('show.bs.modal', function(event) {
-        var button = event.relatedTarget;
-        var idTFautes = button.getAttribute('data-id');
-        var LibelFaute = button.getAttribute('data-libelfaute');
-        var Sanction_Indicative = button.getAttribute('data-sanctionindicative');
-        var Sanction_en_heure = button.getAttribute('data-sanctionheure');
-        var Sanction_en_points = button.getAttribute('data-sanctionpoints');
-        var absence = button.getAttribute('data-absence');
+        document.addEventListener('DOMContentLoaded', function() {
+            var editFauteModal = document.getElementById('editFauteModal');
+            editFauteModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget;
+                var idTFautes = button.getAttribute('data-id');
+                var LibelFaute = button.getAttribute('data-libelfaute');
+                var Sanction_Indicative = button.getAttribute('data-sanctionindicative');
+                var Sanction_en_heure = button.getAttribute('data-sanctionheure');
+                var Sanction_en_points = button.getAttribute('data-sanctionpoints');
+                var absence = button.getAttribute('data-absence');
 
-        var form = document.getElementById('editFauteForm');
-        form.action = "{{ route('faute.update', '') }}/" + idTFautes;
+                var form = document.getElementById('editFauteForm');
+                form.action = "{{ route('faute.update', '') }}/" + idTFautes;
 
-        document.getElementById('edit_idTFautes').value = idTFautes;
-        document.getElementById('edit_LibelFaute').value = LibelFaute;
-        document.getElementById('edit_Sanction_Indicative').value = Sanction_Indicative;
-        document.getElementById('edit_Sanction_en_heure').value = Sanction_en_heure;
-        document.getElementById('edit_Sanction_en_points').value = Sanction_en_points;
+                document.getElementById('edit_idTFautes').value = idTFautes;
+                document.getElementById('edit_LibelFaute').value = LibelFaute;
+                document.getElementById('edit_Sanction_Indicative').value = Sanction_Indicative;
+                document.getElementById('edit_Sanction_en_heure').value = Sanction_en_heure;
+                document.getElementById('edit_Sanction_en_points').value = Sanction_en_points;
 
-        // Gérer l'état de la case à cocher absence
-        document.getElementById('edit_absence').checked = (absence == 1); // Coche si absence vaut 1
-    });
-});
-        // Remplir la modale de suppression avec l'ID de la faute
-        var deleteFauteModal = document.getElementById('deleteFauteModal');
-        deleteFauteModal.addEventListener('show.bs.modal', function(event) {
-            var button = event.relatedTarget;
-            var idTFautes = button.getAttribute('data-id');
-
-            var form = document.getElementById('deleteFauteForm');
-            form.action = form.action.replace(/\/\d+$/, '/' + idTFautes);
-
-            document.getElementById('delete_idTFautes').value = idTFautes;
+                // Gérer l'état de la case à cocher absence
+                document.getElementById('edit_absence').checked = (absence == 1); // Coche si absence vaut 1
+            });
         });
+                // Remplir la modale de suppression avec l'ID de la faute
+                var deleteFauteModal = document.getElementById('deleteFauteModal');
+                deleteFauteModal.addEventListener('show.bs.modal', function(event) {
+                    var button = event.relatedTarget;
+                    var idTFautes = button.getAttribute('data-id');
 
-        function ouvrirModalImpression(url) {
-    // Charger le contenu de l'URL dans l'iframe
-    document.getElementById('impressionIframe').src = url;
+                    var form = document.getElementById('deleteFauteForm');
+                    form.action = form.action.replace(/\/\d+$/, '/' + idTFautes);
 
-    // Ouvrir le modal
-    var myModal = new bootstrap.Modal(document.getElementById('imprimerModal'), {
-        keyboard: false
-    });
-    myModal.show();
+                    document.getElementById('delete_idTFautes').value = idTFautes;
+                });
 
-}
-function ouvrirModalImpression1(url) {
-    // Charger le contenu de l'URL dans l'iframe
-    document.getElementById('impressionIframe1').src = url;
+                function ouvrirModalImpression(url) {
+            // Charger le contenu de l'URL dans l'iframe
+            document.getElementById('impressionIframe').src = url;
 
-    // Ouvrir le modal
-    var myModalabs = new bootstrap.Modal(document.getElementById('imprimerModalabs'), {
-        keyboard: false
-    });
+            // Ouvrir le modal
+            var myModal = new bootstrap.Modal(document.getElementById('imprimerModal'), {
+                keyboard: false
+            });
+            myModal.show();
 
-    myModalabs.show();
-}
+        }
+        function ouvrirModalImpression1(url) {
+            // Charger le contenu de l'URL dans l'iframe
+            document.getElementById('impressionIframe1').src = url;
 
-function imprimerContenu() {
-    var iframe = document.getElementById('impressionIframe');
-    iframe.contentWindow.focus(); // S'assurer que l'iframe est bien focalisé
-    iframe.contentWindow.print(); // Lancer l'impression du contenu de l'iframe
-}
-function imprimerContenuabs() {
-    var iframe = document.getElementById('impressionIframe1');
-    iframe.contentWindow.focus(); // S'assurer que l'iframe est bien focalisé
-    iframe.contentWindow.print(); // Lancer l'impression du contenu de l'iframe
-}
+            // Ouvrir le modal
+            var myModalabs = new bootstrap.Modal(document.getElementById('imprimerModalabs'), {
+                keyboard: false
+            });
+
+            myModalabs.show();
+        }
+
+        function imprimerContenu() {
+            var iframe = document.getElementById('impressionIframe');
+            iframe.contentWindow.focus(); // S'assurer que l'iframe est bien focalisé
+            iframe.contentWindow.print(); // Lancer l'impression du contenu de l'iframe
+        }
+        function imprimerContenuabs() {
+            var iframe = document.getElementById('impressionIframe1');
+            iframe.contentWindow.focus(); // S'assurer que l'iframe est bien focalisé
+            iframe.contentWindow.print(); // Lancer l'impression du contenu de l'iframe
+        }
     </script>
 
 @endsection
 
 <style>
     /* From Uiverse.io by DaniloMGutavo */ 
-.checkbox-container {
-  display: inline-block;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 16px;
-  user-select: none;
-}
+    .checkbox-container {
+    display: inline-block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    user-select: none;
+    }
 
-.custom-checkbox {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 25px;
-  width: 25px;
-  background-color: #eee;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-  left: 9px;
-  top: 5px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  transform: rotate(45deg);
-}
-
-.custom-checkbox:checked ~ .checkmark {
-  background-color: #2196F3;
-  box-shadow: 0 3px 7px rgba(33, 150, 243, 0.3);
-}
-
-.custom-checkbox:checked ~ .checkmark:after {
-  display: block;
-}
-
-@keyframes checkAnim {
-  0% {
+    .custom-checkbox {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
     height: 0;
-  }
+    width: 0;
+    }
 
-  100% {
+    .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 9px;
+    top: 5px;
+    width: 5px;
     height: 10px;
-  }
-}
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+    }
 
-.custom-checkbox:checked ~ .checkmark:after {
-  animation: checkAnim 0.2s forwards;
-}
+    .custom-checkbox:checked ~ .checkmark {
+    background-color: #2196F3;
+    box-shadow: 0 3px 7px rgba(33, 150, 243, 0.3);
+    }
+
+    .custom-checkbox:checked ~ .checkmark:after {
+    display: block;
+    }
+
+    @keyframes checkAnim {
+    0% {
+        height: 0;
+    }
+
+    100% {
+        height: 10px;
+    }
+    }
+
+    .custom-checkbox:checked ~ .checkmark:after {
+    animation: checkAnim 0.2s forwards;
+    }
 
 </style>

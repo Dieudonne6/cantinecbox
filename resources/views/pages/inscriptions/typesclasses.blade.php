@@ -48,9 +48,11 @@
               <div class="demo-inline-spacing">
                 {{-- <a  class="btn btn-primary" href=" {{url('/nouveautypesclasses')}}">Nouveau</a> --}}
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                  Nouveau
-                </button>
+                @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Nouveau
+                  </button>
+                @endif
                 
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -141,44 +143,44 @@
                   <td>{{$allclass->TYPECLASSE}}</td>
                   <td>{{$allclass->LibelleType}}</td>
                   <td>
-                            {{-- n'affiche les boutons (et modals) que si ce n'est pas l'un des 5 premiers éléments --}}
-                  @if($loop->iteration > 5)
+                    @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                      {{-- n'affiche les boutons (et modals) que si ce n'est pas l'un des 5 premiers éléments --}}
+                      @if($loop->iteration > 5)
 
-                    <div class="">
-
-                      <button type="button" class="btn btn-primary p-2 btn-sm"
-                      data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo $allclass->idtype; ?>">
-                      Modifier
-                    </button>
-                    <button type="button" class="btn btn-danger p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModaldelete<?php echo $allclass->idtype; ?>">Supprimer</button> 
-                   @endif
-                   
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModaldelete<?php echo $allclass->idtype; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation de suppression</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            Êtes-vous sûr de vouloir supprimer ce type de classes ?
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                            <form action="{{ url('/supprimertype')}}" method="post">
-                              @csrf
-                              @method('DELETE')
-                              <input type="hidden" name="idtype" value="<?php echo $allclass->idtype; ?>">
-                              <input type="submit" class="btn btn-danger" value="Confirmer">
-                            </form>  
+                        <div class="">
+                          <button type="button" class="btn btn-primary p-2 btn-sm"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo $allclass->idtype; ?>">
+                            Modifier
+                          </button>
+                          <button type="button" class="btn btn-danger p-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModaldelete<?php echo $allclass->idtype; ?>">Supprimer</button> 
+                        </div>
+                      @endif
+                    @endif
+                      <!-- Modal -->
+                      <div class="modal fade" id="exampleModaldelete<?php echo $allclass->idtype; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation de suppression</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              Êtes-vous sûr de vouloir supprimer ce type de classes ?
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                              <form action="{{ url('/supprimertype')}}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="idtype" value="<?php echo $allclass->idtype; ?>">
+                                <input type="submit" class="btn btn-danger" value="Confirmer">
+                              </form>  
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
+                  </td>
+                </tr>
               <div class="modal fade" id="exampleModal<?php echo $allclass->idtype; ?>" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">

@@ -47,9 +47,11 @@
                             <h4 class="card-title">Gestion des séries</h4>
                             <div class="row gy-3">
                                 <div class="demo-inline-spacing">
-                                    <!-- Button nouveau trigger modal -->
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModalNouveau"> Nouveau</button>
+                                    @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                                        <!-- Button nouveau trigger modal -->
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#exampleModalNouveau"> Nouveau</button>
+                                    @endif
                                     <style>
                                         table {
                                             float: right;
@@ -109,21 +111,23 @@
                                                 <td>{{ $serie->LIBELSERIE }}</td>
                                                 <td data-order="{{ (int) $serie->CYCLE }}">{{ $serie->CYCLE }}</td>
                                                 <td>
-                                                    {{-- n'affiche les boutons (et modals) que si ce n'est pas l'un des 5 premiers éléments --}}
-                                                    {{-- n'affiche les boutons que si ce n'est pas parmi les 13 premiers éléments (exemple) --}}
-                                                    @if (empty($serie->initial) || !$serie->initial)
-                                                        <div class="">
-                                                            <!-- Button modifier trigger modal -->
-                                                            <button type="button" class="btn btn-primary p-2 btn-sm"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#exampleModalModifier{{ $serie->SERIE }}">
-                                                                Modifier</button>
+                                                    @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                                                        {{-- n'affiche les boutons (et modals) que si ce n'est pas l'un des 5 premiers éléments --}}
+                                                        {{-- n'affiche les boutons que si ce n'est pas parmi les 13 premiers éléments (exemple) --}}
+                                                        @if (empty($serie->initial) || !$serie->initial)
+                                                            <div class="">
+                                                                <!-- Button modifier trigger modal -->
+                                                                <button type="button" class="btn btn-primary p-2 btn-sm"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#exampleModalModifier{{ $serie->SERIE }}">
+                                                                    Modifier</button>
 
-                                                            <!-- Button supprimer trigger modal -->
-                                                            <button type="button" class="btn btn-danger p-2 btn-sm"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#exampleModalDelete{{ $serie->SERIE }}">Supprimer</button>
-                                                        </div>
+                                                                <!-- Button supprimer trigger modal -->
+                                                                <button type="button" class="btn btn-danger p-2 btn-sm"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#exampleModalDelete{{ $serie->SERIE }}">Supprimer</button>
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 </td>
                                             </tr>

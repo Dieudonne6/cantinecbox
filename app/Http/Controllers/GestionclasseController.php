@@ -29,22 +29,29 @@ use Carbon\Carbon;
 use App\Http\Requests\inscriptionEleveRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\QueryException;
-
-
-
 use App\Models\Promo;
 use App\Models\Notes;
 use App\Models\Scolarite;
+use App\Models\Groupe;
+use Illuminate\Support\Facades\Log;
+use App\Services\AuthPermissionService;
 // use App\Models\Echeance;
 
 class GestionclasseController extends Controller
 {
-    public function groupes(){
+    public function groupes(AuthPermissionService $authService){
+        $result = $authService->checkPermission('groupes');
+        if ($result instanceof \Illuminate\Http\RedirectResponse) {
+            return $result; // Redirection si non connecté / inactif
+        }
+
+        $pagePermission = $result;
         $listegroupe = Groupeclasse::all();
 
         // $listeclasse = Classesgroupeclass::where('LibelleGroupe', '=', $libelle);
         // dd($listegroupe);
-        return view('pages.inscriptions.groupes')->with('listegroupe' , $listegroupe);
+        view()->share('pagePermission', $pagePermission);
+        return view('pages.inscriptions.groupes', compact('listegroupe' ,'pagePermission'));
     }
 
     public function ClassesParGroupe($libelle)
@@ -236,8 +243,16 @@ public function supprimerGroupe($id)
     }
 
 
-public function discipline(Request $request)
+public function discipline(Request $request, AuthPermissionService $authService)
 {
+    $result = $authService->checkPermission('discipline');
+    if ($result instanceof \Illuminate\Http\RedirectResponse) {
+        return $result; // Redirection si non connecté / inactif
+    }
+
+    $pagePermission = $result;
+    view()->share('pagePermission', $pagePermission);
+
     // Récupérer toutes les fautes
     $fautes = Faute::all();
     
@@ -270,7 +285,7 @@ public function discipline(Request $request)
     }
 
     // Passer toutes les données à la vue
-    return view('pages.inscriptions.discipline', compact('fautes', 'tfautes', 'absences', 'classesGroupeclasse', 'eleves', 'matieres'));
+    return view('pages.inscriptions.discipline', compact('fautes', 'tfautes', 'absences', 'classesGroupeclasse', 'eleves', 'matieres', 'pagePermission'));
 }
 
 public function showFaults($MATRICULE)
@@ -471,27 +486,36 @@ public function imprimereleveAbsence($MATRICULE)
     //     return view('pages.inscriptions.series')->with('series', $series);
     // }
 
+    public function series(Request $request, AuthPermissionService $authService)
+    {
+        // Vérification session et permission
+        $result = $authService->checkPermission('series');
+        if ($result instanceof \Illuminate\Http\RedirectResponse) {
+            return $result; // Redirection si non connecté / inactif
+        }
 
-public function series(Request $request)
-{
-    // On trie d'abord par CYCLE (numériquement), puis par SERIE.
-    $series = Serie::orderByRaw('CAST(CYCLE AS UNSIGNED) ASC')
-                   ->orderBy('SERIE')
-                   ->get()
-                   // grouper par CYCLE en tant qu'entier (clés 0,1,2...)
-                   ->groupBy(function($item) {
-                        return (int) $item->CYCLE;
-                   })
-                   // assurer que les clés (cycles) sont triées asc
-                   ->sortKeys()
-                   // trier chaque groupe par SERIE et réindexer les collections
-                   ->map(function($group) {
-                        return $group->sortBy('SERIE')->values();
-                   });
+        $pagePermission = $result;
 
-    return view('pages.inscriptions.series', compact('series'));
-}
+        // On trie d'abord par CYCLE (numériquement), puis par SERIE.
+        $series = Serie::orderByRaw('CAST(CYCLE AS UNSIGNED) ASC')
+                    ->orderBy('SERIE')
+                    ->get()
+                    // grouper par CYCLE en tant qu'entier (clés 0,1,2...)
+                    ->groupBy(function($item) {
+                            return (int) $item->CYCLE;
+                    })
+                    // assurer que les clés (cycles) sont triées asc
+                    ->sortKeys()
+                    // trier chaque groupe par SERIE et réindexer les collections
+                    ->map(function($group) {
+                            return $group->sortBy('SERIE')->values();
+                    });
 
+        // Partager avec toutes les vues
+        view()->share('pagePermission', $pagePermission);
+
+        return view('pages.inscriptions.series', compact('series','pagePermission'));
+    }
 
     public function saveserie(inscriptionEleveRequest $request)
     {
@@ -539,6 +563,7 @@ public function series(Request $request)
 
         return back()->withErrors('Erreur lors de la suppression.');
     }
+
     public function deleteclass(Request $request)
     {
         $deleteclas = Classes::find($request->CODECLAS); // Using SERIE as the identifier
@@ -583,9 +608,23 @@ public function series(Request $request)
     $typeclasse->save();
     return back()->with('status','Enregistrer avec succes');
   }
-  public function getclasse(){
+  public function getclasse(AuthPermissionService $authService){
+    // 1. Vérification session et permission
+    $result = $authService->checkPermission('typesclasses');
+    if ($result instanceof \Illuminate\Http\RedirectResponse) {
+        return $result; // Redirection si non connecté / inactif
+    }
+
+    $pagePermission = $result;
+
+    // 2. Reste du code
     $allclasse = Typeclasse::get();
-    return view('pages.inscriptions.typesclasses')->with('allclasse', $allclasse);   
+
+    // 3. Partager avec toutes les vues
+    return view('pages.inscriptions.typesclasses', [
+        'allclasse' => $allclasse,
+        'pagePermission' => $pagePermission,
+    ]);
   }
   public function updateTypeClasse(Request $request)
   {
@@ -791,10 +830,22 @@ public function series(Request $request)
     return back()->with('status','Enregistrer avec succes');
   } 
 //Promotion
-public function index()
+public function index(AuthPermissionService $authService)
 {
+    // 1. Vérification session et permission
+    $result = $authService->checkPermission('promotions');
+    if ($result instanceof \Illuminate\Http\RedirectResponse) {
+        return $result; // Redirection si non connecté / inactif
+    }
+
+    $pagePermission = $result;
+
     $promotions = Promo::all(); // Récupère toutes les promotions
-    return view('pages.inscriptions.promotions', compact('promotions')); // Utilise le bon nom de la vue
+    
+    // Partager avec toutes les vues
+    view()->share('pagePermission', $pagePermission);
+    
+    return view('pages.inscriptions.promotions', compact('promotions','pagePermission')); // Utilise le bon nom de la vue
 }
 
 // Méthode store
@@ -811,15 +862,15 @@ public function store(Request $request)
     // Vérifier si le code promo existe déjà
     if (Promo::where('CODEPROMO', $request->codePromotion)->exists()) {
         return redirect()->back()
-                         ->withErrors(['codePromotion' => 'Le code promotion existe déjà. Veuillez en choisir un autre.'])
-                         ->withInput();
+                        ->withErrors(['codePromotion' => 'Le code promotion existe déjà. Veuillez en choisir un autre.'])
+                        ->withInput();
     }
 
     // Vérifier si le libellé de la promotion existe déjà
     if (Promo::where('LIBELPROMO', $request->libellePromotion)->exists()) {
         return redirect()->back()
-                         ->withErrors(['libellePromotion' => 'Le libellé de la promotion existe déjà. Veuillez en choisir un autre.'])
-                         ->withInput();
+                        ->withErrors(['libellePromotion' => 'Le libellé de la promotion existe déjà. Veuillez en choisir un autre.'])
+                        ->withInput();
     }
 
     // Enregistrer la nouvelle promotion
@@ -855,7 +906,6 @@ public function update(Request $request, $codePromo)
     return redirect()->route('promotions.index')->with('success', 'Promotion mise à jour avec succès !');
 }
 
-
 public function destroy($codePromo)
 {
     $promotion = Promo::where('CODEPROMO', $codePromo)->firstOrFail();
@@ -865,8 +915,17 @@ public function destroy($codePromo)
 }
 
 
-public function indexEleves()
+public function indexEleves(AuthPermissionService $authService)
 {
+    // 1. Vérification session et permission
+    $result = $authService->checkPermission('Acceuil');
+    if ($result instanceof \Illuminate\Http\RedirectResponse) {
+        return $result; // Redirection si non connecté / inactif
+    }
+
+    $pagePermission = $result;
+
+    // 2. Reste du code
     $allClass = Classes::all();
     $serie = Serie::get();
     $promotion = Promo::all();
@@ -884,14 +943,27 @@ public function indexEleves()
     $fillesRedoublantes = $eleves->where('SEXE', 2)->where('STATUT', 1)->count();
     $garconsRedoublants = $eleves->where('SEXE', 1)->where('STATUT', 1)->count();
 
+    // 8. Partager avec toutes les vues
+    view()->share('pagePermission', $pagePermission);
+
     return view('pages.inscriptions.Acceuil', compact(
         'eleves', 'allClass', 'serie', 'promotion', 'typeclah', 'typeenseigne',
-        'totalEleves', 'filles', 'garcons', 'totalRedoublants', 'fillesRedoublantes', 'garconsRedoublants'
+        'totalEleves', 'filles', 'garcons', 'totalRedoublants', 'fillesRedoublantes', 'garconsRedoublants',
+        'pagePermission'
     ));
 }
 
 
-public function filteraccueil($CODECLAS) {
+public function filteraccueil($CODECLAS, AuthPermissionService $authService) {
+    // 1. Vérification session et permission
+    $result = $authService->checkPermission('Acceuil');
+    if ($result instanceof \Illuminate\Http\RedirectResponse) {
+        return $result; // Redirection si non connecté / inactif
+    }
+
+    $pagePermission = $result;
+
+    // 2. Reste du code
         $allClass = Classes::all();
     $serie = Serie::get();
     $promotion = Promo::all();
@@ -907,11 +979,13 @@ public function filteraccueil($CODECLAS) {
     $totalRedoublants = $eleves->where('STATUT', 1)->count();
     $fillesRedoublantes = $eleves->where('SEXE', 2)->where('STATUT', 1)->count();
     $garconsRedoublants = $eleves->where('SEXE', 1)->where('STATUT', 1)->count();
-
+    //Partager avec toutes les vues
+    view()->share('pagePermission', $pagePermission);
 
         return view('pages.inscriptions.filterAccueil', compact(
         'eleves', 'allClass', 'serie', 'promotion', 'typeclah', 'typeenseigne',
-        'totalEleves', 'filles', 'garcons', 'totalRedoublants', 'fillesRedoublantes', 'garconsRedoublants'
+        'totalEleves', 'filles', 'garcons', 'totalRedoublants', 'fillesRedoublantes', 'garconsRedoublants',
+        'pagePermission'
     ));
 
 
@@ -1129,9 +1203,18 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
   //   return view('pages.inscriptions.tabledesclasses')->with('status', 'Enregistrer avec succès');
   // }
 
-  public function gettabledesclasses(){
-    // $classes = Classe::with('serie')->get();
+  public function gettabledesclasses(AuthPermissionService $authService){
+    // 1. Vérification session et permission
+    $result = $authService->checkPermission('tabledesclasses');
+    if ($result instanceof \Illuminate\Http\RedirectResponse) {
+        return $result; // Redirection si non connecté / inactif
+    }
 
+    $pagePermission = $result;
+
+    // 2. Reste du code
+
+    // $classes = Classe::with('serie')->get();
     $classes = DB::table('classes')
             ->join('series', 'classes.SERIE', '=', 'series.SERIE')
             ->join('typeclasses', 'classes.TYPECLASSE', '=', 'typeclasses.TYPECLASSE')
@@ -1149,7 +1232,10 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
  
     // dd($idserie);
 
-    return view('pages.inscriptions.tabledesclasses', compact('classes'));
+    // Partager avec toutes les vues
+    view()->share('pagePermission', $pagePermission);
+
+    return view('pages.inscriptions.tabledesclasses', compact('classes', 'pagePermission'));
 
   }
   public function enrclasse(){

@@ -94,7 +94,7 @@
                 <br>
                 <br>
             </div>
-
+            
             @if (Session::has('status'))
                 <div id="statusAlert" class="alert alert-success btn-primary">
                     {{ Session::get('status') }}
@@ -120,9 +120,11 @@
                 <div class="row gy-6">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <a class="btn btn-primary btn-sm" href="{{ url('/inscrireeleve') }}">
-                                <i class="typcn typcn-plus btn-icon-prepend"></i> Nouveau
-                            </a>
+                            @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                                <a class="btn btn-primary btn-sm" href="{{ url('/inscrireeleve') }}">
+                                    <i class="typcn typcn-plus btn-icon-prepend"></i> Nouveau
+                                </a>
+                            @endif
                             <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                 <i class="typcn typcn-printer btn-icon-prepend"></i> Filtrer pour imprimer
@@ -328,37 +330,41 @@
                                             <div class="align-items-center">
                                                 <a href="/pagedetail/{{ $eleve->MATRICULE }}"
                                                     class= "btn btn-primary p-2 btn-sm mr-2">Voir plus</a>
-                                                <button class="btn btn-primary p-2 btn-sm dropdown" type="button"
-                                                    id="dropdownMenuSizeButton3" data-toggle="dropdown"
-                                                    aria-haspopup="true" aria-expanded="false">
-                                                    <i class="typcn typcn-th-list btn-icon-append"></i>
-                                                </button>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
-                                                    <li>
-                                                        <button class="dropdown-item delete-eleve"
-                                                            data-matricule="{{ $eleve->MATRICULE }}"
-                                                            data-nom="{{ $eleve->NOM }}"
-                                                            data-prenom="{{ $eleve->PRENOM }}" data-bs-toggle="modal"
-                                                            data-bs-target="#deleteModal">
-                                                            Supprimer
-                                                        </button>
-                                                    </li>
-                                                    <li><a class="dropdown-item"
-                                                            href="/modifiereleve/{{ $eleve->MATRICULE }}">Modifier</a>
-                                                    </li>
-                                                    <li><a class="dropdown-item"
-                                                            href="{{ url('/paiementeleve/' . $eleve->MATRICULE) }}">Paiement</a>
-                                                    </li>
-                                                    {{-- <li><a class="dropdown-item"
-                                                            href="{{ url('/majpaiementeleve/' . $eleve->MATRICULE) }}">Maj
-                                                            Paie</a></li> --}}
-                                                    <li><a class="dropdown-item"
-                                                            href="/profil/{{ $eleve->MATRICULE }}">Profil</a></li>
-                                                    <li><a class="dropdown-item"
-                                                            href="/echeancier/{{ $eleve->MATRICULE }}">Echéance</a>
-                                                    </li>
-                                                    {{--  <li><a class="dropdown-item" href="#">Cursus</a></li> --}}
-                                                </ul>
+                                                @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                                                    <button class="btn btn-primary p-2 btn-sm dropdown" type="button"
+                                                        id="dropdownMenuSizeButton3" data-toggle="dropdown"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                        <i class="typcn typcn-th-list btn-icon-append"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
+                                                        <li>
+                                                            <button class="dropdown-item delete-eleve"
+                                                                data-matricule="{{ $eleve->MATRICULE }}"
+                                                                data-nom="{{ $eleve->NOM }}"
+                                                                data-prenom="{{ $eleve->PRENOM }}" data-bs-toggle="modal"
+                                                                data-bs-target="#deleteModal">
+                                                                Supprimer
+                                                            </button>
+                                                        </li>
+                                                        <li><a class="dropdown-item"
+                                                                href="/modifiereleve/{{ $eleve->MATRICULE }}">Modifier</a>
+                                                        </li>
+                                                        <li><a class="dropdown-item"
+                                                                href="{{ url('/paiementeleve/' . $eleve->MATRICULE) }}">Paiement</a>
+                                                        </li>
+                                                        {{-- <li><a class="dropdown-item"
+                                                                href="{{ url('/majpaiementeleve/' . $eleve->MATRICULE) }}">Maj
+                                                                Paie</a></li> --}}
+                                                        <li><a class="dropdown-item"
+                                                                href="/profil/{{ $eleve->MATRICULE }}">Profil</a></li>
+                                                        <li><a class="dropdown-item"
+                                                                href="/echeancier/{{ $eleve->MATRICULE }}">Echéance</a>
+                                                        </li>
+                                                        {{--  <li><a class="dropdown-item" href="#">Cursus</a></li> --}}
+                                                    </ul>
+                                                @else
+                                                    <span class="text-muted small">Actions limitées</span>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

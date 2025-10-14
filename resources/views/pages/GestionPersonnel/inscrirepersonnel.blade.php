@@ -63,7 +63,7 @@
                         @endif
                             @csrf
                                 <div class="row g-3 mb-3">
-                                    <div class="col-md-6 form-floating">
+                                    <div class="col-md-3 form-floating">
                                         <select name="LibelTypeAgent" class="form-select rounded-3">
                                             <option value=""></option>
                                             @foreach($agents as $agent)
@@ -75,6 +75,20 @@
                                         </select>
                                         <label>Type d'agent</label>                                  
                                     </div>
+                                    <div class="col-md-3 form-floating">
+                                        <select name="LibelGroupe" class="form-select rounded-3">
+                                            <option value=""></option>
+                                            @foreach($groupes as $groupe)
+                                                @if(strtoupper($groupe->nomgroupe) !== 'ADMINISTRATEUR')
+                                                    <option value="{{ $groupe->nomgroupe }}"
+                                                        {{ old('LibelGroupe', $groupeData->nomgroupe ?? '') == $groupe->nomgroupe ? 'selected' : '' }}>
+                                                        {{ $groupe->nomgroupe }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        <label>Type de groupe</label>                                  
+                                    </div>                                                                       
                                     <div class="col-md-4 form-floating">
                                         <input type="text" name="matricule" id="matricule" class="form-control rounded-3"
                                             value="{{ old('matricule', $agentData->MATRICULE ?? '') }}"

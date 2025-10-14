@@ -3,61 +3,64 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade as PDF;
+use App\Models\Scolarite;
 use App\Models\Eleve;
-use App\Models\Moiscontrat;
-use App\Models\Paramcontrat;
 use App\Models\Contrat;
+use App\Models\Duplicatafacture;
+use App\Models\Classe;
 use App\Models\Paiementcontrat;
-use App\Models\Paiementglobalcontrat;
-use App\Models\Usercontrat;
-use App\Models\Paramsfacture;
-use App\Models\User;
-use App\Models\Params2;
-use App\Models\Classes;
-use App\Models\Departement;
+use App\Models\Paramcontrat;
 use App\Models\Reduction;
+use App\Models\Frais;
+use App\Models\Echeancier;
+use App\Models\Paramsfacture;
+use App\Models\Facture;
+use App\Models\Facturenormalise;
+use App\Models\Duplicatarecu;
+use App\Models\Scolariteeleve;
+use App\Models\Arriere;
+use App\Models\Eleveplus;
+use App\Models\Nomecole;
+use App\Models\Paiementscolarite;
+use App\Models\User;
+use App\Models\Anscol;
+use App\Models\Trimestre;
+use App\Models\Params2;
+use App\Http\Controllers\DashboardController;
+use App\Models\Classes;
 use App\Models\Promo;
 use App\Models\Serie;
+use App\Models\Classesgroupeclass;
 use App\Models\Typeclasse;
-use App\Models\Typeenseigne;
-use App\Models\Elevea;
-use App\Models\Groupeclasse;
-use App\Models\Eleveplus;
 use App\Models\Echeance;
 use App\Models\Echeancc;
-use App\Models\Scolarite;
-use App\Models\Classesgroupeclass;
-use App\Models\Journal;
-use App\Models\Chapitre;
-use App\Models\Deleve;
-use App\Models\Clasmat;
-use App\Models\DecisionConfigAnnuel;
-use App\Models\Facturenormalise;
-use App\Models\Facturescolarit;
 use App\Models\Dept;
-
+use App\Models\Departement;
+use App\Models\Elevea;
+use App\Models\Deleve;
 use App\Models\Eleve_pont;
+use App\Models\Typeenseigne;
+use App\Models\Groupeclasse;
+use App\Models\Chapitre;
+use App\Models\Journal;
+use App\Models\Facturescolarit;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-// use SimpleSoftwareIO\QrCode\Facades\QrCode;
-
-use App\Models\Duplicatafacture;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth;
-// use Barryvdh\DomPDF\PDF;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\Shared\Html as HtmlFormatter;
 use DateTime;
-
-use RtfHtmlPhp\Document;
-use RtfHtmlPhp\Html\HtmlFormatter;
+use App\Models\Groupe;
+use Illuminate\Support\Facades\Log;
 
 class PagesController extends Controller
 {
-  
   public function inscriptioncantine(){
     if(Session::has('account')){
       // Liste des mots à exclure
@@ -271,6 +274,7 @@ class PagesController extends Controller
     return view('pages.inscriptions.Acceuil')->with('classe', $classes);
     
   }
+  
   public function listedesretardsdepaiement(){
     return view('pages.inscriptions.listedesretardsdepaiement');
   }
@@ -567,7 +571,8 @@ class PagesController extends Controller
 
 
         
-        return redirect("vitrine");
+        // Rediriger vers le dashboard approprié selon les permissions
+        return app(DashboardController::class)->redirectToDashboard();
       } else{
         return back()->with('status', 'Mot de passe ou identifiant incorrecte');
         
@@ -825,6 +830,10 @@ $passants = Eleve::whereNotNull('MAN')
     ->where('MAN', '<', 21)
     ->count();
 
+      // Ajouter les informations de permissions pour l'utilisateur connecté
+      $account = Session::get('account');
+      $permissions = $this->getUserPermissions($account->nomgroupe);
+      
       // dd($totalcantineinscritactif);
       return view('pages.vitrine')
             ->with('totaleleve', $totaleleve)
@@ -836,9 +845,31 @@ $passants = Eleve::whereNotNull('MAN')
             ->with('exclusions', $exclusions)
             ->with('redoublants', $redoublants)
             ->with('passants', $passants)
-            ->with('abandons', $abandons);
+            ->with('abandons', $abandons)
+            ->with('permissions', $permissions);
     }return redirect('/');
   }
+
+  /**
+   * Obtenir toutes les permissions d'un groupe depuis la table groupe_permissions
+   */
+  private function getUserPermissions($nomgroupe)
+  {
+    $groupe = \App\Models\Groupe::where('nomgroupe', $nomgroupe)->first();
+    
+    if (!$groupe) {
+      return [];
+    }
+    
+    // Récupérer toutes les permissions du groupe depuis la table groupe_permissions
+    $permissions = \App\Models\GroupePermission::where('nomgroupe', $nomgroupe)
+      ->pluck('permissions')
+      ->filter() // Enlever les valeurs null/vides
+      ->toArray();
+    
+    return $permissions;
+  }
+
   public function paramsfacture(){
     return view('pages.paramsfacture');
   }
@@ -876,7 +907,7 @@ $passants = Eleve::whereNotNull('MAN')
     $imageconten = file_get_contents($imagenam->getRealPath());
     $login->image = $imageconten;
     $login->motdepasse = $password_crypte;
-    $login->administrateur = 1;
+    $login->ADMINISTRATEUR = 1;
     $login->user_actif = 1;
     $login->save();
     // $login->motdepasse ='';

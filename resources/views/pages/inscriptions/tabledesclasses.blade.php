@@ -58,10 +58,11 @@
         @endif
         <h4 class="card-title">Gestions des classes</h4>
         {{-- <div class="row"> --}}
-          <a type="button" class="btn btn-primary" href="{{ url('/enrclasse') }}">Nouveau</a>
-          <a type="button" class="btn btn-primary" href="{{ url('/groupe') }}">Groupe</a>
+          @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+            <a type="button" class="btn btn-primary" href="{{ url('/enrclasse') }}">Nouveau</a>
+            <a type="button" class="btn btn-primary" href="{{ url('/groupe') }}">Groupe</a>
             <a href="{{ url('/listedesclasses') }}" class="btn btn-secondary">Imprimer</a>
-          
+          @endif
           {{-- </div> --}}
           
           {{-- <h5 style="text-align: center; color: rgb(188, 64, 64)">Scolarite</h5> --}}
@@ -81,74 +82,77 @@
                   <th class="print-hide">Action</th>
                 </tr>
               </thead>
-              <tbody>
-                
+              <tbody>                
                 @foreach ($classes as $classe)
-                <tr>
-                  <td>{{ $classe->CODECLAS }}</td>
-                  <td>{{ $classe->LIBELCLAS }}</td>
-                  <td>{{ $classe->typeclasse_LibelleType }}</td>
-                  <td>{{ $classe->CODEPROMO }}</td>
-                  <td>{{ $classe->CYCLE }}</td>
-                  {{-- <td>{{ ($classe->serie)->LIBELSERIE }}</td> --}}
-                  <td>{{ $classe->serie_libelle }}</td>
-                  <td>{{ $classe->typeenseigne_type }}</td>
-                  <td>{{ $classe->EFFECTIF }}</td>
-                  <td class="print-hide">
-                    <div class="d-flex align-items-center">
-                      <!-- Button trigger modal -->
-                      <button class="btn btn-primary p-2 btn-sm dropdown" type="button"
-                      id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true"
-                      aria-expanded="false">
-                      <i class="typcn typcn-th-list btn-icon-append"></i>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3"
-                    style="">
-                    <li><a class="dropdown-item"
-                      href="/modifierclasse/{{ $classe->CODECLAS }}">Modifier</a>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" data-bs-toggle="modal"
-                      data-bs-target="#exampleModalDelete{{ $classe->CODECLAS }}">Supprimer</a>
-                    </li>
-                  </ul>
-                </div>
-              </td>
-            </tr>
+                  <tr>
+                    <td>{{ $classe->CODECLAS }}</td>
+                    <td>{{ $classe->LIBELCLAS }}</td>
+                    <td>{{ $classe->typeclasse_LibelleType }}</td>
+                    <td>{{ $classe->CODEPROMO }}</td>
+                    <td>{{ $classe->CYCLE }}</td>
+                    {{-- <td>{{ ($classe->serie)->LIBELSERIE }}</td> --}}
+                    <td>{{ $classe->serie_libelle }}</td>
+                    <td>{{ $classe->typeenseigne_type }}</td>
+                    <td>{{ $classe->EFFECTIF }}</td>
+                    <td class="print-hide">
+                      @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                        <div class="d-flex align-items-center">
+                          <!-- Button trigger modal -->
+                          <button class="btn btn-primary p-2 btn-sm dropdown" type="button"
+                            id="dropdownMenuSizeButton3" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <i class="typcn typcn-th-list btn-icon-append"></i>
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3"
+                            style="">
+                            <li><a class="dropdown-item"
+                              href="/modifierclasse/{{ $classe->CODECLAS }}">Modifier</a>
+                            </li>
+                            <li>
+                              <a class="dropdown-item" data-bs-toggle="modal"
+                              data-bs-target="#exampleModalDelete{{ $classe->CODECLAS }}">Supprimer</a>
+                            </li>
+                          </ul>
+                        </div>
+                      @endif
+                    </td>
+                  
+              
+                    <!-- Modal bouton supprimer -->
+                    <div class="modal fade" id="exampleModalDelete{{ $classe->CODECLAS }}" tabindex="-1"
+                      aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation de
+                              suppression</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal"
+                              aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              Êtes-vous sûr de vouloir supprimer cette classe ?
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary"
+                              data-bs-dismiss="modal">Annuler</button>
+                              <form action="{{ url('/supprimerclass') }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="CODECLAS"
+                                value="{{ $classe->CODECLAS }}">
+                                <input type="submit" class="btn btn-danger" value="Confirmer">
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
             
-            <!-- Modal bouton supprimer -->
-            <div class="modal fade" id="exampleModalDelete{{ $classe->CODECLAS }}" tabindex="-1"
-              aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation de
-                      suppression</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal"
-                      aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      Êtes-vous sûr de vouloir supprimer cette classe ?
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary"
-                      data-bs-dismiss="modal">Annuler</button>
-                      <form action="{{ url('/supprimerclass') }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <input type="hidden" name="CODECLAS"
-                        value="{{ $classe->CODECLAS }}">
-                        <input type="submit" class="btn btn-danger" value="Confirmer">
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              @endforeach
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          </div>
       <br>
       <br>
       

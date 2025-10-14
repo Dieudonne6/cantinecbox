@@ -100,19 +100,21 @@
                 <tr>
                     <td>{{ $listegroupe->LibelleGroupe }}</td>
                     <td>
-                    <a type="button" class="btn btn-primary" 
-                        data-bs-toggle="modal" 
-                        data-bs-target="#modifgroup"
-                        data-libelle="{{ $listegroupe->LibelleGroupe }}"
-                        onclick="openModal(this)">
-                         Modifier
-                    </a>
+                        @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                            <a type="button" class="btn btn-primary" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modifgroup"
+                                data-libelle="{{ $listegroupe->LibelleGroupe }}"
+                                onclick="openModal(this)">
+                                Modifier
+                            </a>
 
-                     <form action="/supprimergroupe/{{ $listegroupe->id }}" method="POST"   style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal1" onclick="setDeleteFormAction('{{ $listegroupe->id }}')">Supprimer</button>
-                    </form>
+                            <form action="/supprimergroupe/{{ $listegroupe->id }}" method="POST"   style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal1" onclick="setDeleteFormAction('{{ $listegroupe->id }}')">Supprimer</button>
+                            </form>
+                        @endif
                      {{-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModaldelete<?php echo $listegroupe->id; ?>">Supprimer</button>  --}}
               
                     </td>

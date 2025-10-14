@@ -29,6 +29,8 @@ use App\Http\Controllers\GestionPersonnelController;
 use App\Http\Controllers\InscrirepersonnelController;
 use App\Http\Controllers\BulletinPaieController;
 use App\Http\Controllers\EmploidutempsController;
+use App\Http\Controllers\GestionRolesController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,14 +57,15 @@ Route::get('/listecontrat', [ClassesController::class, 'listecontrat'])->name('l
 
 Route::get('/nouveaucontrat', [PagesController::class, 'nouveaucontrat']);
 Route::get('/paiement', [PagesController::class, 'paiement']);
-Route::get('/listedeseleves', [PagesController::class, 'listedeseleves'])->name('listedeseleves');
-Route::get('/listeselectiveeleve', [PagesController::class, 'listeselectiveeleve'])->name('listeselectiveeleve');
+Route::get('/listedeseleves', [PagesController::class, 'listedeseleves'])->name('listedeseleves')->middleware('check.groupe.permission:eleves.view');
+Route::get('/listeselectiveeleve', [PagesController::class, 'listeselectiveeleve'])->name('listeselectiveeleve')->middleware('check.groupe.permission:eleves.view');
 
 // Route::get('/editions', [EditionController::class, 'listeecheancierperso'])->name('listeecheancierperso');
 
-Route::get('/classes', [ClassesController::class, 'classe']);
-Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees']);
-Route::get('/', [PagesController::class, 'connexion']);
+Route::get('/classes', [ClassesController::class, 'classe'])->middleware('check.groupe.permission:classes.view');
+Route::get('/connexiondonnees', [PagesController::class, 'connexiondonnees'])->middleware('check.groupe.permission:system.manage');
+Route::get('/', [PagesController::class, 'connexion'])->name('login');
+Route::get('/login', [PagesController::class, 'connexion'])->name('login.form');
 Route::get('/eleve/{CODECLAS}', [ClassesController::class, 'filterEleve']);
 Route::get('/filteraccueil/{CODECLAS}', [GestionclasseController::class, 'filteraccueil']);
 Route::get('/listegeneraleeleve/{CODECLAS}', [ClassesController::class, 'listegeneraleeleve']);
@@ -109,7 +112,7 @@ Route::get('/hsuppression', [PagesController::class, 'hsuppression']);
 Route::get('/changetrimestre', [PagesController::class, 'changetrimestre']);
 Route::get('/confimpression', [PagesController::class, 'confimpression']);
 
-Route::get('/Acceuil', [PagesController::class, 'Acceuil'])->name('accueil');
+// Route::get('/Acceuil', [PagesController::class, 'Acceuil'])->name('accueil');
 Route::get('/modifiereleve/{MATRICULE}', [PagesController::class, 'modifiereleve'])->name('modifiereleve');
 Route::put('/modifieeleve/{MATRICULE}', [PagesController::class, 'modifieeleve']);
 Route::put('/modifieleve/{MATRICULE}', [PagesController::class, 'modifieleve']);
@@ -153,9 +156,9 @@ Route::post('/connexion', [ConnexionDBController::class, 'connexion']);
 Route::post('/connexions', [PagesController::class, 'connexions']);
 Route::post('/logins', [PagesController::class, 'logins']);
 
-Route::get('/inscription', [EleveController::class, 'inscription']);
-Route::get('/etat', [ClassesController::class, 'etat'])->name('etat');
-Route::get('/etatpaiement', [ClassesController::class, 'etatpaiement'])->name('etatpaiement');
+Route::get('/inscription', [EleveController::class, 'inscription'])->middleware('check.groupe.permission:inscriptions.view');
+Route::get('/etat', [ClassesController::class, 'etat'])->name('etat')->middleware('check.groupe.permission:etats.view');
+Route::get('/etatpaiement', [ClassesController::class, 'etatpaiement'])->name('etatpaiement')->middleware('check.groupe.permission:paiements.view');
 Route::post('/traitementetatpaiement', [ClassesController::class, 'traitementetatpaiement'])->name('traitementetatpaiement');
 Route::post('/supprimercontrat', [ClassesController::class, 'supprimercontrat']);
 Route::delete('/supprimerpaiement/{id_paiementcontrat}', [ClassesController::class, 'supprimerpaiement']);
@@ -234,8 +237,8 @@ Route::get('/pages/{matricule}/impression-absences', [GestionclasseController::c
 Route::get('/archive', [PagesController::class, 'archive']);
 Route::get('/pagedetailarchive/{MATRICULE}', [PagesController::class, 'pagedetailarchive'])->name('pagedetailarchive');
 
-Route::get('/editions', [EditionController::class, 'editions'])->name('editions');
-Route::get('/editions2', [EditionController2::class, 'editions2'])->name('editions2');
+Route::get('/editions', [EditionController::class, 'editions'])->name('editions')->middleware('check.groupe.permission:editions.view');
+Route::get('/editions2', [EditionController2::class, 'editions2'])->name('editions2')->middleware('check.groupe.permission:editions.view');
 Route::get('/editions2/fichedenotesvierge', [EditionController2::class, 'fichedenotesvierge'])->name('pages.notes.fichedenotesvierge');
 Route::get('/editions2/fichedenoteviergefina/{classeCode}', [EditionController2::class, 'fichedenoteviergefina'])->name('fichedenoteviergefina');
 
@@ -308,8 +311,8 @@ Route::put('/promotions/{codePromo}', [GestionclasseController::class, 'update']
 
 Route::delete('/promotions/{codePromo}', [GestionclasseController::class, 'destroy'])->name('promotions.destroy');
 
-//Acceuil
-Route::get('/Acceuil', [GestionclasseController::class, 'indexEleves'])->name('Acceuil');
+//Acceuil - Route supprimée car doublon avec PagesController::Acceuil
+ Route::get('/Acceuil', [GestionclasseController::class, 'indexEleves'])->name('Acceuil');
 Route::put('/eleves/{matricule}', [EleveController::class, 'destroy'])->name('eleves.destroy');
 
 //Series
@@ -391,7 +394,7 @@ Route::post('/delete-notes', [CdController::class, 'deleteNote'])->name('delete-
 Route::get('/elevessansnote/{classCode}',  [EditionController::class, 'elevessansnote'])->name('elevessansnote');
 Route::get('/editions2/tableauanalytiqueparmatiere', [EditionController2::class, 'tableauanalytiqueparmatiere'])->name('tableauanalytiqueparmatiere');
 
-Route::get('/bulletindenotes', [BulletinController::class, 'bulletindenotes'])->name('bulletindenotes');
+Route::get('/bulletindenotes', [BulletinController::class, 'bulletindenotes'])->name('bulletindenotes')->middleware('check.groupe.permission:notes.view');
 
 // retourne { non: {1:{min, max, lib}, …}, doublant: {…} } ou 404
 Route::get('decisions/config/{promotion}', [BulletinController::class, 'getConfig'])
@@ -634,5 +637,44 @@ Route::get('/modifieragent/{matricule}', function($matricule){
     return redirect()->route('inscrirepersonnel.index', ['matricule' => $matricule]);
 });
 
+// ==================== ROUTES GESTION DES RÔLES ET PERMISSIONS ====================
+// Route::middleware(['auth'])->group(function () {
+    
+    // Gestion des rôles et permissions
+    Route::prefix('admin')->name('admin.')->middleware('check.groupe.permission:admin/roles.manage')->group(function () {
+        Route::get('/roles', [GestionRolesController::class, 'index'])->name('roles.index');
+        Route::post('/roles/update-permissions', [GestionRolesController::class, 'updatePermissions'])->name('roles.update-permissions');
+        Route::post('/roles/create-groupe', [GestionRolesController::class, 'createGroupe'])->name('roles.create-groupe');
+        Route::get('/roles/groupe/{id}/permissions', [GestionRolesController::class, 'getGroupePermissions'])->name('roles.groupe-permissions');
+        Route::get('/roles/refresh', [GestionRolesController::class, 'refreshFonctionnalites'])->name('roles.refresh');
+        Route::post('/roles/change-user-groupe', [GestionRolesController::class, 'changeUserGroupe'])->name('roles.change-user-groupe');
+        Route::get('/roles/groupe/{nomgroupe}', [GestionRolesController::class, 'showGroupe'])->name('roles.show-groupe');
+     //    Route::put('/roles/groupe/{nomgroupe}', [GestionRolesController::class, 'updateGroupe'])->name('roles.update-groupe');
+     //    Route::delete('/roles/groupe/{nomgroupe}', [GestionRolesController::class, 'deleteGroupe'])->name('roles.delete-groupe');
+        Route::get('/roles/test-permission-save', [GestionRolesController::class, 'testPermissionSave'])->name('roles.test-permission-save');
+    });
+    
+    // Routes simples pour les groupes (sans middleware pour éviter les conflits)
+    Route::prefix('groupes')->group(function () {
+        Route::put('/update/{nomgroupe}', [GestionRolesController::class, 'updateGroupe'])->name('groupes.update');
+        Route::delete('/delete/{nomgroupe}', [GestionRolesController::class, 'deleteGroupe'])->name('groupes.delete');
+    });
+
+// );
+
+// Routes pour le dashboard intelligent
+Route::get('/dashboard', [DashboardController::class, 'redirectToDashboard'])->name('dashboard');
+Route::get('/user-permissions', [DashboardController::class, 'getUserPermissions'])->name('user.permissions');
+
+// Gestion des salles - Configuration
 Route::get('/configsalles', [EmploidutempsController::class, 'configsalles'])->name('configsalles');
 Route::post('/gestion-salles/assign', [EmploidutempsController::class, 'assignClassesToSalles'])->name('gestion.salles.assign');
+Route::post('/gestion-salles/create', [EmploidutempsController::class, 'createSalle'])->name('gestion.salles.create');
+Route::post('/gestion-salles/update', [EmploidutempsController::class, 'updateSalle'])->name('gestion.salles.update');
+Route::delete('/gestion-salles/delete', [EmploidutempsController::class, 'deleteSalle'])->name('gestion.salles.delete');
+Route::post('/gestion-salles/toggle-volante', [EmploidutempsController::class, 'toggleVolante'])->name('gestion.salles.toggleVolante');
+
+Route::get('/saisiremploitemps', [EmploidutempsController::class, 'saisiremploitemps'])->name('saisiremploitemps');
+Route::get('/emploidutempsautomatique', [EmploidutempsController::class, 'emploidutempsautomatique'])->name('emploidutempsautomatique');
+Route::get('/configquotahoraires', [EmploidutempsController::class, 'configquotahoraires'])->name('configquotahoraires');
+

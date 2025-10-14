@@ -45,11 +45,13 @@
                             <br>                                     
                         </div>
                         <div class="card-body">
-                            <h4 class="card-title">Gestion des promotions</h4>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#addPromotionModal">
-                                Nouveau
-                            </button>
+                            @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                                <h4 class="card-title">Gestion des promotions</h4>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#addPromotionModal">
+                                    Nouveau
+                                </button>
+                            @endif
                             <div class="row gy-3">
                                 <div class="col text-end">
                                     <!-- Add Promotion Modal -->
@@ -197,11 +199,18 @@
                                             <td>{{ $promotion->CODEPROMO }}</td>
                                             <td>{{ $promotion->LIBELPROMO }}</td>
                                             <td>
-                                                <button type="button" class="btn btn-primary p-2 btn-sm"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editPromotionModal{{ $promotion->CODEPROMO }}">
-                                                    Modifier
-                                                </button>
+                                                @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
+                                                    <button type="button" class="btn btn-primary p-2 btn-sm"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editPromotionModal{{ $promotion->CODEPROMO }}">
+                                                        Modifier
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger p-2 btn-sm"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#deletePromotionModal{{ $promotion->CODEPROMO }}">
+                                                        Supprimer
+                                                    </button>
+                                                @endif
 
                                                 <!-- Edit Promotion Modal -->
                                                 <div class="modal fade" id="editPromotionModal{{ $promotion->CODEPROMO }}"
@@ -318,13 +327,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-
-                                                <button type="button" class="btn btn-danger p-2 btn-sm"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#deletePromotionModal{{ $promotion->CODEPROMO }}">
-                                                    Supprimer
-                                                </button>
 
                                                 <!-- Delete Promotion Modal -->
                                                 <div class="modal fade"

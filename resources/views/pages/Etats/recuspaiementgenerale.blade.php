@@ -499,7 +499,7 @@ class PagesController extends Controller
         $imageconten = file_get_contents($imagenam->getRealPath());
         $login->image = $imageconten;
         $login->motdepasse = $password_crypte;
-        $login->administrateur = 1;
+        $login->ADMINISTRATEUR = 1;
         $login->user_actif = 1;
         $login->save();
         // $login->motdepasse ='';

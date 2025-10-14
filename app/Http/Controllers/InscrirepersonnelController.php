@@ -12,7 +12,11 @@ use App\Models\TypeAgent;
 use App\Models\Profmat;
 use App\Models\Users;
 use App\Models\Usercontrat;
+<<<<<<< Updated upstream
 use App\Models\Dispos;
+=======
+use App\Models\Groupe;
+>>>>>>> Stashed changes
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -43,6 +47,7 @@ class InscrirepersonnelController extends Controller
         $primes = Tprime::all();
         $profils = Profil::all();
         $agents = TypeAgent::all();
+        $groupes = Groupe::all();
 
         $agentData = null;
         $selectedCodes = [];
@@ -55,7 +60,7 @@ class InscrirepersonnelController extends Controller
         }
 
         return view('pages.GestionPersonnel.inscrirepersonnel',
-            compact('classes','matieres','primes','profils','agents','agentData','selectedCodes'));
+            compact('classes','matieres','primes','profils','agents','agentData','selectedCodes','groupes'));
     }
 
 
@@ -100,6 +105,7 @@ class InscrirepersonnelController extends Controller
             'CBanque' => $request->banque ?? ' ',
             'IFU' => $request->ifu ?? ' ',
             'TelAgent' => $request->telephone ?? ' ',
+            'LibelGroupe' => $request->nomgroupe ?? ' ',
         ]);
 
         // Mettre à jour Profmat : supprimer anciens puis insérer nouveaux si fournis
@@ -264,7 +270,7 @@ class InscrirepersonnelController extends Controller
     //         'login'           => $agent->NOM, // identifiant basé sur matricule
     //         'nomuser'         => $agent->NOM,
     //         'prenomuser'      => $agent->PRENOM,
-    //         'administrateur'  => ($request->profil == 'Admin') ? 1 : 0,
+    //         'ADMINISTRATEUR'  => ($request->profil == 'Admin') ? 1 : 0,
     //         'motdepasse'      => Hash::make('1234'), // mot de passe par défaut
     //         'user_actif'      => 1,
     //         'date_desactivation' => null,
@@ -291,27 +297,24 @@ class InscrirepersonnelController extends Controller
 
     public function storeargent(Request $request)
     {
-        // Génération du matricule
-        $last = Agent::latest('MATRICULE')->first();
-        $num = $last ? intval(substr($last->MATRICULE, -4)) + 1 : 1;
-        $matricule = 'MAT' . date('Y') . '-' . str_pad($num, 4, '0', STR_PAD_LEFT);
-
         // Photo
-       $photoPath = $request->hasFile('photo') 
-        ? $request->file('photo')->store('photos_agents', 'public') 
-        : 'default.png';
+        $photoPath = $request->hasFile('photo') 
+            ? $request->file('photo')->store('photos_agents', 'public') 
+            : 'default.png';
 
         if ($request->has('auto')) {
-            // Mode automatique
+            // Mode automatique - Génération du numéro séquentiel
             $last = Agent::latest('MATRICULE')->first();
-            $num = $last ? intval(substr($last->MATRICULE, -4)) + 1 : 1;
-            $matricule = 'MAT' . date('Y') . '-' . str_pad($num, 4, '0', STR_PAD_LEFT);
+            $num = $last ? intval($last->MATRICULE) + 1 : 1;
+            $matricule = str_pad($num, 4, '0', STR_PAD_LEFT); // Seulement le numéro pour agent
+            $loginComplet = 'MAT' . date('Y') . '-' . $matricule; // Format complet pour login
         } else {
-            // Mode manuel (on prend la valeur de l’input)
+            // Mode manuel (on prend la valeur de l'input)
             $request->validate([
                 'matricule' => 'required|string|max:50|unique:agent,MATRICULE',
             ]);
             $matricule = $request->matricule;
+            $loginComplet = 'MAT' . date('Y') . '-' . $matricule; // Format complet pour login
         }
 
         // Création de l’agent
@@ -341,15 +344,17 @@ class InscrirepersonnelController extends Controller
             'IFU' => $request->ifu ?? ' ',
             'TelAgent' => $request->telephone ?? ' ',
             'guid' => Str::uuid(),
+            'LibelGroupe' => $request->LibelGroupe ?? ' ',
+
         ]);
 
         // Création automatique du compte utilisateur
         Users::create([
-            'nomgroupe'       => $request->poste_occupe ?? ' ',
-            'login'           => $matricule, // identifiant basé sur matricule
+            'nomgroupe'       => $request->LibelGroupe ?? ' ', // Correction: utiliser LibelGroupe
+            'login'           => $loginComplet, // identifiant avec format complet
             'nomuser'         => $request->nom,
             'prenomuser'      => $request->prenom,
-            'administrateur'  => ($request->profil == 'Admin') ? 1 : 0,
+            'ADMINISTRATEUR'  => ($request->profil == 'Admin') ? 1 : 0,
             'motdepasse'      => Hash::make('1234'), // mot de passe par défaut
             'user_actif'      => 1,
             'date_desactivation' => null,
@@ -362,7 +367,7 @@ class InscrirepersonnelController extends Controller
         Usercontrat::create([
             'nom_usercontrat'     => $request->nom,
             'prenom_usercontrat'  => $request->prenom,
-            'login_usercontrat'   => $matricule,
+            'login_usercontrat'   => $loginComplet, // identifiant avec format complet
             'password_usercontrat'=> Hash::make('1234'),
             'statut_usercontrat'  => 1,
         ]);
@@ -379,7 +384,7 @@ class InscrirepersonnelController extends Controller
             }
         }
 
-        return redirect()->back()->with('success', "Agent enregistré avec succès ! Matricule : $matricule et utilisateur créé.");
+        return redirect()->back()->with('success', "Agent enregistré avec succès ! Matricule : $matricule, Login : $loginComplet");
     }
 
     //fonction pour l'enrégistremenrt de disponibilité

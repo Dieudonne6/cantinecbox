@@ -103,7 +103,7 @@
                                         </tr>
                                         <tr>
                                             <td>Marie Martin</td>
-                                            <td>Administrateur</td>
+                                            <td>ADMINISTRATEUR</td>
                                             <td><span class="badge bg-success">Actif</span></td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#confTauxHModal">
