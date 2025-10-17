@@ -52,8 +52,8 @@ class inscriptionEleveRequest extends FormRequest
             'typeensei' =>'required',
             'typepromo' =>'required',
             'numero' =>'required',
-            'cycle' =>'required',
-            'typeserie' =>'required',
+            'cycle' =>'nullable',
+            'typeserie' =>'nullable',
             'typecours' =>'required',
             ];
         }

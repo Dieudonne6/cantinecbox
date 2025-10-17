@@ -350,9 +350,9 @@
         const datePaiement = new Date(dateDebut);
         // Calcul de la date en fonction de la périodicité
         if (periodicite < 7) {
-          datePaiement.setMonth(datePaiement.getMonth() + i * periodicite);
+          datePaiement.setMonth(datePaiement.getMonth() + (i - 1) * periodicite);
         } else {
-          datePaiement.setDate(datePaiement.getDate() + i * periodicite);
+          datePaiement.setDate(datePaiement.getDate() + (i - 1) * periodicite);
         }
         const datePaiementFormat = datePaiement.toLocaleDateString('fr-FR');
         

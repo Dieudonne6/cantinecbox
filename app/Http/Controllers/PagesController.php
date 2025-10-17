@@ -54,10 +54,13 @@ use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
-use PhpOffice\PhpWord\Shared\Html as HtmlFormatter;
+// use PhpOffice\PhpWord\Shared\Html as HtmlFormatter;
 use DateTime;
 use App\Models\Groupe;
 use Illuminate\Support\Facades\Log;
+use RtfHtmlPhp\Document;
+use RtfHtmlPhp\Html\HtmlFormatter;
+
 
 class PagesController extends Controller
 {
@@ -4220,11 +4223,11 @@ public function filterEtatDeLaCaisse(Request $request) {
   
   public function situationfinanciereglobale(){
     $eleves = Eleve::with('classe')->get(); // Récupérer tous les élèves avec leur classe
-    $scolarites = Scolarite::all()->groupBy('MATRICULE'); // Regrouper les paiements par matricule
+    $scolarites = Scolarite::where('VALIDE', '1')->get()->groupBy('MATRICULE'); // Regrouper les paiements par matricule
 
     $resultats = $eleves->map(function($eleve) use ($scolarites) {
         $montantPaye = $scolarites->get($eleve->MATRICULE, collect())->sum('MONTANT'); // Somme des montants payés
-        $montantAPayer = $eleve->APAYER; // Montant à payer de l'élève
+        $montantAPayer = ($eleve->APAYER + $eleve->FRAIS1 + $eleve->FRAIS2 + $eleve->FRAIS3 + $eleve->FRAIS4); // Montant à payer de l'élève
         $reste = $montantAPayer - $montantPaye; // Calculer le reste à payer
 
         return [

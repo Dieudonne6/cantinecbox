@@ -141,6 +141,9 @@
                                 <select id="Filterpromo" class="form-control js-example-basic-multiple w-100"
                                     name="typepromo">
                                     <option value="">Sélectionnez une promotion</option>
+                                    @foreach ($promo as $promos)
+                                        <option value="{{ $promos->CODEPROMO }}">{{ $promos->LIBELPROMO }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -170,6 +173,9 @@
                                 <select class="form-control js-example-basic-multiple w-100" name="typeserie"
                                     id="filterserie">
                                     <option value="">Sélectionnez une série</option>
+                                    @foreach ($serie as $series)
+                                        <option value="{{ $series->SERIE }}">{{ $series->LIBELSERIE }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -197,10 +203,10 @@
                                     Annuler
                                 </button>
                             </div>
-                            <div class="col-auto">
+                            {{-- <div class="col-auto">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#donnefinanciere">Données financières (Factures)</button>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <br>

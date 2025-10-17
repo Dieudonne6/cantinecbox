@@ -1325,11 +1325,12 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
         $libelles = Params2::first();
         $echeancee = Echeance::where('MATRICULE', $eleve->MATRICULE)->get();
 
-        $scolarite = Scolarite::where('MATRICULE', $eleve->MATRICULE)->get();      
+        $scolarite = Scolarite::where('MATRICULE', $eleve->MATRICULE)->where('VALIDE', '1')->get();      
 
         // Calcul des sommes par AUTREF
         $sums = Scolarite::where('MATRICULE', $MATRICULE)
             ->whereIn('AUTREF', [1, 2, 3, 4, 5, 6])
+            ->where('VALIDE', '1')
             ->get()
             ->groupBy('AUTREF')
             ->map(function ($group) {
@@ -1348,10 +1349,12 @@ public function nouveaueleve (inscriptionEleveRequest $request) {
         if ($typeclasse == 1) {
             $sommeTotale = Scolarite::where('MATRICULE', $MATRICULE)
                 ->whereIn('AUTREF', [1, 2])
+                ->where('VALIDE', '1')
                 ->sum('MONTANT');
         } else {
             $sommeTotale = Scolarite::where('MATRICULE', $MATRICULE)
                 ->whereIn('AUTREF', [1, 2, 3, 4, 5, 6])
+                ->where('VALIDE', '1')
                 ->sum('MONTANT');
         }
 
