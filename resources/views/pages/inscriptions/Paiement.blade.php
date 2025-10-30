@@ -53,7 +53,7 @@
                                             <th>Numero</th>
                                             <th>Date</th>
                                             <th>Montant</th>
-                                            <th></th>
+                                            <th>Designation</th>
                                             <th>Mode Paiement</th>
                                             <th>SIGNATURE</th>
                                         </tr>
@@ -61,10 +61,10 @@
                                     <tbody>
                                         @foreach ($scolarite as $item)
                                             <tr>
-                                                {{--<td>{{ $item->NUMERO }}</td>--}}
-                                                <td></td>
+                                                <td>{{ $item->NUMERO }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($item->DATEOP)->format('d-m-Y') }}</td>
                                                 <td>{{ $item->MONTANT }}</td>
+                                                {{-- <td></td> --}}
                                                 <td>
                                                     @switch($item->AUTREF)
                                                         @case(1)

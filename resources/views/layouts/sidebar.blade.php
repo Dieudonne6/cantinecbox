@@ -124,7 +124,7 @@
             @endcanAccess
 
             <!-- Bloc Scolarité -->
-            @if(canAccess('creerprofil') || canAccess('paramcomposantes') || canAccess('facturesclasses') || canAccess('duplicatarecu'))
+            @if(canAccess('creerprofil') || canAccess('paramcomposantes') || canAccess('facturesclasses') || canAccess('duplicatarecu') || canAccess('facturesimpleduplicata'))
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#scolarite" aria-expanded="false" aria-controls="scolarite">
                     <i class="typcn typcn-film menu-icon"></i>
@@ -143,8 +143,11 @@
                         <li><a class="nav-link {{ in_array(request()->route()->getName(), $routesFacture) ? 'active' : '' }}" href="{{ route('facturesclasses') }}">Factures classes</a></li>
                         @endcanAccess
                         @canAccess('duplicatarecu')
-                        <li><a class="nav-link {{ request()->is('duplicatarecu*') ? 'active' : '' }}" href="{{ url('/duplicatarecu') }}">Duplicata</a></li>
+                        <li><a class="nav-link {{ request()->is('duplicatarecu') ? 'active' : '' }}" href="{{ url('/duplicatarecu') }}">Duplicata</a></li>
                         @endcanAccess
+                        {{-- @canAccess('duplicatarecufacturesimple') --}}
+                        <li><a class="nav-link {{ request()->is('facturesimpleduplicata') ? 'active' : '' }}" href="{{ url('/facturesimpleduplicata') }}">Liste facture non normalisée </a></li>
+                        {{-- @endcanAccess --}}
 
                         @php
                             $routesAvoirFacPaiementScolarit = ['listefacturescolarite', 'avoirfacturepaiescolarite', 'avoirfacturescolarite'];

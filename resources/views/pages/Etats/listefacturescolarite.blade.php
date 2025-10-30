@@ -73,8 +73,19 @@
                     <td>{{ $facture->codemecef }}</td>
                     <td>{{ $facture->montant_total }}</td>
                     <td>{{ $facture->dateHeure }}</td>
-                    <td>
 
+                    <td>
+                    @if ($facture->typefac == '1')
+                       <button class="btn btn-primary" disabled>
+                            Modifier
+                       </button>
+
+                        <a class="btn btn-danger"
+                           href="{{ url('suppfacturescolaritenonnormalise/'.$facture->id) }}">
+                          Supprimer
+                        </a>         
+              
+                    @else
                         {{-- Sinon, on affiche “Modifier” ET “Supprimer” --}}
                         <a class="btn btn-primary"
                            href="{{ url('avoirfacturepaiescolaritemodif/'.$facture->codemecef) }}">
@@ -84,6 +95,7 @@
                            href="{{ url('avoirfacturepaiescolarite/'.$facture->codemecef) }}">
                           Supprimer
                         </a>
+                    @endif
                     </td>
                     
                   </tr>

@@ -135,9 +135,12 @@ Route::get('/paramcomposantes', [PagesController::class, 'paramcomposantes']);
 
 // --------------------------------------------------
 Route::get('/duplicatarecu', [PagesController::class, 'duplicatarecu']);
+Route::get('/facturesimpleduplicata', [PagesController::class, 'duplicatarecufacturesimple']);
 Route::get('/pdfduplicatarecu/{counters}', [PagesController::class, 'pdfduplicatarecu']);
+Route::get('/pdfduplicatarecufactuesimple/{id}', [PagesController::class, 'pdfduplicatarecufactuesimple']);
 Route::match(['get', 'post'], '/listefacturescolarite', [PagesController::class, 'listefacturescolarite'])->name('listefacturescolarite');
 Route::get('/avoirfacturepaiescolarite/{codemecef}', [PagesController::class, 'avoirfacturepaiescolarite'])->name('avoirfacturepaiescolarite');
+Route::get('/suppfacturescolaritenonnormalise/{id}', [PagesController::class, 'suppfacturescolaritenonnormalise'])->name('suppfacturescolaritenonnormalise');
 Route::post('/avoirfacturescolarite/{codemecef}', [PagesController::class, 'avoirfacturescolarite'])->name('avoirfacturescolarite');
 Route::get('/avoirfacturepaiescolaritemodif/{codemecef}', [PagesController::class, 'avoirfacturepaiescolaritemodif'])->name('avoirfacturepaiescolaritemodif');
 Route::post('/avoirfacturescolaritmodification/{codemecef}', [PagesController::class, 'avoirfacturescolaritmodification'])->name('avoirfacturescolaritmodification');
