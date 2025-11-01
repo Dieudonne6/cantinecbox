@@ -521,22 +521,21 @@
                 <div class="collapse" id="budgetetFinances" data-bs-parent="#parent-accordion" style="margin-left: 2rem !important">
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="collapse" href="#params-budget" aria-controls="params-budget">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#params-budget" 
+                                aria-expanded="false" aria-controls="params-budget">
                                 Paramètres
                                 <i class="menu-arrow"></i>
                             </a>
                             <div class="collapse" id="params-budget" data-bs-parent="#budgetetFinances">
                                 <ul class="nav sub-menu">
-                                    <li><a class="nav-link" href="#">Paramétrage</a></li>
-                                    <li><a class="nav-link " href="#"><span
-                                                class="ab">Parametrage</span></a></li>
-                                    {{-- <li><a class="nav-link {{ request()->is('Table des matières') ? 'active' : '' }}" href="{{ url('/tabledesmatieres') }}">Table des matières</a></li>
-                                    <li><a class="nav-link {{ request()->is('Table des coefficients') ? 'active' : '' }}" href="{{ url('/gestioncoefficient') }}">Table des coefficients</a></li> --}}
+                                    <li><a class="nav-link" href="#">Paramétrage Budget</a></li>
+                                    <li><a class="nav-link" href="#">Configuration Comptable</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="collapse" href="#executionBudget" aria-controls="executionBudget">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#executionBudget" 
+                                aria-expanded="false" aria-controls="executionBudget">
                                 Exécution du Budget
                                 <i class="menu-arrow"></i>
                             </a>
@@ -549,7 +548,8 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="collapse" href="#previsionBudgetaire" aria-controls="previsionBudgetaire">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#previsionBudgetaire" 
+                                aria-expanded="false" aria-controls="previsionBudgetaire">
                                 Prévision Budgétaire
                                 <i class="menu-arrow"></i>
                             </a>
@@ -566,8 +566,8 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="collapse" href="#Edition"
-                                aria-expanded="" aria-controls="Edition">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#Edition-budget"
+                                aria-expanded="false" aria-controls="Edition-budget">
                                 Edition
                                 <i class="menu-arrow"></i>
                             </a>
@@ -586,8 +586,8 @@
                         
                         <!-- Bloc Extraction -->
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="collapse" href="#Extraction"
-                                aria-expanded="" aria-controls="Extraction">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#Extraction-budget"
+                                aria-expanded="false" aria-controls="Extraction-budget">
                                 Extraction
                                 <i class="menu-arrow"></i>
                             </a>
@@ -601,8 +601,8 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="collapse" href="#Integrité"
-                                aria-expanded="" aria-controls="Integrité">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#Integrite-budget"
+                                aria-expanded="false" aria-controls="Integrite-budget">
                                 Integrité
                                 <i class="menu-arrow"></i>
                             </a>
@@ -622,6 +622,7 @@
             </li>
 
             <!-- Paramètres -->
+            @if(canAccess('parametrecantine') || canAccess('parametre.tables') || canAccess('admin/roles') || canAccess('parametre.bornes') || canAccess('parametre.opouverture') || canAccess('parametre.configimprimante') || canAccess('parametre.changementtrimestre'))
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#parametreSubmenu"
                     aria-expanded="{{ request()->routeIs(
@@ -649,34 +650,80 @@
                 ) ? 'show' : '' }}"
                     id="parametreSubmenu" data-bs-parent="#parent-accordion" style="margin-left: 2rem !important">
                     <ul class="nav flex-column sub-menu">
+                        @canAccess('parametrecantine')
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('parametrecantine') ? 'active' : '' }}" href="{{ route('parametrecantine') }}">Cantine</a>
+                            <a class="nav-link {{ request()->routeIs('parametrecantine') ? 'active' : '' }}" href="{{ route('parametrecantine') }}">
+                                Cantine
+                                @canOnlyView('parametrecantine')
+                                    <span class="badge badge-warning ms-1" style="font-size: 0.6em;">RO</span>
+                                @endcanOnlyView
+                            </a>
                         </li>
+                        @endcanAccess
+                        @canAccess('parametre.tables')
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('parametre.tables') ? 'active' : '' }}" href="{{ route('parametre.tables') }}">Tables des paramètres</a>
+                            <a class="nav-link {{ request()->routeIs('parametre.tables') ? 'active' : '' }}" href="{{ route('parametre.tables') }}">
+                                Tables des paramètres
+                                @canOnlyView('parametre.tables')
+                                    <span class="badge badge-warning ms-1" style="font-size: 0.6em;">RO</span>
+                                @endcanOnlyView
+                            </a>
                         </li>
-                        @hasPermission('admin/roles.manage')
+                        @endcanAccess
+                        @canAccess('admin/roles')
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('admin.roles.index') ? 'active' : '' }}" href="{{ route('admin.roles.index') }}">
                                 Gestion des Rôles
+                                @canOnlyView('admin/roles')
+                                    <span class="badge badge-warning ms-1" style="font-size: 0.6em;">RO</span>
+                                @endcanOnlyView
                             </a>
                         </li>
-                        @endhasPermission
+                        @endcanAccess
+                        @canAccess('parametre.bornes')
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('parametre.bornes') ? 'active' : '' }}" href="{{ route('parametre.bornes') }}">Modifier bornes exercice</a>
+                            <a class="nav-link {{ request()->routeIs('parametre.bornes') ? 'active' : '' }}" href="{{ route('parametre.bornes') }}">
+                                Modifier bornes exercice
+                                @canOnlyView('parametre.bornes')
+                                    <span class="badge badge-warning ms-1" style="font-size: 0.6em;">RO</span>
+                                @endcanOnlyView
+                            </a>
                         </li>
+                        @endcanAccess
+                        @canAccess('parametre.opouverture')
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('parametre.opouverture') ? 'active' : '' }}" href="{{ route('parametre.opouverture') }}">Op. Ouverture</a>
+                            <a class="nav-link {{ request()->routeIs('parametre.opouverture') ? 'active' : '' }}" href="{{ route('parametre.opouverture') }}">
+                                Op. Ouverture
+                                @canOnlyView('parametre.opouverture')
+                                    <span class="badge badge-warning ms-1" style="font-size: 0.6em;">RO</span>
+                                @endcanOnlyView
+                            </a>
                         </li>
+                        @endcanAccess
+                        @canAccess('parametre.configimprimante')
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('parametre.configimprimante') ? 'active' : '' }}" href="{{ route('parametre.configimprimante') }}">Configurer imprimante</a>
+                            <a class="nav-link {{ request()->routeIs('parametre.configimprimante') ? 'active' : '' }}" href="{{ route('parametre.configimprimante') }}">
+                                Configurer imprimante
+                                @canOnlyView('parametre.configimprimante')
+                                    <span class="badge badge-warning ms-1" style="font-size: 0.6em;">RO</span>
+                                @endcanOnlyView
+                            </a>
                         </li>
+                        @endcanAccess
+                        @canAccess('parametre.changementtrimestre')
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('parametre.changementtrimestre') ? 'active' : '' }}" href="{{ route('parametre.changementtrimestre') }}">Changement de trimestre</a>
+                            <a class="nav-link {{ request()->routeIs('parametre.changementtrimestre') ? 'active' : '' }}" href="{{ route('parametre.changementtrimestre') }}">
+                                Changement de trimestre
+                                @canOnlyView('parametre.changementtrimestre')
+                                    <span class="badge badge-warning ms-1" style="font-size: 0.6em;">RO</span>
+                                @endcanOnlyView
+                            </a>
                         </li>
+                        @endcanAccess
                     </ul>
                 </div>
             </li>
+            @endif
         </ul>
     </nav>
 </div>

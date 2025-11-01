@@ -203,8 +203,8 @@ Route::get('/duplicatafacture', [PagesController::class, 'duplicatafacture']);
 Route::get('/paiementeleve/{matricule}', [PagesController::class, 'paiementeleve'])->name('paiementeleve');
 Route::post('/paiement/{matricule}', [PagesController::class, 'enregistrerPaiement'])->name('enregistrer.paiement');
 // Route::get('/recouvrementGenerale', [PagesController::class, 'recouvrementGenerale'])->name('recouvrementGenerale');
-Route::get('/pdfpaiementsco/{matricule}', [PagesController::class, 'afficherFacture'])->name('facturesnormalisesco');
 Route::get('/facturenormalisesco/{nomcompleteleve}', [PagesController::class, 'facturenormalisesco'])->name('pdffacturesco');
+Route::get('/facturenonormalisesco', [PagesController::class, 'facturenonormalisesco'])->name('facturenonormalisesco');
 
 
 
@@ -675,6 +675,11 @@ Route::delete('/gestion-salles/delete', [EmploidutempsController::class, 'delete
 Route::post('/gestion-salles/toggle-volante', [EmploidutempsController::class, 'toggleVolante'])->name('gestion.salles.toggleVolante');
 
 Route::get('/saisiremploitemps', [EmploidutempsController::class, 'saisiremploitemps'])->name('saisiremploitemps');
+Route::get('/get-classes-by-groupe', [EmploidutempsController::class, 'getClassesByGroupe'])->name('get.classes.by.groupe');
+Route::post('/store-cours', [EmploidutempsController::class, 'storeCours'])->name('store.cours');
+Route::get('/get-emploi-temps', [EmploidutempsController::class, 'getEmploiTemps'])->name('get.emploi.temps');
 Route::get('/emploidutempsautomatique', [EmploidutempsController::class, 'emploidutempsautomatique'])->name('emploidutempsautomatique');
 Route::get('/configquotahoraires', [EmploidutempsController::class, 'configquotahoraires'])->name('configquotahoraires');
+Route::get('/emploidutempsgeneral', [EmploidutempsController::class, 'general'])->name('emploidutempsgeneral');
+Route::get('/emploidutempsgeneral/excel', [EmploidutempsController::class, 'exportExcel'])->name('emploidutempsgeneral.excel');
 
