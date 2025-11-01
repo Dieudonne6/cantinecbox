@@ -51,6 +51,7 @@
                                         <tr>
                                             <th>N° reçu</th>
                                             <th>Nom</th>
+                                            <th>Prenom</th>
                                             <th>Date reçu</th>
                                             <th>Scolarité</th>
                                             <th>Arriéré</th>
@@ -68,8 +69,9 @@
                                           <tr>
                                             {{-- N° reçu --}}
                                             <td>{{ $facture->id }}</td>
-                                            <td>{{ $facture->nom }}</td>
-                                      
+                                            {{-- <td>{{ $facture->nom }}</td> --}}
+                                            <td>{{  \Illuminate\Support\Str::before(trim($facture->nom ?? ''), ' ') }}</td>
+                                            <td>{{ implode(' ', array_slice(preg_split('/\s+/', trim($facture->nom ?? '')), 1)) }}</td>
                                             {{-- Date (sans l’heure) --}}
                                             <td>
                                               {{ \Illuminate\Support\Carbon::parse($facture->date_time)

@@ -1,9 +1,12 @@
-@extends('layouts.master')
-@section('content')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <style>
-        .btn-arrow {
+
+
+@extends('layouts.master')
+
+@section('content')
+<style>
+
+            .btn-arrow {
             position: absolute;
             top: 0px;
             left: 0px;
@@ -20,643 +23,500 @@
             color: #b700ff !important;
         }
 
-        body {
-            font-family: Arial, sans-serif;
+
+        
+    body {
+        font-family: Arial, sans-serif;
+        color: #000;
+        background: #fff;
+    }
+    .invoice-part {
+        border: 1px solid #000;
+        width: 49%;
+        position: relative;
+        padding: 10px 15px;
+        min-height: 500px;
+    }
+
+    .watermark {
+        position: absolute;
+        font-size: 70px;
+        color: rgba(0, 0, 0, 0.26);
+        font-weight: bold;
+        transform: rotate(-30deg);
+        top: 40%;
+        left: 20%;
+        pointer-events: none;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .header .school-info {
+        flex: 1;
+        padding-left: 10px;
+    }
+
+    .header .school-info h4 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .amount-box {
+        border: 1px solid #000;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        width: 150px;
+        padding: 5px 0;
+    }
+
+    .amount-box small {
+        display: block;
+        font-size: 12px;
+        font-weight: normal;
+    }
+
+    .eleve-box{
+        border: 1px solid #000000a0;
+        text-align: center;
+        font-size: 15px;
+        font-weight: bold;
+        width: 100%;
+        padding: 3px 0;
+    }
+
+    .title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .student-info {
+        margin-top: 10px;
+        font-size: 15px;
+    }
+
+    .student-info strong {
+        font-weight: bold;
+    }
+
+    .details-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .details-table td {
+        padding: 4px 8px;
+        font-size: 15px;
+    }
+
+    .footer {
+        text-align: center;
+        font-size: 14px;
+        margin-top: 30px;
+    }
+
+    .sign {
+        margin-top: 40px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .ajour-box {
+        border: 1px solid #000;
+        text-align: center;
+        padding: 5px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .right-details {
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    @media print {
+        @page {
+            size: A4 portrait;
+            margin: 10mm;
         }
 
-        @media print {
-            .ko {
-                background-color: blue;
-            }
-        }
-
-        p {
-            font-size: 15px;
-        }
-
-        .page-break {
+        .btn-print {
             display: none;
         }
+    }
 
-        .facture-container1 {
-            display: flex;
-            justify-content: space-between;
-            gap: 50px;
-            border-radius: 5px;
-            margin-left: 40px;
-            margin-right: 30px;
-            margin-top: -1.8rem;
-        }
+    .custom-container {
+    display: flex;
+    gap: 20px; /* espace entre les sections */
+    }
 
-        .facture-container2 {
-            display: flex;
-            justify-content: space-between;
-            gap: 50px;
-            margin-left: 40px;
-            margin-right: 30px;
-        }
+    .left-section {
+        flex: 2; /* équivalent à col-md-8 */
+    }
 
-        .facture-container5 {
-            display: flex;
-            justify-content: space-between;
-            /* Optionnel : espace entre les blocs */
-            gap: 50px;
-            /* Optionnel : espace entre les blocs */
-            margin-left: 0px;
-            margin-right: 40px;
-        }
+    .right-section {
+        flex: 1; /* équivalent à col-md-4 */
+    }
 
-        .info {
-            flex: 1;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 2rem;
-        }
+    .details-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-        .table4 {
-            width: 600px;
-            overflow: auto;
-        }
+    .details-table td {
+        border: 1px solid #000;
+        padding: 5px;
+    }
 
-        #customers4 {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    .ajour-box {
+        background-color: #d6d3d3;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
 
-        #customers4 th,
-        #customers4 td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
+    .right-details {
+        background-color: #f1f1f1;
+        padding: 10px;
+    }
 
-        #customers4 th {
-            background-color: #f2f2f2;
-        }
+    .logoimg {
+        width: 20% !important;
+        height: 30% !important;
+    }
+</style>
 
-        #customers4 td p {
-            margin: 0;
-        }
 
-        .invoice {
-            width: 60%;
-            height: 62.9rem;
-            background-color: #ffff;
-            padding: 0;
-            page-break-before: always;
-            margin: 10px auto;
-        }
+<div class="container mt-4">
 
-        .entete {
-            border: 1px solid #ccc;
-            font-size: 15px;
-            background: #cccccc34;
-        }
-
-        .logoimg {
-            width: 40%;
-        }
-
-        .bas {
-            margin-top: 20px;
-            border: 1px solid #ccc;
-            font-size: 15px;
-            background: #cccccc34;
-        }
-
-        .titre {
-            margin: 20px auto;
-            font-size: 15px;
-        }
-
-        h2 {
-            color: #333;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .title {
-            font-size: 17px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .entreprise {
-            margin-left: 40px;
-            border: 1px solid black;
-            background: #aeadad35;
-            width: 14rem;
-            height: 9rem;
-            text-align: center;
-            margin-top: 2rem;
-        }
-
-        .client {
-            margin-top: -9.4rem;
-            margin-left: 28rem;
-            border: 1px solid black;
-            width: 14rem;
-            height: 9rem;
-            text-align: center;
-        }
-
-        .textmontant {
-            margin-left: 40px;
-            margin-top: 20px;
-        }
-
-        .textremerciement {
-            margin-left: 18px;
-            /* margin-top: 6px; */
-        }
-
-        .logo1 {
-            margin-left: 18px;
-        }
-
-        .info1 {
-            margin-top: -1.5rem;
-            margin-left: 28.5rem;
-        }
-
-        .prix {
-            font-weight: bold;
-            color: black;
-            font-size: 16px;
-            text-align: center;
-            padding: 6px 6px;
-        }
-
-        @media print {
-            @page {
-                size: portrait;
-            }
-        }
-
-        #customers {
-            font-family: Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 90%;
-            margin-left: 40px;
-            margin-top: 2rem;
-        }
-
-        #customers2 {
-            font-family: Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 150%;
-            margin-left: 40px;
-            margin-top: 2rem;
-        }
-
-        #customers8 {
-            font-family: Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 20%;
-            margin-right: 0px;
-
-            margin-top: 2rem;
-        }
-
-        #customers3 {
-            font-family: Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 90%;
-            margin-left: 40px;
-            margin-top: 2rem;
-        }
-
-        #customers td,
-        #customers th {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-            max-width: 200px;
-            word-wrap: break-word;
-            word-break: break-all;
-        }
-
-        #customers2 td,
-        #customers2 th {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-            max-width: 200px;
-            word-wrap: break-word;
-            word-break: break-all;
-        }
-
-        #customers3 td,
-        #customers3 th {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-            max-width: 200px;
-            word-wrap: break-word;
-            word-break: break-all;
-        }
-
-        #customers tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        #customers2 tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        #customers3 tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        #customers tr:hover {
-            background-color: #ddd;
-        }
-
-        #customers2 tr:hover {
-            background-color: #ddd;
-        }
-
-        #customers3 tr:hover {
-            background-color: #ddd;
-        }
-
-        #customers th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            background-color: #a5d5e9;
-            color: black;
-        }
-
-        #customers2 th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            background-color: #a5d5e9;
-            color: black;
-        }
-
-        #customers3 th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            background-color: #a5d5e9;
-            color: black;
-        }
-
-        .table2 {
-            margin-top: -0.5rem;
-        }
-
-        .table3 {
-            margin-top: -0.5rem;
-        }
-
-        .telecharger {
-            width: 8rem;
-            height: 2.4rem;
-            text-align: center;
-            margin-top: 40px;
-            margin-left: 10px;
-        }
-
-        .tables-wrapper {
-            display: flex;
-            align-items: flex-start;    
-            justify-content: space-between;
-            gap: 10px;                   
-        }
-
-        .table2 {
-            flex: 2;                    
-            max-width: 100%;
-            box-sizing: border-box;
-        }
-
-        .tableZ{
-            width : 50%;
-        }
-
-        .yes {
-            flex: 1; 
-            max-width: 50% !important;
-        }
-    </style>
-
-    <div class="col-lg-12 grid-margin stretch-card">
-        <button class="btn btn-arrow" onclick="window.history.back();">
+            <button class="btn btn-arrow" onclick="window.history.back();">
             <i class="fas fa-arrow-left"></i> Retour
         </button>
-        <div class="mt-5">
-            <button class="btn btn-success" onclick="printInvoice()">Imprimer</button>
-        </div>
-        <br><br>
-        
-        <div class="invoice">
-            <section>
-                <div class="facture-container1">
-                    <div class="info">
-                        <div class="logo">
-                            @if($logoUrl)
-                                <img src="data:image/jpeg;base64,{{ base64_encode($logoUrl) }}" alt="Logo" class="logoimg">
-                            @endif
-                        </div>
-                        <div>
-                            {!! $entete !!}
-                        </div>
-                    </div>
-                    <div class="info">
-                        <h4><strong>FACTURE DE PAIEMENT</strong></h4>
-                        <p><strong>Facture # {{ $reffacture }} </strong></p>
-                        <p>Date : {{ $dateTime }}</p>
-                        <p>Vendeur : {{ $NOMETAB }}</p>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <div class="facture-container2">
-                    <div class="table4 entre">
-                        <table id="customers4">
-                            <thead>
-                                <tr>
-                                    <th>Informations de l'établissement</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <p>Nom : {{ $NOMETAB }}</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="table4 cli">
-                        <table id="customers4">
-                            <thead>
-                                <tr>
-                                    <th style="text-align: center">Élève</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <p>Nom : {{ $nomcompleteleve }}</p>
-                                        <p>Classe : {{ $classeeleve }}</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <div class="tables-wrapper">
-                <div class="tableZ">
-                    <table id="customers">
-                        <thead>
-                            <tr>
-                                <th>Désignation</th>
-                                <th>Montant</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($itemFacture as $item)
-                                <tr>
-                                    <td>{{ $item['name'] }}</td>
-                                    <td style="text-align: end">{{ number_format($item['price'], 0, ',', ',') }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="yes">
-                    <div class="table2 specifique">
-                        <table id="customers">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{{ number_format($montanttotal, 0, ',', ',') }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="table3">
-                        <table id="customers3">
-                            <thead>
-                                <tr>
-                                    <th>Type de paiement</th>
-                                    <th>Payé</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        {{-- {{ $libelleMode }} --}}
-                                        @if ($mode_paiement == 1)
-                                            ESPECES
-                                        @elseif($mode_paiement == 2)
-                                            CHEQUES
-                                        @else
-                                            AUTRE
-                                        @endif
-                                    </td>
-                                    <td>{{ number_format($montanttotal, 0, ',', ',') }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
             @php
                 use NumberToWords\NumberToWords;
                 $numberToWords = new NumberToWords();
                 $transformer = $numberToWords->getNumberTransformer('fr');
                 $abs = abs($montanttotal);
                 $words = ucfirst(trim($transformer->toWords($abs)));
-                if ($montanttotal < 0) {
-                    $words = 'Moins ' . $words;
-                }
+                // if ($words < 0) {
+                    $words = $words;
+                // }
             @endphp
-
-            <p class="textmontant">Arrêtée, la présente facture à la somme de <span class="prix">
-                {{ $words }} ({{ number_format($montanttotal, 0, ',', ',') }})</span> FCFA.</p>
-            <br>
-        </div>
+    <div class="text-end mb-3">
+        <button class="btn btn-success" onclick="printInvoice()">🖨️ Imprimer</button>
     </div>
 
-    <script>
-        function printInvoice() {
-            const invoice = document.querySelector('.invoice');
-            const printWindow = window.open('', '', 'width=800,height=600');
+    <div id="reçue" class="container">
+        <div class="row">
+            {{-- ===== Partie SOUCHE ===== --}}
+            <div class="invoice-part col-md-4">
+                <div class="watermark">SOUCHE</div>
 
-            printWindow.document.write('<html><head><title>Facture Non Normalisée</title>');
-            printWindow.document.write('<style>');
-            printWindow.document.write(`
-                @media print {
-                    @page {
-                        size: A5 paysage;
-                        margin: 5mm;
-                    }
-                    body {
-                        margin: 0;
-                        padding: 0;
-                        font-size: 10px;
-                    }
-                    .invoice {
-                        zoom: 0.6;
-                        width: 100%;
-                        height: auto;
-                        margin: 0 auto;
-                        padding: 0;
-                        overflow: hidden;
-                        page-break-inside: avoid;
-                        break-inside: avoid;
-                    }
-                    *, *::before, *::after {
-                        box-sizing: border-box;
-                    }
-                }
+                <div class="header">
+                    <div>
+                        <p>{{$classeeleve}}</p>
+                    </div>
+                    {{-- <div class="school-info">
+                        {!!$entete!!}
+                    </div> --}}
+                    <div class="amount-box">
+                            {{$montanttotal}} F
+                        <small> 
+                            @if ($mode_paiement == 1)
+                                ESPECES
+                            @elseif($mode_paiement == 2)
+                                CHEQUES
+                            @else
+                                AUTRE
+                            @endif
+                        </small>
+                    </div>
+                </div>
 
-                body { font-family: Arial, sans-serif; font-size: 10px; }
-                .btn-arrow { display: none; }
-                p, td, th, li, h1, h2, h3, h4 {
-                    font-size: 10px !important;
-                    margin: 0 !important;
-                    padding: 0 !important;
-                }
+                <div class="title mt-2">
+                    QUITTANCE N° <span style="font-size: 14px;">{{$reffacture }}</span>
+                </div>
 
-                #customers, #customers2, #customers3 { 
-                    font-family: Arial, Helvetica, sans-serif; 
-                    border-collapse: collapse; 
-                    margin-left: 40px; 
-                    margin-top: 2rem; 
-                }
+                <div class="student-info">
+                    <strong>{{$nomcompleteleve}}</strong>
+                </div>
 
-                #customers td, #customers th, #customers2 td, #customers2 th, #customers3 td, #customers3 th { 
-                    border: 1px solid #ddd; 
-                    padding: 8px; 
-                    text-align: left; 
-                    max-width: 200px; 
-                    word-wrap: break-word; 
-                    word-break: break-all; 
-                }
+                <div class="details-table">
+                    <br>
+                    <table width="100%">
+                        <tr>
+                            <td>Montant :</td>
+                            {{-- <td><strong>({{ ucfirst($fmt->format($total)) }} francs CFA)</strong></td> --}}
+                            <td><strong>({{ $words }} francs CFA)</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Scolarité</td>                            
+                            <td>{{$scolaritéPayéAujourdhui}}</td>
+                        </tr>
+                        <tr>
+                            <td>Arrièré</td>                          
+                            <td>{{$arrierréPayéAujourdhui}}</td> 
+                        </tr>
+                        <tr>
+                            <td>{{$LIBELF1}}</td>                          
+                            <td>{{$frais1PayéAujourdhui}}</td> 
+                        </tr>
+                        <tr>
+                            <td>{{$LIBELF2}}</td>                        
+                            <td>{{$frais2PayéAujourdhui}}</td> 
+                        </tr>
+                        <tr>
+                            <td>{{$LIBELF3}}</td>                     
+                            <td>{{$frais3PayéAujourdhui}}</td>  
+                        </tr>
+                        <tr>
+                            <td>{{$LIBELF4}}</td>                           
+                            <td>{{$frais4PayéAujourdhui}}</td> 
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="text-align: left; font-size: 14px; margin-top: 8rem;">            
+                    <p>{{$ville}}, le {{ \Carbon\Carbon::parse($datePaiement)->format('d/m/Y') }}</p>
+                    <p><strong>{{ $titreComptable }}</strong></p> <br><br><br>
+                    <p><u>{{ $nomComptable }}</u></p>                 
+                </div>
+                <div style="text-align: end">
+                     <small><strong>{{ $editeur }}</strong> </small>
+                </div>
+
                 
-                #customers tr:nth-child(even), #customers2 tr:nth-child(even), #customers3 tr:nth-child(even) { 
-                    background-color: #f2f2f2; 
-                }
-                
-                #customers th, #customers2 th, #customers3 th { 
-                    padding-top: 12px; 
-                    padding-bottom: 12px; 
-                    background-color: #a5d5e9; 
-                    color: black; 
-                }
+            </div>
 
-                #customers4 th, #customers4 td { 
-                    border: 1px solid #ddd; 
-                    padding: 8px; 
-                    text-align: left; 
-                }
-                
-                #customers4 th { 
-                    background-color: #f2f2f2; 
-                }
+            {{-- ===== Partie ORIGINALE ===== --}}
+            <div class="invoice-part col-md-8">
+                <div class="watermark">ORIGINAL</div>
 
-                .facture-container1, .facture-container2 {
-                    display: flex;
-                    justify-content: space-between;
-                    gap: 10px;
-                    margin: 0 0;
-                }
+                <div class="header">
+                   
+                    @if($logoUrl)
+                        <img src="data:image/jpeg;base64,{{ base64_encode($logoUrl) }}" alt="Logo" class="logoimg">
+                    @endif
+                    
+                    <div class="school-info" style="margin-right: 5rem;">
+                        {!!$entete!!}
+                    </div>
+                    <div class="amount-box">
+                        {{$montanttotal}}F
+                        <small> 
+                            @if ($mode_paiement == 1)
+                                ESPECES
+                            @elseif($mode_paiement == 2)
+                                CHEQUES
+                            @else
+                                AUTRE
+                            @endif
+                        </small>
+                    </div>
+                </div>
 
-                .info {
-                    padding: 5px;
-                }
+                <div class="title mt-2">
+                    QUITTANCE N° <span style="font-size: 14px;">{{$reffacture }}</span>
+                </div>
 
-                .logo img{
-                    width: 90px;
-                    height: 60px;
-                }
+                <div class="eleve-box">
+                    <br>
+                    <p><strong>{{$nomcompleteleve}}</strong> - {{$classeeleve}}</p>
+                    <p><strong>({{ $words }} francs CFA)</strong></p>
+                </div>
 
-                .invoice {
-                    background-color: #fff;
-                    margin: 0 auto;
-                    padding: 5px;
-                }
+                <div class="custom-container">
+                    <div class="left-section">
+                        <table class="details-table">
+                            <tr>                               
+                                <td></td>
+                                <td><strong>Ancien Solde</strong></td>
+                                <td><strong>Montant payé</strong></td>                          
+                            </tr>
+                            <tr>
+                                <td>Scolarité</td>
+                                <td>{{$totalRestantScolarité}}</td>
+                                <td>{{$scolaritéPayéAujourdhui}}</td>
+                            </tr>
+                            <tr>
+                                <td>Arrièré</td>
+                                <td>{{$totalRestantArrierre}}</td>
+                                <td>{{$arrierréPayéAujourdhui}}</td> 
+                            </tr>
+                            <tr>
+                                <td>{{$LIBELF1}}</td>
+                                <td>{{$totalRestantFrais1}}</td>
+                                <td>{{$frais1PayéAujourdhui}}</td> 
+                            </tr>
+                            <tr>
+                                <td>{{$LIBELF2}}</td>
+                                <td>{{$totalRestantFrais2}}</td>
+                                <td>{{$frais2PayéAujourdhui}}</td> 
+                            </tr>
+                            <tr>
+                                <td>{{$LIBELF3}}</td>
+                                <td>{{$totalRestantFrais3}}</td>
+                                <td>{{$frais3PayéAujourdhui}}</td>  
+                            </tr>
+                            <tr>
+                                <td>{{$LIBELF4}}</td>
+                                <td>{{$totalRestantFrais4}}</td>
+                                <td>{{$frais4PayéAujourdhui}}</td> 
+                            </tr>                            
+                        </table>
+                    </div>
+                    <div class="right-section">
+                        <div class="ajour-box">
+                            @if ($resteEcheance == 0)
+                                A JOUR  
+                            @else
+                                NON A JOUR
+                            @endif
+                        </div>
+                        <div class="right-details">
+                            Reste à payer <br><strong>[ {{$totalGlobalRestantAPayer}} FCFA]</strong><br>
+                            Reste % échéancier <br><strong>[ {{$resteEcheance}} FCFA]</strong>
+                        </div>
+                    </div>
+                </div>
 
-                .cli, .entre {
-                    width: 43% !important;
-                    background: #aeadad35; 
-                }
 
-                .info {
-                    width: 43% !important;
-                }
+                <div style="text-align: left; font-size: 14px; margin-top: 3rem;">            
+                    <p>{{$ville}}, le {{ \Carbon\Carbon::parse($datePaiement)->format('d/m/Y') }}</p>
+                    <p><strong> {{ $titreComptable }} </strong></p> <br><br><br>
+                    <p><u>{{ $nomComptable }}</u></p>
+                </div>
+                <div style="text-align: end">                
+                    {{-- <p><u>Signature</u></p> <br><br><br>   --}}
+                    <small>Edité par <strong>{{ $editeur }}</strong></small>
+                </div>
+            </div>
+        </div></br>
 
-                .prix {
-                    font-weight: bold;
-                    font-size: 11px;
-                    text-align: center;
-                }
+        <p>Edition Logiciel SCHOOLBOX 01 Tél +229 01 97 79 17 17 &nbsp;&nbsp;&nbsp; Edition Logiciel SCHOOLBOX 01 Tél +229 01 97 79 17 17 e-mail: contact@cbox.bj &nbsp;&nbsp; C BOX SARL (BENIN) </p>
+    </div>
+    <br><br><br><br><br><br> 
+</div>
 
-                #customers, #customers2, #customers3, #customers4 {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin: 5px 0;
-                }
-
-                table, th, td {
-                    border: 1px solid #ccc;
-                    padding: 4px;
-                    font-size: 10px;
-                }
-
-                .tables-wrapper {
-                    display: flex;
-                    align-items: flex-start;    
-                    justify-content: space-between;
-                    gap: 10px;                   
-                }
-
-                .table2 {
-                    flex: 2;                    
-                    max-width: 100%;
-                    box-sizing: border-box;
-                }
-                
-                .tableZ{
-                    width : 50%;
-                }
-
-                .yes {
-                    flex: 1; 
-                    max-width: 50% !important;
-                }
-
-                th {
-                    background-color: #e0e0e0;
-                }
-            `);
-            printWindow.document.write('</style>');
-            printWindow.document.write('</head><body>');
-            printWindow.document.write(invoice.innerHTML);
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
-
-            printWindow.focus();
-            printWindow.print();
-            printWindow.close();
+<script>
+    function printInvoice() {
+        const recu = document.getElementById('reçue');
+        if (!recu) {
+            alert('Aucune zone "reçue" trouvée à imprimer.');
+            return;
         }
-    </script>
+
+        // Ouvre la fenêtre d'impression
+        const printWindow = window.open('', '', 'width=1000,height=800');
+
+        // Clone du contenu HTML à imprimer
+        const contentHtml = recu.outerHTML;
+
+        // Liens Bootstrap + styles de la page
+        const links = `
+            <link rel="stylesheet"
+                href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+                integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+                crossorigin="anonymous">
+        ` + Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+            .map(l => `<link rel="stylesheet" href="${l.href}">`)
+            .join('\n');
+
+        const styles = Array.from(document.querySelectorAll('style'))
+            .map(s => s.outerHTML)
+            .join('\n');
+
+        // Styles d'impression renforcés
+        const extraHead = `
+            ${links}
+            <style>
+                @page { size: A4 portrait; margin: 10mm; }
+                body {
+                    font-family: Arial, sans-serif;
+                    color: #000;
+                    background: #fff;
+                    margin: 0;
+                    padding: 10px;
+                }
+                .btn, .btn-print, .no-print { display: none !important; }
+
+                /* ✅ Force l'affichage des colonnes même sans Bootstrap */
+                .row {
+                    display: flex !important;
+                    flex-wrap: nowrap !important;
+                    justify-content: space-between;
+                    width: 100%;
+                }
+                .col-md-8, .col-md-4 {
+                    display: inline-block !important;
+                    vertical-align: top;
+                    box-sizing: border-box;
+                    padding: 5px;
+                }
+                .col-md-8 { width: 66.66% !important; }
+                .col-md-4 { width: 33.33% !important; }
+
+                /* Sécurité : jamais "overflow:hidden" sur la partie droite */
+                .invoice-part { overflow: visible !important; }
+
+                /* Visibilité renforcée de la partie droite */
+                .ajour-box, .right-details {
+                    color: #000 !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                }
+            </style>
+            ${styles}
+        `;
+
+        printWindow.document.open();
+        printWindow.document.write(`<!doctype html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <title>Reçu de Paiement</title>
+                ${extraHead}
+            </head>
+            <body>
+                ${contentHtml}
+                <script>
+                    (function(){
+                        const imgs = document.getElementsByTagName('img');
+                        for (let i = 0; i < imgs.length; i++) {
+                            const img = imgs[i];
+                            try {
+                                const u = new URL(img.getAttribute('src'), window.opener ? window.opener.location.href : location.href);
+                                img.src = u.href;
+                            } catch(e) { }
+                        }
+                    })();
+                    window.onload = function() {
+                        setTimeout(function() {
+                            window.focus();
+                            window.print();
+                            window.close();
+                        }, 400);
+                    };
+                <\/script>
+            </body>
+            </html>`);
+        printWindow.document.close();
+    }
+</script>
 
 @endsection

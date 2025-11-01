@@ -200,7 +200,139 @@ class ScolariteController extends Controller
         $listeEleveDeLaClasses1 = Eleve::where('CODECLAS', $CODECLAS)->get();
 
 
+        // foreach ($listeEleveDeLaClasses1 as $eleve) {
+        //     // Suppression des anciennes échéances de l'élève
+        //     Echeance::where('MATRICULE', $eleve->MATRICULE)->delete();
+        //     $frais1 = $eleve->FRAIS1;
+        //     $frais2 = $eleve->FRAIS2;
+        //     $frais3 = $eleve->FRAIS3;
+        //     $frais4 = $eleve->FRAIS4;
+        //     $sco = $eleve->APAYER;
+        //     $ariere = $eleve->ARRIERE;
+        //     $typeduree = intval($request->input('nbEcheances'));
+        //     $typeecheance = intval($request->input('flexRadioDefault'));
+
+        //     $infoparamcontrat = Paramcontrat::first();
+        //     $anneencours = $infoparamcontrat->anneencours_paramcontrat;
+        //     $annesuivante = $anneencours + 1;
+        //     $annescolaire = $anneencours.'-'.$annesuivante;
+
+        //     // dd($eleve->MATRICULE);
+        //     if ($eleve->STATUG == 1) {
+        //       if ($typeecheance == 2) {
+        //         $total = $sco + $frais1 + $frais2 + $frais3 + $frais4 + $ariere;
+        //         $montantparecheance = $total / $typeduree;
+    
+        //         // Insérer les nouvelles échéances
+        //         // for ($i = 1; $i <= $typeduree; $i++) {
+        //           $montantInitial = $ariere; // Le montant que tu veux mettre sur la première ligne
+        //           $isFirst = true;
+        //           foreach ($echeances as $index => $echeanceData) {
+        //               if ($isFirst) {
+        //                 $montantAPayer = $montantInitial;
+        //                 $isFirst = false; // Après la première ligne, changer l'état du drapeau
+        //               } else {
+        //                 $montantAPayer = 0; // Mettre 0 pour les autres lignes
+        //               }
+        //           Echeance::create([
+        //              'guid' => (string) Str::uuid(),
+        //               'MATRICULE' => $eleve->MATRICULE,
+        //               'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
+        //               'APAYER' => $total * $echeanceData['pourcentage_nouveau'],
+        //               'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
+        //               'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
+        //               'anneeacademique' => $annescolaire,
+        //           ]);
+        //         }
+    
+        //       } else {
+        //         $total = $sco;
+        //         $montantparecheance = $total / $typeduree;
+        //         // dd($typeduree);
+    
+        //         // Insérer les nouvelles échéances
+        //         // for ($i = 1; $i <= $typeduree; $i++) {
+        //           $montantInitial = $ariere; // Le montant que tu veux mettre sur la première ligne
+        //           $isFirst = true;
+        //           foreach ($echeances as $index => $echeanceData) {
+        //               if ($isFirst) {
+        //                 $montantAPayer = $montantInitial;
+        //                 $isFirst = false; // Après la première ligne, changer l'état du drapeau
+        //               } else {
+        //                 $montantAPayer = 0; // Mettre 0 pour les autres lignes
+        //               }                  
+        //               Echeance::create([
+        //                  'guid' => (string) Str::uuid(),
+        //               'MATRICULE' => $eleve->MATRICULE,
+        //               'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
+        //               'APAYER' => $total * $echeanceData['pourcentage_nouveau'],
+        //               'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
+        //               'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
+        //               'anneeacademique' => $annescolaire,
+        //           ]);
+        //         }
+        //       }
+        //     } else {
+        //       if ($typeecheance == 2) {
+        //         $total = $sco + $frais1 + $frais2 + $frais3 + $frais4 + $ariere;
+        //         $montantparecheance = $total / $typeduree;
+    
+        //         // Insérer les nouvelles échéances
+        //         // for ($i = 1; $i <= $typeduree; $i++) {
+        //           $montantInitial = $ariere; // Le montant que tu veux mettre sur la première ligne
+        //           $isFirst = true;
+        //           foreach ($echeances as $index => $echeanceData) {
+        //             if ($isFirst) {
+        //               $montantAPayer = $montantInitial;
+        //               $isFirst = false; // Après la première ligne, changer l'état du drapeau
+        //             } else {
+        //               $montantAPayer = 0; // Mettre 0 pour les autres lignes
+        //             }                  
+        //             Echeance::create([
+        //                'guid' => (string) Str::uuid(),
+        //               'MATRICULE' => $eleve->MATRICULE,
+        //               'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
+        //               'APAYER' => $total * $echeanceData['pourcentage_ancien'],
+        //               'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
+        //               'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
+        //               'anneeacademique' => $annescolaire,
+        //           ]);
+        //         }
+    
+        //       } else {
+        //         $total = $sco;
+        //         $montantparecheance = $total / $typeduree;
+        //         // dd($typeduree);
+    
+        //         // Insérer les nouvelles échéances
+        //         // for ($i = 1; $i <= $typeduree; $i++) {
+        //           $montantInitial = $ariere; // Le montant que tu veux mettre sur la première ligne
+        //           $isFirst = true;
+        //           foreach ($echeances as $index => $echeanceData) {
+        //             if ($isFirst) {
+        //               $montantAPayer = $montantInitial;
+        //               $isFirst = false; // Après la première ligne, changer l'état du drapeau
+        //             } else {
+        //               $montantAPayer = 0; // Mettre 0 pour les autres lignes
+        //             }                  
+        //             Echeance::create([
+        //               'guid' => (string) Str::uuid(),
+        //               'MATRICULE' => $eleve->MATRICULE,
+        //               'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
+        //               'APAYER' => $total * $echeanceData['pourcentage_ancien'],
+        //               'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
+        //               'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
+        //               'anneeacademique' => $annescolaire,
+        //           ]);
+        //         }
+        //       }            
+        //     }
+
+        // }
+
+        // dd($listeEleveDeLaClasses1);
         foreach ($listeEleveDeLaClasses1 as $eleve) {
+          // dd($eleve->STATUTG);
             // Suppression des anciennes échéances de l'élève
             Echeance::where('MATRICULE', $eleve->MATRICULE)->delete();
             $frais1 = $eleve->FRAIS1;
@@ -218,7 +350,9 @@ class ScolariteController extends Controller
             $annescolaire = $anneencours.'-'.$annesuivante;
 
             // dd($eleve->MATRICULE);
-            if ($eleve->STATUG == 1) {
+            // dd($eleve->STATUTG);
+            if ($eleve->STATUTG == 1) {
+              // dd('11111');
               if ($typeecheance == 2) {
                 $total = $sco + $frais1 + $frais2 + $frais3 + $frais4 + $ariere;
                 $montantparecheance = $total / $typeduree;
@@ -238,7 +372,7 @@ class ScolariteController extends Controller
                      'guid' => (string) Str::uuid(),
                       'MATRICULE' => $eleve->MATRICULE,
                       'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
-                      'APAYER' => $total * $echeanceData['pourcentage_nouveau'],
+                      'APAYER' => $echeanceData['montant_nouveau'],
                       'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
                       'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
                       'anneeacademique' => $annescolaire,
@@ -254,7 +388,7 @@ class ScolariteController extends Controller
                 // for ($i = 1; $i <= $typeduree; $i++) {
                   $montantInitial = $ariere; // Le montant que tu veux mettre sur la première ligne
                   $isFirst = true;
-                  foreach ($echeances as $index => $echeanceData) {
+                  foreach ($echeances as $echeanceData ) {
                       if ($isFirst) {
                         $montantAPayer = $montantInitial;
                         $isFirst = false; // Après la première ligne, changer l'état du drapeau
@@ -262,10 +396,10 @@ class ScolariteController extends Controller
                         $montantAPayer = 0; // Mettre 0 pour les autres lignes
                       }                  
                       Echeance::create([
-                         'guid' => (string) Str::uuid(),
+                      'guid' => (string) Str::uuid(),
                       'MATRICULE' => $eleve->MATRICULE,
                       'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
-                      'APAYER' => $total * $echeanceData['pourcentage_nouveau'],
+                      'APAYER' => $echeanceData['montant_nouveau'],
                       'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
                       'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
                       'anneeacademique' => $annescolaire,
@@ -281,7 +415,7 @@ class ScolariteController extends Controller
                 // for ($i = 1; $i <= $typeduree; $i++) {
                   $montantInitial = $ariere; // Le montant que tu veux mettre sur la première ligne
                   $isFirst = true;
-                  foreach ($echeances as $index => $echeanceData) {
+                  foreach ($echeances as $echeanceData) {
                     if ($isFirst) {
                       $montantAPayer = $montantInitial;
                       $isFirst = false; // Après la première ligne, changer l'état du drapeau
@@ -292,7 +426,7 @@ class ScolariteController extends Controller
                        'guid' => (string) Str::uuid(),
                       'MATRICULE' => $eleve->MATRICULE,
                       'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
-                      'APAYER' => $total * $echeanceData['pourcentage_ancien'],
+                      'APAYER' => $echeanceData['montant_ancien'],
                       'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
                       'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
                       'anneeacademique' => $annescolaire,
@@ -308,7 +442,7 @@ class ScolariteController extends Controller
                 // for ($i = 1; $i <= $typeduree; $i++) {
                   $montantInitial = $ariere; // Le montant que tu veux mettre sur la première ligne
                   $isFirst = true;
-                  foreach ($echeances as $index => $echeanceData) {
+                  foreach ($echeances as $echeanceData) {
                     if ($isFirst) {
                       $montantAPayer = $montantInitial;
                       $isFirst = false; // Après la première ligne, changer l'état du drapeau
@@ -319,7 +453,7 @@ class ScolariteController extends Controller
                       'guid' => (string) Str::uuid(),
                       'MATRICULE' => $eleve->MATRICULE,
                       'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
-                      'APAYER' => $total * $echeanceData['pourcentage_ancien'],
+                      'APAYER' => $echeanceData['montant_ancien'],
                       'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
                       'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
                       'anneeacademique' => $annescolaire,

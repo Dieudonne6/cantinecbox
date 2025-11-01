@@ -190,25 +190,71 @@ class EditionController extends Controller
     return view('pages.inscriptions.journaldetailleaveccomposante', compact('recouvrements', 'libelle', 'enseign'));
   }
 
+
+  // Ancien code 
+
+  // public function journaldetaillesanscomposante(Request $request)
+  // {
+  //   // Récupérer les paramètres de filtrage depuis la requête
+  //   $datedebut = $request->query('debut');
+  //   $datefin = $request->query('fin');
+  //   $typeenseign = $request->query('typeenseign');
+  //   // Requête pour récupérer les données
+  //   $recouvrements = DB::table('scolarit')
+  //     ->join('eleve', 'scolarit.MATRICULE', '=', 'eleve.MATRICULE') // Joindre la table des élèves
+  //     ->join('typeenseigne', 'eleve.TYPEENSEIG', '=', 'typeenseigne.idenseign') // Joindre la table des types d'enseignement
+  //     ->select('scolarit.DATEOP', 'scolarit.SIGNATURE', 'scolarit.NUMRECU', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type', DB::raw('SUM(scolarit.MONTANT) as total'))
+  //     ->whereBetween('scolarit.DATEOP', [$datedebut, $datefin]) // Filtrer par dates
+  //     ->where('eleve.TYPEENSEIG', '=', $typeenseign) // Filtrer par type d'enseignement
+  //     ->where('scolarit.VALIDE', '=', 1) // Filtrer les enregistrements où validate est égal à 1
+  //     ->groupBy('scolarit.DATEOP', 'scolarit.SIGNATURE', 'scolarit.NUMRECU', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type') // Regrouper par date et autres champs
+  //     ->orderBy('scolarit.DATEOP', 'asc') // Trier par date
+  //     ->get();
+  //   $enseign = Typeenseigne::where('idenseign', $typeenseign)->first();
+  //   $libelle = Params2::first();
+  //   // Retourner la vue avec les données
+  //   return view('pages.inscriptions.journaldetaillesanscomposante', compact('recouvrements', 'libelle', 'enseign'));
+  // }
+
   public function journaldetaillesanscomposante(Request $request)
   {
     // Récupérer les paramètres de filtrage depuis la requête
     $datedebut = $request->query('debut');
     $datefin = $request->query('fin');
     $typeenseign = $request->query('typeenseign');
-    // Requête pour récupérer les données
-    $recouvrements = DB::table('scolarit')
+    
+    // Construction de la requête de base
+    $query = DB::table('scolarit')
       ->join('eleve', 'scolarit.MATRICULE', '=', 'eleve.MATRICULE') // Joindre la table des élèves
       ->join('typeenseigne', 'eleve.TYPEENSEIG', '=', 'typeenseigne.idenseign') // Joindre la table des types d'enseignement
-      ->select('scolarit.DATEOP', 'scolarit.SIGNATURE', 'scolarit.NUMRECU', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type', DB::raw('SUM(scolarit.MONTANT) as total'))
+      ->select(
+        'scolarit.DATEOP', 
+        'scolarit.SIGNATURE', 
+        'scolarit.NUMRECU', 
+        'eleve.NOM', 
+        'eleve.PRENOM', 
+        'eleve.CODECLAS', 
+        'typeenseigne.type', 
+        DB::raw('SUM(scolarit.MONTANT) as total')
+      )
       ->whereBetween('scolarit.DATEOP', [$datedebut, $datefin]) // Filtrer par dates
-      ->where('eleve.TYPEENSEIG', '=', $typeenseign) // Filtrer par type d'enseignement
-      ->where('scolarit.VALIDE', '=', 1) // Filtrer les enregistrements où validate est égal à 1
-      ->groupBy('scolarit.DATEOP', 'scolarit.SIGNATURE', 'scolarit.NUMRECU', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type') // Regrouper par date et autres champs
+      ->where('scolarit.VALIDE', '=', 1); // Filtrer les enregistrements validés uniquement
+    
+    // Ajouter le filtre par type d'enseignement seulement s'il est fourni
+    if (!empty($typeenseign)) {
+      $query->where('eleve.TYPEENSEIG', '=', $typeenseign);
+    }
+    
+    // Finaliser la requête
+    $recouvrements = $query
+      ->groupBy('scolarit.NUMRECU', 'scolarit.DATEOP', 'scolarit.SIGNATURE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type') // Regrouper par NUMRECU pour avoir un total par reçu
       ->orderBy('scolarit.DATEOP', 'asc') // Trier par date
+      ->orderBy('scolarit.NUMRECU', 'asc') // Puis par numéro de reçu
       ->get();
-    $enseign = Typeenseigne::where('idenseign', $typeenseign)->first();
+      
+    $enseign = !empty($typeenseign) ? Typeenseigne::where('idenseign', $typeenseign)->first() : null;
     $libelle = Params2::first();
+    
     // Retourner la vue avec les données
     return view('pages.inscriptions.journaldetaillesanscomposante', compact('recouvrements', 'libelle', 'enseign'));
   }

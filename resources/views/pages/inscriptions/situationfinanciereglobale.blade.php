@@ -57,7 +57,7 @@
             <div class="row">
               <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="table-responsive" id="contenu">
-                  <table id="myTable" class="table custom-table print-table">
+                  <table id="mTable" class="table custom-table print-table">
                     <thead>
                       <tr>
                         <th>MATRICULE</th>
@@ -138,87 +138,140 @@
 
   <!-- Script pour imprimer -->
   <script>
-    function imprimerPage() {
-      // Sauvegarder le titre original de la page
-      let originalTitle = document.title;
-      document.title = 'Situation financière globale';
+    // function imprimerPage() {
+    //   // Sauvegarder le titre original de la page
+    //   let originalTitle = document.title;
+    //   document.title = 'Situation financière globale';
 
-      // Obtenir le tableau DataTable actif et les données triées
-      let table = $('#myTable').DataTable();
-      let sortedData = table.rows({order: 'applied'}).data().toArray(); // Récupérer les données triées
+    //   // Obtenir le tableau DataTable actif et les données triées
+    //   let table = $('#mTable').DataTable();
+    //   let sortedData = table.rows({order: 'applied'}).data().toArray(); // Récupérer les données triées
 
-      // Générer le contenu HTML trié à partir des données récupérées
-      let tableBody = '';
-      sortedData.forEach(function(row) {
-        tableBody += `<tr>
-          <td>${row[0]}</td>
-          <td>${row[1]}</td>
-          <td>${row[2]}</td>
-          <td>${row[3]}</td>
-          <td>${row[4]}</td>
-          <td>${row[5]}</td>
-        </tr>`;
-      });
+    //   // Générer le contenu HTML trié à partir des données récupérées
+    //   let tableBody = '';
+    //   sortedData.forEach(function(row) {
+    //     tableBody += `<tr>
+    //       <td>${row[0]}</td>
+    //       <td>${row[1]}</td>
+    //       <td>${row[2]}</td>
+    //       <td>${row[3]}</td>
+    //       <td>${row[4]}</td>
+    //       <td>${row[5]}</td>
+    //     </tr>`;
+    //   });
 
-      // Créer un élément invisible pour l'impression avec les données triées
-      let printDiv = document.createElement('div');
-      printDiv.innerHTML = `
-        <h1 style="font-size: 20px; text-align: center;">Situation financière globale</h1>
-        <table id="printTable" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
-          <thead>
-            <tr>
-              <th>MATRICULE</th>
-              <th>NOM ET PRENOMS</th>
-              <th>CLASSE</th>
-              <th>APAYER</th>
-              <th>PAYE</th>
-              <th>RESTE</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${tableBody}
-          </tbody>
-        </table>
-      `;
+    //   // Créer un élément invisible pour l'impression avec les données triées
+    //   let printDiv = document.createElement('div');
+    //   printDiv.innerHTML = `
+    //     <h1 style="font-size: 20px; text-align: center;">Situation financière globale</h1>
+    //     <table id="printTable" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+    //       <thead>
+    //         <tr>
+    //           <th>MATRICULE</th>
+    //           <th>NOM ET PRENOMS</th>
+    //           <th>CLASSE</th>
+    //           <th>APAYER</th>
+    //           <th>PAYE</th>
+    //           <th>RESTE</th>
+    //         </tr>
+    //       </thead>
+    //       <tbody>
+    //         ${tableBody}
+    //       </tbody>
+    //     </table>
+    //   `;
 
-      // Appliquer des styles spécifiques pour l'impression
-      let style = document.createElement('style');
-      style.innerHTML = `
-        @page { size: landscape; }
-        @media print {
-          body * { visibility: hidden; }
-          #printDiv, #printDiv * { visibility: visible; }
-          #printDiv { position: absolute; top: 0; left: 0; width: 100%; }
-          table th, table td {
-            font-size: 10px;
-            padding: 5px;
-            text-align: left;
-            border: 1px solid black;
-          }
-        }
-      `;
+    //   // Appliquer des styles spécifiques pour l'impression
+    //   let style = document.createElement('style');
+    //   style.innerHTML = `
+    //     @page { size: landscape; }
+    //     @media print {
+    //       body * { visibility: hidden; }
+    //       #printDiv, #printDiv * { visibility: visible; }
+    //       #printDiv { position: absolute; top: 0; left: 0; width: 100%; }
+    //       table th, table td {
+    //         font-size: 10px;
+    //         padding: 5px;
+    //         text-align: left;
+    //         border: 1px solid black;
+    //       }
+    //     }
+    //   `;
       
-      // Ajouter les styles et le contenu à imprimer
-      document.head.appendChild(style);
-      document.body.appendChild(printDiv);
-      printDiv.setAttribute("id", "printDiv");
+    //   // Ajouter les styles et le contenu à imprimer
+    //   document.head.appendChild(style);
+    //   document.body.appendChild(printDiv);
+    //   printDiv.setAttribute("id", "printDiv");
 
-      // Lancer l'impression
-      window.print();
+    //   // Lancer l'impression
+    //   window.print();
       
-      // Nettoyer après l'impression
-      window.location.reload();
-      document.body.removeChild(printDiv);
-      document.head.removeChild(style);
+    //   // Nettoyer après l'impression
+    //   window.location.reload();
+    //   document.body.removeChild(printDiv);
+    //   document.head.removeChild(style);
+    // }
+
+function imprimerPage() {
+  // Sauvegarder le titre original
+  let originalTitle = document.title;
+  document.title = 'Situation financière globale';
+
+  // Copier directement le contenu HTML existant (dans l'ordre affiché)
+  let contenu = document.getElementById('contenu').innerHTML;
+
+  // Créer une zone d'impression propre
+  let printDiv = document.createElement('div');
+  printDiv.innerHTML = `
+    <h1 style="font-size: 20px; text-align: center; margin-bottom: 20px;">
+      Situation financière globale
+    </h1>
+    ${contenu}
+  `;
+  printDiv.setAttribute("id", "printDiv");
+
+  // Styles pour impression
+  let style = document.createElement('style');
+  style.innerHTML = `
+    @page { size: landscape; }
+    @media print {
+      body * { visibility: hidden; }
+      #printDiv, #printDiv * { visibility: visible; }
+      #printDiv { position: absolute; top: 0; left: 0; width: 100%; }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #000;
+      }
+      th, td {
+        font-size: 10px;
+        padding: 5px;
+        text-align: left;
+        border: 1px solid #000;
+      }
     }
+  `;
+
+  // Injecter le style et le contenu
+  document.head.appendChild(style);
+  document.body.appendChild(printDiv);
+
+  // Imprimer
+  window.print();
+
+  // Nettoyer
+  document.body.removeChild(printDiv);
+  document.head.removeChild(style);
+  document.title = originalTitle;
+}
 
     function exportToExcel() {
-      const table = $('#myTable').DataTable();
+      const table = $('#mTable').DataTable();
 
       // Désactiver la pagination pour avoir toutes les lignes visibles
       table.page.len(-1).draw();
 
-      const contentElement = document.getElementById('myTable');
+      const contentElement = document.getElementById('mTable');
 
       if (!contentElement) {
           alert("Aucune liste à exporter. Veuillez d'abord créer la liste.");

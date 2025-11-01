@@ -60,6 +60,7 @@
                 <thead>
                   <tr>
                     <th>Nom</th>
+                    <th>Prenom</th>
                     <th>Référence</th>
                     <th>Montant</th>
                     <th>Date</th>
@@ -69,7 +70,9 @@
                 <tbody>
                 @foreach ($facturesPaiementscolarite as $facture)
                   <tr>
-                    <td>{{ $facture->nom }}</td>
+                    {{-- <td>{{ $facture->nom }}</td> --}}
+                    <td>{{  \Illuminate\Support\Str::before(trim($facture->nom ?? ''), ' ') }}</td>
+                    <td>{{ implode(' ', array_slice(preg_split('/\s+/', trim($facture->nom ?? '')), 1)) }}</td>
                     <td>{{ $facture->codemecef }}</td>
                     <td>{{ $facture->montant_total }}</td>
                     <td>{{ $facture->dateHeure }}</td>

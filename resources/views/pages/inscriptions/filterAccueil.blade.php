@@ -6,6 +6,72 @@
 
             <div>
                 <style>
+
+                    
+
+                    /* style du menu flottant */
+                    .custom-dropdown {
+                    position: absolute;
+                    min-width: 160px;
+                    background: white;
+                    border: 1px solid rgba(0,0,0,0.12);
+                    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+                    border-radius: 4px;
+                    padding: 6px 0;
+                    z-index: 99999; /* très au-dessus pour éviter d'être masqué */
+                    }
+
+                    .custom-dropdown .dropdown-item {
+                    display: block;
+                    width: 100%;
+                    padding: 8px 12px;
+                    text-align: left;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    font-size: 18px;
+                    font-weight: bold;
+                    }
+
+                    .custom-dropdown .dropdown-item:hover,
+                    .custom-dropdown .dropdown-item:focus {
+                    background: rgba(0,0,0,0.05);
+                    }
+
+                    /* cacher la source inline */
+                    .js-dropdown-source.d-none { display: none !important; }
+
+                    /* enlève la puce et les marges/paddings par défaut */
+                    .dropdown-list {
+                    list-style: none;   /* retire la puce */
+                    margin: 0;
+                    padding: 0;
+                    }
+
+                    /* s'assure que chaque <li> n'ajoute pas d'espace inutile */
+                    .dropdown-list li {
+                    margin: 0;
+                    padding: 0;
+                    }
+
+                    /* style des items à l'intérieur du menu flottant */
+                    .custom-dropdown .dropdown-list .dropdown-item {
+                    display: block;
+                    width: 100%;
+                    padding: 8px 12px;
+                    text-align: left;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    box-sizing: border-box;
+                    }
+
+                    /* sécurité pour navigateurs qui utilisent ::marker */
+                    .dropdown-list li::marker {
+                    content: none;
+                    }
+
+
                     .btn-arrow {
                         position: absolute;
                         top: 0px;
@@ -331,38 +397,48 @@
                                             <div class="d-flex align-items-center">
                                                 <a href="/pagedetail/{{ $eleve->MATRICULE }}"
                                                     class= "btn btn-primary p-2 btn-sm mr-2">Voir plus</a>
+                                                    <a class= "btn btn-secondary p-2 btn-sm mr-2"
+                                                        href="{{ url('/paiementeleve/' . $eleve->MATRICULE) }}">Paiement</a>
                                                 @if(empty($pagePermission['isReadOnly']) || $pagePermission['canManage'])
-                                                    <button class="btn btn-primary p-2 btn-sm dropdown" type="button"
-                                                        id="dropdownMenuSizeButton3" data-toggle="dropdown"
-                                                        aria-haspopup="true" aria-expanded="false">
+                                                   <button
+                                                        class="btn btn-primary p-2 btn-sm js-dropdown-btn"
+                                                        type="button"
+                                                        aria-haspopup="true"
+                                                        aria-expanded="false"
+                                                        data-menu-id="menu-{{ $eleve->MATRICULE }}">
                                                         <i class="typcn typcn-th-list btn-icon-append"></i>
                                                     </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
-                                                        <li>
-                                                            <button class="dropdown-item delete-eleve"
-                                                                data-matricule="{{ $eleve->MATRICULE }}"
-                                                                data-nom="{{ $eleve->NOM }}"
-                                                                data-prenom="{{ $eleve->PRENOM }}" data-bs-toggle="modal"
-                                                                data-bs-target="#deleteModal">
-                                                                Supprimer
-                                                            </button>
-                                                        </li>
-                                                        <li><a class="dropdown-item"
-                                                                href="/modifiereleve/{{ $eleve->MATRICULE }}">Modifier</a>
-                                                        </li>
-                                                        <li><a class="dropdown-item"
-                                                                href="{{ url('/paiementeleve/' . $eleve->MATRICULE) }}">Paiement</a>
-                                                        </li>
-                                                        {{-- <li><a class="dropdown-item"
-                                                                href="{{ url('/majpaiementeleve/' . $eleve->MATRICULE) }}">Maj
-                                                                Paie</a></li> --}}
-                                                        <li><a class="dropdown-item"
-                                                                href="/profil/{{ $eleve->MATRICULE }}">Profil</a></li>
-                                                        <li><a class="dropdown-item"
-                                                                href="/echeancier/{{ $eleve->MATRICULE }}">Echéance</a>
-                                                        </li>
-                                                        {{--  <li><a class="dropdown-item" href="#">Cursus</a></li> --}}
-                                                    </ul>
+
+                                                    <div class="js-dropdown-source d-none" id="menu-{{ $eleve->MATRICULE }}">                                                 
+                                                        <ul class="dropdown-list"  >
+                                                            <li>
+                                                                <button class="dropdown-item delete-eleve"
+                                                                    data-matricule="{{ $eleve->MATRICULE }}"
+                                                                    data-nom="{{ $eleve->NOM }}"
+                                                                    data-prenom="{{ $eleve->PRENOM }}" data-bs-toggle="modal"
+                                                                    data-bs-target="#deleteModal">
+                                                                    Supprimer
+                                                                </button>
+                                                            </li>
+                                                            <li><a class="dropdown-item"
+                                                                    href="/modifiereleve/{{ $eleve->MATRICULE }}">Modifier</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="dropdown-item" href="{{ route('pointdepaiement', $eleve->MATRICULE) }}">
+                                                                    Point de paiement
+                                                                </a>
+                                                            </li>
+                                                            {{-- <li><a class="dropdown-item"
+                                                                    href="{{ url('/majpaiementeleve/' . $eleve->MATRICULE) }}">Maj
+                                                                    Paie</a></li> --}}
+                                                            <li><a class="dropdown-item"
+                                                                    href="/profil/{{ $eleve->MATRICULE }}">Profil</a></li>
+                                                            <li><a class="dropdown-item"
+                                                                    href="/echeancier/{{ $eleve->MATRICULE }}">Echéance</a>
+                                                            </li>
+                                                            {{--  <li><a class="dropdown-item" href="#">Cursus</a></li> --}}
+                                                        </ul>
+                                                    </div>
                                                 @else
                                                     <span class="text-muted small">Actions limitées</span>
                                                 @endif
@@ -572,6 +648,7 @@
                 "scrollCollapse": true, // réduit la hauteur si moins de lignes
                         responsive: true,    // active l'extension responsive (si chargée)
                 autoWidth: false, 
+                order: [[1, 'asc'], [2, 'asc']],
                 "language": {
                     "sProcessing": "Traitement en cours...",
                     "sSearch": "Rechercher&nbsp;:",
@@ -689,6 +766,90 @@
 
             $('#filterClasse, #filterSexe, #filterStatut, #filterSerie, #filterTypeClas, #filterEnseign, #filterCategory, #filterPromo, #filterCycle')
                 .on('change', filterTableByClass);
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        let openMenu = null;
+
+        function closeOpenMenu() {
+            if (openMenu) {
+            openMenu.remove();
+            openMenu = null;
+            document.removeEventListener('click', handleDocClick);
+            window.removeEventListener('resize', closeOpenMenu);
+            window.removeEventListener('scroll', repositionOpenMenu, true);
+            }
+        }
+
+        function handleDocClick(e) {
+            if (!openMenu) return;
+            if (!openMenu.contains(e.target) && !openMenu.triggerBtn.contains(e.target)) {
+            closeOpenMenu();
+            }
+        }
+
+        function repositionOpenMenu() {
+            if (!openMenu) return;
+            const btn = openMenu.triggerBtn;
+            const rect = btn.getBoundingClientRect();
+            const menuRect = openMenu.getBoundingClientRect();
+            const spaceBelow = window.innerHeight - rect.bottom;
+            let top;
+            if (spaceBelow < menuRect.height + 8 && rect.top > menuRect.height + 8) {
+            top = window.scrollY + rect.top - menuRect.height - 6;
+            } else {
+            top = window.scrollY + rect.bottom + 6;
+            }
+            let left = window.scrollX + rect.left;
+            if (left + menuRect.width > window.scrollX + window.innerWidth - 8) {
+            left = window.scrollX + window.innerWidth - menuRect.width - 8;
+            }
+            openMenu.style.top = top + 'px';
+            openMenu.style.left = left + 'px';
+        }
+
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest ? e.target.closest('.js-dropdown-btn') : null;
+            if (!btn) return;
+            e.preventDefault();
+            e.stopPropagation();
+
+            // toggle same menu
+            if (openMenu && openMenu.triggerBtn === btn) {
+            closeOpenMenu();
+            return;
+            }
+            closeOpenMenu();
+
+            const menuId = btn.dataset.menuId;
+            const source = document.getElementById(menuId);
+            if (!source) return;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'custom-dropdown';
+            wrapper.innerHTML = source.innerHTML;
+            wrapper.triggerBtn = btn;
+            document.body.appendChild(wrapper);
+            openMenu = wrapper;
+
+            // position after inserted
+            setTimeout(repositionOpenMenu, 0);
+
+            wrapper.addEventListener('click', function() {
+            setTimeout(closeOpenMenu, 50);
+            });
+
+            document.addEventListener('click', handleDocClick);
+            window.addEventListener('resize', closeOpenMenu);
+            window.addEventListener('scroll', repositionOpenMenu, true);
+        });
+
+        document.addEventListener('keydown', function(e){
+            if (e.key === 'Escape') {
+            if (openMenu) closeOpenMenu();
+            }
+        });
         });
     </script>
 @endsection

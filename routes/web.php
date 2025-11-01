@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\CdController;
-
+use App\Http\Controllers\PointController;
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ConnexionDBController;
 use App\Http\Controllers\EleveController;
@@ -681,3 +681,6 @@ Route::get('/saisiremploitemps', [EmploidutempsController::class, 'saisiremploit
 Route::get('/emploidutempsautomatique', [EmploidutempsController::class, 'emploidutempsautomatique'])->name('emploidutempsautomatique');
 Route::get('/configquotahoraires', [EmploidutempsController::class, 'configquotahoraires'])->name('configquotahoraires');
 
+//route pour le point des payements
+Route::get('/point', [PointController::class, 'index'])->name('point');
+Route::get('/pointdepaiement/{matricule}', [PointController::class, 'index'])->name('pointdepaiement');

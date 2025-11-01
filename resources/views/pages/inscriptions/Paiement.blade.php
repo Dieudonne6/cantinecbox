@@ -123,12 +123,12 @@
                                         composantes</label>
                                     <select id="priority-select" class="form-select" multiple
                                         aria-label="Sélection multiple">
-                                        <option value="1">Scolarité</option>
-                                        <option value="2">Arriéré</option>
-                                        <option value="3">{{ $libelle->LIBELF1 }}</option>
-                                        <option value="4">{{ $libelle->LIBELF2 }}</option>
-                                        <option value="5">{{ $libelle->LIBELF3 }}</option>
-                                        <option value="6">{{ $libelle->LIBELF4 }}</option>
+                                        <option value="1">Arriéré</option>
+                                        <option value="2">{{ $libelle->LIBELF1 }}</option>
+                                        <option value="3">{{ $libelle->LIBELF2 }}</option>
+                                        <option value="4">{{ $libelle->LIBELF3 }}</option>
+                                        <option value="5">{{ $libelle->LIBELF4 }}</option>
+                                        <option value="6">Scolarité</option>
                                     </select>
                                     <div class="mt-2" style="text-align: center">
                                         <button id="monter-btn" type="button" class="btn btn-primary btn-sm">Monter</button>
@@ -160,18 +160,13 @@
                                 </div>
 
                                 <div class="form-group row mt-4" id="form-fields">
-                                    <div class="col-md-2" data-id="1">
-                                        <label for="scolarite">Scolarité</label>
-                                        <input id="scolarite" name="scolarite" class="form-control composante"
-                                            type="number" placeholder="{{ $eleve->APAYER - $totalScolarite }}"
-                                            value="0" data-priorite="1" oninput="verifierSaisie()">
-                                    </div>
+                      
 
-                                    <div class="col-md-2" data-id="2">
+                                    <div class="col-md-2" data-id="1">
                                         <label for="arriere">Arriéré</label>
                                         <input id="arriere" name="arriere" class="form-control composante" type="number"
                                             placeholder="{{ $eleve->ARRIERE ? $eleve->ARRIERE - $totalArriere : $eleve->ARRIERE }}"
-                                            value="0" data-priorite="2" oninput="verifierSaisie()"
+                                            value="0" data-priorite="1" oninput="verifierSaisie()"
                                             {{ $eleve->ARRIERE == 0 ? 'disabled' : '' }}>
                                     </div>
 
@@ -190,6 +185,13 @@
                                                 oninput="verifierSaisie()">
                                         </div>
                                     @endforeach
+
+                                    <div class="col-md-2" data-id="6">
+                                        <label for="scolarite">Scolarité</label>
+                                        <input id="scolarite" name="scolarite" class="form-control composante"
+                                            type="number" placeholder="{{ $eleve->APAYER - $totalScolarite }}"
+                                            value="0" data-priorite="6" oninput="verifierSaisie()">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -209,7 +211,7 @@
                                 <label for="mode-paiement" class="form-label">Mode de Paiement</label>
                                 <select id="mode-paiement" name="mode_paiement" class="form-select" required>
                                     <option value="" disabled selected>Choisir un mode de paiement</option>
-                                    <option value="1">ESPECES</option>
+                                    <option value="1" selected>ESPECES</option>
                                     <option value="2">CHEQUES</option>
                                     <option value="4">AUTRE</option>
                                 </select>
