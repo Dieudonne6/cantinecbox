@@ -124,10 +124,10 @@
                                     <th rowspan="2">Classe</th>
                                     <th colspan="2">Scolarité</th>
                                     <th colspan="2">Arriéré</th>
-                                    <th colspan="2">Frais1</th>
-                                    <th colspan="2">Frais2</th>
-                                    <th colspan="2">Frais3</th>
-                                    <th colspan="2">Frais4</th>
+                                    <th colspan="2">{{ $params->LIBELF1 ?? 'Frais1' }}</th>
+                                    <th colspan="2">{{ $params->LIBELF2 ?? 'Frais2' }}</th>
+                                    <th colspan="2">{{ $params->LIBELF3 ?? 'Frais3' }}</th>
+                                    <th colspan="2">{{ $params->LIBELF4 ?? 'Frais4' }}</th>
                                     <th colspan="2">Total</th>
                                     <th colspan="1">Reste</th>
                                 </tr>
@@ -414,7 +414,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `situation_des_recouvrements.xls`;
+            a.download = situation_des_recouvrements.xls;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
