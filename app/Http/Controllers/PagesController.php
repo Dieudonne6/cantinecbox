@@ -1677,38 +1677,61 @@ $donneSituationFinanciereGroupe = collect($donneSituationFinanciere)->groupBy('C
 
 
   // Calcul de l'effectif et de la somme total_du_hors_echeancier par classe
-  // Résumé par classe : effectif, total dû (APAYER+ARRIERE), total payé et taux de recouvrement
+// Résumé par classe en prenant "total à payer" = sum(paid_apayer) par élève
 $resultatParClasse = $donneSituationFinanciereGroupe->map(function ($eleves, $classe) {
-    // total que tous les élèves de la classe doivent (APAYER + ARRIERE)
-    $totalApayer = $eleves->sum(function ($e) {
-        return (($e['due_apayer'] ?? 0) + ($e['due_arriere'] ?? 0));
+    // total à payer (selon ta remarque : somme des paid_apayer par élève)
+    $totalAPayerClasse = $eleves->sum(function ($e) {
+        return ($e['paid_apayer'] ?? 0);
     });
 
     // total payé par tous les élèves (champ total_tous_scolarite)
-    $totalPaye = $eleves->sum(function ($e) {
+    $totalPayeClasse = $eleves->sum(function ($e) {
         return ($e['total_tous_scolarite'] ?? 0);
     });
 
-    // reste à recouvrer
-    $reste = $totalApayer - $totalPaye;
+    // somme des reste_echeance (conserve ton affichage souhaité)
+    $sommeResteEcheance = $eleves->sum(function ($e) {
+        return ($e['reste_echeance'] ?? 0);
+    });
 
-    // taux de recouvrement en pourcentage (0 si rien à recouvrer)
-    $taux = $totalApayer > 0 ? round(($totalPaye / $totalApayer) * 100, 2) : 0;
+        // P calculé comme D - R (paié si D = P + R)
+    $totalPayeCalc = $totalAPayerClasse - $sommeResteEcheance;
+    if ($totalPayeCalc < 0) {
+        // sécurité : si négatif (incohérence), on le ramène à 0
+        $totalPayeCalc = 0;
+    }
+
+    // taux = P / D * 100 (éviter division par 0)
+    $taux = $totalAPayerClasse > 0 ? round(($totalPayeCalc / $totalAPayerClasse) * 100, 2) : 0;
+
+    // reste calculé (si tu veux que ce soit totalAPayer - totalPaye)
+    // $reste = $totalAPayerClasse - $totalPayeClasse;
+    // if ($reste < 0) {
+    //     $reste = 0; // si tu préfères ne pas afficher de négatif
+    // }
+
+    // // taux de recouvrement : part du payé sur le total à payer (paid_apayer)
+    // $taux = $totalAPayerClasse > 0 ? round(($totalPayeClasse / $totalAPayerClasse) * 100, 2) : 0;
+    // $taux = $totalDu > 0 ? round(($totalPayeCalc / $totalDu) * 100, 2) : 0;
+
 
     return [
-        'effectif' => $eleves->count(), // effectif par classe
-        'total_du_hors_echeancier' => $totalApayer, // somme APAYER + ARRIERE par classe
-        'total_paye' => $totalPaye, // somme des paiements (jusqu'à la date pivot)
-        'reste' => $reste >= 0 ? $reste : 0, // ne pas retourner de négatif si tu préfères
-        // 'reste' => $reste >= 0 ? $reste : 0, // ne pas retourner de négatif si tu préfères
-        'pourcentage_recouvrement' => $taux, // valeur numérique
-        // formats prêts à l'affichage
-        'total_du_hors_echeancier_fmt' => number_format($totalApayer, 0, ',', ' '),
-        'total_paye_fmt' => number_format($totalPaye, 0, ',', ' '),
-        'reste_fmt' => number_format(max(0, $reste), 0, ',', ' '),
+        'effectif' => $eleves->count(),
+        // total à payer selon ta variable paid_apayer
+        'total_du_hors_echeancier' => $totalAPayerClasse,
+        'total_paye' => $totalPayeClasse,
+        // reste affiché = somme des reste_echeance (comme tu voulais)
+        'reste' => $sommeResteEcheance,
+        'pourcentage_recouvrement' => $taux,
+        // formats pour affichage
+        'total_du_hors_echeancier_fmt' => number_format($totalAPayerClasse, 0, ',', ' '),
+        'total_paye_fmt' => number_format($totalPayeClasse, 0, ',', ' '),
+        'reste_fmt' => number_format($sommeResteEcheance, 0, ',', ' '),
         'pourcentage_recouvrement_fmt' => number_format($taux, 2) . ' %',
     ];
 });
+
+
 
 
 
