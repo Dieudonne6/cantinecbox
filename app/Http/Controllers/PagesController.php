@@ -1490,110 +1490,231 @@ public function sfinanceclassespecifique($classeCode) {
 
   // logique pour la lettre de relance
 
-  $CODECLASArray = explode(',', $classeCode);
+  // $CODECLASArray = explode(',', $classeCode);
 
-  // $classesAExclure = ['NON', 'DELETE'];
+  // // $classesAExclure = ['NON', 'DELETE'];
 
   $classes = Classes::where('TYPECLASSE', 1)->get();
 
-  $contratValideMatricules = Eleve::whereIn('CODECLAS', $CODECLASArray)->pluck('MATRICULE');
+  // $contratValideMatricules = Eleve::whereIn('CODECLAS', $CODECLASArray)->pluck('MATRICULE');
 
-      // Filtrer les élèves en fonction des classes sélectionnées
-      $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
-          ->whereIn('CODECLAS', $CODECLASArray)
-          ->select(
-                'MATRICULE', 
-                'NOM', 
-                'PRENOM', 
-                'CODECLAS', 
-                DB::raw('FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 as total_frais'),
-                DB::raw('FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 + ARRIERE as total_tous')
-            )
-            ->orderBy('NOM', 'asc')
-            ->groupBy(
-                'MATRICULE',
-                'NOM',
-                'PRENOM',
-                'CODECLAS',
-                'FRAIS1',
-                'FRAIS2',
-                'FRAIS3',
-                'FRAIS4',
-                'APAYER',
-                'ARRIERE'
-            )
-          ->get()
-          ->keyBy('MATRICULE');
+  //     // Filtrer les élèves en fonction des classes sélectionnées
+  //     $filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+  //         ->whereIn('CODECLAS', $CODECLASArray)
+  //         ->select(
+  //               'MATRICULE', 
+  //               'NOM', 
+  //               'PRENOM', 
+  //               'CODECLAS', 
+  //               DB::raw('FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 as total_frais'),
+  //               DB::raw('FRAIS1 + FRAIS2 + FRAIS3 + FRAIS4 + ARRIERE as total_tous')
+  //           )
+  //           ->orderBy('NOM', 'asc')
+  //           ->groupBy(
+  //               'MATRICULE',
+  //               'NOM',
+  //               'PRENOM',
+  //               'CODECLAS',
+  //               'FRAIS1',
+  //               'FRAIS2',
+  //               'FRAIS3',
+  //               'FRAIS4',
+  //               'APAYER',
+  //               'ARRIERE'
+  //           )
+  //         ->get()
+  //         ->keyBy('MATRICULE');
 
-      // donne echeance
-      $donneEcheanceEleve = Echeance::whereIn('MATRICULE', $contratValideMatricules)
-          ->select(
-              'MATRICULE',
-              DB::raw('SUM(APAYER) as totalapayer'), // Somme de la colonne APAYER
-              DB::raw('SUM(ARRIERE) as totalarriere'), // Somme de la colonne APAYER
-          )
-          ->groupBy('MATRICULE')
-          ->get()
-          ->keyBy('MATRICULE'); 
+  //     // donne echeance
+  //     $donneEcheanceEleve = Echeance::whereIn('MATRICULE', $contratValideMatricules)
+  //         ->select(
+  //             'MATRICULE',
+  //             DB::raw('SUM(APAYER) as totalapayer'), // Somme de la colonne APAYER
+  //             DB::raw('SUM(ARRIERE) as totalarriere'), // Somme de la colonne APAYER
+  //         )
+  //         ->groupBy('MATRICULE')
+  //         ->get()
+  //         ->keyBy('MATRICULE'); 
 
 
-      // donne echeance
-      $donneeScolariteEleve = Scolarite::whereIn('MATRICULE',  $contratValideMatricules)
-          ->select(
-              'MATRICULE', // Groupe par élève
-              DB::raw('SUM(CASE WHEN VALIDE = 1 AND AUTREF = 1 THEN MONTANT ELSE 0 END) as total_scolarite'), // Somme conditionnelle
-              DB::raw('SUM(CASE WHEN VALIDE = 1 AND AUTREF = 2 THEN MONTANT ELSE 0 END) as total_arriere'), // Somme conditionnelle
-              DB::raw('SUM(CASE WHEN VALIDE = 1 THEN MONTANT ELSE 0 END) as total_all'), // Somme conditionnelle
-              DB::raw('SUM(CASE WHEN VALIDE = 1 AND AUTREF IN (3, 4, 5, 6) THEN MONTANT ELSE 0 END) as total_autrefrais'), // Somme pour AUTREF 3, 4, 5
-              DB::raw('MAX(DATEOP) as derniere_datescolarit') // Dernière date de paiement
+  //     // donne echeance
+  //     $donneeScolariteEleve = Scolarite::whereIn('MATRICULE',  $contratValideMatricules)
+  //         ->select(
+  //             'MATRICULE', // Groupe par élève
+  //             DB::raw('SUM(CASE WHEN VALIDE = 1 AND AUTREF = 1 THEN MONTANT ELSE 0 END) as total_scolarite'), // Somme conditionnelle
+  //             DB::raw('SUM(CASE WHEN VALIDE = 1 AND AUTREF = 2 THEN MONTANT ELSE 0 END) as total_arriere'), // Somme conditionnelle
+  //             DB::raw('SUM(CASE WHEN VALIDE = 1 THEN MONTANT ELSE 0 END) as total_all'), // Somme conditionnelle
+  //             DB::raw('SUM(CASE WHEN VALIDE = 1 AND AUTREF IN (3, 4, 5, 6) THEN MONTANT ELSE 0 END) as total_autrefrais'), // Somme pour AUTREF 3, 4, 5
+  //             DB::raw('MAX(DATEOP) as derniere_datescolarit') // Dernière date de paiement
 
-          )
-          ->groupBy('MATRICULE') // Grouper les résultats par matricule d'élève
-          ->get()
-          ->keyBy('MATRICULE');
+  //         )
+  //         ->groupBy('MATRICULE') // Grouper les résultats par matricule d'élève
+  //         ->get()
+  //         ->keyBy('MATRICULE');
 
-  // dd($donneEcheanceEleve);
+  // // dd($donneEcheanceEleve);
 
-  $donneSituationFinanciere = [];
+  // $donneSituationFinanciere = [];
 
-  foreach ($filterEleves as $matricule => $filterEleve) {
-      $donneSituationFinanciere[$matricule] = [
-          'MATRICULE' => $matricule,
-          'NOM' => $filterEleve->NOM,
-          'PRENOM' => $filterEleve->PRENOM,
-          'CODECLAS' => $filterEleve->CODECLAS,
-          'reste_echeance' => ($donneEcheanceEleve[$matricule]->totalapayer ?? 0) - ($donneeScolariteEleve[$matricule]->total_scolarite ?? 0),
-          'reste_arriere' => ($donneEcheanceEleve[$matricule]->totalarriere ?? 0) - ($donneeScolariteEleve[$matricule]->total_arriere ?? 0),
-          'reste_autre_frais' => ($filterEleve->total_frais ?? 0) - ($donneeScolariteEleve[$matricule]->total_autrefrais ?? 0),
-          'total_du_hors_echeancier' => $filterEleve->total_tous ?? 0,
-          'total_tous_scolarite' => $donneeScolariteEleve[$matricule]->total_all ?? 0,
-          'derniere_date_scolarite' => $donneeScolariteEleve[$matricule]->derniere_datescolarit ?? null, // Dernière date de scolarité
-      ];
-  }
+  // foreach ($filterEleves as $matricule => $filterEleve) {
+  //     $donneSituationFinanciere[$matricule] = [
+  //         'MATRICULE' => $matricule,
+  //         'NOM' => $filterEleve->NOM,
+  //         'PRENOM' => $filterEleve->PRENOM,
+  //         'CODECLAS' => $filterEleve->CODECLAS,
+  //         'reste_echeance' => ($donneEcheanceEleve[$matricule]->totalapayer ?? 0) - ($donneeScolariteEleve[$matricule]->total_scolarite ?? 0),
+  //         'reste_arriere' => ($donneEcheanceEleve[$matricule]->totalarriere ?? 0) - ($donneeScolariteEleve[$matricule]->total_arriere ?? 0),
+  //         'reste_autre_frais' => ($filterEleve->total_frais ?? 0) - ($donneeScolariteEleve[$matricule]->total_autrefrais ?? 0),
+  //         'total_du_hors_echeancier' => $filterEleve->total_tous ?? 0,
+  //         'total_tous_scolarite' => $donneeScolariteEleve[$matricule]->total_all ?? 0,
+  //         'derniere_date_scolarite' => $donneeScolariteEleve[$matricule]->derniere_datescolarit ?? null, // Dernière date de scolarité
+  //     ];
+  // }
 
-  $donneSituationFinanciereGroupe = collect($donneSituationFinanciere)->groupBy('CODECLAS');
+  // $donneSituationFinanciereGroupe = collect($donneSituationFinanciere)->groupBy('CODECLAS');
+
+
+
+  // use Carbon\Carbon;
+// use Illuminate\Support\Facades\DB;
+
+// récupère la date (ex. depuis la requête)
+// $datePaiement = Carbon::parse($request->input('date_operation'))->toDateString(); // 'Y-m-d'
+$datePaiement = Carbon::today()->toDateString();
+
+// tableau de classes/matricules déjà présent dans ton code
+$CODECLASArray = explode(',', $classeCode);
+$contratValideMatricules = Eleve::whereIn('CODECLAS', $CODECLASArray)->pluck('MATRICULE');
+
+// 1) Échéances DUES selon l'échéancier **strictement avant** la date de paiement
+$donneEcheanceEleve = Echeance::whereIn('MATRICULE', $contratValideMatricules)
+    ->whereDate('DATEOP', '<=', $datePaiement) // strictement antérieures
+    ->select(
+        'MATRICULE',
+        DB::raw('COALESCE(SUM(APAYER),0) as totalapayer'),
+        DB::raw('COALESCE(SUM(ARRIERE),0) as totalarriere')
+    )
+    ->groupBy('MATRICULE')
+    ->get()
+    ->keyBy('MATRICULE');
+
+// 2) Paiements (scolarite) effectués **jusqu'à et y compris** la date de paiement
+$donneeScolariteEleve = Scolarite::whereIn('MATRICULE', $contratValideMatricules)
+    ->where('VALIDE', 1)
+    ->whereDate('DATEOP', '<=', $datePaiement) // inclut le jour
+    ->select(
+        'MATRICULE',
+        DB::raw('COALESCE(SUM(CASE WHEN AUTREF = 1 THEN MONTANT ELSE 0 END),0) as total_scolarite'),
+        DB::raw('COALESCE(SUM(CASE WHEN AUTREF = 2 THEN MONTANT ELSE 0 END),0) as total_arriere'),
+        DB::raw('COALESCE(SUM(CASE WHEN AUTREF IN (3,4,5,6) THEN MONTANT ELSE 0 END),0) as total_autrefrais'),
+        DB::raw('COALESCE(SUM(CASE WHEN VALIDE = 1 THEN MONTANT ELSE 0 END),0) as total_all'),
+        DB::raw('MAX(DATEOP) as derniere_datescolarit')
+    )
+    ->groupBy('MATRICULE')
+    ->get()
+    ->keyBy('MATRICULE');
+
+// 3) Récupère élèves filtrés (tel que tu faisais)
+$filterEleves = Eleve::whereIn('MATRICULE', $contratValideMatricules)
+    ->whereIn('CODECLAS', $CODECLASArray)
+    ->select(
+        'MATRICULE',
+        'NOM',
+        'PRENOM',
+        'CODECLAS',
+        DB::raw('COALESCE(FRAIS1,0) + COALESCE(FRAIS2,0) + COALESCE(FRAIS3,0) + COALESCE(FRAIS4,0) as total_frais'),
+        DB::raw('COALESCE(FRAIS1,0) + COALESCE(FRAIS2,0) + COALESCE(FRAIS3,0) + COALESCE(FRAIS4,0) + COALESCE(ARRIERE,0) as total_tous')
+    )
+    ->orderBy('NOM', 'asc')
+    ->groupBy('MATRICULE','NOM','PRENOM','CODECLAS','FRAIS1','FRAIS2','FRAIS3','FRAIS4','ARRIERE')
+    ->get()
+    ->keyBy('MATRICULE');
+
+// 4) Construire la situation financière à la date
+$donneSituationFinanciere = [];
+
+foreach ($filterEleves as $matricule => $filterEleve) {
+    // valeurs dues selon échéancier (jusqu'à la date)
+    $dueApayer = $donneEcheanceEleve[$matricule]->totalapayer ?? 0;
+    $dueArriere = $donneEcheanceEleve[$matricule]->totalarriere ?? 0;
+
+    // paiements affectés jusqu'à la date
+    $paidApayer = $donneeScolariteEleve[$matricule]->total_scolarite ?? 0;
+    $paidArriere = $donneeScolariteEleve[$matricule]->total_arriere ?? 0;
+    $paidAutre = $donneeScolariteEleve[$matricule]->total_autrefrais ?? 0;
+    $totalPaidAll = $donneeScolariteEleve[$matricule]->total_all ?? 0;
+
+    $totalApayer = $dueApayer + $dueArriere;
+
+    // calculs du reste (on ne retourne pas de négatif)
+    $reste_echeance = max(0, $totalApayer - $totalPaidAll);
+    $reste_arriere = max(0, $dueArriere - $paidArriere);
+    // autres frais = total_frais (FRAIS1..4) - paiements "autres" effectués
+    $reste_autre_frais = max(0, ($filterEleve->total_frais ?? 0) - $paidAutre);
+
+    $donneSituationFinanciere[$matricule] = [
+        'MATRICULE' => $matricule,
+        'NOM' => $filterEleve->NOM,
+        'PRENOM' => $filterEleve->PRENOM,
+        'CODECLAS' => $filterEleve->CODECLAS,
+        'due_apayer' => $dueApayer,
+        'paid_apayer' => $paidApayer,
+        'reste_echeance' => $reste_echeance,
+        'due_arriere' => $dueArriere,
+        'paid_arriere' => $paidArriere,
+        'reste_arriere' => $reste_arriere,
+        'total_frais' => $filterEleve->total_frais ?? 0,
+        'paid_autre_frais' => $paidAutre,
+        'reste_autre_frais' => $reste_autre_frais,
+        // 'total_du_hors_echeancier' => $filterEleve->total_tous ?? 0,
+        'total_tous_scolarite' => $totalPaidAll,
+        // 'derniere_date_scolarite' => $donneeScolariteEleve[$matricule]->derniere_datescolarit ?? null,
+    ];
+}
+
+$donneSituationFinanciereGroupe = collect($donneSituationFinanciere)->groupBy('CODECLAS');
+
+
 
   // Calcul de l'effectif et de la somme total_du_hors_echeancier par classe
-  $resultatParClasse = $donneSituationFinanciereGroupe->map(function ($eleves, $classe) {
-    $total_du = $eleves->sum('total_du_hors_echeancier'); 
-    $total_scolarite = $eleves->sum('total_tous_scolarite');
+  // Résumé par classe : effectif, total dû (APAYER+ARRIERE), total payé et taux de recouvrement
+$resultatParClasse = $donneSituationFinanciereGroupe->map(function ($eleves, $classe) {
+    // total que tous les élèves de la classe doivent (APAYER + ARRIERE)
+    $totalApayer = $eleves->sum(function ($e) {
+        return (($e['due_apayer'] ?? 0) + ($e['due_arriere'] ?? 0));
+    });
 
-    if ($total_du > 0) {
-        $recouvrement = ($total_du - $total_scolarite) / $total_du;
-    } else {
-        $recouvrement = 0; // ou null, selon ce que tu veux afficher
-    }
+    // total payé par tous les élèves (champ total_tous_scolarite)
+    $totalPaye = $eleves->sum(function ($e) {
+        return ($e['total_tous_scolarite'] ?? 0);
+    });
 
-    $pourcentageRecouvrement = round((1 - $recouvrement) * 100 , 2);
+    // reste à recouvrer
+    $reste = $totalApayer - $totalPaye;
+
+    // taux de recouvrement en pourcentage (0 si rien à recouvrer)
+    $taux = $totalApayer > 0 ? round(($totalPaye / $totalApayer) * 100, 2) : 0;
 
     return [
-        'effectif' => $eleves->count(), // Effectif par classe
-        'total_du_hors_echeancier' => $eleves->sum('total_du_hors_echeancier'), // Somme total_du_hors_echeancier par classe
-        'total_paye' => $eleves->sum('total_tous_scolarite'), // Somme total_du_hors_echeancier par classe
-        'reste' => $eleves->sum('total_du_hors_echeancier') - $eleves->sum('total_tous_scolarite'), // 
-        'pourcentage_recouvrement' =>  $pourcentageRecouvrement,  
+        'effectif' => $eleves->count(), // effectif par classe
+        'total_du_hors_echeancier' => $totalApayer, // somme APAYER + ARRIERE par classe
+        'total_paye' => $totalPaye, // somme des paiements (jusqu'à la date pivot)
+        'reste' => $reste >= 0 ? $reste : 0, // ne pas retourner de négatif si tu préfères
+        // 'reste' => $reste >= 0 ? $reste : 0, // ne pas retourner de négatif si tu préfères
+        'pourcentage_recouvrement' => $taux, // valeur numérique
+        // formats prêts à l'affichage
+        'total_du_hors_echeancier_fmt' => number_format($totalApayer, 0, ',', ' '),
+        'total_paye_fmt' => number_format($totalPaye, 0, ',', ' '),
+        'reste_fmt' => number_format(max(0, $reste), 0, ',', ' '),
+        'pourcentage_recouvrement_fmt' => number_format($taux, 2) . ' %',
     ];
-  });
+});
+
+
+
+
+  // donne de recouvrement 
+
 
   // dd($donneSituationFinanciereGroupe);
 
@@ -1677,6 +1798,8 @@ public function sfinanceclassespecifique($classeCode) {
     }
 
     // dd($donneRelance);
+
+
 
 
     return view ('pages.inscriptions.situationfinanceclasse1')

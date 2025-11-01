@@ -287,7 +287,7 @@
       <div class="left">
         <span>Copyright &copy; {{ date('Y') }}</span>
         <span>•</span>
-        <a href="https://www.cbox.bj" rel="noopener">CBOX SARL (TONY ABAMAN FIRMIN) </a>
+        <a href="https://www.cbox.bj" rel="noopener">C BOX Système intégré de gestion académique</a>
         <span>•</span>
         <span>Tous droits réservés.</span>
         <footer>
