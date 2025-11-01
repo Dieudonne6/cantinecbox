@@ -195,8 +195,8 @@
                                 <tbody>
                                     @foreach ($scolarite as $item)
                                         <tr>
-                                          {{--  <td>{{ $item->NUMERO }}</td>--}}
-                                          <td></td>
+                                           <td>{{ $item->NUMERO }}</td>
+                                          {{-- <td></td> --}}
                                             <td>{{ \Carbon\Carbon::parse($item->DATEOP)->format('d-m-Y') }}</td>
                                             <td>{{ number_format($item->MONTANT, 0, ',', ' ') }}</td>
                                         </tr>

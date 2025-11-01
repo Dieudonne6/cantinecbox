@@ -933,7 +933,10 @@ public function indexEleves(AuthPermissionService $authService)
     $typeclah = Typeclasse::get();
 
     // Récupérer les élèves avec leurs notes
-    $eleves = Eleve::with('notes')->orderBy('nom', 'asc')->get();
+    // $eleves = Eleve::with('notes')->orderBy('nom', 'asc')->get();
+    $eleves = Eleve::with('notes')
+        ->orderByRaw('LOWER(NOM) ASC, LOWER(PRENOM) ASC')
+        ->get();
 
     // Calcul des effectifs
     $totalEleves = $eleves->count();
@@ -970,7 +973,12 @@ public function filteraccueil($CODECLAS, AuthPermissionService $authService) {
     $typeenseigne = Typeenseigne::get();
     $typeclah = Typeclasse::get();
 
-        $eleves = Eleve::where('CODECLAS', $CODECLAS)->with('notes')->orderBy('nom', 'asc')->get();
+        // $eleves = Eleve::where('CODECLAS', $CODECLAS)->with('notes')->orderBy('NOM', 'asc')->get();
+
+        $eleves = Eleve::where('CODECLAS', $CODECLAS)
+            ->with('notes')
+            ->orderByRaw('LOWER(NOM) ASC, LOWER(PRENOM) ASC')
+            ->get();
 
             // Calcul des effectifs
     $totalEleves = $eleves->count();

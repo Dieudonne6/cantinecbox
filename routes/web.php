@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\CdController;
-
+use App\Http\Controllers\PointController;
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ConnexionDBController;
 use App\Http\Controllers\EleveController;
@@ -135,9 +135,12 @@ Route::get('/paramcomposantes', [PagesController::class, 'paramcomposantes']);
 
 // --------------------------------------------------
 Route::get('/duplicatarecu', [PagesController::class, 'duplicatarecu']);
+Route::get('/facturesimpleduplicata', [PagesController::class, 'duplicatarecufacturesimple']);
 Route::get('/pdfduplicatarecu/{counters}', [PagesController::class, 'pdfduplicatarecu']);
+Route::get('/pdfduplicatarecufactuesimple/{id}', [PagesController::class, 'pdfduplicatarecufactuesimple']);
 Route::match(['get', 'post'], '/listefacturescolarite', [PagesController::class, 'listefacturescolarite'])->name('listefacturescolarite');
 Route::get('/avoirfacturepaiescolarite/{codemecef}', [PagesController::class, 'avoirfacturepaiescolarite'])->name('avoirfacturepaiescolarite');
+Route::get('/suppfacturescolaritenonnormalise/{id}', [PagesController::class, 'suppfacturescolaritenonnormalise'])->name('suppfacturescolaritenonnormalise');
 Route::post('/avoirfacturescolarite/{codemecef}', [PagesController::class, 'avoirfacturescolarite'])->name('avoirfacturescolarite');
 Route::get('/avoirfacturepaiescolaritemodif/{codemecef}', [PagesController::class, 'avoirfacturepaiescolaritemodif'])->name('avoirfacturepaiescolaritemodif');
 Route::post('/avoirfacturescolaritmodification/{codemecef}', [PagesController::class, 'avoirfacturescolaritmodification'])->name('avoirfacturescolaritmodification');
@@ -683,3 +686,6 @@ Route::get('/configquotahoraires', [EmploidutempsController::class, 'configquota
 Route::get('/emploidutempsgeneral', [EmploidutempsController::class, 'general'])->name('emploidutempsgeneral');
 Route::get('/emploidutempsgeneral/excel', [EmploidutempsController::class, 'exportExcel'])->name('emploidutempsgeneral.excel');
 
+//route pour le point des payements
+Route::get('/point', [PointController::class, 'index'])->name('point');
+Route::get('/pointdepaiement/{matricule}', [PointController::class, 'index'])->name('pointdepaiement');

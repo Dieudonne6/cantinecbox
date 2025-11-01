@@ -132,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const excelButton = document.getElementById('excel-btn');
 
     let lastGeneratedHTML = "";
+    let lastCodeClasse = ''; // <-- on ajoute une variable globale pour garder le CODECLASS
 
     applyButton.addEventListener('click', function(event) {
         event.preventDefault(); 
@@ -164,6 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (elevesClasse.length === 0) return;
 
                 const maxVersements = Math.max(...elevesClasse.map(eleve => (eleve.montants?.length || 0)));
+                lastCodeClasse = elevesClasse[0].CODECLAS; // <-- sauvegarde
 
                 const tableHTML = `
                 <div class="table-wrapper">
@@ -236,7 +238,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const printWindow = window.open('', '', 'height=600,width=800');
         printWindow.document.write('<html><head><title>Impression</title>');
         printWindow.document.write('<style>.table-scrollable {border-collapse: collapse; width: 100%;} .table-scrollable th, .table-scrollable td {border: 1px solid #ddd; padding: 8px; text-align: center;} .sub-header {background-color: #e0e0e0;}</style>');
-        printWindow.document.write('<h2 style="text-align: center;">État des droits constatés par classe</h2>');
+        // printWindow.document.write('<h2 style="text-align: center;">État des droits constatés de la classe ${lastCodeClasse}</h2>');
+        printWindow.document.write(`<h2 style="text-align: center;">État des droits constatés de la classe ${lastCodeClasse}</h2>`);
         printWindow.document.write('</head><body>');
         printWindow.document.write(lastGeneratedHTML);
         printWindow.document.write('</body></html>');

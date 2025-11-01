@@ -322,6 +322,7 @@ align-items: center;  */
 
         $(document).ready(function() {
             $('#myTable').DataTable({
+                order: [[1, 'asc'], [2, 'asc']],
                 "language": {
                     "sProcessing": "Traitement en cours...",
                     "sSearch": "Rechercher&nbsp;:",
@@ -343,12 +344,16 @@ align-items: center;  */
                     }
                 }
             });
+
+            
         });
         $(document).ready(function() {
             $('#nomclasse').on('input', function() {
                 $('#libclasse').val($(this).val());
             });
         });
+
+
     </script>
     <!-- End custom js for this page-->
 
