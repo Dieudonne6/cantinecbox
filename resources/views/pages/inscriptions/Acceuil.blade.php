@@ -14,21 +14,22 @@
                     min-width: 160px;
                     background: white;
                     border: 1px solid rgba(0,0,0,0.12);
-                    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+                 
                     border-radius: 4px;
-                    padding: 6px 0;
+                  
+               
                     z-index: 99999; /* très au-dessus pour éviter d'être masqué */
                     }
 
                     .custom-dropdown .dropdown-item {
                     display: block;
-                    width: 100%;
-                    padding: 8px 12px;
+                    width: 80%;
+                    padding: 5px 8px;
                     text-align: left;
                     background: none;
                     border: none;
                     cursor: pointer;
-                    font-size: 18px;
+                    font-size: 15px;
                     font-weight: bold;
                     }
 
@@ -43,8 +44,7 @@
                     /* enlève la puce et les marges/paddings par défaut */
                     .dropdown-list {
                     list-style: none;   /* retire la puce */
-                    margin: 0;
-                    padding: 0;
+                    
                     }
 
                     /* s'assure que chaque <li> n'ajoute pas d'espace inutile */
@@ -56,8 +56,8 @@
                     /* style des items à l'intérieur du menu flottant */
                     .custom-dropdown .dropdown-list .dropdown-item {
                     display: block;
-                    width: 100%;
-                    padding: 8px 12px;
+                    width: 80%;
+                  line-height: 20px !important;
                     text-align: left;
                     background: none;
                     border: none;

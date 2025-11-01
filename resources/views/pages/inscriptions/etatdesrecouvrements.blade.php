@@ -36,14 +36,29 @@
             </div>
             <div class="card-body">
                 <h4 class="card-title">Etat des recouvrements</h4>
+                
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Erreur !</strong> {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Succès !</strong> {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                
                 <div class="form-group row">
                     <div class="col">
                         <label for="debut">Date de début</label>
-                        <input name="debut" id="debut" type="date" class="typeaheads" required>
+                        <input name="debut" id="debut" type="date" class="typeaheads" required value="{{ request('debut') ?? old('debut') }}">
                     </div>
                     <div class="col">
                         <label for="fin">Date de fin</label>
-                        <input name="fin" id="fin" type="date" class="typeaheads" required>
+                        <input name="fin" id="fin" type="date" class="typeaheads" required value="{{ request('fin') ?? old('fin') }}">
                     </div>
                 </div>
             </div>
@@ -61,7 +76,7 @@
                                         <label for="groupe" >Choisir un groupe</label>
                                         <select  id="groupe" name="groupe" aria-label="Small select example" >
                                             @foreach ($groupeclasse as $groupe)
-                                                <option value="{{ $groupe->LibelleGroupe }}">{{ $groupe->LibelleGroupe }}</option>
+                                                <option value="{{ $groupe->LibelleGroupe }}" {{ request('groupe') == $groupe->LibelleGroupe ? 'selected' : '' }}>{{ $groupe->LibelleGroupe }}</option>
                                             @endforeach
                                         </select>                                        
                                     </div>
@@ -69,7 +84,7 @@
                                         <label for="typeclasse" >Types de classe</label>
                                         <select id="typeclasse" name="typeclasse" aria-label="Small select example" >
                                             @foreach ($typeclasse as $type)
-                                                <option value="{{ $type->TYPECLASSE }}">{{ $type->LibelleType }}</option>
+                                                <option value="{{ $type->TYPECLASSE }}" {{ request('typeclasse') == $type->TYPECLASSE ? 'selected' : '' }}>{{ $type->LibelleType }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -103,9 +118,9 @@
                                 </div>
                                 <div class="radio-inline col-md-4">
                                     <select class="form-select mb-2" name="typeenseign" id="typeenseign">
-                                        <option selected>Sélectionner un enseignement</option>
+                                        <option value="">Sélectionner un enseignement</option>
                                         @foreach ($typeenseign as $type)
-                                            <option value="{{ $type->idenseign }}">{{ $type->type }}</option>
+                                            <option value="{{ $type->idenseign }}" {{ request('typeenseign') == $type->idenseign ? 'selected' : '' }}>{{ $type->type }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -144,72 +159,71 @@
 </div>
 
 <script>
-    function submitForm() {
-        const form = document.getElementById('recouvrementForm');
-        const selectedOption = document.querySelector('input[name="choixPlage"]:checked');
+function submitForm() {
+    const form = document.getElementById('recouvrementForm');
+    const selectedOption = document.querySelector('input[name="choixPlage"]:checked');
 
+    const debut = document.getElementById('debut').value;
+    const fin = document.getElementById('fin').value;
+    const typeClasse = document.getElementById('typeclasse').value;
+    const groupe = document.getElementById('groupe').value;
+    const typeEnseign = document.getElementById('typeenseign') ? document.getElementById('typeenseign').value : '';
 
-
-        // Récupération des valeurs des champs de date, type de classe et groupe
-        const debut = document.getElementById('debut').value;
-        const fin = document.getElementById('fin').value;
-        
-        const typeClasse = document.getElementById('typeclasse').value;
-        const groupe = document.getElementById('groupe').value;
-
-        // Vérifier que les champs requis sont remplis
-        // if (!debut || !fin || !typeClasse || !groupe) {
-        //     alert('Veuillez remplir tous les champs obligatoires.');
-        //     return;
-        // }
-        console.log(typeClasse);
-
-        if (!selectedOption) {
-            alert('Veuillez sélectionner une option.');
-            return;
-        }
-        
-
-        let actionUrl = '';
-
-        switch (selectedOption.value) {
-
-            case 'option1':
-                actionUrl = `{{ route('recouvrementgeneral') }}?debut=${debut}&fin=${fin}&typeclasse=${typeClasse}&groupe=${groupe}`;
-                break;
-
-            case 'option2':
-                actionUrl = `{{ route('recouvrementgeneralenseignement') }}?debut=${debut}&fin=${fin}&typeclasse=${typeClasse}&groupe=${groupe}`;
-                break;
-
-            case 'option4':
-                actionUrl = "{{ route('journaldetailleaveccomposante') }}";
-                break;
-
-            case 'option5':
-                actionUrl = "{{ route('journaldetaillesanscomposante') }}";
-                break;
-
-            case 'option6':
-                actionUrl = "{{ route('recouvrementoperateur') }}";
-                break;
-
-            case 'option7':
-                actionUrl = "{{ route('journaloperateur') }}";
-                break;
-
-            case 'option8':
-                actionUrl = "{{ route('journalresumerecouvrement') }}";
-                break;
-
-            default:
-                alert('Veuillez sélectionner une option valide.');
-                return;
-        }
-        form.action = actionUrl;
-        form.submit();
+    if (!debut || !fin) {
+        alert('Veuillez renseigner les dates de début et de fin.');
+        return;
     }
+
+    if (!typeClasse || !groupe) {
+        alert('Veuillez sélectionner un type de classe et un groupe.');
+        return;
+    }
+
+    if (!selectedOption) {
+        alert('Veuillez sélectionner une option.');
+        return;
+    }
+
+    if ((selectedOption.value === 'option4' || selectedOption.value === 'option5') && !typeEnseign) {
+        alert('Veuillez sélectionner un type d\'enseignement pour cette option.');
+        return;
+    }
+
+    let actionUrl = '';
+
+    // Utilise des template literals et encodeURIComponent pour les paramètres
+    switch (selectedOption.value) {
+        case 'option1':
+            actionUrl = `{{ route('recouvrementgeneral') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`;
+            break;
+        case 'option2':
+            actionUrl = `{{ route('recouvrementgeneralenseignement') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`;
+            break;
+        case 'option4':
+            actionUrl = `{{ route('journaldetailleaveccomposante') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}&typeenseign=${encodeURIComponent(typeEnseign)}`;
+            break;
+        case 'option5':
+            actionUrl = `{{ route('journaldetaillesanscomposante') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}&typeenseign=${encodeURIComponent(typeEnseign)}`;
+            break;
+        case 'option6':
+            actionUrl = `{{ route('recouvrementoperateur') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`;
+            break;
+        case 'option7':
+            actionUrl = `{{ route('journaloperateur') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`;
+            break;
+        case 'option8':
+            actionUrl = `{{ route('journalresumerecouvrement') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`;
+            break;
+        default:
+            alert('Veuillez sélectionner une option valide.');
+            return;
+    }
+
+    form.action = actionUrl;
+    form.submit();
+}
 </script>
+
 
 
 

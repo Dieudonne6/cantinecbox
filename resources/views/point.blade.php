@@ -174,13 +174,13 @@
                     <div>
                         <p><strong>Total à payer :</strong> <span style="float: right;">{{$totalAPayer}}</span></p>
                         <p classe="last_point">Paie actuel<span style="float: right;">{{ number_format($totalPaye, 0, ',', ' ') }} F</span></p>
-                        <p classe="last_point">Reste à payer<span style="float: right;">0</span></p>                
+                        <p classe="last_point">Reste à payer<span style="float: right;">{{$resteAPayer}}</span></p>                
                         <p classe="last_point">Arrièrés restants<span style="float: right;">{{$arriereRestant}}</span></p>
-                        <p classe="last_point">{{$params->LIBELF1}}<span style="float: right;">{{$libelF1Restant}}</span></p>
-                        <p classe="last_point">{{$params->LIBELF2}}<span style="float: right;">{{$libelF2Restant}}</span></p>
-                        <p classe="last_point">{{$params->LIBELF3}}<span style="float: right;">{{$apeRestant}}</span></p>
-                        <p classe="last_point">{{$params->LIBELF4}}<span style="float: right;">{{$libelF4Restant}}</span></p>
-                        <p style="margin-left: 3rem;"><strong>Total restant :</strong> <span style="float: right;">0</span></p>
+                        <p classe="last_point">{{$params->LIBELF1}} restant<span style="float: right;">{{$libelF1Restant}}</span></p>
+                        <p classe="last_point">{{$params->LIBELF2}} restant<span style="float: right;">{{$libelF2Restant}}</span></p>
+                        <p classe="last_point">{{$params->LIBELF3}} restant<span style="float: right;">{{$apeRestant}}</span></p>
+                        <p classe="last_point">{{$params->LIBELF4}} restant<span style="float: right;">{{$libelF4Restant}}</span></p>
+                        <p style="margin-left: 3rem;"><strong>Total restant :</strong> <span style="float: right;">{{$resteAPayer}}</span></p>
                     </div>
                    <br> <p style="font-weight: 500;">Signature, cachet</p>
                 </div>
@@ -256,13 +256,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <p><strong>Arriéré restant :</strong> <span style="float: right;">{{$arriereRestant}}</span></p>
-                                    <p><strong>{{$params->LIBELF1}} :</strong> <span style="float: right;">{{$libelF1Restant}}</span></p>
-                                    <p><strong>{{$params->LIBELF4}} :</strong> <span style="float: right;">{{$libelF4Restant}}</span></p>
+                                    <p><strong>{{$params->LIBELF1}}  :</strong> <span style="float: right;">{{$libelF1Restant}}</span></p>
+                                    <p><strong>{{$params->LIBELF4}} restant :</strong> <span style="float: right;">{{$libelF4Restant}}</span></p>
                                 </div>
                                 <div class="col-md-6">
                                     <p><strong>Écolage restant :</strong> <span style="float: right;">{{$scolariteRestant}}</span></p>
-                                    <p><strong>{{$params->LIBELF2}} :</strong> <span style="float: right;">{{$libelF2Restant}}</span></p>
-                                    <p><strong>{{$params->LIBELF3}} :</strong> <span style="float: right;">{{$apeRestant}}</span></p>
+                                    <p><strong>{{$params->LIBELF2}} restant:</strong> <span style="float: right;">{{$libelF2Restant}}</span></p>
+                                    <p><strong>{{$params->LIBELF3}} restant :</strong> <span style="float: right;">{{$apeRestant}}</span></p>
                                 </div>
                             </div>
                            
@@ -273,11 +273,11 @@
                         <p ><strong>Total à payer :</strong> <span style="float: right;"> {{$totalAPayer}}</span></p>
                         <p classe="last_point" >Total payé<span style="float: right;">{{ number_format($totalPaye, 0, ',', ' ') }} F</span></p>
                         <p classe="last_point">Arrièrés restants<span style="float: right;">{{$arriereRestant}}</span></p>
-                        <p classe="last_point">{{$params->LIBELF1}}<span style="float: right;">{{$libelF1Restant}}</span></p>
-                        <p classe="last_point">{{$params->LIBELF2}}<span style="float: right;">{{$libelF2Restant}}</span></p>
-                        <p classe="last_point">{{$params->LIBELF3}}<span style="float: right;">{{$apeRestant}}</span></p>
-                        <p classe="last_point">{{$params->LIBELF4}}<span style="float: right;">{{$libelF4Restant}}</span></p>
-                        <p style="margin-left: 3rem;"><strong>Total restant :</strong> <span style="float: right;">0</span></p>
+                        <p classe="last_point">{{$params->LIBELF1}} restant<span style="float: right;">{{$libelF1Restant}}</span></p>
+                        <p classe="last_point">{{$params->LIBELF2}} restant<span style="float: right;">{{$libelF2Restant}}</span></p>
+                        <p classe="last_point">{{$params->LIBELF3}} restant<span style="float: right;">{{$apeRestant}}</span></p>
+                        <p classe="last_point">{{$params->LIBELF4}} restant<span style="float: right;">{{$libelF4Restant}}</span></p>
+                        <p style="margin-left: 3rem;"><strong>Total restant :</strong> <span style="float: right;">{{$resteAPayer}}</span></p>
                     </div>
                    <br> <p style="font-weight: 500; text-align: end;">Signature, cachet</p>
 

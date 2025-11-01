@@ -104,7 +104,9 @@ class PointController extends Controller
 
             $totalAPayer = $eleve->FRAIS2 + $eleve->FRAIS4 + $eleve->FRAIS3 + $eleve->FRAIS1 + $eleve->ARRIERE + $eleve->APAYER;
 
-            return view('point', compact('paiements', 'matricule', 'totalPaye', 'entete', 'eleve', 'params', 'arriereRestant', 'scolariteRestant', 'apeRestant', 'libelF4Restant', 'libelF2Restant', 'libelF1Restant', 'totalAPayer'));
+            $resteAPayer = $libelF1Restant + $libelF2Restant + $libelF4Restant + $apeRestant + $arriereRestant + $scolariteRestant;
+
+            return view('point', compact('paiements', 'matricule', 'totalPaye', 'entete', 'eleve', 'params', 'arriereRestant', 'scolariteRestant', 'apeRestant', 'libelF4Restant', 'libelF2Restant', 'libelF1Restant', 'totalAPayer', 'resteAPayer'));
             
         }
 
