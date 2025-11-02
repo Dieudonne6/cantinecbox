@@ -5999,7 +5999,7 @@ public function enregistrerPaiement(Request $request, $matricule)
                 'frais3PayéAujourdhui' => $frais3PayéAujourdhui,
                 'frais4PayéAujourdhui' => $frais4PayéAujourdhui,
                 'ville' => $ville,
-
+                'datePaiement' => $datePaiement,
                 // libelleFrais
                 'LIBELF1' => $LIBELF1,
                 'LIBELF2' => $LIBELF2,
