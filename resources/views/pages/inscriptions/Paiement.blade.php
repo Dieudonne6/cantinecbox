@@ -172,7 +172,7 @@
 
                                     <!-- Champs générés dynamiquement -->
                                     @foreach (['LIBELF1', 'LIBELF2', 'LIBELF3', 'LIBELF4'] as $key => $libelleField)
-                                        <div class="col-md-2" data-id="{{ $key + 3 }}">
+                                        <div class="col-md-2" data-id="{{ $key + 2 }}">
                                             <label for="libelle-{{ $key }}">{{ $libelle->$libelleField }}</label>
                                             @php
                                                 $fraisField = 'FRAIS' . ($key + 1);
@@ -180,7 +180,7 @@
                                             @endphp
                                             <input id="libelle-{{ $key }}" name="libelle_{{ $key }}"
                                                 class="form-control composante" type="number"
-                                                data-priorite="{{ $key + 3 }}"
+                                                data-priorite="{{ $key + 2 }}"
                                                 placeholder="{{ $eleve->$fraisField - $totalLibelle }}" value="0"
                                                 oninput="verifierSaisie()">
                                         </div>
