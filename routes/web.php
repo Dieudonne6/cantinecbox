@@ -684,3 +684,9 @@ Route::get('/configquotahoraires', [EmploidutempsController::class, 'configquota
 //route pour le point des payements
 Route::get('/point', [PointController::class, 'index'])->name('point');
 Route::get('/pointdepaiement/{matricule}', [PointController::class, 'index'])->name('pointdepaiement');
+
+
+//route pour l'enrégistrement de la disponibilité
+Route::post('/dispo/storeDispo', [InscrirepersonnelController::class, 'storeDispo'])->name('dispo.storeDispo');
+// routes pour récupérer les disponibilités des agents
+Route::get('/disponibilites/{matricule}', [InscrirepersonnelController::class, 'getDispos']);

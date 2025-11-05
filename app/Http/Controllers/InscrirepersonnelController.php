@@ -37,14 +37,13 @@ class InscrirepersonnelController extends Controller
     //     return view('pages.GestionPersonnel.inscrirepersonnel' , compact('classes', 'matieres', 'primes', 'profils', 'agents'));
     // }
 
-    public function index(Request $request, $matricule = null)
+public function index(Request $request, $matricule = null)
     {
         $classes = Classesgroupeclass::all();
         $matieres = Matieres::all();
         $primes = Tprime::all();
         $profils = Profil::all();
         $agents = TypeAgent::all();
-        $groupes = Groupe::all();
 
         $agentData = null;
         $selectedCodes = [];
@@ -57,7 +56,7 @@ class InscrirepersonnelController extends Controller
         }
 
         return view('pages.GestionPersonnel.inscrirepersonnel',
-            compact('classes','matieres','primes','profils','agents','agentData','selectedCodes','groupes'));
+            compact('classes','matieres','primes','profils','agents','agentData','selectedCodes'));
     }
 
 
@@ -384,10 +383,16 @@ class InscrirepersonnelController extends Controller
         return redirect()->back()->with('success', "Agent enregistré avec succès ! Matricule : $matricule, Login : $loginComplet");
     }
 
-    //fonction pour l'enrégistremenrt de disponibilité
+
+
+
+        //fonction pour l'enrégistremenrt de disponibilité
     public function storeDispo(Request $request)
         {
             $matricule = $request->MATRICULE;
+
+            // Supprimer les anciennes disponibilités
+            Dispos::where('MATRICULE', $matricule)->delete();
 
             foreach ($request->dispo ?? [] as $jour => $heures) {
                 foreach ($heures as $h) {
@@ -401,6 +406,20 @@ class InscrirepersonnelController extends Controller
 
             return back()->with('success', 'Disponibilités enregistrées');
         }
+
+    
+    //fonction pour récupérer la disponibilité de chaque agent et l'affichaer 
+    public function getDispos($matricule)
+        {
+            $dispos = Dispos::where('MATRICULE', $matricule)
+                            ->select('JOUR', 'HEURE')
+                            ->get();
+
+            return response()->json($dispos);
+        }
+
+
+
 }
 
 

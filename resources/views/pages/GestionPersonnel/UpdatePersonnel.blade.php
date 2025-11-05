@@ -228,75 +228,70 @@
 
             <div class="modal-body">
                 <form>
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                    <label class="form-label fw-bold">Nom</label>
-                    <input type="text" class="form-control" value="">
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Nom</label>
+                            <input type="text" id="nom_agent" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Prénom</label>
+                            <input type="text" id="prenom_agent" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Sexe</label>
+                            <input type="text" id="sexe_agent" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Cycles</label>
+                            <input type="text" id="cycle_agent" class="form-control" readonly>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                    <label class="form-label fw-bold">Prénom</label>
-                    <input type="text" class="form-control" value="">
-                    </div>
-                    <div class="col-md-3">
-                    <label class="form-label fw-bold">Sexe</label>
-                    <select class="form-select">
-                        <option>Masculin</option>
-                        <option>Féminin</option>
-                    </select>
-                    </div>
-                    <div class="col-md-3">
-                    <label class="form-label fw-bold">Cycles</label>
-                    <select class="form-select">
-                        <option>Cycle 1</option>
-                        <option>Cycle 2</option>
-                    </select>
-                    </div>
-                </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                    <label class="form-label fw-bold">Jour</label>
-                    <select class="form-select">
-                        <option>Lun</option><option>Mar</option><option>Mer</option>
-                        <option>Jeu</option><option>Ven</option><option>Sam</option>
-                    </select>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                        <label class="form-label fw-bold">Jour</label>
+                        <select class="form-select">
+                            <option>Lun</option><option>Mar</option><option>Mer</option>
+                            <option>Jeu</option><option>Ven</option><option>Sam</option>
+                        </select>
+                        </div>
+                        <div class="col-md-3">
+                        <label class="form-label fw-bold">Heure</label>
+                        <select class="form-select">
+                            @for ($h = 7; $h <= 19; $h++)
+                            <option>{{ str_pad($h, 2, '0', STR_PAD_LEFT) }}H</option>
+                            @endfor
+                        </select>
+                        </div>
+                        <div class="col-md-2">
+                        <label class="form-label fw-bold">Durée</label>
+                        <input type="number" class="form-control" min="1" value="1">
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                    <label class="form-label fw-bold">Heure</label>
-                    <select class="form-select">
-                        @for ($h = 7; $h <= 19; $h++)
-                        <option>{{ str_pad($h, 2, '0', STR_PAD_LEFT) }}H</option>
+
+                    <table class="table table-bordered align-middle text-center"> 
+                        <thead class="table-secondary">
+                        <tr>
+                            <th>Classes</th>
+                            <th>Salles</th>
+                            <th>Matière</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @for ($i = 0; $i < 5; $i++)
+                        <tr>
+                            <td><input type="text" class="form-control"></td>
+                            <td><input type="text" class="form-control"></td>
+                            <td><input type="text" class="form-control"></td>
+                        </tr>
                         @endfor
-                    </select>
-                    </div>
-                    <div class="col-md-2">
-                    <label class="form-label fw-bold">Durée</label>
-                    <input type="number" class="form-control" min="1" value="1">
-                    </div>
-                </div>
+                        </tbody>
+                    </table>
 
-                <table class="table table-bordered align-middle text-center"> 
-                    <thead class="table-secondary">
-                    <tr>
-                        <th>Classes</th>
-                        <th>Salles</th>
-                        <th>Matière</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @for ($i = 0; $i < 5; $i++)
-                    <tr>
-                        <td><input type="text" class="form-control"></td>
-                        <td><input type="text" class="form-control"></td>
-                        <td><input type="text" class="form-control"></td>
-                    </tr>
-                    @endfor
-                    </tbody>
-                </table>
-
-                <div class="text-center mt-3">
-                    <button type="submit" class="btn btn-primary">VALIDER</button>
-                </div>
+                    {{--  <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary">VALIDER</button>
+                    </div>--}}
                 </form>
             </div>
             </div>
@@ -390,9 +385,47 @@
         $(document).on('click', '[data-bs-target="#disponibiliteModal"]', function() {
             let matricule = $(this).data('matricule');
             $('#matricule_agent').val(matricule);
+
+            // D'abord, décocher toutes les cases
+            $('#formDispo input[type=checkbox]').prop('checked', false);
+
+            // Charger les dispos existantes de cet agent
+            $.get(`/disponibilites/${matricule}`, function(dispos) {
+                dispos.forEach(d => {
+                    // Coche la case correspondante si elle existe
+                    $(`input[name="dispo[${d.JOUR}][]"][value="${d.HEURE}"]`).prop('checked', true);
+                });
+            });
         });
 
-</script>
+    </script>
+
+    <script>
+        //Script pour le remplissage des données dans le modal position selon l'agent
+        $(document).on('click', '[data-bs-target="#positionModal"]', function() {
+            let nom = $(this).data('nom');
+            let prenom = $(this).data('prenom');
+            let sexe = $(this).data('sexe');
+            let cycle = $(this).data('cycle');
+
+            // Conversion du sexe
+            let sexeLabel = (sexe == 0) ? 'Masculin' : 'Féminin';
+
+            // Conversion du cycle
+            let cycleLabel = '';
+            if (cycle == 1) cycleLabel = 'Cycle 1';
+            else if (cycle == 2) cycleLabel = 'Cycle 2';
+            else if (cycle == 0) cycleLabel = 'Cycle 1 & 2';
+            else cycleLabel = 'Non défini';
+
+            // Remplir les champs du modal
+            $('#nom_agent').val(nom);
+            $('#prenom_agent').val(prenom);
+            $('#sexe_agent').val(sexeLabel);
+            $('#cycle_agent').val(cycleLabel);
+        });
+
+    </script>
 
    
 @endsection
