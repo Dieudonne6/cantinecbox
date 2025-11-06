@@ -200,87 +200,120 @@
                     @endforeach
 
 
-                 @else
+                @else
                     <p  style="text-align: center; font-size: 19px; margin-top:5rem;"><strong>Aucune situation financiere pour cette classe</strong></p>
                 @endif
                 </div>
-
                 <div id="contenuRelance" class="d-none">
                     <div class="container">
                         @foreach ($donneRelance as $matricule => $donne)
-                        @php
-                            $sommeReste = 0; // Initialise la somme du reste à payer pour chaque élève
-                        @endphp
-                        <div class="row">
-                            <div class="col-10">
-                                GGG
-                            </div>
-                            <div class="col-2">
-                                <p>ccc , le {{$dateDuJour}}</p>
-                                <p>Aux parents de </p>
-                                <p> <strong>{{$donne[0]['NOM']}} {{$donne[0]['PRENOM']}} </strong></p>
-                                <p>{{$donne[0]['CODECLAS']}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <p>Chers parents,</p>
-                                {{-- Calcul de la somme des restes à payer --}}
-                                @foreach ($donne as $donneecheance)
-                                    @php
-                                        $sommeReste += $donneecheance['reste_a_payer']; // Accumule le reste à payer
-                                    @endphp
-                                @endforeach
-                            <p class="texte"> Sauf erreur ou omission de notre part, nous vous rappelons qu'au titre des frais
-                                de scolarité <strong>{{$donne[0]['annescolaire']}}</strong> de votre enfant, ci-dessus mentionné, vous restez devoir dans nos livres,
-                                  par rapport aux échéances de paiement de paiement, la somme de <strong>{{ $sommeReste }}</strong>. Conformement aux  recapitulatif de paiement 
-                                  ci-dessous.</p><br><br>
-                            {{-- Tableau des élèves --}}
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Date échéance</th>
-                                        <th>Montant à payer</th>
-                                        <th>Montant payé</th>
-                                        <th>Reste à payer</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        @foreach ($donne as $index => $donneecheance)
-                                            
-                                            <tr>
-                                                <td>{{ $index + 1 }}</td>
-                                                <td>{{$donneecheance['date_echeance']}}</td>
-                                                <td>{{$donneecheance['montant_a_payer']}}</td>
-                                                <td>{{$donneecheance['montant_payer']}}</td>
-                                                <td>{{$donneecheance['reste_a_payer']}}</td>
-                                            </tr>
-                                            @php
-                                                $sommeReste += $donneecheance['reste_a_payer']; // Accumule le reste à payer
-                                            @endphp
-        
+                            @php
+                                // Ne pas remettre "use Carbon\Carbon;" ici — import déjà fait en haut du fichier
+                                $sommeReste = 0; // Somme totale du reste dû jusqu'à aujourd'hui
+                                $dateCourante = \Carbon\Carbon::now(); // Date du jour (référence complète pour éviter les imports)
+                                
+                                // Transformer en collection et filtrer : échéances dont la date <= aujourd'hui et reste > 0
+                               // nouveau : ne collecte que les échéances
+                                $echeances = $donne['echeances'] ?? [];
+                                $donneesFiltrees = collect($echeances)->filter(function ($d) use ($dateCourante) {
+                                    return isset($d['date_echeance'])
+                                        && \Carbon\Carbon::parse($d['date_echeance'])->lessThanOrEqualTo($dateCourante)
+                                        && (!isset($d['reste_a_payer']) || $d['reste_a_payer'] > 0);
+});
 
-                                        @endforeach
+                            @endphp
 
-                                </tbody>
-                            </table>
-                        </div><br><br>
-                        <p>Vous êtes invité à régler ce solde au plus tard le <strong>{{$dateDuJour}}</strong></p>
-                        <p>Veuillez agréer, chers parents, l'expression de nos sentiments distingués.</p>
-                        <p>Nous vous remercions par avance pour votre compréhension.</p>
-                        <div style="align-items: flex-end">
+                            @if ($donneesFiltrees->isNotEmpty())
+                                <div class="row">
+                                    <div class="col-10"></div>
+                                    <div class="col-2">
+                                        <p>ccc , le {{ $dateDuJour }}</p>
+                                        <p>Aux parents de </p>
+                                        <p><strong>{{ ($donne['echeances'][0]['NOM'] ?? $donne['info_arriere']['nom'] ?? '') }} {{ ($donne['echeances'][0]['PRENOM'] ?? '') }}</strong></p>
+                                        <p>{{ $donne['echeances'][0]['CODECLAS'] ?? '' }}</p>
+                                    </div>
+                                </div>
 
-                            <p class="direction">La direction</p>
-                        </div>
+                                @php
+                                    $sommeReste = $donneesFiltrees->sum(function($item) {
+                                        return $item['reste_a_payer'] ?? 0;
+                                    });
+                                @endphp
 
-                        {{-- <div class="page-break"></div> --}}
-                        </div>
-                        <div class="page-break"></div>
-                    @endforeach
+                                <div class="row">
+                                    <p>Chers parents,</p>
+                                    <p class="texte">
+                                        Sauf erreur ou omission de notre part, nous vous rappelons qu'au titre des frais
+                                        de scolarité <strong>{{ $donne['echeances'][0]['annescolaire'] ?? '' }}</strong> de votre enfant ci-dessus mentionné,
+                                        vous restez devoir dans nos livres, par rapport aux échéances de paiement arrivées à terme,
+                                        la somme de <strong>{{ number_format($sommeReste, 0, ',', ' ') }} FCFA</strong>,
+                                        conformément au récapitulatif ci-dessous.
+                                    </p><br><br>
 
+                                    <div class="table-container">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Date échéance</th>
+                                                    <th>Montant à payer</th>
+                                                    <th>Montant payé</th>
+                                                    <th>Reste à payer</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($donneesFiltrees->values() as $index => $donneecheance)
+                                                    <tr>
+                                                        <td>{{ $index + 1 }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($donneecheance['date_echeance'])->format('d/m/Y') }}</td>
+                                                        <td>{{ number_format($donneecheance['montant_a_payer'] ?? 0, 0, ',', ' ') }}</td>
+                                                        <td>{{ number_format($donneecheance['montant_payer'] ?? 0, 0, ',', ' ') }}</td>
+                                                        <td>{{ number_format($donneecheance['reste_a_payer'] ?? 0, 0, ',', ' ') }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div><br><br>
+                                    @if(isset($donne['info_arriere']) && $donne['info_arriere']['total_arriere'] != 0)
+                                        <div class="table-arriere">
+                                            <p><strong>Concernant vos arriérés</strong></p>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Montant total de l'arriéré</th>
+                                                        <th>Déjà payé</th>
+                                                        <th>Reste à payer</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{ number_format($donne['info_arriere']['total_arriere'] ?? 0, 0, ',', ' ') }}</td>
+                                                        <td>{{ number_format($donne['info_arriere']['deja_paye'] ?? 0, 0, ',', ' ') }}</td>
+                                                        <td style="font-weight: bold; color: red;">
+                                                            {{ number_format($donne['info_arriere']['reste'] ?? 0, 0, ',', ' ') }}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @else
+                                        <p>Aucun arriéré enregistré</p>
+                                    @endif
+
+                                    <br><br>
+
+                                    <p>Vous êtes invité à régler ce solde au plus tard le <strong>{{ $dateDuJour }}</strong>.</p>
+                                    <p>Veuillez agréer, chers parents, l'expression de nos sentiments distingués.</p>
+                                    <p>Nous vous remercions par avance pour votre compréhension.</p>
+                                    <div style="align-items: flex-end">
+                                        <p class="direction">La direction</p>
+                                    </div>
+                                </div>
+
+                                <div class="page-break"></div>
+                            @endif
+                        @endforeach
                     </div>
-
                 </div>
 
                 </div>
