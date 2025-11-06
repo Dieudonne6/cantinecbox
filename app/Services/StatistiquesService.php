@@ -656,8 +656,8 @@ class StatistiquesService
     {
         // $classes = Classes::with('eleves')->where('CODEPROMO', '!=', '1')->get();
         $classes = Classes::with('eleves')
-            ->where('CODEPROMO', '!=', '1')
-            ->where('CODEPROMO', '!=', '00')
+            ->where('TYPEENSEIG', '!=', '2')
+            ->where('TYPEENSEIG', '!=', '1')
             ->get();
         $resultats  = [];
     

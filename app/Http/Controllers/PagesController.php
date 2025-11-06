@@ -2755,10 +2755,297 @@ public function eleveparclasseessai() {
         $nomecole = $infoecole->NOMETAB;
         $logo = $infoecole->logoimage;
         $jsonItem = $facturePaie->itemfacture;
+        $mode_paiement = $facturePaie->mode_paiement;
+        $montanttotal = $facturePaie->montant_total;
         $donneItem = json_decode($jsonItem);
-        // dd($facturePaie);
+        $reffacture = $id;
+        $logoUrl = $infoecole ? $infoecole->logoimage: null; 
 
-        return view('pages.Etats.pdfduplicatarecufacturesimple', compact('nomecole', 'logo', 'facturePaie', 'donneItem', 'entete'));
+        // ----------------------------
+        $libelle = Params2::first();
+        $LIBELF1 = $libelle->LIBELF1;
+        $LIBELF2 = $libelle->LIBELF2;
+        $LIBELF3 = $libelle->LIBELF3;
+        $LIBELF4 = $libelle->LIBELF4;
+
+        $titreComptable = $libelle->TITREINTENDANT;
+        $nomComptable = $libelle->NOMINTEND;
+        $ville = $libelle->VILLE;
+
+        $NUMRECU = $facturePaie->NUMRECU;
+        $MATRICULE = $facturePaie->MATRICULE;
+        $datePaiement = $facturePaie->date_time;
+        $datePaiementFormated = Carbon::parse($datePaiement)->format('Y-m-d'); // "2025-10-27"
+
+
+        $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
+        $classeeleve = $eleve->CODECLAS;
+        $nomcompleteleve = $facturePaie->nom;
+        $montantPayerLeJou = $facturePaie->montant_total;
+        $infoGeneralScolarit = Scolarite::where('MATRICULE', $MATRICULE)
+                ->where('DATEOP', $datePaiementFormated)
+                ->where('NUMRECU', $NUMRECU)
+                ->where('VALIDE', 1)
+                ->first();
+        
+        $editeur = $infoGeneralScolarit->SIGNATURE;
+
+        // recuperation de l'ancien solde restant
+
+
+        //------------------------------------------
+
+                // 1) récupérer la date_time complète de la facture courante
+        $currentDateTime = DB::table('facturescolarit')
+            ->where('id', $id)
+            ->value('date_time'); // ex "2025-11-07 12:43:00"
+
+        // 2) extraire la date au format Y-m-d
+        $dateOnly = Carbon::parse($currentDateTime)->toDateString(); // "2025-11-07"
+
+        // 3) récupérer les NUMRECU des factures du même élève, mêmes jour, faites AVANT la facture courante
+        $nums = DB::table('facturescolarit')
+            ->where('MATRICULE', $MATRICULE)
+            ->where('statut', 1)
+            ->whereDate('date_time', $dateOnly)       // même jour
+            ->where('date_time', '<', $currentDateTime) // strictement avant dans la journée
+            ->pluck('NUMRECU')                         // récupère uniquement NUMRECU
+            ->toArray();
+
+
+              $infoScolarit_total = 0;
+              $infoArriere_total = 0;
+              $infoFrais1_total = 0;
+              $infoFrais2_total = 0;
+              $infoFrais3_total = 0;
+              $infoFrais4_total = 0;
+
+          if (empty($nums)) {
+              $infoScolarit_total = 0;
+              $infoArriere_total = 0;
+              $infoFrais1_total = 0;
+              $infoFrais2_total = 0;
+              $infoFrais3_total = 0;
+              $infoFrais4_total = 0;
+          } else {
+              $infoScolarit_total = Scolarite::where('MATRICULE', $MATRICULE)
+                  ->whereDate('DATEOP', $datePaiementFormated)  // ou ->where('DATEOP', $datePaiementFormated) si c'est exactement stocké comme date
+                  ->whereIn('NUMRECU', $nums)
+                  ->where('VALIDE', 1)
+                  ->where('AUTREF', 1)
+                  ->sum('MONTANT');
+
+              $infoArriere_total = Scolarite::where('MATRICULE', $MATRICULE)
+                  ->whereDate('DATEOP', $datePaiementFormated)  // ou ->where('DATEOP', $datePaiementFormated) si c'est exactement stocké comme date
+                  ->whereIn('NUMRECU', $nums)
+                  ->where('VALIDE', 1)
+                  ->where('AUTREF', 2)
+                  ->sum('MONTANT');
+
+              $infoFrais1_total = Scolarite::where('MATRICULE', $MATRICULE)
+                  ->whereDate('DATEOP', $datePaiementFormated)  // ou ->where('DATEOP', $datePaiementFormated) si c'est exactement stocké comme date
+                  ->whereIn('NUMRECU', $nums)
+                  ->where('VALIDE', 1)
+                  ->where('AUTREF', 3)
+                  ->sum('MONTANT');
+
+              $infoFrais2_total = Scolarite::where('MATRICULE', $MATRICULE)
+                  ->whereDate('DATEOP', $datePaiementFormated)  // ou ->where('DATEOP', $datePaiementFormated) si c'est exactement stocké comme date
+                  ->whereIn('NUMRECU', $nums)
+                  ->where('VALIDE', 1)
+                  ->where('AUTREF', 4)
+                  ->sum('MONTANT');
+
+              $infoFrais3_total = Scolarite::where('MATRICULE', $MATRICULE)
+                  ->whereDate('DATEOP', $datePaiementFormated)  // ou ->where('DATEOP', $datePaiementFormated) si c'est exactement stocké comme date
+                  ->whereIn('NUMRECU', $nums)
+                  ->where('VALIDE', 1)
+                  ->where('AUTREF', 5)
+                  ->sum('MONTANT');
+
+              $infoFrais4_total = Scolarite::where('MATRICULE', $MATRICULE)
+                  ->whereDate('DATEOP', $datePaiementFormated)  // ou ->where('DATEOP', $datePaiementFormated) si c'est exactement stocké comme date
+                  ->whereIn('NUMRECU', $nums)
+                  ->where('VALIDE', 1)
+                  ->where('AUTREF', 6)
+                  ->sum('MONTANT');
+          }
+
+
+
+        // ancien solde de scolarite
+          $totalScolaritePayé = Scolarite::where('MATRICULE', $MATRICULE)
+                ->where('AUTREF', '1')
+                ->where('VALIDE', '1')
+                ->where('DATEOP', '<', $datePaiementFormated)
+                ->sum('MONTANT');
+
+          $totalSocolariteAPayer = $eleve->APAYER;
+          $totalRestantScolarité = $totalSocolariteAPayer - ($totalScolaritePayé + $infoScolarit_total);
+
+        // ancien solde de arrierre
+          $totalArrierePayé = Scolarite::where('MATRICULE', $MATRICULE)
+                ->where('AUTREF', '2')
+                ->where('VALIDE', '1')
+                ->where('DATEOP', '<', $datePaiementFormated)
+                ->sum('MONTANT');
+
+          $totalArrierreAPayer = $eleve->ARRIERE;
+          $totalRestantArrierre = $totalArrierreAPayer - ($totalArrierePayé + $infoArriere_total);
+
+        // ancien solde de Frais1
+          $totalFrais1Payé = Scolarite::where('MATRICULE', $MATRICULE)
+                ->where('AUTREF', '3')
+                ->where('VALIDE', '1')
+                ->where('DATEOP', '<', $datePaiementFormated)
+                ->sum('MONTANT');
+
+          $totalFrais1APayer = $eleve->FRAIS1;
+          $totalRestantFrais1 = $totalFrais1APayer - ($totalFrais1Payé + $infoFrais1_total);
+
+          // ancien solde de Frais2
+          $totalFrais2Payé = Scolarite::where('MATRICULE', $MATRICULE)
+                ->where('AUTREF', '4')
+                ->where('VALIDE', '1')
+                ->where('DATEOP', '<', $datePaiementFormated)
+                ->sum('MONTANT');
+
+          $totalFrais2APayer = $eleve->FRAIS2;
+          $totalRestantFrais2 = $totalFrais2APayer - ($totalFrais2Payé + $infoFrais2_total);
+
+          // ancien solde de Frais3
+          $totalFrais3Payé = Scolarite::where('MATRICULE', $MATRICULE)
+                ->where('AUTREF', '5')
+                ->where('VALIDE', '1')
+                ->where('DATEOP', '<', $datePaiementFormated)
+                ->sum('MONTANT');
+
+          $totalFrais3APayer = $eleve->FRAIS3;
+          $totalRestantFrais3 = $totalFrais3APayer - ($totalFrais3Payé + $infoFrais3_total);
+
+
+          // ancien solde de Frais4
+          $totalFrais4Payé = Scolarite::where('MATRICULE', $MATRICULE)
+                ->where('AUTREF', '6')
+                ->where('VALIDE', '1')
+                ->where('DATEOP', '<', $datePaiementFormated)
+                ->sum('MONTANT');
+
+          $totalFrais4APayer = $eleve->FRAIS4;
+          $totalRestantFrais4 = $totalFrais4APayer - ($totalFrais4Payé + $infoFrais4_total);
+
+
+
+          // total dû jusqu'à la date
+          $totalDueSelonEcheancier = DB::table('echeance')
+              ->where('MATRICULE', $MATRICULE)
+              ->whereDate('DATEOP', '<=', $datePaiementFormated)
+              ->selectRaw('COALESCE(SUM(APAYER + ARRIERE), 0) as total')
+              ->value('total');
+
+          // total payé avant la date
+          $totalPayerAvantAujourdhui = DB::table('scolarit')
+              ->where('MATRICULE', $MATRICULE)
+              ->where('VALIDE', 1)
+              ->whereDate('DATEOP', '<', $datePaiementFormated)
+              ->selectRaw('COALESCE(SUM(MONTANT), 0) as total')
+              ->value('total');
+
+          // total payé le jour
+          $totalPayerAujourdhui = DB::table('scolarit')
+              ->where('MATRICULE', $MATRICULE)
+              ->where('VALIDE', 1)
+              ->whereDate('DATEOP', $datePaiementFormated)
+              ->selectRaw('COALESCE(SUM(MONTANT), 0) as total')
+              ->value('total');
+
+                $totalPayerAceJour = $totalPayerAvantAujourdhui + $infoScolarit_total + $infoArriere_total + $infoFrais1_total + $infoFrais2_total + $infoFrais3_total + $infoFrais4_total + $montantPayerLeJou;
+                // $totalPayerAceJour = $totalPayerAvantAujourdhui + $totalPayerAujourdhui;
+
+                $resteEcheancierAceJour = $totalDueSelonEcheancier - $totalPayerAceJour;
+
+                $val = (float) $resteEcheancierAceJour;
+                $resteEcheance = max(0, $val);
+
+          $totalPayerAvant = $totalScolaritePayé + $totalArrierePayé + $totalFrais1Payé + $totalFrais2Payé + $totalFrais3Payé + $totalFrais4Payé;
+          $totalGlobalApayer = $totalSocolariteAPayer + $totalArrierreAPayer + $totalFrais1APayer + $totalFrais2APayer + $totalFrais3APayer + $totalFrais4APayer ;
+
+
+
+
+        // montant payé par composante le jour de l'edition de la facture
+
+        $infoScolarit = Scolarite::where('MATRICULE', $MATRICULE)
+                ->where('DATEOP', $datePaiementFormated)
+                ->where('NUMRECU', $NUMRECU)
+                ->where('VALIDE', 1)
+                ->where('AUTREF', 1)
+                ->sum('MONTANT');
+
+        $infoArriere = Scolarite::where('MATRICULE', $MATRICULE)
+                ->where('DATEOP', $datePaiementFormated)
+                ->where('NUMRECU', $NUMRECU)
+                ->where('VALIDE', 1)
+                ->where('AUTREF', 2)
+                ->sum('MONTANT');
+
+        $infoFrais1 = Scolarite::where('MATRICULE', $MATRICULE)
+                ->where('DATEOP', $datePaiementFormated)
+                ->where('NUMRECU', $NUMRECU)
+                ->where('VALIDE', 1)
+                ->where('AUTREF', 3)
+                ->sum('MONTANT');
+
+        $infoFrais2 = Scolarite::where('MATRICULE', $MATRICULE)
+                ->where('DATEOP', $datePaiementFormated)
+                ->where('NUMRECU', $NUMRECU)
+                ->where('VALIDE', 1)
+                ->where('AUTREF', 4)
+                ->sum('MONTANT');
+
+        $infoFrais3 = Scolarite::where('MATRICULE', $MATRICULE)
+                ->where('DATEOP', $datePaiementFormated)
+                ->where('NUMRECU', $NUMRECU)
+                ->where('VALIDE', 1)
+                ->where('AUTREF', 5)
+                ->sum('MONTANT');
+
+        $infoFrais4 = Scolarite::where('MATRICULE', $MATRICULE)
+                ->where('DATEOP', $datePaiementFormated)
+                ->where('NUMRECU', $NUMRECU)
+                ->where('VALIDE', 1)
+                ->where('AUTREF', 6)
+                ->sum('MONTANT');
+
+
+
+// -------------------------------------
+
+
+
+
+        $scolaritéPayéAujourdhui = $infoScolarit ;
+        $arrierréPayéAujourdhui = $infoArriere ;
+        $frais1PayéAujourdhui = $infoFrais1 ;
+        $frais2PayéAujourdhui = $infoFrais2 ;
+        $frais3PayéAujourdhui = $infoFrais3 ;
+        $frais4PayéAujourdhui = $infoFrais4 ;
+        $totalPayerAujourdhui = $scolaritéPayéAujourdhui + $arrierréPayéAujourdhui + $frais1PayéAujourdhui + $frais2PayéAujourdhui + $frais3PayéAujourdhui + $frais4PayéAujourdhui + $infoScolarit_total + $infoArriere_total + $infoFrais1_total + $infoFrais2_total + $infoFrais3_total + $infoFrais4_total;
+
+        $totalGlobalRestantAPayer = ( $totalGlobalApayer - ($totalPayerAvant + $totalPayerAujourdhui ) );
+
+
+
+
+
+        // dd($nums);
+
+
+
+
+        // dd($frais2PayéAujourdhui);
+
+        return view('pages.Etats.pdfduplicatarecufacturesimple', compact('nomecole', 'logo', 'facturePaie', 'donneItem', 'entete','nomComptable', 'titreComptable', 'editeur', 'LIBELF4', 'LIBELF3','LIBELF2', 'LIBELF1', 'ville', 'donneItem', 'datePaiement','frais4PayéAujourdhui', 'frais3PayéAujourdhui', 'frais2PayéAujourdhui', 'frais1PayéAujourdhui', 'arrierréPayéAujourdhui','scolaritéPayéAujourdhui', 'totalRestantFrais4', 'totalRestantFrais3', 'totalRestantFrais2','totalRestantFrais1', 'totalRestantArrierre', 'totalRestantScolarité', 'totalGlobalRestantAPayer', 'resteEcheance','montanttotal', 'mode_paiement','classeeleve', 'nomcompleteleve','reffacture', 'logoUrl'));
     }
   
 
@@ -5950,6 +6237,64 @@ public function enregistrerPaiement(Request $request, $matricule)
                 $resteEcheance = max(0, $val);
 
 
+
+                  Session::put([
+                    'reffacture' => $reffactureLocal,
+                    'entete' => $entete,
+
+                    // Informations sur l'élève
+                    'classeeleve' => $eleve->CODECLAS,
+                    'nomcompleteleve' => $nomcompleteleve,
+
+                    // Détails des items de la facture
+                    'itemFacture' => $items,
+
+                    // Métadonnées supplémentaires
+                    'NOMETAB' => $NOMETAB,
+                    // 'nim' => $nim,
+                    'dateTime' => $dateTime,
+
+                    'logoUrl' => $logoUrl ?? null,
+
+                    'mode_paiement' => $request->input('mode_paiement'),
+
+                    // Données supplémentaires si nécessaires
+                    'montanttotal' => $montant_total,
+                    'datepaiementcontrat' => $datepaiementcontrat ?? null,
+
+
+                    // nouvelles données 
+
+                // reste selon Echeance
+                'resteEcheance' => $resteEcheance,
+                // total global restant a payer
+                'totalGlobalRestantAPayer' => $totalGlobalRestantAPayer,
+
+                // total restant a payer par composante
+                'totalRestantScolarité' => $totalRestantScolarité,
+                'totalRestantArrierre' => $totalRestantArrierre,
+                'totalRestantFrais1' => $totalRestantFrais1,
+                'totalRestantFrais2' => $totalRestantFrais2,
+                'totalRestantFrais3' => $totalRestantFrais3,
+                'totalRestantFrais4' => $totalRestantFrais4,
+                // montant payer le jour
+                'scolaritéPayéAujourdhui' => $scolaritéPayéAujourdhui,
+                'arrierréPayéAujourdhui' => $arrierréPayéAujourdhui,
+                'frais1PayéAujourdhui' => $frais1PayéAujourdhui,
+                'frais2PayéAujourdhui' => $frais2PayéAujourdhui,
+                'frais3PayéAujourdhui' => $frais3PayéAujourdhui,
+                'frais4PayéAujourdhui' => $frais4PayéAujourdhui,
+                'ville' => $ville,
+                'datePaiement' => $datePaiement,
+                // libelleFrais
+                'LIBELF1' => $LIBELF1,
+                'LIBELF2' => $LIBELF2,
+                'LIBELF3' => $LIBELF3,
+                'LIBELF4' => $LIBELF4,
+                'editeur' => $editeur,
+                'titreComptable' => $titreComptable,
+                'nomComptable' => $nomComptable,
+              ]);
 
                   return view('pages.inscriptions.pdfpaiementscononnormalise', [
                     // Informations principales de la facture
