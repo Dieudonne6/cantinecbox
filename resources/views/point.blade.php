@@ -159,7 +159,7 @@
                 <div class="bloc-souche section-container">
                     <div>{!! $entete !!}</div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <p class="point">POINT PAYEMENT (Souche)</p>
+                        <p class="point">HISTORIQUE DES PAIEMENTS </p>
                         <p>{{ date('d/m/Y') }}</p>
                     </div>
 
@@ -197,6 +197,7 @@
                     </table>
 
                     <br>
+                    
                     <div>
                         <p><strong>Total à payer :</strong> <span style="float: right;">{{ $totalAPayer }}</span></p>
                         <p>Paie actuel<span style="float: right;">{{ number_format($totalPaye, 0, ',', ' ') }} F</span></p>
@@ -213,12 +214,12 @@
                 </div>
 
                 {{-- Trait de séparation --}}
-                <div class="bloc-separation">
+                <!-- <div class="bloc-separation">
                     <hr style="height: 200px; width: 2px; background-color: black; border: none;">
-                </div>
+                </div> -->
 
                 {{-- Deuxième bloc --}}
-                <div class="bloc-original section-container">
+                <!-- <div class="bloc-original section-container">
                     <div>{!! $entete !!}</div>
                     <div class="d-flex justify-content-between align-items-center">
                         <p class="point">POINT PAYEMENT (Original)</p>
@@ -296,7 +297,7 @@
                     <br>
                     <p style="font-weight: 500;">Signature, cachet</p>  
                     <br>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
