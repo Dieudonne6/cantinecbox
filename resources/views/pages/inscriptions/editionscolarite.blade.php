@@ -88,9 +88,7 @@
     <h4 class="card-title">Editions</h4>
     <div class="container">
       
-       <button><a href="{{ url('/certificatsolarite') }}"><i class="fas fa-certificate"></i> Certificats de scolarité</a></button>
-      {{-- <button><a href="{{ url('/attestationsdescolarite') }}"><i class="fas fa-file-alt"></i> Attestations de scolarité</a></button> --}}
-      <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#renovationModal"><i class="fas fa-file-alt"></i> Attestations de scolarité</button>
+
       {{-- <button><a href="{{ url('/enquetesstatistiques') }}"><i class="fas fa-chart-bar"></i> Enquêtes statistiques</a></button> --}}
       <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#renovationModal"><i class="fas fa-chart-bar"></i> Enquêtes statistiques</button>
       {{-- <button><a href="{{ url('/etatdelacaisse') }}"><i class="fas fa-cash-register"></i> État de la caisse</a></button> --}}
