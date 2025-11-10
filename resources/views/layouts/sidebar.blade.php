@@ -143,10 +143,10 @@
                         <li><a class="nav-link {{ in_array(request()->route()->getName(), $routesFacture) ? 'active' : '' }}" href="{{ route('facturesclasses') }}">Factures classes</a></li>
                         @endcanAccess
                         @canAccess('duplicatarecu')
-                        <li><a class="nav-link {{ request()->is('duplicatarecu') ? 'active' : '' }}" href="{{ url('/duplicatarecu') }}">Duplicata</a></li>
+                        <li><a class="nav-link {{ request()->is('duplicatarecu') ? 'active' : '' }}" href="{{ url('/duplicatarecu') }}">Duplicata fac normalisée</a></li>
                         @endcanAccess
                         {{-- @canAccess('duplicatarecufacturesimple') --}}
-                        <li><a class="nav-link {{ request()->is('facturesimpleduplicata') ? 'active' : '' }}" href="{{ url('/facturesimpleduplicata') }}">Liste facture non normalisée </a></li>
+                        <li><a class="nav-link {{ request()->is('facturesimpleduplicata') ? 'active' : '' }}" href="{{ url('/facturesimpleduplicata') }}">Duplicata fac non normalisée </a></li>
                         {{-- @endcanAccess --}}
 
                         @php

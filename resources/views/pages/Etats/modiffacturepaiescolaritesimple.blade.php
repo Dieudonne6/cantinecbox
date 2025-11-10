@@ -138,7 +138,7 @@
         @endif
                 <h4 class="card-title" style="text-align: center">Annulation de la facture de paiement de <strong>{{ $factureOriginale->nom }}</strong></h4>
 
-                <form action="{{url('avoirfacturescolaritmodification/'.$codemecef)}}" method="POST">
+                <form action="{{url('modiffacturescolaritsimple/'.$id)}}" method="POST">
                     @csrf
                     {{-- @if(Session::has('id_usercontrat'))
                         <input type="hidden" value="{{$id_usercontrat}}" name="id_usercontrat">
@@ -172,24 +172,6 @@
                         </div>
                     </div>
 
-                    <div class=" col-md-12 mx-auto grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Entrer le codemef de la facture originale</h4>
-                                <div class="form-group">
-                                    <div class="col">
-                                        {{-- <p>Nombre de cases cochées : <span id="checked-count">0</span></p> --}}
-                                        <label for="codemecefEntrer">Codemecef Facture Originale</label>
-                                        <div id="bloodhound">
-                                            <input class="typeaheads" id="codemecefEntrer" name="inputCodemecef" type="text" >
-                                            {{-- <p style="visibility: hidden"><span id="checked-count">0</span></p> --}}
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class=" col-md-12 mx-auto grid-margin stretch-card">
                         <div class="card">

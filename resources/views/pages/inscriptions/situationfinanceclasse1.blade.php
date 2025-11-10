@@ -14,6 +14,11 @@
             <div class="card">
                 <div>
                     <style>
+
+                        .select2-container--default .select2-selection--multiple .select2-selection__rendered { 
+                            width: 200px;
+                     }
+
                         .btn-arrow {
                             position: absolute;
                             top: 0px;
@@ -46,7 +51,7 @@
                     <h4 class="card-title" id="title"><strong>Situation financière selon échéancier a la date du {{ \Carbon\Carbon::now()->format('d/m/Y') }} </strong> </h4>
                     <div class="row mb-1">
                         <div class="col-3">
-                            <label for="" style="margin-top: 2px">Classe</label>
+                            <label for="" style="margin-top: 2px">Classes</label>
                             <select class="js-example-basic-multiple w-100" multiple="multiple" name="classeCode[]">
                                 <option value="">Sélectionnez une classe</option>
                                 @foreach ($classes as $classe)
@@ -124,6 +129,63 @@
                             }
                         }
 
+
+                        @media print {
+                        body {
+                            font-family: Arial, sans-serif;
+                            font-size: 13px;
+                        }
+
+                        .lettres-container {
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: space-between;
+                            gap: 10px;
+                        }
+
+                        .lettre-relance {
+                            width: 48%;
+                            border: 1px solid #000;
+                            padding: 8px;
+                            box-sizing: border-box;
+                            margin-bottom: 10px;
+                            page-break-inside: avoid;
+                        }
+
+                        .lettre-relance p {
+                            font-size: 13px;
+                            margin: 3px 0;
+                        }
+
+                        .lettre-relance table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            font-size: 11px;
+                            margin-top: 5px;
+                        }
+
+                        .lettre-relance th,
+                        .lettre-relance td {
+                            border: 1px solid #000;
+                            padding: 3px;
+                            text-align: center;
+                        }
+
+                        h1 {
+                            font-size: 16px;
+                            text-align: center;
+                            margin-bottom: 10px;
+                        }
+
+                        @page {
+                            size: A4 landscape;
+                            margin: 10mm;
+                        }
+
+                        .page-break {
+                            page-break-after: always;
+                        }
+                        }
 
                     </style>
 
@@ -205,116 +267,104 @@
                 @endif
                 </div>
                 <div id="contenuRelance" class="d-none">
-                    <div class="container">
-                        @foreach ($donneRelance as $matricule => $donne)
-                            @php
-                                // Ne pas remettre "use Carbon\Carbon;" ici — import déjà fait en haut du fichier
-                                $sommeReste = 0; // Somme totale du reste dû jusqu'à aujourd'hui
-                                $dateCourante = \Carbon\Carbon::now(); // Date du jour (référence complète pour éviter les imports)
-                                
-                                // Transformer en collection et filtrer : échéances dont la date <= aujourd'hui et reste > 0
-                               // nouveau : ne collecte que les échéances
-                                $echeances = $donne['echeances'] ?? [];
-                                $donneesFiltrees = collect($echeances)->filter(function ($d) use ($dateCourante) {
-                                    return isset($d['date_echeance'])
-                                        && \Carbon\Carbon::parse($d['date_echeance'])->lessThanOrEqualTo($dateCourante)
-                                        && (!isset($d['reste_a_payer']) || $d['reste_a_payer'] > 0);
-});
+                        <div class="container">
+                            <div class="lettres-container">
+                                @foreach ($donneRelance as $matricule => $donne)
+                                    @php
+                                        $dateCourante = \Carbon\Carbon::now();
+                                        $echeances = $donne['echeances'] ?? [];
 
-                            @endphp
+                                        // Échéances échues jusqu'à aujourd'hui
+                                        $donneesFiltrees = collect($echeances)->filter(function ($d) use ($dateCourante) {
+                                            return isset($d['date_echeance'])
+                                                && \Carbon\Carbon::parse($d['date_echeance'])->lessThanOrEqualTo($dateCourante)
+                                                && (!isset($d['reste_a_payer']) || $d['reste_a_payer'] > 0);
+                                        });
 
-                            @if ($donneesFiltrees->isNotEmpty())
-                                <div class="row">
-                                    <div class="col-10"></div>
-                                    <div class="col-2">
-                                        <p>ccc , le {{ $dateDuJour }}</p>
-                                        <p>Aux parents de </p>
-                                        <p><strong>{{ ($donne['echeances'][0]['NOM'] ?? $donne['info_arriere']['nom'] ?? '') }} {{ ($donne['echeances'][0]['PRENOM'] ?? '') }}</strong></p>
-                                        <p>{{ $donne['echeances'][0]['CODECLAS'] ?? '' }}</p>
-                                    </div>
-                                </div>
+                                        //Somme des restes des échéances échues
+                                        $sommeReste = $donneesFiltrees->sum('reste_a_payer');
 
-                                @php
-                                    $sommeReste = $donneesFiltrees->sum(function($item) {
-                                        return $item['reste_a_payer'] ?? 0;
-                                    });
-                                @endphp
+                                        // Arriéré restant
+                                        $resteArriere = $donne['info_arriere']['reste'] ?? 0;
 
-                                <div class="row">
-                                    <p>Chers parents,</p>
-                                    <p class="texte">
-                                        Sauf erreur ou omission de notre part, nous vous rappelons qu'au titre des frais
-                                        de scolarité <strong>{{ $donne['echeances'][0]['annescolaire'] ?? '' }}</strong> de votre enfant ci-dessus mentionné,
-                                        vous restez devoir dans nos livres, par rapport aux échéances de paiement arrivées à terme,
-                                        la somme de <strong>{{ number_format($sommeReste, 0, ',', ' ') }} FCFA</strong>,
-                                        conformément au récapitulatif ci-dessous.
-                                    </p><br><br>
+                                        // Somme totale pour le texte
+                                        $sommeTotale = $sommeReste + $resteArriere;
 
-                                    <div class="table-container">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Date échéance</th>
-                                                    <th>Montant à payer</th>
-                                                    <th>Montant payé</th>
-                                                    <th>Reste à payer</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($donneesFiltrees->values() as $index => $donneecheance)
-                                                    <tr>
-                                                        <td>{{ $index + 1 }}</td>
-                                                        <td>{{ \Carbon\Carbon::parse($donneecheance['date_echeance'])->format('d/m/Y') }}</td>
-                                                        <td>{{ number_format($donneecheance['montant_a_payer'] ?? 0, 0, ',', ' ') }}</td>
-                                                        <td>{{ number_format($donneecheance['montant_payer'] ?? 0, 0, ',', ' ') }}</td>
-                                                        <td>{{ number_format($donneecheance['reste_a_payer'] ?? 0, 0, ',', ' ') }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div><br><br>
-                                    @if(isset($donne['info_arriere']) && $donne['info_arriere']['total_arriere'] != 0)
-                                        <div class="table-arriere">
-                                            <p><strong>Concernant vos arriérés</strong></p>
+                                        // Total général restant à payer = toutes les échéances (échues + futures) + arriéré
+                                        $totalGeneralRestant = collect($echeances)->sum('reste_a_payer') + $resteArriere;
+
+                                        // Ajouter l'arriéré à la première échéance affichée dans le tableau (pour l'affichage)
+                                        if ($resteArriere > 0 && $donneesFiltrees->isNotEmpty()) {
+                                            $premiereCle = $donneesFiltrees->keys()->first();
+                                            $premiereEcheance = $donneesFiltrees->first();
+                                            $premiereEcheance['montant_a_payer'] += $resteArriere;
+                                            $premiereEcheance['reste_a_payer'] += $resteArriere;
+                                            $donneesFiltrees->put($premiereCle, $premiereEcheance);
+                                        }
+                                    @endphp
+
+                                    @if ($donneesFiltrees->isNotEmpty())
+                                        <div class="lettre-relance">
+                                            <div>{!! $entete !!}</div>
+                                            <div style="text-align: right;">
+                                                <p>ccc , le {{ $dateDuJour }}</p>
+                                                <p>Aux parents de</p>
+                                                <p><strong>{{ ($donne['echeances'][0]['NOM'] ?? $donne['info_arriere']['nom'] ?? '') }}
+                                                {{ ($donne['echeances'][0]['PRENOM'] ?? '') }}</strong></p>
+                                                <p>{{ $donne['echeances'][0]['CODECLAS'] ?? '' }}</p>
+                                            </div>
+
+                                            <p>Chers parents,</p>
+                                            <p class="texte">
+                                                Sauf erreur ou omission de notre part, vous restez devoir
+                                                <strong>{{ number_format($sommeTotale, 0, ',', ' ') }} FCFA</strong>
+                                                au titre des échéances échues de l’année scolaire
+                                                <strong>{{ $donne['echeances'][0]['annescolaire'] ?? '' }}</strong>.
+
+                                                Total général restant à payer: <strong>{{ number_format($totalGeneralRestant, 0, ',', ' ') }} FCFA</strong>
+                                            </p>
+
                                             <table>
                                                 <thead>
                                                     <tr>
-                                                        <th>Montant total de l'arriéré</th>
-                                                        <th>Déjà payé</th>
-                                                        <th>Reste à payer</th>
+                                                        <th>No</th>
+                                                        <th>Date échéance</th>
+                                                        <th>Montant à payer</th>
+                                                        <th>Montant payé</th>
+                                                        <th>Reste</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>{{ number_format($donne['info_arriere']['total_arriere'] ?? 0, 0, ',', ' ') }}</td>
-                                                        <td>{{ number_format($donne['info_arriere']['deja_paye'] ?? 0, 0, ',', ' ') }}</td>
-                                                        <td style="font-weight: bold; color: red;">
-                                                            {{ number_format($donne['info_arriere']['reste'] ?? 0, 0, ',', ' ') }}
-                                                        </td>
+                                                    @foreach ($donneesFiltrees->values() as $i => $d)
+                                                        <tr>
+                                                            <td>{{ $i + 1 }}</td>
+                                                            <td>{{ $d['date_echeance'] ? \Carbon\Carbon::parse($d['date_echeance'])->format('d/m/Y') : '-' }}</td>
+                                                            <td>{{ number_format($d['montant_a_payer'], 0, ',', ' ') }}</td>
+                                                            <td>{{ number_format($d['montant_payer'], 0, ',', ' ') }}</td>
+                                                            <td>{{ number_format($d['reste_a_payer'], 0, ',', ' ') }}</td>
+                                                        </tr>
+                                                    @endforeach
+
+                                                    {{-- Ligne finale pour le total général restant --}}
+                                                    <tr style="font-weight: bold; background-color: #f2f2f2;">
+                                                        <td colspan="3" style="text-align: right;">Total Général Restant à Payer:</td>
+                                                        <td colspan="2">{{ number_format($totalGeneralRestant, 0, ',', ' ') }} FCFA</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
+
+                                            <br>
+
+                                            <p>Vous êtes invité à régler ce solde au plus tard le {{ $dateDuJour }}.<br>
+                                            Veuillez agréer, chers parents, l'expression de nos sentiments distingués. <br>
+                                            <strong>La direction</strong>
+                                            </p>
                                         </div>
-                                    @else
-                                        <p>Aucun arriéré enregistré</p>
                                     @endif
-
-                                    <br><br>
-
-                                    <p>Vous êtes invité à régler ce solde au plus tard le <strong>{{ $dateDuJour }}</strong>.</p>
-                                    <p>Veuillez agréer, chers parents, l'expression de nos sentiments distingués.</p>
-                                    <p>Nous vous remercions par avance pour votre compréhension.</p>
-                                    <div style="align-items: flex-end">
-                                        <p class="direction">La direction</p>
-                                    </div>
-                                </div>
-
-                                <div class="page-break"></div>
-                            @endif
-                        @endforeach
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
-                </div>
 
                 </div>
             </div>
@@ -419,81 +469,82 @@
         // relance
 
         function imprimerPageRelance() {
-
-            const titre = "liste de relance";
-
-            // Récupérer le contenu à imprimer (le tableau dans la div avec id "contenuRelance")
+            const titre = "";
             let contenuImpressions = document.getElementById('contenuRelance').innerHTML;
 
-            console.log(contenuImpressions);
-
-            // Créer une nouvelle fenêtre pour l'impression
             let printWindow = window.open('', '', 'height=700,width=1600');
 
             printWindow.document.write(`
                 <html>
                 <head>
-                    <title>liste de relance</title>
+                    <title>${titre}</title>
                     <style>
-                        @page { size: landscape; }
+                        @page { size: A4 landscape; margin: 10mm; }
                         @media print {
                             body {
                                 font-family: Arial, sans-serif;
-                                font-size: 15px;
+                                font-size: 14px;
                             }
-                            table {
+
+                            .lettres-container {
+                                display: flex;
+                                flex-wrap: wrap;
+                                justify-content: space-between;
+                                align-items: stretch;
+                            }
+
+                            .lettre-relance {
+                                width: 48%;
+                                border: 1px solid #000;
+                                padding: 18px;
+                                box-sizing: border-box;
+                                margin-bottom: 0;
+                                page-break-inside: avoid;
+                                min-height: 60vh;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: space-between;
+                            }
+
+                            /* Chaque paire = une page */
+                            .lettre-relance:nth-child(2n) {
+                                page-break-after: always;
+                            }
+
+                            .lettre-relance p {
+                                font-size: 14px;
+                                margin: 6px 0;
+                            }
+
+                            .lettre-relance table {
                                 width: 100%;
                                 border-collapse: collapse;
-                                page-break-inside: auto;
+                                font-size: 12px;
+                                margin-top: 10px;
+                            }
+
+                            .lettre-relance th,
+                            .lettre-relance td {
                                 border: 1px solid #000;
-                            }
-                            table th, table td {
-                                font-size: 13px;
-                                padding: 5px;
-                                border: 1px solid #000;
-                            }
-                            tr {
-                                page-break-inside: avoid;
-                                page-break-after: auto;
-                            }
-                            tbody tr:nth-child(even) {
-                                background-color: #f1f3f5;
-                            }
-                            tbody tr:nth-child(odd) {
-                                background-color: #fff;
+                                padding: 4px;
+                                text-align: center;
                             }
 
-                            .texte{
-                                font-size: 20px !important ;
-                                text-align: justify;
+                            h1 {
+                                font-size: 18px;
+                                text-align: center;
+                                margin-bottom: 15px;
                             }
-
-                            .col-2 {
-                                display: inline-block;
-                                vertical-align: top;
-                                margin-left: 40rem;
-                            }
-                            .direction {
-                                margin-left: 50rem;
-                                font-weight: bold;
-                            }
-
-                            .page-break {
-                                page-break-before: always;
-                            }
-
-
                         }
                     </style>
                 </head>
                 <body>
-                    <h1 style="font-size: 20px; text-align: center; text-transform: uppercase;">${titre}</h1>
+                    <h1 style="text-transform: uppercase;">${titre}</h1>
                     ${contenuImpressions}
                 </body>
                 </html>
             `);
 
-            // Attendre que le contenu soit chargé, puis imprimer
             printWindow.document.close();
             printWindow.focus();
 
@@ -501,12 +552,10 @@
                 printWindow.print();
             };
 
-            // Fermer la fenêtre après l'impression
             printWindow.addEventListener('afterprint', function () {
                 printWindow.close();
             });
 
-            // Restaurer le titre de la page après impression
             document.title = titre;
         }
 

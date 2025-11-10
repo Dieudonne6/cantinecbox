@@ -79,9 +79,10 @@
 
                     <td>
                     @if ($facture->typefac == '1')
-                       <button class="btn btn-primary" disabled>
-                            Modifier
-                       </button>
+                        <a class="btn btn-primary"
+                           href="{{ url('modiffacturepaiescolaritesimple/'.$facture->id) }}">
+                          Modifier
+                        </a>
 
                         <a class="btn btn-danger"
                            href="{{ url('suppfacturescolaritenonnormalise/'.$facture->id) }}">
