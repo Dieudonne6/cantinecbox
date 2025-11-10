@@ -175,15 +175,16 @@
             document.body.innerHTML = originalContent;
         }
 
+
         
-        let statutfinal = @json($statutLabel[$statut]);
+        let statutfinal = @json($statutLabel[$statut] ?? null);
         
         if(statutfinal === "PASSAGE"){
-            statutfinal = 'Liste_definive_Passage';
+            statutfinal = 'Liste_definitive_Passage';
         }else if (statutfinal === "REDOUBLEMENT") {
-            statutfinal = 'Liste_definive_Redoublement';
+            statutfinal = 'Liste_definitive_Redoublement';
         }else if (statutfinal === "EXCLUSION"){
-                statutfinal = 'Liste_definive_Exclusion';
+                statutfinal = 'Liste_definitive_Exclusion';
         } else {
                 statutfinal = 'Liste_definive_Abandon';
         }

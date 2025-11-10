@@ -88,6 +88,7 @@ class TableauController extends Controller
                 $aggregated['nbClasses'] += $stats['nbClasses'];
             }
 
+            // dd($stats);
             // Agrégation des intervalles (cette partie est déjà correcte)
             foreach ($stats['intervales'] as $interval => $data) {
                 if (!isset($aggregated['intervales'][$interval])) {
