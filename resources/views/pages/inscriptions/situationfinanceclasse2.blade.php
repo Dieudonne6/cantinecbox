@@ -4,11 +4,11 @@
     use Carbon\Carbon; // Assurez-vous d'importer la classe Carbon
     $dateDuJour = Carbon::now()->locale('fr')->isoFormat('LL'); // Obtenir la date du jour au format souhaité
 @endphp
-    <style>
-        p{
-            font-size: 20px;
-        }
-    </style>
+<style>
+    p{
+        font-size: 20px;
+    }
+</style>
     <div class="main-panel-10">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
@@ -35,10 +35,6 @@
                             color: #b700ff !important;
                             /* Couleur au survol */
                         }
-
-                        .select2-container--default .select2-selection--multiple .select2-selection__rendered { 
-                            width: 200px;
-                        }
                     </style>
                     <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
                         <i class="fas fa-arrow-left"></i> Retour
@@ -50,8 +46,8 @@
                     <h4 class="card-title" id="title"><strong>Situation financière selon échéancier a la date du {{ \Carbon\Carbon::now()->format('d/m/Y') }} </strong> </h4>
                     <div class="row mb-1">
                         <div class="col-3">
-                            <label for="">Classe</label>
-                           <select class="js-example-basic-multiple w-100" multiple="multiple" name="classeCode[]">
+                            <label for="" style="margin-top: 2px">Classe</label>
+                            <select class="js-example-basic-multiple w-100" multiple="multiple" name="classeCode[]">
                                 <option value="">Sélectionnez une classe</option>
                                 @foreach ($classes as $classe)
                                     <option value="{{ $classe->CODECLAS }}">{{ $classe->CODECLAS }}</option>
@@ -64,10 +60,10 @@
                             <button type="button" class="btn-sm btn-secondary ml-3" onclick="imprimerPageRelance()">Relance</button>
                             <button type="button" class="btn-sm btn-primary ml-3" onclick="exportToExcel()">Exporter vers Excel</button>
                         </div>
-                         {{-- <div class="col-2 mt-4">
+                      
+                        {{-- <div class="col-2 mt-4">
                             <button type="button" class="btn-sm btn-primary" onclick="imprimerPage()">Relance</button>
                         </div> --}}
-                       
                     </div>
 
                     <style>
@@ -186,152 +182,171 @@
 
                     </style>
 
-                    <div id="contenu">  
-                        @if ($donneSituationFinanciereGroupe && $donneSituationFinanciereGroupe->isNotEmpty())
-                            {{-- Boucle principale pour afficher les données par classe --}}
-                            @foreach ($donneSituationFinanciereGroupe as $classeCode => $eleves)
-                                <h4 class="mt-5 mb-4" style="text-align: center"><strong>Classe : {{ $classeCode }}</strong></h4>
+                <div id="contenu">  
 
-                                {{-- Effectif et somme du total hors échéancier --}}
-                                <div class="col1 mb-4">
-                                    @php
-                                        $effectifClasse = $resultatParClasse[$classeCode]['effectif'] ?? 0;
-                                        $sommeTotalHorsEcheancier = $resultatParClasse[$classeCode]['total_du_hors_echeancier'] ?? 0;
-                                        $reste = $resultatParClasse[$classeCode]['reste'] ?? 0;
-                                        $pourcentage_recouvrement = $resultatParClasse[$classeCode]['pourcentage_recouvrement'] ?? 0;
-                                    @endphp
-                                    <p class="sectionEffectifetAutre"><strong>[ Effectif : {{ $effectifClasse }} ] [ Total du : {{ number_format($sommeTotalHorsEcheancier, 2,',', '.') }} ] [ Reste : {{ number_format($reste, 2, ',', '.') }}  ]  [ Recouvrement : {{ $pourcentage_recouvrement }} % ]</strong></p>
-                                    {{-- <p><strong>Somme totale hors échéancier : {{ number_format($sommeTotalHorsEcheancier, 2) }} FCFA</strong></p>
-                                    <p><strong>Reste : {{ number_format($reste, 2) }} FCFA</strong></p>
-                                    <p><strong>Pourcentage Recouvrement : {{ $pourcentage_recouvrement }} %</strong></p> --}}
+                @if ($donneSituationFinanciereGroupe && $donneSituationFinanciereGroupe->isNotEmpty())
+                    {{-- Boucle principale pour afficher les données par classe --}}
+                    @foreach ($donneSituationFinanciereGroupe as $classeCode => $eleves)
+                        <h4 class="mt-5 mb-4" style="text-align: center"><strong>Classe : {{ $classeCode }}</strong></h4>
+
+                        {{-- Effectif et somme du total hors échéancier --}}
+                        <div class="col1 mb-4">
+                            @php
+                                $effectifClasse = $resultatParClasse[$classeCode]['effectif'] ?? 0;
+                                $sommeTotalHorsEcheancier = $resultatParClasse[$classeCode]['total_du_hors_echeancier'] ?? 0;
+                                $reste = $resultatParClasse[$classeCode]['reste'] ?? 0;
+                                $pourcentage_recouvrement = $resultatParClasse[$classeCode]['pourcentage_recouvrement'] ?? 0;
+                            @endphp
+                            <p class="sectionEffectifetAutre"><strong>[ Effectif : {{ $effectifClasse }} ] [ Total du : {{ number_format($sommeTotalHorsEcheancier, 2,',', '.') }} ] [ Reste : {{ number_format($reste, 2, ',', '.') }}  ]  [ Recouvrement : {{ $pourcentage_recouvrement }} % ]</strong></p>
+                            {{-- <p><strong>Somme totale hors échéancier : {{ number_format($sommeTotalHorsEcheancier, 2) }} FCFA</strong></p>
+                            <p><strong>Reste : {{ number_format($reste, 2) }} FCFA</strong></p>
+                            <p><strong>Pourcentage Recouvrement : {{ $pourcentage_recouvrement }} %</strong></p> --}}
+                        </div>
+
+                        {{-- Tableau des élèves --}}
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nom et Prénom</th>
+                                        {{-- <th>Classe</th> --}}
+                                        <th>Reste Échéancier</th>
+                                        <th>Reste Arriéré</th>
+                                        <th>Reste Autres Frais</th>
+                                        {{-- <th>Total restant du hors echeancier</th> --}}
+                                        {{-- <th>Date dern paiement</th> --}}
+                                        <th>Décision</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($eleves as $index => $eleve)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td style="text-align: justify">{{ $eleve['NOM'] }} {{ $eleve['PRENOM'] }}</td>
+                                            {{-- <td>{{ $eleve['CODECLAS'] }}</td> --}}
+                                            <td>{{ number_format($eleve['reste_echeance'], 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($eleve['reste_arriere'], 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($eleve['reste_autre_frais'], 0, ',', ' ') }}</td>
+                                            {{-- <td>{{ number_format($eleve['total_du_hors_echeancier'], 0, ',', ' ') }}</td> --}}
+                                            {{-- <td>
+                                                {{ $eleve['derniere_date_scolarite'] 
+                                                    ? \Carbon\Carbon::parse($eleve['derniere_date_scolarite'])->format('d/m/Y') 
+                                                    : '' }}
+                                            </td>                                             --}}
+                                            <td>
+                                                @if ($eleve['reste_echeance'] == 0 && $eleve['reste_arriere'] == 0 && $eleve['reste_autre_frais'] == 0)
+                                                    À jour
+                                                @elseif($eleve['reste_echeance'] < 0 || $eleve['reste_arriere'] < 0 || $eleve['reste_autre_frais'] < 0)
+
+                                                @else
+                                                    Non à jour
+                                                @endif
+
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="page-break"></div>
+
+                    @endforeach
+
+
+                @else
+                    <p  style="text-align: center; font-size: 19px; margin-top:5rem;"><strong>Aucune situation financiere pour cette classe</strong></p>
+                @endif
+                </div>
+                
+                <div id="contenuRelance" class="d-none">
+                    <div class="container">
+                        <div class="lettres-container">
+                        @foreach ($donneRelance as $matricule => $donne)
+                            @php
+                            $dateCourante = \Carbon\Carbon::now();
+                            $echeances = $donne['echeances'] ?? [];
+                            $donneesFiltrees = collect($echeances)->filter(function ($d) use ($dateCourante) {
+                                return isset($d['date_echeance'])
+                                    && \Carbon\Carbon::parse($d['date_echeance'])->lessThanOrEqualTo($dateCourante)
+                                    && (!isset($d['reste_a_payer']) || $d['reste_a_payer'] > 0);
+                            });
+                            $sommeReste = $donneesFiltrees->sum('reste_a_payer');
+                            @endphp
+
+                            @if ($donneesFiltrees->isNotEmpty())
+                            <div class="lettre-relance">
+                                <div style="text-align: right;">
+                                <p>ccc , le {{ $dateDuJour }}</p>
+                                <p>Aux parents de</p>
+                                <p><strong>{{ ($donne['echeances'][0]['NOM'] ?? $donne['info_arriere']['nom'] ?? '') }}
+                                {{ ($donne['echeances'][0]['PRENOM'] ?? '') }}</strong></p>
+                                <p>{{ $donne['echeances'][0]['CODECLAS'] ?? '' }}</p>
                                 </div>
 
-                                {{-- Tableau des élèves --}}
-                                <div class="table-container">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Nom et Prénom</th>
-                                                {{-- <th>Classe</th> --}}
-                                                <th>Reste Échéancier</th>
-                                                <th>Reste Arriéré</th>
-                                                <th>Reste Autres Frais</th>
-                                                {{-- <th>Total restant du hors echeancier</th> --}}
-                                                {{-- <th>Date dern paiement</th> --}}
-                                                <th>Décision</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($eleves as $index => $eleve)
+                                <p>Chers parents,</p>
+                                <p class="texte">
+                                Sauf erreur ou omission de notre part, vous restez devoir
+                                <strong>{{ number_format($sommeReste, 0, ',', ' ') }} FCFA</strong>
+                                au titre des échéances échues de l’année scolaire
+                                <strong>{{ $donne['echeances'][0]['annescolaire'] ?? '' }}</strong>.
+                                </p>
+
+                                <table>
+                                <thead>
+                                    <tr>
+                                    <th>No</th><th>Date échéance</th><th>Montant à payer</th>
+                                    <th>Montant payé</th><th>Reste</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($donneesFiltrees->values() as $i => $d)
+                                    <tr>
+                                        <td>{{ $i + 1 }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($d['date_echeance'])->format('d/m/Y') }}</td>
+                                        <td>{{ number_format($d['montant_a_payer'], 0, ',', ' ') }}</td>
+                                        <td>{{ number_format($d['montant_payer'], 0, ',', ' ') }}</td>
+                                        <td>{{ number_format($d['reste_a_payer'], 0, ',', ' ') }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                                </table>
+ <!-- @if(isset($donne['info_arriere']) && $donne['info_arriere']['total_arriere'] != 0)
+                                    <div class="table-arriere">
+                                        <p><strong>Concernant vos arriérés</strong></p>
+                                        <table>
+                                            <thead>
                                                 <tr>
-                                                    <td>{{ $index + 1 }}</td>
-                                                    <td style="text-align: justify">{{ $eleve['NOM'] }} {{ $eleve['PRENOM'] }}</td>
-                                                    {{-- <td>{{ $eleve['CODECLAS'] }}</td> --}}
-                                                    <td>{{ number_format($eleve['reste_echeance'], 0, ',', ' ') }}</td>
-                                                    <td>{{ number_format($eleve['reste_arriere'], 0, ',', ' ') }}</td>
-                                                    <td>{{ number_format($eleve['reste_autre_frais'], 0, ',', ' ') }}</td>
-                                                    {{-- <td>{{ number_format($eleve['total_du_hors_echeancier'], 0, ',', ' ') }}</td> --}}
-                                                    {{-- <td>
-                                                        {{ $eleve['derniere_date_scolarite'] 
-                                                            ? \Carbon\Carbon::parse($eleve['derniere_date_scolarite'])->format('d/m/Y') 
-                                                            : '' }}
-                                                    </td>                                             --}}
-                                                    <td>
-                                                        @if ($eleve['reste_echeance'] == 0 && $eleve['reste_arriere'] == 0 && $eleve['reste_autre_frais'] == 0)
-                                                            À jour
-                                                        @elseif($eleve['reste_echeance'] < 0 || $eleve['reste_arriere'] < 0 || $eleve['reste_autre_frais'] < 0)
-
-                                                        @else
-                                                            Non à jour
-                                                        @endif
-
+                                                    <th>Montant total de l'arriéré</th>
+                                                    <th>Déjà payé</th>
+                                                    <th>Reste à payer</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>{{ number_format($donne['info_arriere']['total_arriere'] ?? 0, 0, ',', ' ') }}</td>
+                                                    <td>{{ number_format($donne['info_arriere']['deja_paye'] ?? 0, 0, ',', ' ') }}</td>
+                                                    <td style="font-weight: bold; color: red;">
+                                                        {{ number_format($donne['info_arriere']['reste'] ?? 0, 0, ',', ' ') }}
                                                     </td>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <p>Aucun arriéré enregistré</p>
+                                @endif -->
 
-                                <div class="page-break"></div>
-
-                            @endforeach
-
-                        @else
-                            <p  style="text-align: center; font-size: 19px; margin-top:5rem;"><strong>Aucune situation financiere pour cette classe</strong></p>
-                        @endif
-                    </div>
-                
-                    <div id="contenuRelance" style="display:none;">
-                        <div class="container">
-                            <div class="lettres-container">
-                                @foreach ($donneRelance as $classe => $elevesRelance)
-                                    <h4 style="width:100%; text-align:center;">Classe : {{ $classe }}</h4>
-                                    @foreach ($elevesRelance as $donne)
-                                        @php $meta = $donne['meta'] ?? []; $echeances = $donne['echeances'] ?? []; $total_reste = $donne['total_reste'] ?? 0; @endphp
-
-                                        <div class="lettre-relance">
-                                            <div>{!! $entete !!}</div>
-                                            <div style="text-align: right;">
-                                                <p>Ville, le {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
-                                                <p>Aux parents de</p>
-                                                <p><strong>{{ $meta['NOM'] ?? '' }} {{ $meta['PRENOM'] ?? '' }}</strong></p>
-                                                <p>{{ $meta['CODECLAS'] ?? '' }}</p>
-                                            </div>
-
-                                            <p>Chers parents,</p>
-                                            <p class="texte">
-                                                Sauf erreur ou omission, vous restez devoir
-                                                <strong>{{ number_format($total_reste, 0, ',', ' ') }} FCFA</strong>
-                                                au titre des échéances échues de l’année scolaire
-                                                <strong>{{ $meta['annescolaire'] ?? '' }}</strong>.
-                                            </p>
-
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <th>No</th>
-                                                        <th>Date échéance</th>
-                                                        <th>Montant à payer</th>
-                                                        <th>Montant payé</th>
-                                                        <th>Reste</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @forelse ($echeances as $i => $ech)
-                                                        <tr>
-                                                            <td>{{ $i + 1 }}</td>
-                                                            <td>{{ $ech['date'] }}</td>
-                                                            <td>{{ number_format($ech['montant_apayer'], 0, ',', ' ') }}</td>
-                                                            <td>{{ number_format($ech['montant_paye'], 0, ',', ' ') }}</td>
-                                                            <td>{{ number_format($ech['reste'], 0, ',', ' ') }}</td>
-                                                        </tr>
-                                                    @empty
-                                                        <tr>
-                                                            <td colspan="5" style="text-align:center;">Aucune échéance détaillée disponible</td>
-                                                        </tr>
-                                                    @endforelse
-
-                                                    <tr style="font-weight: bold; background-color: #f2f2f2;">
-                                                        <td colspan="3" style="text-align: right;">Total Général Restant à Payer:</td>
-                                                        <td colspan="2">{{ number_format($meta['total_general_restant'] ?? 0, 0, ',', ' ') }} FCFA</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-
-                                            <br>
-
-                                            <p>Veuillez régler ce solde au plus tard dans les meilleurs délais.<br>
-                                            Veuillez agréer, chers parents, l'expression de nos sentiments distingués. <br>
-                                            <strong>La direction</strong>
-                                            </p>
-                                        </div>
-                                    @endforeach
-                                    <div class="page-break"></div>
-                                @endforeach
+                                <p>Veuillez régulariser avant le {{ $dateDuJour }}.<br>
+                                <strong>La direction</strong>
+                                </p>
                             </div>
+                            @endif
+                        @endforeach
                         </div>
                     </div>
+                </div>
 
                 </div>
             </div>
@@ -434,7 +449,7 @@
 
         // relance
         function imprimerPageRelance() {
-            const titre = "";
+            const titre = "liste de relance";
             let contenuImpressions = document.getElementById('contenuRelance').innerHTML;
 
             let printWindow = window.open('', '', 'height=700,width=1600');
@@ -465,7 +480,7 @@
                                 box-sizing: border-box;
                                 margin-bottom: 0;
                                 page-break-inside: avoid;
-                                min-height: 60vh;
+                                min-height: 60vh; /* ✅ augmente la hauteur de chaque lettre */
                                 display: flex;
                                 flex-direction: column;
                                 justify-content: space-between;
@@ -522,7 +537,7 @@
             });
 
             document.title = titre;
-        }   
+        }
 
         function exportToExcel() {
             const contentElement = document.getElementById('contenu');
@@ -591,14 +606,4 @@
         }
 
     </script>
-    
-    <!-- <script>
-            $(window).on('load', function() {
-            $('.js-example-basic-multiple').select2({
-                width: 'resolve' // ou '100%'
-            });
-        });
-    </script> -->
-    
-
 @endsection
