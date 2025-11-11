@@ -348,7 +348,7 @@
                             </tbody>
                         </table>
 
-                    </div>
+                    </div> 
 
                     <div class="text-center mt-3">
                         <button type="button" id="add-interval-btn" class="btn btn-success">Ajouter un intervalle</button>
@@ -550,41 +550,41 @@
                                     });
                                 }
 
- // Initialise les inputs existants
-  document.querySelectorAll('.interval-input').forEach(attachEvents);
+                            // Initialise les inputs existants
+                            document.querySelectorAll('.interval-input').forEach(attachEvents);
 
-  addIntervalBtn.addEventListener('click', () => {
-    if (currentIntervalCount >= maxIntervals) return;
-    currentIntervalCount++;
+                            addIntervalBtn.addEventListener('click', () => {
+                                if (currentIntervalCount >= maxIntervals) return;
+                                currentIntervalCount++;
 
-    // 1) Clone du template (inclut déjà la colonne "Supprimer")
-    const newRow = intervalTemplate.cloneNode(true);
-    newRow.id = '';
-    newRow.style.display = '';
+                                // 1) Clone du template (inclut déjà la colonne "Supprimer")
+                                const newRow = intervalTemplate.cloneNode(true);
+                                newRow.id = '';
+                                newRow.style.display = '';
 
-    // 2) Mise à jour du label et des inputs
-    newRow.querySelector('.interval-label').textContent = `I${currentIntervalCount}`;
-    ['min','max'].forEach(type => {
-      const inp = newRow.querySelector(`input[data-type="${type}"]`);
-      inp.dataset.interval = currentIntervalCount;
-      inp.name            = `intervales[I${currentIntervalCount}][${type}]`;
-      inp.value           = oldIntervals[`I${currentIntervalCount}`]?.[type] ?? '0.00';
-      attachEvents(inp);
-    });
+                                // 2) Mise à jour du label et des inputs
+                                newRow.querySelector('.interval-label').textContent = `I${currentIntervalCount}`;
+                                ['min','max'].forEach(type => {
+                                const inp = newRow.querySelector(`input[data-type="${type}"]`);
+                                inp.dataset.interval = currentIntervalCount;
+                                inp.name            = `intervales[I${currentIntervalCount}][${type}]`;
+                                inp.value           = oldIntervals[`I${currentIntervalCount}`]?.[type] ?? '0.00';
+                                attachEvents(inp);
+                                });
 
-    // 3) Binder le bouton Supprimer **uniquement** sur ce newRow
-    bindRemove(newRow.querySelector('.remove-interval-btn'));
+                                // 3) Binder le bouton Supprimer **uniquement** sur ce newRow
+                                bindRemove(newRow.querySelector('.remove-interval-btn'));
 
-    // 4) L'ajoute au tableau
-    tableBody.appendChild(newRow);
+                                // 4) L'ajoute au tableau
+                                tableBody.appendChild(newRow);
 
-    // 5) Désactive "Ajouter" si on atteint la limite
-    if (currentIntervalCount === maxIntervals) {
-      addIntervalBtn.disabled = true;
-    }
-  });
-});
-</script>
+                                // 5) Désactive "Ajouter" si on atteint la limite
+                                if (currentIntervalCount === maxIntervals) {
+                                addIntervalBtn.disabled = true;
+                                }
+                            });
+                            });
+                    </script>
 
                     @if ($errors->any())
                         <div class="alert alert-danger">
@@ -608,7 +608,6 @@
                         </button>
 
                     </div>
-
                 </form>
                 <br>
                 <br>
@@ -764,234 +763,476 @@
                                 </table>
                             </div>
                         @elseif($typeEtat == 'tableau_synoptique')
-                            @if (request('periode') == 4)
-                                <div class="table-responsive mt-5">
-                                    <h4 class="text-center mb-4 no-print" id="titre">TABLEAU ANALYTIQUE DES Effectifs  {{ ' - ' . $titre . ' ' . $anneeScolaire }}</h4>
-                                    <table class="table table-bordered table-synoptique">
-                                        <thead class="thead-dark">
-                                            <tr class="print-only">
-                                                <th colspan="2"></th>
-                                                <th colspan="3">EFFECTIF TOTAL DES ELEVES<br>INSCRITS</th>
+                            @if ($typeAn == 1)
+                            {{-- SEMESTRE --}}
 
-                                                <th colspan="3">
-                                                        EFFECTIF DES PROMUS
-                                                </th>
-                                                <th colspan="3">
-                                                        EFFECTIF DES REDOUBLANT
-                                                </th>
-                                                <th colspan="3">
-                                                        EFFECTIF DES ABANDONS
-                                                </th>
-                                                <th colspan="3">
-                                                        EFFECTIF DES EXCLUS
-                                                </th>
-                                            </tr>
-                                            <tr class="print-only">
-                                                <th>ANNEE</th>
-                                                <th>NB GROUPE PEDAGOGIQUE</th>
-                                                <th>G</th>
-                                                <th>F</th>
-                                                <th>T</th>
-                                                <th>G</th>
-                                                <th>F</th>
-                                                <th>T</th>
-                                                <th>G</th>
-                                                <th>F</th>
-                                                <th>T</th>
-                                                <th>G</th>
-                                                <th>F</th>
-                                                <th>T</th>
-                                                <th>G</th>
-                                                <th>F</th>
-                                                <th>T</th>
-                                            </tr>
-                                            <tr class="screen-only">
-                                                <th style="width: 100px;">GPE</th>
-                                                <th>NBGPE</th>
-                                                <th>I1G</th>
-                                                <th>I1F</th>
-                                                <th>I1T</th>
-                                                <th>I2G</th>
-                                                <th>I2F</th>
-                                                <th>I2T</th>
-                                                <th>I3G</th>
-                                                <th>I3F</th>
-                                                <th>I3T</th>
-                                                <th>I4G</th>
-                                                <th>I4F</th>
-                                                <th>I4T</th>
-                                                <th>I5G</th>
-                                                <th>I5F</th>
-                                                <th>I5T</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @php
-                                                $ordreDesGroupes = [
-                                                    '6è',
-                                                    '5è',
-                                                    '4è',
-                                                    '3è',
-                                                    'CYCLE I',
-                                                    '2ndA1',
-                                                    '2ndA2',
-                                                    '2ndB',
-                                                    '2ndC',
-                                                    '2ndD',
-                                                    'SECONDES',
-                                                    '1èreA1',
-                                                    '1èreA2',
-                                                    '1èreB',
-                                                    '1èreC',
-                                                    '1èreD',
-                                                    'PREMIÈRE',
-                                                    'TleA1',
-                                                    'TleA2',
-                                                    'TleB',
-                                                    'TleC',
-                                                    'TleD',
-                                                    'TERMINALE',
-                                                    'CYCLE II',
-                                                    'ETABLISSEMENT',
-                                                ];
-                                            @endphp
-                                            @foreach ($ordreDesGroupes as $codePromo)
-                                                @if (isset($resultats[$codePromo]))
-                                                    <tr @if (in_array($codePromo, ['CYCLE I', 'SECONDES', 'PREMIÈRE', 'TERMINALE', 'CYCLE II', 'ETABLISSEMENT'])) class="ligne-bilan" @endif>
-                                                        <td class="font-weight-bold col-gpe">{{ $codePromo }}</td>
-                                                        <td>{{ $resultats[$codePromo]['nbClasses'] }}</td>
-                                                        @foreach (range(1, 5) as $i)
-                                                            <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['garcons'] ?? 0 }}
-                                                            </td>
-                                                            <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['filles'] ?? 0 }}
-                                                            </td>
-                                                            <td class="total-cell">
-                                                                {{ $resultats[$codePromo]['intervales']['I' . $i]['total'] ?? 0 }}
-                                                            </td>
-                                                        @endforeach
-                                                    </tr>
-                                                @endif
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                @if (request('periode') == 4)
+                                    <div class="table-responsive mt-5">
+                                        <h4 class="text-center mb-4 no-print" id="titre">TABLEAU ANALYTIQUE DES Effectifs  {{ ' - ' . $titre . ' ' . $anneeScolaire }}</h4>
+                                        <table class="table table-bordered table-synoptique">
+                                            <thead class="thead-dark">
+                                                <tr class="print-only">
+                                                    <th colspan="2"></th>
+                                                    <th colspan="3">EFFECTIF TOTAL DES ELEVES<br>INSCRITS</th>
 
+                                                    <th colspan="3">
+                                                            EFFECTIF DES PROMUS
+                                                    </th>
+                                                    <th colspan="3">
+                                                            EFFECTIF DES REDOUBLANT
+                                                    </th>
+                                                    <th colspan="3">
+                                                            EFFECTIF DES ABANDONS
+                                                    </th>
+                                                    <th colspan="3">
+                                                            EFFECTIF DES EXCLUS
+                                                    </th>
+                                                </tr>
+                                                <tr class="print-only">
+                                                    <th>ANNEE</th>
+                                                    <th>NB GROUPE PEDAGOGIQUE</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                </tr>
+                                                <tr class="screen-only">
+                                                    <th style="width: 100px;">GPE</th>
+                                                    <th>NBGPE</th>
+                                                    <th>I1G</th>
+                                                    <th>I1F</th>
+                                                    <th>I1T</th>
+                                                    <th>I2G</th>
+                                                    <th>I2F</th>
+                                                    <th>I2T</th>
+                                                    <th>I3G</th>
+                                                    <th>I3F</th>
+                                                    <th>I3T</th>
+                                                    <th>I4G</th>
+                                                    <th>I4F</th>
+                                                    <th>I4T</th>
+                                                    <th>I5G</th>
+                                                    <th>I5F</th>
+                                                    <th>I5T</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $ordreDesGroupes = [
+                                                        '6è',
+                                                        '5è',
+                                                        '4è',
+                                                        '3è',
+                                                        'CYCLE I',
+                                                        '2ndA1',
+                                                        '2ndA2',
+                                                        '2ndB',
+                                                        '2ndC',
+                                                        '2ndD',
+                                                        'SECONDES',
+                                                        '1èreA1',
+                                                        '1èreA2',
+                                                        '1èreB',
+                                                        '1èreC',
+                                                        '1èreD',
+                                                        'PREMIÈRE',
+                                                        'TleA1',
+                                                        'TleA2',
+                                                        'TleB',
+                                                        'TleC',
+                                                        'TleD',
+                                                        'TERMINALE',
+                                                        'CYCLE II',
+                                                        'ETABLISSEMENT',
+                                                    ];
+                                                @endphp
+                                                @foreach ($ordreDesGroupes as $codePromo)
+                                                    @if (isset($resultats[$codePromo]))
+                                                        <tr @if (in_array($codePromo, ['CYCLE I', 'SECONDES', 'PREMIÈRE', 'TERMINALE', 'CYCLE II', 'ETABLISSEMENT'])) class="ligne-bilan" @endif>
+                                                            <td class="font-weight-bold col-gpe">{{ $codePromo }}</td>
+                                                            <td>{{ $resultats[$codePromo]['nbClasses'] }}</td>
+                                                            @foreach (range(1, 5) as $i)
+                                                                <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['garcons'] ?? 0 }}
+                                                                </td>
+                                                                <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['filles'] ?? 0 }}
+                                                                </td>
+                                                                <td class="total-cell">
+                                                                    {{ $resultats[$codePromo]['intervales']['I' . $i]['total'] ?? 0 }}
+                                                                </td>
+                                                            @endforeach
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                @else
+                                    <div class="table-responsive mt-5">
+                                        <h4 class="text-center mb-4 no-print" id="titre">TABLEAU ANALYTIQUE DES Effectifs  {{ ' - ' . $titre . ' ' . $anneeScolaire }}</h4>
+                                        <table class="table table-bordered table-synoptique">
+                                            <thead class="thead-dark">
+                                                <tr class="print-only">
+                                                    <th colspan="2" rowspan="2"></th>
+                                                    <th colspan="3" rowspan="2">EFFECTIF TOTAL DES ELEVES<br>INSCRITS EN
+                                                        DEBUT D'ANNEE</th>
+                                                    <th colspan="6">
+                                                        @if (request('periode') == 2)
+                                                            EFFECTIF TOTAL DES ELEVES A LA FIN DU 2nd SEMESTRE 
+                                                        @elseif (request('periode') == 1)
+                                                        EFFECTIF TOTAL DES ELEVES A LA FIN DU 1er SEMESTRE
+                                                        @endif
+                                                        
+                                                    </th>
+
+                                                    <th colspan="3" rowspan="2">
+                                                        @if (request('periode') == 2)
+                                                            EFFECTIF TOTAL DES ELEVES<br>AYANT ABANDONNE
+                                                            AU COURS DE L'ANNEE
+                                                        @elseif (request('periode') == 1)
+                                                            EFFECTIF TOTAL DES ELEVES<br>AYANT ABANDONNE
+                                                            AU COURS DU 1er SEMESTRE
+                                                        @endif
+                                                    </th>
+                                                </tr>
+                                                <tr class="print-only">
+                                                    <th colspan="3">ELEVES NON REDOUBLANTS</th>
+                                                    <th colspan="3">ELEVES REDOUBLANTS</th>
+                                                </tr>
+                                                <tr class="print-only">
+                                                    <th>ANNEE</th>
+                                                    <th>NB GROUPE PEDAGOGIQUE</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                </tr>
+                                                <tr class="screen-only">
+                                                    <th style="width: 100px;">GPE</th>
+                                                    <th>NBGPE</th>
+                                                    <th>I1G</th>
+                                                    <th>I1F</th>
+                                                    <th>I1T</th>
+                                                    <th>I2G</th>
+                                                    <th>I2F</th>
+                                                    <th>I2T</th>
+                                                    <th>I3G</th>
+                                                    <th>I3F</th>
+                                                    <th>I3T</th>
+                                                    <th>I4G</th>
+                                                    <th>I4F</th>
+                                                    <th>I4T</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $ordreDesGroupes = [
+                                                        '6è',
+                                                        '5è',
+                                                        '4è',
+                                                        '3è',
+                                                        'CYCLE I',
+                                                        '2ndA1',
+                                                        '2ndA2',
+                                                        '2ndB',
+                                                        '2ndC',
+                                                        '2ndD',
+                                                        'SECONDES',
+                                                        '1èreA1',
+                                                        '1èreA2',
+                                                        '1èreB',
+                                                        '1èreC',
+                                                        '1èreD',
+                                                        'PREMIÈRE',
+                                                        'TleA1',
+                                                        'TleA2',
+                                                        'TleB',
+                                                        'TleC',
+                                                        'TleD',
+                                                        'TERMINALE',
+                                                        'CYCLE II',
+                                                        'ETABLISSEMENT',
+                                                    ];
+                                                @endphp
+                                                @foreach ($ordreDesGroupes as $codePromo)
+                                                    @if (isset($resultats[$codePromo]))
+                                                        <tr @if (in_array($codePromo, ['CYCLE I', 'SECONDES', 'PREMIÈRE', 'TERMINALE', 'CYCLE II', 'ETABLISSEMENT'])) class="ligne-bilan" @endif>
+                                                            <td class="font-weight-bold col-gpe">{{ $codePromo }}</td>
+                                                            <td>{{ $resultats[$codePromo]['nbClasses'] }}</td>
+                                                            @foreach (range(1, 4) as $i)
+                                                                <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['garcons'] ?? 0 }}
+                                                                </td>
+                                                                <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['filles'] ?? 0 }}
+                                                                </td>
+                                                                <td class="total-cell">
+                                                                    {{ $resultats[$codePromo]['intervales']['I' . $i]['total'] ?? 0 }}
+                                                                </td>
+                                                            @endforeach
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @endif
                             @else
-                                <div class="table-responsive mt-5">
-                                    <h4 class="text-center mb-4 no-print" id="titre">TABLEAU ANALYTIQUE DES Effectifs  {{ ' - ' . $titre . ' ' . $anneeScolaire }}</h4>
-                                    <table class="table table-bordered table-synoptique">
-                                        <thead class="thead-dark">
-                                            <tr class="print-only">
-                                                <th colspan="2" rowspan="2"></th>
-                                                <th colspan="3" rowspan="2">EFFECTIF TOTAL DES ELEVES<br>INSCRITS EN
-                                                    DEBUT D'ANNEE</th>
-                                                <th colspan="6">
-                                                    @if (request('periode') == 2)
-                                                        EFFECTIF TOTAL DES ELEVES A LA FIN DU 2nd SEMESTRE 
-                                                    @elseif (request('periode') == 1)
-                                                    EFFECTIF TOTAL DES ELEVES A LA FIN DU 1er SEMESTRE
-                                                    @endif
-                                                    
-                                                </th>
+                            {{-- TRIMESTRE --}}
 
-                                                <th colspan="3" rowspan="2">
-                                                    @if (request('periode') == 2)
-                                                        EFFECTIF TOTAL DES ELEVES<br>AYANT ABANDONNE
-                                                        AU COURS DE L'ANNEE
-                                                    @elseif (request('periode') == 1)
-                                                        EFFECTIF TOTAL DES ELEVES<br>AYANT ABANDONNE
-                                                        AU COURS DU 1er SEMESTRE
+                                @if (request('periode') == 4)
+                                    <div class="table-responsive mt-5">
+                                        <h4 class="text-center mb-4 no-print" id="titre">TABLEAU ANALYTIQUE DES Effectifs  {{ ' - ' . $titre . ' ' . $anneeScolaire }}</h4>
+                                        <table class="table table-bordered table-synoptique">
+                                            <thead class="thead-dark">
+                                                <tr class="print-only">
+                                                    <th colspan="2"></th>
+                                                    <th colspan="3">EFFECTIF TOTAL DES ELEVES<br>INSCRITS</th>
+
+                                                    <th colspan="3">
+                                                            EFFECTIF DES PROMUS
+                                                    </th>
+                                                    <th colspan="3">
+                                                            EFFECTIF DES REDOUBLANT
+                                                    </th>
+                                                    <th colspan="3">
+                                                            EFFECTIF DES ABANDONS
+                                                    </th>
+                                                    <th colspan="3">
+                                                            EFFECTIF DES EXCLUS
+                                                    </th>
+                                                </tr>
+                                                <tr class="print-only">
+                                                    <th>ANNEE</th>
+                                                    <th>NB GROUPE PEDAGOGIQUE</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                </tr>
+                                                <tr class="screen-only">
+                                                    <th style="width: 100px;">GPE</th>
+                                                    <th>NBGPE</th>
+                                                    <th>I1G</th>
+                                                    <th>I1F</th>
+                                                    <th>I1T</th>
+                                                    <th>I2G</th>
+                                                    <th>I2F</th>
+                                                    <th>I2T</th>
+                                                    <th>I3G</th>
+                                                    <th>I3F</th>
+                                                    <th>I3T</th>
+                                                    <th>I4G</th>
+                                                    <th>I4F</th>
+                                                    <th>I4T</th>
+                                                    <th>I5G</th>
+                                                    <th>I5F</th>
+                                                    <th>I5T</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $ordreDesGroupes = [
+                                                        '6è',
+                                                        '5è',
+                                                        '4è',
+                                                        '3è',
+                                                        'CYCLE I',
+                                                        '2ndA1',
+                                                        '2ndA2',
+                                                        '2ndB',
+                                                        '2ndC',
+                                                        '2ndD',
+                                                        'SECONDES',
+                                                        '1èreA1',
+                                                        '1èreA2',
+                                                        '1èreB',
+                                                        '1èreC',
+                                                        '1èreD',
+                                                        'PREMIÈRE',
+                                                        'TleA1',
+                                                        'TleA2',
+                                                        'TleB',
+                                                        'TleC',
+                                                        'TleD',
+                                                        'TERMINALE',
+                                                        'CYCLE II',
+                                                        'ETABLISSEMENT',
+                                                    ];
+                                                @endphp
+                                                @foreach ($ordreDesGroupes as $codePromo)
+                                                    @if (isset($resultats[$codePromo]))
+                                                        <tr @if (in_array($codePromo, ['CYCLE I', 'SECONDES', 'PREMIÈRE', 'TERMINALE', 'CYCLE II', 'ETABLISSEMENT'])) class="ligne-bilan" @endif>
+                                                            <td class="font-weight-bold col-gpe">{{ $codePromo }}</td>
+                                                            <td>{{ $resultats[$codePromo]['nbClasses'] }}</td>
+                                                            @foreach (range(1, 5) as $i)
+                                                                <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['garcons'] ?? 0 }}
+                                                                </td>
+                                                                <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['filles'] ?? 0 }}
+                                                                </td>
+                                                                <td class="total-cell">
+                                                                    {{ $resultats[$codePromo]['intervales']['I' . $i]['total'] ?? 0 }}
+                                                                </td>
+                                                            @endforeach
+                                                        </tr>
                                                     @endif
-                                                </th>
-                                            </tr>
-                                            <tr class="print-only">
-                                                <th colspan="3">ELEVES NON REDOUBLANTS</th>
-                                                <th colspan="3">ELEVES REDOUBLANTS</th>
-                                            </tr>
-                                            <tr class="print-only">
-                                                <th>ANNEE</th>
-                                                <th>NB GROUPE PEDAGOGIQUE</th>
-                                                <th>G</th>
-                                                <th>F</th>
-                                                <th>T</th>
-                                                <th>G</th>
-                                                <th>F</th>
-                                                <th>T</th>
-                                                <th>G</th>
-                                                <th>F</th>
-                                                <th>T</th>
-                                                <th>G</th>
-                                                <th>F</th>
-                                                <th>T</th>
-                                            </tr>
-                                            <tr class="screen-only">
-                                                <th style="width: 100px;">GPE</th>
-                                                <th>NBGPE</th>
-                                                <th>I1G</th>
-                                                <th>I1F</th>
-                                                <th>I1T</th>
-                                                <th>I2G</th>
-                                                <th>I2F</th>
-                                                <th>I2T</th>
-                                                <th>I3G</th>
-                                                <th>I3F</th>
-                                                <th>I3T</th>
-                                                <th>I4G</th>
-                                                <th>I4F</th>
-                                                <th>I4T</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @php
-                                                $ordreDesGroupes = [
-                                                    '6è',
-                                                    '5è',
-                                                    '4è',
-                                                    '3è',
-                                                    'CYCLE I',
-                                                    '2ndA1',
-                                                    '2ndA2',
-                                                    '2ndB',
-                                                    '2ndC',
-                                                    '2ndD',
-                                                    'SECONDES',
-                                                    '1èreA1',
-                                                    '1èreA2',
-                                                    '1èreB',
-                                                    '1èreC',
-                                                    '1èreD',
-                                                    'PREMIÈRE',
-                                                    'TleA1',
-                                                    'TleA2',
-                                                    'TleB',
-                                                    'TleC',
-                                                    'TleD',
-                                                    'TERMINALE',
-                                                    'CYCLE II',
-                                                    'ETABLISSEMENT',
-                                                ];
-                                            @endphp
-                                            @foreach ($ordreDesGroupes as $codePromo)
-                                                @if (isset($resultats[$codePromo]))
-                                                    <tr @if (in_array($codePromo, ['CYCLE I', 'SECONDES', 'PREMIÈRE', 'TERMINALE', 'CYCLE II', 'ETABLISSEMENT'])) class="ligne-bilan" @endif>
-                                                        <td class="font-weight-bold col-gpe">{{ $codePromo }}</td>
-                                                        <td>{{ $resultats[$codePromo]['nbClasses'] }}</td>
-                                                        @foreach (range(1, 4) as $i)
-                                                            <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['garcons'] ?? 0 }}
-                                                            </td>
-                                                            <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['filles'] ?? 0 }}
-                                                            </td>
-                                                            <td class="total-cell">
-                                                                {{ $resultats[$codePromo]['intervales']['I' . $i]['total'] ?? 0 }}
-                                                            </td>
-                                                        @endforeach
-                                                    </tr>
-                                                @endif
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                @else
+                                    <div class="table-responsive mt-5">
+                                        <h4 class="text-center mb-4 no-print" id="titre">TABLEAU ANALYTIQUE DES Effectifs  {{ ' - ' . $titre . ' ' . $anneeScolaire }}</h4>
+                                        <table class="table table-bordered table-synoptique">
+                                            <thead class="thead-dark">
+                                                <tr class="print-only">
+                                                    <th colspan="2" rowspan="2"></th>
+                                                    <th colspan="3" rowspan="2">EFFECTIF TOTAL DES ELEVES<br>INSCRITS EN
+                                                        DEBUT D'ANNEE</th>
+                                                    <th colspan="6">
+                                                        @if (request('periode') == 2)
+                                                            EFFECTIF TOTAL DES ELEVES A LA FIN DU 2EME TRIMESTRE 
+                                                        @elseif (request('periode') == 1)
+                                                        EFFECTIF TOTAL DES ELEVES A LA FIN DU 1er TRIMESTRE
+                                                        @elseif (request('periode') == 3)
+                                                        EFFECTIF TOTAL DES ELEVES A LA FIN DU 3EME TRIMESTRE
+                                                        @endif
+                                                        
+                                                    </th>
+
+                                                    <th colspan="3" rowspan="2">
+                                                        @if (request('periode') == 2)
+                                                            EFFECTIF TOTAL DES ELEVES<br>AYANT ABANDONNE
+                                                            AU COURS DU 2EME TRIMESTRE 
+                                                        @elseif (request('periode') == 1)
+                                                            EFFECTIF TOTAL DES ELEVES<br>AYANT ABANDONNE
+                                                            AU COURS DU 1er TRIMESTRE
+                                                        @elseif (request('periode') == 3)
+                                                            EFFECTIF TOTAL DES ELEVES<br>AYANT ABANDONNE
+                                                            AU COURS DE L'ANNEE
+                                                        @endif
+                                                    </th>
+                                                </tr>
+                                                <tr class="print-only">
+                                                    <th colspan="3">ELEVES NON REDOUBLANTS</th>
+                                                    <th colspan="3">ELEVES REDOUBLANTS</th>
+                                                </tr>
+                                                <tr class="print-only">
+                                                    <th>ANNEE</th>
+                                                    <th>NB GROUPE PEDAGOGIQUE</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                    <th>G</th>
+                                                    <th>F</th>
+                                                    <th>T</th>
+                                                </tr>
+                                                <tr class="screen-only">
+                                                    <th style="width: 100px;">GPE</th>
+                                                    <th>NBGPE</th>
+                                                    <th>I1G</th>
+                                                    <th>I1F</th>
+                                                    <th>I1T</th>
+                                                    <th>I2G</th>
+                                                    <th>I2F</th>
+                                                    <th>I2T</th>
+                                                    <th>I3G</th>
+                                                    <th>I3F</th>
+                                                    <th>I3T</th>
+                                                    <th>I4G</th>
+                                                    <th>I4F</th>
+                                                    <th>I4T</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $ordreDesGroupes = [
+                                                        '6è',
+                                                        '5è',
+                                                        '4è',
+                                                        '3è',
+                                                        'CYCLE I',
+                                                        '2ndA1',
+                                                        '2ndA2',
+                                                        '2ndB',
+                                                        '2ndC',
+                                                        '2ndD',
+                                                        'SECONDES',
+                                                        '1èreA1',
+                                                        '1èreA2',
+                                                        '1èreB',
+                                                        '1èreC',
+                                                        '1èreD',
+                                                        'PREMIÈRE',
+                                                        'TleA1',
+                                                        'TleA2',
+                                                        'TleB',
+                                                        'TleC',
+                                                        'TleD',
+                                                        'TERMINALE',
+                                                        'CYCLE II',
+                                                        'ETABLISSEMENT',
+                                                    ];
+                                                @endphp
+                                                @foreach ($ordreDesGroupes as $codePromo)
+                                                    @if (isset($resultats[$codePromo]))
+                                                        <tr @if (in_array($codePromo, ['CYCLE I', 'SECONDES', 'PREMIÈRE', 'TERMINALE', 'CYCLE II', 'ETABLISSEMENT'])) class="ligne-bilan" @endif>
+                                                            <td class="font-weight-bold col-gpe">{{ $codePromo }}</td>
+                                                            <td>{{ $resultats[$codePromo]['nbClasses'] }}</td>
+                                                            @foreach (range(1, 4) as $i)
+                                                                <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['garcons'] ?? 0 }}
+                                                                </td>
+                                                                <td>{{ $resultats[$codePromo]['intervales']['I' . $i]['filles'] ?? 0 }}
+                                                                </td>
+                                                                <td class="total-cell">
+                                                                    {{ $resultats[$codePromo]['intervales']['I' . $i]['total'] ?? 0 }}
+                                                                </td>
+                                                            @endforeach
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @endif
+
                             @endif
+
                         @elseif($typeEtat == 'statistique')
                             <div class="table-responsive mt-5">
                                 <h4 class="text-center mb-4 no-print" id="titre">Statistique des Résultats  {{ ' - ' . $titre . ' ' . $anneeScolaire }}</h4>
@@ -1095,7 +1336,8 @@
                                                 //  - 'plus_faible_eleve' ([ 'nom'=>…, 'moyenne'=>… ]) ou null
 
                                                 // 4.1. Déterminer le préfixe CODEPROMO dans $classeNom
-                                                $codepromo = substr($classeNom, 0, 3);
+                                                //$codepromo = $stats['codepromo'] ?? substr($classeNom, 0, 3);
+                                                    $codepromo = $stats['codepromo'] ?? substr($classeNom, 0, 3);
 
                                                 if (!isset($groupedClasses[$codepromo])) {
                                                     $groupedClasses[$codepromo] = [
@@ -1167,7 +1409,7 @@
                                                 }
 
                                                 // 5. Mise à jour du bilan global des cycles
-                                                if (in_array($codepromo, ['6EM', '5EM', '4EM', '3EM'], true)) {
+                                                if (in_array($codepromo, ['6EME', '5EME', '4EME', '3EME'], true)) {
                                                     $cycle = 'CYCLE I';
                                                 } elseif (in_array($codepromo, ['2ND', '1RE', 'TLE'], true)) {
                                                     $cycle = 'CYCLE II';
@@ -1301,10 +1543,36 @@
                                                         $effectifSansAbandonEtab > 0
                                                             ? ($totalReussiteEtab / $effectifSansAbandonEtab) * 100
                                                             : 0;
-                                                @endphp
+                                    @endphp                                  
+
+                                    @php
+                                        // Définir l'ordre des CODEPROMO pour un affichage logique
+                                        $ordreCodepromo = ['6EME', '5EME', '4EME', '3EME', '2ND', '1RE', 'TLE'];
+                                        
+                                        // Trier les groupes selon l'ordre défini
+                                        $groupedClassesTries = [];
+                                        foreach ($ordreCodepromo as $code) {
+                                            if (isset($groupedClasses[$code])) {
+                                                $groupedClassesTries[$code] = $groupedClasses[$code];
+                                                // Trier les classes dans chaque groupe par nom
+                                                ksort($groupedClassesTries[$code]['classes']);
+                                            }
+                                        }
+                                        
+                                        // Ajouter les groupes non prévus à la fin
+                                        foreach ($groupedClasses as $code => $data) {
+                                            if (!in_array($code, $ordreCodepromo)) {
+                                                $groupedClassesTries[$code] = $data;
+                                                ksort($groupedClassesTries[$code]['classes']);
+                                            }
+                                        }
+                                    @endphp
+
+                                  
 
                                         {{-- 9. Affichage des tableaux par CODEPROMO --}}
-                                        @foreach ($groupedClasses as $codepromo => $dataPromo)
+                                    
+                                          @foreach ($groupedClassesTries as $codepromo => $dataPromo) 
                                             @php
                                                 $sommeTauxClasse = 0;
                                                 $nbClasses = count($dataPromo['classes']);
@@ -1438,7 +1706,7 @@
                                             </tr>
 
                                             {{-- 9.3. Afficher le bilan CYCLE I juste après le bilan du CODEPROMO "3EM" --}}
-                                            @if ($codepromo === '3EM')
+                                            @if ($codepromo === '3EME')
                                                 <tr class="table-info">
                                                     <td class="font-weight-bold">CYCLE I</td>
                                                     <td class="text-center">
@@ -1475,35 +1743,37 @@
                                         @endforeach
 
                                         {{-- 10. Affichage du bilan CYCLE II (après tous les CODEPROMO) --}}
-                                        <tr class="table-info">
-                                            <td class="font-weight-bold">CYCLE II</td>
-                                            <td class="text-center">{{ $bilansCycles['CYCLE II']['effectif_total'] }}</td>
+                                        @if ($bilansCycles['CYCLE II']['effectif_total'] > 0)
+                                            <tr class="table-info">
+                                                <td class="font-weight-bold">CYCLE II</td>
+                                                <td class="text-center">{{ $bilansCycles['CYCLE II']['effectif_total'] }}</td>
 
-                                            @foreach ($intervales as $intervalleCle => $valeurs)
+                                                @foreach ($intervales as $intervalleCle => $valeurs)
+                                                    <td class="text-center">
+                                                        {{ $bilansCycles['CYCLE II']['intervales'][$intervalleCle] ?? 0 }}
+                                                    </td>
+                                                @endforeach
+
+                                                <td>{{ $bilansCycles['CYCLE II']['meilleur_eleve']['nom'] ?? '-' }}</td>
                                                 <td class="text-center">
-                                                    {{ $bilansCycles['CYCLE II']['intervales'][$intervalleCle] ?? 0 }}
+                                                    {{ !empty($bilansCycles['CYCLE II']['meilleur_eleve'])
+                                                        ? number_format($bilansCycles['CYCLE II']['meilleur_eleve']['moyenne'], 2)
+                                                        : '-' }}
                                                 </td>
-                                            @endforeach
 
-                                            <td>{{ $bilansCycles['CYCLE II']['meilleur_eleve']['nom'] ?? '-' }}</td>
-                                            <td class="text-center">
-                                                {{ !empty($bilansCycles['CYCLE II']['meilleur_eleve'])
-                                                    ? number_format($bilansCycles['CYCLE II']['meilleur_eleve']['moyenne'], 2)
-                                                    : '-' }}
-                                            </td>
+                                                <td>{{ $bilansCycles['CYCLE II']['plus_faible_eleve']['nom'] ?? '-' }}</td>
+                                                <td class="text-center">
+                                                    {{ !empty($bilansCycles['CYCLE II']['plus_faible_eleve'])
+                                                        ? number_format($bilansCycles['CYCLE II']['plus_faible_eleve']['moyenne'], 2)
+                                                        : '-' }}
+                                                </td>
 
-                                            <td>{{ $bilansCycles['CYCLE II']['plus_faible_eleve']['nom'] ?? '-' }}</td>
-                                            <td class="text-center">
-                                                {{ !empty($bilansCycles['CYCLE II']['plus_faible_eleve'])
-                                                    ? number_format($bilansCycles['CYCLE II']['plus_faible_eleve']['moyenne'], 2)
-                                                    : '-' }}
-                                            </td>
-
-                                            <td class="text-center">{{ $bilansCycles['CYCLE II']['abandons'] }}</td>
-                                            <td class="text-center">
-                                                {{ number_format($bilansCycles['CYCLE II']['taux_reussite'], 2) }}%
-                                            </td>
-                                        </tr>
+                                                <td class="text-center">{{ $bilansCycles['CYCLE II']['abandons'] }}</td>
+                                                <td class="text-center">
+                                                    {{ number_format($bilansCycles['CYCLE II']['taux_reussite'], 2) }}%
+                                                </td>
+                                            </tr>
+                                        @endif
 
                                         {{-- 11. Ligne de bilan global ÉTABLISSEMENT --}}
                                         <tr class="table-success">
