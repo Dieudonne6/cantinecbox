@@ -601,7 +601,7 @@
                                         <input type="number" class="form-control" id="pondTrim3" name="pondTrim3"
                                             value="1"
                                             style="margin-left: 10px; width: 30px !important; padding: 0; height: 2rem;">
-                                        <input type="checkbox" checked class="form-check-input" name="pondTrim3Check" id="pondTrim3Check" style="right: 1rem !important;;">Check
+                                        <input type="checkbox" checked class="form-check-input" name="pondTrim3Check" id="pondTrim3Check" style="right: 1rem !important;">
                                     </div>
                                 </div>
                             @endif
