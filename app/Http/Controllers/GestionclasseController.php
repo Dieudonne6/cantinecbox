@@ -57,23 +57,27 @@ class GestionclasseController extends Controller
     public function ClassesParGroupe($libelle)
     {
         try {
-            // Supposons que votre table ClasseGroupeClass a une colonne 'LibelleGroupe'
+            Log::info("Recherche des classes pour le groupe: " . $libelle);
+            
+            // Vérifier tous les groupes existants pour debug
+            $allGroups = Classesgroupeclass::select('LibelleGroupe')->distinct()->get();
+            Log::info("Tous les groupes dans la table: " . $allGroups->toJson());
+            
+            // Récupérer les classes du groupe sans tri par id (colonne inexistante)
             $classes = Classesgroupeclass::where('LibelleGroupe', $libelle)
-                              ->orderBy('id', 'desc')
+                              ->orderBy('CODECLAS', 'asc')
                               ->get();
 
-            // $classes = Classesgroupeclass::where('LibelleGroupe', $libelle)->get();
+            Log::info("Nombre de classes trouvées: " . $classes->count());
+            Log::info("Classes trouvées: " . $classes->toJson());
 
-            // Vérifiez les données récupérées
-            if ($classes->isEmpty()) {
-                return response()->json(['message' => 'Aucune classe trouvée pour ce groupe'], 404);
-            }
-
+            // Retourner toujours un tableau, même vide
             return response()->json($classes);
+            
         } catch (\Exception $e) {
             // Log the error
-            \Log::error($e->getMessage());
-            return response()->json(['message' => 'Erreur interne du serveur'], 500);
+            Log::error("Erreur dans ClassesParGroupe: " . $e->getMessage());
+            return response()->json(['message' => 'Erreur interne du serveur', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -116,47 +120,73 @@ class GestionclasseController extends Controller
     public function ajouterClasse(Request $request, $libelle)
 {
     try {
-        // attendre un tableau sous la clé "classCodes"
-        $classCodes = $request->input('classCodes');
+        // Récupérer les codes de classe sélectionnés
+        $classCodes = $request->input('classCodes', []);
 
-        if (!is_array($classCodes) || empty($classCodes)) {
-            return response()->json(['message' => 'Aucune classe sélectionnée'], 400);
+        if (!is_array($classCodes)) {
+            return response()->json(['message' => 'Format de données invalide'], 400);
         }
 
+        // Nettoyer les codes (supprimer les espaces et les codes vides)
+        $classCodes = array_filter(array_map('trim', $classCodes), function($code) {
+            return $code !== '';
+        });
+
+        Log::info("Synchronisation du groupe '$libelle' avec les classes: " . json_encode($classCodes));
+
+        // Récupérer les classes actuellement dans le groupe
+        $currentClasses = Classesgroupeclass::where('LibelleGroupe', $libelle)->get();
+        $currentCodes = $currentClasses->pluck('CODECLAS')->map(function($code) {
+            return trim($code);
+        })->toArray();
+
+        Log::info("Classes actuelles dans le groupe: " . json_encode($currentCodes));
+
         $added = [];
-        $skipped = [];
+        $removed = [];
 
-        foreach ($classCodes as $code) {
-            $code = trim($code);
-            if ($code === '') continue;
-
-            $exists = Classesgroupeclass::where('LibelleGroupe', $libelle)
-                                        ->where('CODECLAS', $code)
-                                        ->exists();
-            if ($exists) {
-                $skipped[] = $code;
-                continue;
-            }
-
-            // création — attention au fillable si tu utilises create()
+        // 1. Ajouter les nouvelles classes (présentes dans $classCodes mais pas dans $currentCodes)
+        $toAdd = array_diff($classCodes, $currentCodes);
+        foreach ($toAdd as $code) {
             $row = new Classesgroupeclass();
             $row->LibelleGroupe = $libelle;
             $row->CODECLAS = $code;
             $row->save();
-
             $added[] = $code;
         }
 
-        // status 200 si au moins un ajouté, 409 si aucun ajouté (tout doublon)
-        $status = count($added) ? 200 : 409;
+        // 2. Supprimer les classes décochées (présentes dans $currentCodes mais pas dans $classCodes)
+        $toRemove = array_diff($currentCodes, $classCodes);
+        foreach ($toRemove as $code) {
+            Classesgroupeclass::where('LibelleGroupe', $libelle)
+                              ->where('CODECLAS', $code)
+                              ->delete();
+            $removed[] = $code;
+        }
+
+        // Construire le message de réponse
+        $message = '';
+        if (count($added) > 0 && count($removed) > 0) {
+            $message = count($added) . ' classe(s) ajoutée(s), ' . count($removed) . ' classe(s) supprimée(s)';
+        } elseif (count($added) > 0) {
+            $message = count($added) . ' classe(s) ajoutée(s) avec succès';
+        } elseif (count($removed) > 0) {
+            $message = count($removed) . ' classe(s) supprimée(s) avec succès';
+        } else {
+            $message = 'Aucune modification nécessaire';
+        }
+
+        Log::info("Résultat: $message");
 
         return response()->json([
-            'message' => 'Traitement terminé',
+            'message' => $message,
             'added' => $added,
-            'skipped' => $skipped
-        ], $status);
+            'removed' => $removed,
+            'total_selected' => count($classCodes)
+        ], 200);
+
     } catch (\Exception $e) {
-        \Log::error('ajouterClasse error: '.$e->getMessage());
+        Log::error('Erreur dans ajouterClasse: ' . $e->getMessage());
         return response()->json(['message' => 'Erreur interne du serveur'], 500);
     }
 }
