@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Classes;
 use App\Models\Eleve;
+use App\Models\Params2;
 use App\Models\DecisionConfigAnnuel;
 use Illuminate\Support\Facades\DB;
 
@@ -239,6 +240,9 @@ class StatistiquesService
             ->whereHas('eleves')     // <— filtre SQL : effectif > 0
             ->get();
 
+        $params2 = Params2::all();
+        $typean =  $params2->first()->TYPEAN;
+
         $resultats = [];
         $groupes   = $classes->groupBy(fn($classe) => $this->getGroupLabel($classe));
 
@@ -258,273 +262,594 @@ class StatistiquesService
             // Pré-filtrages fréquents
             $hasMS1 = $eleves->filter(fn($e) => $isValid($e->MS1));
             $hasMS2 = $eleves->filter(fn($e) => $isValid($e->MS2));
+            $hasMS3 = $eleves->filter(fn($e) => $isValid($e->MS3));
             $hasMAN = $eleves->filter(fn($e) => $isValid($e->MAN));
 
-            switch ($periode) {
+            if ($typean == 1) {
+                // SEMESTRE
+                switch ($periode) {
 
-                case 1:
-                    
-                    // I1
-                    // $elevesInscritsDebutAnnee = $eleves->filter(function($e) use ($isValid) {
-                    //         return
-                    //          ($isValid($e->INT1) && $e->SEMESTRE == 1) 
-                    //         || ($isValid($e->INT2 ) && $e->SEMESTRE == 1) 
-                    //         || ($isValid($e->INT3 ) && $e->SEMESTRE == 1)
-                    //         || ($isValid($e->INT4 ) && $e->SEMESTRE == 1)
-                    //         || ($isValid($e->DEV1 ) && $e->SEMESTRE == 1)
-                    //         || ($isValid($e->DEV2 ) && $e->SEMESTRE == 1);
-                    //     });
+                    case 1:
+                        
+                        // I1
+                        // $elevesInscritsDebutAnnee = $eleves->filter(function($e) use ($isValid) {
+                        //         return
+                        //          ($isValid($e->INT1) && $e->SEMESTRE == 1) 
+                        //         || ($isValid($e->INT2 ) && $e->SEMESTRE == 1) 
+                        //         || ($isValid($e->INT3 ) && $e->SEMESTRE == 1)
+                        //         || ($isValid($e->INT4 ) && $e->SEMESTRE == 1)
+                        //         || ($isValid($e->DEV1 ) && $e->SEMESTRE == 1)
+                        //         || ($isValid($e->DEV2 ) && $e->SEMESTRE == 1);
+                        //     });
 
-                    
-                    // 2) Filtrage avec la relation 'notes'
-                    $elevesInscritsDebutAnnee = $eleves
-                        ->filter(function($eleve) {
-                        return $eleve->notes
-                                ->where('SEMESTRE', '1')
-                                ->filter(function($note) {
-                                    foreach (['INT1','INT2','INT3','INT4','DEV1','DEV2'] as $col) {
-                                        $val = $note->$col;
-                                        if (! is_null($val) && $val !== -1 && $val !== 21) {
-                                            return true;
+                        
+                        // 2) Filtrage avec la relation 'notes'
+                        $elevesInscritsDebutAnnee = $eleves
+                            ->filter(function($eleve) {
+                            return $eleve->notes
+                                    ->where('SEMESTRE', '1')
+                                    ->filter(function($note) {
+                                        foreach (['INT1','INT2','INT3','INT4','DEV1','DEV2'] as $col) {
+                                            $val = $note->$col;
+                                            if (! is_null($val) && $val !== -1 && $val !== 21) {
+                                                return true;
+                                            }
                                         }
-                                    }
-                                    return false;
-                                })
-                                ->isNotEmpty();
-                        });
+                                        return false;
+                                    })
+                                    ->isNotEmpty();
+                            });
 
-                    $countI1Garcons = $elevesInscritsDebutAnnee->where('SEXE','1')->count();
-                    $countI1Filles  = $elevesInscritsDebutAnnee->where('SEXE','2')->count();
-                    $countI1 = $countI1Garcons + $countI1Filles;
+                        $countI1Garcons = $elevesInscritsDebutAnnee->where('SEXE','1')->count();
+                        $countI1Filles  = $elevesInscritsDebutAnnee->where('SEXE','2')->count();
+                        $countI1 = $countI1Garcons + $countI1Filles;
 
-                    // I2 / I3 : MS1 valide + STATUT
-                    $elevesI2 = $hasMS1->where('STATUT', '0');
-                    $elevesI3 = $hasMS1->where('STATUT', '1');
+                        // I2 / I3 : MS1 valide + STATUT
+                        $elevesI2 = $hasMS1->where('STATUT', '0');
+                        $elevesI3 = $hasMS1->where('STATUT', '1');
 
-                
-
-                    // dd($elevesI2);
-                    // I4 
-
-                        // 4) parmis tous les eleves inscrit en debut d'anne , ne garder que ceux qui n'ont pas MS1
-                        $elevesAbandonSem1 = $elevesInscritsDebutAnnee->filter(function($e) use ($isValid) {
-                            return 
-                                ! ($isValid($e->MS1));
-                        });
-
-                        // 5) comptage par sexe et total
-                        $countI4Garcons = $elevesAbandonSem1->where('SEXE', '1')->count();
-                        $countI4Filles  = $elevesAbandonSem1->where('SEXE', '2')->count();
-                        $countI4        = $countI4Garcons + $countI4Filles;
-
-
-                    $intervales = [
-                        'I1' => [
-                            'garcons' => $countI1Garcons,
-                            'filles'  => $countI1Filles,
-                            'total'   => $countI1,
-                        ],
-                        'I2' => [
-                            'garcons' => $elevesI2->where('SEXE','1')->count(),
-                            'filles'  => $elevesI2->where('SEXE','2')->count(),
-                            'total'   => $elevesI2->count(),
-                        ],
-                        'I3' => [
-                            'garcons' => $elevesI3->where('SEXE','1')->count(),
-                            'filles'  => $elevesI3->where('SEXE','2')->count(),
-                            'total'   => $elevesI3->count(),
-                        ],
-                        'I4' => [
-                            'garcons' => $countI4Garcons,
-                            'filles'  => $countI4Filles,
-                            'total'   => $countI4,
-                        ],
-                    ];
-                break;
-
-                case 2:
-
-                    // I1
-                    // 2) Filtrage avec la relation 'notes'
-                    $elevesInscritsDebutAnnee = $eleves
-                        ->filter(function($eleve) {
-                        return $eleve->notes
-                                ->where('SEMESTRE', '1')
-                                ->filter(function($note) {
-                                    foreach (['INT1','INT2','INT3','INT4','DEV1','DEV2'] as $col) {
-                                        $val = $note->$col;
-                                        if (! is_null($val) && $val !== -1 && $val !== 21) {
-                                            return true;
-                                        }
-                                    }
-                                    return false;
-                                })
-                                ->isNotEmpty();
-                        });
-
-                    $countI1Garcons = $elevesInscritsDebutAnnee->where('SEXE','1')->count();
-                    $countI1Filles  = $elevesInscritsDebutAnnee->where('SEXE','2')->count();
-                    $countI1 = $countI1Garcons + $countI1Filles;
                     
-                    // I2 / I3 : MS2 valide + STATUT
-                    $elevesI2 = $hasMS2->where('STATUT', '0');
-                    $elevesI3 = $hasMS2->where('STATUT', '1');
 
-                    // I4 = élèves sans MAN
-                        $elevesAbandonAnne = $eleves->filter(function($e) use ($isValid) {
-                            return 
-                                ! ($isValid($e->MAN));
-                        });
+                        // dd($elevesI2);
+                        // I4 
 
-                        // 5) comptage par sexe et total
-                        $countI4Garcons = $elevesAbandonAnne->where('SEXE', '1')->count();
-                        $countI4Filles  = $elevesAbandonAnne->where('SEXE', '2')->count();
-                        $countI4        = $countI4Garcons + $countI4Filles;
+                            // 4) parmis tous les eleves inscrit en debut d'anne , ne garder que ceux qui n'ont pas MS1
+                            $elevesAbandonSem1 = $elevesInscritsDebutAnnee->filter(function($e) use ($isValid) {
+                                return 
+                                    ! ($isValid($e->MS1));
+                            });
+
+                            // 5) comptage par sexe et total
+                            $countI4Garcons = $elevesAbandonSem1->where('SEXE', '1')->count();
+                            $countI4Filles  = $elevesAbandonSem1->where('SEXE', '2')->count();
+                            $countI4        = $countI4Garcons + $countI4Filles;
 
 
-                    $intervales = [
-                        'I1' => ['garcons' => $countI1Garcons, 'filles' => $countI1Filles, 'total' => $countI1],
-                        'I2' => ['garcons' => $elevesI2->where('SEXE','1')->count(), 'filles' => $elevesI2->where('SEXE','2')->count(), 'total' => $elevesI2->count()],
-                        'I3' => ['garcons' => $elevesI3->where('SEXE','1')->count(), 'filles' => $elevesI3->where('SEXE','2')->count(), 'total' => $elevesI3->count()],
-                        'I4' => ['garcons' => $countI4Garcons, 'filles' => $countI4Filles, 'total' => $countI4],
-                    ];
-                break;
+                        $intervales = [
+                            'I1' => [
+                                'garcons' => $countI1Garcons,
+                                'filles'  => $countI1Filles,
+                                'total'   => $countI1,
+                            ],
+                            'I2' => [
+                                'garcons' => $elevesI2->where('SEXE','1')->count(),
+                                'filles'  => $elevesI2->where('SEXE','2')->count(),
+                                'total'   => $elevesI2->count(),
+                            ],
+                            'I3' => [
+                                'garcons' => $elevesI3->where('SEXE','1')->count(),
+                                'filles'  => $elevesI3->where('SEXE','2')->count(),
+                                'total'   => $elevesI3->count(),
+                            ],
+                            'I4' => [
+                                'garcons' => $countI4Garcons,
+                                'filles'  => $countI4Filles,
+                                'total'   => $countI4,
+                            ],
+                        ];
+                    break;
 
-                case 4:
-                    // I2 / I3 : MS2 valide + STATUT
-                    $DecisionConfigAnnuel = DecisionConfigAnnuel::first();
-                    $seuilPassage = $DecisionConfigAnnuel->seuil_Passage;
+                    case 2:
 
-                    // I2
+                        // I1
+                        // 2) Filtrage avec la relation 'notes'
+                        $elevesInscritsDebutAnnee = $eleves
+                            ->filter(function($eleve) {
+                            return $eleve->notes
+                                    ->where('SEMESTRE', '1')
+                                    ->filter(function($note) {
+                                        foreach (['INT1','INT2','INT3','INT4','DEV1','DEV2'] as $col) {
+                                            $val = $note->$col;
+                                            if (! is_null($val) && $val !== -1 && $val !== 21) {
+                                                return true;
+                                            }
+                                        }
+                                        return false;
+                                    })
+                                    ->isNotEmpty();
+                            });
 
-                    $elevesI2   = [];
-                    $garconsI2  = 0;
-                    $fillesI2   = 0;
-
-                    foreach ($hasMAN as $singleStudent) {
-                        if ($singleStudent->MAN >= $seuilPassage) {
-
-                            $elevesI2[] = $singleStudent;
-
-                            if ($singleStudent->SEXE === 1) {
-                                $garconsI2++;
-                            } else {
-                                $fillesI2++;
-                            }
-                        }
-                    }
-
-                    // I3
-
-                    $elevesI3  = [];
-                    $garconsI3  = 0;
-                    $fillesI3   = 0;
-
-                    foreach ($hasMAN as $singleStudent) {
-                        // On récupère le cycle de la promo de l'élève
-                        // (adaptez le chemin de relation si besoin : ici on suppose classe->promo)
-                        $cycle = $singleStudent->classe->promo->CYCLE;
-
-                        // On choisit le seuil min correspondant
-                        $seuilMin = ($cycle === '1')
-                            ? $DecisionConfigAnnuel->MinCycle1
-                            : $DecisionConfigAnnuel->MinCycle2;
-
-                        // On filtre selon les nouvelles bornes et le statut
-                        if (
-                            $singleStudent->MAN >= $seuilMin &&
-                            $singleStudent->MAN <  $seuilPassage &&
-                            $singleStudent->STATUT === 0
-                        ) {
-                            // Ajout à la liste I3
-                            $elevesI3[] = $singleStudent;
-                        }
-                    }
-                    // maintenant on filtre la liste I3 pour compter
-                    $garconsI3 = count(array_filter(
-                        $elevesI3,
-                        fn($e) => $e->SEXE === 1
-                    ));
-                    $fillesI3 = count($elevesI3) - $garconsI3;
-
+                        $countI1Garcons = $elevesInscritsDebutAnnee->where('SEXE','1')->count();
+                        $countI1Filles  = $elevesInscritsDebutAnnee->where('SEXE','2')->count();
+                        $countI1 = $countI1Garcons + $countI1Filles;
+                        
+                        // I2 / I3 : MS2 valide + STATUT
+                        $elevesI2 = $hasMS2->where('STATUT', '0');
+                        $elevesI3 = $hasMS2->where('STATUT', '1');
 
                         // I4 = élèves sans MAN
-                        $elevesAbandonAnne = $eleves->filter(function($e) use ($isValid) {
-                            return 
-                                ! ($isValid($e->MAN));
-                        });
+                            $elevesAbandonAnne = $eleves->filter(function($e) use ($isValid) {
+                                return 
+                                    ! ($isValid($e->MAN));
+                            });
 
-                        // 5) comptage par sexe et total
-                        $garconsI4 = $elevesAbandonAnne->where('SEXE', '1')->count();
-                        $fillesI4  = $elevesAbandonAnne->where('SEXE', '2')->count();
-                        $elevesI4        = $garconsI4 + $fillesI4;
+                            // 5) comptage par sexe et total
+                            $countI4Garcons = $elevesAbandonAnne->where('SEXE', '1')->count();
+                            $countI4Filles  = $elevesAbandonAnne->where('SEXE', '2')->count();
+                            $countI4        = $countI4Garcons + $countI4Filles;
 
 
-                
-                    // I5
-                    $elevesI5  = [];
-                    $garconsI5  = 0;
-                    $fillesI5   = 0;
+                        $intervales = [
+                            'I1' => ['garcons' => $countI1Garcons, 'filles' => $countI1Filles, 'total' => $countI1],
+                            'I2' => ['garcons' => $elevesI2->where('SEXE','1')->count(), 'filles' => $elevesI2->where('SEXE','2')->count(), 'total' => $elevesI2->count()],
+                            'I3' => ['garcons' => $elevesI3->where('SEXE','1')->count(), 'filles' => $elevesI3->where('SEXE','2')->count(), 'total' => $elevesI3->count()],
+                            'I4' => ['garcons' => $countI4Garcons, 'filles' => $countI4Filles, 'total' => $countI4],
+                        ];
+                    break;
 
-                    foreach ($hasMAN as $singleStudent) {
-                        // On récupère le cycle de la promo de l'élève
-                        // (adaptez le chemin de relation si besoin : ici on suppose classe->promo)
-                        $cycle = $singleStudent->classe->promo->CYCLE;
+                    case 4:
+                        // I2 / I3 : MS2 valide + STATUT
+                        $DecisionConfigAnnuel = DecisionConfigAnnuel::first();
+                        $seuilPassage = $DecisionConfigAnnuel->seuil_Passage;
 
-                        // On choisit le seuil min correspondant
-                        $seuilMin = ($cycle === '1')
-                            ? $DecisionConfigAnnuel->MinCycle1
-                            : $DecisionConfigAnnuel->MinCycle2;
+                        // I2
 
-                        // On filtre selon les nouvelles bornes et le statut
-                        if (
-                            ($singleStudent->MAN < $seuilMin && $singleStudent->STATUT === 0) || 
-                            ($singleStudent->MAN < $seuilPassage && $singleStudent->STATUT === 1)
-                        ) {
-                            // Ajout à la liste I3
-                            $elevesI5[] = $singleStudent;
+                        $elevesI2   = [];
+                        $garconsI2  = 0;
+                        $fillesI2   = 0;
+
+                        foreach ($hasMAN as $singleStudent) {
+                            if ($singleStudent->MAN >= $seuilPassage) {
+
+                                $elevesI2[] = $singleStudent;
+
+                                if ($singleStudent->SEXE === 1) {
+                                    $garconsI2++;
+                                } else {
+                                    $fillesI2++;
+                                }
+                            }
                         }
-                    }
-                    // maintenant on filtre la liste I3 pour compter
-                    $garconsI5 = count(array_filter(
-                        $elevesI5,
-                        fn($e) => $e->SEXE === 1
-                    ));
-                    $fillesI5 = count($elevesI5) - $garconsI5;
+
+                        // I3
+
+                        $elevesI3  = [];
+                        $garconsI3  = 0;
+                        $fillesI3   = 0;
+
+                        foreach ($hasMAN as $singleStudent) {
+                            // On récupère le cycle de la promo de l'élève
+                            // (adaptez le chemin de relation si besoin : ici on suppose classe->promo)
+                            $cycle = $singleStudent->classe->promo->CYCLE;
+
+                            // On choisit le seuil min correspondant
+                            $seuilMin = ($cycle === '1')
+                                ? $DecisionConfigAnnuel->MinCycle1
+                                : $DecisionConfigAnnuel->MinCycle2;
+
+                            // On filtre selon les nouvelles bornes et le statut
+                            if (
+                                $singleStudent->MAN >= $seuilMin &&
+                                $singleStudent->MAN <  $seuilPassage &&
+                                $singleStudent->STATUT === 0
+                            ) {
+                                // Ajout à la liste I3
+                                $elevesI3[] = $singleStudent;
+                            }
+                        }
+                        // maintenant on filtre la liste I3 pour compter
+                        $garconsI3 = count(array_filter(
+                            $elevesI3,
+                            fn($e) => $e->SEXE === 1
+                        ));
+                        $fillesI3 = count($elevesI3) - $garconsI3;
+
+
+                            // I4 = élèves sans MAN
+                            $elevesAbandonAnne = $eleves->filter(function($e) use ($isValid) {
+                                return 
+                                    ! ($isValid($e->MAN));
+                            });
+
+                            // 5) comptage par sexe et total
+                            $garconsI4 = $elevesAbandonAnne->where('SEXE', '1')->count();
+                            $fillesI4  = $elevesAbandonAnne->where('SEXE', '2')->count();
+                            $elevesI4        = $garconsI4 + $fillesI4;
+
 
                     
-                    // $elevesI2 = $hasMAN  >= ;
-                    // $elevesI3 = $hasMS2->where('STATUT', 1);
+                        // I5
+                        $elevesI5  = [];
+                        $garconsI5  = 0;
+                        $fillesI5   = 0;
 
-                    // I4 = élèves sans MAN
-                    // $countI4Garcons = $eleves->where('SEXE','1')->count() - $hasMAN->where('SEXE','1')->count();
-                    // $countI4Filles  = $eleves->where('SEXE','2')->count() - $hasMAN->where('SEXE','2')->count();
-                    // $countI4 = $countI4Garcons + $countI4Filles;
+                        foreach ($hasMAN as $singleStudent) {
+                            // On récupère le cycle de la promo de l'élève
+                            // (adaptez le chemin de relation si besoin : ici on suppose classe->promo)
+                            $cycle = $singleStudent->classe->promo->CYCLE;
 
-                    // I1 = même répartition que période 1
+                            // On choisit le seuil min correspondant
+                            $seuilMin = ($cycle === '1')
+                                ? $DecisionConfigAnnuel->MinCycle1
+                                : $DecisionConfigAnnuel->MinCycle2;
+
+                            // On filtre selon les nouvelles bornes et le statut
+                            if (
+                                ($singleStudent->MAN < $seuilMin && $singleStudent->STATUT === 0) || 
+                                ($singleStudent->MAN < $seuilPassage && $singleStudent->STATUT === 1)
+                            ) {
+                                // Ajout à la liste I3
+                                $elevesI5[] = $singleStudent;
+                            }
+                        }
+                        // maintenant on filtre la liste I3 pour compter
+                        $garconsI5 = count(array_filter(
+                            $elevesI5,
+                            fn($e) => $e->SEXE === 1
+                        ));
+                        $fillesI5 = count($elevesI5) - $garconsI5;
+
+                        
+                        // $elevesI2 = $hasMAN  >= ;
+                        // $elevesI3 = $hasMS2->where('STATUT', 1);
+
+                        // I4 = élèves sans MAN
+                        // $countI4Garcons = $eleves->where('SEXE','1')->count() - $hasMAN->where('SEXE','1')->count();
+                        // $countI4Filles  = $eleves->where('SEXE','2')->count() - $hasMAN->where('SEXE','2')->count();
+                        // $countI4 = $countI4Garcons + $countI4Filles;
+
+                        // I1 = même répartition que période 1
 
 
-                    // I1 : effictif total de la classe
-                    $countI1 = $eleves->count();
+                        // I1 : effictif total de la classe
+                        $countI1 = $eleves->count();
 
-                    $countI1Garcons = $eleves->where('SEXE','1')->count();
-                    $countI1Filles  = $eleves->where('SEXE','2')->count();
-                            
+                        $countI1Garcons = $eleves->where('SEXE','1')->count();
+                        $countI1Filles  = $eleves->where('SEXE','2')->count();
+                                
 
-                    $intervales = [
-                        'I1' => ['garcons' => $countI1Garcons, 'filles' => $countI1Filles, 'total' => $countI1],
-                        'I2' => ['garcons' => $garconsI2, 'filles'  => $fillesI2, 'total' => count($elevesI2)],
-                        'I3' => ['garcons' => $garconsI3, 'filles' => $fillesI3, 'total' => count($elevesI3)],
-                        'I4' => ['garcons' => $garconsI4, 'filles' => $fillesI4, 'total' => $elevesI4],
-                        'I5' => ['garcons' => $garconsI5, 'filles' => $fillesI5, 'total' => count($elevesI5)],
-                    ];
-                break;
-
-                default:
-                    // $intervales = $this->ancienneLogique($eleves, $periode, $data['moyenne_ref'] ?? 10.0);
-                    $intervales = "yoyooyoy";
+                        $intervales = [
+                            'I1' => ['garcons' => $countI1Garcons, 'filles' => $countI1Filles, 'total' => $countI1],
+                            'I2' => ['garcons' => $garconsI2, 'filles'  => $fillesI2, 'total' => count($elevesI2)],
+                            'I3' => ['garcons' => $garconsI3, 'filles' => $fillesI3, 'total' => count($elevesI3)],
+                            'I4' => ['garcons' => $garconsI4, 'filles' => $fillesI4, 'total' => $elevesI4],
+                            'I5' => ['garcons' => $garconsI5, 'filles' => $fillesI5, 'total' => count($elevesI5)],
+                        ];
                     break;
+
+                    default:
+                        // $intervales = $this->ancienneLogique($eleves, $periode, $data['moyenne_ref'] ?? 10.0);
+                        $intervales = "yoyooyoy";
+                        break;
+                }
+            } else {
+                // TRIMESTRE
+                switch ($periode) {
+
+                    case 1:
+                        
+                        // I1
+                        // $elevesInscritsDebutAnnee = $eleves->filter(function($e) use ($isValid) {
+                        //         return
+                        //          ($isValid($e->INT1) && $e->SEMESTRE == 1) 
+                        //         || ($isValid($e->INT2 ) && $e->SEMESTRE == 1) 
+                        //         || ($isValid($e->INT3 ) && $e->SEMESTRE == 1)
+                        //         || ($isValid($e->INT4 ) && $e->SEMESTRE == 1)
+                        //         || ($isValid($e->DEV1 ) && $e->SEMESTRE == 1)
+                        //         || ($isValid($e->DEV2 ) && $e->SEMESTRE == 1);
+                        //     });
+
+                        
+                        // 2) Filtrage avec la relation 'notes'
+                        $elevesInscritsDebutAnnee = $eleves
+                            ->filter(function($eleve) {
+                            return $eleve->notes
+                                    ->where('SEMESTRE', '1')
+                                    ->filter(function($note) {
+                                        foreach (['INT1','INT2','INT3','INT4','DEV1','DEV2'] as $col) {
+                                            $val = $note->$col;
+                                            if (! is_null($val) && $val !== -1 && $val !== 21) {
+                                                return true;
+                                            }
+                                        }
+                                        return false;
+                                    })
+                                    ->isNotEmpty();
+                            });
+
+                        $countI1Garcons = $elevesInscritsDebutAnnee->where('SEXE','1')->count();
+                        $countI1Filles  = $elevesInscritsDebutAnnee->where('SEXE','2')->count();
+                        $countI1 = $countI1Garcons + $countI1Filles;
+
+                        // I2 / I3 : MS1 valide + STATUT
+                        $elevesI2 = $hasMS1->where('STATUT', '0');
+                        $elevesI3 = $hasMS1->where('STATUT', '1');
+
+                    
+
+                        // dd($elevesI2);
+                        // I4 
+
+                            // 4) parmis tous les eleves inscrit en debut d'anne , ne garder que ceux qui n'ont pas MS1
+                            $elevesAbandonSem1 = $elevesInscritsDebutAnnee->filter(function($e) use ($isValid) {
+                                return 
+                                    ! ($isValid($e->MS1));
+                            });
+
+                            // 5) comptage par sexe et total
+                            $countI4Garcons = $elevesAbandonSem1->where('SEXE', '1')->count();
+                            $countI4Filles  = $elevesAbandonSem1->where('SEXE', '2')->count();
+                            $countI4        = $countI4Garcons + $countI4Filles;
+
+
+                        $intervales = [
+                            'I1' => [
+                                'garcons' => $countI1Garcons,
+                                'filles'  => $countI1Filles,
+                                'total'   => $countI1,
+                            ],
+                            'I2' => [
+                                'garcons' => $elevesI2->where('SEXE','1')->count(),
+                                'filles'  => $elevesI2->where('SEXE','2')->count(),
+                                'total'   => $elevesI2->count(),
+                            ],
+                            'I3' => [
+                                'garcons' => $elevesI3->where('SEXE','1')->count(),
+                                'filles'  => $elevesI3->where('SEXE','2')->count(),
+                                'total'   => $elevesI3->count(),
+                            ],
+                            'I4' => [
+                                'garcons' => $countI4Garcons,
+                                'filles'  => $countI4Filles,
+                                'total'   => $countI4,
+                            ],
+                        ];
+                    break;
+
+                    case 2:
+
+                        // I1
+                        // 2) Filtrage avec la relation 'notes'
+                        $elevesInscritsDebutAnnee = $eleves
+                            ->filter(function($eleve) {
+                            return $eleve->notes
+                                    ->where('SEMESTRE', '1')
+                                    ->filter(function($note) {
+                                        foreach (['INT1','INT2','INT3','INT4','DEV1','DEV2'] as $col) {
+                                            $val = $note->$col;
+                                            if (! is_null($val) && $val !== -1 && $val !== 21) {
+                                                return true;
+                                            }
+                                        }
+                                        return false;
+                                    })
+                                    ->isNotEmpty();
+                            });
+
+                        $countI1Garcons = $elevesInscritsDebutAnnee->where('SEXE','1')->count();
+                        $countI1Filles  = $elevesInscritsDebutAnnee->where('SEXE','2')->count();
+                        $countI1 = $countI1Garcons + $countI1Filles;
+                        
+                        // I2 / I3 : MS2 valide + STATUT
+                        $elevesI2 = $hasMS2->where('STATUT', '0');
+                        $elevesI3 = $hasMS2->where('STATUT', '1');
+
+                        // I4 = élèves sans MS2
+                            $elevesAbandonSem2 = $eleves->filter(function($e) use ($isValid) {
+                                return 
+                                    ! ($isValid($e->MS2));
+                            });
+
+                            // 5) comptage par sexe et total
+                            $countI4Garcons = $elevesAbandonSem2->where('SEXE', '1')->count();
+                            $countI4Filles  = $elevesAbandonSem2->where('SEXE', '2')->count();
+                            $countI4        = $countI4Garcons + $countI4Filles;
+
+
+                        $intervales = [
+                            'I1' => ['garcons' => $countI1Garcons, 'filles' => $countI1Filles, 'total' => $countI1],
+                            'I2' => ['garcons' => $elevesI2->where('SEXE','1')->count(), 'filles' => $elevesI2->where('SEXE','2')->count(), 'total' => $elevesI2->count()],
+                            'I3' => ['garcons' => $elevesI3->where('SEXE','1')->count(), 'filles' => $elevesI3->where('SEXE','2')->count(), 'total' => $elevesI3->count()],
+                            'I4' => ['garcons' => $countI4Garcons, 'filles' => $countI4Filles, 'total' => $countI4],
+                        ];
+                    break;
+
+                    case 3:
+
+                        // I1
+                        // 2) Filtrage avec la relation 'notes'
+                        $elevesInscritsDebutAnnee = $eleves
+                            ->filter(function($eleve) {
+                            return $eleve->notes
+                                    ->where('SEMESTRE', '1')
+                                    ->filter(function($note) {
+                                        foreach (['INT1','INT2','INT3','INT4','DEV1','DEV2'] as $col) {
+                                            $val = $note->$col;
+                                            if (! is_null($val) && $val !== -1 && $val !== 21) {
+                                                return true;
+                                            }
+                                        }
+                                        return false;
+                                    })
+                                    ->isNotEmpty();
+                            });
+
+                        $countI1Garcons = $elevesInscritsDebutAnnee->where('SEXE','1')->count();
+                        $countI1Filles  = $elevesInscritsDebutAnnee->where('SEXE','2')->count();
+                        $countI1 = $countI1Garcons + $countI1Filles;
+                        
+                        // I2 / I3 : MS2 valide + STATUT
+                        $elevesI2 = $hasMS3->where('STATUT', '0');
+                        $elevesI3 = $hasMS3->where('STATUT', '1');
+
+                        // I4 = élèves sans MAN
+                            $elevesAbandonAnne = $eleves->filter(function($e) use ($isValid) {
+                                return 
+                                    ! ($isValid($e->MAN));
+                            });
+
+                            // 5) comptage par sexe et total
+                            $countI4Garcons = $elevesAbandonAnne->where('SEXE', '1')->count();
+                            $countI4Filles  = $elevesAbandonAnne->where('SEXE', '2')->count();
+                            $countI4        = $countI4Garcons + $countI4Filles;
+
+
+                        $intervales = [
+                            'I1' => ['garcons' => $countI1Garcons, 'filles' => $countI1Filles, 'total' => $countI1],
+                            'I2' => ['garcons' => $elevesI2->where('SEXE','1')->count(), 'filles' => $elevesI2->where('SEXE','2')->count(), 'total' => $elevesI2->count()],
+                            'I3' => ['garcons' => $elevesI3->where('SEXE','1')->count(), 'filles' => $elevesI3->where('SEXE','2')->count(), 'total' => $elevesI3->count()],
+                            'I4' => ['garcons' => $countI4Garcons, 'filles' => $countI4Filles, 'total' => $countI4],
+                        ];
+                    break;
+
+                    case 4:
+                        // I2 / I3 : MS2 valide + STATUT
+                        $DecisionConfigAnnuel = DecisionConfigAnnuel::first();
+                        $seuilPassage = $DecisionConfigAnnuel->seuil_Passage;
+
+                        // I2
+
+                        $elevesI2   = [];
+                        $garconsI2  = 0;
+                        $fillesI2   = 0;
+
+                        foreach ($hasMAN as $singleStudent) {
+                            if ($singleStudent->MAN >= $seuilPassage) {
+
+                                $elevesI2[] = $singleStudent;
+
+                                if ($singleStudent->SEXE === 1) {
+                                    $garconsI2++;
+                                } else {
+                                    $fillesI2++;
+                                }
+                            }
+                        }
+
+                        // I3
+
+                        $elevesI3  = [];
+                        $garconsI3  = 0;
+                        $fillesI3   = 0;
+
+                        foreach ($hasMAN as $singleStudent) {
+                            // On récupère le cycle de la promo de l'élève
+                            // (adaptez le chemin de relation si besoin : ici on suppose classe->promo)
+                            $cycle = $singleStudent->classe->promo->CYCLE;
+
+                            // On choisit le seuil min correspondant
+                            $seuilMin = ($cycle === '1')
+                                ? $DecisionConfigAnnuel->MinCycle1
+                                : $DecisionConfigAnnuel->MinCycle2;
+
+                            // On filtre selon les nouvelles bornes et le statut
+                            if (
+                                $singleStudent->MAN >= $seuilMin &&
+                                $singleStudent->MAN <  $seuilPassage &&
+                                $singleStudent->STATUT === 0
+                            ) {
+                                // Ajout à la liste I3
+                                $elevesI3[] = $singleStudent;
+                            }
+                        }
+                        // maintenant on filtre la liste I3 pour compter
+                        $garconsI3 = count(array_filter(
+                            $elevesI3,
+                            fn($e) => $e->SEXE === 1
+                        ));
+                        $fillesI3 = count($elevesI3) - $garconsI3;
+
+
+                            // I4 = élèves sans MAN
+                            $elevesAbandonAnne = $eleves->filter(function($e) use ($isValid) {
+                                return 
+                                    ! ($isValid($e->MAN));
+                            });
+
+                            // 5) comptage par sexe et total
+                            $garconsI4 = $elevesAbandonAnne->where('SEXE', '1')->count();
+                            $fillesI4  = $elevesAbandonAnne->where('SEXE', '2')->count();
+                            $elevesI4        = $garconsI4 + $fillesI4;
+
+
+                    
+                        // I5
+                        $elevesI5  = [];
+                        $garconsI5  = 0;
+                        $fillesI5   = 0;
+
+                        foreach ($hasMAN as $singleStudent) {
+                            // On récupère le cycle de la promo de l'élève
+                            // (adaptez le chemin de relation si besoin : ici on suppose classe->promo)
+                            $cycle = $singleStudent->classe->promo->CYCLE;
+
+                            // On choisit le seuil min correspondant
+                            $seuilMin = ($cycle === '1')
+                                ? $DecisionConfigAnnuel->MinCycle1
+                                : $DecisionConfigAnnuel->MinCycle2;
+
+                            // On filtre selon les nouvelles bornes et le statut
+                            if (
+                                ($singleStudent->MAN < $seuilMin && $singleStudent->STATUT === 0) || 
+                                ($singleStudent->MAN < $seuilPassage && $singleStudent->STATUT === 1)
+                            ) {
+                                // Ajout à la liste I3
+                                $elevesI5[] = $singleStudent;
+                            }
+                        }
+                        // maintenant on filtre la liste I3 pour compter
+                        $garconsI5 = count(array_filter(
+                            $elevesI5,
+                            fn($e) => $e->SEXE === 1
+                        ));
+                        $fillesI5 = count($elevesI5) - $garconsI5;
+
+                        
+                        // $elevesI2 = $hasMAN  >= ;
+                        // $elevesI3 = $hasMS2->where('STATUT', 1);
+
+                        // I4 = élèves sans MAN
+                        // $countI4Garcons = $eleves->where('SEXE','1')->count() - $hasMAN->where('SEXE','1')->count();
+                        // $countI4Filles  = $eleves->where('SEXE','2')->count() - $hasMAN->where('SEXE','2')->count();
+                        // $countI4 = $countI4Garcons + $countI4Filles;
+
+                        // I1 = même répartition que période 1
+
+
+                        // I1 : effictif total de la classe
+                        $countI1 = $eleves->count();
+
+                        $countI1Garcons = $eleves->where('SEXE','1')->count();
+                        $countI1Filles  = $eleves->where('SEXE','2')->count();
+                                
+
+                        $intervales = [
+                            'I1' => ['garcons' => $countI1Garcons, 'filles' => $countI1Filles, 'total' => $countI1],
+                            'I2' => ['garcons' => $garconsI2, 'filles'  => $fillesI2, 'total' => count($elevesI2)],
+                            'I3' => ['garcons' => $garconsI3, 'filles' => $fillesI3, 'total' => count($elevesI3)],
+                            'I4' => ['garcons' => $garconsI4, 'filles' => $fillesI4, 'total' => $elevesI4],
+                            'I5' => ['garcons' => $garconsI5, 'filles' => $fillesI5, 'total' => count($elevesI5)],
+                        ];
+                    break;
+
+                    default:
+                        // $intervales = $this->ancienneLogique($eleves, $periode, $data['moyenne_ref'] ?? 10.0);
+                        $intervales = "yoyooyoy";
+                        break;
+                }
             }
+
+
 
             $resultats[$groupLabel] = [
                 'codePromo'   => $groupLabel,

@@ -583,25 +583,25 @@
                                     <legend style="font-weight: bold; color: #fff; font-size: 1rem;">Calcul moyenne
                                         annuelle</legend>
                                     <div class="form-group d-flex align-items-center mb-2">
-                                        <label for="pondTrim1">Pondération Trimestre 1</label>
+                                        <label for="pondTrim1Check">Pondération Trimestre 1</label>
                                         <input type="number" class="form-control" id="pondTrim1" name="pondTrim1"
                                             value="1"
                                             style="margin-left: 10px; width: 30px !important; padding: 0; height: 2rem;">
-                                        <input type="checkbox" class="form-check-input" name="pondTrim1" id="pondTrim1" style="right: 1rem !important;">
+                                        <input type="checkbox" class="form-check-input" name="pondTrim1Check" id="pondTrim1Check" style="right: 1rem !important;">
                                     </div>
                                     <div class="form-group d-flex align-items-center mb-2">
-                                        <label for="pondTrim2">Pondération Trimestre 2</label>
+                                        <label for="pondTrim2Check">Pondération Trimestre 2</label>
                                         <input type="number" class="form-control" id="pondTrim2" name="pondTrim2"
                                             value="1"
                                             style="margin-left: 10px; width: 30px !important; padding: 0; height: 2rem;">
-                                        <input type="checkbox" checked class="form-check-input" name="pondTrim2" id="pondTrim2" style="right: 1rem !important;">
+                                        <input type="checkbox" class="form-check-input" name="pondTrim2Check" id="pondTrim2Check" style="right: 1rem !important;">
                                     </div>
                                     <div class="form-group d-flex align-items-center mb-1">
-                                        <label for="pondTrim3">Pondération Trimestre 3</label>
+                                        <label for="pondTrim3Check">Pondération Trimestre 3</label>
                                         <input type="number" class="form-control" id="pondTrim3" name="pondTrim3"
                                             value="1"
                                             style="margin-left: 10px; width: 30px !important; padding: 0; height: 2rem;">
-                                        <input type="checkbox" checked class="form-check-input" name="pondTrim3" id="pondTrim3" style="right: 1rem !important;;">
+                                        <input type="checkbox" checked class="form-check-input" name="pondTrim3Check" id="pondTrim3Check" style="right: 1rem !important;;">Check
                                     </div>
                                 </div>
                             @endif

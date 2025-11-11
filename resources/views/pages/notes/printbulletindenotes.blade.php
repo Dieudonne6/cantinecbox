@@ -86,7 +86,7 @@
                 </div>
 
                 @php
-                    $sortedResultats = collect($resultats)->sortBy('matricule');
+                    $sortedResultats = collect($resultats)->sortBy('nom');
                 @endphp
 
 

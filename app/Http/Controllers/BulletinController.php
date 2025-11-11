@@ -1236,10 +1236,10 @@ class BulletinController extends Controller
                 //   }
 
 
-                // Si P2 et P3 manquent toutes les deux, on fixe la moyenne annuelle à 21
+                // Si P3 manquent toutes les deux, on fixe la moyenne annuelle à 21
                 if (
-                    ($moyenneP2 === null || $moyenneP2 === 21)
-                    && ($moyenneP3 === null || $moyenneP3 === 21)
+                    // ($moyenneP2 === null || $moyenneP2 === 21)  && 
+                    ($moyenneP3 === null || $moyenneP3 === 21)
                 ) {
                     $moyenneAnnuelle = 21;
                 } else {
@@ -1249,17 +1249,17 @@ class BulletinController extends Controller
 
                     // Période 1
                     if ($moyenneP1 !== null && $moyenneP1 !== 21) {
-                        $sommePonderee += $moyenneP1 * $pondTrim1;
+                        $sommePonderee += ($moyenneP1 * $pondTrim1);
                         $sommePond     += $pondTrim1;
                     }
                     // Période 2
                     if ($moyenneP2 !== null && $moyenneP2 !== 21) {
-                        $sommePonderee += $moyenneP2 * $pondTrim2;
+                        $sommePonderee += ($moyenneP2 * $pondTrim2);
                         $sommePond     += $pondTrim2;
                     }
                     // Période 3
                     if ($moyenneP3 !== null && $moyenneP3 !== 21) {
-                        $sommePonderee += $moyenneP3 * $pondTrim3;
+                        $sommePonderee += ($moyenneP3 * $pondTrim3);
                         $sommePond     += $pondTrim3;
                     }
 
@@ -1268,14 +1268,19 @@ class BulletinController extends Controller
                         $moyenneAnnuelle = round($sommePonderee / $sommePond, 2);
                     } else {
                         // Cas théorique si aucune période valide (ne devrait pas se produire
-                        // ici car P2/P3 n'étaient pas toutes deux manquantes)
+                        // ici car P3 n'étaient pas toutes deux manquantes)
                         $moyenneAnnuelle = 21;
                     }
+
+                    // dd($sommePonderee, $sommePond);
+
+                    // dd($pondTrim1, $pondTrim2, $pondTrim3, $moyenneP1, $moyenneP2, $moyenneP3);
+
                 }
             }
 
 
-
+            // dd($moyenneP1,  $moyenneP2, $moyenneP3, $moyenneAnnuelle);
 
             $appreciationAnnuelle = ($moyenneAnnuelle !== null) ? $this->determineAppreciation($moyenneAnnuelle, $params2) : null;
 
@@ -1331,6 +1336,7 @@ class BulletinController extends Controller
                     'appan' => $appan,
                 ];
 
+
                 // Parcourir les périodes et ajouter les valeurs non nulles
                 foreach ($periodsA as $periodeA) {
                     $periodeData = $resA['periods'][$periodeA] ?? null;
@@ -1358,6 +1364,8 @@ class BulletinController extends Controller
                     $data['app3'] = "";
                     // On ne met rien pour 'app3'
                 }
+
+                // dd($data);
 
                 // Mettre à jour l'élève dans la base de données
                 Eleve::where('MATRICULE', $matricule)->update($data);
@@ -1636,6 +1644,7 @@ class BulletinController extends Controller
             // recuperer la decision correspondante
 
 
+            // dd($eleve);
 
             $classeElev = $eleve->CODECLAS;
             $CodePromo = Classes::where('CODECLAS', $classeElev)->first();
