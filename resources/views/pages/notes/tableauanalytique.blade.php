@@ -348,7 +348,7 @@
                             </tbody>
                         </table>
 
-                    </div>
+                    </div> 
 
                     <div class="text-center mt-3">
                         <button type="button" id="add-interval-btn" class="btn btn-success">Ajouter un intervalle</button>
@@ -550,41 +550,41 @@
                                     });
                                 }
 
- // Initialise les inputs existants
-  document.querySelectorAll('.interval-input').forEach(attachEvents);
+                            // Initialise les inputs existants
+                            document.querySelectorAll('.interval-input').forEach(attachEvents);
 
-  addIntervalBtn.addEventListener('click', () => {
-    if (currentIntervalCount >= maxIntervals) return;
-    currentIntervalCount++;
+                            addIntervalBtn.addEventListener('click', () => {
+                                if (currentIntervalCount >= maxIntervals) return;
+                                currentIntervalCount++;
 
-    // 1) Clone du template (inclut déjà la colonne "Supprimer")
-    const newRow = intervalTemplate.cloneNode(true);
-    newRow.id = '';
-    newRow.style.display = '';
+                                // 1) Clone du template (inclut déjà la colonne "Supprimer")
+                                const newRow = intervalTemplate.cloneNode(true);
+                                newRow.id = '';
+                                newRow.style.display = '';
 
-    // 2) Mise à jour du label et des inputs
-    newRow.querySelector('.interval-label').textContent = `I${currentIntervalCount}`;
-    ['min','max'].forEach(type => {
-      const inp = newRow.querySelector(`input[data-type="${type}"]`);
-      inp.dataset.interval = currentIntervalCount;
-      inp.name            = `intervales[I${currentIntervalCount}][${type}]`;
-      inp.value           = oldIntervals[`I${currentIntervalCount}`]?.[type] ?? '0.00';
-      attachEvents(inp);
-    });
+                                // 2) Mise à jour du label et des inputs
+                                newRow.querySelector('.interval-label').textContent = `I${currentIntervalCount}`;
+                                ['min','max'].forEach(type => {
+                                const inp = newRow.querySelector(`input[data-type="${type}"]`);
+                                inp.dataset.interval = currentIntervalCount;
+                                inp.name            = `intervales[I${currentIntervalCount}][${type}]`;
+                                inp.value           = oldIntervals[`I${currentIntervalCount}`]?.[type] ?? '0.00';
+                                attachEvents(inp);
+                                });
 
-    // 3) Binder le bouton Supprimer **uniquement** sur ce newRow
-    bindRemove(newRow.querySelector('.remove-interval-btn'));
+                                // 3) Binder le bouton Supprimer **uniquement** sur ce newRow
+                                bindRemove(newRow.querySelector('.remove-interval-btn'));
 
-    // 4) L'ajoute au tableau
-    tableBody.appendChild(newRow);
+                                // 4) L'ajoute au tableau
+                                tableBody.appendChild(newRow);
 
-    // 5) Désactive "Ajouter" si on atteint la limite
-    if (currentIntervalCount === maxIntervals) {
-      addIntervalBtn.disabled = true;
-    }
-  });
-});
-</script>
+                                // 5) Désactive "Ajouter" si on atteint la limite
+                                if (currentIntervalCount === maxIntervals) {
+                                addIntervalBtn.disabled = true;
+                                }
+                            });
+                            });
+                    </script>
 
                     @if ($errors->any())
                         <div class="alert alert-danger">
@@ -608,7 +608,6 @@
                         </button>
 
                     </div>
-
                 </form>
                 <br>
                 <br>
@@ -1337,7 +1336,8 @@
                                                 //  - 'plus_faible_eleve' ([ 'nom'=>…, 'moyenne'=>… ]) ou null
 
                                                 // 4.1. Déterminer le préfixe CODEPROMO dans $classeNom
-                                                $codepromo = substr($classeNom, 0, 3);
+                                                //$codepromo = $stats['codepromo'] ?? substr($classeNom, 0, 3);
+                                                    $codepromo = $stats['codepromo'] ?? substr($classeNom, 0, 3);
 
                                                 if (!isset($groupedClasses[$codepromo])) {
                                                     $groupedClasses[$codepromo] = [
@@ -1409,7 +1409,7 @@
                                                 }
 
                                                 // 5. Mise à jour du bilan global des cycles
-                                                if (in_array($codepromo, ['6EM', '5EM', '4EM', '3EM'], true)) {
+                                                if (in_array($codepromo, ['6EME', '5EME', '4EME', '3EME'], true)) {
                                                     $cycle = 'CYCLE I';
                                                 } elseif (in_array($codepromo, ['2ND', '1RE', 'TLE'], true)) {
                                                     $cycle = 'CYCLE II';
@@ -1543,10 +1543,36 @@
                                                         $effectifSansAbandonEtab > 0
                                                             ? ($totalReussiteEtab / $effectifSansAbandonEtab) * 100
                                                             : 0;
-                                                @endphp
+                                    @endphp                                  
+
+                                    @php
+                                        // Définir l'ordre des CODEPROMO pour un affichage logique
+                                        $ordreCodepromo = ['6EME', '5EME', '4EME', '3EME', '2ND', '1RE', 'TLE'];
+                                        
+                                        // Trier les groupes selon l'ordre défini
+                                        $groupedClassesTries = [];
+                                        foreach ($ordreCodepromo as $code) {
+                                            if (isset($groupedClasses[$code])) {
+                                                $groupedClassesTries[$code] = $groupedClasses[$code];
+                                                // Trier les classes dans chaque groupe par nom
+                                                ksort($groupedClassesTries[$code]['classes']);
+                                            }
+                                        }
+                                        
+                                        // Ajouter les groupes non prévus à la fin
+                                        foreach ($groupedClasses as $code => $data) {
+                                            if (!in_array($code, $ordreCodepromo)) {
+                                                $groupedClassesTries[$code] = $data;
+                                                ksort($groupedClassesTries[$code]['classes']);
+                                            }
+                                        }
+                                    @endphp
+
+                                  
 
                                         {{-- 9. Affichage des tableaux par CODEPROMO --}}
-                                        @foreach ($groupedClasses as $codepromo => $dataPromo)
+                                    
+                                          @foreach ($groupedClassesTries as $codepromo => $dataPromo) 
                                             @php
                                                 $sommeTauxClasse = 0;
                                                 $nbClasses = count($dataPromo['classes']);
@@ -1680,7 +1706,7 @@
                                             </tr>
 
                                             {{-- 9.3. Afficher le bilan CYCLE I juste après le bilan du CODEPROMO "3EM" --}}
-                                            @if ($codepromo === '3EM')
+                                            @if ($codepromo === '3EME')
                                                 <tr class="table-info">
                                                     <td class="font-weight-bold">CYCLE I</td>
                                                     <td class="text-center">
@@ -1717,35 +1743,37 @@
                                         @endforeach
 
                                         {{-- 10. Affichage du bilan CYCLE II (après tous les CODEPROMO) --}}
-                                        <tr class="table-info">
-                                            <td class="font-weight-bold">CYCLE II</td>
-                                            <td class="text-center">{{ $bilansCycles['CYCLE II']['effectif_total'] }}</td>
+                                        @if ($bilansCycles['CYCLE II']['effectif_total'] > 0)
+                                            <tr class="table-info">
+                                                <td class="font-weight-bold">CYCLE II</td>
+                                                <td class="text-center">{{ $bilansCycles['CYCLE II']['effectif_total'] }}</td>
 
-                                            @foreach ($intervales as $intervalleCle => $valeurs)
+                                                @foreach ($intervales as $intervalleCle => $valeurs)
+                                                    <td class="text-center">
+                                                        {{ $bilansCycles['CYCLE II']['intervales'][$intervalleCle] ?? 0 }}
+                                                    </td>
+                                                @endforeach
+
+                                                <td>{{ $bilansCycles['CYCLE II']['meilleur_eleve']['nom'] ?? '-' }}</td>
                                                 <td class="text-center">
-                                                    {{ $bilansCycles['CYCLE II']['intervales'][$intervalleCle] ?? 0 }}
+                                                    {{ !empty($bilansCycles['CYCLE II']['meilleur_eleve'])
+                                                        ? number_format($bilansCycles['CYCLE II']['meilleur_eleve']['moyenne'], 2)
+                                                        : '-' }}
                                                 </td>
-                                            @endforeach
 
-                                            <td>{{ $bilansCycles['CYCLE II']['meilleur_eleve']['nom'] ?? '-' }}</td>
-                                            <td class="text-center">
-                                                {{ !empty($bilansCycles['CYCLE II']['meilleur_eleve'])
-                                                    ? number_format($bilansCycles['CYCLE II']['meilleur_eleve']['moyenne'], 2)
-                                                    : '-' }}
-                                            </td>
+                                                <td>{{ $bilansCycles['CYCLE II']['plus_faible_eleve']['nom'] ?? '-' }}</td>
+                                                <td class="text-center">
+                                                    {{ !empty($bilansCycles['CYCLE II']['plus_faible_eleve'])
+                                                        ? number_format($bilansCycles['CYCLE II']['plus_faible_eleve']['moyenne'], 2)
+                                                        : '-' }}
+                                                </td>
 
-                                            <td>{{ $bilansCycles['CYCLE II']['plus_faible_eleve']['nom'] ?? '-' }}</td>
-                                            <td class="text-center">
-                                                {{ !empty($bilansCycles['CYCLE II']['plus_faible_eleve'])
-                                                    ? number_format($bilansCycles['CYCLE II']['plus_faible_eleve']['moyenne'], 2)
-                                                    : '-' }}
-                                            </td>
-
-                                            <td class="text-center">{{ $bilansCycles['CYCLE II']['abandons'] }}</td>
-                                            <td class="text-center">
-                                                {{ number_format($bilansCycles['CYCLE II']['taux_reussite'], 2) }}%
-                                            </td>
-                                        </tr>
+                                                <td class="text-center">{{ $bilansCycles['CYCLE II']['abandons'] }}</td>
+                                                <td class="text-center">
+                                                    {{ number_format($bilansCycles['CYCLE II']['taux_reussite'], 2) }}%
+                                                </td>
+                                            </tr>
+                                        @endif
 
                                         {{-- 11. Ligne de bilan global ÉTABLISSEMENT --}}
                                         <tr class="table-success">
