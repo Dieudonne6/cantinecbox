@@ -323,7 +323,7 @@
                                                     callbacks: {
                                                         label: function(context) {
                                                             const value = context.raw;
-                                                            return context.label + ': ' + new Intl.NumberFormat().format(value) + ' XAF';
+                                                            return context.label + ': ' + new Intl.NumberFormat().format(value) + ' XOF';
                                                         }
                                                     }
                                                 }

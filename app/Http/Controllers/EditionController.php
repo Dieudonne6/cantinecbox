@@ -1144,12 +1144,17 @@ class EditionController extends Controller
                   }
 
                   $countValides = count($listeValides);
-                  if ($countValides > 0) {
-                      // Si au moins une période valide, on fait la moyenne arithmétique des valeurs présentes
-                      $somme = array_sum($listeValides);
-                      $moyenneAnnuelle = number_format($somme / $countValides, 2);
+                  if ($moyenneP3 !== null && $moyenneP3 !== 21) {
+                    if ($countValides > 0) {
+                        // Si au moins une période valide, on fait la moyenne arithmétique des valeurs présentes
+                        $somme = array_sum($listeValides);
+                        $moyenneAnnuelle = number_format($somme / $countValides, 2);
+                    } else {
+                        // Aucune note sur les 3 périodes
+                        $moyenneAnnuelle = 21;
+                    }
                   } else {
-                      // Aucune note sur les 3 périodes
+                    // période 3 NON valide
                       $moyenneAnnuelle = 21;
                   }
               }

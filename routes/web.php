@@ -144,6 +144,8 @@ Route::get('/suppfacturescolaritenonnormalise/{id}', [PagesController::class, 's
 Route::post('/avoirfacturescolarite/{codemecef}', [PagesController::class, 'avoirfacturescolarite'])->name('avoirfacturescolarite');
 Route::get('/avoirfacturepaiescolaritemodif/{codemecef}', [PagesController::class, 'avoirfacturepaiescolaritemodif'])->name('avoirfacturepaiescolaritemodif');
 Route::post('/avoirfacturescolaritmodification/{codemecef}', [PagesController::class, 'avoirfacturescolaritmodification'])->name('avoirfacturescolaritmodification');
+Route::get('/modiffacturepaiescolaritesimple/{id}', [PagesController::class, 'modiffacturepaiescolaritesimple'])->name('modiffacturepaiescolaritesimple');
+Route::post('/modiffacturescolaritsimple/{id}', [PagesController::class, 'modiffacturescolaritsimple'])->name('modiffacturescolaritsimple');
 
 Route::get('/transfert', [PagesController::class, 'transfert']);
 

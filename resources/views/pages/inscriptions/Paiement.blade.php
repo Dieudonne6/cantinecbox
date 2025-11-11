@@ -39,8 +39,8 @@
                             }
                             
                             .btn {
-                                padding: 0.25rem 0.5rem;
-                                font-size: 0.875rem;
+                                padding: 5rem 5rem;
+                                font-size: 1.1rem;
                                 transition: transform 0.2s ease, background-color 0.3s ease;
                             }
                             
@@ -299,9 +299,9 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-4 col-lg-3 d-flex align-items-center">
+                                <div class="col-md-4 col-lg-3  align-items-center">
                                     <input type="hidden" name="matricule" value="{{ $eleve->MATRICULE }}">
-                                    <button id="btn-enregistrer" type="submit" class="btn btn-primary w-100" style="font-size: 1.2rem; padding: 0.5rem 1rem;">
+                                    <button id="btn-enregistrer" type="submit" class="btn btn-primary w-100" style="padding: 0.5rem 1rem;">
                                         Enregistrer le paiement
                                     </button>
                                 </div>
