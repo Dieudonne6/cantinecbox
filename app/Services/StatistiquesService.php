@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Classes;
 use App\Models\Params2;
 use App\Models\Eleve;
-use App\Models\Params2;
 use App\Models\DecisionConfigAnnuel;
 use Illuminate\Support\Facades\DB;
 
