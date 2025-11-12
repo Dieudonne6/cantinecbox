@@ -186,14 +186,14 @@
                     
                     <div class="form-group row">
                       <div class="col d-flex align-items-center">
-                        <label class="mr-2">Frais 1</label>
+                        <label class="mr-2">{{$libel->LIBELF1}}</label>
                         <div id="the-basics">
                           <input class="form-control" type="text" id="frais1" name="frais1" value="{{ $eleve->FRAIS1 }}" readonly>
                           
                         </div>
                       </div>
                       <div class="col d-flex align-items-center">
-                        <label class="mr-2">Frais 2</label>
+                        <label class="mr-2"> {{$libel->LIBELF2}}</label>
                         <div id="bloodhound">
                           <input class="form-control" id="frais2" name="frais2" type="text"  value="{{ $eleve->FRAIS2}}" readonly>
                           
@@ -203,13 +203,13 @@
                     
                     <div class="form-group row">
                       <div class="col d-flex align-items-center">
-                        <label class="mr-2">Frais 3</label>
+                        <label class="mr-2">{{$libel->LIBELF3}}</label>
                         <div id="the-basics">
                           <input class="form-control" id="frais3" type="text" name="frais3" value="{{ $eleve->FRAIS3 }}" readonly>
                         </div>
                       </div>
                       <div class="col d-flex align-items-center">
-                        <label class="mr-2">Frais 4</label>
+                        <label class="mr-2">{{$libel->LIBELF4}}</label>
                         <div id="bloodhound">
                           <input class="form-control" id="frais4" type="text" name="frais4" value="{{ $eleve->FRAIS4 }}" readonly>
                         </div>
