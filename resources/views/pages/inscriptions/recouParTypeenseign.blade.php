@@ -207,7 +207,7 @@
                                     $totalAPercevoirTotal += $donneclasse['totalAPercevoir'] ?? 0;
                                     $totalPercuTotal += $donneclasse['totalPercu'] ?? 0;
                                     // Reste
-                                    $totalAPercevoirReste += $donneclasse['Reste'] ?? 0;
+                                    $totalAPercevoirReste += $donneclasse['reste'] ?? 0;
                                 @endphp
 
                                     

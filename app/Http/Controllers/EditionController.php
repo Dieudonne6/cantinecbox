@@ -183,8 +183,8 @@ class EditionController extends Controller
     // Requête pour récupérer les données
     $query = DB::table('scolarit')
       ->join('eleve', 'scolarit.MATRICULE', '=', 'eleve.MATRICULE') // Joindre la table des élèves
-      ->join('typeenseigne', 'eleve.TYPEENSEIG', '=', 'typeenseigne.idenseign') // Joindre la table des types d'enseignement
-      ->select('scolarit.DATEOP', 'scolarit.AUTREF', 'scolarit.SIGNATURE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type', DB::raw('SUM(scolarit.MONTANT) as total'))
+      // ->join('typeenseigne', 'eleve.TYPEENSEIG', '=', 'typeenseigne.idenseign') // Joindre la table des types d'enseignement
+      ->select('scolarit.DATEOP', 'scolarit.AUTREF', 'scolarit.SIGNATURE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', DB::raw('SUM(scolarit.MONTANT) as total'))
       ->whereBetween('scolarit.DATEOP', [$datedebut, $datefin]) // Filtrer par dates
       ->where('scolarit.VALIDE', '=', 1); // Filtrer les enregistrements où validate est égal à 1
     
@@ -199,7 +199,7 @@ class EditionController extends Controller
     }
     
     $recouvrements = $query
-      ->groupBy('scolarit.DATEOP', 'scolarit.AUTREF', 'scolarit.SIGNATURE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type') // Regrouper par date et autres champs
+      ->groupBy('scolarit.DATEOP', 'scolarit.AUTREF', 'scolarit.SIGNATURE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS') // Regrouper par date et autres champs
       ->orderBy('scolarit.DATEOP', 'asc') // Trier par date
       ->get();
     
@@ -257,7 +257,7 @@ class EditionController extends Controller
     // Construction de la requête de base
     $query = DB::table('scolarit')
       ->join('eleve', 'scolarit.MATRICULE', '=', 'eleve.MATRICULE') // Joindre la table des élèves
-      ->join('typeenseigne', 'eleve.TYPEENSEIG', '=', 'typeenseigne.idenseign') // Joindre la table des types d'enseignement
+      // ->join('typeenseigne', 'eleve.TYPEENSEIG', '=', 'typeenseigne.idenseign') // Joindre la table des types d'enseignement
       ->select(
         'scolarit.DATEOP', 
         'scolarit.SIGNATURE', 
@@ -265,7 +265,7 @@ class EditionController extends Controller
         'eleve.NOM', 
         'eleve.PRENOM', 
         'eleve.CODECLAS', 
-        'typeenseigne.type', 
+        // 'typeenseigne.type', 
         DB::raw('SUM(scolarit.MONTANT) as total')
       )
       ->whereBetween('scolarit.DATEOP', [$datedebut, $datefin]) // Filtrer par dates
@@ -283,7 +283,7 @@ class EditionController extends Controller
     
     // Finaliser la requête
     $recouvrements = $query
-      ->groupBy('scolarit.NUMRECU', 'scolarit.DATEOP', 'scolarit.SIGNATURE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type') // Regrouper par NUMRECU pour avoir un total par reçu
+      ->groupBy('scolarit.NUMRECU', 'scolarit.DATEOP', 'scolarit.SIGNATURE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS') // Regrouper par NUMRECU pour avoir un total par reçu
       ->orderBy('scolarit.DATEOP', 'asc') // Trier par date
       ->orderBy('scolarit.NUMRECU', 'asc') // Puis par numéro de reçu
       ->get();
