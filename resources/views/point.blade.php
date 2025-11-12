@@ -200,17 +200,18 @@
                     
                     <div>
                         <p><strong>Total à payer :</strong> <span style="float: right;">{{ $totalAPayer }}</span></p>
-                        <p>Paie actuel<span style="float: right;">{{ number_format($totalPaye, 0, ',', ' ') }} F</span></p>
+                        <p>Montant Total Payé<span style="float: right;">{{ number_format($totalPaye, 0, ',', ' ') }} F</span></p>
                         <p>Reste à payer<span style="float: right;">0</span></p>                
                         <p>Arrièrés restants<span style="float: right;">{{ $arriereRestant }}</span></p>
-                        <p>{{ $params->LIBELF1 }}<span style="float: right;">{{ $libelF1Restant }}</span></p>
-                        <p>{{ $params->LIBELF2 }}<span style="float: right;">{{ $libelF2Restant }}</span></p>
-                        <p>{{ $params->LIBELF3 }}<span style="float: right;">{{ $apeRestant }}</span></p>
-                        <p>{{ $params->LIBELF4 }}<span style="float: right;">{{ $libelF4Restant }}</span></p>
+                        <p>Scolarité restants<span style="float: right;">{{ $scolariteRestant }}</span></p>
+                        <p>{{ $params->LIBELF1 }} restants<span style="float: right;">{{ $libelF1Restant }}</span></p>
+                        <p>{{ $params->LIBELF2 }} restants<span style="float: right;">{{ $libelF2Restant }}</span></p>
+                        <p>{{ $params->LIBELF3 }} restants<span style="float: right;">{{ $apeRestant }}</span></p>
+                        <p>{{ $params->LIBELF4 }} restants<span style="float: right;">{{ $libelF4Restant }}</span></p>
                         <p style="margin-left: 3rem;"><strong>Total restant :</strong> <span style="float: right;">{{$resteAPayer}}</span></p>
                     </div>
                     <br>
-                    <p style="font-weight: 500;">Signature, cachet</p>
+                    <p style="font-weight: 500; float: right; padding-bottom:5rem;">Signature, cachet</p>
                 </div>
 
                 {{-- Trait de séparation --}}

@@ -3955,7 +3955,7 @@ public function eleveparclasseessai() {
               ->update(['VALIDE' => 0]);
       
       
-          return back()->with('status', "Facture d'avoir generer avec succes");
+          return back()->with('status', "Facture de paiement supprimer avec succes");
 
         // return view('pages.Etats.avoirfacturepaiescolarite')->with('factureOriginale', $factureOriginale)->with('codemecef', $codemecef);
     }
