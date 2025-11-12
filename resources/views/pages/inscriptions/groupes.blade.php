@@ -74,6 +74,32 @@
                 .btn-close {
                     margin-left: auto;
                 }
+                .form-check-input {
+                    width: 1.25em;
+                    height: 1.25em;
+                    margin-top: 0 !important;
+                    margin-left: 0 !important;
+                    margin-right: 0.5rem !important;
+                    flex-shrink: 0;
+                    position: relative;
+                    z-index: 1;
+                    background-color: #fff;
+                    border: 2px solid #dee2e6;
+                }
+                .form-check {
+                    padding-left: 0 !important;
+                    margin-bottom: 0.5rem;
+                }
+                #listeClasses .form-check {
+                    min-height: 1.5rem;
+                    display: flex !important;
+                    align-items: center !important;
+                    padding: 0.25rem;
+                }
+                #listeClasses .col-md-4 {
+                    padding-left: 0.5rem;
+                    padding-right: 0.5rem;
+                }
             </style>
       <div class="card-body">
             @if (session('success'))
@@ -128,45 +154,244 @@
 </div>
 
 
-<!-- Modal modification groupes-->
+<!-- Modal modification groupes -->
 <div class="modal fade" id="modifgroup" tabindex="-1" aria-labelledby="modifgroupLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modifgroupTitle">Modifier le groupe</h5>
-                <button type="button" class="btn-close p-2" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="card">
-                    <div class="row mt-3">
-                        <div class="form-group w-50 mb-6">
-                            <input type="hidden" id="groupeLibelle" name="groupeLibelle" value="" >
-                            <select class="js-example-basic-multiple w-100 select2-hidden-accessible form-control" id="classSelect" tabindex="-1" aria-hidden="true"  multiple="multiple" name="classeCode[]" style="background-color:#6b2c80 !important; color:#fff !important; border:1px solid #5a1e66 !important;">
-                                <option value="">Sélectionner la classe</option>
-                            </select>
-                            
-                        </div>
-                        <div class="form-group w-50 mb-6">
-                            <button type="button" id="ajouterClasse" class="btn btn-primary" onclick="ajouterClasse()">Ajouter une classe</button>
-                            {{-- <button type="button" id="ajouterClasse" class="btn btn-primary">Ajouter une classe</button> --}}
-                        </div>  
-                    </div>
-                    <table id="classTable">
-                        <thead>
-                            <tr>
-                                <th>Classe</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="classTableBody">
-                            <!-- Les lignes de la table seront ajoutées ici -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="modifgroupTitle">Modifier le groupe</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+          </div>
+          <div class="modal-body">
+              <input type="hidden" id="groupeLibelle" name="groupeLibelle" value="">
+              
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h6>Liste des classes</h6>
+                  <div>
+                      <input type="checkbox" id="checkAllClasses" class="form-check-input me-2">
+                      <label for="checkAllClasses" class="form-check-label">Tout cocher / décocher</label>
+                  </div>
+              </div>
+
+              <div id="listeClasses" class="row g-2" style="max-height: 350px; overflow-y: auto;">
+                  <!-- Les cases à cocher seront générées ici -->
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+              <button type="button" class="btn btn-primary" id="btnValiderAjout">Synchroniser</button>
+          </div>
+      </div>
+  </div>
 </div>
+
+<script>
+async function openModal(button) {
+    const groupeLibelle = button.getAttribute('data-libelle');
+    document.getElementById('modifgroupTitle').textContent = 'Modifier le groupe : ' + groupeLibelle;
+    document.getElementById('groupeLibelle').value = groupeLibelle;
+
+    const listeClasses = document.getElementById('listeClasses');
+    listeClasses.innerHTML = '<p class="text-muted text-center">Chargement des classes...</p>';
+
+    try {
+        console.log('=== DÉBUT DU CHARGEMENT DES CLASSES ===');
+        console.log('Groupe sélectionné:', groupeLibelle);
+        
+        const [allRes, groupRes] = await Promise.all([
+            fetch('/afficherTouteClasse'),
+            fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes`)
+        ]);
+
+        console.log('Status allRes:', allRes.status);
+        console.log('Status groupRes:', groupRes.status);
+
+        const allClasses = await allRes.json();
+        console.log('=== TOUTES LES CLASSES ===');
+        console.log('Nombre total de classes:', allClasses.length);
+        console.log('Structure première classe:', allClasses[0]);
+        console.log('Toutes les classes:', allClasses);
+        
+        let groupClasses = [];
+        if (groupRes.ok) {
+            groupClasses = await groupRes.json();
+            console.log('=== CLASSES DU GROUPE ===');
+            console.log('Nombre de classes dans le groupe:', groupClasses.length);
+            if (groupClasses.length > 0) {
+                console.log('Structure première classe du groupe:', groupClasses[0]);
+            }
+            console.log('Classes du groupe (brutes):', groupClasses);
+        } else {
+            console.log('Aucune classe trouvée pour ce groupe ou erreur:', groupRes.status);
+            const errorText = await groupRes.text();
+            console.log('Erreur détaillée:', errorText);
+        }
+        
+        // Normaliser les codes des classes du groupe (conversion en string et trim)
+        const groupCodes = (Array.isArray(groupClasses) ? groupClasses : [])
+            .map(c => String(c.CODECLAS || '').trim().toUpperCase())
+            .filter(code => code !== ''); // Éliminer les codes vides
+        
+        console.log('Codes des classes du groupe (normalisés):', groupCodes);
+        console.log('Types des codes:', groupCodes.map(c => typeof c));
+
+        listeClasses.innerHTML = ''; // vider
+
+        console.log('=== GÉNÉRATION DES CHECKBOXES ===');
+        let totalChecked = 0;
+        
+        allClasses.forEach((classe, index) => {
+            // Normaliser le code de la classe (conversion en string, trim et majuscules)
+            const classeCodeOriginal = classe.CODECLAS;
+            const classeCode = String(classe.CODECLAS || '').trim().toUpperCase();
+            const isInGroup = groupCodes.includes(classeCode);
+            const isChecked = isInGroup ? 'checked' : '';
+            
+            if (isInGroup) totalChecked++;
+            
+            console.log(`[${index + 1}] Classe originale: "${classeCodeOriginal}" | Normalisée: "${classeCode}" | Dans groupe: ${isInGroup} | Cochée: ${isChecked !== ''}`);
+            
+            listeClasses.insertAdjacentHTML('beforeend', `
+                <div class="col-md-4">
+                    <div class="form-check">
+                        <input class="form-check-input classe-checkbox" type="checkbox" value="${classe.CODECLAS}" id="chk_${classe.CODECLAS}" ${isChecked}>
+                        <label class="form-check-label" for="chk_${classe.CODECLAS}">
+                            ${classe.CODECLAS}
+                        </label>
+                    </div>
+                </div>
+            `);
+        });
+        
+        console.log(`=== RÉSUMÉ ===`);
+        console.log(`Total classes: ${allClasses.length}`);
+        console.log(`Classes dans le groupe: ${groupCodes.length}`);
+        console.log(`Classes qui devraient être cochées: ${totalChecked}`);
+        
+        // Vérification après génération des checkboxes
+        setTimeout(() => {
+            const actualChecked = document.querySelectorAll('.classe-checkbox:checked');
+            console.log(`=== VÉRIFICATION POST-GÉNÉRATION ===`);
+            console.log(`Checkboxes réellement cochées: ${actualChecked.length}`);
+            actualChecked.forEach((checkbox, index) => {
+                console.log(`[${index + 1}] Checkbox cochée: ${checkbox.value}`);
+            });
+            
+            if (actualChecked.length !== totalChecked) {
+                console.error(`PROBLÈME: ${totalChecked} classes devraient être cochées mais seulement ${actualChecked.length} le sont !`);
+            }
+        }, 100);
+
+        // Gestion du "Tout cocher / décocher"
+        const checkAll = document.getElementById('checkAllClasses');
+        const totalClasses = allClasses.length;
+        const checkedClasses = groupCodes.length;
+        
+        // Cocher "Tout cocher" seulement si toutes les classes sont dans le groupe
+        checkAll.checked = checkedClasses > 0 && checkedClasses === totalClasses;
+        
+        checkAll.addEventListener('change', () => {
+            document.querySelectorAll('.classe-checkbox').forEach(chk => {
+                chk.checked = checkAll.checked;
+            });
+        });
+
+        // Auto mise à jour : gérer l'état de "Tout cocher" selon les cases individuelles
+        document.querySelectorAll('.classe-checkbox').forEach(chk => {
+            chk.addEventListener('change', () => {
+                const allCheckboxes = document.querySelectorAll('.classe-checkbox');
+                const checkedCheckboxes = document.querySelectorAll('.classe-checkbox:checked');
+                
+                // Si toutes les cases sont cochées, cocher "Tout cocher"
+                // Si aucune case n'est cochée ou pas toutes, décocher "Tout cocher"
+                checkAll.checked = checkedCheckboxes.length === allCheckboxes.length;
+            });
+        });
+
+        const myModal = new bootstrap.Modal(document.getElementById('modifgroup'));
+        myModal.show();
+
+    } catch (err) {
+        console.error(err);
+        alert('Erreur de chargement des classes.');
+    }
+}
+
+document.getElementById('btnValiderAjout').addEventListener('click', async () => {
+    const groupeLibelle = document.getElementById('groupeLibelle').value;
+    const selected = Array.from(document.querySelectorAll('.classe-checkbox:checked')).map(chk => chk.value);
+
+    console.log('Groupe sélectionné:', groupeLibelle);
+    console.log('Classes sélectionnées:', selected);
+
+    // Permettre la suppression de toutes les classes (selected.length peut être 0)
+    if (selected.length === 0) {
+        const confirmRemoveAll = confirm('Aucune classe sélectionnée. Voulez-vous supprimer toutes les classes de ce groupe ?');
+        if (!confirmRemoveAll) {
+            return;
+        }
+    }
+
+    const csrf = document.querySelector('meta[name="csrf-token"]').content;
+    console.log('Token CSRF:', csrf);
+
+    try {
+        const res = await fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrf
+            },
+            body: JSON.stringify({ classCodes: selected })
+        });
+
+        console.log('Statut de la réponse:', res.status);
+        const data = await res.json();
+        console.log('Réponse du serveur:', data);
+
+        // Gérer la réponse de synchronisation
+        if (res.status === 200) {
+            let message = '';
+            let details = [];
+            
+            if (data.added && data.added.length > 0) {
+                details.push(`${data.added.length} classe(s) ajoutée(s)`);
+                console.log('Classes ajoutées:', data.added);
+            }
+            
+            if (data.removed && data.removed.length > 0) {
+                details.push(`${data.removed.length} classe(s) supprimée(s)`);
+                console.log('Classes supprimées:', data.removed);
+            }
+            
+            if (details.length > 0) {
+                message = details.join(', ') + ' avec succès.';
+            } else if (selected.length === 0) {
+                // Si aucune classe sélectionnée, c'est une suppression totale
+                message = 'Toutes les classes ont été supprimées du groupe avec succès.';
+            } else {
+                message = 'Aucune modification nécessaire.';
+            }
+            
+            console.log(`Total classes sélectionnées: ${data.total_selected || selected.length}`);
+            alert(message);
+        } else {
+            // Erreur
+            throw new Error(data.message || 'Erreur serveur');
+        }
+
+        bootstrap.Modal.getInstance(document.getElementById('modifgroup')).hide();
+
+        // Rechargement du tableau principal
+        location.reload();
+
+    } catch (err) {
+        console.error(err);
+        alert('Erreur : ' + err.message);
+    }
+});
+</script>
+
 
 
 {{-- modal de confirmation de suppression de classe --}}
@@ -243,21 +468,23 @@ $(document).ready(function(){
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var modal = document.getElementById('modifgroup');
-    var myModal = new bootstrap.Modal(modal);
+    if (modal) {
+        var myModal = new bootstrap.Modal(modal);
 
-    modal.addEventListener('hidden.bs.modal', function() {
-        // Supprimer le backdrop si nécessaire
-        var backdrop = document.querySelector('.modal-backdrop');
-        if (backdrop) {
-            backdrop.remove();
-        }
+        modal.addEventListener('hidden.bs.modal', function() {
+            // Supprimer le backdrop si nécessaire
+            var backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
 
-        // Supprimer la classe modal-open du body
-        document.body.classList.remove('modal-open');
-        document.body.style.paddingRight = '';
-    });
-
-
+            // Supprimer la classe modal-open du body
+            document.body.classList.remove('modal-open');
+            document.body.style.paddingRight = '';
+        });
+    } else {
+        console.error('Modal #modifgroup non trouvé dans le DOM');
+    }
 });
     function setDeleteFormAction(groupeId) {
         var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
@@ -269,298 +496,43 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    function showAlert(message, callback) {
-    var alertModal = new bootstrap.Modal(document.getElementById('alertModal'));
-    document.getElementById('alertModalMessage').textContent = message;
-    alertModal.show();
+// L'ancienne fonction openModal a été remplacée par la nouvelle logique avec cases à cocher
 
-    // Assurez-vous que le callback est appelé lorsque le modal d'alerte est caché
-    alertModal._element.addEventListener('hidden.bs.modal', function () {
-        if (callback) {
-            callback();
-        }
-    }, { once: true });
-}
+// L'ancienne fonction ajouterClasse a été remplacée par la nouvelle logique dans le script du modal
 
-function openModal(button) {
-    var groupeLibelle = button.getAttribute('data-libelle');
-    var modalTitle = document.getElementById('modifgroupTitle');
-    modalTitle.textContent = 'Modifier le groupe : ' + groupeLibelle;
-
-    // Effectuer une requête AJAX pour obtenir toutes les classes
-    fetch('/afficherTouteClasse')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(allClasses => {
-            var select = document.getElementById('classSelect');
-            select.innerHTML = '<option value="">Sélectionner la classe</option>'; // Réinitialiser le select
-
-            allClasses.forEach(function(classe) {
-                var option = document.createElement('option');
-                option.value = classe.CODECLAS;
-                option.textContent = classe.CODECLAS;
-                select.appendChild(option);
-            });
-
-            // Ensuite, obtenir les classes spécifiques au groupe
-            return fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes`);
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(classesByGroup => {
-            var tableBody = document.getElementById('classTableBody');
-            tableBody.innerHTML = ''; // Réinitialiser le tableau
-
-            classesByGroup.forEach(function(classe) {
-                var row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${classe.CODECLAS}</td>
-                    <td><button type="button" class="btn btn-danger" data-id="${classe.id}" onclick="supprimerClasse(this)">Supprimer</button></td>
-                `;
-                tableBody.appendChild(row);
-            });
-
-            // Ouvrir le modal
-            var myModal = new bootstrap.Modal(document.getElementById('modifgroup'));
-            myModal.show();
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-// function ajouterClasse() {
-//     var select = document.getElementById('classSelect');
-//     var classCode = select ? select.value : null;
-//     var modalTitle = document.getElementById('modifgroupTitle');
-//     var groupeLibelle = modalTitle ? modalTitle.textContent.replace('Modifier le groupe : ', '').trim() : null;
-
-//     if (!classCode) {
-//         showAlert('Veuillez sélectionner une classe.', function() {
-//             var modal = document.getElementById('modifgroup');
-//             var myModal = bootstrap.Modal.getInstance(modal);
-//             if (myModal) {
-//                 myModal.show(); // Réouvrir le modal
-//             }
-//         });
-//         return;
-//     }
-
-//     var csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
-//     if (!csrfTokenMeta) {
-//         console.error('Le token CSRF est manquant.');
-//         showAlert('Le token CSRF est manquant.', function() {
-//             var modal = document.getElementById('modifgroup');
-//             var myModal = bootstrap.Modal.getInstance(modal);
-//             if (myModal) {
-//                 myModal.show(); // Réouvrir le modal
-//             }
-//         });
-//         return;
-//     }
-
-//     var csrfToken = csrfTokenMeta.getAttribute('content');
-
-//     fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes`, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'X-CSRF-TOKEN': csrfToken
-//         },
-//         body: JSON.stringify({ classCode: classCode })
-//     })
-//     .then(response => {
-//         if (response.status === 409) {
-//             return response.json().then(data => {
-//                 showAlert(data.error, function() {
-//                     var modal = document.getElementById('modifgroup');
-//                     var myModal = bootstrap.Modal.getInstance(modal);
-//                     if (myModal) {
-//                         myModal.show(); // Réouvrir le modal
-//                     }
-//                 });
-//                 throw new Error(data.error);
-//             });
-//         }
-
-//         if (!response.ok) {
-//             return response.json().then(data => {
-//                 throw new Error(data.message || 'Erreur lors de l\'ajout de la classe.');
-//             });
-//         }
-//         return response.json();
-//     })
-//     .then(data => {
-//         showAlert('Classe ajoutée avec succès !', function() {
-//             // Fermer le modal
-//             var modal = document.getElementById('modifgroup');
-//             var myModal = bootstrap.Modal.getInstance(modal);
-//             if (myModal) {
-//                 myModal.hide(); // Fermer le modal
-//             }
-
-//             // Assurez-vous que le modal est complètement caché avant de réouvrir
-//             setTimeout(function() {
-//                 // Recharger et réouvrir le modal avec les données du groupe
-//                 openModal(document.querySelector('a[data-libelle="' + groupeLibelle + '"]'));
-//             }, 500); // Ajuster le délai si nécessaire
-//         });
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//     });
-// }
-
-function ajouterClasse() {
-    var select = document.getElementById('classSelect');
-    // Récupérer toutes les options sélectionnées
-    var selected = Array.from(select.options)
-                        .filter(opt => opt.selected)
-                        .map(opt => opt.value)
-                        .map(v => v.trim())
-                        .filter(v => v.length > 0);
-
-    // Récupérer le libellé du groupe depuis l'input caché (plus fiable que le titre)
-    var groupeLibelleInput = document.getElementById('groupeLibelle');
-        var modalTitle = document.getElementById('modifgroupTitle');
-
-    var groupeLibelle = modalTitle ? modalTitle.textContent.replace('Modifier le groupe : ', '').trim() : null;
-
-    if (!selected.length) {
-        showAlert('Veuillez sélectionner au moins une classe.', function() {
-            var modal = document.getElementById('modifgroup');
-            var myModal = bootstrap.Modal.getInstance(modal);
-            if (myModal) myModal.show();
-        });
-        return;
+// Fonction utilitaire pour afficher des alertes avec modal
+function showAlert(message, callback) {
+    var alertModalElement = document.getElementById('alertModal');
+    var alertMessageElement = document.getElementById('alertModalMessage');
+    
+    if (alertModalElement && alertMessageElement) {
+        alertMessageElement.textContent = message;
+        var alertModal = new bootstrap.Modal(alertModalElement);
+        alertModal.show();
+        
+        // Gérer la fermeture du modal
+        alertModalElement.addEventListener('hidden.bs.modal', function() {
+            if (callback) callback();
+        }, { once: true });
+    } else {
+        console.error('Éléments du modal d\'alerte non trouvés');
+        // Fallback avec alert natif
+        alert(message);
+        if (callback) callback();
     }
-
-    if (!groupeLibelle) {
-        console.error('Libellé du groupe introuvable.');
-        showAlert('Libellé du groupe introuvable.', function() {});
-        return;
-    }
-
-    var csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
-    if (!csrfTokenMeta) {
-        console.error('Le token CSRF est manquant.');
-        showAlert('Le token CSRF est manquant.', function() {});
-        return;
-    }
-    var csrfToken = csrfTokenMeta.getAttribute('content');
-
-    // Désactiver le bouton pendant la requête (optionnel)
-    var btn = document.getElementById('ajouterClasse');
-    if (btn) btn.disabled = true;
-
-    fetch('/groupes/' + encodeURIComponent(groupeLibelle) + '/classes', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken
-        },
-        body: JSON.stringify({ classCodes: selected })
-    })
-    .then(response => response.json().then(body => ({ status: response.status, body })))
-    .then(({ status, body }) => {
-        if (status === 409 || (body && body.skipped && body.skipped.length && (!body.added || !body.added.length))) {
-            // Tous ou certains étaient des doublons
-            var msg = '';
-            if (body.added && body.added.length) {
-                msg += 'Ajouté : ' + body.added.join(', ') + '. ';
-            }
-            if (body.skipped && body.skipped.length) {
-                msg += 'Déjà présent(s) : ' + body.skipped.join(', ') + '.';
-            }
-            showAlert(msg, function() {
-                var modal = document.getElementById('modifgroup');
-                var myModal = bootstrap.Modal.getInstance(modal);
-                if (myModal) myModal.show();
-            });
-        } else if (status >= 200 && status < 300) {
-            var added = body.added || [];
-            var skipped = body.skipped || [];
-
-            var msg = '';
-            if (added.length) msg += 'Ajouté(s) : ' + added.join(', ') + '. ';
-            if (skipped.length) msg += 'Ignoré(s) (existants) : ' + skipped.join(', ') + '.';
-
-            showAlert(msg || 'Opération terminée.', function() {
-                // Mettre à jour la table côté client : ajouter les lignes pour les éléments ajoutés
-                added.forEach(function(code) {
-                    appendClassRow(code);
-                });
-
-                // Maintenir le modal ouvert (ou le fermer selon ton UX)
-                var modal = document.getElementById('modifgroup');
-                var myModal = bootstrap.Modal.getInstance(modal);
-                if (myModal) myModal.hide();
-
-                 // Assurez-vous que le modal est complètement caché avant de réouvrir
-                setTimeout(function() {
-                    // Recharger et réouvrir le modal avec les données du groupe
-                    openModal(document.querySelector('a[data-libelle="' + groupeLibelle + '"]'));
-                }, 500); // Ajuster le délai si nécessaire
-
-            });
-        } else {
-            showAlert(body.message || 'Erreur serveur', function(){});
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('Erreur réseau ou serveur.', function(){});
-    })
-    .finally(() => {
-        if (btn) btn.disabled = false;
-    });
 }
 
-// exemple simple : ajoute une ligne à la table d'affichage des classes du groupe
-function appendClassRow(code) {
-    var tbody = document.getElementById('classTableBody');
-    if (!tbody) return;
 
-    // créer éléments (adapter selon l'HTML voulu)
-    var tr = document.createElement('tr');
-    var tdClasse = document.createElement('td');
-    tdClasse.textContent = code;
-    var tdActions = document.createElement('td');
-
-    // bouton supprimer côté client (tu peux le brancher sur un endpoint de suppression)
-    var btnSuppr = document.createElement('button');
-    btnSuppr.className = 'btn btn-danger btn-sm';
-    btnSuppr.type = 'button';
-    btnSuppr.textContent = 'Supprimer';
-    // btnSuppr.onclick = function() { /* appeler suppression */ };
-
-    tdActions.appendChild(btnSuppr);
-    tr.appendChild(tdClasse);
-    tr.appendChild(tdActions);
-    tbody.appendChild(tr);
-}
-
-// }
-
-
-    function supprimerClasse(button) {
+function supprimerClasse(button) {
     var id = button.getAttribute('data-id');
     var groupeLibelle = document.getElementById('modifgroupTitle').textContent.replace('Modifier le groupe : ', '').trim();
-
-        // Ouvrir la modale de confirmation
-        var confirmModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
-        confirmModal.show();
-
-        // Gestion de l'événement de confirmation
-        var confirmButton = document.getElementById('confirmDeleteButton');
-
-    confirmButton.onclick = function() {
+    
+    // Ouvrir le modal de confirmation
+    var confirmModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+    confirmModal.show();
+    
+    // Gérer la confirmation
+    document.getElementById('confirmDeleteButton').onclick = function() {
         fetch(`/groupes/${encodeURIComponent(groupeLibelle)}/classes/${id}`, {
             method: 'DELETE',
             headers: {
@@ -575,33 +547,22 @@ function appendClassRow(code) {
             return response.json();
         })
         .then(data => {
+            // Fermer le modal de confirmation
+            confirmModal.hide();
+            
             // Afficher le message de succès
-            showAlert(data.message);  // Assurez-vous que la réponse contient 'message'
-
-            // Fermer le modal
-            var modal = document.getElementById('modifgroup');
-            var myModal = bootstrap.Modal.getInstance(modal);
-            myModal.hide();
-
-            // Retirer backdrop et modal-open au cas où
-            var backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-                backdrop.remove();
-            }
-            document.body.classList.remove('modal-open');
-            document.body.style.paddingRight = '';
-        // })
-
-            // Recharger les données du groupe
-            openModal(document.querySelector('button[data-libelle="' + encodeURIComponent(groupeLibelle) + '"]'));
+            showAlert('Classe supprimée avec succès !', function() {
+                // Recharger la page pour actualiser les données
+                location.reload();
+            });
         })
-        .catch(error => console.error('Error:', error));
-
-
-        // Fermer la modale de confirmation
-        confirmModal.hide();
-    }
-    }
+        .catch(error => {
+            console.error('Error:', error);
+            confirmModal.hide();
+            showAlert('Erreur lors de la suppression de la classe.', function() {});
+        });
+    };
+}
 
     function confirmDelete() {
         return confirm('Êtes-vous sûr de vouloir supprimer ce groupe?');

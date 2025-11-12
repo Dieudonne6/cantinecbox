@@ -480,7 +480,7 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('assets/jquery-3.6.0.min.js') }}"></script>
 
     <!-- Scripts JavaScript à placer à la fin du body pour optimiser le chargement -->
     <script>
