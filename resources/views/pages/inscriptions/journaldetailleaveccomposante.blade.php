@@ -64,7 +64,7 @@
             <th>Prénom</th>
             <th>Classe</th>
             <th>Composante</th>
-            <th>édité ?</th>
+            <th>Signé ?</th>
             <th>Montant</th>
            
           </tr>
@@ -95,7 +95,7 @@
               <!-- Afficher la nouvelle date -->
               <tr>
                 <td colspan="1"><strong>Date : {{ \Carbon\Carbon::parse($recouvrement->DATEOP)->format('d/m/Y') }}</strong></td>
-                <td colspan="4"><strong>Ens {{ $enseign->type }}</strong></td>
+                <td colspan="4"><strong>Groupe {{ $groupe ? $groupe->LibelleGroupe : 'Tous' }}</strong></td>
               </tr>
               
             @endif
@@ -133,7 +133,7 @@
                 @endswitch
             </td>
             <td>
-              @if($recouvrement->EDITE == 1)
+              @if($recouvrement->SIGNATURE == 1)
                 Oui
               @endif
             </td>
@@ -261,7 +261,7 @@
             <th>Prénom</th>
             <th>Classe</th>
             <th>Composante</th>
-            <th>édité ?</th>
+            <th>Signature</th>
             <th>Montant</th>
            
           </tr>
@@ -292,7 +292,7 @@
               <!-- Afficher la nouvelle date -->
               <tr>
                 <td colspan="1"><strong>Date : {{ \Carbon\Carbon::parse($recouvrement->DATEOP)->format('d/m/Y') }}</strong></td>
-                <td colspan="4"><strong>Ens {{ $enseign->type }}</strong></td>
+                <td colspan="4"><strong>Groupe {{ $groupe ? $groupe->LibelleGroupe : 'Tous' }}</strong></td>
               </tr>
               
             @endif
@@ -330,9 +330,7 @@
                 @endswitch
               </td>
               <td>
-                @if($recouvrement->EDITE == 1)
-                  Oui
-                @endif
+                {{ $recouvrement->SIGNATURE }}
               </td>
               <td>{{ number_format($recouvrement->total,  0, ',', ' ') }} </td>
             </tr>

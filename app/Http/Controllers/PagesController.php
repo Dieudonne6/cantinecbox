@@ -2219,7 +2219,7 @@ public function recouvrementParType(Request $request) {
           // Calculer les sommes pour chaque élève dans la classe
           foreach ($eleves as $eleve) {
               $total_a_payer += $eleve->APAYER;
-              $total_arriere += $eleve->ARREARRE;  // Si vous avez un champ "ARREARRE" pour les arriérés
+              $total_arriere += $eleve->ARRIERE;  // Si vous avez un champ "ARRIERE" pour les arriérés
               $total_frais1 += $eleve->FRAIS1;     // Si vous avez un champ "FRAIS1"
               $total_frais2 += $eleve->FRAIS2;     // Si vous avez un champ "FRAIS2"
               $total_frais3 += $eleve->FRAIS3;     // Si vous avez un champ "FRAIS3"
@@ -2296,9 +2296,12 @@ public function recouvrementParType(Request $request) {
       ];
   }
 
+  // Récupérer les libellés des frais depuis params2
+  $params = Params2::first();
+
   // Débogage final : vérifier les données regroupées
   // dd($donneesRegroupees);
-  return view('pages.inscriptions.recouParTypeenseign')->with('donneesRegroupees', $donneesRegroupees)->with('sommeParClasse', $sommeParClasse)->with('dateDebut', $dateDebut)->with('dateFin', $dateFin);
+  return view('pages.inscriptions.recouParTypeenseign')->with('donneesRegroupees', $donneesRegroupees)->with('sommeParClasse', $sommeParClasse)->with('dateDebut', $dateDebut)->with('dateFin', $dateFin)->with('params', $params);
 }
 
 
@@ -7491,9 +7494,8 @@ public function enregistrerPaiement(Request $request, $matricule)
   
     public function etatdesrecouvrements(){
       $typeclasse = Typeclasse::all();
-      $typeenseign = Typeenseigne::all();
       $groupeclasse = Groupeclasse::all();
-      return view ('pages.inscriptions.etatdesrecouvrements', compact('typeclasse', 'typeenseign', 'groupeclasse'));
+      return view ('pages.inscriptions.etatdesrecouvrements', compact('typeclasse', 'groupeclasse'));
     }
 
   public function modifieeleve(Request $request, $MATRICULE){

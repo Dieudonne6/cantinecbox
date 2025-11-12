@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('content')
 
-<div class="d-flex justify-content-between align-items-center w-100 " style="min-height: 100vh; margin-left: 0; padding: 20px;">
+<div class="d-flex justify-content-between align-items-center w-100" style="min-height: 100vh; margin-left: 0; padding: 20px;">
     <form id="recouvrementForm" method="GET" action="">
         <div class="card col-md-12">
             <div>
@@ -9,63 +9,77 @@
                     .btn-arrow {
                         position: absolute;
                         top: 0px;
-                        /* Ajustez la position verticale */
                         left: 0px;
-                        /* Positionnez à gauche */
                         background-color: transparent !important;
                         border: 1px !important;
                         text-transform: uppercase !important;
                         font-weight: bold !important;
                         cursor: pointer !important;
                         font-size: 17px !important;
-                        /* Taille de l'icône */
                         color: #b51818 !important;
-                        /* Couleur de l'icône */
                     }
-            
+
                     .btn-arrow:hover {
                         color: #b700ff !important;
-                        /* Couleur au survol */
+                    }
+
+                    /* === Séparateur uniforme === */
+                    .separator {
+                        display: block;
+                        border: none;
+                        height: 2px;
+                        background: linear-gradient(to right, #007bff, #6c757d, #007bff);
+                        margin: 25px auto; /* même espace avant et après + centré horizontalement */
+                        width: 80%; /* largeur centrée à 80% du conteneur */
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        align-self: center; /* pour flexbox si besoin */
+                    }
+
+                    .footer {
+                        position: relative !important;
+                        width: 100% !important;
+                        z-index: 10 !important;
                     }
                 </style>
+
                 <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
-                    <i class="fas fa-arrow-left"></i> Retour 
+                    <i class="fas fa-arrow-left"></i> Retour
                 </button>
-                <br>
-                <br>                                     
+                <br><br>
             </div>
+
             <div class="card-body">
                 <h4 class="card-title">Etat des recouvrements</h4>
-                
+
                 @if(session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <strong>Erreur !</strong> {{ session('error') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-                
+
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <strong>Succès !</strong> {{ session('success') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-                
+
                 <div class="form-group row">
-                    <div class="col">
+                    <div class="col-md-3">
                         <label for="debut">Date de début</label>
                         <input name="debut" id="debut" type="date" class="typeaheads" required value="{{ request('debut') ?? old('debut') }}">
                     </div>
-                    <div class="col">
+                    <div class="col-md-3">
                         <label for="fin">Date de fin</label>
                         <input name="fin" id="fin" type="date" class="typeaheads" required value="{{ request('fin') ?? old('fin') }}">
                     </div>
                 </div>
             </div>
-        
-        <div class="card-body">
-            <h4 class="text-center">Sélectionner l'état que vous souhaitez imprimer</h4>
-            <br>
+
+            <div class="card-body">
+                <h4 class="text-center">Sélectionner l'état que vous souhaitez imprimer</h4>
+                <br>
                 @csrf
                 <div class="justify-content-center">
                     <div class="col-md-12 grid-margin stretch-card">
@@ -73,22 +87,23 @@
                             <div class="card-body">
                                 <div class="form-group col-md-12 row mt-1">
                                     <div class="col-md-6">
-                                        <label for="groupe" >Choisir un groupe</label>
-                                        <select  id="groupe" name="groupe" aria-label="Small select example" >
+                                        <label for="groupe">Choisir un groupe</label>
+                                        <select id="groupe" name="groupe" aria-label="Small select example">
                                             @foreach ($groupeclasse as $groupe)
                                                 <option value="{{ $groupe->LibelleGroupe }}" {{ request('groupe') == $groupe->LibelleGroupe ? 'selected' : '' }}>{{ $groupe->LibelleGroupe }}</option>
                                             @endforeach
-                                        </select>                                        
+                                        </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="typeclasse" >Types de classe</label>
-                                        <select id="typeclasse" name="typeclasse" aria-label="Small select example" >
+                                        <label for="typeclasse">Types de classe</label>
+                                        <select id="typeclasse" name="typeclasse" aria-label="Small select example">
                                             @foreach ($typeclasse as $type)
-                                                <option value="{{ $type->TYPECLASSE }}" {{ request('typeclasse') == $type->TYPECLASSE ? 'selected' : '' }}>{{ $type->LibelleType }}</option>
+                                                <option value="{{ $type->TYPECLASSE }}" {{ (request('typeclasse') == $type->TYPECLASSE) || (!request('typeclasse') && $type->LibelleType == 'Normal') ? 'selected' : '' }}>{{ $type->LibelleType }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
+
                                 <div class="form-group row mt-1 justify-content-center">
                                     <div class="radio-inline">
                                         <input type="radio" id="option1" name="choixPlage" value="option1">
@@ -102,7 +117,10 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
+                            <!-- Séparateur uniforme -->
+                            <hr class="separator">
+
                             <div class="card-body col-md-12 row">
                                 <div class="row col-md-8">
                                     <div class="radio-inline">
@@ -116,17 +134,20 @@
                                         <h6 style="font-size: 14px; margin-left: 20px">Liste des élèves ayant payé par jour sans précision des composantes</h6>
                                     </div>
                                 </div>
+
                                 <div class="radio-inline col-md-4">
                                     <select class="form-select mb-2" name="typeenseign" id="typeenseign">
-                                        <option value="">Sélectionner un enseignement</option>
-                                        @foreach ($typeenseign as $type)
-                                            <option value="{{ $type->idenseign }}" {{ request('typeenseign') == $type->idenseign ? 'selected' : '' }}>{{ $type->type }}</option>
+                                        @foreach ($groupeclasse as $groupe)
+                                            <option value="{{ $groupe->LibelleGroupe }}" {{ request('typeenseign') == $groupe->LibelleGroupe ? 'selected' : '' }}>{{ $groupe->LibelleGroupe }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <br>
                             </div>
-                        
+
+                            <!-- Séparateur uniforme -->
+                            <hr class="separator">
+
                             <div class="card-body">
                                 <div class="radio-inline">
                                     <input type="radio" id="option6" name="choixPlage" value="option6">
@@ -150,7 +171,7 @@
 
                 <div class="d-flex justify-content-center">
                     <button type="button" id="apply" class="btn btn-primary" onclick="submitForm()">
-                        Appliquer la sélection  
+                        Appliquer la sélection
                     </button>
                 </div>
             </div>
@@ -162,84 +183,31 @@
 function submitForm() {
     const form = document.getElementById('recouvrementForm');
     const selectedOption = document.querySelector('input[name="choixPlage"]:checked');
-
     const debut = document.getElementById('debut').value;
     const fin = document.getElementById('fin').value;
     const typeClasse = document.getElementById('typeclasse').value;
     const groupe = document.getElementById('groupe').value;
     const typeEnseign = document.getElementById('typeenseign') ? document.getElementById('typeenseign').value : '';
 
-    if (!debut || !fin) {
-        alert('Veuillez renseigner les dates de début et de fin.');
-        return;
-    }
-
-    if (!typeClasse || !groupe) {
-        alert('Veuillez sélectionner un type de classe et un groupe.');
-        return;
-    }
-
-    if (!selectedOption) {
-        alert('Veuillez sélectionner une option.');
-        return;
-    }
-
-    if ((selectedOption.value === 'option4' || selectedOption.value === 'option5') && !typeEnseign) {
-        alert('Veuillez sélectionner un type d\'enseignement pour cette option.');
-        return;
-    }
+    if (!debut || !fin) return alert('Veuillez renseigner les dates de début et de fin.');
+    if (!typeClasse || !groupe) return alert('Veuillez sélectionner un type de classe et un groupe.');
+    if (!selectedOption) return alert('Veuillez sélectionner une option.');
 
     let actionUrl = '';
-
-    // Utilise des template literals et encodeURIComponent pour les paramètres
     switch (selectedOption.value) {
-        case 'option1':
-            actionUrl = `{{ route('recouvrementgeneral') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`;
-            break;
-        case 'option2':
-            actionUrl = `{{ route('recouvrementgeneralenseignement') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`;
-            break;
-        case 'option4':
-            actionUrl = `{{ route('journaldetailleaveccomposante') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}&typeenseign=${encodeURIComponent(typeEnseign)}`;
-            break;
-        case 'option5':
-            actionUrl = `{{ route('journaldetaillesanscomposante') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}&typeenseign=${encodeURIComponent(typeEnseign)}`;
-            break;
-        case 'option6':
-            actionUrl = `{{ route('recouvrementoperateur') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`;
-            break;
-        case 'option7':
-            actionUrl = `{{ route('journaloperateur') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`;
-            break;
-        case 'option8':
-            actionUrl = `{{ route('journalresumerecouvrement') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`;
-            break;
-        default:
-            alert('Veuillez sélectionner une option valide.');
-            return;
+        case 'option1': actionUrl = `{{ route('recouvrementgeneral') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`; break;
+        case 'option2': actionUrl = `{{ route('recouvrementgeneralenseignement') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`; break;
+        case 'option4': actionUrl = `{{ route('journaldetailleaveccomposante') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}&typeenseign=${encodeURIComponent(typeEnseign)}`; break;
+        case 'option5': actionUrl = `{{ route('journaldetaillesanscomposante') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}&typeenseign=${encodeURIComponent(typeEnseign)}`; break;
+        case 'option6': actionUrl = `{{ route('recouvrementoperateur') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`; break;
+        case 'option7': actionUrl = `{{ route('journaloperateur') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`; break;
+        case 'option8': actionUrl = `{{ route('journalresumerecouvrement') }}?debut=${encodeURIComponent(debut)}&fin=${encodeURIComponent(fin)}&typeclasse=${encodeURIComponent(typeClasse)}&groupe=${encodeURIComponent(groupe)}`; break;
+        default: alert('Veuillez sélectionner une option valide.'); return;
     }
 
     form.action = actionUrl;
     form.submit();
 }
 </script>
-
-
-
-
-<style>
-/*     .footer{
-    display: none;
-    } */
-    .footer {
-        position: relative !important; /* Utiliser relative pour éviter de cacher le tableau */
-        width: 100% !important;
-        z-index: 10 !important; /* Assurer que le footer soit au-dessus des autres éléments */
-    }
-    
-    
-</style>
-
-{{-- Route::get('/recouvrementGenParPeriode/{datedebut}/{datefin}/{typeclasse}/{groupe}', [PagesController::class, 'recouvrementGenParPeriode'])->name('recouvrementgeneral'); --}}
 
 @endsection

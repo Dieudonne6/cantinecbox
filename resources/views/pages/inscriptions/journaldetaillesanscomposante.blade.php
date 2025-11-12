@@ -94,7 +94,7 @@
               <!-- Afficher la nouvelle date -->
               <tr>
                 <td colspan="1"><strong>Date : {{ \Carbon\Carbon::parse($recouvrement->DATEOP)->format('d/m/Y') }}</strong></td>
-                <td colspan="4"><strong>Ens {{ $enseign->type }}</strong></td>
+                <td colspan="4"><strong>Groupe {{ $groupe ? $groupe->LibelleGroupe : 'Tous' }}</strong></td>
               </tr>
             @endif
 
@@ -265,7 +265,7 @@
               <!-- Afficher la nouvelle date -->
               <tr>
                 <td colspan="1"><strong>Date : {{ \Carbon\Carbon::parse($recouvrement->DATEOP)->format('d/m/Y') }}</strong></td>
-                <td colspan="4"><strong>Ens {{ $enseign ? $enseign->type : $recouvrement->type }}</strong></td>
+                <td colspan="4"><strong>Groupe {{ $groupe ? $groupe->LibelleGroupe : 'Tous' }}</strong></td>
               </tr>
             @endif
 
