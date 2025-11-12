@@ -266,14 +266,14 @@
                         <div class="container">
                             <div class="lettres-container">
                                 @foreach ($donneRelance as $classe => $elevesRelance)
-                                    <h4 style="width:100%; text-align:center;">Classe : {{ $classe }}</h4>
+                                    <!-- <h4 style="width:100%; text-align:center;">Classe : {{ $classe }}</h4> -->
                                     @foreach ($elevesRelance as $donne)
                                         @php $meta = $donne['meta'] ?? []; $echeances = $donne['echeances'] ?? []; $total_reste = $donne['total_reste'] ?? 0; @endphp
 
                                         <div class="lettre-relance">
                                             <div>{!! $entete !!}</div>
-                                            <div style="text-align: right;">
-                                                <p>Ville, le {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
+                                            <div style="text-align: right; margin-top: -2.5rem;">
+                                                <p>{{$ville->VILLE}}, le {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
                                                 <p>Aux parents de</p>
                                                 <p><strong>{{ $meta['NOM'] ?? '' }} {{ $meta['PRENOM'] ?? '' }}</strong></p>
                                                 <p>{{ $meta['CODECLAS'] ?? '' }}</p>
@@ -322,9 +322,9 @@
                                             <br>
 
                                             <p>Veuillez régler ce solde au plus tard dans les meilleurs délais.<br>
-                                            Veuillez agréer, chers parents, l'expression de nos sentiments distingués. <br>
-                                            <strong>La direction</strong>
+                                            Veuillez agréer, chers parents, l'expression de nos sentiments distingués. <br>                                        
                                             </p>
+                                            <p style="text-align:right; margin-right: 3rem;">  <strong>La direction</strong></p> <br><br><br><br>
                                         </div>
                                     @endforeach
                                     <div class="page-break"></div>
@@ -448,7 +448,7 @@
                         @media print {
                             body {
                                 font-family: Arial, sans-serif;
-                                font-size: 14px;
+                                font-size: 16px;
                             }
 
                             .lettres-container {

@@ -2221,6 +2221,8 @@ public function sfinanceclassespecifique($classeCode)
     </div>
     ';
 
+    $ville = Params2::first();
+
     $classes = Classes::where('TYPECLASSE', 1)->get();
     $datePaiement = Carbon::today()->toDateString();
 
@@ -2421,7 +2423,8 @@ public function sfinanceclassespecifique($classeCode)
         ->with('resultatParClasse', $resultatParClasse)
         ->with('donneRelance', $donneRelance)
         ->with('classeCode', $classeCode)
-        ->with('entete', $entete);
+        ->with('entete', $entete)
+        ->with('ville', $ville);
 }
 
 
