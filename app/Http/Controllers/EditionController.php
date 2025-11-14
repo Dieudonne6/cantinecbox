@@ -17,7 +17,7 @@ use App\Models\Paramcontrat;
 use App\Models\PeriodeSave;
 
 use Illuminate\Support\Facades\Schema;
-
+use Illuminate\Support\Facades\Log;
 
 use Illuminate\Support\Facades\DB;
 
@@ -171,23 +171,47 @@ class EditionController extends Controller
     // Récupérer les paramètres de filtrage depuis la requête
     $datedebut = $request->query('debut');
     $datefin = $request->query('fin');
-    $typeenseign = $request->query('typeenseign');
+    $groupeClasse = $request->query('typeenseign'); // Le paramètre s'appelle toujours typeenseign mais contient maintenant un groupe
+    
+    // Débogage : Log des paramètres reçus
+    Log::info('Journal détaillé avec composante - Paramètres:', [
+        'debut' => $datedebut,
+        'fin' => $datefin,
+        'groupeClasse' => $groupeClasse
+    ]);
+    
     // Requête pour récupérer les données
-    $recouvrements = DB::table('scolarit')
+    $query = DB::table('scolarit')
       ->join('eleve', 'scolarit.MATRICULE', '=', 'eleve.MATRICULE') // Joindre la table des élèves
-      ->join('typeenseigne', 'eleve.TYPEENSEIG', '=', 'typeenseigne.idenseign') // Joindre la table des types d'enseignement
-      ->select('scolarit.DATEOP', 'scolarit.AUTREF', 'scolarit.EDITE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type', DB::raw('SUM(scolarit.MONTANT) as total'))
+      // ->join('typeenseigne', 'eleve.TYPEENSEIG', '=', 'typeenseigne.idenseign') // Joindre la table des types d'enseignement
+      ->select('scolarit.DATEOP', 'scolarit.AUTREF', 'scolarit.SIGNATURE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', DB::raw('SUM(scolarit.MONTANT) as total'))
       ->whereBetween('scolarit.DATEOP', [$datedebut, $datefin]) // Filtrer par dates
-      ->where('eleve.TYPEENSEIG', '=', $typeenseign) // Filtrer par type d'enseignement
-      ->where('scolarit.VALIDE', '=', 1) // Filtrer les enregistrements où validate est égal à 1
-      ->groupBy('scolarit.DATEOP', 'scolarit.AUTREF', 'scolarit.EDITE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type') // Regrouper par date et autres champs
+      ->where('scolarit.VALIDE', '=', 1); // Filtrer les enregistrements où validate est égal à 1
+    
+    // Ajouter le filtre par groupe de classe si spécifié
+    if (!empty($groupeClasse)) {
+        $query->whereIn('eleve.CODECLAS', function($subquery) use ($groupeClasse) {
+            $subquery->select('CODECLAS')
+                     ->from('classes_groupeclasse')
+                     ->where('LibelleGroupe', $groupeClasse);
+        });
+        Log::info('Filtrage par groupe de classe:', ['groupe' => $groupeClasse]);
+    }
+    
+    $recouvrements = $query
+      ->groupBy('scolarit.DATEOP', 'scolarit.AUTREF', 'scolarit.SIGNATURE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS') // Regrouper par date et autres champs
       ->orderBy('scolarit.DATEOP', 'asc') // Trier par date
       ->get();
-    $enseign = Typeenseigne::where('idenseign', $typeenseign)->first();
+    
+    // Débogage : Log du nombre de résultats
+    Log::info('Nombre de recouvrements trouvés:', ['count' => $recouvrements->count()]);
+    
+    // Récupérer les informations du groupe au lieu du type d'enseignement
+    $groupe = !empty($groupeClasse) ? DB::table('groupeclasse')->where('LibelleGroupe', $groupeClasse)->first() : null;
 
     $libelle = Params2::first();
     // Retourner la vue avec les données
-    return view('pages.inscriptions.journaldetailleaveccomposante', compact('recouvrements', 'libelle', 'enseign'));
+    return view('pages.inscriptions.journaldetailleaveccomposante', compact('recouvrements', 'libelle', 'groupe'));
   }
 
 
@@ -221,12 +245,19 @@ class EditionController extends Controller
     // Récupérer les paramètres de filtrage depuis la requête
     $datedebut = $request->query('debut');
     $datefin = $request->query('fin');
-    $typeenseign = $request->query('typeenseign');
+    $groupeClasse = $request->query('typeenseign'); // Le paramètre s'appelle toujours typeenseign mais contient maintenant un groupe
+    
+    // Débogage : Log des paramètres reçus
+    Log::info('Journal détaillé sans composante - Paramètres:', [
+        'debut' => $datedebut,
+        'fin' => $datefin,
+        'groupeClasse' => $groupeClasse
+    ]);
     
     // Construction de la requête de base
     $query = DB::table('scolarit')
       ->join('eleve', 'scolarit.MATRICULE', '=', 'eleve.MATRICULE') // Joindre la table des élèves
-      ->join('typeenseigne', 'eleve.TYPEENSEIG', '=', 'typeenseigne.idenseign') // Joindre la table des types d'enseignement
+      // ->join('typeenseigne', 'eleve.TYPEENSEIG', '=', 'typeenseigne.idenseign') // Joindre la table des types d'enseignement
       ->select(
         'scolarit.DATEOP', 
         'scolarit.SIGNATURE', 
@@ -234,29 +265,38 @@ class EditionController extends Controller
         'eleve.NOM', 
         'eleve.PRENOM', 
         'eleve.CODECLAS', 
-        'typeenseigne.type', 
+        // 'typeenseigne.type', 
         DB::raw('SUM(scolarit.MONTANT) as total')
       )
       ->whereBetween('scolarit.DATEOP', [$datedebut, $datefin]) // Filtrer par dates
       ->where('scolarit.VALIDE', '=', 1); // Filtrer les enregistrements validés uniquement
     
-    // Ajouter le filtre par type d'enseignement seulement s'il est fourni
-    if (!empty($typeenseign)) {
-      $query->where('eleve.TYPEENSEIG', '=', $typeenseign);
+    // Ajouter le filtre par groupe de classe si spécifié
+    if (!empty($groupeClasse)) {
+        $query->whereIn('eleve.CODECLAS', function($subquery) use ($groupeClasse) {
+            $subquery->select('CODECLAS')
+                     ->from('classes_groupeclasse')
+                     ->where('LibelleGroupe', $groupeClasse);
+        });
+        Log::info('Filtrage par groupe de classe:', ['groupe' => $groupeClasse]);
     }
     
     // Finaliser la requête
     $recouvrements = $query
-      ->groupBy('scolarit.NUMRECU', 'scolarit.DATEOP', 'scolarit.SIGNATURE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS', 'typeenseigne.type') // Regrouper par NUMRECU pour avoir un total par reçu
+      ->groupBy('scolarit.NUMRECU', 'scolarit.DATEOP', 'scolarit.SIGNATURE', 'eleve.NOM', 'eleve.PRENOM', 'eleve.CODECLAS') // Regrouper par NUMRECU pour avoir un total par reçu
       ->orderBy('scolarit.DATEOP', 'asc') // Trier par date
       ->orderBy('scolarit.NUMRECU', 'asc') // Puis par numéro de reçu
       ->get();
       
-    $enseign = !empty($typeenseign) ? Typeenseigne::where('idenseign', $typeenseign)->first() : null;
+    // Débogage : Log du nombre de résultats
+    Log::info('Nombre de recouvrements trouvés:', ['count' => $recouvrements->count()]);
+      
+    // Récupérer les informations du groupe au lieu du type d'enseignement
+    $groupe = !empty($groupeClasse) ? DB::table('groupeclasse')->where('LibelleGroupe', $groupeClasse)->first() : null;
     $libelle = Params2::first();
     
     // Retourner la vue avec les données
-    return view('pages.inscriptions.journaldetaillesanscomposante', compact('recouvrements', 'libelle', 'enseign'));
+    return view('pages.inscriptions.journaldetaillesanscomposante', compact('recouvrements', 'libelle', 'groupe'));
   }
 
   public function tabledesmatieres()

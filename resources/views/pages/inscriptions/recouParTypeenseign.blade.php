@@ -101,10 +101,10 @@
                                 <th rowspan="2">Classe</th>
                                 <th colspan="2">Scolarité</th>
                                 <th colspan="2">Arriéré</th>
-                                <th colspan="2">Frais1</th>
-                                <th colspan="2">Frais2</th>
-                                <th colspan="2">Frais3</th>
-                                <th colspan="2">Frais4</th>
+                                <th colspan="2">{{ $params->LIBELF1 ?? 'Frais1' }}</th>
+                                <th colspan="2">{{ $params->LIBELF2 ?? 'Frais2' }}</th>
+                                <th colspan="2">{{ $params->LIBELF3 ?? 'Frais3' }}</th>
+                                <th colspan="2">{{ $params->LIBELF4 ?? 'Frais4' }}</th>
                                 <th colspan="2">Total</th>
                                 <th colspan="1">Reste</th>
                             </tr>
@@ -207,7 +207,7 @@
                                     $totalAPercevoirTotal += $donneclasse['totalAPercevoir'] ?? 0;
                                     $totalPercuTotal += $donneclasse['totalPercu'] ?? 0;
                                     // Reste
-                                    $totalAPercevoirReste += $donneclasse['Reste'] ?? 0;
+                                    $totalAPercevoirReste += $donneclasse['reste'] ?? 0;
                                 @endphp
 
                                     

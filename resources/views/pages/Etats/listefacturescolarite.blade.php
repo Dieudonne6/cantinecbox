@@ -35,7 +35,19 @@
                         <i class="fas fa-arrow-left"></i> Retour
                     </button>  
                     <br>
-                    <br>                                    
+                    <br>      
+                    
+                            @if(Session::has('status'))
+                                <div id="statusAlert" class="alert alert-succes btn-primary">
+                                {{ Session::get('status')}}
+                                </div></br>
+                            @endif
+
+                            @if(Session::has('erreur'))
+                                <div id="statusAlert" class="alert alert-danger btn-primary">
+                                {{ Session::get('erreur')}}
+                                </div></br>
+                            @endif
                 </div>
                 <div class="card-body">
                     <h4 class="card-title">Annuler une facture</h4>
@@ -84,10 +96,44 @@
                           Modifier
                         </a>
 
-                        <a class="btn btn-danger"
+                        {{-- <a class="btn btn-danger"
                            href="{{ url('suppfacturescolaritenonnormalise/'.$facture->id) }}">
                           Supprimer
-                        </a>         
+                        </a>     --}}
+                        
+                        
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal-{{ $facture->id }}" >Supprimer</button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal-{{ $facture->id }}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation de
+                                            suppression</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Êtes-vous sûr de vouloir supprimer ce paiement ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Annuler</button>
+                                        <form action="{{ url('suppfacturescolaritenonnormalise/'.$facture->id) }}" method="POST">
+                                            {{-- <form action="{{ url('supprimercontrat/'.$eleves->MATRICULE)}}" method="POST"> --}}
+                                            @csrf
+                                            {{-- @method('PUT') --}}
+                                            {{-- <input type="hidden" value="{{ $eleves->MATRICULE }}"
+                                                name="matricule"> --}}
+                                            {{-- <a href='/admin/deletecashier/{{$eleves->MATRICULE}}' class='btn btn-danger w-50'>Suspendre</a> --}}
+                                            <input type="submit" class="btn btn-danger" value="Confirmer">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
               
                     @else
                         {{-- Sinon, on affiche “Modifier” ET “Supprimer” --}}
