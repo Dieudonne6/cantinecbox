@@ -64,9 +64,6 @@
                             <button type="button" class="btn-sm btn-secondary ml-3" onclick="imprimerPageRelance()">Relance</button>
                             <button type="button" class="btn-sm btn-primary ml-3" onclick="exportToExcel()">Exporter vers Excel</button>
                         </div>
-                         {{-- <div class="col-2 mt-4">
-                            <button type="button" class="btn-sm btn-primary" onclick="imprimerPage()">Relance</button>
-                        </div> --}}
                        
                     </div>
 
@@ -142,7 +139,7 @@
 
                         .lettre-relance {
                             width: 48%;
-                            border: 1px solid #000;
+                            border: 0px solid #000;
                             padding: 8px;
                             box-sizing: border-box;
                             margin-bottom: 10px;
@@ -183,6 +180,8 @@
                             page-break-after: always;
                         }
                         }
+
+
 
                     </style>
 
@@ -271,7 +270,16 @@
                                         @php $meta = $donne['meta'] ?? []; $echeances = $donne['echeances'] ?? []; $total_reste = $donne['total_reste'] ?? 0; @endphp
 
                                         <div class="lettre-relance">
-                                            <div>{!! $entete !!}</div>
+                                            <div class="header-flex" style="display:flex; align-items:center; gap:15px;">
+                                                @if($logo)
+                                                    <img src="data:image/jpeg;base64,{{ base64_encode($logo) }}" alt="Logo" style="width:25%; height: 75%; margin-top: -5rem;">
+                                                @endif
+
+                                                <div>
+                                                    {!! $entete !!}
+                                                </div>
+                                            </div>
+
                                             <div style="text-align: right; margin-top: -2.5rem;">
                                                 <p>{{$ville->VILLE}}, le {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
                                                 <p>Aux parents de</p>
@@ -281,10 +289,11 @@
 
                                             <p>Chers parents,</p>
                                             <p class="texte">
-                                                Sauf erreur ou omission, vous restez devoir
+                                                Sauf erreur ou omission, vous restez nous devoir
                                                 <strong>{{ number_format($total_reste, 0, ',', ' ') }} FCFA</strong>
                                                 au titre des échéances échues de l’année scolaire
-                                                <strong>{{ $meta['annescolaire'] ?? '' }}</strong>.
+                                                <strong>{{ $meta['annescolaire'] ?? '' }}</strong>. <br>
+                                                    Voici dans le tableau suivant, le détail des échéances correspondantes :
                                             </p>
 
                                             <table>
@@ -460,7 +469,7 @@
 
                             .lettre-relance {
                                 width: 48%;
-                                border: 1px solid #000;
+                                // border: 1px solid #000;
                                 padding: 18px;
                                 box-sizing: border-box;
                                 margin-bottom: 0;

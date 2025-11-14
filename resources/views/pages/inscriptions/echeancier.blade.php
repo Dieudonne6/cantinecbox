@@ -231,9 +231,9 @@
                         </select>
                         
                       </div>
-                      <div class="col">
+                      <!-- <div class="col">
                         <button type="submit" class="btn btn-primary mr-2">Valider</button>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -360,7 +360,7 @@
                   <button onclick="imprimerPage()" type="button" class="btn btn-primary" style=" width:8rem ;">
                     Imprimer
                   </button>
-                  <button type="button" id="validerbtn" class="btn btn-primary" style="margin-top: 10px; width:8rem;">Regenerer</button>
+                  <!-- <button type="button" id="validerbtn" class="btn btn-primary" style="margin-top: 10px; width:8rem;">Regenerer</button> -->
                 </div>
               </form>
             </div>
