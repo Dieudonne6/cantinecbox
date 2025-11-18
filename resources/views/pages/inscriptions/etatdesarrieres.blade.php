@@ -1,8 +1,6 @@
 @extends('layouts.master')
 @section('content')
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
 <div class="main-content">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
@@ -11,106 +9,155 @@
                     .btn-arrow {
                         position: absolute;
                         top: 0px;
-                        /* Ajustez la position verticale */
                         left: 0px;
-                        /* Positionnez à gauche */
                         background-color: transparent !important;
                         border: 1px !important;
                         text-transform: uppercase !important;
                         font-weight: bold !important;
                         cursor: pointer !important;
                         font-size: 17px !important;
-                        /* Taille de l'icône */
                         color: #b51818 !important;
-                        /* Couleur de l'icône */
                     }
             
                     .btn-arrow:hover {
                         color: #b700ff !important;
-                        /* Couleur au survol */
                     }
                 </style>
+
                 <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
                     <i class="fas fa-arrow-left"></i> Retour
                 </button>
-                <br>
-                <br>                                     
+                <br><br>
             </div>
+
             <div class="card-body">
-                <div class="d-grid gap-2 d-md-flex justify-content-between" style="margin-top: 20px; margin-bottom: 40px;"> <!-- Ajout d'un margin-bottom pour espacer le bouton du footer -->
-                    <h2>Etat des arriérés</h2>
-                    <button type="button" class="btn btn-primary btn-lg btn-print" onclick="imprimerliste()" style="margin-left: 10rem;"> <!-- Ajout de la classe btn-lg pour agrandir le bouton -->
-                        Imprimer
-                    </button>
-                     <button type="button" class="btn btn-primary " onclick="exportToExcel()">Exporter vers Excel</button>
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center" style="margin-top: 20px; margin-bottom: 40px;">
+                    <h2 class="mb-3 mb-md-0">Etat des arriérés</h2>
+                    <div class="d-flex flex-column flex-sm-row gap-2">
+                        <button type="button" class="btn btn-primary btn-lg btn-print" onclick="imprimerliste()">
+                            Imprimer
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="exportToExcel()">Exporter vers Excel</button>
+                    </div>
                 </div>
-            <div class="container-fluid d-flex align-items-center justify-content-center">
-                <div id="contenu">
-                    <table id="arrearsTable" class="display" {{-- style="width:50%; margin: 0 auto; border-collapse: collapse;" --}}>
-                        <thead>
-                            <tr>
-                                <th>N°</th>
-                                <th>Nom</th>
-                                <th>Prenom</th>
-                                <th>Classe</th>
-                                <th>Montant du</th>
-                                <th>PAYE</th>
-                                <th>RESTE</th>
-                                <th>Inscrit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $num = 1;
-                            @endphp
-                            @foreach ($archive as $eleve)
-                                @foreach ($delevea->where('MATRICULE', $eleve->MATRICULE) as $arrears)
+
+                <div class="container-fluid d-flex align-items-center justify-content-center">
+                    <div id="contenu">
+
+                        <!-- ===================== TABLEAU CORRIGÉ ===================== -->
+                        <div class="table-responsive">
+                            <table id="arrearsTable" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Classe</th>
+                                    <th>Montant dû</th>
+                                    <th>Payé</th>
+                                    <th>Reste</th>
+                                    {{-- <th>Inscrit</th> --}}
+                                </tr>
+                            </thead>
+
+                            <tbody>
                                 @php
-                                    $reste = $arrears->MONTANTARRIERE - $arrears->MONTANTENAVANCE;
-                                    $isInscrit = $eleve->pluck('MATRICULE')->contains($eleve->MATRICULE);
+                                    $num = 1;
+                                    $totalArriere = 0;
+                                    $totalPaye = 0;
+                                    $totalReste = 0;
+                                    $totalsByClass = [];
+                                    $currentClass = null;
                                 @endphp
-                                    <tr data-classe="{{ $arrears->CODECLAS }}" class="classe-table">
+
+                                @foreach ($listeEle as $eleve)
+                                    @php
+                                        $paye = \App\Models\Scolarite::where('AUTREF', 2)
+                                            ->where('MATRICULE', $eleve->MATRICULE)
+                                            ->sum('MONTANT');
+
+                                        $reste = $eleve->ARRIERE - $paye;
+
+                                        // Mettre à jour les totaux
+                                        $totalArriere += $eleve->ARRIERE;
+                                        $totalPaye += $paye;
+                                        $totalReste += $reste;
+
+                                        // Récupération classe (optionnel)
+                                        $classe = \App\Models\Eleve::where('MATRICULE', $eleve->MATRICULE)
+                                                ->value('CODECLAS');
+
+                                        // Update class totals
+                                        if (!isset($totalsByClass[$classe])) {
+                                            $totalsByClass[$classe] = ['totalArriere' => 0, 'totalPaye' => 0, 'totalReste' => 0];
+                                        }
+                                        $totalsByClass[$classe]['totalArriere'] += $eleve->ARRIERE;
+                                        $totalsByClass[$classe]['totalPaye'] += $paye;
+                                        $totalsByClass[$classe]['totalReste'] += $reste;
+
+                                        // Check if class has changed
+                                        if ($currentClass !== null && $currentClass !== $classe) {
+                                            // Output totals for the previous class
+                                            echo "<tr><td colspan='3' style='text-align: right; font-weight: bold;'>Total $currentClass</td>";
+                                            echo "<td style='font-weight: bold;'>" . number_format($totalsByClass[$currentClass]['totalArriere'], 0, ',', ' ') . "</td>";
+                                            echo "<td style='font-weight: bold;'>" . number_format($totalsByClass[$currentClass]['totalPaye'], 0, ',', ' ') . "</td>";
+                                            echo "<td style='font-weight: bold;'>" . number_format($totalsByClass[$currentClass]['totalReste'], 0, ',', ' ') . "</td>";
+                                            echo "<td></td></tr>";
+                                        }
+
+                                        $currentClass = $classe;
+                                    @endphp
+
+                                    <tr data-classe="{{ $classe }}">
                                         <td>{{ $num++ }}</td>
                                         <td>{{ $eleve->NOM }}</td>
                                         <td>{{ $eleve->PRENOM }}</td>
-                                        <td>{{ $arrears->CODECLAS }}</td>
-                                        <td>{{ number_format($arrears->MONTANTARRIERE, 0, ',', ' ') }}</td>
-                                        <td>{{ number_format($arrears->MONTANTENAVANCE, 0, ',', ' ') }}</td>
+                                        <td>{{ $classe }}</td>
+                                        <td>{{ number_format($eleve->ARRIERE, 0, ',', ' ') }}</td>
+                                        <td>{{ number_format($paye, 0, ',', ' ') }}</td>
                                         <td>{{ number_format($reste, 0, ',', ' ') }}</td>
-                                        <td>
-                                            <input type="checkbox" disabled {{ $isInscrit ? 'checked' : '' }}>
-                                        </td>
+                                        {{-- <td><input type="checkbox" disabled checked></td> --}}
                                     </tr>
                                 @endforeach
-                            @endforeach
-                        </tbody>
-                    </table>
+
+                                // Output totals for the last class
+                                @if ($currentClass !== null)
+                                    <tr>
+                                        <td colspan="3" style="text-align: right; font-weight: bold;">Total {{ $currentClass }}</td>
+                                        <td style="font-weight: bold;">{{ number_format($totalsByClass[$currentClass]['totalArriere'], 0, ',', ' ') }}</td>
+                                        <td style="font-weight: bold;">{{ number_format($totalsByClass[$currentClass]['totalPaye'], 0, ',', ' ') }}</td>
+                                        <td style="font-weight: bold;">{{ number_format($totalsByClass[$currentClass]['totalReste'], 0, ',', ' ') }}</td>
+                                        <td></td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" style="text-align: right; font-weight: bold;">Total Général</td>
+                                    <td style="font-weight: bold;">{{ number_format($totalArriere, 0, ',', ' ') }}</td>
+                                    <td style="font-weight: bold;">{{ number_format($totalPaye, 0, ',', ' ') }}</td>
+                                    <td style="font-weight: bold;">{{ number_format($totalReste, 0, ',', ' ') }}</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                            </table>
+                        </div>
+                        <!-- =========================================================== -->
+
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>
 </div>
+
 <script>
-    $(document).ready(function() {
-        $('#arrearsTable').DataTable({
-            language: {
-                url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/fr-FR.json"
-            }
-        });
-    });
+    // Fonction d'impression
+    window.imprimerliste = function() {
+        const originalTable = document.getElementById('arrearsTable');
+        const printContent = originalTable.cloneNode(true);
 
-    function imprimerliste() {
-        // Désactiver DataTables pour afficher toutes les lignes
-        var table = $('#arrearsTable').DataTable();
-        table.destroy();
-
-        // Obtenir le contenu du tableau complet
-        var originalTable = document.getElementById('arrearsTable');
-        var printContent = originalTable.cloneNode(true);
-
-        // Créer une nouvelle fenêtre pour l'impression
-        var printWindow = window.open('', '', 'height=600,width=800');
+        const printWindow = window.open('', '', 'height=600,width=800');
         printWindow.document.write('<html><head><title>Impression</title>');
         printWindow.document.write('<style>');
         printWindow.document.write('table { width: 100%; border-collapse: collapse; }');
@@ -121,115 +168,80 @@
         printWindow.document.write(printContent.outerHTML);
         printWindow.document.write('</body></html>');
 
-        // Fermer le document pour déclencher l'impression
         printWindow.document.close();
         printWindow.focus();
         printWindow.print();
         printWindow.close();
-
-        // Réinitialiser DataTables après l'impression
-        $(document).ready(function() {
-            $('#arrearsTable').DataTable({
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/fr-FR.json"
-                }
-            });
-        });
     }
 
- function exportToExcel() {
-    // Récupérer l'instance DataTable
-    var table = $('#arrearsTable').DataTable();
+    // Fonction d'export Excel
+    window.exportToExcel = function() {
+        const contentElement = document.getElementById('contenu');
+        if (!contentElement) {
+            alert("Aucune liste à exporter.");
+            return;
+        }
 
-    // Sauvegarder la page actuelle
-    var currentPage = table.page();
+        const clone = contentElement.cloneNode(true);
+        const buttons = clone.querySelectorAll('button, .form-group, select');
+        buttons.forEach(el => el.remove());
 
-    // Désactiver la pagination pour afficher toutes les lignes
-    table.page.len(-1).draw();
+        const style = `
+            <style>
+                table { border-collapse: collapse; width: 100%; }
+                th, td { border: 1px solid black; padding: 5px; text-align: center; font-size: 14px; }
+                th { font-weight: bold; background-color: #f2f2f2; }
+                td.mat { mso-number-format:"0"; }
+            </style>
+        `;
 
-    // Récupérer le tableau complet
-    const contentElement = document.getElementById('contenu');
-    if (!contentElement) {
-        alert("Aucune liste à exporter. Veuillez d'abord créer la liste.");
-        return;
+        const html = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                xmlns:x="urn:schemas-microsoft-com:office:excel"
+                xmlns="http://www.w3.org/TR/REC-html40">
+            <head><meta charset="UTF-8">${style}</head>
+            <body>${clone.innerHTML}</body>
+            </html>
+        `;
+
+        const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `etat_arrieres.xls`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
-
-    const clone = contentElement.cloneNode(true);
-
-    // Supprimer les boutons, filtres et autres éléments inutiles
-    const buttons = clone.querySelectorAll('button, .form-group, select');
-    buttons.forEach(el => el.remove());
-
-    // Styles pour Excel
-    const style = `
-        <style>
-            table { border-collapse: collapse; width: 100%; }
-            th, td { border: 1px solid black; padding: 5px; text-align: center; font-size: 14px; }
-            th { font-weight: bold; background-color: #f2f2f2; }
-            td.mat { mso-number-format:"0"; }
-        </style>
-    `;
-
-    // HTML final
-    const html = `
-        <html xmlns:o="urn:schemas-microsoft-com:office:office"
-              xmlns:x="urn:schemas-microsoft-com:office:excel"
-              xmlns="http://www.w3.org/TR/REC-html40">
-        <head><meta charset="UTF-8">${style}</head>
-        <body>${clone.innerHTML}</body>
-        </html>
-    `;
-
-    // Télécharger le fichier Excel
-    const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `etat_arrieres.xls`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    // Réactiver la pagination à l'état initial
-    table.page.len(10).draw();
-    table.page(currentPage).draw(false);
-}
-
-
 </script>
+
 
 <style>
     .footer {
-        position: relative !important; /* Utiliser relative pour éviter de cacher le tableau */
+        position: relative !important;
         width: 100% !important;
-        z-index: 10 !important; /* Assurer que le footer soit au-dessus des autres éléments */
+        z-index: 10 !important;
     }
 
     @media print {
         .sidebar, .navbar, .footer, .noprint, button {
-            display: none !important; /* Masquer la barre de titre et autres éléments */
+            display: none !important;
         }
-        body {
-            overflow: hidden; /* Masquer les barres de défilement */
-        }
+        body { overflow: hidden; }
 
-        .card {
-            margin-top: 0px !important;
-        }
+        .card { margin-top: 0px !important; }
 
         table {
             margin: 0 auto;
-            width: 100%; 
+            width: 100%;
             border-collapse: collapse;
         }
         td, th {
             border: 1px solid black;
             padding: 8px;
-            text-align: left;
             white-space: nowrap;
         }
     }
 </style>
-
-    @endsection
+@endsection

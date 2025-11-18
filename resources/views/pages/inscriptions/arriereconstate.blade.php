@@ -72,7 +72,7 @@
             <th>Date</th>
             <th>Nom</th>
             <th>Prénom</th>
-            <th>Classe précédente</th>
+            {{-- <th>Classe précédente</th> --}}
             <th>Montant</th>
             <th>Percepteur</th>
           </tr>
@@ -88,7 +88,7 @@
             <td> {{ \Carbon\Carbon::parse($date)->format('d/m/Y') }}</td>
             <td>{{ $resultat->NOM }}</td>
             <td>{{ $resultat->PRENOM }}</td>
-            <td>{{ $resultat->classe_precedente }}</td> <!-- Classe précédente -->
+            {{-- <td>{{ $resultat->classe_precedente }}</td> <!-- Classe précédente --> --}}
             <td>{{ number_format($resultat->MONTANT, 0, ',', ' ') }} </td>
             <td>{{ $resultat->SIGNATURE }}</td>
           </tr>
@@ -100,7 +100,7 @@
           
           <!-- Affichage du sous-total pour cette date -->
           <tr>
-            <td colspan="5" class="text-right"><strong>Sous-total</strong></td>
+            <td colspan="4" class="text-right"><strong>Sous-total</strong></td>
             <td><strong>{{ number_format($sousTotal, 0, ',', ' ') }} </strong></td>
           </tr>
           
@@ -113,7 +113,7 @@
         <tfoot>
           <!-- Affichage du total général -->
           <tr>
-            <td colspan="5" class="text-right"><strong>Total général :</strong></td>
+            <td colspan="4" class="text-right"><strong>Total général :</strong></td>
             <td><strong>{{ number_format($totalGeneral, 0, ',', ' ') }}</strong></td>
           </tr>
         </tfoot>
