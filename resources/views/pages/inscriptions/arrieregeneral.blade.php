@@ -1,8 +1,29 @@
 @extends('layouts.master')
 @section('content')
 
+<style>
+            .btn-arrow {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            background-color: transparent !important;
+            border: 1px !important;
+            text-transform: uppercase !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+            font-size: 17px !important;
+            color: #b51818 !important;
+        }
+
+        .btn-arrow:hover {
+            color: #b700ff !important;
+        }
+</style>
+
 @push('styles')
     <style>
+
+
         /* Style d'impression */
         @media print {
             /* Masquer tout sauf le tableau */
@@ -24,6 +45,7 @@
                 width: 100% !important;
                 border-collapse: collapse !important;
             }
+
             
             /* Style des cellules pour l'impression */
             th, td {
@@ -65,7 +87,11 @@
 
     <div class="col-md-12">
 
-        <div class="mb-3 no-print">
+        <button class="btn btn-arrow " onclick="window.history.back();">
+            <i class="fas fa-arrow-left"></i> Retour
+        </button>
+
+        <div class="mb-3 no-print mt-5">
             <button id="printButton" class="btn btn-primary me-2" onclick="printSection('printableArea')">
                 <i class="fas fa-print"></i> Imprimer
             </button>
@@ -80,15 +106,15 @@
 
             <div class="table-responsive" id="arrieresTable">
                 <table  class="table table-bordered table-striped table-sm">
-                    <thead class="table-dark">
+                    <thead class="fw-bold">
                         <tr>
-                            <th>N°</th>
-                            <th>Matricule</th>
-                            <th>Nom et Prénoms</th>
-                            <th>Classe</th>
-                            <th>Montant dû</th>
-                            <th>Montant payé</th>
-                            <th>Reste à payer</th>
+                            <th class="fw-bold">N°</th>
+                            <th class="fw-bold">Matricule</th>
+                            <th class="fw-bold">Nom et Prénoms</th>
+                            <th class="fw-bold">Classe</th>
+                            <th class="fw-bold">Montant dû</th>
+                            <th class="fw-bold">Montant payé</th>
+                            <th class="fw-bold">Reste à payer</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -132,12 +158,12 @@
                     </tbody>
 
                     @if(count($resultats) > 0)
-                        <tfoot class="table-dark">
+                        <tfoot>
                             <tr>
                                 <th colspan="4" class="text-end">TOTAUX</th>
-                                <th class="text-end">{{ number_format($totalDues, 0, ',', ' ') }} FCFA</th>
-                                <th class="text-end">{{ number_format($totalPayes, 0, ',', ' ') }} FCFA</th>
-                                <th class="text-end">{{ number_format($totalRestes, 0, ',', ' ') }} FCFA</th>
+                                <th class="fw-bold text-end">{{ number_format($totalDues, 0, ',', ' ') }} FCFA</th>
+                                <th class="fw-bold text-end">{{ number_format($totalPayes, 0, ',', ' ') }} FCFA</th>
+                                <th class="fw-bold text-end">{{ number_format($totalRestes, 0, ',', ' ') }} FCFA</th>
                             </tr>
                         </tfoot>
                     @endif

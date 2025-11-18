@@ -964,7 +964,9 @@ public function indexEleves(AuthPermissionService $authService)
 
     // Récupérer les élèves avec leurs notes
     // $eleves = Eleve::with('notes')->orderBy('nom', 'asc')->get();
-    $eleves = Eleve::with('notes')
+    $eleves = Eleve::where('CODECLAS', '!=', 'NON')
+        ->where('CODECLAS', '!=', 'DELETE')
+        ->with('notes')
         ->orderByRaw('LOWER(NOM) ASC, LOWER(PRENOM) ASC')
         ->get();
 

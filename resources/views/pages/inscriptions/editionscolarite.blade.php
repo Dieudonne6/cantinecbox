@@ -122,7 +122,7 @@
       <button id="printButton" onclick="printTable()"><a href="#"><i class="fas fa-calendar-check"></i> Liste des élèves ayant un échéancier personnalisé</a></button>
       <button><a href="{{ route('arrieregeneralInscrits') }}"><i class="fas fa-exclamation-triangle"></i> État général des arriérés (élèves inscrits)</a></button>
       <button><a href="{{ route('arrieregeneralNonInscrits') }}"><i class="fas fa-exclamation-triangle"></i> État général des arriérés (élèves non inscrits)</a></button>
-      <button id="" onclick="imprimerPageNonSolde()"><a href="#"><i class="fas fa-minus-circle"></i> État général des arriérés moins ceux qui sont soldés</a></button>
+      {{-- <button id="" onclick="imprimerPageNonSolde()"><a href="#"><i class="fas fa-minus-circle"></i> État général des arriérés moins ceux qui sont soldés</a></button> --}}
       <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"><a href="#"><i class="fas fa-file-invoice"></i>
         État des arriérés constatés (élèves inscrits)</a></button>
       <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModalNonInscrits"><a href="#"><i class="fas fa-file-invoice"></i>

@@ -789,7 +789,9 @@ public function etatdesdroits(Request $request) {
 
   public function vitrine(){
     if(Session::has('account')){
-      $totaleleve = Eleve::count();
+      $totaleleve = Eleve::where('CODECLAS', '!=', 'NON')
+      ->where('CODECLAS', '!=', 'DELETE')
+      ->count();
       $totalcantineinscritactif = Contrat::where('statut_contrat', 1)->count();
        $totalcantineinscritinactif = Contrat::where('statut_contrat', 0)->count();
       
