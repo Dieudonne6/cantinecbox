@@ -7604,13 +7604,42 @@ public function enregistrerPaiement(Request $request, $matricule)
 
 
   public function etatdesarriérés() {
-    $archive = Elevea::select('MATRICULE', 'NOM', 'PRENOM')->get();
-    $delevea = Deleve::where('MONTANTARRIERE', '!=', 0)
-                      ->select('MATRICULE', 'MONTANTARRIERE', 'CODECLAS', 'MONTANTENAVANCE')
-                      ->get();
-    $eleve = Eleve::select('MATRICULE')->get();
-    return view('pages.inscriptions.etatdesarrieres', compact('archive', 'delevea', 'eleve'));
+    // $archive = Elevea::select('MATRICULE', 'NOM', 'PRENOM')->get();
+    // $delevea = Deleve::where('MONTANTARRIERE', '!=', 0)
+    //                   ->select('MATRICULE', 'MONTANTARRIERE', 'CODECLAS', 'MONTANTENAVANCE')
+    //                   ->get();
+    // $eleve = Eleve::select('MATRICULE')->get();
+    // return view('pages.inscriptions.etatdesarrieres', compact('archive', 'delevea', 'eleve'));
+
+    $listeEle = Eleve::select('MATRICULE', 'NOM', 'PRENOM', 'ARRIERE')
+        ->where('ARRIERE', '!=', 0)
+        ->orderBy('CODECLAS')
+        ->get();
+
+    $totalDues = 0;
+    $totalPayes = 0;
+    $totalRestes = 0;
+
+    // Parcourir chaque élève
+    foreach ($listeEle as $eleve) {
+
+        // Calculer la somme des montants où AUTREF = 2 pour cet élève
+        $somme = Scolarite::where('AUTREF', 2)
+            ->where('MATRICULE', $eleve->MATRICULE)
+            ->sum('MONTANT');
+
+        // Calcul du reste
+        $RESTE = $eleve->ARRIERE - $somme;
+
+        // Cumuls
+        $totalDues += $eleve->ARRIERE;
+        $totalPayes += $somme;
+        $totalRestes += $RESTE;
+    }
+
+    return view('pages.inscriptions.etatdesarrieres', compact('totalDues', 'totalPayes', 'totalRestes', 'listeEle'));
   }
+
   
   /**
    * Affiche l'état général des arriérés pour les élèves inscrits
