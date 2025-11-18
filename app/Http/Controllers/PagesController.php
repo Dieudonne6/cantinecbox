@@ -1513,6 +1513,8 @@ public function sfinanceclassespecifique($classeCode)
 
     $ville = Params2::first();
 
+    $logo = Params2::first()->logoimage;
+
     $classes = Classes::where('TYPECLASSE', 1)->get();
     $datePaiement = Carbon::today()->toDateString();
 
@@ -1714,7 +1716,8 @@ public function sfinanceclassespecifique($classeCode)
         ->with('donneRelance', $donneRelance)
         ->with('classeCode', $classeCode)
         ->with('entete', $entete)
-        ->with('ville', $ville);
+        ->with('ville', $ville)
+        ->with('logo', $logo);
 }
 
 
@@ -3186,7 +3189,7 @@ public function eleveparclasseessai() {
 
 
 
-// -------------------------------------
+            // -------------------------------------
 
 
 

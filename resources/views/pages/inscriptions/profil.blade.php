@@ -296,9 +296,9 @@
                   </div>
                 </div>
                 <div class="col-lg-4 justify-content-end d-flex">
-                  <div class="mr-2">
+                  <!-- <div class="mr-2">
                     <button type="submit" class="btn btn-primary mb-2">Sauvegarde</button>
-                  </div>
+                  </div> -->
                   <div>
                     {{-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolli" aria-controls="offcanvasScrolli">Aide</button> --}}
                     
