@@ -5837,8 +5837,8 @@ public function eleveparclasseessai() {
     // Préparation des effectifs par classe
     $effectifsParClasse = $classes->mapWithKeys(function ($codeClasse) {
         // Récupération de tous les élèves de cette classe
-        $elevesClasse = Eleve::where('CODECLAS', $codeClasse);
-
+        $elevesClasse = Eleve::where('CODECLAS', $codeClasse)->get();
+        // dd($elevesClasse);
         return [
             $codeClasse => [
                 'total'        => $elevesClasse->count(),
@@ -5848,7 +5848,7 @@ public function eleveparclasseessai() {
             ]
         ];
     });
-    //dd($effectifsParClasse);
+    // dd($effectifsParClasse);
     $effectifsParPromotion = $promotions->mapWithKeys(function($promo) use ($eleves) {
         $classes = Classes::where('CODEPROMO', $promo->CODEPROMO)->pluck('CODECLAS'); 
         $elevesPromo = $eleves->whereIn('CODECLAS', $classes);

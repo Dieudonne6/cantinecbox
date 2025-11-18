@@ -120,7 +120,6 @@
                                     </tr>
                                 @endforeach
 
-                                // Output totals for the last class
                                 @if ($currentClass !== null)
                                     <tr>
                                         <td colspan="3" style="text-align: right; font-weight: bold;">Total {{ $currentClass }}</td>
