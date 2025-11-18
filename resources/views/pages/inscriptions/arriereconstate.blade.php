@@ -55,7 +55,7 @@
     </div>
     
     <div id="ArriereConstat" style="width: 100%"> 
-      <h4 class="card-title text-center my-3">Etat des arrièrés constatés (Elèves inscrits)</h4>
+      <h4 class="card-title text-center my-3">{{ $titre ?? 'État des arriérés constatés' }}</h4>
       
       @if(isset($datedebut) && isset($datefin))
       <p class="text-center">Période: {{ \Carbon\Carbon::parse($datedebut)->format('d/m/Y') }} à {{ \Carbon\Carbon::parse($datefin)->format('d/m/Y') }}</p>

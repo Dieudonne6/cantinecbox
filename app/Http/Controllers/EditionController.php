@@ -138,6 +138,8 @@ class EditionController extends Controller
       )
         ->join('eleve', 'scolarit.MATRICULE', '=', 'eleve.MATRICULE')
         ->where('scolarit.AUTREF', 2)
+        ->where('eleve.CODECLAS', '!=', 'DELETE')
+        ->where('eleve.CODECLAS', '!=', 'NON')
         ->whereBetween('scolarit.DATEOP', [$datedebut, $datefin])
         ->orderBy('scolarit.DATEOP')
         ->get();
@@ -166,6 +168,62 @@ class EditionController extends Controller
       return back()->with('error', 'Veuillez fournir une date de début et une date de fin.');
     }
   }
+
+  public function arriereconstateNonInscrits(Request $request)
+  {
+    // Récupérer les dates du formulaire
+    $datedebut = $request->input('datedebut');
+    $datefin = $request->input('datefin');
+
+    // Vérifier que les dates ont bien été soumises
+    if ($datedebut && $datefin) {
+      // Récupérer les lignes de scolarite avec jointure sur la table eleve
+      $resultats = Scolarite::select(
+        'scolarit.DATEOP',
+        'scolarit.MONTANT',
+        'scolarit.MATRICULE',
+        'eleve.NOM',
+        'eleve.PRENOM',
+        'eleve.CODECLAS',
+        'scolarit.SIGNATURE'
+      )
+        ->join('eleve', 'scolarit.MATRICULE', '=', 'eleve.MATRICULE')
+        ->where('scolarit.AUTREF', 2)
+        ->where('eleve.CODECLAS', 'NON')
+        ->whereBetween('scolarit.DATEOP', [$datedebut, $datefin])
+        ->orderBy('scolarit.DATEOP')
+        ->get();
+
+      // Pour chaque résultat, récupérer la classe précédente depuis la table 'elevea' de la base de données 'scoracine'
+      $resultats->map(function ($resultat) {
+        // Récupérer la classe précédente (dernier enregistrement dans la table 'elevea' pour le matricule)
+        $classePrecedente = DB::connection('mysql2')
+          ->table('delevea')
+          ->where('MATRICULE', $resultat->MATRICULE)
+          ->orderBy('ANSCOL', 'desc')
+          ->value('CODECLAS');
+
+        // Ajouter la classe précédente au résultat
+        $resultat->classe_precedente = $classePrecedente;
+
+        return $resultat;
+      });
+
+      // Regrouper par DATEOP
+      $groupedResultats = $resultats->groupBy('DATEOP');
+
+      // Retourner la vue avec les résultats groupés
+      return view('pages.inscriptions.arriereconstate', [
+        'groupedResultats' => $groupedResultats, 
+        'datedebut' => $datedebut, 
+        'datefin' => $datefin,
+        'titre' => 'Etat des arriérés constatés (Elèves non inscrits)'
+      ]);
+    } else {
+      return back()->with('error', 'Veuillez fournir une date de début et une date de fin.');
+    }
+  }
+
   public function journaldetailleaveccomposante(Request $request)
   {
     // Récupérer les paramètres de filtrage depuis la requête

@@ -7606,8 +7606,123 @@ public function enregistrerPaiement(Request $request, $matricule)
     $eleve = Eleve::select('MATRICULE')->get();
     return view('pages.inscriptions.etatdesarrieres', compact('archive', 'delevea', 'eleve'));
   }
+  
+  /**
+   * Affiche l'état général des arriérés pour les élèves inscrits
+   */
+  public function arriereGeneral()
+  {
+    // LISTE DES ELEVES DONT ARRIERE EST != 0, en excluant les classes 'DELETE' et 'NON'
+    $listeElevesArr = Eleve::where('ARRIERE', '!=', 0)
+        ->where('CODECLAS', 'not like', '%DELETE%')
+        ->where('CODECLAS', 'not like', '%NON%')
+        ->orderBy('CODECLAS')
+        ->get();
+    
+    // Initialiser un tableau pour stocker les résultats groupés par classe
+    $resultatsParClasse = [];
+    $totalDues = 0;
+    $totalPayes = 0;
+    $totalRestes = 0;
 
+    // Parcourir chaque élève
+    foreach ($listeElevesArr as $eleve) {
+      // Calculer la somme des a_payer où autreref est 2 et le matricule correspond à celui de l'élève
+      $somme = Scolarite::where('AUTREF', 2)
+        ->where('MATRICULE', $eleve->MATRICULE)
+        ->sum('MONTANT');
 
+      $RESTE = $eleve->ARRIERE - $somme;
+      
+      // Créer l'entrée pour l'élève
+      $eleveData = [
+        'NOM' => $eleve->NOM,
+        'PRENOM' => $eleve->PRENOM,
+        'CLASSE' => $eleve->CODECLAS,
+        'ARRIERE' => $eleve->ARRIERE,
+        'PAYE' => $somme,
+        'RESTE' => $RESTE,
+      ];
+
+      // Ajouter l'élève au tableau de sa classe
+      $classe = $eleve->CODECLAS ?? 'Sans classe';
+      if (!isset($resultatsParClasse[$classe])) {
+        $resultatsParClasse[$classe] = [];
+      }
+      $resultatsParClasse[$classe][$eleve->MATRICULE] = $eleveData;
+
+      // Calculer les totaux
+      $totalDues += $eleve->ARRIERE;
+      $totalPayes += $somme;
+      $totalRestes += $RESTE;
+    }
+
+    // Trier les classes par ordre alphabétique
+    ksort($resultatsParClasse);
+
+    $eleves = Eleve::where('EcheancierPerso', 1)
+      ->orderBy('CODECLAS')
+      ->get();
+
+    return view('pages.inscriptions.arrieregeneral', [
+      'eleves' => $eleves,
+      'resultats' => $resultatsParClasse, // Maintenant groupé par classe
+      'totalDues' => $totalDues,
+      'totalPayes' => $totalPayes,
+      'totalRestes' => $totalRestes,
+      'titre' => 'État des arriérés – Élèves inscrits',
+    ]);
+  }
+
+  public function arriereGeneralNonInscrits()
+  {
+    $listeElevesArr = Eleve::where('ARRIERE', '!=', 0)
+        ->where('CODECLAS', 'NON')
+        ->orderBy('CODECLAS')
+        ->get();
+
+    $resultatsParClasse = [];
+    $totalDues = 0;
+    $totalPayes = 0;
+    $totalRestes = 0;
+
+    foreach ($listeElevesArr as $eleve) {
+      $somme = Scolarite::where('AUTREF', 2)
+        ->where('MATRICULE', $eleve->MATRICULE)
+        ->sum('MONTANT');
+
+      $RESTE = $eleve->ARRIERE - $somme;
+
+      $eleveData = [
+        'NOM' => $eleve->NOM,
+        'PRENOM' => $eleve->PRENOM,
+        'CLASSE' => $eleve->CODECLAS,
+        'ARRIERE' => $eleve->ARRIERE,
+        'PAYE' => $somme,
+        'RESTE' => $RESTE,
+      ];
+
+      $classe = $eleve->CODECLAS ?? 'Sans classe';
+      if (!isset($resultatsParClasse[$classe])) {
+        $resultatsParClasse[$classe] = [];
+      }
+      $resultatsParClasse[$classe][$eleve->MATRICULE] = $eleveData;
+
+      $totalDues += $eleve->ARRIERE;
+      $totalPayes += $somme;
+      $totalRestes += $RESTE;
+    }
+
+    ksort($resultatsParClasse);
+
+    return view('pages.inscriptions.arrieregeneral', [
+      'resultats' => $resultatsParClasse,
+      'totalDues' => $totalDues,
+      'totalPayes' => $totalPayes,
+      'totalRestes' => $totalRestes,
+      'titre' => 'État des arriérés – Élèves non inscrits (classe NON)',
+    ]);
+  }
 
 public function recouvrementoperateur(Request $request) {
   $params = Params2::all();

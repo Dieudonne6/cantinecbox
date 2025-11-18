@@ -120,11 +120,14 @@
       <button class="profil-btn" type="button" id="" class="" data-bs-toggle="modal" data-bs-target="#exampleModal2"><i class="fas fa-id-card"></i> Liste des élèves par profil</button>
       
       <button id="printButton" onclick="printTable()"><a href="#"><i class="fas fa-calendar-check"></i> Liste des élèves ayant un échéancier personnalisé</a></button>
-      <button id="" onclick="imprimerPageTous()"><a href="#"><i class="fas fa-exclamation-triangle"></i> État général des arriérés (élèves inscrits)</a></button>
+      <button><a href="{{ route('arrieregeneralInscrits') }}"><i class="fas fa-exclamation-triangle"></i> État général des arriérés (élèves inscrits)</a></button>
+      <button><a href="{{ route('arrieregeneralNonInscrits') }}"><i class="fas fa-exclamation-triangle"></i> État général des arriérés (élèves non inscrits)</a></button>
       <button id="" onclick="imprimerPageNonSolde()"><a href="#"><i class="fas fa-minus-circle"></i> État général des arriérés moins ceux qui sont soldés</a></button>
       <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"><a href="#"><i class="fas fa-file-invoice"></i>
-        État des arriérés constatés (élèves inscrits)      </a></button>
-        <button><a href="{{ url('/etatdesarriérés') }}"><i class="fas fa-exclamation"></i> État général des arriérés</a></button>
+        État des arriérés constatés (élèves inscrits)</a></button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModalNonInscrits"><a href="#"><i class="fas fa-file-invoice"></i>
+        État des arriérés constatés (élèves non inscrits)</a></button>
+      <button><a href="{{ url('/etatdesarriérés') }}"><i class="fas fa-exclamation"></i> État général des arriérés</a></button>
       </div>
     </div>
   </div>
@@ -141,6 +144,35 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form id="arriereConstatForm" action="{{ url('/arriereconstate') }}" method="POST">
+          @csrf
+          <div class="modal-body d-flex justify-content-between">
+            <div class="w-50">
+              <label>Date début</label>
+              <input type="date" class="form-control" name="datedebut" required>
+            </div>
+            <div class="w-50">
+              <label>Date fin</label>
+              <input type="date" class="form-control" name="datefin" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal pour les élèves non inscrits -->
+  <div class="modal fade" id="exampleModalNonInscrits" tabindex="-1" aria-labelledby="exampleModalNonInscritsLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalNonInscritsLabel">État des arriérés constatés (élèves non inscrits)</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="arriereConstatNonInscritsForm" action="{{ url('/arriereconstate-non-inscrits') }}" method="POST">
           @csrf
           <div class="modal-body d-flex justify-content-between">
             <div class="w-50">

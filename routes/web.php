@@ -259,6 +259,7 @@ Route::get('/editionscolarite', [EditionController::class, 'editionscolarite'])-
 Route::get('/journalderecouvrement', [EditionController::class, 'journal'])->name('journal');
 
 Route::post('/arriereconstate', [EditionController::class, 'arriereconstate'])->name('arriereconstate');
+Route::post('/arriereconstate-non-inscrits', [EditionController::class, 'arriereconstateNonInscrits'])->name('arriereconstate.noninscrits');
 
 Route::get('/etatdesarrieresinscrits', [PagesController::class, 'etatdesarrieresinscrits']);
 Route::get('/eleveparclasse', [PagesController::class, 'eleveparclasse'])->name('eleveparclasse');
@@ -362,6 +363,8 @@ Route::get('/listedesreductions', [PagesController::class, 'listedesreductions']
 Route::get('/pagedetail/{MATRICULE}', [GestionclasseController::class, 'pagedetail'])->name('pagedetail');
 Route::get('/etatdesdroits', [PagesController::class, 'etatdesdroits'])->name('etatdesdroits');
 Route::get('/etatdesarriérés', [PagesController::class, 'etatdesarriérés'])->name('etatdesarriérés');
+Route::get('/arrieregeneral', [PagesController::class, 'arriereGeneral'])->name('arrieregeneralInscrits');
+Route::get('/arrieregeneral-non-inscrits', [PagesController::class, 'arriereGeneralNonInscrits'])->name('arrieregeneralNonInscrits');
 Route::get('/recouvrementoperateur', [PagesController::class, 'recouvrementoperateur'])->name('recouvrementoperateur');
 Route::get('/journaloperateur', [PagesController::class, 'journaloperateur'])->name('journaloperateur');
 Route::get('/journaldetailleaveccomposante', [EditionController::class, 'journaldetailleaveccomposante'])->name('journaldetailleaveccomposante');
