@@ -27,6 +27,37 @@
                                 color: #b700ff !important;
                                 /* Couleur au survol */
                             }
+
+
+
+                            /* Styles pour tous les champs input */
+                            .form-control {
+                                border: 2px solid #ced4da;   /* bordure plus épaisse */
+                                border-radius: 0.3rem;       /* coins arrondis */
+                                padding: 0.5rem 0.75rem;
+                                background-color: #f9f9f9;   /* fond léger */
+                                transition: all 0.3s ease;
+                            }
+
+                            /* Effet au focus */
+                            .form-control:focus {
+                                border-color: #007bff;       /* bordure bleue */
+                                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                                background-color: #fff;
+                            }
+                            /* Pour le select */
+                            .form-select {
+                                border: 2px solid #ced4da;
+                                border-radius: 0.5rem;
+                                background-color: #f9f9f9;
+                                transition: all 0.3s ease;
+                            }
+
+                            .form-select:focus {
+                                border-color: #007bff;
+                                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                                background-color: #fff;
+                            }
                         </style>
                         <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
                             <i class="fas fa-arrow-left"></i> Retour
@@ -378,7 +409,7 @@
                                                                         data-bs-dismiss="modal">Fermer</button>
                                                                 </form>
                                                             </div>
-                                                            <div class="col-lg-4 d-none" id="percentage" style="margin-top: -2.4rem; background-color:rgb(207, 204, 204) !important;">
+                                                            <div class="col-lg-4 d-none" id="percentage" style="margin-top: -3rem; background-color:rgb(207, 204, 204) !important;">
                                                                 <br></br>
                                                                 <br></br>
                                                                 <h6 style="margin-top: 1rem">Calculateur de pourcentage de
