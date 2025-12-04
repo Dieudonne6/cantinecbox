@@ -202,17 +202,19 @@
                                     <!-- Label supprimé car déjà dans le header -->
                                     <select id="priority-select" class="form-select" multiple
                                         aria-label="Sélection multiple" style="height: 120px; overflow-y: auto;">
-                                        <option value="1">Arriéré</option>
-                                        <option value="2">{{ $libelle->LIBELF1 }}</option>
+                                        <option value="1">{{ $libelle->LIBELF1 }}</option>
+                                        <option value="2">Arriéré</option>
                                         <option value="3">{{ $libelle->LIBELF2 }}</option>
                                         <option value="4">{{ $libelle->LIBELF3 }}</option>
                                         <option value="5">{{ $libelle->LIBELF4 }}</option>
                                         <option value="6">Scolarité</option>
                                     </select>
+                                                              @if(Session::has('account') && Session::get('account')->groupe && strtoupper(Session::get('account')->groupe->nomgroupe) === 'ADMINISTRATEUR')
                                     <div class="mt-1" style="text-align: center">
                                         <button id="monter-btn" type="button" class="btn btn-sm bg-primary">Monter</button>
                                         <button id="descendre-btn" type="button" class="btn btn-sm bg-accent">Descendre</button>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -241,29 +243,45 @@
                                 </div>
 
                                 <div class="form-group row g-1 mt-1" id="form-fields">
-                                    <div class="col-md-4 col-lg-2 mb-2" data-id="1"><!-- Classes responsives ajoutées -->
+                                    <!-- First Frais field (Frais 1) -->
+                                    <div class="col-md-4 col-lg-2 mb-2" data-id="1">
+                                        <label for="libelle-0">{{ $libelle->LIBELF1 }}</label>
+                                        @php
+                                            $fraisField = 'FRAIS1';
+                                            $totalLibelle = $totalLibelle1 ?? 0;
+                                        @endphp
+                                        <input id="libelle-0" name="libelle_0"
+                                            class="form-control composante" type="number"
+                                            data-priorite="1" data-due="{{ $eleve->$fraisField - $totalLibelle }}"
+                                            placeholder="{{ $eleve->$fraisField - $totalLibelle }}"
+                                            value="0" oninput="verifierSaisie(event)"
+                                            aria-label="Montant pour {{ $libelle->LIBELF1 }}">
+                                    </div>
+
+                                    <!-- Arriéré field -->
+                                    <div class="col-md-4 col-lg-2 mb-2" data-id="2">
                                         <label for="arriere">Arriéré</label>
                                         <input id="arriere" name="arriere" class="form-control composante" type="number"
                                             placeholder="{{ $eleve->ARRIERE ? $eleve->ARRIERE - $totalArriere : $eleve->ARRIERE }}"
-                                            value="0" data-priorite="1" data-due="{{ $eleve->ARRIERE ? $eleve->ARRIERE - $totalArriere : $eleve->ARRIERE }}" oninput="verifierSaisie(event)"
+                                            value="0" data-priorite="2" data-due="{{ $eleve->ARRIERE ? $eleve->ARRIERE - $totalArriere : $eleve->ARRIERE }}" oninput="verifierSaisie(event)"
                                             {{ $eleve->ARRIERE == 0 ? 'disabled' : '' }}
                                             aria-label="Montant des arriérés">
                                     </div>
 
-                                    <!-- Champs générés dynamiquement -->
-                                    @foreach (['LIBELF1', 'LIBELF2', 'LIBELF3', 'LIBELF4'] as $key => $libelleField)
-                                        <div class="col-md-4 col-lg-2 mb-2" data-id="{{ $key + 2 }}"><!-- Classes responsives ajoutées -->
-                                            <label for="libelle-{{ $key }}">{{ $libelle->$libelleField }}</label>
+                                    <!-- Other Frais fields (Frais 2, 3, 4) -->
+                                    @foreach (['LIBELF2', 'LIBELF3', 'LIBELF4'] as $key => $libelleField)
+                                        <div class="col-md-4 col-lg-2 mb-2" data-id="{{ $key + 3 }}">
+                                            <label for="libelle-{{ $key + 1 }}">{{ $libelle->$libelleField }}</label>
                                             @php
-                                                $fraisField = 'FRAIS' . ($key + 1);
-                                                $totalLibelle = ${'totalLibelle' . ($key + 1)} ?? 0;
+                                                $fraisField = 'FRAIS' . ($key + 2);
+                                                $totalLibelle = ${'totalLibelle' . ($key + 2)} ?? 0;
                                             @endphp
-                                            <input id="libelle-{{ $key }}" name="libelle_{{ $key }}"
-                                            class="form-control composante" type="number"
-                                            data-priorite="{{ $key + 2 }}" data-due="{{ $eleve->$fraisField - $totalLibelle }}"
-                                            placeholder="{{ $eleve->$fraisField - $totalLibelle }}"
-                                            value="0" oninput="verifierSaisie(event)"
-                                            aria-label="Montant pour {{ $libelle->$libelleField }}">
+                                            <input id="libelle-{{ $key + 1 }}" name="libelle_{{ $key + 1 }}"
+                                                class="form-control composante" type="number"
+                                                data-priorite="{{ $key + 3 }}" data-due="{{ $eleve->$fraisField - $totalLibelle }}"
+                                                placeholder="{{ $eleve->$fraisField - $totalLibelle }}"
+                                                value="0" oninput="verifierSaisie(event)"
+                                                aria-label="Montant pour {{ $libelle->$libelleField }}">
                                         </div>
                                     @endforeach
 

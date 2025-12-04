@@ -37,6 +37,7 @@ use App\Models\Serie;
 use App\Models\Classesgroupeclass;
 use App\Models\Typeclasse;
 use App\Models\Echeance;
+use App\Models\EcheanceAncien;
 use App\Models\Echeancc;
 use App\Models\Dept;
 use App\Models\Departement;
@@ -297,27 +298,56 @@ class PagesController extends Controller
     $classis = Classes::where('CODECLAS', $claso)->first();
     $donnee = Echeance::where('MATRICULE', $MATRICULE)->get();
     $modifiecheances = Echeance::where('MATRICULE', $MATRICULE)->orderBy('NUMERO', 'asc')->get();
-   
+    $infoDebut = Echeance::where('MATRICULE', $MATRICULE)->first();
+    $dateDebut = $infoDebut->DATEOP;
+    $nbEcheance = $modifiecheances->count();
+    $typeEcheance = $classis->TYPEECHEANCIER;
+
     return view('pages.inscriptions.echeancier')
             ->with('eleve', $eleve)->with('elev', $elev)
             ->with('libel', $libel)->with('reduction', $reduction)
             ->with('donnee',$donnee)->with('classis',$classis)
             ->with('annescolaire', $annescolaire)
+            ->with('dateDebut', $dateDebut)
+            ->with('nbEcheance', $nbEcheance)
+            ->with('typeEcheance', $typeEcheance)
             ->with ('modifiecheances', $modifiecheances);
   }
 
   public function profil($MATRICULE){
+
+    // Récupérer le dernier code de reduction existant
+    $lastCode = Reduction::orderBy('CodeReduction', 'desc')->pluck('CodeReduction')->first();
+    
+    // Générer le nouveau matricule
+    if ($lastCode) {
+      // En supposant que le matricule est de type numérique
+      $newCode = (int)$lastCode + 1;
+    } else {
+      // Si aucun matricule n'existe encore, initialiser à un numéro de départ
+      $newCode = 1;
+    }
+    $reductions = Reduction::all();
+
+    $donneLibelle = Params2::first();
+
+
     $eleve = Eleve::where('MATRICULE', $MATRICULE)->first();
     $elev= Eleve::with('classe')->where('MATRICULE', $MATRICULE)->firstOrFail();
     $libel = Params2::first();
     $reduction = Reduction::all();
     $totalArrieres = Echeance::where('MATRICULE', $MATRICULE)->sum('ARRIERE');
-    return view('pages.inscriptions.profil')->with('eleve', $eleve)->with('elev', $elev)->with('libel', $libel)->with('reduction', $reduction)->with('totalArrieres',$totalArrieres);
+    return view('pages.inscriptions.profil')->with('eleve', $eleve)->with('elev', $elev)->with('libel', $libel)->with('reduction', $reduction)->with('totalArrieres',$totalArrieres)->with('reductions', $reductions)->with('newCode', $newCode)->with('donneLibelle', $donneLibelle);;
     
   }
+
+
   public function regenererecheance(Request $request, $MATRICULE) {
     $echeancesData = $request->input('echeancesData');
     $echeancesDat = json_decode($echeancesData, true);
+
+    // dd($echeancesDat);
+
     $arie = Eleve::where('MATRICULE', $MATRICULE)->first();
     // $ari = $arie->ARRIERE;
     Eleve::where('MATRICULE', $MATRICULE)->update(['EcheancierPerso' => 1]);
@@ -330,7 +360,7 @@ class PagesController extends Controller
     $isFirst = true; 
   foreach ($echeancesDat as $echeance) {
     $dateFormat = 'd/m/Y';
-    $dateOriginal = $echeance['datepaye'];
+    $dateOriginal = $echeance['date_paiement'];
     // $arriere = $echeance['arriere'];
     $date = Carbon::createFromFormat($dateFormat, $dateOriginal);
     $dateFormater = $date->format('Y-m-d');
@@ -343,7 +373,7 @@ class PagesController extends Controller
   }
     Echeance::create([
       'NUMERO' => $echeance['tranche'],
-      'APAYER' => $echeance['montantpaye'],
+      'APAYER' => $echeance['montant_nouveau'] - $montantAPayer,
       'DATEOP' => $dateFormater,
       'MATRICULE' => $MATRICULE,
       'anneeacademique' => $annescolaire,
@@ -355,94 +385,179 @@ class PagesController extends Controller
 
   }
   
-  public function modifieprofil(Request $request, $MATRICULE) {
+
+
+
+
+  // public function modifieprofil(Request $request, $MATRICULE) {
+  //   $modifiprofil = Eleve::find($MATRICULE);
+  //   $classe = $request->input('classe');
+  //   $typeechean = Classes::where('CODECLAS', $classe)->first();
+  //   $typeecheance = $typeechean->TYPEECHEANCIER;
+  //   $typeduree = $typeechean->DUREE;
+    
+  //   $type = $request->input('type');
+  //   $reduc = $request->input('reduction');
+  //   $modifiecheances = Echeance::where('MATRICULE', $MATRICULE)->orderBy('NUMERO', 'desc')->get();
+  //   $typemode = Reduction::where('CodeReduction', $reduc)->value('mode');
+  //   $sco = $request->input('sco');
+  //   $dure = $request->input('duree');
+  //   $frais1 =  $request->input('frais1');
+  //   $frais2 =  $request->input('frais2');
+  //   $frais3 =  $request->input('frais3');
+  //   $frais4 =  $request->input('frais4');
+  //   $arriere = $request->input('arriere');
+  //   $modifiecheancc = Echeancc::where('CODECLAS', $classe)->orderBy('NUMERO', 'desc')->get();
+    
+  //   if ($reduc == 0) {
+  //     foreach ($modifiecheancc as $echeancc) {
+  //       if ($type == 1) {
+  //         $montant = $echeancc->APAYER; // Utiliser la colonne APAYER si type est 1
+  //       } else {
+  //         $montant = $echeancc->APAYER2; // Utiliser la colonne APAYER2 si type est 2
+  //       }
+  //       Echeance::where('NUMERO', $echeancc->NUMERO)
+  //       ->update(['APAYER' => $montant]);
+  //     }
+  //   }
+  //   else {
+  //     if($typeecheance == 2){
+  //       $total = $sco + $frais1 + $frais2+ $frais3 + $frais4 + $arriere;
+  //       if($typemode == 2) {
+  //         $montantecheance = $total / $typeduree;
+  //         // Mettre à jour toutes les échéances avec ce montant
+  //         foreach ($modifiecheances as $echeance) {
+  //           // Mettre à jour la colonne APAYER avec le montant calculé
+  //           Echeance::where('NUMERO', $echeance->NUMERO)
+  //           ->update(['APAYER' => $montantecheance]);
+  //         }            
+  //       } else {
+  //         foreach ($modifiecheancc as $echeance) {
+  //             $montant_a_payer = ($type == 1) ? $echeance->APAYER : $echeance->APAYER2;
+
+  //             if ($montant_a_payer <= $total) {
+  //                 $total -= $montant_a_payer;
+  //                 Echeance::where('NUMERO', $echeance->NUMERO)
+  //                     ->update(['APAYER' => 0]);
+  //             } else {
+  //                 Echeance::where('NUMERO', $echeance->NUMERO)
+  //                     ->update(['APAYER' => $montant_a_payer - $total]);
+  //                 $total = 0; // Stopper une fois que le total est atteint
+  //                 break;
+  //             }
+  //         }
+  //       }
+  //     } else {
+  //       if($typemode == 2) {
+  //         $montantecheance = $sco / $typeduree;
+  //         // Mettre à jour toutes les échéances avec ce montant
+          
+  //         foreach ($modifiecheances as $echeance) {
+  //           // Mettre à jour la colonne APAYER avec le montant calculé
+  //           Echeance::where('NUMERO', $echeance->NUMERO)
+  //           ->update(['APAYER' => $montantecheance]);
+  //         }            
+  //       } else {
+          
+  //           foreach ($modifiecheancc as $echeance) {
+  //             $montant_a_payer = ($type == 1) ? $echeance->APAYER : $echeance->APAYER2;
+
+  //             if ($montant_a_payer <= $sco) {
+  //                 $sco -= $montant_a_payer;
+  //                 Echeance::where('NUMERO', $echeance->NUMERO)
+  //                     ->update(['APAYER' => 0]);
+  //             } else {
+  //                 Echeance::where('NUMERO', $echeance->NUMERO)
+  //                     ->update(['APAYER' => $montant_a_payer - $sco]);
+  //                 $sco = 0; // Stopper une fois que le total est atteint
+  //                 break;
+  //             }
+  //         }
+  //       }
+  //     }
+  //   }
+    
+  //   $modifiprofil->CodeReduction = $request->input('reduction');
+  //   $modifiprofil->APAYER = $request->input('sco');
+  //   $modifiprofil->FRAIS1 = $request->input('frais1');
+  //   $modifiprofil->FRAIS2 = $request->input('frais2');
+  //   $modifiprofil->FRAIS3 = $request->input('frais3');
+  //   $modifiprofil->FRAIS4 = $request->input('frais4');
+  //   $modifiprofil->ARRIERE = $request->input('arriere');
+  //   Echeance::where('NUMERO', 1)
+  //   ->update(['ARRIERE' => $arriere]);
+    
+  //   $modifiprofil->update();
+  //   return back()->with('status', 'Reduction modifier avec succes');
+    
+  // }
+
+
+//   public function modifieprofil(Request $request, $MATRICULE)
+// {
+//     $modifiprofil = Eleve::find($MATRICULE);
+
+//     $classe = $request->input('classe');
+//     $montantReductionTotal = $request->input('montant_total_reduction');
+
+//     // Mise à jour du profil de l'élève
+//     $modifiprofil->CodeReduction = $request->input('reduction');
+//     $modifiprofil->APAYER = $request->input('sco');
+//     $modifiprofil->FRAIS1 = $request->input('frais1');
+//     $modifiprofil->FRAIS2 = $request->input('frais2');
+//     $modifiprofil->FRAIS3 = $request->input('frais3');
+//     $modifiprofil->FRAIS4 = $request->input('frais4');
+//     $modifiprofil->ARRIERE = $request->input('arriere');
+//     $modifiprofil->update();
+
+//     // Mettre l'arriéré dans la première échéance
+//     Echeance::where('NUMERO', 1)
+//         ->where('MATRICULE', $MATRICULE)
+//         ->update(['ARRIERE' => $request->input('arriere')]);
+
+//     // Réduction simple sur toutes les échéances
+//     $echeances = Echeance::where('MATRICULE', $MATRICULE)
+//         ->orderBy('NUMERO', 'asc')
+//         ->get();
+//     //dd($echeances);
+//     $reductionRestante = $montantReductionTotal;
+
+//     foreach ($echeances as $echeance) {
+
+//     if ($reductionRestante <= 0) {
+//         break;
+//     }
+
+//     $montantInitial = $echeance->APAYER;
+  
+//     if ($reductionRestante >= $montantInitial) {
+//         $nouveauMontant = 0;
+//         $reductionRestante -= $montantInitial;
+//     } else {
+//         $nouveauMontant = $montantInitial - $reductionRestante;
+//         $reductionRestante = 0;
+//     }
+
+//     // ⚠ PAS DE $echeance->save() !
+//     Echeance::where('MATRICULE', $MATRICULE)
+//         ->where('NUMERO', $echeance->NUMERO)
+//         ->update([
+//             'APAYER' => $nouveauMontant
+//         ]);
+//     }
+
+//     return back()->with('status', 'Reduction modifiée avec succès');
+// }
+
+
+public function modifieprofil(Request $request, $MATRICULE)
+{
     $modifiprofil = Eleve::find($MATRICULE);
+
     $classe = $request->input('classe');
-    $typeechean = Classes::where('CODECLAS', $classe)->first();
-    $typeecheance = $typeechean->TYPEECHEANCIER;
-    $typeduree = $typeechean->DUREE;
-    
-    $type = $request->input('type');
-    $reduc = $request->input('reduction');
-    $modifiecheances = Echeance::where('MATRICULE', $MATRICULE)->orderBy('NUMERO', 'desc')->get();
-    $typemode = Reduction::where('CodeReduction', $reduc)->value('mode');
-    $sco = $request->input('sco');
-    $dure = $request->input('duree');
-    $frais1 =  $request->input('frais1');
-    $frais2 =  $request->input('frais2');
-    $frais3 =  $request->input('frais3');
-    $frais4 =  $request->input('frais4');
-    $arriere = $request->input('arriere');
-    $modifiecheancc = Echeancc::where('CODECLAS', $classe)->orderBy('NUMERO', 'desc')->get();
-    
-    if ($reduc == 0) {
-      foreach ($modifiecheancc as $echeancc) {
-        if ($type == 1) {
-          $montant = $echeancc->APAYER; // Utiliser la colonne APAYER si type est 1
-        } else {
-          $montant = $echeancc->APAYER2; // Utiliser la colonne APAYER2 si type est 2
-        }
-        Echeance::where('NUMERO', $echeancc->NUMERO)
-        ->update(['APAYER' => $montant]);
-      }
-    }
-    else {
-      if($typeecheance == 2){
-        $total = $sco + $frais1 + $frais2+ $frais3 + $frais4 + $arriere;
-        if($typemode == 2) {
-          $montantecheance = $total / $typeduree;
-          // Mettre à jour toutes les échéances avec ce montant
-          foreach ($modifiecheances as $echeance) {
-            // Mettre à jour la colonne APAYER avec le montant calculé
-            Echeance::where('NUMERO', $echeance->NUMERO)
-            ->update(['APAYER' => $montantecheance]);
-          }            
-        } else {
-          foreach ($modifiecheancc as $echeance) {
-              $montant_a_payer = ($type == 1) ? $echeance->APAYER : $echeance->APAYER2;
+    $montantReductionTotal = (int)$request->input('montant_total_reduction');
 
-              if ($montant_a_payer <= $total) {
-                  $total -= $montant_a_payer;
-                  Echeance::where('NUMERO', $echeance->NUMERO)
-                      ->update(['APAYER' => 0]);
-              } else {
-                  Echeance::where('NUMERO', $echeance->NUMERO)
-                      ->update(['APAYER' => $montant_a_payer - $total]);
-                  $total = 0; // Stopper une fois que le total est atteint
-                  break;
-              }
-          }
-        }
-      } else {
-        if($typemode == 2) {
-          $montantecheance = $sco / $typeduree;
-          // Mettre à jour toutes les échéances avec ce montant
-          
-          foreach ($modifiecheances as $echeance) {
-            // Mettre à jour la colonne APAYER avec le montant calculé
-            Echeance::where('NUMERO', $echeance->NUMERO)
-            ->update(['APAYER' => $montantecheance]);
-          }            
-        } else {
-          
-            foreach ($modifiecheancc as $echeance) {
-              $montant_a_payer = ($type == 1) ? $echeance->APAYER : $echeance->APAYER2;
-
-              if ($montant_a_payer <= $sco) {
-                  $sco -= $montant_a_payer;
-                  Echeance::where('NUMERO', $echeance->NUMERO)
-                      ->update(['APAYER' => 0]);
-              } else {
-                  Echeance::where('NUMERO', $echeance->NUMERO)
-                      ->update(['APAYER' => $montant_a_payer - $sco]);
-                  $sco = 0; // Stopper une fois que le total est atteint
-                  break;
-              }
-          }
-        }
-      }
-    }
-    
+    // Mise à jour du profil élève
     $modifiprofil->CodeReduction = $request->input('reduction');
     $modifiprofil->APAYER = $request->input('sco');
     $modifiprofil->FRAIS1 = $request->input('frais1');
@@ -450,13 +565,77 @@ class PagesController extends Controller
     $modifiprofil->FRAIS3 = $request->input('frais3');
     $modifiprofil->FRAIS4 = $request->input('frais4');
     $modifiprofil->ARRIERE = $request->input('arriere');
-    Echeance::where('NUMERO', 1)
-    ->update(['ARRIERE' => $arriere]);
-    
     $modifiprofil->update();
-    return back()->with('status', 'Reduction modifier avec succes');
-    
-  }
+
+
+    /*****************************************
+     * 1 RÉINITIALISER LES ÉCHÉANCES
+     *****************************************/
+    $echeancesAncien = EcheanceAncien::where('MATRICULE', $MATRICULE)
+        ->orderBy('NUMERO', 'asc')
+        ->get();
+
+    foreach ($echeancesAncien as $old) {
+        Echeance::where('MATRICULE', $MATRICULE)
+            ->where('NUMERO', $old->NUMERO)
+            ->update([
+                'APAYER' => $old->APAYER,
+                'ARRIERE' => $old->ARRIERE
+            ]);
+    }
+
+
+    /*****************************************
+     * 2 METTRE L'ARRIÉRÉ DANS L'ÉCHÉANCE N°1
+     *****************************************/
+    Echeance::where('MATRICULE', $MATRICULE)
+        ->where('NUMERO', 1)
+        ->update([
+            'ARRIERE' => $request->input('arriere')
+        ]);
+
+
+    /*****************************************
+     * 3 APPLIQUER LA NOUVELLE RÉDUCTION
+     *****************************************/
+   $echeances = EcheanceAncien::where('MATRICULE', $MATRICULE)
+        ->orderBy('NUMERO', 'asc')
+        ->get();
+        $reductionRestante = $montantReductionTotal;
+
+
+      foreach ($echeances as $echeance) {
+        if ($reductionRestante <= 0) break;
+
+        $montantInitial = $echeance->APAYER;
+
+        if ($reductionRestante >= $montantInitial) {
+            $nouveauMontant = 0;
+            $reductionRestante -= $montantInitial;
+        } else {
+            $nouveauMontant = $montantInitial - $reductionRestante;
+            $reductionRestante = 0;
+        }
+
+        // Mettre à jour via where
+        Echeance::where('MATRICULE', $MATRICULE)
+                ->where('NUMERO', $echeance->NUMERO)
+                ->update([
+                    'APAYER' => $nouveauMontant
+                ]);
+    }
+
+
+    return back()->with('status', 'Réduction modifiée avec succès');
+}
+
+
+
+
+
+
+
+
   public function modifieecheancier(Request $request, $MATRICULE) {
     $modifiprofil = Eleve::find($MATRICULE);
     $classe = $request->input('classe');
@@ -528,6 +707,8 @@ class PagesController extends Controller
     $modifiprofil->update();
     return back()->with('status', 'Reduction modifier avec succes');  
   }
+
+
   public function gestionarriere(){
     return view('pages.inscriptions.gestionarriere');
     
@@ -538,7 +719,8 @@ class PagesController extends Controller
   }
   
   public function logins(Request $request){
-    $account = User::where("login",$request->login_usercontrat)->first();
+    // $account = User::where("login",$request->login_usercontrat)->first();
+    $account = User::with('groupe')->where("login", $request->login_usercontrat)->first();
     
     if($account){
       if (Hash::check($request->password_usercontrat, $account->motdepasse)) {
@@ -2490,7 +2672,9 @@ public function eleveparclasseessai() {
       }
   
       $reduction->mode = $request->input('mode');
+      // dd ($reduction);
       $reduction->save();
+
   
       return back()->with('status', 'Profil de réduction créé avec succès.');
   }

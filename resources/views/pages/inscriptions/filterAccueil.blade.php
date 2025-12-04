@@ -491,9 +491,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <form id="deleteForm" method="POST">
+                    <form id="deleteForm" action="" method="POST">
                         @csrf
-                        @method('PUT')
+                        @method('DELETE')
                         <button type="submit" class="btn btn-danger">Supprimer</button>
                     </form>
                 </div>
@@ -501,23 +501,40 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+    <script src="{{ asset('assets/jquery-3.6.0.min.js') }}"></script>
 
     <!-- Scripts JavaScript à placer à la fin du body pour optimiser le chargement -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Gestion du modal de suppression
-            document.querySelectorAll('.delete-eleve').forEach(button => {
-                button.addEventListener('click', function() {
-                    const matricule = this.getAttribute('data-matricule');
-                    const nom = this.getAttribute('data-nom');
-                    const prenom = this.getAttribute('data-prenom');
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     // Gestion du modal de suppression
+        //     document.querySelectorAll('.delete-eleve').forEach(button => {
+        //         button.addEventListener('click', function() {
+        //             const matricule = this.getAttribute('data-matricule');
+        //             const nom = this.getAttribute('data-nom');
+        //             const prenom = this.getAttribute('data-prenom');
 
-                    document.getElementById('eleveName').textContent = `${nom} ${prenom}`;
-                    document.getElementById('deleteForm').action = `/eleves/${matricule}`;
-                });
+        //             document.getElementById('eleveName').textContent = `${nom} ${prenom}`;
+        //             document.getElementById('deleteForm').action = `/eleves/${matricule}`;
+        //         });
+        //     });
+        // });
+         $(document).ready(function() {
+            // Utiliser la délégation d'événements sur le body pour intercepter les clics sur les menus dynamiques
+    
+            $(document).on('click', '.delete-eleve', function () {
+                const matricule = $(this).data('matricule');
+                const nom = $(this).data('nom');
+                const prenom = $(this).data('prenom');
+
+                // Affiche le nom dans la modale
+                $('#eleveName').text(`${nom} ${prenom}`);
+
+                // Corrige l'URL du formulaire
+                $('#deleteForm').attr('action', `/eleves/${matricule}`);
             });
-        });
+
+        });
 
         function imprimerPage() {
             let originalTitle = document.title;

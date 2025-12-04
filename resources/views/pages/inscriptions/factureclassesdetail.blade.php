@@ -349,6 +349,7 @@
 
                     <!-- Tableaux des échéances pour les nouveaux et anciens élèves -->
                     <div class="row">
+
                         <div class="col-4">
                             <h5 style="margin-left:2rem;">Nouveaux élèves</h5>
                             <div class="table-responsive mb-4">
@@ -476,7 +477,8 @@
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="alertModalLabel">Message</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                                        aria-label="Close">
+                                    </button>
                                 </div>
                                 <div class="modal-body">
                                     <strong id="alertModalMessage"></strong>
@@ -523,13 +525,13 @@
 
         initialDatas.forEach(echeance => {
             const tr = document.createElement('tr');
-            tr.innerHTML = `
-            <td class="text-center">${echeance.NUMERO}</td>
-            <td class="text-center">${echeance.DATEOP}</td>
-            <td><input type="number" readonly class="form-control montant-nouveau" id="inputNou" value="${echeance.APAYER}" data-tranche-nouveau="${echeance.NUMERO}" /></td>
-        `;
+            tr.innerHTML =
+            `
+                <td class="text-center">${echeance.NUMERO}</td>
+                <td class="text-center">${echeance.DATEOP}</td>
+                <td><input type="number" readonly class="form-control montant-nouveau" id="inputNou" value="${echeance.APAYER}" data-tranche-nouveau="${echeance.NUMERO}" /></td>
+            `;
             tableBodys.appendChild(tr);
-
         });
 
 
@@ -548,11 +550,11 @@
         // });
 
         // Mise à jour des totaux dans le tableau
-        document.getElementById('totalMontantNouveauEleve').innerText = totalMontantNouveau;
+        document.getElementById('totalMontantNouveauEleve').innerText = totalMontantNouveau.toLocaleString('fr-FR');
         // document.getElementById('totalMontantAncienEleve').innerText = totalMontantAncien;
         // Mettre à jour les totaux dans le tfoot
 
-        document.getElementById('totalMontantNouveau').innerText = totalMontantNouveau;
+        document.getElementById('totalMontantNouveau').innerText = totalMontantNouveau.toLocaleString('fr-FR');
         // document.getElementById('totalMontantAncien').innerText = totalMontantAncien;
 
 
@@ -604,10 +606,10 @@
         });
 
         // Mise à jour des totaux dans le tableau
-        document.getElementById('totalMontantAncienEleve').innerText = totalMontantAncien;
+        document.getElementById('totalMontantAncienEleve').innerText = totalMontantAncien.toLocaleString('fr-FR');
         // Mettre à jour les totaux dans le tfoot
 
-        document.getElementById('totalMontantAncien').innerText = totalMontantAncien;
+        document.getElementById('totalMontantAncien').innerText = totalMontantAncien.toLocaleString('fr-FR');
 
 
         // Mise à jour des pourcentages dans le tableau des échéances

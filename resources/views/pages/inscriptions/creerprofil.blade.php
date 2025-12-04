@@ -181,7 +181,7 @@
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>               
                                                 </form>
                                             </div>
-                                            <div class="col-lg-4 d-none" id="percentage">
+                                            <div class="col-lg-4 d-none" id="percentage" style="margin-top: -3rem">
                                                 <br></br>
                                                 <br></br>
                                                 <h6 style="margin-top: 1rem">Calculateur de pourcentage de réduction</h6>

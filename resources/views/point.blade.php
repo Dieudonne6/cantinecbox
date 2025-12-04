@@ -199,16 +199,16 @@
                     <br>
                     
                     <div>
-                        <p><strong>Total à payer :</strong> <span style="float: right;">{{ $totalAPayer }}</span></p>
+                        <p><strong>Total à payer :</strong> <span style="float: right;">{{ number_format($totalAPayer, 0, ',', ' ') }}</span></p>
                         <p>Montant Total Payé<span style="float: right;">{{ number_format($totalPaye, 0, ',', ' ') }} F</span></p>
                         <p>Reste à payer<span style="float: right;">0</span></p>                
-                        <p>Arrièrés restants<span style="float: right;">{{ $arriereRestant }}</span></p>
-                        <p>Scolarité restants<span style="float: right;">{{ $scolariteRestant }}</span></p>
-                        <p>{{ $params->LIBELF1 }} restants<span style="float: right;">{{ $libelF1Restant }}</span></p>
-                        <p>{{ $params->LIBELF2 }} restants<span style="float: right;">{{ $libelF2Restant }}</span></p>
-                        <p>{{ $params->LIBELF3 }} restants<span style="float: right;">{{ $apeRestant }}</span></p>
-                        <p>{{ $params->LIBELF4 }} restants<span style="float: right;">{{ $libelF4Restant }}</span></p>
-                        <p style="margin-left: 3rem;"><strong>Total restant :</strong> <span style="float: right;">{{$resteAPayer}}</span></p>
+                        <p>Arrièrés restants<span style="float: right;">{{ number_format($arriereRestant, 0, ',', ' ') }}</span></p>
+                        <p>Scolarité restants<span style="float: right;">{{ number_format($scolariteRestant, 0, ',', ' ') }}</span></p>
+                        <p>{{ $params->LIBELF1 }} restants<span style="float: right;">{{ number_format($libelF1Restant, 0, ',', ' ') }}</span></p>
+                        <p>{{ $params->LIBELF2 }} restants<span style="float: right;">{{ number_format($libelF2Restant, 0, ',', ' ') }}</span></p>
+                        <p>{{ $params->LIBELF3 }} restants<span style="float: right;">{{ number_format($apeRestant, 0, ',', ' ') }}</span></p>
+                        <p>{{ $params->LIBELF4 }} restants<span style="float: right;">{{ number_format($libelF4Restant, 0, ',', ' ') }}</span></p>
+                        <p style="margin-left: 3rem;"><strong>Total restant :</strong> <span style="float: right;">{{number_format($resteAPayer, 0, ',', ' ')}}</span></p>
                     </div>
                     <br>
                     <p style="font-weight: 500; float: right; padding-bottom:5rem;">Signature, cachet</p>

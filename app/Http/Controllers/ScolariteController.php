@@ -13,6 +13,7 @@ use App\Models\Eleve;
 use App\Models\Params2;
 use App\Models\Echeancec;
 use App\Models\Echeance;
+use App\Models\EcheanceAncien;
 use App\Models\Reduction;
 use App\Models\Paramcontrat;
 
@@ -335,6 +336,7 @@ class ScolariteController extends Controller
           // dd($eleve->STATUTG);
             // Suppression des anciennes échéances de l'élève
             Echeance::where('MATRICULE', $eleve->MATRICULE)->delete();
+            EcheanceAncien::where('MATRICULE', $eleve->MATRICULE)->delete();
             $frais1 = $eleve->FRAIS1;
             $frais2 = $eleve->FRAIS2;
             $frais3 = $eleve->FRAIS3;
@@ -377,6 +379,15 @@ class ScolariteController extends Controller
                       'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
                       'anneeacademique' => $annescolaire,
                   ]);
+                  EcheanceAncien::create([
+                     'guid' => (string) Str::uuid(),
+                      'MATRICULE' => $eleve->MATRICULE,
+                      'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
+                      'APAYER' => $echeanceData['montant_nouveau'],
+                      'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
+                      'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
+                      'anneeacademique' => $annescolaire,
+                  ]);
                 }
     
               } else {
@@ -396,6 +407,15 @@ class ScolariteController extends Controller
                         $montantAPayer = 0; // Mettre 0 pour les autres lignes
                       }                  
                       Echeance::create([
+                      'guid' => (string) Str::uuid(),
+                      'MATRICULE' => $eleve->MATRICULE,
+                      'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
+                      'APAYER' => $echeanceData['montant_nouveau'],
+                      'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
+                      'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
+                      'anneeacademique' => $annescolaire,
+                  ]);
+                      EcheanceAncien::create([
                       'guid' => (string) Str::uuid(),
                       'MATRICULE' => $eleve->MATRICULE,
                       'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
@@ -431,6 +451,15 @@ class ScolariteController extends Controller
                       'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
                       'anneeacademique' => $annescolaire,
                   ]);
+                    EcheanceAncien::create([
+                       'guid' => (string) Str::uuid(),
+                      'MATRICULE' => $eleve->MATRICULE,
+                      'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
+                      'APAYER' => $echeanceData['montant_ancien'],
+                      'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
+                      'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
+                      'anneeacademique' => $annescolaire,
+                  ]);
                 }
     
               } else {
@@ -450,6 +479,15 @@ class ScolariteController extends Controller
                       $montantAPayer = 0; // Mettre 0 pour les autres lignes
                     }                  
                     Echeance::create([
+                      'guid' => (string) Str::uuid(),
+                      'MATRICULE' => $eleve->MATRICULE,
+                      'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances
+                      'APAYER' => $echeanceData['montant_ancien'],
+                      'ARRIERE' => $montantAPayer, // Tu peux ajouter ici la logique pour gérer les arriérés si nécessaire
+                      'DATEOP' => Carbon::createFromFormat('d/m/Y', $echeanceData['date_paiement'])->toDateString(), // Date spécifique de l'échéance,
+                      'anneeacademique' => $annescolaire,
+                  ]);
+                    EcheanceAncien::create([
                       'guid' => (string) Str::uuid(),
                       'MATRICULE' => $eleve->MATRICULE,
                       'NUMERO' => $echeanceData['tranche'], // Numérotation des échéances

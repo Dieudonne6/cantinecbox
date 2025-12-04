@@ -24,6 +24,12 @@ class User extends Authenticatable
         'login',
         'motdepasse',
     ];
+
+    public function groupe()
+    {
+        return $this->belongsTo(Groupe::class, 'nomgroupe', 'nomgroupe');
+    }
+
     
 
     /**

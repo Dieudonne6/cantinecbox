@@ -319,7 +319,9 @@ Route::delete('/promotions/{codePromo}', [GestionclasseController::class, 'destr
 
 //Acceuil - Route supprimée car doublon avec PagesController::Acceuil
  Route::get('/Acceuil', [GestionclasseController::class, 'indexEleves'])->name('Acceuil');
-Route::put('/eleves/{matricule}', [EleveController::class, 'destroy'])->name('eleves.destroy');
+//  Route::match(['get', 'post'], '/Acceuil', [GestionclasseController::class, 'indexEleves'])->name('Acceuil');
+// Route::put('/eleves/{matricule}', [EleveController::class, 'destroy'])->name('eleves.destroy');
+Route::delete('/eleves/{matricule}', [EleveController::class, 'destroy'])->name('eleves.destroy');
 
 //Series
 Route::get('/series', [GestionclasseController::class, 'series']);

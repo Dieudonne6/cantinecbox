@@ -51,5 +51,6 @@ class Users extends Model
     {
         return $this->prenomuser . ' ' . $this->nomuser;
     }
+
 }
 
