@@ -79,15 +79,15 @@
                                     <input type="hidden" name="duree" value="{{ $elev->classe->DUREE }}">
                                     <h5>Changement de profil</h5>
                                     <div class="mb-2">
-                                        <input type="" class="form-control" id="nom" placeholder=""
+                                        <input type="" class="form-control" id="nom" placeholder="" style="border: none;"
                                             value="{{ $eleve->NOM }}" readonly>
                                     </div>
                                     <div class="mb-2">
-                                        <input type="" class="form-control" id="prenom" placeholder=""
+                                        <input type="" class="form-control" id="prenom" placeholder="" style="border: none;"
                                             value="{{ $eleve->PRENOM }}" readonly>
                                     </div>
                                     <div class="mb-2">
-                                        <input type="" class="form-control" id="classe" placeholder=""
+                                        <input type="" class="form-control" id="classe" placeholder="" style="border: none;"
                                             name="classe" value="{{ $eleve->CODECLAS }}" readonly>
                                     </div>
                                     <div class="mb-2">
