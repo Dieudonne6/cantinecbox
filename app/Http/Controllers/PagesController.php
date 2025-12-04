@@ -575,15 +575,21 @@ public function modifieprofil(Request $request, $MATRICULE)
         ->orderBy('NUMERO', 'asc')
         ->get();
 
+        
+    Echeance::where('MATRICULE', $MATRICULE)->delete();
+
     foreach ($echeancesAncien as $old) {
-        Echeance::where('MATRICULE', $MATRICULE)
-            ->where('NUMERO', $old->NUMERO)
-            ->update([
+        Echeance::insert([
+                'NUMERO' => $old->NUMERO,
+                'DATEOP' => $old->DATEOP,
+                'anneeacademique' => $old->anneeacademique,
+                'MATRICULE' => $MATRICULE,
                 'APAYER' => $old->APAYER,
                 'ARRIERE' => $old->ARRIERE
             ]);
     }
 
+    // dd($echeancesAncien);
 
     /*****************************************
      * 2 METTRE L'ARRIÉRÉ DANS L'ÉCHÉANCE N°1

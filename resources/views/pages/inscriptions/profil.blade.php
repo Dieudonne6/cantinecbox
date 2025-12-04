@@ -378,7 +378,7 @@
                                                                         data-bs-dismiss="modal">Fermer</button>
                                                                 </form>
                                                             </div>
-                                                            <div class="col-lg-4 d-none" id="percentage" style="margin-top: -3rem">
+                                                            <div class="col-lg-4 d-none" id="percentage" style="margin-top: -2.4rem; background-color:rgb(207, 204, 204) !important;">
                                                                 <br></br>
                                                                 <br></br>
                                                                 <h6 style="margin-top: 1rem">Calculateur de pourcentage de
@@ -438,8 +438,8 @@
                                                                                 id="apresFrais4" placeholder="0">
                                                                         </div>
                                                                     </div>
-                                                                    <div class="my-4 col-lg-12">
-                                                                        <button type="button" class="btn btn-secondary"
+                                                                    <div class="my-4 col-lg-12" style="">
+                                                                        <button type="button" class="btn btn-secondary" style=" margin-left: 25%; margin-right: 25%;"
                                                                             id="closecalculate">Fermer le
                                                                             calculateur</button>
                                                                     </div>
