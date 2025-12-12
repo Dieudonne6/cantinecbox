@@ -8,6 +8,9 @@ use App\Models\Typeclasse;
 use App\Models\Serie;
 use App\Models\Promo;
 use App\Models\Typeenseigne;
+use App\Models\Matiere;
+use App\Models\Agent;
+use App\Models\Cours;
 
 
 class Classes extends Model
@@ -31,5 +34,21 @@ class Classes extends Model
     public function eleves()
     {
         return $this->hasMany(Eleve::class, 'CODECLAS', 'CODECLAS');
+    }
+
+    public function matieres()
+    {
+        return $this->belongsToMany(Matiere::class, 'clasmat', 'CODECLAS', 'CODEMAT');
+    }
+
+    public function agent()
+    {
+        // Relation many-to-many avec la table pivot 'agent_classe'
+        return $this->hasMany(Agent::class, 'agent', 'CODECLAS', 'MATRICULE');
+    }
+
+    public function cours()
+    {
+        return $this->hasMany(Cours::class, 'CODECLAS', 'CODECLAS');
     }
 }

@@ -28,7 +28,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/vertical-layout-light/style.css') }}">
     <!-- endinject -->
     <link rel="shortcut icon" href="{{ asset('assets/images/logo_mini.png') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Font Awesome local -->
+    <link rel="stylesheet" href="{{ asset('assets/vendors/font-awesome-6/css/all.min.css') }}">
 
     <style>
         input::placeholder {
@@ -251,7 +252,6 @@ align-items: center;  */
     <script src="{{ asset('assets/js/todolist.js') }}"></script>
     <!-- endinject -->
     <!-- plugin js for this page -->
-    <script src="{{ asset('assets/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('assets/bootstrap.bundle.min.js') }}"></script>
 
     <script src="{{ asset('assets/vendors/typeahead.js/typeahead.bundle.min.js') }}"></script>
@@ -262,6 +262,102 @@ align-items: center;  */
 
     <script src="{{ asset('assets/js/typeahead.js') }}"></script>
     {{-- <script src="{{asset('assets/js/select2.js')}}"></script> --}}
+
+    <!-- Simple Collapse JavaScript (sans Bootstrap) -->
+<script>
+$(document).ready(function () {
+
+    // OUVRIR TOUS LES NIVEAUX DE MENUS AYANT UN LIEN ACTIF
+    $('.nav-link.active').each(function () {
+
+        // Ouvrir tous les collapse parents
+        $(this).parents('.collapse').each(function () {
+
+            $(this).addClass('show');
+
+            // Activer le lien parent (trigger)
+            $(this)
+                .prev('.nav-link')
+                .removeClass('collapsed')
+                .attr('aria-expanded', 'true');
+        });
+
+        // Ouvrir les sous-menus personnalisés
+        $(this).parents('.sub-menus').addClass('d-block');
+        $(this).parents('.menu-item-has-children').addClass('rotate-after');
+    });
+
+
+    // DATATABLE
+    $('#myTable').DataTable({
+        order: [[1, 'asc'], [2, 'asc']],
+        language: {
+            sProcessing: "Traitement en cours...",
+            sSearch: "Rechercher&nbsp;:",
+            sLengthMenu: "Afficher _MENU_ éléments",
+            sInfo: "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+            sInfoEmpty: "Affichage de 0 à 0 sur 0 entrées",
+            sInfoFiltered: "(filtré à partir de _MAX_ entrées au total)",
+            sLoadingRecords: "Chargement en cours...",
+            sZeroRecords: "Aucun résultat trouvé",
+            sEmptyTable: "Aucune donnée disponible dans le tableau",
+            oPaginate: {
+                sPrevious: "Précédent",
+                sNext: "Suivant"
+            }
+        }
+    });
+
+
+    // COPIER nomclasse → libclasse
+    $('#nomclasse').on('input', function () {
+        $('#libclasse').val($(this).val());
+    });
+
+    // PERSONNALISATION DES MENUS - EMPECHER FERMETURE PARENTS
+    $('.nav-link[data-bs-toggle="collapse"]').on('click', function(e) {
+        var $this = $(this);
+        var $target = $($this.attr('href'));
+        var isCurrentlyOpen = $target.hasClass('show');
+        
+        // Empêcher le comportement par défaut de Bootstrap
+        e.preventDefault();
+        
+        // Si le menu est déjà ouvert, le fermer
+        if (isCurrentlyOpen) {
+            $target.removeClass('show');
+            $this.addClass('collapsed').attr('aria-expanded', 'false');
+            $this.closest('.menu-item-has-children').removeClass('rotate-after');
+        } else {
+            // Ouvrir ce menu sans fermer les autres
+            $target.addClass('show');
+            $this.removeClass('collapsed').attr('aria-expanded', 'true');
+            $this.closest('.menu-item-has-children').addClass('rotate-after');
+        }
+    });
+    
+    // Empêcher la propagation du clic sur les liens sans data-bs-toggle
+    $('.nav-link:not([data-bs-toggle="collapse"])').on('click', function(e) {
+        // Laisser le lien fonctionner normalement mais ne pas affecter les menus
+        return true;
+    });
+    
+    // Gestion manuelle des sous-menus pour éviter la fermeture automatique
+    $('.collapse').on('show.bs.collapse', function(e) {
+        // Ne pas empêcher l'ouverture
+        e.stopPropagation();
+    }).on('hide.bs.collapse', function(e) {
+        // Vérifier si c'est une fermeture manuelle (via le clic sur le parent)
+        var $trigger = $(e.relatedTarget);
+        if (!$trigger.length || !$trigger.hasClass('nav-link')) {
+            // Si ce n'est pas une fermeture manuelle via le lien parent, l'empêcher
+            e.preventDefault();
+        }
+    });
+});
+</script>
+
+
 
 
     <script src="{{ asset('assets/dataTables.js') }}"></script>
@@ -805,9 +901,10 @@ $('#Filtercycle').on('change', function() {
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   const select = document.getElementById('promoSelect');
-
-  select.addEventListener('change', function(){
-    const promo = this.value;
+  
+  if (select) { // Vérifier si l'élément existe avant d'ajouter l'écouteur
+    select.addEventListener('change', function(){
+      const promo = this.value;
     // Appel AJAX
     fetch(`/decisions/config/${promo}`)
       .then(resp => {
@@ -845,11 +942,60 @@ document.addEventListener('DOMContentLoaded', function(){
           }
         });
       });
-  });
+    });
+  }
 });
 
 </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    const select = document.getElementById('promoSelect');
+  
+    if (select) { 
+      select.addEventListener('change', function(){
+        const promo = this.value;
+      // Appel AJAX
+      fetch(`/decisions/config/${promo}`)
+        .then(resp => {
+          if (resp.status === 204) return null;
+          if (!resp.ok) throw new Error('Erreur réseau');
+          return resp.json();
+        })
+        .then(data => {
+          ['non','doublant'].forEach(type => {
+            for (let i = 1; i <= 5; i++) {
+              const base = `intervals[${type}][${i}]`;
+              const minEl     = document.querySelector(`[name="${base}[min]"]`);
+              const maxEl     = document.querySelector(`[name="${base}[max]"]`);
+              const libelleEl = document.querySelector(`[name="${base}[libelle]"]`);
+              if (data && data[type] && data[type][i]) {
+                minEl.value     = data[type][i].min;
+                maxEl.value     = data[type][i].max;
+                libelleEl.value = data[type][i].libelle;
+              } else {
+                minEl.value = '';
+                maxEl.value = '';
+                libelleEl.value = '';
+              }
+            }
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          // en cas d'erreur, vider les champs
+          ['non','doublant'].forEach(type => {
+            for (let i = 1; i <= 5; i++) {
+              document.querySelector(`[name="intervals[${type}][${i}][min]"]`).value = '';
+              document.querySelector(`[name="intervals[${type}][${i}][max]"]`).value = '';
+              document.querySelector(`[name="intervals[${type}][${i}][libelle]"]`).value = '';
+            }
+          });
+        });
+      });
+    }
+  });
+</script>
 
 {{-- Mode lecture seule --}}
 @if(!empty($pagePermission['isReadOnly']) && $pagePermission['isReadOnly'])
@@ -927,6 +1073,7 @@ document.addEventListener('DOMContentLoaded', function(){
 @endif
 
 
+    @stack('scripts')
 </body>
 
 </html>

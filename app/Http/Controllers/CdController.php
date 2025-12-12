@@ -172,6 +172,8 @@ public function saisirnotefilter(Request $request)
         ->orderBy('NOM')
         ->get();
 
+        // dd($matieres);
+
     return view('pages.notes.saisirnotefilter', compact(
         'classes','eleves','gclasses','matieres','classe','matiere','getClasmat'
     ));
