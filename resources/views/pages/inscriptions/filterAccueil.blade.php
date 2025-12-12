@@ -391,7 +391,13 @@
                                         @endphp
 
                                         <td>{{ $dateFormatted }}</td>
-                                        <td>{{ $eleve->LIEUNAIS }}</td>
+                                        <td>
+                                            @if ($eleve->LIEUNAIS === 'NULL')
+                                                
+                                            @else
+                                                {{ $eleve->LIEUNAIS }}
+                                            @endif
+                                        </td>
                                         <td class="hide-printe">
                                             <div class="d-flex align-items-center">
                                                 <a href="/pagedetail/{{ $eleve->MATRICULE }}"

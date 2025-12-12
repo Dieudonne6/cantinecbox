@@ -605,7 +605,7 @@ public function modifieprofil(Request $request, $MATRICULE)
      * 3 APPLIQUER LA NOUVELLE RÉDUCTION
      *****************************************/
    $echeances = EcheanceAncien::where('MATRICULE', $MATRICULE)
-        ->orderBy('NUMERO', 'asc')
+        ->orderBy('NUMERO', 'desc')
         ->get();
         $reductionRestante = $montantReductionTotal;
 
