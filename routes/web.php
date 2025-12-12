@@ -120,6 +120,12 @@ Route::put('/modifieprofil/{MATRICULE}', [PagesController::class, 'modifieprofil
 Route::put('/modifieecheancier/{MATRICULE}', [PagesController::class, 'modifieecheancier']);
 
 
+// Routes pour le transfert d'élèves
+Route::get('classes/transfert', [ClassesController::class, 'afficherFormulaireTransfert'])->name('classes.formulaire-transfert');
+Route::post('classes/transferer-eleves', [ClassesController::class, 'transfererEleves'])->name('classes.transferer-eleves');
+Route::post('/classes/update-codeclas', [ClassesController::class, 'updateCodeclas'])->name('classes.update-codeclas');
+Route::get('api/eleves-par-classe/{code}', [ClassesController::class, 'getElevesParClasse'])->name('api.eleves.par.classe');
+
 Route::get('/profil/{MATRICULE}', [PagesController::class, 'profil'])->name('profil');
 
 Route::get('/typesclasses', [PagesController::class, 'typesclasses']);
@@ -685,8 +691,16 @@ Route::delete('/gestion-salles/delete', [EmploidutempsController::class, 'delete
 Route::post('/gestion-salles/toggle-volante', [EmploidutempsController::class, 'toggleVolante'])->name('gestion.salles.toggleVolante');
 
 Route::get('/saisiremploitemps', [EmploidutempsController::class, 'saisiremploitemps'])->name('saisiremploitemps');
+Route::get('/get-classes-by-groupe', [EmploidutempsController::class, 'getClassesByGroupe'])->name('get.classes.by.groupe');
+Route::post('/store-cours', [EmploidutempsController::class, 'storeCours'])->name('store.cours');
+Route::get('/get-emploi-temps', [EmploidutempsController::class, 'getEmploiTemps'])->name('get.emploi.temps');
+
+Route::get('/api/classes/{codeClasse}/eleves', [App\Http\Controllers\ClassesController::class, 'getElevesParClasse']);
+
 Route::get('/emploidutempsautomatique', [EmploidutempsController::class, 'emploidutempsautomatique'])->name('emploidutempsautomatique');
 Route::get('/configquotahoraires', [EmploidutempsController::class, 'configquotahoraires'])->name('configquotahoraires');
+Route::get('/emploidutempsgeneral', [EmploidutempsController::class, 'general'])->name('emploidutempsgeneral');
+Route::get('/emploidutempsgeneral/excel', [EmploidutempsController::class, 'exportExcel'])->name('emploidutempsgeneral.excel');
 
 //route pour le point des payements
 Route::get('/point', [PointController::class, 'index'])->name('point');

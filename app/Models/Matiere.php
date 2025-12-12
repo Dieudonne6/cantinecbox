@@ -9,6 +9,7 @@ class Matiere extends Model
 {
     use HasFactory;
     protected $table = 'matieres';
+    protected $primaryKey = 'CODEMAT';
     public $timestamps = false;
 
     public function notes()

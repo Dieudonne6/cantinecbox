@@ -33,6 +33,16 @@
                         </li>
                         @endcanAccess
 
+                        <!-- SOUS-MENU: Transfert -->
+                        @canAccess('classes.formulaire-transfert')
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->is('classes/transfert') || request()->routeIs('classes.formulaire-transfert') ? 'active' : '' }}"
+                                href="{{ route('classes.formulaire-transfert') }}">
+                                Transfert d'élèves
+                            </a>
+                        </li>
+                        @endcanAccess
+
                         @if(canAccess('typesclasses') || canAccess('series') || canAccess('promotions') || canAccess('tabledesclasses') || canAccess('groupes'))
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('typesclasses*') || request()->is('series*') || request()->is('promotions*') || request()->is('groupes*') || in_array(request()->route()->getName(), $routesClass) ? 'active' : '' }}"

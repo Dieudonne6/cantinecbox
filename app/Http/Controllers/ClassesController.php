@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Eleve;
 use App\Models\Classes;
 use App\Models\Contrat;
+use App\Models\Notes;
+use App\Models\Echeancc;
+use App\Models\Echeancec;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Typeenseigne;
 use App\Models\Paramcontrat;
 use App\Models\Duplicatafacture;
@@ -5616,8 +5620,151 @@ public function filterlisteselectiveeleve(Request $request)
     //     // Utiliser l'ID de l'élève pour effectuer des opérations dans votre contrôleur
     //     // Par exemple, charger les détails de l'élève à partir de la base de données
 
-        // fin facture normalisee pour tous les paiements de l'annee 2023_2024                     
-                         
+        // fin facture normalisee pour tous les paiements de l'annee 2023_2024
+
+    /**
+     * Affiche le formulaire de transfert d'élèves entre classes
+     */
+    public function afficherFormulaireTransfert()
+    {
+        $classes = Classes::orderBy('LIBELCLAS', 'asc')->get();
+        $eleves = Eleve::orderBy('NOM', 'asc')->get(['MATRICULE', 'NOM', 'PRENOM', 'DATENAIS', 'CODECLAS']);
+        $elevesParClasse = $eleves->groupBy('CODECLAS');
+
+        return view('pages.classes.transfert', compact('classes', 'elevesParClasse'));
+    }
+
+    /**
+     * Traite le transfert d'élèves entre classes.
+     */
+    public function transfererEleves(Request $request)
+    {
+        $validated = $request->validate([
+            'classe_source' => 'required|string|exists:classes,CODECLAS',
+            'classe_destination' => 'required|string|exists:classes,CODECLAS|different:classe_source',
+            'eleves' => 'required|array|min:1',
+            'eleves.*' => 'required|string|exists:eleve,MATRICULE',
+        ]);
+
+        $classeSourceCode = $validated['classe_source'];
+        $classeDestinationCode = $validated['classe_destination'];
+        $elevesATransferer = $validated['eleves'];
+
+        DB::beginTransaction();
+        try {
+            // 0. Compter les élèves AVANT la mise à jour pour déterminer si c'est un transfert complet
+            $totalElevesAncienneClasse = Eleve::where('CODECLAS', $classeSourceCode)->count();
+            
+            // 1. Mettre à jour la classe principale des élèves
+            $updatedCount = Eleve::whereIn('MATRICULE', $elevesATransferer)
+                                 ->where('CODECLAS', $classeSourceCode)
+                                 ->update(['CODECLAS' => $classeDestinationCode]);
+            
+            // 2. Mettre à jour les tables liées qui dépendent de l'élève ET de la classe
+            $this->mettreAJourTablesLiees($elevesATransferer, $classeSourceCode, $classeDestinationCode, $totalElevesAncienneClasse);
+
+            DB::commit();
+            return back()->with('success', "{$updatedCount} élève(s) ont été transféré(s) avec succès de la classe {$classeSourceCode} vers {$classeDestinationCode}.");
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Erreur lors du transfert des élèves: " . $e->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors du transfert. Veuillez consulter les logs pour plus de détails.');
+        }
+    }
+
+    /**
+     * Met à jour les tables liées pour les élèves transférés.
+     */
+    private function mettreAJourTablesLiees(array $elevesMatricules, string $ancienneClasse, string $nouvelleClasse, int $totalElevesAncienneClasse = null)
+    {
+        // Tables où la mise à jour se base sur MATRICULE et CODECLAS (logique de transfert partiel)
+        $tablesLiees = [
+            'notes' => ['MATRICULE', 'CODECLAS'],
+            'cours' => ['MATRICULE', 'CODECLAS'],
+            // Ajoutez ici d'autres tables qui ont à la fois MATRICULE et CODECLAS
+        ];
+
+        foreach ($tablesLiees as $table => $colonnes) {
+            $colMatricule = $colonnes[0];
+            $colClasse = $colonnes[1];
+
+            if (Schema::hasTable($table) && Schema::hasColumn($table, $colMatricule) && Schema::hasColumn($table, $colClasse)) {
+                DB::table($table)
+                    ->whereIn($colMatricule, $elevesMatricules)
+                    ->where($colClasse, $ancienneClasse)
+                    ->update([$colClasse => $nouvelleClasse]);
+            }
+        }
+
+        // Tables globales de la classe : uniquement si tous les élèves sont transférés (transfert complet)
+        // Utiliser le total passé en paramètre ou le recalculer si non fourni
+        if ($totalElevesAncienneClasse === null) {
+            $totalElevesAncienneClasse = Eleve::where('CODECLAS', $ancienneClasse)->count();
+        }
         
+        $elevesTransfetes = count($elevesMatricules);
+        
+        // dd([
+        //     'debug_transfert' => [
+        //         'ancienne_classe' => $ancienneClasse,
+        //         'nouvelle_classe' => $nouvelleClasse,
+        //         'total_eleves_ancienne_classe' => $totalElevesAncienneClasse,
+        //         'eleves_transfetes' => $elevesTransfetes,
+        //         'est_transfert_complet' => ($totalElevesAncienneClasse > 0 && $elevesTransfetes >= $totalElevesAncienneClasse),
+        //         'table_echeancc_existe' => Schema::hasTable('echeancc'),
+        //         'colonne_codeclas_existe' => Schema::hasColumn('echeancc', 'CODECLAS')
+        //     ]
+        // ]);
+        
+        // CRÉATION DES ASSOCIATIONS CLASSE-MATIÈRE pour la nouvelle classe
+        // Récupérer les associations de l'ancienne classe
+        $ancienClasmats = DB::table('clasmat')
+            ->where('CODECLAS', $ancienneClasse)
+            ->get();
+            
+        foreach ($ancienClasmats as $clasmat) {
+            // Vérifier si l'association existe déjà dans la nouvelle classe
+            $existante = DB::table('clasmat')
+                ->where('CODECLAS', $nouvelleClasse)
+                ->where('CODEMAT', $clasmat->CODEMAT)
+                ->first();
+                
+            if (!$existante) {
+                // Créer l'association pour la nouvelle classe (sans la colonne NATURE)
+                DB::table('clasmat')->insert([
+                    'CODECLAS' => $nouvelleClasse,
+                    'CODEMAT' => $clasmat->CODEMAT,
+                    'COEF' => $clasmat->COEF,
+                    // Ajoutez d'autres colonnes si nécessaire
+                ]);
+            }
+        }
+        
+        if ($totalElevesAncienneClasse > 0 && $elevesTransfetes >= $totalElevesAncienneClasse) {
+            // Transfert complet : mettre à jour toutes les associations de la classe
+            $tablesCodeclasSeul = [
+                'rapports' => 'CODECLAS',
+                'echeancc' => 'CODECLAS',
+                'agent_classe' => 'CODECLAS',
+            ];
+
+            foreach ($tablesCodeclasSeul as $table => $column) {
+                if (Schema::hasTable($table) && Schema::hasColumn($table, $column)) {
+                    try {
+                        $affectedRows = DB::table($table)->where($column, $ancienneClasse)->update([$column => $nouvelleClasse]);
+                        Log::info("Table {$table} : {$affectedRows} lignes mises à jour de {$ancienneClasse} vers {$nouvelleClasse}");
+                    } catch (\Exception $e) {
+                        Log::error("Erreur lors de la mise à jour de la table {$table} : " . $e->getMessage());
+                        // Continuer avec les autres tables même si celle-ci échoue
+                    }
+                }
+            }
+            
+            Log::info("Transfert complet de la classe {$ancienneClasse} vers {$nouvelleClasse} : mise à jour des tables globales");
+        } else {
+            Log::info("Transfert partiel : {$elevesTransfetes}/{$totalElevesAncienneClasse} élèves transférés de {$ancienneClasse} vers {$nouvelleClasse}");
+        }
+    }
 
 }

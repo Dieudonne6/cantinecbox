@@ -15,18 +15,18 @@
                     <div class="d-flex align-items-center mb-2">
                         <label for="groupe" class="form-label me-2" style="width: 160px;">Sélectionner un groupe</label>
                         <select id="groupe" class="form-select form-select-sm" style="width: 180px;">
-                            <option selected>Choisir...</option>
+                            <option value="">Choisir...</option>
                                 @foreach ($classesg as $classeg)
-                                    <option value="{{ $classeg->LibelleGroupe }}" 
-                                        {{ $classeg->LibelleGroupe == 'Ens. General' ? 'selected' : '' }}>
+                                    <option value="{{ $classeg->LibelleGroupe }}">
                                         {{ $classeg->LibelleGroupe }}</option>
                                 @endforeach
                         </select>
                     </div>
 
+
                     <!-- Table des classes -->
                     <div class="mt-3">
-                        <label class="form-label" style="font-weight: bold;">Table des classes</label>
+                        <label class="form-label" style="font-weight: bold;">Classes disponibles</label>
                         <div class="table-container" style="height: 300px; overflow-y: auto; border: 2px solid #000; background-color: #E0F7FA;">
                             <table class="table table-striped table-sm mb-0" style="border-collapse: collapse; width: 100%;">
                                 <thead>
@@ -39,11 +39,9 @@
                                     </tr>
                                 </thead>
                                 <tbody id="classesTableBody">
-                                    @foreach($classes as $classe)
                                     <tr>
-                                        <td style="padding: 5px;">{{ $classe->CODECLAS }}</td>
+                                        <td style="padding: 5px; text-align: center; color: #666;">Sélectionnez un groupe pour voir les classes</td>
                                     </tr>
-                                    @endforeach
                                 </tbody>                                
                             </table>
                         </div>
@@ -51,7 +49,7 @@
                 </div>
 
                 <!-- Colonne droite : Jour, Matière, Plage horaire, Salle, Professeur -->
-                <div class="col-md-7">
+                <div class="col-md-7" id="rightColumn" style="opacity: 0.5; pointer-events: none;">
                     <!-- Sélectionner un jour -->
                     <div class="d-flex align-items-center mb-3">
                         <label for="jour" class="form-label me-2" style="width: 160px;">Sélectionner un jour</label>
@@ -135,10 +133,13 @@
                         </select>
                     </div>
 
-                    <!-- Bouton Enregistrer -->
+                    <!-- Boutons Enregistrer et Voir l'emploi du temps -->
                     <div class="d-flex justify-content-center mt-4">
-                        <button type="button" class="btn btn-success btn-sm" style="width: 120px; font-weight: bold; background-color: #B2EBF2; color: #000; border: 1px solid #000;">
-                            Enregistrer
+                        <button type="button" id="btnEnregistrer" class="btn btn-success btn-sm me-2" disabled style="width: 140px; font-weight: bold; background-color: #B2EBF2; color: #000; border: 1px solid #000;">
+                            <i class="fas fa-save me-1"></i> Enregistrer
+                        </button>
+                        <button type="button" id="btnVoirEmploi" class="btn btn-info btn-sm" disabled style="width: 180px; font-weight: bold; background-color: #FFE082; color: #000; border: 1px solid #000;">
+                            <i class="fas fa-calendar-alt me-1"></i> Voir l'emploi du temps
                         </button>
                     </div>
                 </div>
@@ -147,37 +148,209 @@
     </div>
 </div>
 
-<!-- Scripts JS pour ajouter/supprimer des lignes -->
+<!-- Scripts JS pour la sélection en cascade et gestion des formulaires -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Ajouter une nouvelle ligne
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('add-row') || e.target.closest('.add-row')) {
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td style="padding: 5px;"><input type="text" class="form-control form-control-sm" style="border: none; background: transparent;"></td>
-                <td style="padding: 5px; text-align: center;">
-                    <button type="button" class="btn btn-sm btn-success add-row" title="Ajouter une ligne">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                    <button type="button" class="btn btn-sm btn-danger remove-row" title="Supprimer la ligne">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            `;
-            document.getElementById('classesTableBody').appendChild(newRow);
+    const groupeSelect = document.getElementById('groupe');
+    const classesTableBody = document.getElementById('classesTableBody');
+    const rightColumn = document.getElementById('rightColumn');
+    const btnEnregistrer = document.getElementById('btnEnregistrer');
+    const btnVoirEmploi = document.getElementById('btnVoirEmploi');
+    
+    // Variables pour stocker l'état
+    let selectedGroupe = '';
+    let selectedClasse = '';
+    let availableClasses = [];
+
+    // Fonction pour activer/désactiver la colonne droite
+    function toggleRightColumn(enable) {
+        if (enable) {
+            rightColumn.style.opacity = '1';
+            rightColumn.style.pointerEvents = 'auto';
+            btnEnregistrer.disabled = false;
+            btnVoirEmploi.disabled = false;
+        } else {
+            rightColumn.style.opacity = '0.5';
+            rightColumn.style.pointerEvents = 'none';
+            btnEnregistrer.disabled = true;
+            btnVoirEmploi.disabled = true;
         }
+    }
+
+    // Fonction pour mettre à jour le tableau des classes
+    function updateClassesTable(classes) {
+        classesTableBody.innerHTML = '';
         
-        // Supprimer une ligne
-        if (e.target.classList.contains('remove-row') || e.target.closest('.remove-row')) {
-            const row = e.target.closest('tr');
-            if (document.querySelectorAll('#classesTableBody tr').length > 1) {
-                row.remove();
+        if (classes.length === 0) {
+            classesTableBody.innerHTML = '<tr><td style="padding: 5px; text-align: center; color: #666;">Aucune classe trouvée pour ce groupe</td></tr>';
+            return;
+        }
+
+        classes.forEach(function(classe) {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td style="padding: 5px; cursor: pointer;" data-classe="${classe.CODECLAS}">${classe.CODECLAS}</td>`;
+            
+            // Ajouter un événement de clic pour sélectionner la classe
+            row.addEventListener('click', function() {
+                // Retirer la sélection précédente
+                document.querySelectorAll('#classesTableBody tr').forEach(tr => {
+                    tr.style.backgroundColor = '';
+                    tr.style.fontWeight = '';
+                });
+                
+                // Appliquer la nouvelle sélection
+                row.style.backgroundColor = '#007bff';
+                row.style.color = 'white';
+                row.style.fontWeight = 'bold';
+                
+                // Mettre à jour la classe sélectionnée
+                selectedClasse = classe.CODECLAS;
+                
+                // Activer la colonne droite
+                toggleRightColumn(true);
+            });
+            
+            classesTableBody.appendChild(row);
+        });
+    }
+
+    // Fonction pour charger les classes par groupe
+    function loadClassesByGroupe(libelleGroupe) {
+        if (!libelleGroupe) {
+            classesTableBody.innerHTML = '<tr><td style="padding: 5px; text-align: center; color: #666;">Sélectionnez un groupe pour voir les classes</td></tr>';
+            toggleRightColumn(false);
+            return;
+        }
+
+        // Afficher un message de chargement
+        classesTableBody.innerHTML = '<tr><td style="padding: 5px; text-align: center; color: #666;">Chargement des classes...</td></tr>';
+        
+        // Faire la requête AJAX
+        fetch(`{{ route('get.classes.by.groupe') }}?groupe=${encodeURIComponent(libelleGroupe)}`)
+            .then(response => response.json())
+            .then(data => {
+                availableClasses = data;
+                
+                // Mettre à jour le tableau
+                updateClassesTable(data);
+                
+                // Réinitialiser la sélection
+                selectedClasse = '';
+                toggleRightColumn(false);
+            })
+            .catch(error => {
+                console.error('Erreur lors du chargement des classes:', error);
+                classesTableBody.innerHTML = '<tr><td style="padding: 5px; text-align: center; color: #ff0000;">Erreur lors du chargement des classes</td></tr>';
+                toggleRightColumn(false);
+            });
+    }
+
+    // Événement de changement de groupe
+    groupeSelect.addEventListener('change', function() {
+        selectedGroupe = this.value;
+        loadClassesByGroupe(selectedGroupe);
+    });
+
+    // Fonction pour enregistrer le cours
+    function enregistrerCours() {
+        // Récupérer toutes les valeurs du formulaire
+        const jour = document.getElementById('jour').value;
+        const matiere = document.getElementById('matiere').value;
+        const heureDebut = document.getElementById('heureDebut').value;
+        const heureFin = document.getElementById('heureFin').value;
+        const salle = document.getElementById('salle').value;
+        const professeur = document.getElementById('professeur').value;
+
+        // Validation côté client
+        if (!selectedClasse) {
+            alert('Veuillez sélectionner une classe.');
+            return;
+        }
+
+        if (!matiere) {
+            alert('Veuillez sélectionner une matière.');
+            return;
+        }
+
+        if (!salle) {
+            alert('Veuillez sélectionner une salle.');
+            return;
+        }
+
+        if (!professeur || professeur === 'Choisir...') {
+            alert('Veuillez sélectionner un professeur.');
+            return;
+        }
+
+        // Désactiver le bouton pendant l'enregistrement
+        btnEnregistrer.disabled = true;
+        btnEnregistrer.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Enregistrement...';
+
+        // Préparer les données pour FormData (plus compatible avec Laravel)
+        const formData = new FormData();
+        formData.append('classe', selectedClasse);
+        formData.append('jour', jour);
+        formData.append('matiere', matiere);
+        formData.append('heureDebut', heureDebut);
+        formData.append('heureFin', heureFin);
+        formData.append('salle', salle);
+        formData.append('professeur', professeur);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        // Envoyer la requête AJAX
+        fetch('{{ route("store.cours") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Cours enregistré avec succès !');
+                
+                // Réinitialiser le formulaire
+                document.getElementById('matiere').value = '';
+                document.getElementById('salle').value = '';
+                document.getElementById('professeur').value = 'Choisir...';
+                
+                // Optionnel : recharger les données ou mettre à jour l'affichage
+                console.log('Cours créé:', data.data);
             } else {
-                alert('Vous ne pouvez pas supprimer la dernière ligne.');
+                alert('Erreur: ' + data.message);
+                if (data.errors) {
+                    console.error('Erreurs de validation:', data.errors);
+                }
             }
+        })
+        .catch(error => {
+            console.error('Erreur lors de l\'enregistrement:', error);
+            alert('Erreur lors de l\'enregistrement du cours. Veuillez réessayer.');
+        })
+        .finally(() => {
+            // Réactiver le bouton
+            btnEnregistrer.disabled = false;
+            btnEnregistrer.innerHTML = '<i class="fas fa-save me-1"></i> Enregistrer';
+        });
+    }
+
+    // Événement de clic sur le bouton Enregistrer
+    btnEnregistrer.addEventListener('click', enregistrerCours);
+
+    // Événement de clic sur le bouton Voir l'emploi du temps
+    btnVoirEmploi.addEventListener('click', function() {
+        if (selectedClasse) {
+            // Rediriger vers la page d'emploi du temps général avec la classe sélectionnée
+            window.location.href = '{{ route("emploidutempsgeneral") }}?classe=' + encodeURIComponent(selectedClasse);
+        } else {
+            alert('Veuillez sélectionner une classe.');
         }
     });
+
+    // Initialiser l'état
+    toggleRightColumn(false);
 });
 </script>
 
