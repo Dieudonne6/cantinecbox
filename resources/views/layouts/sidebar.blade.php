@@ -1,5 +1,5 @@
 <div id="parent-accordion">
-    <nav class="sidebar sidebar-offcanvas" id="sidebar" style="max-width: 255px;">
+    <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
             @php
                 $routesAccueil = ['Acceuil', 'inscrireeleve', 'modifiereleve', 'paiementeleve', 'majpaiementeleve', 'echeancier', 'profil', 'pagedetail'];

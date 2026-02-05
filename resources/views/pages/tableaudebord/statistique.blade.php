@@ -1,6 +1,53 @@
 @extends('layouts.master')
 @section('content')
 
+<style>
+    /* Responsive styles */
+    @media (max-width: 1200px) {
+        .col-lg-5, .col-lg-6 {
+            margin-bottom: 1rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .col-lg-5, .col-lg-6, .col-5 {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+        }
+        
+        .btn {
+            font-size: 0.9rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .card-body {
+            padding: 0.75rem;
+        }
+        
+        .card-title {
+            font-size: 0.9rem;
+        }
+        
+        .table-responsive {
+            font-size: 0.8rem;
+        }
+        
+        .btn {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+    }
+</style>
+
 <div class="row">
     <div class="col-lg-5 grid-margin stretch-card">
       <div class="card">

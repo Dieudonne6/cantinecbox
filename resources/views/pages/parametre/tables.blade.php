@@ -1,5 +1,74 @@
 @extends('layouts.master')
 @section('content')
+    <style>
+        /* Responsive styles */
+        @media (max-width: 1200px) {
+            .card {
+                margin: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .card {
+                margin: 0.25rem;
+            }
+            
+            .card-header {
+                padding: 0.75rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .nav-tabs .nav-link {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.3rem;
+                margin-bottom: 0.2rem;
+            }
+            
+            .col-md-12 {
+                padding: 0.5rem;
+            }
+            
+            .btn-arrow {
+                font-size: 14px !important;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .card-header {
+                padding: 0.5rem;
+            }
+            
+            .card-body {
+                padding: 0.75rem;
+            }
+            
+            .nav-tabs .nav-link {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.2rem;
+            }
+            
+            .btn-arrow {
+                font-size: 12px !important;
+            }
+            
+            .form-control {
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+    </style>
+    
     <div class="card">
         <div class="card-header position-relative">
             <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
@@ -74,11 +143,20 @@
                                                 {{-- Logo gauche --}}
                                                 <div class="card flex-fill text-center">
                                                     <div class="card-header">Logo gauche</div>
+                                                    {{-- <div class="card-body">
+                                                        <img id="preview-logo-gauche"
+                                                            src="{{ $settings->logoimage ? route('settings.logo', ['side' => 'left']) : '#' }}"
+                                                            class="img-fluid mb-2"
+                                                            style="max-height:120px; {{ $settings->logoimage ? '' : 'display:none;' }}"
+                                                            alt="logo gauche" />
+                                                        <input type="file" name="logo_gauche" class="form-control-sm"
+                                                            onchange="previewImage(this, 'preview-logo-gauche')">
+                                                    </div> --}}
                                                     <div class="card-body">
                                                         <img id="preview-logo-gauche"
-                                                            src="{{ $settings->logoimage1 ? route('settings.logo', ['side' => 'left']) : '#' }}"
+                                                            src="{{ $settings->logoimage ? route('settings.logo', ['side' => 'left']) : '#' }}"
                                                             class="img-fluid mb-2"
-                                                            style="max-height:120px; {{ $settings->logoimage1 ? '' : 'display:none;' }}"
+                                                            style="max-height:120px; {{ $settings->logoimage ? '' : 'display:none;' }}"
                                                             alt="logo gauche" />
                                                         <input type="file" name="logo_gauche" class="form-control-sm"
                                                             onchange="previewImage(this, 'preview-logo-gauche')">
@@ -86,7 +164,7 @@
                                                 </div>
 
                                                 {{-- Logo droite --}}
-                                                <div class="card flex-fill text-center">
+                                                {{-- <div class="card flex-fill text-center">
                                                     <div class="card-header">Logo droite</div>
                                                     <div class="card-body">
                                                         <img id="preview-logo-droit"
@@ -97,7 +175,7 @@
                                                         <input type="file" name="logo_droit" class="form-control-sm"
                                                             onchange="previewImage(this, 'preview-logo-droit')">
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                             </div>
 
                                             <script>

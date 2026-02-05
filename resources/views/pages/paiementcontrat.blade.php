@@ -19,6 +19,76 @@
   .btn-arrow:hover {
       color: #b700ff !important; /* Couleur au survol */
   }
+
+  /* Responsive styles */
+  @media (max-width: 1200px) {
+    .col-lg-12 {
+      padding: 0.5rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .col-lg-12 {
+      padding: 0.25rem;
+    }
+    
+    .card-body {
+      padding: 1rem;
+    }
+    
+    .btn-arrow {
+      font-size: 14px !important;
+    }
+    
+    .col-md-8 {
+      width: 100%;
+      margin: 0.5rem 0;
+    }
+    
+    .card-title {
+      font-size: 1rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .card-body {
+      padding: 0.75rem;
+    }
+    
+    .btn-arrow {
+      font-size: 12px !important;
+    }
+    
+    .card-title {
+      font-size: 0.9rem;
+    }
+    
+    .form-group {
+      margin-bottom: 0.75rem;
+    }
+    
+    .form-check {
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-control {
+      font-size: 0.9rem;
+      padding: 0.4rem;
+    }
+    
+    .btn {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.8rem;
+    }
+    
+    strong {
+      font-size: 0.9rem;
+    }
+  }
   </style>
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">

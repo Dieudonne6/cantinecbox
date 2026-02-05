@@ -747,16 +747,19 @@ public function updateMessages(Request $request)
         ];
 
         // Gestion des fichiers logo
-        if ($request->hasFile('logo_gauche')) {
-            $data['logoimage1'] = file_get_contents($request->file('logo_gauche')->getRealPath());
+        // if ($request->hasFile('logo_gauche')) {
+        //     $data['logoimage1'] = file_get_contents($request->file('logo_gauche')->getRealPath());
+        // }
+         if ($request->hasFile('logo_gauche')) {
+            $data['logoimage'] = file_get_contents($request->file('logo_gauche')->getRealPath());
         }
 
-        if ($request->hasFile('logo_droit')) {
-            // image enregistrée sur le disque
-            $path = $request->file('logo_droit')->store('logos', 'public'); // storage/app/public/logos/...
-            $filename = basename($path); // on ne garde que le nom pour respecter le VARCHAR(20)
-            $data['LOGO1'] = substr($filename, 0, 20); // coupe à 20 caractères si nécessaire
-        }
+        // if ($request->hasFile('logo_droit')) {
+        //     // image enregistrée sur le disque
+        //     $path = $request->file('logo_droit')->store('logos', 'public'); // storage/app/public/logos/...
+        //     $filename = basename($path); // on ne garde que le nom pour respecter le VARCHAR(20)
+        //     $data['LOGO1'] = substr($filename, 0, 20); // coupe à 20 caractères si nécessaire
+        // }
 
         // Mise à jour ou insertion (s'il n'existe pas encore)
         $exists = DB::table('params2')->exists();

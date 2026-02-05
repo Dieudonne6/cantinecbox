@@ -25,6 +25,46 @@
             color: #b700ff !important;
             /* Couleur au survol */
         }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .nav-tabs .nav-link {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.3rem;
+            }
+            
+            .col-md-10, .col-md-12, .col-md-6 {
+                margin-bottom: 1rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .btn {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .nav-tabs .nav-link {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.2rem;
+                margin-bottom: 0.2rem;
+            }
+            
+            .btn-arrow {
+                font-size: 14px !important;
+            }
+            
+            .card-title {
+                font-size: 1rem;
+            }
+        }
     </style>
     <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
         <i class="fas fa-arrow-left"></i> Retour

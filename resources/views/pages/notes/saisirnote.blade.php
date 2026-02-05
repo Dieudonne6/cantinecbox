@@ -26,6 +26,68 @@
                         color: #b700ff !important;
                         /* Couleur au survol */
                     }
+
+                    /* Responsive styles */
+                    @media (max-width: 1200px) {
+                        .container {
+                            padding: 0 1rem;
+                        }
+                    }
+                    
+                    @media (max-width: 768px) {
+                        .container {
+                            padding: 0 0.5rem;
+                        }
+                        
+                        .main-panel-10 {
+                            padding: 0.5rem;
+                        }
+                        
+                        .btn-arrow {
+                            font-size: 14px !important;
+                        }
+                        
+                        .table-responsive {
+                            font-size: 0.85rem;
+                        }
+                        
+                        .form-control {
+                            font-size: 0.9rem;
+                        }
+                    }
+                    
+                    @media (max-width: 576px) {
+                        .container {
+                            padding: 0 0.25rem;
+                        }
+                        
+                        .main-panel-10 {
+                            padding: 0.25rem;
+                        }
+                        
+                        .btn-arrow {
+                            font-size: 12px !important;
+                        }
+                        
+                        .table-responsive {
+                            font-size: 0.75rem;
+                        }
+                        
+                        .table th, .table td {
+                            padding: 0.25rem;
+                            white-space: nowrap;
+                        }
+                        
+                        .form-control {
+                            font-size: 0.8rem;
+                            padding: 0.4rem;
+                        }
+                        
+                        .btn {
+                            font-size: 0.8rem;
+                            padding: 0.4rem 0.8rem;
+                        }
+                    }
                 </style>
                 <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
                     <i class="fas fa-arrow-left"></i> Retour
@@ -158,7 +220,7 @@
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col-md-6 d-flex flex-wrap" id="intCheckboxes">
-                                    @for ($i = 3; $i <= 10; $i++)
+                                    @for ($i = 1; $i <= 10; $i++)
                                         <label class="checkbox-label interro-checkbox me-2"
                                             for="optionINT{{ $i }}" data-interro="{{ $i }}">
                                             <input type="checkbox" id="optionINT{{ $i }}" name="optionGroup1[]"
@@ -167,9 +229,25 @@
                                             INT{{ $i }}
                                         </label>
                                     @endfor
+                                    <label class="checkbox-label me-2" for="optionDEV1">
+                                        <input type="checkbox" id="optionDEV1" onchange="toggleDev1()">
+                                        DEV1
+                                    </label>
+                                    <label class="checkbox-label me-2" for="optionDEV2">
+                                        <input type="checkbox" id="optionDEV2" onchange="toggleDev2()">
+                                        DEV3
+                                    </label>
+                                    <label class="checkbox-label me-2" for="optionDEV3">
+                                        <input type="checkbox" id="optionDEV3" onchange="toggleDev3()">
+                                        DEV3
+                                    </label>
+                                    <label class="checkbox-label me-2" for="optionTEST">
+                                        <input type="checkbox" id="optionTEST" onchange="toggleTest()">
+                                        TEST
+                                    </label>
                                 </div>
                                 <div class="col-md-6 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary btn-rounded">
+                                    <button type="submit" id="submitBtn" class="btn btn-primary btn-rounded">
                                         <i class="typcn typcn-home-outline"></i> Enregistrer
                                     </button>
 
@@ -197,7 +275,7 @@
                                         <tr>
                                             <th>MATRICULE</th>
                                             <th>Nom et Prénoms</th>
-                                            <th class="interro-column" data-interro="1">Int1</th>
+                                            {{-- <th class="interro-column" data-interro="1">Int1</th>
                                             <th class="interro-column" data-interro="2">Int2</th>
                                             <th class="interro-column" data-interro="3">Int3</th>
                                             <th class="interro-column" data-interro="4">Int4</th>
@@ -209,7 +287,7 @@
                                             <th class="interro-column" data-interro="10">Int10</th>
                                             <th>M.int</th>
                                             <th>Dev1</th>
-                                            <th>Dev2</th>
+                                            <th>Dev2</th> --}}
                                             {{-- <th>Dev3</th> --}}
                                             <th>Moy</th>
                                             <th>Test</th>
@@ -237,14 +315,14 @@
                                                         value="{{ $eleve->MI ?? '' }}"
                                                         class="form-control form-control-sm mi-input fixed-input" readonly>
                                                 </td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
+                                                {{-- <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
                                                         value="{{ $eleve->DEV1 ?? '' }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
                                                 <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
                                                         value="{{ $eleve->DEV2 ?? '' }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
-                                                        oninput="calculateMIAndMoy(this)"></td>
+                                                        oninput="calculateMIAndMoy(this)"></td> --}}
                                                 {{-- <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV3]"
                                                         value="{{ $eleve->DEV3 ?? '' }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
@@ -395,6 +473,52 @@
                     e.preventDefault(); // Empêche la soumission du formulaire par "Entrée"
                 }
             });
+
+            // Validation des notes pour ne pas dépasser 20
+            document.querySelectorAll('input.fixed-input').forEach(inp => {
+                inp.addEventListener('input', function() {
+                    const numericValue = parseFloat(this.value);
+                    if (!isNaN(numericValue) && numericValue > 20) {
+                        this.style.borderColor = '#dc3545';
+                        this.style.backgroundColor = '#f8d7da';
+                        this.title = 'La note ne peut pas dépasser 20.00';
+                    } else {
+                        this.style.borderColor = '';
+                        this.style.backgroundColor = '';
+                        this.title = '';
+                    }
+                    validateAllNotes(); // Valider toutes les notes après chaque changement
+                });
+            });
+
+            // Fonction pour valider toutes les notes et contrôler le bouton Enregistrer
+            function validateAllNotes() {
+                const submitBtn = document.getElementById('submitBtn');
+                const allInputs = document.querySelectorAll('input.fixed-input');
+                let hasInvalidNote = false;
+
+                allInputs.forEach(inp => {
+                    const numericValue = parseFloat(inp.value);
+                    if (!isNaN(numericValue) && numericValue > 20) {
+                        hasInvalidNote = true;
+                    }
+                });
+
+                if (hasInvalidNote) {
+                    submitBtn.disabled = true;
+                    submitBtn.style.opacity = '0.5';
+                    submitBtn.style.cursor = 'not-allowed';
+                    submitBtn.title = 'Veuillez corriger les notes supérieures à 20.00';
+                } else {
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    submitBtn.style.cursor = 'pointer';
+                    submitBtn.title = '';
+                }
+            }
+
+            // Initialiser la validation au chargement
+            validateAllNotes();
         });
     </script>
 

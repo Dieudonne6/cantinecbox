@@ -65,8 +65,35 @@ use Illuminate\Support\Facades\Http;
 
 
 
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
+
 class PagesController extends Controller
 {
+    /**
+     * Récupérer la liste des bases de données MySQL disponibles
+     */
+    public function getAvailableDatabases()
+    {
+        try {
+            // Connexion temporaire sans spécifier de base de données
+            $databases = DB::connection('mysql')->select('SHOW DATABASES');
+            
+            $databaseList = [];
+            foreach ($databases as $db) {
+                $dbName = current((array)$db);
+                // Exclure les bases système
+                if (!in_array($dbName, ['information_schema', 'mysql', 'performance_schema', 'phpmyadmin', 'sys'])) {
+                    $databaseList[] = $dbName;
+                }
+            }
+            
+            return $databaseList;
+        } catch (\Exception $e) {
+            // En cas d'erreur, retourner les bases par défaut connues
+            return ['2025_2026', 'scoracine'];
+        }
+    }
   public function inscriptioncantine(){
     if(Session::has('account')){
       // Liste des mots à exclure
@@ -721,10 +748,23 @@ public function modifieprofil(Request $request, $MATRICULE)
   }
   public function connexion(){
     $login = User::get();
-    return view('pages.connexion', ['login' => $login]);
+    $databases = $this->getAvailableDatabases();
+    return view('pages.connexion', ['login' => $login, 'databases' => $databases]);
   }
   
   public function logins(Request $request){
+    // Vérifier si une base de données est sélectionnée
+    if (!$request->has('database') || empty($request->database)) {
+        return back()->with('status', 'Veuillez sélectionner une base de données')->withInput();
+    }
+    
+    // Configurer la connexion à la base de données sélectionnée
+    Config::set('database.connections.mysql.database', $request->database);
+    DB::purge('mysql');
+    
+    // Stocker en session
+    Session::put('selected_database', $request->database);
+    
     // $account = User::where("login",$request->login_usercontrat)->first();
     $account = User::with('groupe')->where("login", $request->login_usercontrat)->first();
     
@@ -775,11 +815,11 @@ public function modifieprofil(Request $request, $MATRICULE)
         // Rediriger vers le dashboard approprié selon les permissions
         return app(DashboardController::class)->redirectToDashboard();
       } else{
-        return back()->with('status', 'Mot de passe ou identifiant incorrecte');
+        return back()->with('status', 'Mot de passe ou identifiant incorrecte')->withInput();
         
       }
     } else {
-        return back()->with('status', 'Mot de passe ou identifiant incorrecte');
+        return back()->with('status', 'Mot de passe ou identifiant incorrecte')->withInput();
     }
 }
   public function logout(Request $request)

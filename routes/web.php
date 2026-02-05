@@ -165,7 +165,7 @@ Route::put('/modifierfrais/{id_paramcontrat}', [PagesController::class, 'modifie
 Route::get('/dashbord', [PagesController::class, 'dashbord']);
 Route::post('/connexion', [ConnexionDBController::class, 'connexion']);
 Route::post('/connexions', [PagesController::class, 'connexions']);
-Route::post('/logins', [PagesController::class, 'logins']);
+Route::post('/logins', [PagesController::class, 'logins'])->middleware('switch.database.connection');
 
 Route::get('/inscription', [EleveController::class, 'inscription'])->middleware('check.groupe.permission:inscriptions.view');
 Route::get('/etat', [ClassesController::class, 'etat'])->name('etat')->middleware('check.groupe.permission:etats.view');
@@ -410,7 +410,7 @@ Route::post('/delete-notes', [CdController::class, 'deleteNote'])->name('delete-
 Route::get('/elevessansnote/{classCode}',  [EditionController::class, 'elevessansnote'])->name('elevessansnote');
 Route::get('/editions2/tableauanalytiqueparmatiere', [EditionController2::class, 'tableauanalytiqueparmatiere'])->name('tableauanalytiqueparmatiere');
 
-Route::get('/bulletindenotes', [BulletinController::class, 'bulletindenotes'])->name('bulletindenotes')->middleware('check.groupe.permission:notes.view');
+Route::get('/bulletindenotes', [BulletinController::class, 'bulletindenotes'])->name('bulletindenotes')->middleware('check.groupe.permission:bulletindenotes.view');
 
 // retourne { non: {1:{min, max, lib}, …}, doublant: {…} } ou 404
 Route::get('decisions/config/{promotion}', [BulletinController::class, 'getConfig'])
@@ -437,6 +437,7 @@ Route::post('/optionsbulletindenotes', [BulletinController::class, 'optionsbulle
 Route::get('/get-classes-by-group', [BulletinController::class, 'getClassesByType'])->name('getClassesByGroup');
 // Route::get('/printbulletindenotes', [BulletinController::class, 'printbulletindenotes'])->name('printbulletindenotes');
 Route::post('/archiveBulletin', [BulletinController::class, 'archiveBulletin']);
+Route::post('/generate-server-pdf', [BulletinController::class, 'generateServerPDF']);
 
 
 Route::post('/bulletindenotes', [BulletinController::class, 'printimagefond'])->name('bulletindenotes');

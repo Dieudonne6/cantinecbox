@@ -40,10 +40,223 @@
         .btn-icon-text .typcn { font-size: 20px; width: 36px; }
         }
 
+        /* Responsive pour tablettes et mobiles */
+        @media (max-width: 992px) {
+            .col-md-4 {
+                margin-bottom: 1rem;
+            }
+            .card {
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .row {
+                margin: 0;
+            }
+            
+            .col-md-4,
+            .col-md-8 {
+                padding: 0 10px;
+                margin-bottom: 1rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .page-title {
+                font-size: 1.2rem;
+            }
+            
+            #chart-perf,
+            #chart2 {
+                height: 300px !important;
+            }
+            
+            #income-chart {
+                height: 250px !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .col-md-4,
+            .col-md-8,
+            .col-12 {
+                padding: 0 5px;
+                margin-bottom: 0.75rem;
+            }
+            
+            .card {
+                margin-bottom: 0.75rem;
+            }
+            
+            .card-body {
+                padding: 0.75rem;
+            }
+            
+            .card-header {
+                padding: 0.75rem;
+            }
+            
+            .btn-icon-text {
+                min-height: 56px;
+                padding: 8px;
+                font-size: 0.875rem;
+            }
+            
+            .btn-icon-text .typcn {
+                font-size: 18px;
+                width: 30px;
+            }
+            
+            .btn-icon-text .text-left small {
+                font-size: 0.75rem;
+            }
+            
+            .btn-icon-text .text-left span {
+                font-size: 0.875rem;
+            }
+            
+            h1.mb-0 {
+                font-size: 1.5rem;
+            }
+            
+            .page-title {
+                font-size: 1rem;
+                line-height: 1.2;
+            }
+            
+            #chart-perf,
+            #chart2 {
+                height: 250px !important;
+            }
+            
+            #income-chart {
+                height: 200px !important;
+            }
+            
+            .template-demo .btn {
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 5px;
+            }
+            
+            .card-body {
+                padding: 0.5rem;
+            }
+            
+            .card-header {
+                padding: 0.5rem;
+            }
+            
+            .btn-icon-text {
+                min-height: 50px;
+                padding: 6px;
+                font-size: 0.8rem;
+            }
+            
+            .btn-icon-text .typcn {
+                font-size: 16px;
+                width: 25px;
+                margin-right: 0.5rem !important;
+            }
+            
+            .btn-icon-text .text-left small {
+                font-size: 0.7rem;
+            }
+            
+            .btn-icon-text .text-left span {
+                font-size: 0.8rem;
+            }
+            
+            h1.mb-0 {
+                font-size: 1.25rem;
+            }
+            
+            .page-title {
+                font-size: 0.9rem;
+            }
+            
+            #chart-perf,
+            #chart2 {
+                height: 200px !important;
+            }
+            
+            #income-chart {
+                height: 180px !important;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .btn-icon-text {
+                min-height: 45px;
+                padding: 5px;
+                font-size: 0.75rem;
+            }
+            
+            .btn-icon-text .typcn {
+                font-size: 14px;
+                width: 20px;
+                margin-right: 0.25rem !important;
+            }
+            
+            .btn-icon-text .text-left small {
+                font-size: 0.65rem;
+                margin-bottom: 0.25rem;
+            }
+            
+            .btn-icon-text .text-left span {
+                font-size: 0.75rem;
+            }
+            
+            h1.mb-0 {
+                font-size: 1.1rem;
+            }
+            
+            .page-title {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Mode paysage pour petits écrans */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .card-body {
+                padding: 0.5rem;
+            }
+            
+            .btn-icon-text {
+                min-height: 40px;
+                padding: 5px;
+            }
+            
+            #chart-perf,
+            #chart2 {
+                height: 200px !important;
+            }
+            
+            #income-chart {
+                height: 150px !important;
+            }
+        }
+
     </style>
 
-    <script src="{{ asset('js/chart.js') }}"></script>
-    <script src="{{ asset('js/apexcharts.js') }}"></script>
+    <script src="{{ asset('assets/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('assets/js/chart.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <div class="main-panel-10">
 

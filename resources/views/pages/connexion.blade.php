@@ -80,7 +80,8 @@
         margin-bottom: 25px;
       }
 
-      .input-group input {
+      .input-group input,
+      .input-group select {
         width: 80%;
         padding: 10px 35px;
         border: none;
@@ -89,6 +90,11 @@
         color: #fff;
         outline: none;
         font-size: 14px;
+      }
+
+      .input-group select option {
+        background: #031b33;
+        color: #fff;
       }
 
       .input-group i {
@@ -159,12 +165,126 @@
           flex-direction: column;
           width: 90%;
           height: auto;
+          margin-top: 2rem;
         }
         .login-form, .welcome-section {
           width: 100%;
         }
         .welcome-section {
           padding: 30px 20px;
+        }
+        .login-form {
+          padding: 30px 20px;
+        }
+        .login-form h2 {
+          font-size: 20px;
+        }
+        .welcome-section h1 {
+          font-size: 26px;
+        }
+        .welcome-section p {
+          font-size: 18px;
+        }
+        .input-group input,
+        .input-group select {
+          width: 100%;
+          padding: 12px 35px;
+          font-size: 16px;
+        }
+        .login-btn {
+          padding: 12px;
+          font-size: 16px;
+        }
+        .filigramme {
+          font-size: 18px;
+          margin-top: -2rem;
+        }
+        footer.footer {
+          padding: 12px 20px;
+          font-size: 12px;
+          flex-direction: column;
+          gap: 8px;
+          text-align: center;
+        }
+        footer.footer .left,
+        footer.footer .right {
+          justify-content: center;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .login-container {
+          width: 95%;
+          margin-top: 1rem;
+        }
+        .login-form {
+          padding: 20px 15px;
+        }
+        .welcome-section {
+          padding: 20px 15px;
+        }
+        .login-form h2 {
+          font-size: 18px;
+          margin-bottom: 20px;
+        }
+        .welcome-section h1 {
+          font-size: 22px;
+        }
+        .welcome-section p {
+          font-size: 16px;
+        }
+        .input-group {
+          margin-bottom: 20px;
+        }
+        .input-group input,
+        .input-group select {
+          padding: 10px 35px;
+          font-size: 14px;
+        }
+        .login-btn {
+          padding: 10px;
+          font-size: 14px;
+        }
+        .filigramme {
+          font-size: 16px;
+          margin-top: -1rem;
+        }
+        footer.footer {
+          padding: 10px 15px;
+          font-size: 11px;
+        }
+      }
+
+      @media (max-height: 600px) and (orientation: landscape) {
+        .login-container {
+          height: auto;
+          max-height: 90vh;
+          margin-top: 1rem;
+          margin-bottom: 1rem;
+        }
+        .login-form, .welcome-section {
+          padding: 20px;
+        }
+        .welcome-section h1 {
+          font-size: 24px;
+        }
+        .welcome-section p {
+          font-size: 16px;
+        }
+        .login-form h2 {
+          font-size: 18px;
+        }
+        .input-group {
+          margin-bottom: 15px;
+        }
+        .input-group input,
+        .input-group select {
+          padding: 8px 35px;
+          font-size: 14px;
+        }
+        .login-btn {
+          padding: 8px;
+          font-size: 14px;
         }
       }
 
@@ -255,6 +375,23 @@
           <input type="text" style="display:none" autocomplete="username">
           <input type="password" style="display:none" autocomplete="new-password">
           <div class="input-group">
+            <i class="typcn typcn-database"></i>
+            <select
+              name="database"
+              class="form-control"
+              required
+            >
+              <option value="">Sélectionner une base de données</option>
+              @if(isset($databases))
+                @foreach($databases as $database)
+                  <option value="{{ $database }}" {{ (old('database') == $database) ? 'selected' : '' }}>
+                    {{ $database }}
+                  </option>
+                @endforeach
+              @endif
+            </select>
+          </div>
+          <div class="input-group">
             <i class="typcn typcn-user"></i>
             <input
               type="text"
@@ -262,6 +399,7 @@
               class="form-control"
               placeholder="Entrer votre nom"
               aria-label="Adresse e-mail"
+              value="{{ old('login_usercontrat') }}"
               required        
             />
           </div>

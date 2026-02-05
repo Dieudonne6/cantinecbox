@@ -28,6 +28,46 @@
                         color: #b700ff !important;
                     }
 
+                    /* Responsive styles */
+                    @media (max-width: 1200px) {
+                        .table-responsive {
+                            font-size: 0.85rem;
+                        }
+                    }
+
+                    @media (max-width: 768px) {
+                        .table-responsive {
+                            font-size: 0.75rem;
+                        }
+                        
+                        .col-lg-12 {
+                            padding: 0.5rem;
+                        }
+                        
+                        .card-body {
+                            padding: 0.75rem;
+                        }
+                        
+                        .btn-arrow {
+                            font-size: 14px !important;
+                        }
+                    }
+
+                    @media (max-width: 576px) {
+                        .table-responsive {
+                            font-size: 0.7rem;
+                        }
+                        
+                        .table th, .table td {
+                            padding: 0.25rem;
+                            white-space: nowrap;
+                        }
+                        
+                        .btn-arrow {
+                            font-size: 12px !important;
+                        }
+                    }
+
                     /* Masquer les en-têtes des intervalles à l'écran */
                     .table-screen thead tr:first-child th {
                         display: none;

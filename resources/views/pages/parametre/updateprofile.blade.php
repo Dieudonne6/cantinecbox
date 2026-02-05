@@ -2,6 +2,69 @@
 
 @section('content')
 
+<style>
+    /* Responsive styles */
+    @media (max-width: 1200px) {
+        .col-md-5 {
+            max-width: 100%;
+            margin: 0 1rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .col-md-5 {
+            max-width: 100%;
+            margin: 0 0.5rem;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+        }
+        
+        .container {
+            padding: 0.5rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .col-md-5 {
+            max-width: 100%;
+            margin: 0 0.25rem;
+        }
+        
+        .card-body {
+            padding: 0.75rem;
+        }
+        
+        .card-title {
+            font-size: 0.9rem;
+        }
+        
+        .container {
+            padding: 0.25rem;
+        }
+        
+        .form-control {
+            font-size: 0.9rem;
+            padding: 0.4rem;
+        }
+        
+        .btn {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .mb-3 {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
 <div class="col-md-5 container d-flex justify-content-center align-items-center">
     <div class="card w-100">
       <div class="card-body">

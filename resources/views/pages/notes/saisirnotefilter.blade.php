@@ -158,7 +158,7 @@
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col-md-6 d-flex flex-wrap" id="intCheckboxes">
-                                    @for ($i = 3; $i <= 10; $i++)
+                                    @for ($i = 1; $i <= 10; $i++)
                                         <label class="checkbox-label interro-checkbox me-2"
                                             for="optionINT{{ $i }}" data-interro="{{ $i }}">
                                             <input type="checkbox" id="optionINT{{ $i }}" name="optionGroup1[]"
@@ -168,6 +168,14 @@
                                         </label>
                                     @endfor
 
+                                    <label class="checkbox-label me-2" for="optionDEV1">
+                                        <input type="checkbox" id="optionDEV1" onchange="toggleDev1()">
+                                        DEV1
+                                    </label>
+                                    <label class="checkbox-label me-2" for="optionDEV2">
+                                        <input type="checkbox" id="optionDEV2" onchange="toggleDev2()">
+                                        DEV2
+                                    </label>
                                     <label class="checkbox-label me-2" for="optionDEV3">
                                         <input type="checkbox" id="optionDEV3" onchange="toggleDev3()">
                                         DEV3
@@ -179,7 +187,7 @@
 
                                 </div>
                                 <div class="col-md-6 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary btn-rounded">
+                                    <button type="submit" id="submitBtn" class="btn btn-primary btn-rounded">
                                         <i class="typcn typcn-home-outline"></i> Enregistrer
                                     </button>
 
@@ -226,8 +234,8 @@
                                             <th class="interro-column" data-interro="9">Int9</th>
                                             <th class="interro-column" data-interro="10">Int10</th>
                                             <th>M.int</th>
-                                            <th>Dev1</th>
-                                            <th>Dev2</th>
+                                            <th class="dev1-column">Dev1</th>
+                                            <th class="dev2-column">Dev2</th>
                                             <th class="dev3-column">Dev3</th>
                                             <th>Moy</th>
                                             <th class="test-column">Test</th>
@@ -255,12 +263,12 @@
                                                     value="{{ in_array($eleve->MI ?? '', [21, -1]) ? '' : ($eleve->MI ?? '') }}"
                                                         class="form-control form-control-sm mi-input fixed-input" readonly>
                                                 </td>
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
+                                                <td class="dev1-column"><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV1]"
                                                     value="{{ in_array($eleve->DEV1 ?? '', [21, -1]) ? '' : ($eleve->DEV1 ?? '') }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
 
-                                                <td><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
+                                                <td class="dev2-column"><input type="text" name="notes[{{ $eleve->MATRICULE }}][DEV2]"
                                                     value="{{ in_array($eleve->DEV2 ?? '', [21, -1]) ? '' : ($eleve->DEV2 ?? '') }}"
                                                         class="form-control form-control-sm dev-input fixed-input"
                                                         oninput="calculateMIAndMoy(this)"></td>
@@ -294,10 +302,12 @@
 
                             <script>
                                 document.addEventListener("DOMContentLoaded", () => {
-                                // 1) Masquer les colonnes Int3 à Int10 au chargement
-                                for (let i = 3; i <= 10; i++) {
+                                // 1) Masquer les colonnes Int1 à Int10 au chargement
+                                for (let i = 1; i <= 10; i++) {
                                     toggleColumn(i);
                                 }
+                                toggleDev1();
+                                toggleDev2();
                                 toggleDev3();
                                 toggleTest();
 
@@ -535,21 +545,64 @@
                                         // Puis on recalcule MI/MS1/MS et on passe au champ suivant
                                             const numericValue = parseFloat(this.value);
                                            calculateMIAndMoy(this);
+                                           validateAllNotes(); // Valider toutes les notes après chaque changement
                                            if (!isNaN(numericValue) && numericValue <= 20) {
                                                moveToNext(this);
+                                               // Enlever le style d'erreur s'il y en avait un
+                                               this.style.borderColor = '';
+                                               this.style.backgroundColor = '';
                                            } else {
-                                               // Si > 20, on reste dans la même case (on ne bouge pas le focus).
-                                               // Facultatif : vous pouvez remettre 'this.value = ""' ou
-                                               // afficher un message d'erreur ici si besoin.
+                                               // Si > 20, on affiche une erreur et on reste dans la même case
+                                               this.style.borderColor = '#dc3545';
+                                               this.style.backgroundColor = '#f8d7da';
+                                               // Afficher un message d'erreur temporaire
+                                               this.title = 'La note ne peut pas dépasser 20.00';
+                                               // Optionnellement, corriger automatiquement à 20
+                                               // this.value = '20.00';
+                                               // calculateMIAndMoy(this);
                                            }
                                     } else {
                                         // Sinon, on laisse l'utilisateur inscrire librement (sans virgule)
                                         this.value = digits;
                                         // On peut quand même recalculer MI/MS1/MS en direct si souhaité :
                                         calculateMIAndMoy(this);
+                                        validateAllNotes(); // Valider toutes les notes après chaque changement
+                                        // Enlever le style d'erreur
+                                        this.style.borderColor = '';
+                                        this.style.backgroundColor = '';
+                                        this.title = '';
                                     }
                                     });
                                 });
+
+                                // Fonction pour valider toutes les notes et contrôler le bouton Enregistrer
+                                function validateAllNotes() {
+                                    const submitBtn = document.getElementById('submitBtn');
+                                    const allInputs = document.querySelectorAll('input.fixed-input');
+                                    let hasInvalidNote = false;
+
+                                    allInputs.forEach(inp => {
+                                        const numericValue = parseFloat(inp.value);
+                                        if (!isNaN(numericValue) && numericValue > 20) {
+                                            hasInvalidNote = true;
+                                        }
+                                    });
+
+                                    if (hasInvalidNote) {
+                                        submitBtn.disabled = true;
+                                        submitBtn.style.opacity = '0.5';
+                                        submitBtn.style.cursor = 'not-allowed';
+                                        submitBtn.title = 'Veuillez corriger les notes supérieures à 20.00';
+                                    } else {
+                                        submitBtn.disabled = false;
+                                        submitBtn.style.opacity = '1';
+                                        submitBtn.style.cursor = 'pointer';
+                                        submitBtn.title = '';
+                                    }
+                                }
+
+                                // Initialiser la validation au chargement
+                                validateAllNotes();
                                 });
                             </script>
 
@@ -1075,14 +1128,28 @@
 
                         // Initialisation : Masque les colonnes Int3 à Int10 au chargement de la page
                         document.addEventListener("DOMContentLoaded", () => {
-                            for (let i = 3; i <= 10; i++) {
+                            for (let i = 1; i <= 10; i++) {
                                 toggleColumn(i);
                             }
                         });
                     </script>
 
-                    {{-- ——— SCRIPT : toggle DEV3 ——— --}}
+                    {{-- ——— SCRIPT : toggle DEV1 à DEV3 ——— --}}
                             <script>
+                                function toggleDev1() {
+                                    const checkbox = document.getElementById("optionDEV1");
+                                    const isChecked = checkbox.checked;
+                                    document.querySelectorAll(".dev1-column").forEach(cell => {
+                                        cell.style.display = isChecked ? '' : 'none';
+                                    });
+                                }
+                                function toggleDev2() {
+                                    const checkbox = document.getElementById("optionDEV2");
+                                    const isChecked = checkbox.checked;
+                                    document.querySelectorAll(".dev2-column").forEach(cell => {
+                                        cell.style.display = isChecked ? '' : 'none';
+                                    });
+                                }
                                 function toggleDev3() {
                                     const checkbox = document.getElementById("optionDEV3");
                                     const isChecked = checkbox.checked;

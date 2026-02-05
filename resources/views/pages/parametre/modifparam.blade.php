@@ -26,6 +26,75 @@
                 color: #b700ff !important;
                 /* Couleur au survol */
             }
+
+            /* Responsive styles */
+            @media (max-width: 1200px) {
+                .content-wrapper {
+                    padding: 0 1rem;
+                }
+                
+                .col-md-9 {
+                    padding: 0.5rem;
+                }
+            }
+            
+            @media (max-width: 768px) {
+                .content-wrapper {
+                    padding: 0 0.5rem;
+                }
+                
+                .col-md-9 {
+                    width: 100%;
+                    padding: 0.25rem;
+                }
+                
+                .card-body {
+                    padding: 1rem;
+                }
+                
+                .btn-arrow {
+                    font-size: 14px !important;
+                }
+                
+                .nav-tabs {
+                    flex-wrap: wrap;
+                }
+                
+                .nav-tabs .nav-link {
+                    font-size: 0.8rem;
+                    padding: 0.5rem 0.3rem;
+                    margin-bottom: 0.2rem;
+                }
+            }
+            
+            @media (max-width: 576px) {
+                .content-wrapper {
+                    padding: 0 0.25rem;
+                }
+                
+                .card-body {
+                    padding: 0.75rem;
+                }
+                
+                .btn-arrow {
+                    font-size: 12px !important;
+                }
+                
+                .nav-tabs .nav-link {
+                    font-size: 0.75rem;
+                    padding: 0.4rem 0.2rem;
+                }
+                
+                .form-control {
+                    font-size: 0.9rem;
+                    padding: 0.4rem;
+                }
+                
+                .btn {
+                    font-size: 0.8rem;
+                    padding: 0.4rem 0.8rem;
+                }
+            }
         </style>
         <button type="button" class="btn btn-arrow" onclick="window.history.back();" aria-label="Retour">
             <i class="fas fa-arrow-left"></i> Retour

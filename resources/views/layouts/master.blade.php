@@ -417,31 +417,32 @@ $(document).ready(function () {
         });
 
         $(document).ready(function() {
-            $('#myTable').DataTable({
-                order: [[1, 'asc'], [2, 'asc']],
-                "language": {
-                    "sProcessing": "Traitement en cours...",
-                    "sSearch": "Rechercher&nbsp;:",
-                    "sLengthMenu": "Afficher _MENU_ éléments",
-                    "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
-                    "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrées",
-                    "sInfoFiltered": "(filtré à partir de _MAX_ entrées au total)",
-                    "sInfoPostFix": "",
-                    "sLoadingRecords": "Chargement en cours...",
-                    "sZeroRecords": "Aucun résultat trouvé",
-                    "sEmptyTable": "Aucune donnée disponible dans le tableau",
-                    "oPaginate": {
-                        "sPrevious": "Précédent",
-                        "sNext": "Suivant"
-                    },
-                    "oAria": {
-                        "sSortAscending": ": activer pour trier la colonne par ordre croissant",
-                        "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+            // Check if DataTable is already initialized
+            if (!$.fn.DataTable.isDataTable('#myTable')) {
+                $('#myTable').DataTable({
+                    order: [[1, 'asc'], [2, 'asc']],
+                    "language": {
+                        "sProcessing": "Traitement en cours...",
+                        "sSearch": "Rechercher&nbsp;:",
+                        "sLengthMenu": "Afficher _MENU_ éléments",
+                        "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                        "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrées",
+                        "sInfoFiltered": "(filtré à partir de _MAX_ entrées au total)",
+                        "sInfoPostFix": "",
+                        "sLoadingRecords": "Chargement en cours...",
+                        "sZeroRecords": "Aucun résultat trouvé",
+                        "sEmptyTable": "Aucune donnée disponible dans le tableau",
+                        "oPaginate": {
+                            "sPrevious": "Précédent",
+                            "sNext": "Suivant"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+                            "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+                        }
                     }
-                }
-            });
-
-            
+                });
+            }
         });
         $(document).ready(function() {
             $('#nomclasse').on('input', function() {

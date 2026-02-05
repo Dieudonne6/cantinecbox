@@ -40,54 +40,35 @@ class GestionNotesController extends Controller
 
     public function enregistrerCoefficient(Request $request)
     {
-        // Récupération et décodage du JSON des coefficients
-        $coefficients = json_decode($request->input('coefficients'), true);
-        // $coefficients = $request->input('coefficients');
-    
-        // Vérifier si les coefficients sont bien envoyés
+        $coefficients = $request->input('coefficients', []);
+        $fondamentales = $request->input('fondamentale', []);
+
         if (empty($coefficients)) {
-            return redirect()->back()->with('status', 'Aucun coefficient à sauvegarder.');
+            return redirect()->back()->with('error', 'Aucune donnée de coefficient reçue.');
         }
-    
-        // Boucler à travers chaque classe
-        foreach ($coefficients as $classId => $matieres) {
-            foreach ($matieres as $matiereId => $data) {
-                // Vérifier que les valeurs existent et ne sont pas nulles
-                if (isset($data['value']) && $data['value'] !== '') {
-                    $value = $data['value'];
-                    // Convertir la couleur "red" en 1 et "default" en 0
-                    $isFondamentale = ($data['color'] === 'red') ? 1 : 0;
-    
-                    // Récupérer tous les enregistrements existants pour cette classe et matière
-                    $clasmatRecords = Clasmat::where('CODECLAS', $classId)
-                                             ->where('CODEMAT', $matiereId)
-                                             ->get(); // Récupérer plusieurs enregistrements
-    
-                    if ($clasmatRecords->isNotEmpty()) {
-                        // Mettre à jour chaque enregistrement existant
-                        foreach ($clasmatRecords as $clasmat) {
-                            if ($clasmat->COEF != $value || $clasmat->FONDAMENTALE != $isFondamentale) {
-                                Clasmat::where('CODECLAS', $classId)
-                                      ->where('CODEMAT', $matiereId)
-                                      ->update([
-                                          'COEF' => $value,
-                                          'FONDAMENTALE' => $isFondamentale,
-                                      ]);
-                            }
-                        }
-                    } else {
-                        // Création d'un nouvel enregistrement si aucun trouvé
-                        Clasmat::create([
-                            'CODECLAS' => $classId,
-                            'CODEMAT' => $matiereId,
-                            'COEF' => $value,
-                            'FONDAMENTALE' => $isFondamentale
-                        ]);
-                    }
+
+        foreach ($coefficients as $codeclas => $matieres) {
+            foreach ($matieres as $codemat => $coef) {
+                $isFondamentale = $fondamentales[$codeclas][$codemat] ?? 0;
+
+                if ($coef !== null && $coef !== '') {
+                    Clasmat::updateOrCreate(
+                        [
+                            'CODECLAS' => $codeclas,
+                            'CODEMAT' => $codemat,
+                        ],
+                        [
+                            'COEF' => $coef,
+                            'FONDAMENTALE' => $isFondamentale,
+                        ]
+                    );
+                } else {
+                    // If the coefficient is empty, delete the record.
+                    Clasmat::where('CODECLAS', $codeclas)->where('CODEMAT', $codemat)->delete();
                 }
             }
         }
-        // dd($coefficients);
+
         return redirect()->back()->with('status', 'Coefficients sauvegardés avec succès.');
     }
     

@@ -58,6 +58,7 @@ use RtfHtmlPhp\Html\HtmlFormatter;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\NotesExport;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 use App\Imports\ElevesImport;
 use App\Exports\NotesClasseMultiExport;
@@ -914,6 +915,12 @@ class BulletinController extends Controller
         $nbabsence = $request->input('nbabsence');
         $classeSelectionne = $request->input('selected_classes');
         $interligne = $request->input('interligne', 7); // Valeur par défaut de 7mm
+        $archive = $request->input('archive', false); // Récupération de la variable archive
+        
+        // Log pour débogage
+        \Log::info('Variable archive reçue: ' . ($archive ? 'true' : 'false'));
+        \Log::info('Toutes les données reçues: ' . json_encode($request->all()));
+        
         $promo = Promo::all();
         $decisions = DecisionConfiguration::all();
 
@@ -2319,7 +2326,7 @@ class BulletinController extends Controller
         //     $pdf->save($destinationPath . '/' . $filename);
 
         // dd($option);
-        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean', 'params2', 'logo', 'logoBase64', 'mimeType', 'interligne', 'image'));
+        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean', 'params2', 'logo', 'logoBase64', 'mimeType', 'interligne', 'image', 'archive'));
     }
 
     /**
@@ -2828,7 +2835,7 @@ class BulletinController extends Controller
 // }
 
   public function import(Request $request)
-{
+    {
         if (!$request->hasFile('excelFile')) {
             return response()->json(['success' => false, 'message' => 'Aucun fichier sélectionné.']);
         }
@@ -2871,6 +2878,26 @@ class BulletinController extends Controller
                 $classe   = $row[5] ?? null;
                 $lieunais = $row[6] ?? null;
                 $datenais = $row[7] ?? null;
+                
+                // Convertir la date du format DD/MM/YYYY vers YYYY-MM-DD
+                if ($datenais && !empty($datenais)) {
+                    try {
+                        $dateObj = \DateTime::createFromFormat('d/m/Y', trim($datenais));
+                        if ($dateObj) {
+                            $datenais = $dateObj->format('Y-m-d');
+                        } else {
+                            // Si le format n'est pas d/m/Y, essayer d'autres formats courants
+                            $dateObj = \DateTime::createFromFormat('Y-m-d', trim($datenais));
+                            if ($dateObj) {
+                                $datenais = $dateObj->format('Y-m-d');
+                            } else {
+                                $datenais = null; // Mettre null si le format n'est pas reconnu
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        $datenais = null; // Mettre null en cas d'erreur
+                    }
+                }
               
 
                 // Ignorer les lignes sans matricule
@@ -2909,145 +2936,523 @@ class BulletinController extends Controller
 
             if (!empty($insertData)) {
                 DB::table('eleve')->insert($insertData);
+                
+                // Remplir automatiquement la table classes pour les nouvelles classes
+                $this->fillClassesTable($insertData);
+                
+                // Remplir automatiquement la table clasmat pour les nouvelles classes
+                $this->fillClasmatTable($insertData);
+                
+                // Mettre à jour les effectifs des classes
+                $this->updateClassesEffectif();
             }
 
             return response()->json(['success' => true, 'message' => 'Importation effectuée avec succès.']);
         } catch (\Exception $e) {
-        // 1) Vérification du fichier
-        if (! $request->hasFile('excelFile')) {
             return response()->json([
                 'success' => false,
-                'message' => 'Aucun fichier sélectionné.'
+                'message' => 'Erreur lors de l\'importation : ' . $e->getMessage()
             ]);
         }
-        $file = $request->file('excelFile');
-
-        // 2) Chargement du classeur et lecture “raw” (formattedData=false)
-        $spreadsheet = IOFactory::load($file);
-        $sheet       = $spreadsheet->getActiveSheet();
-        $rows        = $sheet->toArray(
-            null,   // valeur par défaut
-            true,   // calculateFormulas
-            false,  // formattedData = false
-            true    // indexByColumn = true, on aura ['A'=>…, 'B'=>…]
-        );
-
-        // 3) Si moins de 2 lignes (seulement l’en-tête), on stoppe
-        if (count($rows) < 2) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Le fichier ne contient que les en-têtes ou est vide.'
-            ]);
-        }
-
-        // 4) Détection de tous les doublons de matricule
-        $linesByMatricule = [];
-        foreach ($rows as $idx => $row) {
-            if ($idx === 1) continue;  // on saute la ligne d’en-tête  
-            $matricule = trim($row['A'] ?? '');
-            if ($matricule === '') continue;
-            $linesByMatricule[$matricule][] = $idx;
-        }
-
-        // 5) Construction du tableau d’erreurs pour chaque matricule dupliqué
-        $errors = [];
-        foreach ($linesByMatricule as $matricule => $lines) {
-            if (count($lines) > 1) {
-                if (count($lines) === 2) {
-                    [$l1, $l2] = $lines;
-                    $errors[] = "Ligne {$l1} et {$l2} : matricule « {$matricule} » en double.";
-                } else {
-                    $last = array_pop($lines);
-                    $allButLast = implode(', ', $lines);
-                    $errors[] = "Ligne {$allButLast} et {$last} : matricule « {$matricule} » en double.";
-                }
-            }
-        }
-
-        // 6) Si on a détecté des doublons, on renvoie sans toucher à la BDD
-        if (! empty($errors)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Des doublons ont été trouvés dans le fichier.',
-                'errors'  => $errors
-            ]);
-        }
-
-        // 7) Pas de doublons → on prépare l’insertion
-        $insertData = [];
-        foreach ($rows as $idx => $row) {
-            if ($idx === 1) continue;
-
-            $matricule = trim($row['A'] ?? '');
-            if ($matricule === '') {
-                // on peut choisir d’ajouter une erreur ici…
-                continue;
-            }
-
-            // Lecture des autres colonnes
-            $nom     = trim($row['B'] ?? '');
-            $prenoms = trim($row['C'] ?? '');
-            $sexeRaw = strtoupper(trim($row['D'] ?? ''));
-            $statutRaw = strtoupper(trim($row['E'] ?? ''));
-            $classe  = trim($row['F'] ?? '');
-            $dateRaw = $row['G'] ?? '';
-            $lieu    = trim($row['H'] ?? '');
-
-            // Conversion du sexe/statut
-            $sexe   = ($sexeRaw === 'M' ? 1 : ($sexeRaw === 'F' ? 2 : null));
-            $statut = ($statutRaw === 'R' ? 1 : ($statutRaw === 'N' ? 0 : null));
-
-            // Conversion de la date Excel (serial ou texte d/m/Y)
-            $dateNaiss = null;
-            if ($dateRaw !== '' && $dateRaw !== null) {
-                if (is_numeric($dateRaw)) {
-                    $dt = ExcelDate::excelToDateTimeObject((float)$dateRaw);
-                } else {
-                    $dt = \DateTime::createFromFormat('d/m/Y', $dateRaw);
-                }
-                if (! $dt) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => "Date invalide à la ligne {$idx} : “{$dateRaw}”."
-                    ]);
-                }
-                $dateNaiss = $dt->format('Y-m-d');
-            }
-
-            // Construction du tableau pour l’insertion
-            $rowToInsert = [
-                'MATRICULEX' => $matricule,
-                'NOM'        => $nom,
-                'PRENOM'     => $prenoms,
-                'SEXE'       => $sexe,
-                'STATUT'     => $statut,
-                'CODECLAS'   => $classe,
-                'DATENAIS'   => $dateNaiss,
-                'LIEUNAIS'   => $lieu,
-            ];
-
-            // Génération d’UUID si les colonnes existent
-            $cols = DB::getSchemaBuilder()->getColumnListing('eleve');
-            if (in_array('guid_matri',  $cols)) $rowToInsert['guid_matri']  = Str::uuid();
-            if (in_array('guid_classe',$cols)) $rowToInsert['guid_classe'] = Str::uuid();
-            if (in_array('guid_red',    $cols)) $rowToInsert['guid_red']    = Str::uuid();
-
-            $insertData[] = $rowToInsert;
-        }
-
-        // 8) On vide la table et on insère tous les élèves d’un coup
-        DB::table('eleve')->truncate();
-        DB::table('eleve')->insert($insertData);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Importation réussie de '.count($insertData).' élèves.'
-        ]);
     }
-}
+
+    /**
+     * Remplit automatiquement la table classes pour les nouvelles classes trouvées lors de l'importation
+     */
+    private function fillClassesTable($elevesData)
+    {
+        // Extraire tous les codes de classe uniques
+        $classCodes = array_unique(array_filter(array_column($elevesData, 'CODECLAS')));
+        
+        if (empty($classCodes)) {
+            return;
+        }
+
+        // Vérifier quelles classes n'existent pas déjà
+        $existingClasses = DB::table('classes')->whereIn('CODECLAS', $classCodes)->pluck('CODECLAS')->toArray();
+        $newClasses = array_diff($classCodes, $existingClasses);
+
+        if (empty($newClasses)) {
+            return;
+        }
+
+        // Préparer les données pour les nouvelles classes
+        $classesToInsert = [];
+        foreach ($newClasses as $classCode) {
+            $classData = $this->generateClassData($classCode);
+            if ($classData) {
+                $classesToInsert[] = $classData;
+            }
+        }
+
+        // Insérer les nouvelles classes
+        if (!empty($classesToInsert)) {
+            DB::table('classes')->insert($classesToInsert);
+        }
+    }
+
+    /**
+     * Génère les données pour une classe en fonction de son code
+     */
+    private function generateClassData($classCode)
+    {
+        // Déterminer le cycle en fonction du code de classe
+        $cycle = $this->determineCycle($classCode);
+        
+        // Déterminer le promo en fonction du code de classe
+        $codePromo = $this->determineCodePromo($classCode);
+        
+        // Déterminer la série en fonction du code de classe
+        $serie = $this->determineSerie($classCode);
+        
+        // Type d'enseignement par défaut (3 = Secondaire)
+        $typeEnseig = $this->determineTypeEnseignement($classCode);
+
+        return [
+            'CODECLAS' => $classCode,
+            'CYCLE' => $cycle,
+            'CODEPROMO' => $codePromo,
+            'TYPEENSEIG' => $typeEnseig,
+            'SERIE' => $serie,
+            'LIBELCLAS' => $classCode, // Utiliser le code comme libellé par défaut
+            'niveau' => 0,
+            // 'EFFECTIF' => 0,
+            // 'APAYER' => 0,
+            // 'FRAIS1' => 0,
+            // 'FRAIS2' => 0,
+            // 'FRAIS3' => 0,
+            // 'FRAIS4' => 0,
+            // 'MFORTE' => 0,
+            // 'MFAIBLE' => 0,
+            // 'MCLASSE' => 0,
+            // 'guid' => Str::uuid(),
+            // 'anneeacademique' => date('Y') . '-' . (date('Y') + 1),
+        ];
+    }
+
+    /**
+     * Détermine le cycle en fonction du code de classe
+     */
+    private function determineCycle($classCode)
+    {
+        $classCode = strtoupper(trim($classCode));
+        
+        // Cycle 0: Maternelle, Primaire
+        if (preg_match('/(CP|CE1|CE2|CM1|CM2|GS|PS|MS|MAT|NUR|KINDER)/', $classCode)) {
+            return 0;
+        }
+        
+        // Cycle 1: Secondaire (6ème à 3ème)
+        if (preg_match('/(6|5|4|3|6|5|4|3)/', $classCode)) {
+            return 1;
+        }
+        
+        // Cycle 2: Lycée (2nde à Terminale)
+        if (preg_match('/(2ND|SECONDE|1ER|1|TLE|TERMINALE)/', $classCode)) {
+            return 2;
+        }
+        
+        // Cycle  par défaut pour les classes non reconnues
+        // return ;
+    }
+
+    /**
+     * Détermine le code promo en fonction du code de classe en utilisant la table promo
+     */
+    private function determineCodePromo($classCode)
+    {
+        $classCode = strtoupper(trim($classCode));
+        
+        // Récupérer tous les promos disponibles dans la table promo
+        $promos = DB::table('promo')->get();
+        
+        if ($promos->isEmpty()) {
+            return '00';
+        }
+        
+        // Correspondances spécifiques basées sur le premier caractère du code de classe
+        // Toute classe commençant par 6 -> 6EME, 5 -> 5EME, 4 -> 4EME, 3 -> 3EME
+        // Toute classe commençant par 1 -> 1ERE
+        $firstChar = substr($classCode, 0, 1);
+        
+        if ($firstChar === '6') {
+            return '6EME';
+        } elseif ($firstChar === '5') {
+            return '5EME';
+        } elseif ($firstChar === '4') {
+            return '4EME';
+        } elseif ($firstChar === '3') {
+            return '3EME';
+        } elseif ($firstChar === '1') {
+            return '1ERE';
+        }
+        
+        // Chercher une correspondance directe dans le code de classe (seulement si la règle du premier caractère ne s'applique pas)
+        foreach ($promos as $promo) {
+            if (!empty($promo->CODEPROMO) && strpos($classCode, $promo->CODEPROMO) !== false) {
+                return $promo->CODEPROMO;
+            }
+        }
+        
+        // Correspondances spécifiques pour les autres cas
+        $specificMatches = [
+            // Primaire
+            'CP1' => 'CP1',
+            'CP2' => 'CP2', 
+            'CP' => 'CP1', // Par défaut CP1 si juste "CP"
+            'CE1' => 'CE1',
+            'CE2' => 'CE2',
+            'CM1' => 'CM1',
+            'CM2' => 'CM2',
+            
+            // Lycée général (cas spécifiques non couverts par la règle du premier caractère)
+            '2ND' => '2ND',
+            'SECONDE' => '2ND',
+            'TLE' => 'TLE',
+            'TERMINALE' => 'TLE',
+            
+            // Lycée technique
+            '2NDT' => '2NDT',
+            '1ERT' => '1ERT',
+            'TLET' => 'TLET',
+            
+            // Multigrade et autres
+            'MULG' => 'MULG',
+            'MULTI' => 'MULG',
+        ];
+        
+        foreach ($specificMatches as $pattern => $promoCode) {
+            if (strpos($classCode, $pattern) !== false) {
+                // Vérifier si ce promo existe dans la table
+                $exists = $promos->firstWhere('CODEPROMO', $promoCode);
+                if ($exists) {
+                    return $promoCode;
+                }
+            }
+        }
+        
+        // Correspondances partielles pour les patterns complexes
+        $partialMatches = [
+            // Si contient "CP" mais pas déjà matché
+            'CP' => function($promos) {
+                $cp1 = $promos->firstWhere('CODEPROMO', 'CP1');
+                return $cp1 ? 'CP1' : null;
+            },
+            // Si contient "CM" mais pas déjà matché  
+            'CM' => function($promos) {
+                $cm1 = $promos->firstWhere('CODEPROMO', 'CM1');
+                return $cm1 ? 'CM1' : null;
+            },
+            // Si contient "6EME" ou "6ÈME"
+            '6EM' => function($promos) {
+                $promo = $promos->firstWhere('CODEPROMO', '6EME');
+                return $promo ? '6EME' : null;
+            },
+            // Si contient "1ER" ou "1ERE"
+            '1ER' => function($promos) {
+                $promo = $promos->firstWhere('CODEPROMO', '1ERE');
+                return $promo ? '1ERE' : null;
+            },
+        ];
+        
+        foreach ($partialMatches as $pattern => $callback) {
+            if (strpos($classCode, $pattern) !== false) {
+                $promoCode = $callback($promos);
+                if ($promoCode) {
+                    return $promoCode;
+                }
+            }
+        }
+        
+        // Valeur par défaut : chercher un promo de niveau le plus bas
+        $defaultPromo = $promos->where('Niveau', $promos->min('Niveau'))->first();
+        return $defaultPromo ? $defaultPromo->CODEPROMO : '00';
+    }
+
+    /**
+     * Détermine la série en fonction du code de classe en utilisant la table series
+     */
+    private function determineSerie($classCode)
+    {
+        $classCode = strtoupper(trim($classCode));
+        
+        // Récupérer toutes les séries disponibles dans la table series
+        $series = DB::table('series')->get();
+        
+        if ($series->isEmpty()) {
+            return '';
+        }
+        
+        // Chercher une correspondance directe dans le code de classe
+        foreach ($series as $serie) {
+            if (!empty($serie->SERIE) && strpos($classCode, $serie->SERIE) !== false) {
+                return $serie->SERIE;
+            }
+        }
+        
+        // Correspondances spécifiques basées sur les patterns
+        $specificMatches = [
+            // Série A (et variantes)
+            'A1' => 'A1',
+            'A2' => 'A2', 
+            'A' => 'A',
+            
+            // Série B
+            'B' => 'B',
+            
+            // Série C
+            'C' => 'C',
+            
+            // Série D
+            'D' => 'D',
+            
+            // Série Court/Long
+            'MC' => 'MC',
+            'ML' => 'ML',
+            
+            // Série EB
+            'EB' => 'EB',
+            
+            // Série AC
+            'AC' => 'AC',
+            
+            // Séries scientifiques
+            'S' => 'C', // Souvent la série C pour scientifique
+            
+            // Séries littéraires
+            'L' => 'A', // Souvent la série A pour littéraire
+            
+            // Séries économiques
+            'ES' => 'B', // Souvent la série B pour économique
+            
+            // Séries technologiques
+            'STI' => 'A1',
+            'STL' => 'A2', 
+            'STG' => 'B',
+            'ST2S' => 'C',
+            'STMG' => 'D',
+        ];
+        
+        foreach ($specificMatches as $pattern => $serieCode) {
+            if (strpos($classCode, $pattern) !== false) {
+                // Vérifier si cette série existe dans la table
+                $exists = $series->firstWhere('SERIE', $serieCode);
+                if ($exists) {
+                    return $serieCode;
+                }
+            }
+        }
+        
+        // Correspondances partielles pour les patterns complexes
+        $partialMatches = [
+            // Si contient "M" suivi d'un chiffre, considérer comme ML (Long)
+            'M' => function($classCode, $series) {
+                // Vérifier si c'est un pattern comme M1, M2, M3, etc.
+                if (preg_match('/M\d+/', $classCode)) {
+                    $ml = $series->firstWhere('SERIE', 'ML');
+                    return $ml ? 'ML' : null;
+                }
+                return null;
+            },
+            // Si contient "C" suivi d'un chiffre, considérer comme MC (Court)
+            'C' => function($classCode, $series) {
+                // Vérifier si c'est un pattern comme C1, C2, C3, etc.
+                if (preg_match('/C\d+/', $classCode)) {
+                    $mc = $series->firstWhere('SERIE', 'MC');
+                    return $mc ? 'MC' : null;
+                }
+                return null;
+            },
+        ];
+        
+        foreach ($partialMatches as $pattern => $callback) {
+            if (strpos($classCode, $pattern) !== false) {
+                $serieCode = $callback($classCode, $series);
+                if ($serieCode) {
+                    return $serieCode;
+                }
+            }
+        }
+        
+        // Pas de série pour les classes du primaire
+        if (preg_match('/(CP|CE|CM|GS|PS|MS)/', $classCode)) {
+            $noSerie = $series->firstWhere('SERIE', '00');
+            return $noSerie ? '00' : '';
+        }
+        
+        // Valeur par défaut "Aucun" si elle existe
+        $defaultSerie = $series->firstWhere('SERIE', '00');
+        return $defaultSerie ? '00' : '';
+    }
+
+    /**
+     * Détermine le type d'enseignement en fonction du code de classe
+     */
+    private function determineTypeEnseignement($classCode)
+    {
+        $classCode = strtoupper(trim($classCode));
+        
+        // Maternelle
+        if (preg_match('/(PS|MS|GS|MAT|NUR|KINDER)/', $classCode)) {
+            return 1; // Maternelle
+        }
+        
+        // Primaire
+        if (preg_match('/(CP|CE1|CE2|CM1|CM2)/', $classCode)) {
+            return 2; // Primaire
+        }
+        
+        // Secondaire général
+        if (preg_match('/(6EME|5EME|4EME|3EME|2ND|1ER|TLE|6ÈME|5ÈME|4ÈME|3ÈME|SECONDE|1ERE|TERMINALE)/', $classCode)) {
+            return 3; // Secondaire
+        }
+        
+        // Technique/Professionnel
+        if (preg_match('/(STI|STL|STG|ST2S|STMG|PRO|CAP|BEP)/', $classCode)) {
+            return 4; // Technique/Professionnel
+        }
+        
+        // Supérieur
+        if (preg_match('/(LIC|MAS|DOC|BTS|DUT)/', $classCode)) {
+            return 5; // Supérieur
+        }
+        
+        // Par défaut: Secondaire
+        return 3;
+    }
+
+    /**
+     * Remplit automatiquement la table clasmat pour les nouvelles classes trouvées lors de l'importation
+     */
+    private function fillClasmatTable($elevesData)
+    {
+        // Extraire tous les codes de classe uniques
+        $classCodes = array_unique(array_filter(array_column($elevesData, 'CODECLAS')));
+        
+        if (empty($classCodes)) {
+            return;
+        }
+
+        // Récupérer toutes les matières disponibles
+        $matieres = DB::table('matieres')->get();
+        
+        if ($matieres->isEmpty()) {
+            return;
+        }
+
+        // Pour chaque nouvelle classe, créer les associations avec les matières
+        foreach ($classCodes as $classCode) {
+            // Vérifier si des associations existent déjà pour cette classe
+            $existingAssociations = DB::table('clasmat')
+                ->where('CODECLAS', $classCode)
+                ->pluck('CODEMAT')
+                ->toArray();
+
+            // Filtrer les matières qui ne sont pas déjà associées
+            $newMatieres = $matieres->filter(function($matiere) use ($existingAssociations) {
+                return !in_array($matiere->CODEMAT, $existingAssociations);
+            });
+
+            // Préparer les données pour les nouvelles associations
+            // $clasmatData = [];
+            // foreach ($newMatieres as $matiere) {
+            //     $clasmatData[] = [
+            //         'CODECLAS' => $classCode,
+            //         'CODEMAT' => $matiere->CODEMAT,
+            //         'COEF' => 0,
+            //         'MOYFO' => 0,
+            //         'MOYFA' => 0,
+            //         'MODIFIER' => 1,
+            //         'fondamentale' => 0,
+            //         'NBHEURE' => 0,
+            //         'Tranches' => 0,
+            //         'MOYFO1' => 0,
+            //         'MOYFO2' => 0,
+            //         'MOYFO3' => 0,
+            //         'MOYFO4' => 0,
+            //         'MOYFA1' => 0,
+            //         'MOYFA2' => 0,
+            //         'MOYFA3' => 0,
+            //         'MOYFA4' => 0,
+            //         'ANSCOL' => (date('Y') - 1) . '-' . date('Y'),
+            //     ];
+            // }
+
+            // Insérer les nouvelles associations
+            // if (!empty($clasmatData)) {
+            //     DB::table('clasmat')->insert($clasmatData);
+            // }
+        }
+    }
+
+    /**
+     * Met à jour les effectifs des classes en comptant les élèves
+     */
+    private function updateClassesEffectif()
+    {
+        // Récupérer tous les codes de classe uniques depuis la table eleve
+        $classCounts = DB::table('eleve')
+            ->select('CODECLAS', DB::raw('COUNT(*) as effectif'))
+            ->whereNotNull('CODECLAS')
+            ->where('CODECLAS', '!=', '')
+            ->groupBy('CODECLAS')
+            ->get();
+
+        // Mettre à jour chaque classe avec son effectif
+        foreach ($classCounts as $classCount) {
+            DB::table('classes')
+                ->where('CODECLAS', $classCount->CODECLAS)
+                ->update(['EFFECTIF' => $classCount->effectif]);
+        }
+
+        // Mettre à 0 les classes qui n'ont plus d'élèves
+        $classesWithStudents = $classCounts->pluck('CODECLAS')->toArray();
+        
+        DB::table('classes')
+            ->whereNotIn('CODECLAS', $classesWithStudents)
+            ->update(['EFFECTIF' => 0]);
+    }
 
 
+    public function generateServerPDF(Request $request)
+    {
+        $data = $request->json()->all();
+        $html = $data['html'] ?? null;
+        $filename = $data['filename'] ?? 'bulletin.pdf';
+        $archive = $data['archive'] ?? false;
 
+        if ($html) {
+            // Utiliser DomPDF pour générer le PDF
+            $pdf = PDF::loadHTML($html);
+            $pdfContent = $pdf->output();
+
+            if ($archive) {
+                // Utiliser le dossier spécifié par l'utilisateur
+                $destinationPath = 'C:\\Users\\USER\\Documents\\ArchiveSCHOOLBOX';
+                
+                // Créer le dossier s'il n'existe pas
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0755, true);
+                }
+                
+                $fullPath = $destinationPath . '\\' . $filename;
+                file_put_contents($fullPath, $pdfContent);
+
+                return response()->json([
+                    'success' => true, 
+                    'path' => $fullPath,
+                    'message' => 'Bulletin archivé avec succès dans ' . $fullPath
+                ]);
+            }
+
+            // Retourner le PDF pour téléchargement
+            return response($pdfContent)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        }
+
+        return response()->json(['success' => false, 'message' => 'Aucun contenu HTML reçu'], 400);
+    }
 
 
     public function archiveBulletin(Request $request)
@@ -3062,14 +3467,31 @@ class BulletinController extends Controller
             $pdfBase64 = end($parts);
             $pdfContent = base64_decode($pdfBase64);
 
-            // Créer un dossier pour la classe dans public/archives/bulletins
-            $destinationPath = public_path('archives/bulletins/' . $classCode);
+            // Utiliser le dossier spécifié par l'utilisateur: C:\Users\USER\Documents\ArchiveSCHOOLBOX
+            $destinationPath = 'C:\\Users\\USER\\Documents\\ArchiveSCHOOLBOX';
+            
+            // Créer le dossier s'il n'existe pas
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0755, true);
             }
-            file_put_contents($destinationPath . '/' . $filename, $pdfContent);
+            
+            // Créer un sous-dossier pour la classe si spécifié
+            if ($classCode && $classCode !== 'default') {
+                $classPath = $destinationPath . '\\' . $classCode;
+                if (!file_exists($classPath)) {
+                    mkdir($classPath, 0755, true);
+                }
+                $destinationPath = $classPath;
+            }
+            
+            $fullPath = $destinationPath . '\\' . $filename;
+            file_put_contents($fullPath, $pdfContent);
 
-            return response()->json(['success' => true]);
+            return response()->json([
+                'success' => true, 
+                'path' => $fullPath,
+                'message' => 'Bulletin archivé avec succès dans ' . $fullPath
+            ]);
         }
         return response()->json(['success' => false, 'message' => 'Aucun PDF reçu'], 400);
     }
@@ -3084,15 +3506,13 @@ class BulletinController extends Controller
 
 
    public function getEleves()
-{
-    $eleves = DB::table('eleve')
-        ->select('MATRICULEX', 'NOM', 'PRENOM', 'DATENAIS', 'LIEUNAIS', 'STATUT', 'SEXE', 'CODECLAS')
-        ->orderBy('CODECLAS')
-        ->get()
-        ->groupBy('CODECLAS'); // regroupement par CODECLAS
+    {
+        $eleves = DB::table('eleve')
+            ->select('MATRICULEX', 'NOM', 'PRENOM', 'DATENAIS', 'LIEUNAIS', 'STATUT', 'SEXE', 'CODECLAS')
+            ->orderBy('CODECLAS')
+            ->get()
+            ->groupBy('CODECLAS'); // regroupement par CODECLAS
 
-    return view('pages.inscriptions.exporternoteexcel', compact('eleves'));
-}
-                                                                                                                                                                              
-
+        return view('pages.inscriptions.exporternoteexcel', compact('eleves'));
+    }
 }

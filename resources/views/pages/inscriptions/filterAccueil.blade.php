@@ -368,8 +368,8 @@
                                             @endif
                                         </td>
                                         {{-- <td class="" data-promi="{{ $eleve->classe->promo->CODEPROMO }}">{{ $eleve->classe->promo->LIBELPROMO }}</td> --}}
-                                        <td class="d-none" data-cycle="{{ $eleve->classe->CYCLE }}">
-                                            {{ $eleve->classe->CYCLE }}</td>
+                                        <td class="d-none" data-cycle="{{ $eleve->classe ? $eleve->classe->CYCLE : '' }}">
+                                            {{ $eleve->classe ? $eleve->classe->CYCLE : '' }}</td>
                                         <td class="d-none"
                                             data-promo="{{ $eleve->classe && $eleve->classe->promo ? $eleve->classe->promo->CODEPROMO : '' }}">
                                         </td>

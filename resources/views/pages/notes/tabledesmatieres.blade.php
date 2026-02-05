@@ -7,6 +7,59 @@
         width: 100% !important;
         z-index: 10 !important; /* Assurer que le footer soit au-dessus des autres éléments */
     }
+
+    /* Responsive styles */
+    @media (max-width: 1200px) {
+        .col-lg-12 {
+            padding: 0.5rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .col-lg-12 {
+            padding: 0.25rem;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        .row {
+            margin: 0;
+        }
+        
+        .btn-arrow {
+            font-size: 14px !important;
+        }
+        
+        .table-responsive {
+            font-size: 0.85rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .card-body {
+            padding: 0.75rem;
+        }
+        
+        .btn-arrow {
+            font-size: 12px !important;
+        }
+        
+        .table-responsive {
+            font-size: 0.75rem;
+        }
+        
+        .table th, .table td {
+            padding: 0.25rem;
+            white-space: nowrap;
+        }
+        
+        .btn {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+    }
 </style>
 
 <div class="col-lg-12 grid-margin stretch-card" style="padding-bottom: 3rem !important;">

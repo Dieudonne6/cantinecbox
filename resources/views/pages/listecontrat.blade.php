@@ -1,6 +1,68 @@
 @extends('layouts.master')
 @section('content')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Responsive styles */
+        @media (max-width: 1200px) {
+            .col-lg-12 {
+                padding: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .col-lg-12 {
+                padding: 0.25rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .d-flex {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .card-title {
+                font-size: 1rem;
+                text-align: center;
+            }
+            
+            .btn {
+                font-size: 0.9rem;
+            }
+            
+            .btn-arrow {
+                font-size: 14px !important;
+                align-self: flex-start;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 0.75rem;
+            }
+            
+            .card-title {
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .btn-arrow {
+                font-size: 12px !important;
+            }
+            
+            .offcanvas {
+                width: 85% !important;
+            }
+        }
+    </style>
+    
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">

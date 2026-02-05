@@ -26,6 +26,62 @@
             border-bottom: 20px solid transparent;
             /* Ajoute un espace de 20px sous la dernière ligne du tbody */
         }
+
+        /* Responsive styles */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .col-12 {
+                padding: 0.5rem;
+            }
+            
+            .table-responsive {
+                font-size: 0.85rem;
+            }
+            
+            #donnefinanciere .form-control {
+                height: 1.8rem;
+                margin-left: 0.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 0.25rem;
+            }
+            
+            .col-12 {
+                padding: 0.25rem;
+            }
+            
+            .table-responsive {
+                font-size: 0.75rem;
+            }
+            
+            .table th, .table td {
+                padding: 0.25rem;
+                white-space: nowrap;
+            }
+            
+            #donnefinanciere .form-control {
+                height: 1.5rem;
+                margin-left: 0.25rem;
+                font-size: 0.8rem;
+            }
+            
+            .btn {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
     </style>
 
 

@@ -64,5 +64,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'check.groupe.permission' => \App\Http\Middleware\CheckGroupePermission::class,
+        'switch.database.connection' => \App\Http\Middleware\SwitchDatabaseConnection::class,
     ];
 }
