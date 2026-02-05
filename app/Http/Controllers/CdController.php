@@ -224,7 +224,7 @@ public function saisirnotefilter(Request $request)
         ->first();
 
 
-        $contrat = ParamContrat::first();
+        $contrat = Paramcontrat::first();
 
         $anneeCourante = (int) $contrat->anneencours_paramcontrat;
         // Calcul de l'année suivante

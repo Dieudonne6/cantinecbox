@@ -27,7 +27,7 @@ class RapportannuelController extends Controller
         $configs = ConfigClasseSup::all()->keyBy('codeClas');
         $params2 = Params2::all();
 
-        $contrat = ParamContrat::first();
+        $contrat = Paramcontrat::first();
 
         $anneeCourante = (int) $contrat->anneencours_paramcontrat;
         // Calcul de l'année suivante
@@ -389,7 +389,7 @@ class RapportannuelController extends Controller
 
         $params2 = Params2::all();
 
-        $contrat = ParamContrat::first();
+        $contrat = Paramcontrat::first();
 
         $anneeCourante = (int) $contrat->anneencours_paramcontrat;
         // Calcul de l'année suivante
@@ -517,7 +517,7 @@ class RapportannuelController extends Controller
         }
 
         $params2 = Params2::all();
-        $contrat = ParamContrat::first();
+        $contrat = Paramcontrat::first();
         $anneeCourante = (int) $contrat->anneencours_paramcontrat;
         $anneeSuivante = $anneeCourante + 1;
         $anneeScolaire = "{$anneeCourante}-{$anneeSuivante}";

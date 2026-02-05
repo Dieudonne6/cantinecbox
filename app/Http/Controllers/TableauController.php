@@ -203,7 +203,7 @@ class TableauController extends Controller
         $typeAn = $params2->first()->TYPEAN;         // ou la logique qui convient
         $nom    = ($typeAn == 1) ? 'SEMESTRE' : 'TRIMESTRE';
         // Récupérer l'objet de configuration (par exemple le premier enregistrement)
-        $contrat = ParamContrat::first();
+        $contrat = Paramcontrat::first();
         // Supposons que la colonne s'appelle 'anneencours_paramcontrat' et contient un entier, ex. 2024
         $anneeCourante = (int) $contrat->anneencours_paramcontrat;
         // Calcul de l'année suivante
@@ -243,7 +243,7 @@ class TableauController extends Controller
         $typeAn = $params2->first()->TYPEAN;         // ou la logique qui convient
         $nom    = ($typeAn == 1) ? 'SEMESTRE' : 'TRIMESTRE';
         // Récupérer l'objet de configuration (par exemple le premier enregistrement)
-        $contrat = ParamContrat::first();
+        $contrat = Paramcontrat::first();
         // Supposons que la colonne s'appelle 'anneencours_paramcontrat' et contient un entier, ex. 2024
         $anneeCourante = (int) $contrat->anneencours_paramcontrat;
         // Calcul de l'année suivante
@@ -284,7 +284,7 @@ class TableauController extends Controller
         $typeAn = $params2->first()->TYPEAN;         // ou la logique qui convient
         $nom    = ($typeAn == 1) ? 'SEMESTRE' : 'TRIMESTRE';
         // Récupérer l'objet de configuration (par exemple le premier enregistrement)
-        $contrat = ParamContrat::first();
+        $contrat = Paramcontrat::first();
         // Supposons que la colonne s'appelle 'anneencours_paramcontrat' et contient un entier, ex. 2024
         $anneeCourante = (int) $contrat->anneencours_paramcontrat;
         // Calcul de l'année suivante
@@ -323,7 +323,7 @@ class TableauController extends Controller
         $params2 = Params2::all();
         $typeAn = $params2->first()->TYPEAN;
         $nom = ($typeAn == 1) ? 'SEMESTRE' : 'TRIMESTRE';
-        $contrat = ParamContrat::first();
+        $contrat = Paramcontrat::first();
         $anneeCourante = (int) $contrat->anneencours_paramcontrat;
         $anneeSuivante = $anneeCourante + 1;
         $anneeScolaire = "{$anneeCourante}-{$anneeSuivante}";
