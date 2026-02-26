@@ -13,6 +13,7 @@ use App\Models\PeriodeSave;
 use App\Models\Groupeclasse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class CdController extends Controller
 {
@@ -132,6 +133,7 @@ public function saisirnotefilter(Request $request)
     $classe    = $request->input('classe');
     $matiere   = $request->input('matiere');
     $periode   = $request->input('periode', 1);
+    
     $gclasses  = Groupeclasse::all();
 
     // On ne récupère les matières que si une classe est sélectionnée
@@ -148,6 +150,13 @@ public function saisirnotefilter(Request $request)
     }
 
     // Requête pour les élèves
+    // $elevesQuery = Eleve::query()
+    //     ->when($classe, fn($q) => $q->where('eleve.CODECLAS', $classe))
+    //     ->leftJoin('notes', function ($join) use ($matiere, $periode) {
+    //         $join->on('eleve.MATRICULE', '=', 'notes.MATRICULE')
+    //              ->when($matiere, fn($j) => $j->where('notes.CODEMAT', $matiere))
+    //              ->where('notes.SEMESTRE', $periode);
+    //     });
     $elevesQuery = Eleve::query()
         ->when($classe, fn($q) => $q->where('eleve.CODECLAS', $classe))
         ->leftJoin('notes', function ($join) use ($matiere, $periode) {
@@ -182,6 +191,10 @@ public function saisirnotefilter(Request $request)
   public function enregistrerNotes(Request $request)
   {
     set_time_limit(200); 
+    
+    // Récupérer l'ID de l'utilisateur connecté
+    $codeUser = Auth::id();
+    
     // Valider les données entrantes
     $validatedData = $request->validate([
       'periode' => 'required|integer',
@@ -210,12 +223,16 @@ public function saisirnotefilter(Request $request)
 
     // Parcourir chaque élève et enregistrer les notes
     foreach ($validatedData['notes'] as $matricule => $noteData) {
-        // 1) D’abord, remplacer chaque champ NULL par 21
+        // 1) D'abord, remplacer chaque champ NULL par 21
         foreach ($noteData as $field => $value) {
             if (is_null($value)) {
                 $noteData[$field] = 21;
         }
       }
+      
+      // Ajouter la date de modification
+      $dateModif = now();
+      
       // Rechercher si une note existe déjà pour cet élève, matière, classe et semestre
       $noteExistante = Notes::where('MATRICULE', $matricule)
         ->where('SEMESTRE', $request->periode)
@@ -236,6 +253,8 @@ public function saisirnotefilter(Request $request)
         // Si la note existe, on la met à jour
         $noteExistante->update(array_merge($noteData, [
           'COEF' => $request->champ2,
+          'CODEUSER' => $codeUser,
+          'DATEMODIF' => $dateModif,
         ]));
       } else {
         // Sinon, on crée une nouvelle entrée
@@ -246,6 +265,8 @@ public function saisirnotefilter(Request $request)
           'CODEMAT' => $request->CODEMAT,
           'CODECLAS' => $request->CODECLAS,
           'ANSCOL'    => $anneeScolaire,
+          'CODEUSER' => $codeUser,
+          'DATEMODIF' => $dateModif,
         ]));
       }
     }
@@ -256,7 +277,10 @@ public function saisirnotefilter(Request $request)
   public function deleteNote(Request $request)
     {
       set_time_limit(200); 
-      // dd('yoyoyoyoy');
+      
+      // Récupérer l'ID de l'utilisateur connecté
+      $codeUser = Auth::id();
+      
         $classe  = $request->input('CODECLAS');
         $matiere = $request->input('CODEMAT');
         $periode = $request->input('champ1'); // ou 'periode' selon votre formulaire
@@ -266,13 +290,22 @@ public function saisirnotefilter(Request $request)
             return redirect()->back()->with('error', 'Veuillez sélectionner une classe, une matière et une période valides.');
         }
 
+        // Mettre à jour CODEUSER et DATEMODIF avant suppression pour tracer qui a supprimé et quand
+        Notes::where('CODECLAS', $classe)
+            ->where('CODEMAT', $matiere)
+            ->where('SEMESTRE', $periode)
+            ->update([
+                'CODEUSER' => $codeUser,
+                'DATEMODIF' => now(),
+            ]);
+
         // Supprime les notes correspondant à la classe, la matière et le semestre
            Notes::where('CODECLAS', $classe)
                ->where('CODEMAT', $matiere)
                ->where('SEMESTRE', $periode)
                ->delete();
 
-        return redirect()->back()->with('success', 'Les notes ont bien été supprimées pour la classe, la matière et le période sélectionnées.');
+        return redirect()->back()->with('success', 'Les notes ont bien été supprimées pour la classe, la matière et la période sélectionnées.');
     }
 
   // public function deleteNote(Request $request)
@@ -378,6 +411,9 @@ public function saisirnotefilter(Request $request)
 
   public function permuterNotes(Request $request)
     {
+        // Récupérer l'ID de l'utilisateur connecté
+        $codeUser = Auth::id();
+        
         // 1. Validation des données
         $data = $request->validate([
             'CODEMAT' => 'required|integer|exists:clasmat,CODEMAT', // matière source
@@ -439,7 +475,10 @@ public function saisirnotefilter(Request $request)
                 ]);
 
                 // Créer ou mettre à jour la note cible
-                Notes::updateOrCreate($attributes, $values);
+                Notes::updateOrCreate($attributes, array_merge($values, [
+                    'CODEUSER' => $codeUser,
+                    'DATEMODIF' => now(),
+                ]));
 
                 // dd('yoyoy');
 

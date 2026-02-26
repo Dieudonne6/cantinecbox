@@ -20,6 +20,7 @@
       </h5>
       @endif
     </div> --}}
+
     <div class="dropdown text-end">
       <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true">
         {{ $image = Session::get('image') }}
@@ -40,6 +41,15 @@
         </li>
       </ul>
     </div>
+    {{-- Affichage de la base de données actuelle --}}
+    @if(Session::has('selected_database'))
+      <div class="ms-3 me-3">
+        <span class="badge" style="background-color: #844fc1; color: white;">
+          <i class="fas fa-database me-1"></i>
+          {{ Session::get('selected_database') }}
+        </span>
+      </div>
+    @endif
 
   </div>
 </nav>

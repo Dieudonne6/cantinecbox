@@ -2935,7 +2935,13 @@ class BulletinController extends Controller
             }
 
             if (!empty($insertData)) {
-                DB::table('eleve')->insert($insertData);
+                // Diviser l'insertion en lots pour éviter l'erreur "too many placeholders"
+                $chunkSize = 1000; // Taille du lot
+                $chunks = array_chunk($insertData, $chunkSize);
+                
+                foreach ($chunks as $chunk) {
+                    DB::table('eleve')->insert($chunk);
+                }
                 
                 // Remplir automatiquement la table classes pour les nouvelles classes
                 $this->fillClassesTable($insertData);
@@ -2968,26 +2974,27 @@ class BulletinController extends Controller
             return;
         }
 
-        // Vérifier quelles classes n'existent pas déjà
-        $existingClasses = DB::table('classes')->whereIn('CODECLAS', $classCodes)->pluck('CODECLAS')->toArray();
-        $newClasses = array_diff($classCodes, $existingClasses);
+        // Vider la table classes en conservant uniquement les classes "NON" et "DELETE"
+        DB::table('classes')->whereNotIn('CODECLAS', ['NON', 'DELETE'])->delete();
 
-        if (empty($newClasses)) {
-            return;
-        }
-
-        // Préparer les données pour les nouvelles classes
+        // Préparer les données pour toutes les nouvelles classes
         $classesToInsert = [];
-        foreach ($newClasses as $classCode) {
+        foreach ($classCodes as $classCode) {
             $classData = $this->generateClassData($classCode);
             if ($classData) {
                 $classesToInsert[] = $classData;
             }
         }
 
-        // Insérer les nouvelles classes
+        // Insérer toutes les nouvelles classes
         if (!empty($classesToInsert)) {
-            DB::table('classes')->insert($classesToInsert);
+            // Diviser l'insertion en lots pour éviter l'erreur "too many placeholders"
+            $chunkSize = 1000;
+            $chunks = array_chunk($classesToInsert, $chunkSize);
+            
+            foreach ($chunks as $chunk) {
+                DB::table('classes')->insert($chunk);
+            }
         }
     }
 
@@ -3326,6 +3333,9 @@ class BulletinController extends Controller
      */
     private function fillClasmatTable($elevesData)
     {
+        // Vider complètement la table clasmat
+        DB::table('clasmat')->truncate();
+        
         // Extraire tous les codes de classe uniques
         $classCodes = array_unique(array_filter(array_column($elevesData, 'CODECLAS')));
         

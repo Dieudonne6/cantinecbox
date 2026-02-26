@@ -91,7 +91,7 @@ class PagesController extends Controller
             return $databaseList;
         } catch (\Exception $e) {
             // En cas d'erreur, retourner les bases par défaut connues
-            return ['2025_2026', 'scoracine'];
+            // return ['2025_2026', 'scoracine'];
         }
     }
   public function inscriptioncantine(){
@@ -765,12 +765,17 @@ public function modifieprofil(Request $request, $MATRICULE)
     // Stocker en session
     Session::put('selected_database', $request->database);
     
+    // Extraire l'année du nom de la base et mettre à jour paramcontrat
+    $this->updateAnneeEnCours($request->database);
+    
     // $account = User::where("login",$request->login_usercontrat)->first();
     $account = User::with('groupe')->where("login", $request->login_usercontrat)->first();
     
     if($account){
       if (Hash::check($request->password_usercontrat, $account->motdepasse)) {
 
+        // Authentification Laravel standard
+        Auth::login($account);
 
         Session::put('account', $account);
         $id_usercontrat = $account->id;
@@ -930,6 +935,9 @@ public function modifieprofil(Request $request, $MATRICULE)
       $user->prenomuser = $request->prenom;
       $user->save();
 
+      // Maintenir l'authentification Laravel à jour
+      Auth::login($user);
+      
       Session::put('account', $user);
       // Déconnexion : effacer la session
       // Session::forget('account');
@@ -8039,6 +8047,30 @@ public function recouvrementoperateur(Request $request) {
                   ->get();
     return view('pages.inscriptions.journalresumerecouvrement', compact('scolarite', 'dateDebut', 'dateFin', 'params'));
 }
+    
+    /**
+     * Extrait l'année du nom de la base et met à jour la table paramcontrat
+     */
+    private function updateAnneeEnCours($databaseName)
+    {
+        try {
+            // Extraire l'année du nom de la base (ex: 2025_2026 -> 2025)
+            if (preg_match('/^(\d{4})_\d{4}$/', $databaseName, $matches)) {
+                $anneeEnCours = $matches[1];
+                
+                // Mettre à jour la table paramcontrat
+                DB::table('paramcontrat')->update([
+                    'anneencours_paramcontrat' => $anneeEnCours
+                ]);
+                
+                // Log pour le débogage
+                Log::info("Année en cours mise à jour: {$anneeEnCours} pour la base {$databaseName}");
+            }
+        } catch (\Exception $e) {
+            // En cas d'erreur, logger sans bloquer le processus
+            Log::error("Erreur lors de la mise à jour de l'année en cours: " . $e->getMessage());
+        }
+    }
 }
 
 

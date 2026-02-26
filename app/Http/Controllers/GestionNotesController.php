@@ -7,6 +7,7 @@ use App\Models\Classes;
 use App\Models\Users;
 use App\Models\Matieres;
 use App\Models\Clasmat;
+use Illuminate\Support\Facades\Log;
 
 class GestionNotesController extends Controller
 {
@@ -43,28 +44,46 @@ class GestionNotesController extends Controller
         $coefficients = $request->input('coefficients', []);
         $fondamentales = $request->input('fondamentale', []);
 
+        // Logs de débogage
+        Log::info('Coefficients reçus:', $coefficients);
+        Log::info('Fondamentales reçus:', $fondamentales);
+
         if (empty($coefficients)) {
             return redirect()->back()->with('error', 'Aucune donnée de coefficient reçue.');
         }
 
         foreach ($coefficients as $codeclas => $matieres) {
             foreach ($matieres as $codemat => $coef) {
-                $isFondamentale = $fondamentales[$codeclas][$codemat] ?? 0;
+                $isFondamentale = isset($fondamentales[$codeclas][$codemat]) ? (int)$fondamentales[$codeclas][$codemat] : 0;
+                
+                Log::info("Traitement: CODECLAS=$codeclas, CODEMAT=$codemat, COEF=$coef, FONDAMENTALE=$isFondamentale");
 
                 if ($coef !== null && $coef !== '') {
-                    Clasmat::updateOrCreate(
-                        [
-                            'CODECLAS' => $codeclas,
-                            'CODEMAT' => $codemat,
-                        ],
-                        [
-                            'COEF' => $coef,
-                            'FONDAMENTALE' => $isFondamentale,
-                        ]
-                    );
+                    // Vérifier si l'enregistrement existe déjà
+                    $clasmat = Clasmat::where('CODECLAS', $codeclas)
+                                    ->where('CODEMAT', $codemat)
+                                    ->first();
+
+                    if ($clasmat) {
+                        // Mettre à jour l'enregistrement existant
+                        $clasmat->COEF = $coef;
+                        $clasmat->FONDAMENTALE = $isFondamentale;
+                        $clasmat->save();
+                        Log::info("Mis à jour: ID={$clasmat->id}, FONDAMENTALE={$clasmat->FONDAMENTALE}");
+                    } else {
+                        // Créer un nouvel enregistrement
+                        $newClasmat = new Clasmat();
+                        $newClasmat->CODECLAS = $codeclas;
+                        $newClasmat->CODEMAT = $codemat;
+                        $newClasmat->COEF = $coef;
+                        $newClasmat->FONDAMENTALE = $isFondamentale;
+                        $newClasmat->save();
+                        Log::info("Créé: CODECLAS={$codeclas}, CODEMAT={$codemat}, FONDAMENTALE={$isFondamentale}");
+                    }
                 } else {
-                    // If the coefficient is empty, delete the record.
+                    // Si le champ est vidé, on supprime l'enregistrement existant.
                     Clasmat::where('CODECLAS', $codeclas)->where('CODEMAT', $codemat)->delete();
+                    Log::info("Supprimé: CODECLAS={$codeclas}, CODEMAT={$codemat}");
                 }
             }
         }

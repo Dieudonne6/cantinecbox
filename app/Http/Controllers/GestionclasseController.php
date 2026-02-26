@@ -969,6 +969,12 @@ public function indexEleves(AuthPermissionService $authService)
         ->with('notes')
         ->orderByRaw('LOWER(NOM) ASC, LOWER(PRENOM) ASC')
         ->get();
+    // $eleves = Eleve::where('CODECLAS', '!=', 'NON')
+    // ->where('CODECLAS', '!=', 'DELETE')
+    // ->with('notes')
+    // ->orderBy('NOM', 'asc')
+    // ->orderBy('PRENOM', 'asc')
+    // ->get();
 
     // Calcul des effectifs
     $totalEleves = $eleves->count();
@@ -1011,6 +1017,11 @@ public function filteraccueil($CODECLAS, AuthPermissionService $authService) {
             ->with('notes')
             ->orderByRaw('LOWER(NOM) ASC, LOWER(PRENOM) ASC')
             ->get();
+        // $eleves = Eleve::where('CODECLAS', '!=', 'NON') 
+        //        ->where('CODECLAS', '!=', 'DELETE') 
+        //        ->with('notes') ->orderBy('NOM', 'asc') 
+        //        ->orderBy('PRENOM', 'asc') 
+        //        ->get();
 
             // Calcul des effectifs
     $totalEleves = $eleves->count();

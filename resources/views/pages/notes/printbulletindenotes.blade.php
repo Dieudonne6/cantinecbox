@@ -1,10 +1,5 @@
 @extends('layouts.master')
 @section('content')
-    <!-- Inclusion des bibliothèques pour l'archivage PDF individuel -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
         @if (isset($option['fond']) || isset($option['fond']))
                 <div style=" position: relative; margin-left: 10px; margin-right: 10px; min-height: 100vh; overflow: hidden;">    
 
@@ -127,8 +122,6 @@
 
                     <div class="bulletin" data-nom="{{ $resultat['nom'] }} .''.{{ $resultat['prenom'] }} "
                         data-classe="{{ $resultat['classe'] }}"
-                        data-periode="{{ $request->input('periode', 'defaut') }}"
-                        data-type-periode="{{ $request->input('typePeriode', 'semestre') }}"
                         style="position: relative; {{ $index < count($resultats) - 1 ? 'page-break-after: always;' : '' }}">
 
                         <div class="row" style="display: flex; align-items: flex-start;">
@@ -907,7 +900,8 @@
                                         </div>
 
                                     @endif
-                            </div>
+                            
+                                </div>
                             <div id="appreciation"
                                 style="width: 45%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column; padding: 10px;">
                                 <div
@@ -1216,7 +1210,7 @@
 
                 /* Supprimez ou réduisez les marges automatiques du navigateur si nécessaire */
                 @page {
-                    margin: 5mm;
+                    margin: 1mm;
                     /* Ajustez à votre convenance */
                 }
 
@@ -1330,132 +1324,6 @@
                 window.print();
 
                 document.body.innerHTML = originalContent;
-                
-                // Archivage automatique si la case est cochée
-                // @if(isset($archive) && $archive)
-                //     console.log('Archivage PDF automatique déclenché...');
-                //     archiveBulletinsPDF();
-                // @endif
-            }
-
-            // function archiveBulletinsPDF() {
-            //     console.log('Archivage des bulletins par classe et période...');
-                
-            //     // Vérifier que les bibliothèques nécessaires sont chargées
-            //     if (typeof html2canvas === 'undefined') {
-            //         console.error('❌ html2canvas n\'est pas chargé');
-            //         return;
-            //     }
-                
-            //     if (typeof window.jspdf === 'undefined') {
-            //         console.error('❌ jsPDF n\'est pas chargé');
-            //         return;
-            //     }
-                
-            //     // Sélectionner tous les bulletins individuels
-            //     var bulletinElements = document.querySelectorAll('.bulletin');
-                
-            //     if (bulletinElements.length === 0) {
-            //         console.error("Aucun bulletin trouvé pour l'archivage.");
-            //         return;
-            //     }
-                
-            //     console.log(bulletinElements.length + ' bulletin(s) trouvé(s)');
-                
-            //     // Grouper les bulletins par classe et période
-            //     var groupes = {};
-                
-            //     bulletinElements.forEach(function(bulletinElement) {
-            //         var classe = bulletinElement.getAttribute('data-classe') || 'default';
-            //         var periode = bulletinElement.getAttribute('data-periode') || 'defaut';
-            //         var typePeriode = bulletinElement.getAttribute('data-type-periode') || 'semestre';
-                    
-            //         var cle = classe + '_' + typePeriode + '_' + periode;
-                    
-            //         if (!groupes[cle]) {
-            //             groupes[cle] = {
-            //                 classe: classe,
-            //                 periode: periode,
-            //                 typePeriode: typePeriode,
-            //                 bulletins: []
-            //             };
-            //         }
-                    
-            //         groupes[cle].bulletins.push(bulletinElement);
-            //     });
-                
-            //     console.log('Groupes créés:', Object.keys(groupes).length);
-                
-            //     var promises = [];
-                
-            //     // Traiter chaque groupe
-            //     Object.keys(groupes).forEach(function(cle) {
-            //         var groupe = groupes[cle];
-            //         var timestamp = new Date().getTime();
-            //         var filename = 'bulletins_' + groupe.classe + '_' + groupe.typePeriode + '_' + groupe.periode + '_' + timestamp + '.pdf';
-                    
-            //         console.log('Préparation du groupe:', filename, '(' + groupe.bulletins.length + ' bulletins)');
-                    
-            //         var promise = createPDFForGroup(groupe, filename);
-            //         promises.push(promise);
-            //     });
-                
-            //     Promise.all(promises).then(function() {
-            //         console.log('✅ Tous les groupes de bulletins ont été archivés');
-            //     }).catch(function(error) {
-            //         console.error('❌ Erreur lors de l\'archivage des groupes:', error);
-            //     });
-            // }
-            
-            function createPDFForGroup(groupe, filename) {
-                const { jsPDF } = window.jspdf;
-                var pdf = new jsPDF('p', 'mm', 'a4');
-                
-                var promises = [];
-                
-                groupe.bulletins.forEach(function(bulletinElement, index) {
-                    var promise = html2canvas(bulletinElement).then(function(canvas) {
-                        var imgData = canvas.toDataURL('image/jpeg', 1.0);
-                        var pdfWidth = pdf.internal.pageSize.getWidth();
-                        var pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                        
-                        // Ajouter une nouvelle page sauf pour le premier bulletin
-                        if (index > 0) {
-                            pdf.addPage();
-                        }
-                        
-                        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                    });
-                    
-                    promises.push(promise);
-                });
-                
-                return Promise.all(promises).then(function() {
-                    var pdfBase64 = pdf.output('datauristring');
-                    
-                    return fetch('/archiveBulletin', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            pdf: pdfBase64,
-                            filename: filename,
-                            class: groupe.classe
-                        })
-                    });
-                }).then(function(response) {
-                    return response.json();
-                }).then(function(data) {
-                    if (data.success) {
-                        console.log('✅ Groupe archivé:', filename);
-                    } else {
-                        console.error('❌ Erreur pour', filename, ':', data.message);
-                    }
-                }).catch(function(err) {
-                    console.error('❌ Erreur lors de la création du groupe:', err);
-                });
             }
 
             // document.getElementById('redoublant_oui').addEventListener('click', function(event) {
