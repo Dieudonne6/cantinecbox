@@ -2601,15 +2601,6 @@ class BulletinController extends Controller
     }
 
 
-
-
-
-
-
-
-
-
-
     public function importernote()
     {
         return view('pages.inscriptions.importenote');

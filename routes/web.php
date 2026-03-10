@@ -31,6 +31,7 @@ use App\Http\Controllers\BulletinPaieController;
 use App\Http\Controllers\EmploidutempsController;
 use App\Http\Controllers\GestionRolesController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ImportnoteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -418,6 +419,13 @@ Route::middleware(['switch.database.connection'])->group(function () {
     Route::post('/generate-server-pdf', [BulletinController::class, 'generateServerPDF']);
 
     Route::post('/bulletindenotes', [BulletinController::class, 'printimagefond'])->name('bulletindenotes');
+    
+    //Importation de notes
+    Route::get('/importnote',[ImportnoteController::class, 'index'])->name('importnote');
+    Route::post('/previewImport', [ImportnoteController::class, 'importGlobal'])
+    ->name('previewImport');
+    Route::post('/notes/save-import', [ImportnoteController::class, 'saveImport'])
+    ->name('notes.saveImport');
 
     Route::get('/extrairenote', [BulletinController::class, 'extrairenote'])->name('extrairenote');
     Route::post('/extractnote', [BulletinController::class, 'extractnote'])->name('extractnote');
