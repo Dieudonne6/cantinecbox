@@ -47,9 +47,9 @@ class NotesMatiereSheetExport implements FromCollection, WithHeadings, WithTitle
                 'MATRICULE'     => "\u{200B}" . $firstNote->eleve->MATRICULEX,
                 'Nom' => $firstNote->eleve->NOM,
                 'Prenom' => $firstNote->eleve->PRENOM,
-                'Moyenne Interro' => ($firstNote->MI == 21 || $firstNote->MI == -1) ? '**.**' : round($firstNote->MI, 2),
-                'DEV1'          => ($firstNote->DEV1 == 21 || $firstNote->DEV1 == -1) ? '**.**' : $firstNote->DEV1,
-                'DEV2'          => ($firstNote->DEV2 == 21 || $firstNote->DEV2 == -1) ? '**.**' : $firstNote->DEV2,
+                'Moyenne Interro' => ($firstNote->MI == 21 || $firstNote->MI == -1) ? '**.**' : (string) round($firstNote->MI, 2),
+                'DEV1'          => ($firstNote->DEV1 == 21 || $firstNote->DEV1 == -1) ? '**.**' : (string) $firstNote->DEV1 ,
+                'DEV2'          => ($firstNote->DEV2 == 21 || $firstNote->DEV2 == -1) ? '**.**' : (string) $firstNote->DEV2 ,
             ]);
         }
 
@@ -94,6 +94,7 @@ class NotesMatiereSheetExport implements FromCollection, WithHeadings, WithTitle
                     $sheet->getStyleByColumnAndRow($i, 2)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                 }
                 $rowCount = count($sheet->toArray());
+                // $rowCount = $sheet->getHighestRow();
                 foreach ($sheet->getRowIterator(1, $rowCount) as $row) {
                     foreach ($row->getCellIterator() as $cell) {
                         $cell->getStyle()->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
@@ -111,8 +112,12 @@ class NotesMatiereSheetExport implements FromCollection, WithHeadings, WithTitle
                                    null, true, false)[0];
     
                 // Filtre les cellules non-vides
+                // $nonEmptyCells = array_filter($lastRowValues, function($cell) {
+                //     return !is_null($cell) && trim((string)$cell) !== '';
+                // });
+
                 $nonEmptyCells = array_filter($lastRowValues, function($cell) {
-                    return !is_null($cell) && trim((string)$cell) !== '';
+                    return $cell !== null && $cell !== '';
                 });
     
                 // Si aucun élément non-vide, on enlève la ligne
@@ -147,10 +152,20 @@ class NotesMatiereSheetExport implements FromCollection, WithHeadings, WithTitle
         return [];
     }
 
+    // public function columnFormats(): array
+    // {
+    //     return [
+    //         'A' => NumberFormat::FORMAT_TEXT, // Forcer la colonne MATRICULE en texte
+    //     ];
+    // }
+
     public function columnFormats(): array
     {
         return [
-            'A' => NumberFormat::FORMAT_TEXT, // Forcer la colonne MATRICULE en texte
+            'A' => NumberFormat::FORMAT_TEXT,
+            'D' => NumberFormat::FORMAT_NUMBER_00,
+            'E' => NumberFormat::FORMAT_NUMBER,
+            'F' => NumberFormat::FORMAT_NUMBER,
         ];
     }
 }

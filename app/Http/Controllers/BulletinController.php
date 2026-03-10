@@ -915,10 +915,10 @@ class BulletinController extends Controller
         $nbabsence = $request->input('nbabsence');
         $classeSelectionne = $request->input('selected_classes');
         $interligne = $request->input('interligne', 7); // Valeur par défaut de 7mm
-        $archive = $request->input('archive', false); // Récupération de la variable archive
+        // $archive = $request->input('archive', false); // Récupération de la variable archive
         
         // Log pour débogage
-        \Log::info('Variable archive reçue: ' . ($archive ? 'true' : 'false'));
+        // \Log::info('Variable archive reçue: ' . ($archive ? 'true' : 'false'));
         \Log::info('Toutes les données reçues: ' . json_encode($request->all()));
         
         $promo = Promo::all();
@@ -2326,7 +2326,7 @@ class BulletinController extends Controller
         //     $pdf->save($destinationPath . '/' . $filename);
 
         // dd($option);
-        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean', 'params2', 'logo', 'logoBase64', 'mimeType', 'interligne', 'image', 'archive'));
+        return view('pages.notes.printbulletindenotes', compact('request', 'resultats', 'eleves', 'option', 'entete', 'typean', 'params2', 'logo', 'logoBase64', 'mimeType', 'interligne', 'image'));
     }
 
     /**
@@ -2876,6 +2876,12 @@ class BulletinController extends Controller
                 $sexe     = isset($row[3]) ? ($row[3] === 'M' ? 1 : ($row[3] === 'F' ? 2 : null)) : null;
                 $statut   = isset($row[4]) ? ($row[4] === 'R' ? 1 : ($row[4] === 'N' ? 0 : null)) : null;
                 $classe   = $row[5] ?? null;
+                
+                // Retirer tous les espaces du CODECLAS
+                if ($classe) {
+                    $classe = preg_replace('/\s+/', '', $classe);
+                }
+                
                 $lieunais = $row[6] ?? null;
                 $datenais = $row[7] ?? null;
                 
@@ -3429,31 +3435,31 @@ class BulletinController extends Controller
         $data = $request->json()->all();
         $html = $data['html'] ?? null;
         $filename = $data['filename'] ?? 'bulletin.pdf';
-        $archive = $data['archive'] ?? false;
+        // $archive = $data['archive'] ?? false;
 
         if ($html) {
             // Utiliser DomPDF pour générer le PDF
             $pdf = PDF::loadHTML($html);
             $pdfContent = $pdf->output();
 
-            if ($archive) {
-                // Utiliser le dossier spécifié par l'utilisateur
-                $destinationPath = 'C:\\Users\\USER\\Documents\\ArchiveSCHOOLBOX';
+            // if ($archive) {
+            //     // Utiliser le dossier spécifié par l'utilisateur
+            //     $destinationPath = 'C:\\Users\\USER\\Documents\\ArchiveSCHOOLBOX';
                 
-                // Créer le dossier s'il n'existe pas
-                if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0755, true);
-                }
+            //     // Créer le dossier s'il n'existe pas
+            //     if (!file_exists($destinationPath)) {
+            //         mkdir($destinationPath, 0755, true);
+            //     }
                 
-                $fullPath = $destinationPath . '\\' . $filename;
-                file_put_contents($fullPath, $pdfContent);
+            //     $fullPath = $destinationPath . '\\' . $filename;
+            //     file_put_contents($fullPath, $pdfContent);
 
-                return response()->json([
-                    'success' => true, 
-                    'path' => $fullPath,
-                    'message' => 'Bulletin archivé avec succès dans ' . $fullPath
-                ]);
-            }
+            //     return response()->json([
+            //         'success' => true, 
+            //         'path' => $fullPath,
+            //         'message' => 'Bulletin archivé avec succès dans ' . $fullPath
+            //     ]);
+            // }
 
             // Retourner le PDF pour téléchargement
             return response($pdfContent)
@@ -3465,46 +3471,47 @@ class BulletinController extends Controller
     }
 
 
-    public function archiveBulletin(Request $request)
-    {
-        $data = $request->json()->all();
-        $pdfDataUri = $data['pdf'] ?? null;
-        $filename = $data['filename'] ?? 'bulletin.pdf';
-        $classCode = $data['class'] ?? 'default';
+    // public function archiveBulletin(Request $request)
+    // {
+    //     $data = $request->json()->all();
+    //     $pdfDataUri = $data['pdf'] ?? null;
+    //     $filename = $data['filename'] ?? 'bulletin.pdf';
+    //     $classCode = $data['class'] ?? 'default';
 
-        if ($pdfDataUri) {
-            $parts = explode(',', $pdfDataUri);
-            $pdfBase64 = end($parts);
-            $pdfContent = base64_decode($pdfBase64);
+    //     if ($pdfDataUri) {
+    //         $parts = explode(',', $pdfDataUri);
+    //         $pdfBase64 = end($parts);
+    //         $pdfContent = base64_decode($pdfBase64);
 
-            // Utiliser le dossier spécifié par l'utilisateur: C:\Users\USER\Documents\ArchiveSCHOOLBOX
-            $destinationPath = 'C:\\Users\\USER\\Documents\\ArchiveSCHOOLBOX';
+    //         // Utiliser le vrai dossier Documents de l'utilisateur Windows
+    //         $userProfile = getenv('USERPROFILE') ?: getenv('HOME');
+    //         $destinationPath = $userProfile . '\\Documents\\ArchiveSCHOOLBOX';
             
-            // Créer le dossier s'il n'existe pas
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0755, true);
-            }
+    //         // Créer le dossier s'il n'existe pas
+    //         if (!file_exists($destinationPath)) {
+    //             mkdir($destinationPath, 0755, true);
+    //         }
             
-            // Créer un sous-dossier pour la classe si spécifié
-            if ($classCode && $classCode !== 'default') {
-                $classPath = $destinationPath . '\\' . $classCode;
-                if (!file_exists($classPath)) {
-                    mkdir($classPath, 0755, true);
-                }
-                $destinationPath = $classPath;
-            }
+    //         // Créer un sous-dossier pour la classe si spécifié
+    //         if ($classCode && $classCode !== 'default') {
+    //             $classPath = $destinationPath . '\\' . $classCode;
+    //             if (!file_exists($classPath)) {
+    //                 mkdir($classPath, 0755, true);
+    //             }
+    //             $destinationPath = $classPath;
+    //         }
             
-            $fullPath = $destinationPath . '\\' . $filename;
-            file_put_contents($fullPath, $pdfContent);
+    //         $fullPath = $destinationPath . '\\' . $filename;
+    //         file_put_contents($fullPath, $pdfContent);
 
-            return response()->json([
-                'success' => true, 
-                'path' => $fullPath,
-                'message' => 'Bulletin archivé avec succès dans ' . $fullPath
-            ]);
-        }
-        return response()->json(['success' => false, 'message' => 'Aucun PDF reçu'], 400);
-    }
+    //         return response()->json([
+    //             'success' => true, 
+    //             'path' => $fullPath,
+    //             'message' => 'Bulletin archivé avec succès dans ' . $fullPath
+    //         ]);
+    //     }
+    //     return response()->json(['success' => false, 'message' => 'Aucun PDF reçu'], 400);
+    // }
 
 
     //Exportation vers le fichier excel

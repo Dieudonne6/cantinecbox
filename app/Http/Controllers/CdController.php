@@ -188,90 +188,160 @@ public function saisirnotefilter(Request $request)
     ));
 }
 
+  // public function enregistrerNotes(Request $request)
+  // {
+  //   set_time_limit(200); 
+    
+  //   // Récupérer l'ID de l'utilisateur connecté
+  //   $codeUser = Auth::id();
+    
+  //   // Valider les données entrantes
+  //   $validatedData = $request->validate([
+  //     'periode' => 'required|integer',
+  //     'champ2' => 'required|integer',
+  //     'CODEMAT' => 'required|integer',
+  //     'CODECLAS' => 'required|string',
+  //     'notes' => 'required|array',
+  //     'notes.*.INT1' => 'nullable|numeric|max:20',
+  //     'notes.*.INT2' => 'nullable|numeric|max:20',
+  //     'notes.*.INT3' => 'nullable|numeric|max:20',
+  //     'notes.*.INT4' => 'nullable|numeric|max:20',
+  //     'notes.*.INT5' => 'nullable|numeric|max:20',
+  //     'notes.*.INT6' => 'nullable|numeric|max:20',
+  //     'notes.*.INT7' => 'nullable|numeric|max:20',
+  //     'notes.*.INT8' => 'nullable|numeric|max:20',
+  //     'notes.*.INT9' => 'nullable|numeric|max:20',
+  //     'notes.*.INT10' => 'nullable|numeric|max:20',
+  //     'notes.*.MI' => 'nullable|numeric|max:20',
+  //     'notes.*.DEV1' => 'nullable|numeric|max:20',
+  //     'notes.*.DEV2' => 'nullable|numeric|max:20',
+  //     'notes.*.DEV3' => 'nullable|numeric|max:20',
+  //     'notes.*.MS' => 'nullable|numeric|max:20',
+  //     'notes.*.TEST' => 'nullable|numeric|max:20',
+  //     'notes.*.MS1' => 'nullable|numeric|max:20',
+  //   ]);
+
+  //   // Parcourir chaque élève et enregistrer les notes
+  //   foreach ($validatedData['notes'] as $matricule => $noteData) {
+  //       // 1) D'abord, remplacer chaque champ NULL par 21
+  //       foreach ($noteData as $field => $value) {
+  //           if (is_null($value)) {
+  //               $noteData[$field] = 21;
+  //       }
+  //     }
+      
+  //     // Ajouter la date de modification
+  //     $dateModif = now();
+      
+  //     // Rechercher si une note existe déjà pour cet élève, matière, classe et semestre
+  //     $noteExistante = Notes::where('MATRICULE', $matricule)
+  //       ->where('SEMESTRE', $request->periode)
+  //       ->where('CODEMAT', $request->CODEMAT)
+  //       ->where('CODECLAS', $request->CODECLAS)
+  //       ->first();
+
+
+  //       $contrat = Paramcontrat::first();
+
+  //       $anneeCourante = (int) $contrat->anneencours_paramcontrat;
+  //       // Calcul de l'année suivante
+  //       $anneeSuivante = $anneeCourante + 1;
+  //       $anneeScolaire = "{$anneeCourante}-{$anneeSuivante}";
+
+
+  //     if ($noteExistante) {
+  //       // Si la note existe, on la met à jour
+  //       $noteExistante->update(array_merge($noteData, [
+  //         'COEF' => $request->champ2,
+  //         'CODEUSER' => $codeUser,
+  //         'DATEMODIF' => $dateModif,
+  //       ]));
+  //     } else {
+  //       // Sinon, on crée une nouvelle entrée
+  //       Notes::create(array_merge($noteData, [
+  //         'MATRICULE' => $matricule,
+  //         'SEMESTRE' => $request->periode,
+  //         'COEF' => $request->champ2,
+  //         'CODEMAT' => $request->CODEMAT,
+  //         'CODECLAS' => $request->CODECLAS,
+  //         'ANSCOL'    => $anneeScolaire,
+  //         'CODEUSER' => $codeUser,
+  //         'DATEMODIF' => $dateModif,
+  //       ]));
+  //     }
+  //   }
+
+  //   return redirect()->back()->with('success', 'Les notes ont été enregistrées avec succès.');
+  // }
+
   public function enregistrerNotes(Request $request)
   {
-    set_time_limit(200); 
-    
-    // Récupérer l'ID de l'utilisateur connecté
-    $codeUser = Auth::id();
-    
-    // Valider les données entrantes
-    $validatedData = $request->validate([
-      'periode' => 'required|integer',
-      'champ2' => 'required|integer',
-      'CODEMAT' => 'required|integer',
-      'CODECLAS' => 'required|string',
-      'notes' => 'required|array',
-      'notes.*.INT1' => 'nullable|numeric|max:20',
-      'notes.*.INT2' => 'nullable|numeric|max:20',
-      'notes.*.INT3' => 'nullable|numeric|max:20',
-      'notes.*.INT4' => 'nullable|numeric|max:20',
-      'notes.*.INT5' => 'nullable|numeric|max:20',
-      'notes.*.INT6' => 'nullable|numeric|max:20',
-      'notes.*.INT7' => 'nullable|numeric|max:20',
-      'notes.*.INT8' => 'nullable|numeric|max:20',
-      'notes.*.INT9' => 'nullable|numeric|max:20',
-      'notes.*.INT10' => 'nullable|numeric|max:20',
-      'notes.*.MI' => 'nullable|numeric|max:20',
-      'notes.*.DEV1' => 'nullable|numeric|max:20',
-      'notes.*.DEV2' => 'nullable|numeric|max:20',
-      'notes.*.DEV3' => 'nullable|numeric|max:20',
-      'notes.*.MS' => 'nullable|numeric|max:20',
-      'notes.*.TEST' => 'nullable|numeric|max:20',
-      'notes.*.MS1' => 'nullable|numeric|max:20',
-    ]);
+      set_time_limit(200);
 
-    // Parcourir chaque élève et enregistrer les notes
-    foreach ($validatedData['notes'] as $matricule => $noteData) {
-        // 1) D'abord, remplacer chaque champ NULL par 21
-        foreach ($noteData as $field => $value) {
-            if (is_null($value)) {
-                $noteData[$field] = 21;
-        }
-      }
-      
-      // Ajouter la date de modification
+      // Utilisateur connecté
+      $codeUser = Auth::id();
       $dateModif = now();
-      
-      // Rechercher si une note existe déjà pour cet élève, matière, classe et semestre
-      $noteExistante = Notes::where('MATRICULE', $matricule)
-        ->where('SEMESTRE', $request->periode)
-        ->where('CODEMAT', $request->CODEMAT)
-        ->where('CODECLAS', $request->CODECLAS)
-        ->first();
 
+      // Validation
+      $validatedData = $request->validate([
+          'periode' => 'required|integer',
+          'champ2' => 'required|integer',
+          'CODEMAT' => 'required|integer',
+          'CODECLAS' => 'required|string',
+          'notes' => 'required|array',
 
-        $contrat = Paramcontrat::first();
+          'notes.*.INT1' => 'nullable|numeric|max:20',
+          'notes.*.INT2' => 'nullable|numeric|max:20',
+          'notes.*.INT3' => 'nullable|numeric|max:20',
+          'notes.*.INT4' => 'nullable|numeric|max:20',
+          'notes.*.INT5' => 'nullable|numeric|max:20',
+          'notes.*.INT6' => 'nullable|numeric|max:20',
+          'notes.*.INT7' => 'nullable|numeric|max:20',
+          'notes.*.INT8' => 'nullable|numeric|max:20',
+          'notes.*.INT9' => 'nullable|numeric|max:20',
+          'notes.*.INT10' => 'nullable|numeric|max:20',
+          'notes.*.MI' => 'nullable|numeric|max:20',
+          'notes.*.DEV1' => 'nullable|numeric|max:20',
+          'notes.*.DEV2' => 'nullable|numeric|max:20',
+          'notes.*.DEV3' => 'nullable|numeric|max:20',
+          'notes.*.MS' => 'nullable|numeric|max:20',
+          'notes.*.TEST' => 'nullable|numeric|max:20',
+          'notes.*.MS1' => 'nullable|numeric|max:20',
+      ]);
 
-        $anneeCourante = (int) $contrat->anneencours_paramcontrat;
-        // Calcul de l'année suivante
-        $anneeSuivante = $anneeCourante + 1;
-        $anneeScolaire = "{$anneeCourante}-{$anneeSuivante}";
+      // Récupérer l'année scolaire UNE SEULE FOIS
+      $contrat = Paramcontrat::first();
+      $anneeCourante = (int) $contrat->anneencours_paramcontrat;
+      $anneeSuivante = $anneeCourante + 1;
+      $anneeScolaire = "{$anneeCourante}-{$anneeSuivante}";
 
+      foreach ($validatedData['notes'] as $matricule => $noteData) {
 
-      if ($noteExistante) {
-        // Si la note existe, on la met à jour
-        $noteExistante->update(array_merge($noteData, [
-          'COEF' => $request->champ2,
-          'CODEUSER' => $codeUser,
-          'DATEMODIF' => $dateModif,
-        ]));
-      } else {
-        // Sinon, on crée une nouvelle entrée
-        Notes::create(array_merge($noteData, [
-          'MATRICULE' => $matricule,
-          'SEMESTRE' => $request->periode,
-          'COEF' => $request->champ2,
-          'CODEMAT' => $request->CODEMAT,
-          'CODECLAS' => $request->CODECLAS,
-          'ANSCOL'    => $anneeScolaire,
-          'CODEUSER' => $codeUser,
-          'DATEMODIF' => $dateModif,
-        ]));
+          // Remplacer les NULL par 21
+          foreach ($noteData as $field => $value) {
+              if (is_null($value)) {
+                  $noteData[$field] = 21;
+              }
+          }
+
+          // Update ou Insert automatiquement
+          Notes::updateOrCreate(
+              [
+                  'MATRICULE' => $matricule,
+                  'SEMESTRE'  => $request->periode,
+                  'CODEMAT'   => $request->CODEMAT,
+              ],
+              array_merge($noteData, [
+                  'COEF'      => $request->champ2,
+                  'CODECLAS'  => $request->CODECLAS,
+                  'ANSCOL'    => $anneeScolaire,
+                  'CODEUSER'  => $codeUser,
+                  'DATEMODIF' => $dateModif,
+              ])
+          );
       }
-    }
 
-    return redirect()->back()->with('success', 'Les notes ont été enregistrées avec succès.');
+      return redirect()->back()->with('success', 'Les notes ont été enregistrées avec succès.');
   }
 
   public function deleteNote(Request $request)

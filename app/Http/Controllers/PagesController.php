@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Models\Scolarite;
 use App\Models\Eleve;
+use App\Models\Notes;
 use App\Models\Contrat;
 use App\Models\Duplicatafacture;
 use App\Models\Classe;
@@ -7832,6 +7833,10 @@ public function enregistrerPaiement(Request $request, $matricule)
       $modifieleve->CODEWEB = $formateMatricule;
       
       $modifieleve->update();
+
+      $modifiEleveInfoNote = Notes::where('MATRICULE', $MATRICULE)->first();
+      $modifiEleveInfoNote->CODECLAS = $request->input('classe');
+      $modifiEleveInfoNote->update();
       
       return back()->with('status', 'Modification effectuée avec succès');
     }

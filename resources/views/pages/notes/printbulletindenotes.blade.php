@@ -1,29 +1,12 @@
 @extends('layouts.master')
 @section('content')
-        @if (isset($option['fond']) || isset($option['fond']))
-                <div style=" position: relative; margin-left: 10px; margin-right: 10px; min-height: 100vh; overflow: hidden;">    
-
-                           <div class="bulletin-bg" style="position: absolute;
-                                top: 0;
-                                left: 0;
-                                width: 100%;
-                                height: 100%;
-                                background-image: url('{{ $image ? asset('img/fonds/' . $image) : '' }}');
-                                background-position: center;
-                                "> </div>
-            <div style="
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: rgba(255, 255, 255, 0.7);
-            "></div> 
-
-        @else
-
-        <div style="margin-left: 10px; margin-right: 10px;">    
-        @endif
+    @if (isset($option['fond']))
+        <div style="position: relative; margin-left: 10px; margin-right: 10px; min-height: 100vh; overflow: hidden;">
+            <div class="bulletin-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('{{ $image ? asset('img/fonds/' . $image) : '' }}'); background-position: center;"></div>
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.7);"></div>
+    @else
+        <div style="margin-left: 10px; margin-right: 10px;">
+    @endif
               
 
         <div class="col-lg-12" style="margin-top: 0; padding-top: 0;">
@@ -122,7 +105,8 @@
 
                     <div class="bulletin" data-nom="{{ $resultat['nom'] }} .''.{{ $resultat['prenom'] }} "
                         data-classe="{{ $resultat['classe'] }}"
-                        style="position: relative; {{ $index < count($resultats) - 1 ? 'page-break-after: always;' : '' }}">
+                        {{-- style="position: relative; {{ $index < count($resultats) - 1 ? 'page-break-after: always;' : '' }}"> --}}
+                        style="position: relative; page-break-after: always;">
 
                         <div class="row" style="display: flex; align-items: flex-start;">
                             {{-- Logo, aligné en haut --}}
@@ -192,14 +176,14 @@
 
                         </br>
                         </br>
-                        <div class="d-flex">
+                        <div class="d-flex" style="align-items: stretch;">
                             <div id="donneeleve"
-                                style="width: 60%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
+                                style="width: 60%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column; padding: 10px; box-sizing: border-box;">
                                 <h4 class="ml-2" style="margin-top: 5px; font-weight: 200;">NOM : <span
                                         class="font-weight-bold">{{ $resultat['nom'] }}</span></h4>
                                 <h4 class="ml-2" style="margin-top: 5px; font-weight: 200;">PRENOMS : <span
                                         class="font-weight-bold">{{ $resultat['prenom'] }}</span></h4>
-                                <div class="d-flex">
+                                <div class="d-flex" style="margin-top: auto;">
                                     <h4 class="ml-2" style="margin-top: 5px; font-weight: 400; white-space: nowrap;">
                                         Redoublant (e) :
                                         <label for="redoublant_oui">OUI</label>
@@ -217,15 +201,13 @@
                                 </div>
                             </div>
                             <div
-                                style="width: 20%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
+                                style="width: 20%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; padding: 10px; box-sizing: border-box;">
                                 <h5 class="ml-2 d-inline-block"
-                                    style="margin-top: 20px; margin-bottom: 0; font-size: 14px; font-weight: 400;"
+                                    style="margin-bottom: 0; font-size: 14px; font-weight: 400;"
                                     id="sco">
                                     Année scolaire : {{ $resultat['anneScolaire'] }}
                                 </h5>
-                                <br>
-                                <br>
-                                <h5 id="periode" class="text-center" style="margin-top: 8px; font-weight: bold;">
+                                <h5 id="periode" class="text-center" style="margin-top: 20px; font-weight: bold; flex-grow: 1; display: flex; align-items: center; justify-content: center;">
                                     @switch($resultat['periode'])
                                         @case('1')
                                             1er {{ $periode }}
@@ -241,11 +223,10 @@
                                 </h5>
                             </div>
                             <div id="classe"
-                                style="width: 20%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                                <h5 class="ml-2" style="margin-top: 20px; font-weight: 400;" id="sco">Classe : <span
+                                style="width: 20%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; padding: 10px; box-sizing: border-box;">
+                                <h5 class="ml-2" style="margin-top: 0; font-weight: 400;" id="sco">Classe : <span
                                         class="font-weight-bold">{{ $resultat['classe'] }}</span></h5>
-                                <br>
-                                <h5 class="ml-2" style="margin-top: 0; font-weight: 400;">Effectif : <span
+                                <h5 class="ml-2" style="margin-top: 20px; font-weight: 400;">Effectif : <span
                                         class="font-weight-bold">{{ $resultat['effectif'] }}</span></h5>
                             </div>
                         </div>
@@ -574,10 +555,10 @@
                             </tbody>
                         </table>
                         <div id="ligne" style="width: 100%; height: 1px; background-color: rgb(0, 0, 0);"></div>
-                        <div class="d-flex" style="height: 90px; margin-top:5px; margin-bottom:5px;">
+                        <div class="d-flex" style="align-items: stretch; margin-top:5px; margin-bottom:5px;">
                             <div
-                                style="width: 23%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                                <h4 style="margin-top: 32px; text-align:left;">BILAN {{ strtoupper($texte) }}</h4>
+                                style="width: 23%; min-width: 23%; max-width: 23%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; padding: 10px; box-sizing: border-box; overflow: hidden;">
+                                <h4 style="text-align:left; margin: 0; font-size: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">BILAN {{ strtoupper($texte) }}</h4>
 
                             </div>
                             @php
@@ -589,16 +570,16 @@
                                     $moyenne = 0; // Ou une autre valeur par défaut
                                 }
                             @endphp
-                            <div style="width: 45%; margin-left: 1%">
+                            <div style="width: 45%; min-width: 45%; max-width: 45%; margin-left: 1%; display: flex; flex-direction: column; padding: 10px; box-sizing: border-box; overflow: hidden;">
                                 <div class="d-flex">
-                                    <h6 style="text-align: center; font-weight: bold" class="mt-1">Moyenne
+                                    <h6 style="text-align: center; font-weight: bold" class="mt-1; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Moyenne
                                         {{ $texte2 }} :
                                         &nbsp&nbsp <span
                                             style="font-size: 20px;">{{ $total_moyenne_coeffs != 0 && $resultat['rang_1'] != null  ? number_format($moyenne, 2) : '**.**' }}</span>
                                             {{-- style="font-size: 20px;">{{ $total_moyenne_coeffs != 0 ? number_format($moyenne, 2) : '**.**' }}</span> --}}
                                     </h6>
                                     @if (isset($option['rang_general']) && $option['rang_general'])
-                                        <h6 style="margin-left: 40px; font-weight: 50" class="mt-1">Rang
+                                        <h6 style="margin-left: 40px; font-weight: 50" class="mt-1; font-size: 18px; white-space: nowrap;">Rang
                                             :&nbsp&nbsp&nbsp
                                             @if ($resultat['rang_1'] == 1)
                                                 <span
@@ -612,23 +593,23 @@
                                         </h6>
                                     @endif
                                 </div>
-                                <table id="tableau_bilan" style="width: 100%;">
+                                <table id="tableau_bilan" style="width: 100%; margin-top: auto; font-size: 12px; table-layout: fixed;">
                                     <thead>
                                         <tr>
-                                            <th style="font-weight: normal;">Plus forte Moy.</th>
-                                            <th style="font-weight: normal;">Plus faible Moy.</th>
-                                            <th style="font-weight: normal;">Moy. de la classe</th>
+                                            <th style="font-weight: normal; space-between; font-size: 16px; ">Plus forte Moy.</th>
+                                            <th style="font-weight: normal; space-between; font-size: 16px; ">Plus faible Moy.</th>
+                                            <th style="font-weight: normal; space-between; font-size: 16px; ">Moy. de la classe</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="text-center">
+                                            <td class="text-center" style=" word-break: break-all; space-between; font-size: 18px;">
                                                 <strong>{{ number_format($resultat['moyenne_forte_1'], 2) }}</strong>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-center" style=" word-break: break-all; space-between; font-size: 18px;">
                                                 <strong>{{ number_format($resultat['moyenne_faible_1'], 2) }}</strong>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-center" style=" word-break: break-all; space-between; font-size: 18px;">
                                                 <strong>{{ number_format($resultat['moyenne_classe_1'], 2) }}</strong>
                                             </td>
                                         </tr>
@@ -637,35 +618,35 @@
                             </div>
 
                             <div class=""
-                                style="width: 32%; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px;">
-                                <div style="display: flex; justify-content: space-between; font-size: 16px;"
+                                style="width: 30%; min-width: 30%; max-width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px; margin-left: 10px; display: flex; flex-direction: column; padding: 10px; box-sizing: border-box; overflow: hidden;">
+                                <div style="display: flex; justify-content: space-between; font-size: 16px; margin-bottom: 3px;"
                                     class="mt-2">
-                                    <span><strong>Bilan Matières Littéraires </strong></span>
+                                    <span style="font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>Bilan Matières Littéraires </strong></span>
                                     <span
-                                        style="font-weight: bold; font-size:18px;">{{ $resultat['moyenne_bilan_litteraire_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_litteraire_1'], 2) }}</span>
+                                        style="font-weight: bold; font-size: 15px; white-space: nowrap;">{{ $resultat['moyenne_bilan_litteraire_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_litteraire_1'], 2) }}</span>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; font-size: 16px; margin-bottom: 3px;"
+                                    class="mt-1">
+                                    <span style="font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>Bilan Matières Scientifiques </strong></span>
+                                    <span
+                                        style="font-weight: bold; font-size: 15px; white-space: nowrap;">{{ $resultat['moyenne_bilan_scientifique_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_scientifique_1'], 2) }}</span>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; font-size: 16px;"
                                     class="mt-1">
-                                    <span><strong>Bilan Matières Scientifiques </strong></span>
+                                    <span style="font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>Bilan Matières Fondamentales </strong></span>
                                     <span
-                                        style="font-weight: bold; font-size:18px;">{{ $resultat['moyenne_bilan_scientifique_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_scientifique_1'], 2) }}</span>
-                                </div>
-
-                                <div style="display: flex; justify-content: space-between; font-size: 16px;"
-                                    class="mt-1">
-                                    <span><strong>Bilan Matières Fondamentales </strong></span>
-                                    <span
-                                        style="font-weight: bold; font-size:18px;">{{ $resultat['moyenne_bilan_fondamentale_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_fondamentale_1'], 2) }}</span>
+                                        style="font-weight: bold; font-size: 15px; white-space: nowrap;">{{ $resultat['moyenne_bilan_fondamentale_1'] == -1 ? '**' : number_format($resultat['moyenne_bilan_fondamentale_1'], 2) }}</span>
                                 </div>
                             </div>
 
                         </div>
                         @if (($typean == 1 && $resultat['periode'] == 2) || ($typean == 2 && $resultat['periode'] == 3))
-                            <div {{-- id="bilan_annuel" --}} class="d-flex"
+                            <div id="bilan_annuel_container" class="d-flex"
                                 style="border: 1px solid black; border-radius: 10px; background-color: rgb(128, 128, 128, 0.2)">
                                 <!-- Bloc Bilan Annuel -->
-                                <div style="margin-left: 20px; padding-top: 10px;">
+                                <div style="width: 23%; min-width: 23%; max-width: 23%; margin-left: 1%; padding-top: 10px;">
                                     <h5>BILAN ANNUEL</h5>
                                     <p style="font-size: 15px">Lettres :
                                         {{ $resultat['moyenneBilanLitteraire'] != -1 ? number_format($resultat['moyenneBilanLitteraire'], 2) : '**.**' }}
@@ -679,7 +660,7 @@
                                 </div>
 
                                 <!-- Bloc Moyenne Annuelle -->
-                                <div style="margin-left: 70px;">
+                                <div style="width: 45%; min-width: 45%; max-width: 45%; margin-left: 1%; padding-top: 10px;">
                                     <div class="d-flex" style="align-items: normal; padding-top: 10px;">
                                         <h5 class="ml-5">Moyenne Annuelle :
                                             {{ $resultat['moyenneAnnuel'] != -1 && $resultat['moyenneAnnuel'] != 21 ? number_format($resultat['moyenneAnnuel'], 2) : '**.**' }}
@@ -721,7 +702,7 @@
                                 </div>
 
                                 <!-- Bloc Récapitulatif Annuel -->
-                                <div style="margin-left: 60px; padding-top: 10px;">
+                                <div style="width: 30%; min-width: 30%; max-width: 30%; margin-left: 1%; padding-top: 10px;">
                                     <h5>RECAPITULATIF ANNUEL</h5>
                                     <div class="d-flex">
                                         <p style="margin: 0;">Moy. 1er {{ $periode_abr }} :
@@ -768,10 +749,11 @@
                         @php
                             $mention_conseil = isset($option['mention_conseil']);
                         @endphp
-                        <div class="d-flex">
+                        <div class="d-flex" style="align-items: stretch; min-height: 250px !important;
+">
                             <div
-                                style="width: 25%; height: 230px; background-color: transparent; border: 1px solid black; border-radius: 10px; padding: 10px; box-sizing: border-box;">
-                                <h6 style="margin-top: 5px;" class="text-center">Mention du conseil des Prof.</h6>
+                                style="width: 25%; min-width: 25%; max-width: 25%; background-color: transparent; border: 1px solid black; border-radius: 10px; padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden;">
+                                <h6 style="margin-top: 10px; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="text-center">Mention du conseil des Prof.</h6>
 
                                 {{-- utiliser la moyenne annuelle pour les mentions --}}
 
@@ -903,15 +885,15 @@
                             
                                 </div>
                             <div id="appreciation"
-                                style="width: 45%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column; padding: 10px;">
+                                style="width: 45%; min-width: 45%; max-width: 45%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column; padding: 10px; overflow: hidden;">
                                 <div
                                     style="flex: 1; display: flex; flex-direction: column; align-items: center; margin-bottom: 10px;">
-                                    <h6 style="margin-top: 5px; text-align: center; text-decoration: underline;">
+                                    <h6 style="margin-top: 5px; text-align: center; text-decoration: underline; font-size: 12px;">
                                         Appréciation du chef d'établissement 
                                     </h6>
 
                                     @if (isset($option['appreciation_directeur']) && $option['appreciation_directeur'])
-                                        <p style="font-weight: bold; text-align: center; margin-top: 10px; font-size:18px">
+                                        <p style="font-weight: bold; text-align: center; margin-top: 10px; font-size: 18px; line-height: 1.2;">
                                             {{ $resultat['mentionDir'] }}
                                         </p>
                                     @endif
@@ -919,7 +901,7 @@
                                 <hr style="border: 1px solid black; margin: 0;">                              
                                 <div
                                     style="flex: 1; display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
-                                    <h6 style="text-align: center; text-decoration: underline; margin-bottom: 10px;">
+                                    <h6 style="text-align: center; text-decoration: underline; margin-bottom: 10px; font-size: 12px;">
                                         Appréciations du professeur principal</h6>
                                     <div
                                         style="display: flex; justify-content: space-between; width: 100%; padding: 0 10px;">
@@ -927,28 +909,28 @@
                                             {{-- <span
                                                 style="border-bottom: 1px dotted black; width: 131px; display: inline-block;">{{ $note_conduite }}</span> --}}
                                             <span
-                                                style="border-bottom: 1px dotted black; width: 131px; display: inline-block;">
+                                                style="border-bottom: 1px dotted black; width: 80px; display: inline-block;">
                                             </span>
                                         </p>
                                         <p style="margin: 0;">Travail :
                                             <span
-                                                style="border-bottom: 1px dotted black; width: 131px; display: inline-block;"></span>
+                                                style="border-bottom: 1px dotted black; width: 80px; display: inline-block;"></span>
                                         </p>
-                                    </div><br>
+                                    </div>
 
                                     @if (isset($option['decision_conseil']) && $option['decision_conseil'])
                                         @if(
                                         ($typean === 2 && request('periode') == 3) ||
                                         ($typean === 1 && request('periode') == 2)
                                         )
-                                            <p style="margin: 10px 0; font-weight:bold; text-align:center;">
+                                            <p style="margin: 10px 0; font-weight:bold; text-align:center; font-size: 11px; line-height: 1.2;">
                                                 {{ $resultat['decisionAnnuelle'] }}
                                             </p>
                                         @endif
                                     @else
-                                            <p style="margin: 10px 0; font-weight:bold; text-align:center;">
+                                            <p style="margin: 10px 0; font-weight:bold; text-align:center; font-size: 11px;">
                                                 <span
-                                                style="border-bottom: 1px dotted black; width: 250px; display: inline-block;"></span>
+                                                style="border-bottom: 1px dotted black; width: 180px; display: inline-block;"></span>
                                             </p>
                                     @endif
 
@@ -959,15 +941,15 @@
                                 </div>
                             </div>
                             <div id="signature"
-                                style="width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px;">
-                                <h5 id="signature_chef" style="margin-top: 5px; font-weight: 500; font-size: 15px;"
+                                style="width: 30%; min-width: 30%; max-width: 30%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; box-sizing: border-box; overflow: hidden;">
+                                <h5 id="signature_chef" style="margin-top: 5px; font-weight: 500; font-size: 14px; line-height: 1.2;"
                                     class="text-center">
-                                    Signature et cachet <br> du Chef d'établissement
+                                    Signature et cachet <br> du Chef d'établissement <br>
+                                    <span style="margin-top: 10px; font-size: 16px; font-weight: bold;">{{ $params2->NOMETAB }}</span>
                                 </h5>
-                                <h5 class="text-center">{{ $params2->NOMETAB }}</h5>
                                 <u>
                                     <h6 class="text-center"
-                                        style="margin-left: 0%; padding-top: 38%; font-weight: bold; white-space: normal; word-wrap: break-word;">
+                                        style="margin-left: 0%; font-weight: bold; white-space: normal; word-wrap: break-word; flex-grow: 1; display: flex; align-items: flex-end; justify-content: center; font-size: 13px;">
                                         {{ $params2->NOMDIRECT }}</h6>
                                 </u>
                             </div>
@@ -1218,102 +1200,259 @@
                     margin: 0;
                     padding: 0;
                 }
+
+                /* Fixer la taille de la ligne lors de l'impression */
+                #ligne {
+                    height: 1px !important;
+                    min-height: 1px !important;
+                    max-height: 1px !important;
+                    background-color: rgb(0, 0, 0) !important;
+                    width: 100% !important;
+                }
+
+                /* Fixer la taille et la mise en page du tableau bilan lors de l'impression */
+                #tableau_bilan {
+                    width: 100% !important;
+                    table-layout: fixed !important;
+                    font-size: 12px !important;
+                    margin-top: auto !important;
+                }
+
+                #tableau_bilan th,
+                #tableau_bilan td {
+                    font-size: 16px !important;
+                    padding: 2px !important;
+                    word-break: break-all !important;
+                }
+
+                #tableau_bilan td {
+                    font-size: 18px !important;
+                }
+
+                #tableau_bilan th {
+                    font-weight: normal !important;
+                }
+
+                #tableau_bilan td strong {
+                    font-weight: bold !important;
+                }
+
+                /* Fixer la taille et la mise en page du bilan annuel lors de l'impression */
+                #bilan_annuel_container {
+                    display: flex !important;
+                    border: 1px solid black !important;
+                    border-radius: 10px !important;
+                    background-color: rgb(128, 128, 128, 0.2) !important;
+                    width: 100% !important;
+                }
+
+                /* Bloc Bilan Annuel */
+                #bilan_annuel_container > div:first-child {
+                    width: 23% !important;
+                    min-width: 23% !important;
+                    max-width: 23% !important;
+                    margin-left: 1% !important;
+                    padding-top: 10px !important;
+                }
+
+                #bilan_annuel_container > div:first-child h5 {
+                    font-size: inherit !important;
+                    font-weight: bold !important;
+                }
+
+                #bilan_annuel_container > div:first-child p {
+                    font-size: 15px !important;
+                    margin: inherit !important;
+                }
+
+                /* Bloc Moyenne Annuelle */
+                #bilan_annuel_container > div:nth-child(2) {
+                    width: 45% !important;
+                    min-width: 45% !important;
+                    max-width: 45% !important;
+                    margin-left: 1% !important;
+                    padding-top: 10px !important;
+                }
+
+                #bilan_annuel_container > div:nth-child(2) .d-flex {
+                    align-items: normal !important;
+                    padding-top: 10px !important;
+                }
+
+                #bilan_annuel_container > div:nth-child(2) h5 {
+                    font-size: inherit !important;
+                    font-weight: bold !important;
+                    margin: inherit !important;
+                }
+
+                #bilan_annuel_container > div:nth-child(2) h5.ml-5 {
+                    margin-left: 20px !important;
+                }
+
+                #bilan_annuel_container > div:nth-child(2) h5:not(.ml-5) {
+                    margin-left: 30px !important;
+                }
+
+                /* Tableau bilan annuel */
+                #tableau_bilan_annuel {
+                    width: 100% !important;
+                    margin-top: 5px !important;
+                }
+
+                #tableau_bilan_annuel th {
+                    font-weight: normal !important;
+                }
+
+                #tableau_bilan_annuel td {
+                    text-align: center !important;
+                }
+
+                #tableau_bilan_annuel td strong {
+                    font-weight: bold !important;
+                }
+
+                /* Bloc Récapitulatif Annuel */
+                #bilan_annuel_container > div:last-child {
+                    width: 30% !important;
+                    min-width: 30% !important;
+                    max-width: 30% !important;
+                    margin-left: 1% !important;
+                    padding-top: 10px !important;
+                }
+
+                #bilan_annuel_container > div:last-child h5 {
+                    font-size: inherit !important;
+                    font-weight: bold !important;
+                }
+
+                #bilan_annuel_container > div:last-child p {
+                    margin: 0 !important;
+                    font-size: inherit !important;
+                }
+
+                #bilan_annuel_container > div:last-child p[style*="margin-left: 25px"] {
+                    margin-left: 25px !important;
+                }
+
+                #bilan_annuel_container > div:last-child .d-flex {
+                    align-items: center !important;
+                }
+
+                /* Fixer la taille de l'élément de date d'édition lors de l'impression */
+                .flex-grow-1.justify-content-end[style*="margin-left: 800px"] {
+                    flex-grow: 1 !important;
+                    justify-content: flex-end !important;
+                    margin-left: 800px !important;
+                }
+
+                .flex-grow-1.justify-content-end[style*="margin-left: 800px"] p {
+                    margin: 0 !important;
+                    font-size: inherit !important;
+                }
+
+                /* Fixer les nouvelles tailles de police pour les blocs d'appréciation et bilans */
+                #sco {
+                    white-space: nowrap !important;
+                    display: inline-block !important;
+                }
+
+                /* Bloc BILAN principal */
+                .d-flex[style*="align-items: stretch"] > div:first-child h4 {
+                    font-size: 20px !important;
+                }
+
+                /* Bloc Moyenne et Rang */
+                .d-flex[style*="align-items: stretch"] > div:nth-child(2) h6 {
+                    font-size: 18px !important;
+                }
+
+                .d-flex[style*="align-items: stretch"] > div:nth-child(2) h6 span {
+                    font-size: 20px !important;
+                }
+
+                /* Bloc bilans matières */
+                .d-flex[style*="align-items: stretch"] > div:last-child div[style*="justify-content: space-between"] {
+                    font-size: 14px !important;
+                }
+
+                .d-flex[style*="align-items: stretch"] > div:last-child div[style*="justify-content: space-between"] span:first-child {
+                    font-size: 14px !important;
+                }
+
+                .d-flex[style*="align-items: stretch"] > div:last-child div[style*="justify-content: space-between"] span:last-child {
+                    font-size: 15px !important;
+                }
+
+                /* Mention du conseil des professeurs */
+                h6.text-center[style*="Mention du conseil"] {
+                    font-size: 16px !important;
+                }
+
+                /* Appréciations professeur principal */
+                #appreciation h6[style*="Appréciations du professeur principal"] {
+                    font-size: 11px !important;
+                }
+
+                #appreciation p {
+                    margin: 0 !important;
+                }
+
+                /* Appréciation chef d'établissement */
+                #appreciation h6[style*="Appréciation du chef d'établissement"] {
+                    font-size: 12px !important;
+                }
+
+                #appreciation p[style*="mentionDir"] {
+                    font-size: 14px !important;
+                }
+
+                /* Signature */
+                #signature_chef {
+                    font-size: 13px !important;
+                }
+
+                #signature_chef span {
+                    font-size: 14px !important;
+                }
+
+                #signature h6 {
+                    font-size: 13px !important;
+                }
+
+                /* Correction du débordement pour les noms de classe longs */
+                #classe {
+                    width: 20% !important;
+                    min-width: 20% !important;
+                    max-width: 20% !important;
+                    background-color: transparent !important;
+                    border: 1px solid black !important;
+                    border-radius: 10px !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    justify-content: center !important;
+                    padding: 10px !important;
+                    box-sizing: border-box !important;
+                    overflow: hidden !important;
+                }
+
+                #classe h5 {
+                    margin-top: 0 !important;
+                    font-weight: 400 !important;
+                    white-space: normal !important;
+                    overflow: visible !important;
+                    font-size: inherit !important;
+                    word-wrap: break-word !important;
+                }
+
+                #classe h5 span {
+                    font-weight: bold !important;
+                    font-size: inherit !important;
+                }
             }
         </style>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-
-                    {{-- <script>
-                        function imprimerliste() {
-                            var content = document.querySelector('.main-panel').innerHTML;
-                            var originalContent = document.body.innerHTML;
-
-                            document.body.innerHTML = content;
-                            window.print();
-
-                            document.body.innerHTML = originalContent;
-                        }
-
-                        // document.getElementById('redoublant_oui').addEventListener('click', function(event) {
-                        //     event.preventDefault(); // Empêche la modification
-                        // });
-
-                        // document.getElementById('redoublant_non').addEventListener('click', function(event) {
-                        //     event.preventDefault(); // Empêche la modification
-                        // });
-                    </script> --}}
-
-
-        {{-- <script>
-            function imprimerliste() {
-                // Sélectionner tous les bulletins individuels
-                var bulletinElements = document.querySelectorAll('.bulletin');
-                
-                if (bulletinElements.length === 0) {
-                    console.error("Aucun bulletin trouvé pour l'archivage.");
-                    window.print();
-                    return;
-                }
-                
-                var promises = [];
-                
-                bulletinElements.forEach(function(bulletinElement, index) {
-                    // Récupérer le nom et la classe depuis les attributs data-nom et data-classe
-                    var studentName = bulletinElement.getAttribute('data-nom') || 'unknown';
-                    studentName = studentName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
-                    
-                    var classCode = bulletinElement.getAttribute('data-classe') || 'default';
-                    classCode = classCode.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
-                    
-                    var promise = html2canvas(bulletinElement).then(function(canvas) {
-                        var imgData = canvas.toDataURL('image/jpeg', 1.0);
-                        const { jsPDF } = window.jspdf;
-                        var pdf = new jsPDF('p', 'mm', 'a4');
-                        var pdfWidth = pdf.internal.pageSize.getWidth();
-                        var pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                        
-                        // Créer un nom de fichier en utilisant le code de la classe et le nom de l'élève
-                        var filename = 'bulletin_' + classCode + '_' + studentName + '_' + new Date().getTime() + '.pdf';
-                        
-                        var pdfBase64 = pdf.output('datauristring');
-                        
-                        return fetch('/archiveBulletin', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({
-                                pdf: pdfBase64,
-                                filename: filename,
-                                class: classCode
-                            })
-                        });
-                    }).catch(function(err) {
-                        console.error('Erreur lors de la capture d'un bulletin :', err);
-                    });
-                    
-                    promises.push(promise);
-                });
-                
-                Promise.all(promises).then(function() {
-                    var contentN = document.querySelector('.main-panel').innerHTML;
-                    var originalContent = document.body.innerHTML;
-                    document.body.innerHTML = contentN;
-                    window.print();
-                    document.body.innerHTML = originalContent;
-                }).catch(function(error) {
-                    console.error('Erreur lors de l'archivage de certains bulletins:', error);
-                    window.print();
-                });
-            }
-
-
-            </script> 
-        --}}
 
         <script>
             function imprimerliste() {
@@ -1325,15 +1464,6 @@
 
                 document.body.innerHTML = originalContent;
             }
-
-            // document.getElementById('redoublant_oui').addEventListener('click', function(event) {
-            //     event.preventDefault(); // Empêche la modification
-            // });
-
-            // document.getElementById('redoublant_non').addEventListener('click', function(event) {
-            //     event.preventDefault(); // Empêche la modification
-            // });
         </script>
-
     </div>
 @endsection
