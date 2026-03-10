@@ -105,7 +105,7 @@
                         @endcanAccess
 
                         @if(canAccess('exporternote') || canAccess('importernote'))
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'active' : '' }}"
                                 data-bs-toggle="collapse" href="#extract-insc"
                                 aria-expanded="{{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'true' : 'false' }}"
@@ -114,7 +114,7 @@
                                 <i class="menu-arrow"></i>
                             </a>
 
-                            <!-- ici : data-bs-parent passé de "#form-elements" à "#ui-basic" -->
+                        
                             <div class="collapse {{ in_array(request()->route()->getName(), $activeExtractRoutesInsc) ? 'show' : '' }}"
                                 id="extract-insc" data-bs-parent="#ui-basic">
                                 <ul class="nav sub-menu">
@@ -126,7 +126,7 @@
                                     @endcanAccess
                                 </ul>
                             </div>
-                        </li>
+                        </li> -->
                         @endif
                     </ul>
                 </div>
@@ -238,6 +238,9 @@
                     'recapitulatifdenotes', 'tableauanalytiqueparmatiere', 'resultatsparpromotion', 'listedesmeritants'
                 ];
                 $activeExtractRoutes = ['extrairenote', 'extractnote'];
+                $activeExtractRoutes = ['extrairenote', 'importnote'];
+                $activeExtractRoutes = ['extrairenote', 'previewImport'];
+                $activeExtractRoutes = ['extrairenote', 'notes.saveImport'];
                 $activeResultatRoutes = ['listeparmerite', 'imprimer.liste.merite'];
             @endphp
 
@@ -394,6 +397,12 @@
                                 id="extract-notes" data-bs-parent="#form-elements">
                                 <ul class="nav sub-menu">
                                     <li><a class="nav-link {{ request()->routeIs('extrairenote') ? 'active' : '' }}" href="{{ route('extrairenote') }}">Exporter vers EducMaster</a></li>
+                                </ul>
+                            </div>
+                            <div class="collapse {{ in_array(request()->route()->getName(), $activeExtractRoutes) ? 'show' : '' }}"
+                                id="extract-notes" data-bs-parent="#form-elements">
+                                <ul class="nav sub-menu">
+                                    <li><a class="nav-link {{ request()->routeIs('importnote') ? 'active' : '' }}" href="{{ route('importnote') }}">Import des notes</a></li>
                                 </ul>
                             </div>
                         </li>
