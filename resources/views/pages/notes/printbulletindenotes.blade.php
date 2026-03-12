@@ -203,7 +203,7 @@
                             <div
                                 style="width: 20%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; padding: 10px; box-sizing: border-box;">
                                 <h5 class="ml-2 d-inline-block"
-                                    style="margin-bottom: 0; font-size: 14px; font-weight: 400;"
+                                    style="margin-bottom: 0; font-size: 14px; font-weight: 400; text-align: center;"
                                     id="sco">
                                     Année scolaire : {{ $resultat['anneScolaire'] }}
                                 </h5>
@@ -226,6 +226,7 @@
                                 style="width: 20%; background-color: transparent; border: 1px solid black; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; padding: 10px; box-sizing: border-box;">
                                 <h5 class="ml-2" style="margin-top: 0; font-weight: 400;" id="sco">Classe : <span
                                         class="font-weight-bold">{{ $resultat['classe'] }}</span></h5>
+                                        <br>
                                 <h5 class="ml-2" style="margin-top: 20px; font-weight: 400;">Effectif : <span
                                         class="font-weight-bold">{{ $resultat['effectif'] }}</span></h5>
                             </div>
@@ -905,16 +906,16 @@
                                         Appréciations du professeur principal</h6>
                                     <div
                                         style="display: flex; justify-content: space-between; width: 100%; padding: 0 10px;">
-                                        <p style="margin: 0;">Conduite :
+                                        <p style="margin: 0; font-size: 14px;">Conduite :
                                             {{-- <span
                                                 style="border-bottom: 1px dotted black; width: 131px; display: inline-block;">{{ $note_conduite }}</span> --}}
                                             <span
-                                                style="border-bottom: 1px dotted black; width: 80px; display: inline-block;">
+                                                style="border-bottom: 1px dotted black; width: 90px; display: inline-block;">
                                             </span>
                                         </p>
-                                        <p style="margin: 0;">Travail :
+                                        <p style="margin: 0; font-size: 14px;">Travail :
                                             <span
-                                                style="border-bottom: 1px dotted black; width: 80px; display: inline-block;"></span>
+                                                style="border-bottom: 1px dotted black; width: 90px; display: inline-block;"></span>
                                         </p>
                                     </div>
 
@@ -1372,15 +1373,15 @@
 
                 /* Bloc bilans matières */
                 .d-flex[style*="align-items: stretch"] > div:last-child div[style*="justify-content: space-between"] {
-                    font-size: 14px !important;
+                    font-size: 16px !important;
                 }
 
                 .d-flex[style*="align-items: stretch"] > div:last-child div[style*="justify-content: space-between"] span:first-child {
-                    font-size: 14px !important;
+                    font-size: 16px !important;
                 }
 
                 .d-flex[style*="align-items: stretch"] > div:last-child div[style*="justify-content: space-between"] span:last-child {
-                    font-size: 15px !important;
+                    font-size: 16px !important;
                 }
 
                 /* Mention du conseil des professeurs */
@@ -1390,7 +1391,7 @@
 
                 /* Appréciations professeur principal */
                 #appreciation h6[style*="Appréciations du professeur principal"] {
-                    font-size: 11px !important;
+                    font-size: 12px !important;
                 }
 
                 #appreciation p {
@@ -1408,15 +1409,15 @@
 
                 /* Signature */
                 #signature_chef {
-                    font-size: 13px !important;
+                    font-size: 16px !important;
                 }
 
                 #signature_chef span {
-                    font-size: 14px !important;
+                    font-size: 18px !important;
                 }
 
                 #signature h6 {
-                    font-size: 13px !important;
+                    font-size: 16px !important;
                 }
 
                 /* Correction du débordement pour les noms de classe longs */
@@ -1440,13 +1441,12 @@
                     font-weight: 400 !important;
                     white-space: normal !important;
                     overflow: visible !important;
-                    font-size: inherit !important;
                     word-wrap: break-word !important;
                 }
 
-                #classe h5 span {
+                #classe.h5.span {
                     font-weight: bold !important;
-                    font-size: inherit !important;
+                    font-size: 14px
                 }
             }
         </style>

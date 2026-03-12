@@ -2534,8 +2534,11 @@ class BulletinController extends Controller
                 ->get();
 
             // Tri des notes par ordre alphabétique du nom de l'élève
+            // $notes = $notes->sortBy(function ($note) {
+            //     return $note->eleve->NOM . ' ' . $note->eleve->PRENOM;
+            // });
             $notes = $notes->sortBy(function ($note) {
-                return $note->eleve->NOM . ' ' . $note->eleve->PRENOM;
+                return strtolower(trim($note->eleve->NOM)) . ' ' . strtolower(trim($note->eleve->PRENOM));
             });
 
             // On stocke les notes pour cette matière dans un tableau associatif
@@ -2579,7 +2582,7 @@ class BulletinController extends Controller
                 ->where('SEMESTRE', $periode)
                 ->get()
                 ->sortBy(function ($note) {
-                    return $note->eleve->NOM . ' ' . $note->eleve->PRENOM;
+                     return strtolower(trim($note->eleve->NOM)) . ' ' . strtolower(trim($note->eleve->PRENOM));
                 });
             if (!$notes->isEmpty()) {
                 $result[$matiereCode] = $notes;
